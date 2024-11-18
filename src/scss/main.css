@@ -46,11 +46,11 @@ a {
 }
 
 .authinfo_slider {
-  padding: 0 38px;
+  padding: 0 32px;
 }
 .authinfo_slider h2 {
-  font-size: 2.25rem;
-  line-height: 52px;
+  font-size: 2.15rem;
+  line-height: 48px;
   margin-bottom: 30px;
   color: #344054;
   font-family: "Sofia Pro Bold";
@@ -201,6 +201,19 @@ a {
 }
 .pass_instructor ul li.active {
   color: #100D37;
+}
+
+.error {
+  font-size: 14px;
+  color: #F04438;
+  margin: 4px 0 0 0;
+}
+
+.btn-loder.spinner-border {
+  width: 16px;
+  height: 16px;
+  border-width: 3px;
+  margin-right: 5px;
 }
 
 .sidebar-wrapper {
@@ -364,4 +377,205 @@ ol.breadcrumb {
   line-height: 18px;
   color: #667085;
   margin-top: 15px;
+}
+
+.modal-dialog.modal-lg .modal-content {
+  border-radius: 0;
+}
+
+.model_sidebar {
+  width: 11%;
+  height: 100vh;
+  border-right: solid 1px #EAECF0;
+  padding: 0;
+}
+.model_sidebar .md_sdrlogo {
+  padding: 20px 30px;
+  height: 71px;
+}
+.model_sidebar .mdl_sdbarmenu .nav-item .nav-link {
+  padding: 15px 30px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #344054;
+  display: flex;
+  flex-direction: column;
+  line-height: 22px;
+  border-radius: 0;
+}
+.model_sidebar .mdl_sdbarmenu .nav-item .nav-link span {
+  font-weight: 400;
+  color: #667085;
+}
+.model_sidebar .mdl_sdbarmenu .nav-item .nav-link.active {
+  background-color: #F5F8FF;
+}
+
+.cprofile_right {
+  width: 89%;
+  padding-left: 0;
+  background-color: #F9FAFB;
+}
+
+.modal-header {
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.1098039216);
+  border: none;
+  padding: 22px 20px;
+  background-color: #fff;
+  border-radius: 0;
+}
+.modal-header .modal-title {
+  color: #101828;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.btn-link {
+  font-size: 16px;
+  color: #3538CD;
+  text-decoration: none;
+  text-transform: capitalize;
+  font-weight: 600;
+  padding: 8px 15px;
+}
+
+.mdl_pagetitle {
+  margin-bottom: 15px;
+}
+.mdl_pagetitle .btn {
+  font-size: 14px;
+}
+
+.cmprofile_mdl .modal-body {
+  padding: 1.15rem;
+}
+
+.form_card {
+  border-color: #EAECF0;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.08);
+}
+
+.required.form-label:after {
+  content: "*";
+  color: red;
+  right: -10px;
+  position: absolute;
+  top: 0px;
+}
+
+label.required.form-label {
+  position: relative;
+}
+
+.form-select {
+  color: #344054;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 8px;
+  min-height: 44px;
+  border-color: #D0D5DD;
+}
+
+.form-control:focus, .form-select:focus {
+  box-shadow: none;
+  outline: none;
+}
+
+.form_card .form-label {
+  margin-bottom: 0.3rem;
+  font-size: 12px;
+  font-weight: 600;
+}
+.form_card .form-control, .form_card .form-select {
+  font-size: 12px;
+  min-height: 36px;
+}
+.form_card span.words_limit {
+  font-size: 12px;
+}
+.form_card .mb-3 {
+  margin-bottom: 0.5rem !important;
+}
+
+.cmp_details .accordion, .cmp_details .accordion-item {
+  background-color: transparent;
+}
+.cmp_details .accordion-button {
+  background-color: transparent;
+  color: #475467;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 0.9rem;
+  border-bottom: solid 1px #EAECF0;
+}
+.cmp_details .accordion-button:focus {
+  outline: none;
+  box-shadow: none;
+}
+.cmp_details .accordion-button::after {
+  background-size: 75%;
+}
+.cmp_details .cmp_textlogo {
+  background-color: #EEF4FF;
+  border: solid 1px #A4BCFD;
+  font-size: 24px;
+  color: #2D3282;
+  font-weight: 600;
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  text-transform: uppercase;
+}
+.cmp_details .cmp_info {
+  margin: 15px 0 40px 0;
+  padding: 0 0 15px 0;
+  border-bottom: solid 1px #EAECF0;
+}
+.cmp_details .cmp_info li {
+  list-style: none;
+  font-size: 13px;
+  font-weight: 400;
+  color: #667085;
+  line-height: 24px;
+}
+.cmp_details .rects-panel h5 {
+  color: #475467;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 0.9rem;
+  border-bottom: solid 1px #EAECF0;
+}
+.cmp_details .rects_list {
+  margin: 0;
+  padding: 0;
+  border-bottom: solid 1px #EAECF0;
+}
+.cmp_details .rects_list li {
+  background-color: #f3f5f7;
+  padding: 6px 8px;
+  border-radius: 16px;
+  border: solid 1px #EAECF0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #344054;
+  list-style: none;
+  margin: 12px 0;
+  display: flex;
+  align-items: center;
+}
+.cmp_details .rects_list li img {
+  margin-right: 4px;
+}
+
+@media (min-width: 992px) {
+  .modal-lg, .modal-xl {
+    max-width: 100%;
+    height: 100vh;
+    background-color: #fff;
+    margin: 0;
+    padding: 0;
+  }
 }/*# sourceMappingURL=main.css.map */

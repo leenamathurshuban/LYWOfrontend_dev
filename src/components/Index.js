@@ -4,6 +4,7 @@ import SetPassword from "./SetPassword";
 import EmailPasswordVerifyContainer from "./EmailPasswordVerifyContainer";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
+import FileUploader from "./FileUploader";
 
 
 export {
@@ -12,5 +13,6 @@ export {
     SetPassword,
     EmailPasswordVerifyContainer,
     Header,
-    Sidebar
+    Sidebar,
+    FileUploader
 }

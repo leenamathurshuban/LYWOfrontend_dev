@@ -28,11 +28,20 @@ const Header = () => {
             </Col>
             <Col md={4}>
                 <div className='header_right'>
-                    <button type='button' className='hed_notifaction'>
-                        <svg width="21" height="18" viewBox="0 0 21 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M17.0272 11.7144V14.3434C17.0272 15.0139 17.2935 15.6569 17.7677 16.1311C18.2417 16.6051 19.0436 16.8715 19.7141 16.8715H0.856934C1.52743 16.8715 2.3293 16.6051 2.80342 16.1311C3.27752 15.6569 3.54389 15.0139 3.54389 14.3434L3.54387 8.17035C3.54387 6.38236 4.25415 4.6676 5.51845 3.40329C6.78276 2.13899 8.49752 1.42871 10.2855 1.42871" stroke="#344054" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
+                <button type='button' className='hed_notifaction'>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g clip-path="url(#clip0_618_16365)">
+                                    <path d="M18.4283 9.42885C20.7952 9.42885 22.714 7.51007 22.714 5.14314C22.714 2.7762 20.7952 0.857422 18.4283 0.857422C16.0614 0.857422 14.1426 2.7762 14.1426 5.14314C14.1426 7.51007 16.0614 9.42885 18.4283 9.42885Z" stroke="#344054" stroke-linecap="round" stroke-linejoin="round" />
+                                    <path d="M17.0272 13.7144V16.3434C17.0272 17.0139 17.2935 17.6569 17.7677 18.1311C18.2417 18.6051 19.0436 18.8715 19.7141 18.8715H0.856934C1.52743 18.8715 2.3293 18.6051 2.80342 18.1311C3.27752 17.6569 3.54389 17.0139 3.54389 16.3434L3.54387 10.1703C3.54387 8.38236 4.25415 6.6676 5.51845 5.40329C6.78276 4.13899 8.49752 3.42871 10.2855 3.42871" stroke="#344054" stroke-linecap="round" stroke-linejoin="round" />
+                                    <path d="M8.57129 23.1436H11.9999" stroke="#344054" stroke-linecap="round" stroke-linejoin="round" />
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_618_16365">
+                                        <rect width="24" height="24" fill="white" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                        </button>
                     <button type='button' className='hed_username'>
                         <span>or</span>
                     </button>
