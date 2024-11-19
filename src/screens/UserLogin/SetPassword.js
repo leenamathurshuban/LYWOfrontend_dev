@@ -1,17 +1,17 @@
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
-import { Col, Container, Row, Form, Button, Spinner } from "react-bootstrap";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import passtrue from "../../images/icons/check-tick-circle.svg";
 import passfalse from "../../images/icons/minus-circle.svg";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { setPasswordVerifyApi } from "../../services/provider";
 import Getstarted from "../GetStarted/GetStarted";
 
 const SetPassword = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [initialCount, setInitialCount] = useState(0);
-  const [email, setEmail] = useState(""); //ayanshaikh.shuban@gmail.com
+  const [email, setEmail] = useState(""); 
   const [validated, setValidated] = useState(false);
 
   const [password, setPassword] = useState("");
@@ -34,15 +34,13 @@ const SetPassword = () => {
 
   const setPasswordApi = async () => {
     setIsLoading(true);
-    await axios
-      .put(
-        "https://bittrend.shubansoftware.com/account-api/set-user-password-api/",
-        {
-          email,
+    const data = {
+           email,
           password,
-          confirm_password,
-        }
-      )
+          confirm_password
+    }
+   
+    setPasswordVerifyApi(data)
       .then((response) => {
         setIsLoading(false);
         if (response.data.success) {
@@ -186,7 +184,7 @@ const SetPassword = () => {
               <a
                href="#"
                 className="text-primery font-weight-600 text-center mt-4 d-block text-base"
-                onClick={() => navigate("/email")}
+                onClick={() => navigate("/otp")}
               >
                 Continue without Setting Password
               </a>

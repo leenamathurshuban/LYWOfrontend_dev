@@ -1,14 +1,13 @@
-import React,{useState} from "react";
-import { Col, Container, Row, Form, Button, Spinner } from "react-bootstrap";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import Getstarted from "../GetStarted/GetStarted"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { storeToken } from "../../helpers/helper";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useState } from "react";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from "react-router-dom";
 import { setLoginuserInfor } from "../../Slice/Login/LoginSlice";
+import { storeToken } from "../../helpers/helper";
 import { LogInCall } from "../../services/provider";
+import Getstarted from "../GetStarted/GetStarted";
 
 
 
@@ -52,7 +51,7 @@ const EmailPasswordVerifyContainer = () => {
           email: emailValue,
               password
         }
-        
+
         LogInCall(data)
         .then((response)=>{
            setIsLoading(false)
