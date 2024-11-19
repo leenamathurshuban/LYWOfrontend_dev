@@ -52,26 +52,7 @@ const EmailPasswordVerifyContainer = () => {
           email: emailValue,
               password
         }
-        // await axios
-        //   .post(
-        //     "https://bittrend.shubansoftware.com/account-api/user-login-view/",
-        //     {
-        //       email: emailValue,
-        //       password
-        //     }
-        //   )
-        //   .then((response) => {
-        //     setIsLoading(false);
-        //    storeToken(response?.data?.response?.access)
-        //    console.log("response user kakakk dehooo----",response?.data?.response)
-        //    dispatch(setLoginuserInfor(response?.data?.response))
-        //    setPasswordErrormsg("")
-        //    navigate("/")
-        //   })
-        //   .catch((error) => {
-        //     setIsLoading(false);
-        //    setPasswordErrormsg(error.response.data.response)
-        //   })
+        
         LogInCall(data)
         .then((response)=>{
            setIsLoading(false)
