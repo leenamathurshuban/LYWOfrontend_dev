@@ -6,6 +6,9 @@ export const AuthUrl = {
   };
 
 
-  export const CommonUrl = {
+  export const CompanyUrl = {
+    CompanyList : "account-api/company-list-api/?page=1&limit=10",
+    Logout : "account-api/logout-user-api/",
+    UpdateCompanyProfile : "account-api/update-company-api/"
 
   }

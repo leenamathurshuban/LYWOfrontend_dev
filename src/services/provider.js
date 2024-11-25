@@ -1,4 +1,4 @@
-import { AuthUrl } from "./apiUrl";
+import { AuthUrl ,CompanyUrl} from "./apiUrl";
 import client from "./axiosInstance";
 
 export const LogInCall = (data) => {
@@ -19,5 +19,25 @@ export const OtpVerifyApi = (data) =>{
 
 export const setPasswordVerifyApi = (data) =>{
   const setPasswordVerify = client.putWithoutToken(AuthUrl.SetPassword,data)
+  return setPasswordVerify
+}
+
+
+
+export const GetcompanyDetailsApi = (uid) =>{
+  const GetCompanyDetails = client.get(`account-api/company-detail-api/${uid}`)
+  return GetCompanyDetails
+}
+
+
+export const logoutApi = () =>{
+  const Logout = client.put(CompanyUrl.Logout)
+  console.log("logout------===",Logout)
+  return Logout
+}
+
+
+export const updateCompanyProfileApi = (data,uid) =>{
+  const setPasswordVerify = client.putWithoutToken(`${CompanyUrl.UpdateCompanyProfile}${uid}/`)
   return setPasswordVerify
 }

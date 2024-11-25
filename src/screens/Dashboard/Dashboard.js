@@ -16,38 +16,61 @@ import FileUploader from "../../components/FileUploader";
 import Header from "../../components/Header";
 import Sidebar from "../../components/Sidebar";
 import { cprofilelogo, liwotextlogo, starIcon } from "../../images/assest";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { removeToken } from "../../helpers/helper";
+import { logoMaker, removeToken } from "../../helpers/helper";
 import CompanyEditProfile from "../../components/CompanyEditProfile";
-import { LogInCall } from "../../services/provider";
+import { GetcompanyDetailsApi, LogInCall } from "../../services/provider";
+import { setCompanyProfileDetails } from "../../Slice/Login/LoginSlice";
 
 const Dashboard = () => {
   const [show, setShow] = useState(false);
+  const [getDetails,setGetDetails] = useState("")
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch()
 
-  const emailValue = useSelector((state) => state.login.emailValue);
   const userInfo = useSelector((state)=>state.login.loginUserInfo)
 
-  console.log("dashboarddd check---------",userInfo)
+  const uid = userInfo?.default_company?.uid
+  console.log("uid check--------",uid)
 
-  const handleLogout = () => {
-    removeToken();
-    navigate("/emailverify");
-  };
+  const logoname = logoMaker(userInfo?.default_company?.company_name ?? "infograins techno")
 
 
-  // useEffect(()=>{
-  //   const data ={
-  //     email : "shivanilatya.shuban@gmail.com",
-  //     password : "Task@1234"
-  //   }
-  //   LogInCall(data).then(res=>console.log("dashhhboard par response-------",res))
-  //   // console.log("LogInCall()------",LogInCall(data))
-  // })
+
+  const GetCompanyDetails = (uid) =>{
+    handleShow()
+    GetcompanyDetailsApi(uid)
+    .then((res)=>{
+      console.log("dispatch calll",res?.response)
+      dispatch(setCompanyProfileDetails(res?.response)) 
+    })
+    // .catch((error)=>{
+    //   navigate("/loginwithpassword")
+    //   // if(error?.response?.data?.detail){
+    //   //   console.log("eroorrrr",error?.response?.data?.detail)
+    //   //   // navigate("/loginwithpassword")
+    //   // }
+    // })
+      // setGetDetails(res?.response) )
+      .catch((error) => {
+        // Check if the error is a 401 Unauthorized (Token Expired)
+        if (error?.response?.status === 401 || error?.response?.data?.detail?.includes("Given token not valid for any token type")) {
+          console.log("Token expired, redirecting to login");
+          navigate("/loginwithpassword");
+        } else {
+          // Handle other errors (network errors, server errors, etc.)
+          console.error("An error occurred:", error);
+        }
+      });
+
+  }
+
+  console.log("getDetails------#####---",getDetails)
+
   return (
     <>
       <Sidebar />
@@ -117,9 +140,9 @@ const Dashboard = () => {
             <Col md={4}>
               <Card className="mdt_card">
                 <Card.Body>
-                  <span className="mdt_name">pe</span>
+                  <span className="mdt_name">{logoname}</span>
                   <Card.Title>Complete Company Profile</Card.Title>
-                  <Button variant="primary" onClick={handleShow}>
+                  <Button variant="primary" onClick={()=>GetCompanyDetails(uid)}>
                     Start
                   </Button>
                 </Card.Body>

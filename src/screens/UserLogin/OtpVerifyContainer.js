@@ -4,9 +4,10 @@ import { useNavigate } from "react-router-dom";
 import Getstarted from "../GetStarted/GetStarted";
 // import { setEmailValue } from '../Slice/Login/LoginSlice'; // Import your action
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { storeToken } from "../../helpers/helper";
-import { IsEmailVerify, OtpVerifyApi } from "../../services/provider";
+import { IsEmailVerify, LogInCall, OtpVerifyApi } from "../../services/provider";
+import { setLoginuserInfor } from "../../Slice/Login/LoginSlice";
 
 const OtpVerifyContainer = () => {
 
@@ -29,6 +30,7 @@ const OtpVerifyContainer = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const email = useSelector((state) => state.login.emailValue);
 
@@ -55,15 +57,25 @@ const OtpVerifyContainer = () => {
       });
   };
 
+  const handleLoginwithOtp = async() => {
+    const data = {
+       email,
+       otp
+    }
+
+    LogInCall(data)
+    .then((response)=>{
+       storeToken(response?.data?.response?.access)
+       dispatch(setLoginuserInfor(response?.data?.response))
+       navigate("/")})
+       .catch((error)=>{
+          console.log("login with otp error-------",error)
+          })
+
+  }
+
   const EmailVerifyApi = () => {
     setIsLoading(true);
-    // axios
-    //   .post(
-    //     "https://bittrend.shubansoftware.com/account-api/verify-email-view/",
-    //     {
-    //       email,
-    //     }
-    //   )
     const data = {email}
     IsEmailVerify(data)
       .then((response) => {
@@ -186,7 +198,7 @@ const OtpVerifyContainer = () => {
                 type="submit"
                 className="btn-full mt-1"
                 disabled={otpErrormsg !== "OTP verified successfully."}
-                onClick={()=>navigate("/")}
+                onClick={handleLoginwithOtp}
               >
                 Login
               </Button>

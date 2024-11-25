@@ -5,6 +5,10 @@ const initialState = {
   emailValue : "" ,
   loginUserInfo:  {
     email: "",
+    default_company: {
+            uid: "",
+            company_name: ""
+        },
     company: [
         {
             id: "",
@@ -16,7 +20,9 @@ const initialState = {
             uid: "",
             company_name: ""
         }
-    ]} 
+    ]},
+    CompanyProfileDetails:{} 
+
 };
 
 const loginSlice = createSlice({
@@ -29,9 +35,18 @@ const loginSlice = createSlice({
       },
       setLoginuserInfor(state, action: PayloadAction<string>){
         state.loginUserInfo = action.payload
-      }
+      },
+      setCompanyProfileDetails(state, action: PayloadAction<string>){
+        console.log("slice maiaiiaii",action.payload)
+        state.CompanyProfileDetails = action.payload
+      },
+    logout: (state) => {
+      state.emailValue = "";
+      state.loginUserInfo = initialState.loginUserInfo;
+    }
+
   },
 });
 
-export const { setEmailValue,setLoginuserInfor } = loginSlice.actions;
+export const { setEmailValue,setLoginuserInfor,logout,setCompanyProfileDetails } = loginSlice.actions;
 export default loginSlice.reducer;

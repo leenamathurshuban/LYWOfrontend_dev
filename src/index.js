@@ -6,13 +6,16 @@ import './scss/main.css';
 import './fonts/style.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { store } from "../src/Slice/Store";
+import { store,persistor } from "../src/Slice/Store";
+import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from "react-redux";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Provider store={store}>
-    <App/>
+    <PersistGate loading={null} persistor={persistor}>
+      <App />
+    </PersistGate>
   </Provider>
 );
 

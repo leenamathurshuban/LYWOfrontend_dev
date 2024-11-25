@@ -20,7 +20,7 @@ const EmailPasswordVerifyContainer = () => {
   // const [otpErrormsg, setOtpErrorMsg] = useState(""); 
   const [initialCount, setInitialCount] = useState(0);
 
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState("Task@1234");
   // const [confirm_password, setConfirmPassword] = useState("");
   const [passwordErrormsg, setPasswordErrormsg] = useState("");
   const [requirements, setRequirements] = useState({
@@ -54,12 +54,15 @@ const EmailPasswordVerifyContainer = () => {
 
         LogInCall(data)
         .then((response)=>{
+          console.log("check loginwithpassword success------------------",response)
            setIsLoading(false)
            storeToken(response?.data?.response?.access)
            dispatch(setLoginuserInfor(response?.data?.response))
            setPasswordErrormsg("")
            navigate("/")})
            .catch((error)=>{
+            console.log("check error loginwithpassword failuree------------------",error)
+
                setIsLoading(false);
                setPasswordErrormsg(error.response.data.response)})
          
@@ -110,7 +113,7 @@ const EmailPasswordVerifyContainer = () => {
                   <Form.Label>Password</Form.Label>
                   <Form.Control
                     type={showPassword ? "text" : "password"}
-                    value={password}
+                    value={"password"}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter your password"
                     required

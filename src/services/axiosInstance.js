@@ -75,11 +75,12 @@ export const postWithUpload = async (url, params) => {
     headers: baseHeadersForUploads(),
   });
 };
-export const put = async (url, params) => {
+export const put = async (url) => {
   return instance({
     url,
     method: "PUT",
-    data: params,
+    body : {},
+    // data: params,
     headers: baseHeadersForRequest(),
   });
 };

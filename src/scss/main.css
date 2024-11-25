@@ -15,7 +15,7 @@ body {
 h1, h2, h3, h4, h5, h6 {
   margin: 0;
   padding: 0;
-  font-weight: 700;
+  font-weight: 600;
   color: #101828;
 }
 
@@ -46,11 +46,11 @@ a {
 }
 
 .authinfo_slider {
-  padding: 0 32px;
+  padding: 0 38px;
 }
 .authinfo_slider h2 {
   font-size: 2.15rem;
-  line-height: 48px;
+  line-height: 52px;
   margin-bottom: 30px;
   color: #344054;
   font-family: "Sofia Pro Bold";
@@ -138,6 +138,12 @@ a {
   text-decoration: none;
 }
 
+.error {
+  color: #F04438;
+  font-size: 14px;
+  margin: 2px 0 0 0;
+}
+
 .text-primery {
   color: #4C60E5;
 }
@@ -203,19 +209,6 @@ a {
   color: #100D37;
 }
 
-.error {
-  font-size: 14px;
-  color: #F04438;
-  margin: 4px 0 0 0;
-}
-
-.btn-loder.spinner-border {
-  width: 16px;
-  height: 16px;
-  border-width: 3px;
-  margin-right: 5px;
-}
-
 .sidebar-wrapper {
   position: fixed;
   top: 0;
@@ -229,6 +222,7 @@ a {
 .sidebar-wrapper .sd_logo {
   text-align: center;
   padding: 20px 10px;
+  min-height: 76px;
 }
 .sidebar-wrapper nav.sidebar-menu ul {
   margin: 0;
@@ -291,19 +285,31 @@ a {
   color: #344054;
   font-weight: 600;
 }
-.header-wrapper.row .header_right {
+.header-wrapper.row .header_serach .form-control {
+  min-height: 40px;
+  border-color: #D0D5DD;
+  border-radius: 4px;
+}
+.header-wrapper.row .header_serach .btn {
+  background-color: transparent !important;
+  border-color: #d0d5dd;
+  border-right: transparent;
+  border-radius: 4px;
+}
+
+.header_right {
   display: flex;
   justify-content: end;
 }
-.header-wrapper.row .header_right button.hed_notifaction {
+.header_right button.hed_notifaction {
   border: none;
   background-color: transparent;
   margin-right: 12px;
   padding: 10px;
   position: relative;
 }
-.header-wrapper.row .header_right .hed_username {
-  background-color: #F2F4F7;
+.header_right .hed_username {
+  background-color: #F2F4F7 !important;
   border: solid 1px #d8d8d8;
   font-size: 16px;
   color: #475467;
@@ -316,13 +322,89 @@ a {
   border-radius: 50%;
   text-transform: uppercase;
 }
-.header-wrapper.row .header_serach .form-control {
-  min-height: 40px;
-  border-color: #D0D5DD;
+.header_right .hed_username:hover, .header_right .hed_username:active {
+  color: #475467;
+  border-color: #d8d8d8;
+}
+.header_right .hed_username::after {
+  content: inherit;
+}
+.header_right .dropdown-menu {
+  border-color: #EAECF0;
+  border-radius: 8px;
+  min-width: 240px;
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.05);
+  font-size: 14px;
+  padding: 0;
+}
+.header_right .dropdown-menu .hd_srtname {
+  background-color: #F2F4F7;
+  border: solid 1px #d8d8d8;
+  font-size: 16px;
+  color: #475467;
+  font-weight: 600;
+  flex: 0 0 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  text-transform: uppercase;
+  position: relative;
+}
+.header_right .dropdown-menu .hd_srtname .urg_stuts {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: solid 2px #fff;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: 99;
+}
+.header_right .dropdown-menu .hd_srtname .urg_stuts.active {
+  background-color: #17B26A;
+}
+.header_right .dropdown-menu .usr_info {
+  display: flex;
+  flex-direction: column;
+  padding-left: 12px;
+  font-weight: 400;
+  font-size: 13px;
+  color: #344054;
+}
+.header_right .dropdown-menu .usr_info a {
+  color: #475467;
+}
+.header_right .dropdown-menu .d-flex {
+  padding: 11px 12px;
+  border-bottom: solid 1px #EAECF0;
+}
+.header_right .dropdown-menu .dropdown-item {
+  color: #344054;
+  line-height: 36px;
+}
+.header_right .dropdown-menu .dropdown-item img {
+  margin-right: 10px;
+}
+.header_right .dropdown-menu .dropdown-item:last-child {
+  border-top: solid 1px #EAECF0;
 }
 
 ol.breadcrumb {
   margin: 15px 0;
+}
+
+.breadcrumb-item {
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.breadcrumb-item svg {
+  margin-right: 5px;
+}
+
+.breadcrumb-item.active {
+  color: #101828;
 }
 
 .h1_welcometext {
@@ -334,6 +416,9 @@ ol.breadcrumb {
   padding-bottom: 15px;
   border-bottom: solid 1px #D0D5DD;
   margin-bottom: 30px;
+}
+.h1_welcometext strong {
+  color: #101828;
 }
 
 .mdt_card.card {

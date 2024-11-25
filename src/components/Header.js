@@ -1,14 +1,36 @@
 import React from "react";
-import { Col, Form, InputGroup } from "react-bootstrap";
+import { Col, Form, InputGroup,Dropdown } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { logoMaker, removeToken } from "../helpers/helper";
+import UpdateDetailsIcon from '../images/icons/update-details-Hicon.svg';
+import ResetPassIcon from '../images/icons/reset-pass-Hicon.svg';
+import RemovePassIcon from '../images/icons/remove-pass-Hicon.svg';
+import LogoutIcon from '../images/icons/log-out-Hicon.svg';
+import { useNavigate } from "react-router-dom";
+import { logoutApi } from "../services/provider";
+// import {persistor} from "../../src/Slice/Store"
+// import { logout } from "../Slice/Login/LoginSlice";
 
 const Header = () => {
+  const userInfo = useSelector((state)=>state.login.loginUserInfo)
+  const logoname = logoMaker(userInfo?.default_company?.company_name)
+  const navigate = useNavigate();
+  // const dispatch = useDispatch();
+
+  const handleLogout = async() => {
+    logoutApi()
+    removeToken();
+    navigate("/emailverify");
+  };
+
+  
   return (
     <header className="main_header">
       <div className="header-wrapper row">
         <Col md={4}>
           <div className="org_name">
-            <span className="orgshort_text">pe</span>
-            <p>Organization Name</p>
+            <span className="orgshort_text">{logoname}</span>
+            <p>{userInfo?.default_company?.company_name}</p>
           </div>
         </Col>
         <Col md={4}>
@@ -74,9 +96,25 @@ const Header = () => {
                 </defs>
               </svg>
             </button>
-            <button type="button" className="hed_username">
-              <span>or</span>
-            </button>
+       
+            <Dropdown>
+                            <Dropdown.Toggle className="hed_username" id="dropdown-basic">
+                                or
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu>
+                                <div className="d-flex">
+                                    <p className='hd_srtname mb-0'>or <span className='urg_stuts active'></span></p>
+                                    <div className='usr_info'>
+                                        <strong>Olivia Rhye</strong>
+                                        <a href='#'>olivia@untitledui.com</a>
+                                    </div>
+                                </div>
+                                <Dropdown.Item href="#/action-1"><img src={UpdateDetailsIcon}/>Update Details</Dropdown.Item>
+                                <Dropdown.Item href="#/action-2"><img src={ResetPassIcon}/>Set / Reset Password</Dropdown.Item>
+                                <Dropdown.Item href="#/action-3"><img src={RemovePassIcon}/>Remove Password</Dropdown.Item>
+                                <Dropdown.Item  onClick={handleLogout}><img src={LogoutIcon}/>Log out</Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
           </div>
         </Col>
       </div>
