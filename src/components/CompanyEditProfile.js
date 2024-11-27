@@ -62,10 +62,10 @@ const CompanyEditProfile = ({ show, handleClose }) => {
   const [websiteError, setWebsiteError] = useState("");
   const [completionPercentage, setCompletionPercentage] = useState(0);
   const [ids, setIds] = useState({
-    industryName: companyProfileDetails.industry.industry_name,
-    industryUid: companyProfileDetails.industry.uid,
-    location_name: companyProfileDetails.location.location_name,
-    locationUid: companyProfileDetails.location.uid,
+    industryName: companyProfileDetails?.industry?.industry_name,
+    industryUid: companyProfileDetails?.industry?.uid,
+    location_name: companyProfileDetails?.location?.location_name,
+    locationUid: companyProfileDetails?.location?.uid,
   });
 
   // cropping img state
