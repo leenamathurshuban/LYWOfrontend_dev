@@ -21,7 +21,7 @@ import imgplusIcon from "../images/icons/image-plus.svg";
 import AddUserManagement from "./AddUserManagement";
 import TextEditor from "./TextEditor";
 import imgpTrash from "../images/icons/trash-01.svg";
-import imgpEdit from "../images/icons/edit-01.svg"
+import imgpEdit from "../images/icons/edit-01.svg";
 
 const CompanyEditProfile = ({ show, handleClose }) => {
   const companyProfileDetails = useSelector(
@@ -61,7 +61,11 @@ const CompanyEditProfile = ({ show, handleClose }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [customModalshowcustomModal, setCustomShowModal] = useState(false);
-  const [websiteError, setWebsiteError] = useState("");
+  const [companyUpdateError, setCompanyUpdateError] = useState({
+    websiteError: "",
+    logoError: "",
+  });
+  // const [websiteError, setWebsiteError] = useState("");
   const [completionPercentage, setCompletionPercentage] = useState(0);
   const [ids, setIds] = useState({
     industryName: companyProfileDetails?.industry?.industry_name,
@@ -159,8 +163,8 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                     width: "200px",
                     height: `${imageHeight}px`,
                     maxHeight: "300px",
-                    transform: `scale(${zoom})`, 
-                    transition: "transform 0.2s ease-in-out", 
+                    transform: `scale(${zoom})`,
+                    transition: "transform 0.2s ease-in-out",
                   }}
                 />
               </div>
@@ -171,8 +175,8 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                 -
               </button>
               <progress
-                value={zoom - 1} 
-                max="2" 
+                value={zoom - 1}
+                max="2"
                 style={{ width: "100%", height: "14px" }}
               />
               <button onClick={zoomIn} className="icon_btn">
@@ -189,11 +193,9 @@ const CompanyEditProfile = ({ show, handleClose }) => {
       </div>
     );
   };
-  
 
   const handleShowcustomModal = () => setCustomShowModal(true);
   const handlecustomModalClose = () => setCustomShowModal(false);
-
 
   const userInfo = useSelector((state) => state.login.loginUserInfo);
   const uid = userInfo?.default_company?.uid;
@@ -202,12 +204,18 @@ const CompanyEditProfile = ({ show, handleClose }) => {
 
   const CustomModal = ({ show, handleClose }) => {
     return (
-      <Modal show={show} onHide={handleClose} className="confirmation_model" aria-labelledby="contained-modal-title-vcenter"
-      centered>
-        <Modal.Header closeButton>
-        </Modal.Header>
+      <Modal
+        show={show}
+        onHide={handleClose}
+        className="confirmation_model"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton></Modal.Header>
         <Modal.Body className="text-center">
-          <h3>Are you sure<br></br> you want to save changes?</h3>
+          <h3>
+            Are you sure<br></br> you want to save changes?
+          </h3>
           <p>Changes will be applied to all current jobs.</p>
         </Modal.Body>
         <Modal.Footer>
@@ -221,7 +229,6 @@ const CompanyEditProfile = ({ show, handleClose }) => {
       </Modal>
     );
   };
-
 
   const calculateProfileCompletion = () => {
     let completionPercentage = 0;
@@ -243,7 +250,6 @@ const CompanyEditProfile = ({ show, handleClose }) => {
     return Math.min(completionPercentage, 100);
   };
 
-  
   useEffect(() => {
     const fetchIndustries = async () => {
       if (typeof searchTerm !== "string" || searchTerm.trim() === "") {
@@ -304,7 +310,6 @@ const CompanyEditProfile = ({ show, handleClose }) => {
     //   setSelectedIndustry(null);
     // }
   };
-
 
   // Location
 
@@ -368,7 +373,6 @@ const CompanyEditProfile = ({ show, handleClose }) => {
 
   const handleLocationSearchChange = (e) => {
     setLocationSearchTerm(e.target.value);
-   
   };
 
   const updateCompanyProfile = async () => {
@@ -392,19 +396,31 @@ const CompanyEditProfile = ({ show, handleClose }) => {
         }
       );
       if (response === 200) {
-        setWebsiteError("");
+        // setCompanyUpdateError.websiteError("");
+        setCompanyUpdateError((prevState) => ({
+          ...prevState,
+          websiteError: "", // Clear websiteError on successful update
+        }));
       }
     } catch (error) {
-      console.log("erooor------>>>",error)
-      setWebsiteError(error?.response?.data?.response?.website_url[0]);
+      console.log("erooor------>>>", error);
+      // setCompanyUpdateError.websiteError(error?.response?.data?.response?.website_url[0]);
+      const errorResponse = error?.response?.data?.response;
+
+      // Update the state with the appropriate error messages
+      setCompanyUpdateError((prevState) => ({
+        ...prevState,
+        websiteError: errorResponse?.website_url?.[0] || "",
+        logoError: errorResponse?.logo_url?.[0] || "", // Handle logo error if available
+      }));
     }
 
     handlecustomModalClose();
-    handleClose()
+    handleClose();
   };
 
   const handleUpdate = (updatedDescription) => {
-    setDescription(updatedDescription); 
+    setDescription(updatedDescription);
   };
 
   const handleWebsite = (e) => {
@@ -426,9 +442,8 @@ const CompanyEditProfile = ({ show, handleClose }) => {
   };
 
   const handleEditImage = () => {
-    if(image || companyProfileDetails?.logo !== null){
-      setLogoModal(true); 
-
+    if (image || companyProfileDetails?.logo !== null) {
+      setLogoModal(true);
     }
   };
 
@@ -527,8 +542,10 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                     value={website}
                                   />
                                 </Form.Group>
-                                {websiteError && (
-                                  <p style={{ color: "red" }}>{websiteError}</p>
+                                {companyUpdateError?.websiteError && (
+                                  <p style={{ color: "red" }}>
+                                    {companyUpdateError?.websiteError}
+                                  </p>
                                 )}
 
                                 <Form.Group className="mb-3">
@@ -665,7 +682,6 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                   </Form.Select>
                                 </Form.Group>
                                 <Form.Group className="mb-3">
-                                 
                                   <Form.Group className="mb-3">
                                     <Form.Label>Headquarter</Form.Label>
 
@@ -721,18 +737,16 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                         </p>
                                       )}
                                   </Form.Group>
-
                                 </Form.Group>
                                 <Form.Group className="mb-3">
                                   <Form.Label>Add Company Logo</Form.Label>
 
-                                    {!image && !companyProfileDetails?.logo ? (
-                                     
-                                      <div className="cmp_uploder file-upload-box" {...getRootProps()}>
-
-                                      <div
-                                        className="upload-content"
-                                      >
+                                  {!image && !companyProfileDetails?.logo ? (
+                                    <div
+                                      className="cmp_uploder file-upload-box"
+                                      {...getRootProps()}
+                                    >
+                                      <div className="upload-content">
                                         <input {...getInputProps()} />
                                         <i className="fas fa-cloud-upload-alt upload-icon"></i>
                                         <h5>
@@ -746,28 +760,39 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                           aspect ratio: 1:1 or 2:3)
                                         </small>
                                       </div>
-                                      </div>
-                                    ) : (
-                                      
-
-                                      <div className="selected_logo">
+                                    </div>
+                                  ) : (
+                                    <div className="selected_logo">
                                       {/* {companyProfileDetails?.logo ? <p>{companyProfileDetails?.logo}</p> :<p>{imageName}</p>} */}
                                       <label>{imageName}</label>
                                       <div className="d-flex">
-                                      
-                                        <Button variant="link" onClick={handleEditImage}><img src={imgpEdit}/></Button>
-                                       <Button variant="link" className=" me-2" onClick={handleDeleteImage}><img src={imgpTrash}/></Button>
-                                     
+                                        <Button
+                                          variant="link"
+                                          onClick={handleEditImage}
+                                        >
+                                          <img src={imgpEdit} />
+                                        </Button>
+                                        <Button
+                                          variant="link"
+                                          className=" me-2"
+                                          onClick={handleDeleteImage}
+                                        >
+                                          <img src={imgpTrash} />
+                                        </Button>
                                       </div>
                                     </div>
-
-                                    )}
-                                  
+                                  )}
 
                                   {showLogoModal && (
                                     <LogoModal
                                       onClose={() => setLogoModal(false)}
                                     />
+                                  )}
+
+                                  {companyUpdateError.logoError && (
+                                    <p className="error-message">
+                                      {companyUpdateError.logoError}
+                                    </p>
                                   )}
                                 </Form.Group>
                               </Col>
