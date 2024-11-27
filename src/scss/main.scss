@@ -101,6 +101,11 @@ a {
     text-transform: capitalize;
     font-weight: 600;
     padding: 8px 15px;
+    .spinner-border {
+        width: 16px;
+        height: 16px;
+        border-width: 3px;
+    }
 }
 .btn-full {
     width: 100%;
@@ -254,6 +259,12 @@ a {
             justify-content: center;
             border-radius: 50%;
             text-transform: uppercase;
+            overflow: hidden;
+            img {
+                width: 40px;
+                height: 40px;         
+                object-fit: contain;
+            }
         }
         p {
             margin: 0 0 0 10px;
@@ -261,7 +272,9 @@ a {
             color: #344054;
             font-weight: 600;
         }
+        
     }
+
     .header_serach {
         .form-control {
             min-height: 40px;
@@ -299,12 +312,18 @@ a {
         justify-content: center;
         border-radius: 50%;
         text-transform: uppercase;
+        overflow: hidden;
         &:hover,&:active{
             color: #475467;
             border-color: #d8d8d8;
         }
         &::after{
             content: inherit;
+        }
+        img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
         }
     }
     .dropdown-menu {
@@ -340,6 +359,11 @@ a {
                 &.active {
                     background-color:#17B26A ;
                 }
+            }
+            img {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
             }
         }
         .usr_info {
@@ -502,10 +526,47 @@ ol.breadcrumb {
 }
 .mdl_pagetitle {
     margin-bottom: 15px;
+    h5 {
+        font-size: 16px;
+    }
     .btn {
         font-size: 14px;
     }
+    .input-group {
+        max-width: 250px;
+        .btn {
+            background-color: #fff !important;
+            border-color: #D0D5DD;
+            padding: 8px 11px !important;
+            border-radius: 4px;
+            border-right: none;
+        }
+        .form-control {
+            min-height: 40px;
+            border-radius: 4px;
+            font-weight: 400;
+            padding-left: 0;
+        }
+    }
 }
+.shadow-md {
+    box-shadow: 0 2px 8px rgb(0 0 0 / 14%);
+}
+.border-light {
+    border:solid 1px #EAECF0;
+}
+.me-2_5{
+    margin-right: 12px;
+}
+.sm-fcontrol {
+    min-height: 34px;
+    font-size: 12px;
+    border-radius: 6px;
+}
+.btn-transpant {
+    background-color: transparent !important;
+    border: transparent !important;
+} 
 .cmprofile_mdl {
     .modal-body {
         padding: 1.15rem;
@@ -547,13 +608,43 @@ label.required.form-label {
         font-size: 12px;
         min-height: 36px;
     }
-    span.words_limit {
+    .words_limit {
         font-size: 12px;
+        text-align: left !important;
+        margin-top: 50px !important; 
     }
     .mb-3 {
         margin-bottom: 0.50rem !important;
     }
 }
+.text-sm {
+    font-size: 12px;
+}
+.ctm_dropdown {
+    border: solid 1px #d0d5dd;
+    border-radius: 8px;
+    max-height: 250px;
+    overflow-y: auto;
+    ul {
+        margin: 0;
+        padding: 0 4px;
+        li {
+            list-style: none;
+            padding: 10px 15px;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 8px;
+            font-weight: 500;
+            color: #344054;
+            border-radius: 8px;
+            &:hover {
+                background-color: #F9FAFB;
+                color: #344054;
+            }
+        }  
+    }
+}
+
 .cmp_details {
     .accordion ,.accordion-item{
         background-color: transparent;
@@ -586,6 +677,12 @@ label.required.form-label {
         justify-content: center;
         border-radius: 50%;
         text-transform: uppercase;
+        overflow: hidden;
+        img {
+            width: 72px;
+            height: 72px;
+            object-fit: contain;  
+        }
     }
     .cmp_info {
         margin: 15px 0  40px  0;
@@ -606,6 +703,8 @@ label.required.form-label {
         padding: 0.90rem;
         border-bottom: solid 1px #EAECF0;
     }
+}
+.rects-panel {
     .rects_list {
         margin: 0;
         padding: 0;
@@ -625,9 +724,197 @@ label.required.form-label {
             img {
                 margin-right: 4px;
             }
+            &.active{
+                color: #3538CD;
+                background-color: #EEF4FF;
+                border-color: #C7D7FE;
+            }
+        }
+    }
+    .flter_count {
+        font-size: 12px;
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 14px 0 14px;
+        font-weight: 600;
+    }
+}
+.link-sm {
+    font-size: 12px;
+}
+button.btn-link-muted {
+    color: #475467;
+    font-weight: 500;
+    svg {
+        margin-right: 5px;
+    }
+}
+.btn-link:disabled {
+    color: #98A2B3;
+    background-color: transparent !important;
+    border: none;
+    svg {
+        path{
+            stroke:#98A2B3;
         }
     }
 }
+.table {
+    tr {
+        th {
+            font-size: 12px;
+            font-weight: 500;
+        }
+        td {
+            font-size: 12px;
+            font-weight: 400;
+            vertical-align: middle;
+        }
+    }
+    .form-check-input {
+        width: 16px;
+        height: 16px;
+    }
+}
+.form-switch {
+    .form-check-input {
+        height: 1.4em;
+        width: 2.4em;
+    }
+}
+.btn-light {
+    background-color:#EEF4FF !important;
+    border-radius: 8px;
+    font-size: 16px;
+    text-transform: capitalize;
+    font-weight: 600;
+    padding: 8px 15px;
+    color:  #444CE7;
+    border-color:  #444CE7;
+}
+.btn-sm {
+    font-size: 12px;
+}
+.hadding_h5 {
+    color: #475467;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 0.9rem;
+    border-bottom: solid 1px #EAECF0;
+}
+.bullet_list {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    li {
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 20px;
+    }
+}
+.ql-toolbar.ql-snow {
+    background-color: #F9FAFB;
+    border-radius: 8px 8px 0 0;
+}
+.ql-container.ql-snow {
+    border-radius: 0 0 8px 8px;
+}
+/**=========SCROLLBAR-CSS==========**/
+/* width */
+.ct_scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  /* Track */
+.ct_scrollbar::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px rgb(213, 213, 213); 
+    border-radius: 8px;
+  }
+   
+  /* Handle */
+.ct_scrollbar::-webkit-scrollbar-thumb {
+    background: #D0D5DD; 
+    border-radius: 8px;
+  }
+  
+  /* Handle on hover */
+.ct_scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #444CE7; 
+  }
+  .ctm_modal_dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-Color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999999;
+    .modal-header {
+        box-shadow: none;
+        border-bottom: solid 1px #EAECF0;
+    }
+    .modal-title {
+        display: flex;
+        align-items: center;
+    }
+    .ctm_modal_content {
+        background-color: #fff;
+        border-radius: 8px;
+        text-align: center;
+        width: 900px;
+    }
+    .aspect_ratio {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 600;
+        label {
+            margin-right: 15px;
+        }
+        input[type="radio"] {
+            margin-right: 5px;
+            width: 15px;
+            height: 15px;
+            position: relative;
+            top: 2px;
+        }
+    }
+    .cropper-container {
+        background-color: #EAECF0;
+        border-radius: 16px;
+        overflow: hidden;
+        padding: 30px;
+        min-height: 335px;
+    }
+    .cropper-wrap-box {
+        width: 250px;
+        height: 250px;
+        border-radius: 8px;
+        overflow: hidden;
+        margin: auto;
+    }
+    .zoomin_cntrols {
+        max-width: 400px;
+        margin: auto;
+        display: flex ;
+        align-items: center;
+        position: relative;
+        top: -45px;
+        .icon_btn {
+            background-color: transparent;
+            border: none;
+            font-size: 26px;
+            color: #344054;
+            margin: 0 15px;
+            font-weight: 600;
+        }
+    }
+    
+  }
+
 @media (min-width: 992px) {
     .modal-lg, .modal-xl {
         max-width: 100%;
@@ -635,6 +922,5 @@ label.required.form-label {
         background-color: #fff;
         margin: 0;
         padding: 0;
-        
     }
 }

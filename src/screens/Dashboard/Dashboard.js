@@ -25,51 +25,53 @@ import { setCompanyProfileDetails } from "../../Slice/Login/LoginSlice";
 
 const Dashboard = () => {
   const [show, setShow] = useState(false);
-  const [getDetails,setGetDetails] = useState("")
+  const [getDetails, setGetDetails] = useState("");
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const navigate = useNavigate();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const userInfo = useSelector((state)=>state.login.loginUserInfo)
+  const userInfo = useSelector((state) => state.login.loginUserInfo);
 
-  const uid = userInfo?.default_company?.uid
-  console.log("uid check--------",uid)
+  const uid = userInfo?.default_company?.uid;
 
-  const logoname = logoMaker(userInfo?.default_company?.company_name ?? "infograins techno")
+  const logoname = logoMaker(
+    userInfo?.default_company?.company_name ?? "infograins techno"
+  );
 
-
-
-  const GetCompanyDetails = (uid) =>{
-    handleShow()
+  const GetCompanyDetails = (uid) => {
+    handleShow();
     GetcompanyDetailsApi(uid)
-    .then((res)=>{
-      console.log("dispatch calll",res?.response)
-      dispatch(setCompanyProfileDetails(res?.response)) 
-    })
-    // .catch((error)=>{
-    //   navigate("/loginwithpassword")
-    //   // if(error?.response?.data?.detail){
-    //   //   console.log("eroorrrr",error?.response?.data?.detail)
-    //   //   // navigate("/loginwithpassword")
-    //   // }
-    // })
+      .then((res) => {
+        console.log("dispatch calll", res?.response);
+        dispatch(setCompanyProfileDetails(res?.response));
+      })
+      // .catch((error)=>{
+      //   navigate("/loginwithpassword")
+      //   // if(error?.response?.data?.detail){
+      //   //   console.log("eroorrrr",error?.response?.data?.detail)
+      //   //   // navigate("/loginwithpassword")
+      //   // }
+      // })
       // setGetDetails(res?.response) )
       .catch((error) => {
         // Check if the error is a 401 Unauthorized (Token Expired)
-        if (error?.response?.status === 401 || error?.response?.data?.detail?.includes("Given token not valid for any token type")) {
+        if (
+          error?.response?.status === 401 ||
+          error?.response?.data?.detail?.includes(
+            "Given token not valid for any token type"
+          )
+        ) {
           console.log("Token expired, redirecting to login");
+          removeToken();
           navigate("/loginwithpassword");
         } else {
           // Handle other errors (network errors, server errors, etc.)
           console.error("An error occurred:", error);
         }
       });
-
-  }
-
-  console.log("getDetails------#####---",getDetails)
+  };
 
   return (
     <>
@@ -142,7 +144,10 @@ const Dashboard = () => {
                 <Card.Body>
                   <span className="mdt_name">{logoname}</span>
                   <Card.Title>Complete Company Profile</Card.Title>
-                  <Button variant="primary" onClick={()=>GetCompanyDetails(uid)}>
+                  <Button
+                    variant="primary"
+                    onClick={() => GetCompanyDetails(uid)}
+                  >
                     Start
                   </Button>
                 </Card.Body>
@@ -165,8 +170,8 @@ const Dashboard = () => {
           </Row>
         </Container>
       </div>
-      
-      <CompanyEditProfile show={show} handleClose={handleClose}/>
+
+      <CompanyEditProfile show={show} handleClose={handleClose} />
     </>
   );
 };

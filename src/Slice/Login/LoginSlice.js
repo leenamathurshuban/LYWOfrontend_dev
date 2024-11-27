@@ -37,7 +37,7 @@ const loginSlice = createSlice({
         state.loginUserInfo = action.payload
       },
       setCompanyProfileDetails(state, action: PayloadAction<string>){
-        console.log("slice maiaiiaii",action.payload)
+        // console.log("slice maiaiiaii",action.payload)
         state.CompanyProfileDetails = action.payload
       },
     logout: (state) => {
