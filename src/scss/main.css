@@ -951,6 +951,62 @@ button.btn-link-muted svg {
   font-weight: 600;
 }
 
+.confirmation_model {
+  background-color: rgba(242, 244, 247, 0.8);
+}
+.confirmation_model .modal-content {
+  overflow: hidden;
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+}
+.confirmation_model .modal-header {
+  box-shadow: none;
+}
+.confirmation_model .modal-body h3 {
+  font-size: 22px;
+  line-height: 30px;
+  margin-bottom: 10px;
+}
+.confirmation_model .modal-footer {
+  justify-content: space-between;
+  border: none;
+}
+.confirmation_model .modal-footer .btn {
+  width: 47%;
+  min-height: 45px;
+}
+
+.selected_logo {
+  border: solid 1px #D0D5DD;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.selected_logo label {
+  font-size: 12px;
+  font-weight: 600;
+  text-align: left;
+  padding: 6px 15px;
+  max-width: 80%;
+}
+.selected_logo .btn {
+  padding: 10px 8px;
+}
+
+.action_dropdown .dropdown-menu.show {
+  inset: 0px auto auto -130px !important;
+  border: none;
+  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.14);
+  font-size: 12px;
+}
+.action_dropdown .dropdown-menu.show .dropdown-item {
+  color: #344054;
+  font-weight: 500;
+  padding: 5px 12px;
+}
+
 @media (min-width: 992px) {
   .modal-lg, .modal-xl {
     max-width: 100%;

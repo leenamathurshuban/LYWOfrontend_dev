@@ -20,6 +20,8 @@ import { cprofilelogo, starIcon } from "../images/assest";
 import imgplusIcon from "../images/icons/image-plus.svg";
 import AddUserManagement from "./AddUserManagement";
 import TextEditor from "./TextEditor";
+import imgpTrash from "../images/icons/trash-01.svg";
+import imgpEdit from "../images/icons/edit-01.svg"
 
 const CompanyEditProfile = ({ show, handleClose }) => {
   const companyProfileDetails = useSelector(
@@ -75,7 +77,6 @@ const CompanyEditProfile = ({ show, handleClose }) => {
   const [aspectRatio, setAspectRatio] = useState(1);
   const [showLogoModal, setLogoModal] = useState(false);
   const [imageFile, setImageFile] = useState(null);
-  // const [showLogoModal, setShowLogoModal] = useState(false); // Track if modal is shown
 
   const aspectRatios = [
     { label: "1:1", value: 3 / 2 },
@@ -148,7 +149,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                 </label>
               ))}
             </div>
-            {/* Display selected image with zoom and aspect ratio applied */}
+
             <div className="cropper-container">
               <div class="cropper-wrap-box">
                 <img
@@ -156,23 +157,22 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                   alt="Selected"
                   style={{
                     width: "200px",
-                    height: `${imageHeight}px`, // Apply the calculated height based on aspect ratio
+                    height: `${imageHeight}px`,
                     maxHeight: "300px",
-                    transform: `scale(${zoom})`, // Apply zoom effect using scale
-                    transition: "transform 0.2s ease-in-out", // Smooth zoom transition
+                    transform: `scale(${zoom})`, 
+                    transition: "transform 0.2s ease-in-out", 
                   }}
                 />
               </div>
             </div>
 
-            {/* Zoom Progress Line */}
             <div className="zoomin_cntrols">
               <button onClick={zoomOut} className="icon_btn">
                 -
               </button>
               <progress
-                value={zoom - 1} // Zoom level between 0 and 2
-                max="2" // Maximum zoom is 3 (zoom level 2)
+                value={zoom - 1} 
+                max="2" 
                 style={{ width: "100%", height: "14px" }}
               />
               <button onClick={zoomIn} className="icon_btn">
@@ -189,15 +189,11 @@ const CompanyEditProfile = ({ show, handleClose }) => {
       </div>
     );
   };
-  // end old code
+  
 
-  // cropping enddd
-
-  //modal function
   const handleShowcustomModal = () => setCustomShowModal(true);
   const handlecustomModalClose = () => setCustomShowModal(false);
 
-  // const [getDetails, setgetDetails] = useState(null);
 
   const userInfo = useSelector((state) => state.login.loginUserInfo);
   const uid = userInfo?.default_company?.uid;
@@ -206,24 +202,26 @@ const CompanyEditProfile = ({ show, handleClose }) => {
 
   const CustomModal = ({ show, handleClose }) => {
     return (
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={show} onHide={handleClose} className="confirmation_model" aria-labelledby="contained-modal-title-vcenter"
+      centered>
         <Modal.Header closeButton>
-          <Modal.Title>Custom Modal</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <p>Are you sure you want to save changes?</p>
+        <Modal.Body className="text-center">
+          <h3>Are you sure<br></br> you want to save changes?</h3>
+          <p>Changes will be applied to all current jobs.</p>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
+          <Button variant="light" onClick={handleClose}>
+            Cancel
           </Button>
           <Button variant="primary" onClick={updateCompanyProfile}>
-            Save Changes
+            Save
           </Button>
         </Modal.Footer>
       </Modal>
     );
   };
+
 
   const calculateProfileCompletion = () => {
     let completionPercentage = 0;
@@ -245,7 +243,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
     return Math.min(completionPercentage, 100);
   };
 
-  //industry start cde
+  
   useEffect(() => {
     const fetchIndustries = async () => {
       if (typeof searchTerm !== "string" || searchTerm.trim() === "") {
@@ -307,7 +305,6 @@ const CompanyEditProfile = ({ show, handleClose }) => {
     // }
   };
 
-  // industry end code
 
   // Location
 
@@ -371,9 +368,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
 
   const handleLocationSearchChange = (e) => {
     setLocationSearchTerm(e.target.value);
-    // if (selectedLocation) {
-    //   setSelectedLocation(null);
-    // }
+   
   };
 
   const updateCompanyProfile = async () => {
@@ -400,10 +395,12 @@ const CompanyEditProfile = ({ show, handleClose }) => {
         setWebsiteError("");
       }
     } catch (error) {
+      console.log("erooor------>>>",error)
       setWebsiteError(error?.response?.data?.response?.website_url[0]);
     }
 
     handlecustomModalClose();
+    handleClose()
   };
 
   const handleUpdate = (updatedDescription) => {
@@ -421,17 +418,18 @@ const CompanyEditProfile = ({ show, handleClose }) => {
   const handleNoOfTypeEmployChange = (e) => {
     setnoOfEmploy(e.target.value);
   };
-  // Handle delete image
+
   const handleDeleteImage = () => {
-    // console.log("delete button calll" , imageFile)
-    // setImage(null);
+    setImage(null);
     setImageName("");
     setImageFile("");
   };
 
-  // Handle edit image (show the drag-and-drop uploader again)
   const handleEditImage = () => {
-    setLogoModal(true); // Show logo modal for editing
+    if(image || companyProfileDetails?.logo !== null){
+      setLogoModal(true); 
+
+    }
   };
 
   useEffect(() => {
@@ -533,7 +531,6 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                   <p style={{ color: "red" }}>{websiteError}</p>
                                 )}
 
-                                {/* //// try */}
                                 <Form.Group className="mb-3">
                                   <Form.Label>Industry</Form.Label>
 
@@ -552,7 +549,6 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                     <p style={{ color: "red" }}>{error}</p>
                                   )}
 
-                                  {/* Only show the dropdown if no industry is selected */}
                                   {!selectedIndustry &&
                                     industries.length > 0 &&
                                     !loading &&
@@ -669,12 +665,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                   </Form.Select>
                                 </Form.Group>
                                 <Form.Group className="mb-3">
-                                  {/* <Form.Label>Headquarter</Form.Label>
-                                  <Form.Control
-                                    type="text"
-                                    placeholder="Headquarter"
-                                  /> */}
-                                  {/* //// try locationnnn start   */}
+                                 
                                   <Form.Group className="mb-3">
                                     <Form.Label>Headquarter</Form.Label>
 
@@ -731,15 +722,15 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                       )}
                                   </Form.Group>
 
-                                  {/* // try enddd locationnnnnnn */}
                                 </Form.Group>
                                 <Form.Group className="mb-3">
                                   <Form.Label>Add Company Logo</Form.Label>
 
-                                  <div className="cmp_uploder file-upload-box">
                                     {!image && !companyProfileDetails?.logo ? (
+                                     
+                                      <div className="cmp_uploder file-upload-box" {...getRootProps()}>
+
                                       <div
-                                        {...getRootProps()}
                                         className="upload-content"
                                       >
                                         <input {...getInputProps()} />
@@ -755,29 +746,23 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                           aspect ratio: 1:1 or 2:3)
                                         </small>
                                       </div>
-                                    ) : (
-                                      <div className="image-preview">
-                                        <div className="image-details">
-                                          {/* {companyProfileDetails?.logo ? <p>{companyProfileDetails?.logo}</p> :<p>{imageName}</p>} */}
-                                          <p>Logo : {imageName}</p>
-                                          <div className="image-actions">
-                                            <Button
-                                              variant="link"
-                                              onClick={handleEditImage}
-                                            >
-                                              <i className="fas fa-edit"></i>{" "}
-                                            </Button>
-                                            <Button
-                                              variant="link"
-                                              onClick={handleDeleteImage}
-                                            >
-                                              <i className="fas fa-trash"></i>{" "}
-                                            </Button>
-                                          </div>
-                                        </div>
                                       </div>
+                                    ) : (
+                                      
+
+                                      <div className="selected_logo">
+                                      {/* {companyProfileDetails?.logo ? <p>{companyProfileDetails?.logo}</p> :<p>{imageName}</p>} */}
+                                      <label>{imageName}</label>
+                                      <div className="d-flex">
+                                      
+                                        <Button variant="link" onClick={handleEditImage}><img src={imgpEdit}/></Button>
+                                       <Button variant="link" className=" me-2" onClick={handleDeleteImage}><img src={imgpTrash}/></Button>
+                                     
+                                      </div>
+                                    </div>
+
                                     )}
-                                  </div>
+                                  
 
                                   {showLogoModal && (
                                     <LogoModal
@@ -822,13 +807,11 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                 {companyProfileDetails?.industry?.industry_name}
                               </li>
                               <li>{companyProfileDetails?.company_type}</li>
-                              {/* <li>{companyProfileDetails?.description}</li> */}
                               <p
                                 dangerouslySetInnerHTML={{
                                   __html: companyProfileDetails?.description,
                                 }}
                               />
-                              {/* add scroll in discription */}
                               <li>
                                 {companyProfileDetails?.number_of_employees}
                               </li>
