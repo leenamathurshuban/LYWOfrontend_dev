@@ -37,25 +37,13 @@ const CompanyEditProfile = ({ show, handleClose }) => {
   const [selectedLocation, setSelectedLocation] = useState(null);
 
   //update profile state
-  const [description, setDescription] = useState(
-    companyProfileDetails?.description || ""
-  );
-  const [website, setWebsite] = useState(
-    companyProfileDetails?.website_url || ""
-  );
+  const [description, setDescription] = useState( companyProfileDetails?.description || "" );
+  const [website, setWebsite] = useState( companyProfileDetails?.website_url || "" );
 
-  const [searchTerm, setSearchTerm] = useState(
-    companyProfileDetails?.industry?.industry_name || ""
-  ); // industry state
-  const [selectedCompanyType, setSelectedCompanyType] = useState(
-    companyProfileDetails?.company_type || ""
-  );
-  const [noOfEmploy, setnoOfEmploy] = useState(
-    companyProfileDetails?.number_of_employees || ""
-  );
-  const [searchLocationTerm, setLocationSearchTerm] = useState(
-    companyProfileDetails?.location?.location_name || ""
-  ); //location state
+  const [searchTerm, setSearchTerm] = useState(companyProfileDetails?.industry?.industry_name || "" ); // industry state
+  const [selectedCompanyType, setSelectedCompanyType] = useState(companyProfileDetails?.company_type || "");
+  const [noOfEmploy, setnoOfEmploy] = useState(companyProfileDetails?.number_of_employees || "");
+  const [searchLocationTerm, setLocationSearchTerm] = useState(companyProfileDetails?.location?.location_name || "" ); //location state
 
   // other state
   const [loading, setLoading] = useState(false);
@@ -376,6 +364,11 @@ const CompanyEditProfile = ({ show, handleClose }) => {
   };
 
   const updateCompanyProfile = async () => {
+    if (companyUpdateError?.websiteError) {
+      console.log("Invalid URL, cannot submit.");
+      return;
+    }
+
     try {
       const data = new FormData();
       data.append("description", description);
@@ -402,8 +395,9 @@ const CompanyEditProfile = ({ show, handleClose }) => {
           websiteError: "", // Clear websiteError on successful update
         }));
       }
+      
     } catch (error) {
-      console.log("erooor------>>>", error);
+      // console.log("erooor------>>>", error);
       // setCompanyUpdateError.websiteError(error?.response?.data?.response?.website_url[0]);
       const errorResponse = error?.response?.data?.response;
 
@@ -423,9 +417,21 @@ const CompanyEditProfile = ({ show, handleClose }) => {
     setDescription(updatedDescription);
   };
 
+
+
   const handleWebsite = (e) => {
-    setWebsite(e.target.value);
+    const url = e.target.value;
+    setWebsite(url);
+  
+    const websiteError = !url || /^https?:\/\//i.test(url) ? "" : "Invalid Website URL";
+
+    setCompanyUpdateError((prevState) => ({
+      ...prevState,
+      websiteError,
+    }));
   };
+  
+  
 
   const handleCompanyTypeChange = (e) => {
     setSelectedCompanyType(e.target.value);
@@ -500,6 +506,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                           <Button
                             variant="primary"
                             onClick={handleShowcustomModal}
+                            disabled={!!companyUpdateError?.websiteError}
                           >
                             Save
                           </Button>
