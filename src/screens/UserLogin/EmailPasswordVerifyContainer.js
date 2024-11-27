@@ -14,7 +14,7 @@ const EmailPasswordVerifyContainer = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [initialCount, setInitialCount] = useState(0);
 
-  const [password, setPassword] = useState("Task@1234");
+  const [password, setPassword] = useState("");
   const [passwordErrormsg, setPasswordErrormsg] = useState("");
   const [requirements, setRequirements] = useState({
     length: false,
@@ -47,10 +47,10 @@ const EmailPasswordVerifyContainer = () => {
 
     LogInCall(data)
       .then((response) => {
-        console.log(
-          "check loginwithpassword success------------------",
-          response
-        );
+        // console.log(
+        //   "check loginwithpassword success------------------",
+        //   response
+        // );
         setIsLoading(false);
         storeToken(response?.data?.response?.access);
         dispatch(setLoginuserInfor(response?.data?.response));
@@ -58,10 +58,10 @@ const EmailPasswordVerifyContainer = () => {
         navigate("/");
       })
       .catch((error) => {
-        console.log(
-          "check error loginwithpassword failuree------------------",
-          error
-        );
+        // console.log(
+        //   "check error loginwithpassword failuree------------------",
+        //   error
+        // );
         setIsLoading(false);
         setPasswordErrormsg(error.response.data.response);
       });

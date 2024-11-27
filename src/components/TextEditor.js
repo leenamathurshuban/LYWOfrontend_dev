@@ -86,7 +86,7 @@ const TextEditor = ({ data, onUpdate }) => {
   const getWordCount = (text) => {
     // Strip HTML tags to count words
     const plainText = text?.replace(/<[^>]+>/g, ''); 
-    return plainText.split(/\s+/).filter(Boolean).length;
+    return plainText?.split(/\s+/).filter(Boolean).length;
   };
 
   const wordCount = getWordCount(editorValue);

@@ -230,7 +230,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
 
     if (companyProfileDetails?.company_name?.trim()) completionPercentage += 20;
     if (companyProfileDetails?.description?.trim()) {
-      const wordCount = companyProfileDetails.description
+      const wordCount = companyProfileDetails?.description
         .trim()
         .split(/\s+/).length;
       completionPercentage += wordCount < 100 ? 10 : 30;
