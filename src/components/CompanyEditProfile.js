@@ -63,7 +63,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
   });
 
   // cropping img state
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState(`https://bittrend.shubansoftware.com${companyProfileDetails?.logo}` || null);
   const [imageName, setImageName] = useState("");
   const [zoom, setZoom] = useState(1);
   const [aspectRatio, setAspectRatio] = useState(1);
@@ -457,6 +457,13 @@ const CompanyEditProfile = ({ show, handleClose }) => {
     setCompletionPercentage(calculateProfileCompletion());
   }, [companyProfileDetails]);
 
+  const filePath = companyProfileDetails?.logo;
+
+// Split by '/' and get the last part (file name)
+const LogoName = filePath?.split('/').pop();
+
+console.log("fffffff@@@@@@@----------",LogoName);
+
   return (
     <Modal
       show={show}
@@ -748,7 +755,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                 <Form.Group className="mb-3">
                                   <Form.Label>Add Company Logo</Form.Label>
 
-                                  {!image && !companyProfileDetails?.logo ? (
+                                  {!companyProfileDetails?.logo && !imageFile ? (
                                     <div
                                       className="cmp_uploder file-upload-box"
                                       {...getRootProps()}
@@ -769,9 +776,8 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                       </div>
                                     </div>
                                   ) : (
-                                    <div className="selected_logo">
-                                      {/* {companyProfileDetails?.logo ? <p>{companyProfileDetails?.logo}</p> :<p>{imageName}</p>} */}
-                                      <label>{imageName}</label>
+                                    <div className="selected_logo">                                      
+                                     {LogoName ? <label>{LogoName}</label> : <label>{imageName}</label> }
                                       <div className="d-flex">
                                         <Button
                                           variant="link"
