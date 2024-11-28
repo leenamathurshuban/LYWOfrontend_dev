@@ -115,7 +115,7 @@ const EmailPasswordVerifyContainer = () => {
                 <Form.Label>Password</Form.Label>
                 <Form.Control
                   type={showPassword ? "text" : "password"}
-                  value={"password"}
+                  value="password"
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
                   required
