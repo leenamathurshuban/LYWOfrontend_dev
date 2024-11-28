@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import { Login, Dashboard, SetPassword, EmailPasswordVerifyContainer, EmailVerify, NotFound,OtpVerifyContainer } from "../screens/";
 import ProtectedRoute from "./protectedRoute"; // Import the ProtectedRoute component
+import Evalation from "../screens/Evaluation/Evaluation";
 
 export const router = createBrowserRouter([
   {
@@ -46,6 +47,10 @@ export const router = createBrowserRouter([
   {
     path: "/",
     element: <ProtectedRoute element={<Dashboard />} allowAuthenticated={false} />,  // Only allow authenticated users here
+  },
+  {
+    path: "/Evalation",
+    element: <ProtectedRoute element={<Evalation />} allowAuthenticated={false} />,  // Only allow authenticated users here
   },
   {
     path: "*",
