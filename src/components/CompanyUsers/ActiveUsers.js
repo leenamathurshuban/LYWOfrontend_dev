@@ -1,21 +1,8 @@
 import axios from "axios";
 import { useState } from "react";
-import {
-  Accordion,
-  Button,
-  Card,
-  Col,
-  Form,
-  InputGroup,
-  Modal,
-  Nav,
-  Row,
-  Table,
-  Tab,
-  Dropdown,
-} from "react-bootstrap";
+import { Dropdown, Form } from "react-bootstrap";
+import { getStatusLabel } from "../../helpers/helper";
 import { getToken } from "../../services/axiosInstance";
-import { getTimeAgo } from "../../helpers/helper";
 
 const ActiveUsersSection = ({
   activeUsers,
@@ -24,21 +11,15 @@ const ActiveUsersSection = ({
   setSelectedUids,
   deleteUser,
   updateUserStatus,
+  handleCheckboxChange,
+  EditUser,
+  editUserData,
+  setEditUserData,
+  
 }) => {
-  // const [selectedUids, setSelectedUids] = useState([]);
-  const [editUserData, setEditUserData] = useState({});
+  // const [editUserData, setEditUserData] = useState({});
 
-  const handleCheckboxChange = (uid) => {
-    setSelectedUids((prevSelectedUids) => {
-      if (prevSelectedUids?.includes(uid)) {
-        // If UID is already in array, remove it
-        return prevSelectedUids.filter((id) => id !== uid);
-      } else {
-        // If UID is not in array, add it
-        return [...prevSelectedUids, uid];
-      }
-    });
-  };
+
 
   const handleEdit = (e, uid) => {
     const { name, value } = e.target;
@@ -52,49 +33,8 @@ const ActiveUsersSection = ({
     }));
   };
 
-  const EditUser = (uid) => {
-    const token = getToken();
-    const myHeaders = {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "multipart/form-data",
-    };
+ 
 
-    const formdata = new FormData();
-
-    formdata.append("first_name", editUserData[uid]?.first_name);
-    formdata.append("phone_number", editUserData[uid]?.phone_number);
-
-    axios
-      .put(
-        `https://bittrend.shubansoftware.com/account-api/update-user-api/${uid}/`,
-        formdata,
-        { headers: myHeaders }
-      ) // Add trailing slash here
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-      });
-  };
-
-  // checkkkcstart
-  const handleDeactivate = (uid) => {
-    // Logic to deactivate the user (you can call your API here)
-    console.log(`Deactivating user with UID: ${uid}`);
-  };
-
-  const handleActivate = (uid) => {
-    // Logic to activate the user (you can call your API here)
-    console.log(`Activating user with UID: ${uid}`);
-  };
-
-  const handleReInvite = (uid) => {
-    // Logic to send a re-invite (you can call your API here)
-    console.log(`Re-inviting user with UID: ${uid}`);
-  };
-
-  //enddddd
   return (
     <>
       {activeUsers?.map((item) => (
@@ -154,29 +94,11 @@ const ActiveUsersSection = ({
               />
             </Form.Group>
           </td>
-          {/* <td>
-            <span>{item.status}</span>
-          </td> */}
+         
           <td>
             <span>
-              {(() => {
-                switch (item.status) {
-                  case "Logged-in":
-                    return "Online";
-                  case "Logged-out-active":
-                    return `${getTimeAgo(item.status_time_interval)}`; // Using getTimeAgo here
-                  case "logged_out_inactive":
-                    return "Logged out - Inactive";
-                  case "deactivated":
-                    return "Deactivated - Disabled";
-                  case "Locked":
-                    return "Locked";
-                  case "pending":
-                    return "Invitation sent";
-                  default:
-                    return "Unknown Status"; // Fallback for any unrecognized status
-                }
-              })()}
+           
+              {getStatusLabel(item.status, item.status_time_interval)}
             </span>
           </td>
           <td>
@@ -225,10 +147,8 @@ const ActiveUsersSection = ({
                   />
                 </svg>
               </Dropdown.Toggle>
-              
 
               <Dropdown.Menu>
-                {/* Show actions based on the user's status */}
                 {item.status === "pending" && (
                   <>
                     <Dropdown.Item
@@ -252,7 +172,6 @@ const ActiveUsersSection = ({
                   </>
                 )}
 
-                {/* Option for active users */}
                 {item.status === "Logged-in" && (
                   <Dropdown.Item
                     href="#/action-4"
@@ -262,7 +181,6 @@ const ActiveUsersSection = ({
                   </Dropdown.Item>
                 )}
 
-                {/* Option for deactivated users */}
                 {item.status === "Logged-out-Inactive" && (
                   <>
                     <Dropdown.Item
@@ -287,21 +205,18 @@ const ActiveUsersSection = ({
                 )}
                 {item.status === "Logged-out-active" && (
                   <>
-                    
                     <Dropdown.Item
                       href="#/action-5"
                       onClick={() => updateUserStatus(item.uid, "Deactivated")}
                     >
                       Deactivated
                     </Dropdown.Item>
-               
                   </>
                 )}
 
-                {/* Common action to delete the user */}
                 <Dropdown.Item
                   href="#/action-6"
-                  onClick={() => console.log("Delete user")}
+                  onClick={() => deleteUser([item.uid])}
                 >
                   Delete
                 </Dropdown.Item>

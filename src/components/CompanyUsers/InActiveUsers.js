@@ -1,22 +1,33 @@
-import { useState } from "react";
 import {
-    Accordion,
-    Button,
-    Card,
-    Col,
-    Form,
-    InputGroup,
-    Modal,
-    Nav,
-    Row,
-    Table,
-    Tab,
-    Dropdown,
-  } from "react-bootstrap";
+  Dropdown,
+  Form
+} from "react-bootstrap";
+import { getStatusLabel } from "../../helpers/helper";
 
 
-const InActiveUserSection = ({ inActiveUsers,handleCheckboxChange }) => {
-    const [selectedUids, setSelectedUids] = useState([]);
+const InActiveUserSection = ({ inActiveUsers,handleCheckboxChange,companyUserListAPI,
+  selectedUids,
+  setSelectedUids,
+  deleteUser,
+  updateUserStatus,EditUser,editUserData,
+  setEditUserData
+
+
+}) => {
+    // const [selectedUids, setSelectedUids] = useState([]);
+
+
+    const handleEdit = (e, uid) => {
+      const { name, value } = e.target;
+  
+      setEditUserData((prev) => ({
+        ...prev,
+        [uid]: {
+          ...prev[uid],
+          [name]: value,
+        },
+      }));
+    };
 
     return (
       <>
@@ -50,7 +61,14 @@ const InActiveUserSection = ({ inActiveUsers,handleCheckboxChange }) => {
                   type="text"
                   placeholder="Ravinder Nain"
                   className="sm-fcontrol"
-                  value={item.first_name}
+                  // value={item.first_name}
+                  name="first_name"
+                  value={
+                    editUserData[item.uid]?.first_name !== undefined
+                      ? editUserData[item.uid].first_name
+                      : item.first_name
+                  }
+                  onChange={(e) => handleEdit(e, item.uid)}
                 />
               </Form.Group>
             </td>
@@ -60,12 +78,19 @@ const InActiveUserSection = ({ inActiveUsers,handleCheckboxChange }) => {
                   type="text"
                   placeholder="9875263214"
                   className="sm-fcontrol"
-                  value={item.phone_number}
+                   name="phone_number"
+                  // value={item.phone_number}
+                  value={
+                    editUserData[item.uid]?.phone_number !== undefined
+                      ? editUserData[item.uid].phone_number
+                      : item.phone_number
+                  }
+                  onChange={(e) => handleEdit(e, item.uid)}
                 />
               </Form.Group>
             </td>
             <td>
-              <span>{item.status}</span>
+              <span>{getStatusLabel(item.status,item.status_time_interval)}</span>
             </td>
             <td>
               <Form.Check
@@ -115,12 +140,89 @@ const InActiveUserSection = ({ inActiveUsers,handleCheckboxChange }) => {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
-                  <Dropdown.Item href="#/action-1">Re-Invite</Dropdown.Item>
-                  <Dropdown.Item href="#/action-2">Unlock</Dropdown.Item>
-                  <Dropdown.Item href="#/action-3">Delete</Dropdown.Item>
-                  <Dropdown.Item href="#/action-4">Deactivate</Dropdown.Item>
-                  <Dropdown.Item href="#/action-5">Activate</Dropdown.Item>
-                </Dropdown.Menu>
+               {item.status === "pending" && (
+                  <>
+                    <Dropdown.Item
+                      href="#/action-1"
+                      onClick={() => updateUserStatus(item.uid, "Activate")}
+                    >
+                      Activate
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      href="#/action-2"
+                      onClick={() => updateUserStatus(item.uid, "Deactivate")}
+                    >
+                      Deactivate
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      href="#/action-3"
+                      onClick={() => updateUserStatus(item.uid, "Unlock")}
+                    >
+                      Unlock
+                    </Dropdown.Item>
+                  </>
+                )}
+
+                
+                {item.status === "Logged-in" && (
+                  <Dropdown.Item
+                    href="#/action-4"
+                    onClick={() => updateUserStatus(item.uid, "Deactivate")}
+                  >
+                    Deactivate
+                  </Dropdown.Item>
+                )}
+
+                
+                {item.status === "Logged-out-Inactive" && (
+                  <>
+                    <Dropdown.Item
+                      href="#/action-5"
+                      onClick={() => updateUserStatus(item.uid, "Activate")}
+                    >
+                      Activate
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      href="#/action-5"
+                      onClick={() => updateUserStatus(item.uid, "Deactivated")}
+                    >
+                      Deactivated
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      href="#/action-5"
+                      onClick={() => updateUserStatus(item.uid, "Unlock")}
+                    >
+                      Unlock
+                    </Dropdown.Item>
+                  </>
+                )}
+                {item.status === "Logged-out-active" && (
+                  <>
+                    
+                    <Dropdown.Item
+                      href="#/action-5"
+                      onClick={() => updateUserStatus(item.uid, "Deactivated")}
+                    >
+                      Deactivated
+                    </Dropdown.Item>
+               
+                  </>
+                )}
+
+              
+                <Dropdown.Item
+                  href="#/action-6"
+                  onClick={() => deleteUser([item.uid])}
+                >
+                  Delete
+                </Dropdown.Item>
+                <Dropdown.Item
+                  href="#/action-2"
+                  onClick={() => EditUser([item.uid])}
+                >
+                  Save Edit Changes
+                </Dropdown.Item>
+              </Dropdown.Menu>
               </Dropdown>
             </td>
           </tr>
