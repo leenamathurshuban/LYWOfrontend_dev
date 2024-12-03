@@ -1,9 +1,9 @@
-import { AuthUrl ,CompanyUrl} from "./apiUrl";
+import { AuthUrl ,CompanyUrl, UsersUrl} from "./apiUrl";
 import client from "./axiosInstance";
 
 export const LogInCall = (data) => {
   const data1 =  client.postWithoutToken(AuthUrl.Login, data);
-  console.log("datata",data1)
+  // console.log("datata",data1)
   return data1
 };
 
@@ -41,3 +41,13 @@ export const updateCompanyProfileApi = (data,uid) =>{
   const setPasswordVerify = client.putWithoutToken(`${CompanyUrl.UpdateCompanyProfile}${uid}/`)
   return setPasswordVerify
 }
+
+
+export const createUserApi = (data) => {
+  const CreateUser = client.postWithUpload(UsersUrl.CreateUser)
+  return CreateUser
+}
+
+// export const CompanyUserList = (uid) => {
+
+// }

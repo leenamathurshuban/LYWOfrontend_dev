@@ -9,7 +9,7 @@ export const removeToken = () => {
 };
 
 export const logoMaker = (companyName) =>{
-   console.log("companynam-----",companyName)
+   // console.log("companynam-----",companyName)
    // if(companyName){
 
    // }
@@ -22,4 +22,22 @@ export const logoMaker = (companyName) =>{
   export const getPlainText = (html) => {
    const doc = new DOMParser().parseFromString(html, 'text/html');
    return doc.body.textContent || "";
+ };
+
+ export const getTimeAgo = (statusTime) => {
+   const currentTime = new Date();
+   const statusTimeDate = new Date(statusTime); // Convert the status_time_interval string to a Date object
+
+   const timeDiff = currentTime - statusTimeDate; // Time difference in milliseconds
+   const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24)); // Days difference
+   const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); // Hours difference
+
+   // Determine the message based on the time difference
+   if (days > 0) {
+     return `${days} day${days > 1 ? 's' : ''} ago`;
+   } else if (hours > 0) {
+     return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+   } else {
+     return 'Just now'; // For cases where the user was active recently (less than 1 hour ago)
+   }
  };

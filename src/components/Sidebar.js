@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import sdlogo from "../images/logo_icon.png";
 import CompanyEditProfile from "./CompanyEditProfile";
+import { Link } from "react-router-dom";  // Import the Link component
+// import { useNavigate } from "react-router-dom";  // Import useNavigate hook
+
+
 const Sidebar = () => {
   const [showModal, setShowModal] = useState(false); 
 
@@ -12,6 +16,8 @@ const Sidebar = () => {
     setShowModal(false); 
   };
 
+  // const navigate = useNavigate(); 
+
   return (
     <div className="sidebar-wrapper">
       <div className="sd_logo">
@@ -22,7 +28,7 @@ const Sidebar = () => {
       <nav className="sidebar-menu">
         <ul className="sidebar-links">
           <li className="active">
-            <a href="#">
+            <a>
               <svg
                 width="17"
                 height="16"
@@ -41,7 +47,7 @@ const Sidebar = () => {
             </a>
           </li>
           <li>
-            <a href="#">
+            <a>
               <svg
                 width="17"
                 height="16"
@@ -60,7 +66,8 @@ const Sidebar = () => {
             </a>
           </li>
           <li>
-            <a href="#">
+            {/* <a href="#" onClick={navigate("/evaluation")}> */}
+            <Link to="/evaluation"> 
               <svg
                 width="17"
                 height="16"
@@ -76,7 +83,8 @@ const Sidebar = () => {
                 />
               </svg>
               <span>Evaluations</span>
-            </a>
+            </Link>
+          
           </li>
           <li>
             <a href="#">

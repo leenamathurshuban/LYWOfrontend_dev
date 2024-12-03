@@ -53,7 +53,6 @@ const CompanyEditProfile = ({ show, handleClose }) => {
     websiteError: "",
     logoError: "",
   });
-  // const [websiteError, setWebsiteError] = useState("");
   const [completionPercentage, setCompletionPercentage] = useState(0);
   const [ids, setIds] = useState({
     industryName: companyProfileDetails?.industry?.industry_name,
@@ -462,7 +461,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
 // Split by '/' and get the last part (file name)
 const LogoName = filePath?.split('/').pop();
 
-console.log("fffffff@@@@@@@----------",LogoName);
+// console.log("fffffff@@@@@@@----------",LogoName);
 
   return (
     <Modal
@@ -898,7 +897,7 @@ console.log("fffffff@@@@@@@----------",LogoName);
               </Tab.Pane>
               <Tab.Pane eventKey="second">
                 <Modal.Body>
-                  <Row>
+                  {/* <Row>
                     <Col md={9}>
                       <div className="mdl_pagetitle d-flex justify-content-between align-items-center">
                         <h5>User Management</h5>
@@ -1083,7 +1082,8 @@ console.log("fffffff@@@@@@@----------",LogoName);
                         </ul>
                       </div>
                     </Col>
-                  </Row>
+                  </Row> */}
+                  <AddUserManagement/>
                 </Modal.Body>
               </Tab.Pane>
             </Tab.Content>

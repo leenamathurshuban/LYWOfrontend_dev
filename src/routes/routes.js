@@ -49,7 +49,7 @@ export const router = createBrowserRouter([
     element: <ProtectedRoute element={<Dashboard />} allowAuthenticated={false} />,  // Only allow authenticated users here
   },
   {
-    path: "/Evalation",
+    path: "/evaluation",
     element: <ProtectedRoute element={<Evalation />} allowAuthenticated={false} />,  // Only allow authenticated users here
   },
   {
