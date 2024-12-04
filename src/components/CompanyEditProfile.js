@@ -22,6 +22,8 @@ import AddUserManagement from "./AddUserManagement";
 import TextEditor from "./TextEditor";
 import imgpTrash from "../images/icons/trash-01.svg";
 import imgpEdit from "../images/icons/edit-01.svg";
+import { toast } from "react-toastify";
+
 
 const CompanyEditProfile = ({ show, handleClose }) => {
   const companyProfileDetails = useSelector(
@@ -444,6 +446,8 @@ const CompanyEditProfile = ({ show, handleClose }) => {
     setImage(null);
     setImageName("");
     setImageFile("");
+    toast.success("Logo deleted successfully!");
+
   };
 
   const handleEditImage = () => {
@@ -506,7 +510,7 @@ const LogoName = filePath?.split('/').pop();
                       <div className="mdl_pagetitle d-flex justify-content-between align-items-center">
                         <h5>Basic Information</h5>
                         <div className="btn_group">
-                          <Button variant="link" className="me-2">
+                          <Button variant="link" className="me-2" onClick={handleClose}>
                             Cancel
                           </Button>
                           <Button

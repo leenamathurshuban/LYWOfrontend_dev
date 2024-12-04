@@ -1,8 +1,5 @@
-import axios from "axios";
-import { useState } from "react";
 import { Dropdown, Form } from "react-bootstrap";
 import { getStatusLabel } from "../../helpers/helper";
-import { getToken } from "../../services/axiosInstance";
 
 const ActiveUsersSection = ({
   activeUsers,
@@ -17,7 +14,6 @@ const ActiveUsersSection = ({
   setEditUserData,
   
 }) => {
-  // const [editUserData, setEditUserData] = useState({});
 
 
 

@@ -1,18 +1,4 @@
-import { useState } from "react";
-import {
-  Accordion,
-  Button,
-  Card,
-  Col,
-  Form,
-  InputGroup,
-  Modal,
-  Nav,
-  Row,
-  Table,
-  Tab,
-  Dropdown,
-} from "react-bootstrap";
+import { Dropdown, Form } from "react-bootstrap";
 import { getStatusLabel } from "../../helpers/helper";
 
 const PendingUserSection = ({
@@ -23,10 +9,8 @@ const PendingUserSection = ({
   EditUser,
   selectedUids,
   editUserData,
-  setEditUserData
+  setEditUserData,
 }) => {
-  // const [selectedUids, setSelectedUids] = useState([]);
-
   const handleEdit = (e, uid) => {
     const { name, value } = e.target;
 
@@ -71,7 +55,6 @@ const PendingUserSection = ({
                 type="text"
                 placeholder="Ravinder Nain"
                 className="sm-fcontrol"
-                // value={item.first_name}
                 name="first_name"
                 value={
                   editUserData[item.uid]?.first_name !== undefined
@@ -88,7 +71,6 @@ const PendingUserSection = ({
                 type="text"
                 placeholder="9875263214"
                 className="sm-fcontrol"
-                // value={item.phone_number}
                 name="phone_number"
                 value={
                   editUserData[item.uid]?.phone_number !== undefined
@@ -100,14 +82,16 @@ const PendingUserSection = ({
             </Form.Group>
           </td>
           <td>
-            <span>{getStatusLabel(item.status,item.status_time_interval)}</span>
+            <span>
+              {getStatusLabel(item.status, item.status_time_interval)}
+            </span>
           </td>
           <td>
             <Form.Check
               className="inline-checkbox"
               type="switch"
               id="custom-switch"
-              checked={item.user_role.role_name === "Admin"} // Check if the user role is 'admin'
+              checked={item.user_role.role_name === "Admin"}
               readOnly
             />
           </td>
@@ -149,21 +133,7 @@ const PendingUserSection = ({
                 </svg>
               </Dropdown.Toggle>
 
-              {/* <Dropdown.Menu>
-                  <Dropdown.Item href="#/action-1">Re-Invite</Dropdown.Item>
-                  <Dropdown.Item href="#/action-2">Unlock</Dropdown.Item>
-                  <Dropdown.Item
-                    href="#/action-3"
-                    onClick={() => deleteUser([item.uid])}
-                  >
-                    Delete
-                  </Dropdown.Item>
-                  <Dropdown.Item href="#/action-4">Deactivate</Dropdown.Item>
-                  <Dropdown.Item href="#/action-5">Activate</Dropdown.Item>
-                </Dropdown.Menu> */}
-
               <Dropdown.Menu>
-                {/* Show actions based on the user's status */}
                 {item.status === "Pending" && (
                   <>
                     <Dropdown.Item
@@ -187,7 +157,6 @@ const PendingUserSection = ({
                   </>
                 )}
 
-                {/* Option for active users */}
                 {item.status === "active" && (
                   <Dropdown.Item
                     href="#/action-4"
@@ -197,7 +166,6 @@ const PendingUserSection = ({
                   </Dropdown.Item>
                 )}
 
-                {/* Option for deactivated users */}
                 {item.status === "deactivated" && (
                   <Dropdown.Item
                     href="#/action-5"
@@ -207,7 +175,6 @@ const PendingUserSection = ({
                   </Dropdown.Item>
                 )}
 
-                {/* Common action to delete the user */}
                 <Dropdown.Item
                   href="#/action-6"
                   onClick={() => deleteUser([item.uid])}

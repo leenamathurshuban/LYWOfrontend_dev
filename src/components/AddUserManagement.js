@@ -1,29 +1,23 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
 import {
-  Accordion,
   Button,
   Card,
   Col,
   Form,
   InputGroup,
-  Modal,
-  Nav,
   Row,
-  Table,
-  Tab,
-  Dropdown,
+  Table
 } from "react-bootstrap";
-import { useEffect, useState } from "react";
-import { starIcon } from "../images/assest";
-import axios from "axios";
-import { getToken } from "../services/axiosInstance";
-import { createUserApi } from "../services/provider";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { starIcon } from "../images/assest";
+import { getToken } from "../services/axiosInstance";
 import ActiveUsersSection from "./CompanyUsers/ActiveUsers";
+import AddUserguide from "./CompanyUsers/AddUserGuilde";
 import AdmidUserSection from "./CompanyUsers/AdmidUsers";
 import InActiveUserSection from "./CompanyUsers/InActiveUsers";
 import PendingUserSection from "./CompanyUsers/PendingUsers";
-import AddUserguide from "./CompanyUsers/AddUserGuilde";
-import { toast } from "react-toastify"; // Import the toast function
 
 const AddUserManagement = () => {
   const [createUserData, setCreateUserData] = useState({
@@ -32,14 +26,13 @@ const AddUserManagement = () => {
     phoneNumber: "",
   });
 
-  // const [addRow, setAddrow] = useState([{ id: 1 }]);
   const [addRow, setAddRow] = useState([]);
 
   const [isRowFilled, setIsRowFilled] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [companyUserList, setCompanyUserList] = useState([]);
-  const [activeItem, setActiveItem] = useState("byDefaultUsers"); // Default to 'Pending Invitations'
+  const [activeItem, setActiveItem] = useState("byDefaultUsers"); 
   const [selectedUids, setSelectedUids] = useState([]);
   const [editUserData, setEditUserData] = useState({});
 
@@ -47,7 +40,7 @@ const AddUserManagement = () => {
     setAddRow([
       ...addRow,
       {
-        id: addRow.length + 1, // Generate a new ID or use a unique method
+        id: addRow.length + 1, 
         email: "",
         name: "",
         phoneNumber: "",
@@ -56,29 +49,14 @@ const AddUserManagement = () => {
   };
 
   const handleCancel = (id) => {
-    // Remove the row from the `addRow` array
     setAddRow((prevRows) => prevRows.filter((row) => row.id !== id));
   };
 
-  // const handleAddNewUserRow = () => {
-  //   if (addRow.length === 1 && !isRowFilled) {
-  //     toast.warn("You need to fill the first row before adding a new one.");
-  //     return;
-  //   }
 
-  //   // Add a new row
-  //   const newRow = { id: addRow.length + 1 };
-  //   setAddrow([...addRow, newRow]);
-
-  //   // If it's the first row and it is filled out, enable adding more rows
-  //   if (addRow.length === 1 && isRowFilled) {
-  //     setIsRowFilled(false); // Reset the filled state if first row is complete
-  //   }
-  // };
 
   const handleRowFill = () => {
-    // This function checks if the first row is filled (example: checking email field)
-    const firstRow = addRow[0]; // Assuming first row is always at index 0
+   
+    const firstRow = addRow[0]; 
     if (
       createUserData.email &&
       createUserData.name &&
@@ -108,33 +86,7 @@ const AddUserManagement = () => {
     }));
   };
 
-  // Handle checkbox change
-  // const handleCheckboxChange = (uid) => {
-  //   setSelectedUids((prev) =>
-  //     prev.includes(uid) ? prev.filter((id) => id !== uid) : [...prev, uid]
-  //   );
-  // };
-
-  // Handle input changes for editable fields
-  // Handle input changes for editable fields
-  //  const handleInputChange = (uid, field, value) => {
-  //   console.log("uidiiiiiii",uid)
-  //   setEditUserData((prevData) => ({
-  //     ...prevData,
-  //     [uid]: { ...prevData[uid], [field]: value },
-  //   }));
-  // };
-
-  // const handleInputChange = (uid, field, value) => {
-  //   setEditUserData((prevData) => ({
-  //     ...prevData,
-  //     [uid]: {
-  //       ...prevData[uid],
-  //       [field]: value
-  //     }
-  //   }));
-  // };
-
+ 
   const companyProfileDetails = useSelector(
     (state) => state.login.CompanyProfileDetails
   );
@@ -306,26 +258,20 @@ const AddUserManagement = () => {
     const token = getToken();
 
     try {
-      // Include the token in the Authorization header
       const url = searchQuery
         ? `https://bittrend.shubansoftware.com/account-api/company-user-list-api/b6cadaab-69bc-4707-8656-2e8573e17547/?search=${searchQuery}`
         : `https://bittrend.shubansoftware.com/account-api/company-user-list-api/b6cadaab-69bc-4707-8656-2e8573e17547/`;
-      // `https://bittrend.shubansoftware.com/account-api/company-user-list-api/d6d7fa81-f972-4733-bb62-ab815e1119af/`;
 
       const response = await axios.get(url, {
         headers: {
-          Authorization: `Bearer ${token}`, // Attach the token here
+          Authorization: `Bearer ${token}`, 
         },
       });
 
-      // Handle the response if the API call is successful
+      
       setCompanyUserList(response.data.response);
-      // console.log(
-      //   "Response Data======:",
-      //   JSON.stringify(response.data.response, null, 4)
-      // );
+    
     } catch (error) {
-      // Handle errors (e.g., network issues, token invalidity, etc.)
       console.error("Error fetching company user list:", error);
     }
   };
@@ -334,6 +280,8 @@ const AddUserManagement = () => {
   const adminUsers = companyUserList[0]?.admin_users || [];
   const inActiveUsers = companyUserList[0]?.inactive_users || [];
   const pendingUsers = companyUserList[0]?.pending_users || [];
+
+
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
@@ -549,7 +497,7 @@ const AddUserManagement = () => {
                         setEditUserData={setEditUserData}
                       />
                       <InActiveUserSection
-                        inactivate={inActiveUsers}
+                        inActiveUsers={inActiveUsers}
                         companyUserListAPI={companyUserListAPI}
                         selectedUids={selectedUids}
                         setSelectedUids={setSelectedUids}
@@ -604,7 +552,7 @@ const AddUserManagement = () => {
                   )}
                   {activeItem === "inActiveUser" && (
                     <InActiveUserSection
-                      inactivate={inActiveUsers}
+                    inActiveUsers={inActiveUsers}
                       companyUserListAPI={companyUserListAPI}
                       selectedUids={selectedUids}
                       setSelectedUids={setSelectedUids}
