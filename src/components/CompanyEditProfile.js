@@ -24,7 +24,6 @@ import imgpTrash from "../images/icons/trash-01.svg";
 import imgpEdit from "../images/icons/edit-01.svg";
 import { toast } from "react-toastify";
 
-
 const CompanyEditProfile = ({ show, handleClose }) => {
   const companyProfileDetails = useSelector(
     (state) => state.login.CompanyProfileDetails
@@ -39,13 +38,25 @@ const CompanyEditProfile = ({ show, handleClose }) => {
   const [selectedLocation, setSelectedLocation] = useState(null);
 
   //update profile state
-  const [description, setDescription] = useState( companyProfileDetails?.description || "" );
-  const [website, setWebsite] = useState( companyProfileDetails?.website_url || "" );
+  const [description, setDescription] = useState(
+    companyProfileDetails?.description || ""
+  );
+  const [website, setWebsite] = useState(
+    companyProfileDetails?.website_url || ""
+  );
 
-  const [searchTerm, setSearchTerm] = useState(companyProfileDetails?.industry?.industry_name || "" ); // industry state
-  const [selectedCompanyType, setSelectedCompanyType] = useState(companyProfileDetails?.company_type || "");
-  const [noOfEmploy, setnoOfEmploy] = useState(companyProfileDetails?.number_of_employees || "");
-  const [searchLocationTerm, setLocationSearchTerm] = useState(companyProfileDetails?.location?.location_name || "" ); //location state
+  const [searchTerm, setSearchTerm] = useState(
+    companyProfileDetails?.industry?.industry_name || ""
+  ); // industry state
+  const [selectedCompanyType, setSelectedCompanyType] = useState(
+    companyProfileDetails?.company_type || ""
+  );
+  const [noOfEmploy, setnoOfEmploy] = useState(
+    companyProfileDetails?.number_of_employees || ""
+  );
+  const [searchLocationTerm, setLocationSearchTerm] = useState(
+    companyProfileDetails?.location?.location_name || ""
+  ); //location state
 
   // other state
   const [loading, setLoading] = useState(false);
@@ -64,7 +75,9 @@ const CompanyEditProfile = ({ show, handleClose }) => {
   });
 
   // cropping img state
-  const [image, setImage] = useState(`https://bittrend.shubansoftware.com${companyProfileDetails?.logo}` || null);
+  const [image, setImage] = useState(
+    `https://bittrend.shubansoftware.com${companyProfileDetails?.logo}` || null
+  );
   const [imageName, setImageName] = useState("");
   const [zoom, setZoom] = useState(1);
   const [aspectRatio, setAspectRatio] = useState(1);
@@ -396,7 +409,6 @@ const CompanyEditProfile = ({ show, handleClose }) => {
           websiteError: "", // Clear websiteError on successful update
         }));
       }
-      
     } catch (error) {
       // console.log("erooor------>>>", error);
       // setCompanyUpdateError.websiteError(error?.response?.data?.response?.website_url[0]);
@@ -418,21 +430,18 @@ const CompanyEditProfile = ({ show, handleClose }) => {
     setDescription(updatedDescription);
   };
 
-
-
   const handleWebsite = (e) => {
     const url = e.target.value;
     setWebsite(url);
-  
-    const websiteError = !url || /^https?:\/\//i.test(url) ? "" : "Invalid Website URL";
+
+    const websiteError =
+      !url || /^https?:\/\//i.test(url) ? "" : "Invalid Website URL";
 
     setCompanyUpdateError((prevState) => ({
       ...prevState,
       websiteError,
     }));
   };
-  
-  
 
   const handleCompanyTypeChange = (e) => {
     setSelectedCompanyType(e.target.value);
@@ -447,7 +456,6 @@ const CompanyEditProfile = ({ show, handleClose }) => {
     setImageName("");
     setImageFile("");
     toast.success("Logo deleted successfully!");
-
   };
 
   const handleEditImage = () => {
@@ -462,10 +470,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
 
   const filePath = companyProfileDetails?.logo;
 
-// Split by '/' and get the last part (file name)
-const LogoName = filePath?.split('/').pop();
-
-// console.log("fffffff@@@@@@@----------",LogoName);
+  const LogoName = filePath?.split("/").pop();
 
   return (
     <Modal
@@ -510,7 +515,11 @@ const LogoName = filePath?.split('/').pop();
                       <div className="mdl_pagetitle d-flex justify-content-between align-items-center">
                         <h5>Basic Information</h5>
                         <div className="btn_group">
-                          <Button variant="link" className="me-2" onClick={handleClose}>
+                          <Button
+                            variant="link"
+                            className="me-2"
+                            onClick={handleClose}
+                          >
                             Cancel
                           </Button>
                           <Button
@@ -758,7 +767,8 @@ const LogoName = filePath?.split('/').pop();
                                 <Form.Group className="mb-3">
                                   <Form.Label>Add Company Logo</Form.Label>
 
-                                  {!companyProfileDetails?.logo && !imageFile ? (
+                                  {!companyProfileDetails?.logo &&
+                                  !imageFile ? (
                                     <div
                                       className="cmp_uploder file-upload-box"
                                       {...getRootProps()}
@@ -779,8 +789,12 @@ const LogoName = filePath?.split('/').pop();
                                       </div>
                                     </div>
                                   ) : (
-                                    <div className="selected_logo">                                      
-                                     {LogoName ? <label>{LogoName}</label> : <label>{imageName}</label> }
+                                    <div className="selected_logo">
+                                      {LogoName ? (
+                                        <label>{LogoName}</label>
+                                      ) : (
+                                        <label>{imageName}</label>
+                                      )}
                                       <div className="d-flex">
                                         <Button
                                           variant="link"
@@ -1087,7 +1101,7 @@ const LogoName = filePath?.split('/').pop();
                       </div>
                     </Col>
                   </Row> */}
-                  <AddUserManagement/>
+                  <AddUserManagement />
                 </Modal.Body>
               </Tab.Pane>
             </Tab.Content>

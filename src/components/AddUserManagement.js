@@ -7,7 +7,8 @@ import {
   Form,
   InputGroup,
   Row,
-  Table
+  Spinner,
+  Table,
 } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -32,15 +33,16 @@ const AddUserManagement = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [companyUserList, setCompanyUserList] = useState([]);
-  const [activeItem, setActiveItem] = useState("byDefaultUsers"); 
+  const [activeItem, setActiveItem] = useState("byDefaultUsers");
   const [selectedUids, setSelectedUids] = useState([]);
   const [editUserData, setEditUserData] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleAddNewUserRow = () => {
     setAddRow([
       ...addRow,
       {
-        id: addRow.length + 1, 
+        id: addRow.length + 1,
         email: "",
         name: "",
         phoneNumber: "",
@@ -52,11 +54,8 @@ const AddUserManagement = () => {
     setAddRow((prevRows) => prevRows.filter((row) => row.id !== id));
   };
 
-
-
   const handleRowFill = () => {
-   
-    const firstRow = addRow[0]; 
+    const firstRow = addRow[0];
     if (
       createUserData.email &&
       createUserData.name &&
@@ -86,7 +85,6 @@ const AddUserManagement = () => {
     }));
   };
 
- 
   const companyProfileDetails = useSelector(
     (state) => state.login.CompanyProfileDetails
   );
@@ -119,6 +117,7 @@ const AddUserManagement = () => {
   };
 
   const createUser = async () => {
+    setIsLoading(true);
     const formData = new FormData();
     formData.append("email", createUserData.email);
     formData.append("first_name", createUserData.name);
@@ -138,11 +137,21 @@ const AddUserManagement = () => {
         { headers }
       );
       if (response.data.status == 200) {
+        setIsLoading(false);
         console.log("User Created:", response.data);
         companyUserListAPI();
       }
-    } catch (err) {
-      console.error("Error:", err.response || err.message);
+    } catch (error) {
+      setIsLoading(false);
+      const errorData = error?.response?.data?.response;
+
+      // Check for specific errors and display messages
+      if (errorData) {
+        errorData?.email?.[0] && toast.error(errorData.email[0]);
+        errorData?.phone_number?.[0] && toast.error(errorData.phone_number[0]);
+      }
+      // If needed, log the full error
+      console.error("Error:", error?.response?.data);
     }
   };
 
@@ -152,7 +161,7 @@ const AddUserManagement = () => {
       Authorization: `Bearer ${token}`, // Bearer token for authorization
       "Content-Type": "multipart/form-data", // Since you're using FormData, this is needed
     };
-
+    setIsLoading(true);
     const formdata = new FormData();
     // formdata.append("uids", JSON.stringify([uid]));
     formdata.append("uids", JSON.stringify(uid));
@@ -169,6 +178,7 @@ const AddUserManagement = () => {
         requestOptions
       )
       .then((response) => {
+        setIsLoading(false);
         if (response.data == 200) {
           console.log("Response: ", response.data);
           toast.success("User deleted successfully!");
@@ -176,6 +186,7 @@ const AddUserManagement = () => {
         }
       })
       .catch((error) => {
+        setIsLoading(false);
         console.error("Error: ", error);
         toast.error("An error occurred while deleting the user.");
       });
@@ -187,6 +198,7 @@ const AddUserManagement = () => {
       Authorization: `Bearer ${token}`,
       "Content-Type": "multipart/form-data",
     };
+    setIsLoading(true);
     const formdata = new FormData();
     formdata.append("uids", JSON.stringify([uid]));
     formdata.append("status", statusAction);
@@ -198,9 +210,11 @@ const AddUserManagement = () => {
         { headers: myHeaders }
       )
       .then((response) => {
+        setIsLoading(false);
         console.log(response.data);
       })
       .catch((error) => {
+        setIsLoading(false);
         console.error("There was an error!", error);
         toast.error("An error occurred while deleting the user.");
       });
@@ -221,6 +235,7 @@ const AddUserManagement = () => {
     if (editUserData[uid]?.phone_number) {
       formdata.append("phone_number", editUserData[uid].phone_number);
     }
+    setIsLoading(true);
 
     axios
       .put(
@@ -229,9 +244,11 @@ const AddUserManagement = () => {
         { headers: myHeaders }
       )
       .then((response) => {
+        setIsLoading(false);
         console.log(response.data);
       })
       .catch((error) => {
+        setIsLoading(false);
         console.error("There was an error!", error);
       });
   };
@@ -256,7 +273,7 @@ const AddUserManagement = () => {
 
   const companyUserListAPI = async (searchQuery) => {
     const token = getToken();
-
+    setIsLoading(true);
     try {
       const url = searchQuery
         ? `https://bittrend.shubansoftware.com/account-api/company-user-list-api/b6cadaab-69bc-4707-8656-2e8573e17547/?search=${searchQuery}`
@@ -264,14 +281,14 @@ const AddUserManagement = () => {
 
       const response = await axios.get(url, {
         headers: {
-          Authorization: `Bearer ${token}`, 
+          Authorization: `Bearer ${token}`,
         },
       });
 
-      
+      setIsLoading(false);
       setCompanyUserList(response.data.response);
-    
     } catch (error) {
+      setIsLoading(false);
       console.error("Error fetching company user list:", error);
     }
   };
@@ -280,8 +297,6 @@ const AddUserManagement = () => {
   const adminUsers = companyUserList[0]?.admin_users || [];
   const inActiveUsers = companyUserList[0]?.inactive_users || [];
   const pendingUsers = companyUserList[0]?.pending_users || [];
-
-
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
@@ -331,7 +346,12 @@ const AddUserManagement = () => {
             />
           </InputGroup>
           <div className="btn_group">
-            <Button variant="link" className="btn-link-muted" disabled>
+            <Button
+              variant="link"
+              className="btn-link-muted"
+              onClick={() => updateUserStatus(selectedUids, "Unlock")}
+              // disabled
+            >
               <svg
                 width="20"
                 height="20"
@@ -349,7 +369,12 @@ const AddUserManagement = () => {
               </svg>
               Unlock
             </Button>
-            <Button variant="link" className="btn-link-muted" disabled>
+            <Button
+              variant="link"
+              className="btn-link-muted"
+              onClick={() => updateUserStatus(selectedUids, "Activate")}
+              // disabled
+            >
               <svg
                 width="20"
                 height="20"
@@ -367,7 +392,11 @@ const AddUserManagement = () => {
               </svg>
               Re-Invite
             </Button>
-            <Button variant="link" className="btn-link-muted">
+            <Button
+              variant="link"
+              className="btn-link-muted"
+              onClick={() => updateUserStatus(selectedUids, "Deactivated")}
+            >
               <svg
                 width="20"
                 height="20"
@@ -423,6 +452,11 @@ const AddUserManagement = () => {
         <Card className="usermanagement_table shadow-md border-light">
           <Form onSubmit={handleSubmit}>
             <Card.Body>
+              {isLoading && (
+                <div className="loader-overlay">
+                  <Spinner animation="border" role="status" className="ml-3" />
+                </div>
+              )}
               <Table className="no-bordered">
                 <thead>
                   <tr>
@@ -552,7 +586,7 @@ const AddUserManagement = () => {
                   )}
                   {activeItem === "inActiveUser" && (
                     <InActiveUserSection
-                    inActiveUsers={inActiveUsers}
+                      inActiveUsers={inActiveUsers}
                       companyUserListAPI={companyUserListAPI}
                       selectedUids={selectedUids}
                       setSelectedUids={setSelectedUids}

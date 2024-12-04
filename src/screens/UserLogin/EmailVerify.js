@@ -158,7 +158,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setEmailValue } from "../../Slice/Login/LoginSlice"; // Import your action
+import { setEmailValue } from "../../Slice/Login/LoginSlice"; 
 import { IsEmailVerify } from "../../services/provider";
 import Getstarted from "../GetStarted/GetStarted";
 
@@ -172,8 +172,7 @@ const EmailVerify = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const loginUserInfo = useSelector(state => state.login.loginUserInfo);
-  const emailValue = useSelector((state) => state.login.emailValue); // Get email from Redux store
-  console.log("emailValue-----------", emailValue);
+  const emailValue = useSelector((state) => state.login.emailValue); 
 
   const handleSubmit = (event) => {
     event.preventDefault();
