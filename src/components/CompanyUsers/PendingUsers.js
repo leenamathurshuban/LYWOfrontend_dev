@@ -138,19 +138,19 @@ const PendingUserSection = ({
                   <>
                     <Dropdown.Item
                       href="#/action-1"
-                      onClick={() => updateUserStatus(item.uid, "Activate")}
+                      onClick={() => updateUserStatus([item.uid], "Activate")}
                     >
                       Activate
                     </Dropdown.Item>
                     <Dropdown.Item
                       href="#/action-2"
-                      onClick={() => updateUserStatus(item.uid, "Deactivated")}
+                      onClick={() => updateUserStatus([item.uid], "Deactivated")}
                     >
                       Deactivate
                     </Dropdown.Item>
                     <Dropdown.Item
                       href="#/action-3"
-                      onClick={() => updateUserStatus(item.uid, "Unlock")}
+                      onClick={() => updateUserStatus([item.uid], "Unlock")}
                     >
                       Unlock
                     </Dropdown.Item>
@@ -160,7 +160,7 @@ const PendingUserSection = ({
                 {item.status === "active" && (
                   <Dropdown.Item
                     href="#/action-4"
-                    onClick={() => updateUserStatus(item.uid, "Deactivate")}
+                    onClick={() => updateUserStatus([item.uid], "Deactivate")}
                   >
                     Deactivate
                   </Dropdown.Item>
@@ -169,7 +169,7 @@ const PendingUserSection = ({
                 {item.status === "deactivated" && (
                   <Dropdown.Item
                     href="#/action-5"
-                    onClick={() => updateUserStatus(item.uid, "Activate")}
+                    onClick={() => updateUserStatus([item.uid], "Activate")}
                   >
                     Activate
                   </Dropdown.Item>

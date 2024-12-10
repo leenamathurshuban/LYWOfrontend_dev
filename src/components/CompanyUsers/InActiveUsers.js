@@ -140,19 +140,19 @@ const InActiveUserSection = ({
                   <>
                     <Dropdown.Item
                       href="#/action-1"
-                      onClick={() => updateUserStatus(item.uid, "Activate")}
+                      onClick={() => updateUserStatus([item.uid], "Activate")}
                     >
                       Activate
                     </Dropdown.Item>
                     <Dropdown.Item
                       href="#/action-2"
-                      onClick={() => updateUserStatus(item.uid, "Deactivate")}
+                      onClick={() => updateUserStatus([item.uid], "Deactivate")}
                     >
                       Deactivate
                     </Dropdown.Item>
                     <Dropdown.Item
                       href="#/action-3"
-                      onClick={() => updateUserStatus(item.uid, "Unlock")}
+                      onClick={() => updateUserStatus([item.uid], "Unlock")}
                     >
                       Unlock
                     </Dropdown.Item>
@@ -162,13 +162,13 @@ const InActiveUserSection = ({
                   <>
                     <Dropdown.Item
                       href="#/action-1"
-                      onClick={() => updateUserStatus(item.uid, "Activate")}
+                      onClick={() => updateUserStatus([item.uid], "Activate")}
                     >
                       Activate
                     </Dropdown.Item>
                     <Dropdown.Item
                       href="#/action-3"
-                      onClick={() => updateUserStatus(item.uid, "Unlock")}
+                      onClick={() => updateUserStatus([item.uid], "Unlock")}
                     >
                       Unlock
                     </Dropdown.Item>
@@ -178,7 +178,7 @@ const InActiveUserSection = ({
                 {item.status === "Logged-in" && (
                   <Dropdown.Item
                     href="#/action-4"
-                    onClick={() => updateUserStatus(item.uid, "Deactivate")}
+                    onClick={() => updateUserStatus([item.uid], "Deactivate")}
                   >
                     Deactivate
                   </Dropdown.Item>
@@ -188,19 +188,19 @@ const InActiveUserSection = ({
                   <>
                     <Dropdown.Item
                       href="#/action-5"
-                      onClick={() => updateUserStatus(item.uid, "Activate")}
+                      onClick={() => updateUserStatus([item.uid], "Activate")}
                     >
                       Activate
                     </Dropdown.Item>
                     <Dropdown.Item
                       href="#/action-5"
-                      onClick={() => updateUserStatus(item.uid, "Deactivated")}
+                      onClick={() => updateUserStatus([item.uid], "Deactivated")}
                     >
                       Deactivated
                     </Dropdown.Item>
                     <Dropdown.Item
                       href="#/action-5"
-                      onClick={() => updateUserStatus(item.uid, "Unlock")}
+                      onClick={() => updateUserStatus([item.uid], "Unlock")}
                     >
                       Unlock
                     </Dropdown.Item>
@@ -210,7 +210,7 @@ const InActiveUserSection = ({
                   <>
                     <Dropdown.Item
                       href="#/action-5"
-                      onClick={() => updateUserStatus(item.uid, "Deactivated")}
+                      onClick={() => updateUserStatus([item.uid], "Deactivated")}
                     >
                       Deactivated
                     </Dropdown.Item>

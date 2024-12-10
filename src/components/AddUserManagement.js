@@ -157,9 +157,14 @@ const navigate = useNavigate()
   };
 
   const updateUserStatus = async (uid, statusAction) => {
+    
+    // if (Array.isArray(uid) && Array.isArray(uid[0])) {
+    //   uid = uid[0];  // Flatten the array by accessing the first element
+    // }
+
     setIsLoading(true);
     const formdata = new FormData();
-    formdata.append("uids", JSON.stringify([uid]));
+    formdata.append("uids", JSON.stringify(uid));
     formdata.append("status", statusAction);
     try {
       const response = await UserStatusUpdateApi(formdata);

@@ -143,7 +143,6 @@ const Evalation = () => {
           "Given token not valid for any token type"
         )
       ) {
-        console.log("Token expired, redirecting to login");
         removeToken();
         navigate("/loginwithpassword");
       }
