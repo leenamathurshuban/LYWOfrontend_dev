@@ -1,3 +1,4 @@
+
 export const AuthUrl = {
     Login: "account-api/user-login-view/", // EmailPasswordVerifyContainer mai
     SetPassword: "account-api/set-user-password-api/", //SetPassword mai hai
@@ -15,5 +16,10 @@ export const AuthUrl = {
   }
 
   export const UsersUrl = {
-    CreateUser : "account-api/create-user-api/"
+    CreateUser : "account-api/create-user-api/",
+    DeleteUser : "account-api/delete-user-api/",
+    UserStatus : "account-api/user-de-re-activate-unlock-api/",
+    EditUser : "account-api/update-user-api/"
   }
+
+ 

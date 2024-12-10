@@ -19,6 +19,15 @@ import AddUserguide from "./CompanyUsers/AddUserGuilde";
 import AdmidUserSection from "./CompanyUsers/AdmidUsers";
 import InActiveUserSection from "./CompanyUsers/InActiveUsers";
 import PendingUserSection from "./CompanyUsers/PendingUsers";
+import {
+  CompanyUserListGetApi,
+  createUserApi,
+  deleteUserApi,
+  EditUserApi,
+  UserStatusUpdateApi,
+} from "../services/provider";
+import { removeToken } from "../helpers/helper";
+import { useNavigate } from "react-router-dom";
 
 const AddUserManagement = () => {
   const [createUserData, setCreateUserData] = useState({
@@ -29,7 +38,6 @@ const AddUserManagement = () => {
 
   const [addRow, setAddRow] = useState([]);
 
-  const [isRowFilled, setIsRowFilled] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [companyUserList, setCompanyUserList] = useState([]);
@@ -37,6 +45,7 @@ const AddUserManagement = () => {
   const [selectedUids, setSelectedUids] = useState([]);
   const [editUserData, setEditUserData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+const navigate = useNavigate()
 
   const handleAddNewUserRow = () => {
     setAddRow([
@@ -54,16 +63,7 @@ const AddUserManagement = () => {
     setAddRow((prevRows) => prevRows.filter((row) => row.id !== id));
   };
 
-  const handleRowFill = () => {
-    const firstRow = addRow[0];
-    if (
-      createUserData.email &&
-      createUserData.name &&
-      createUserData.phoneNumber
-    ) {
-      setIsRowFilled(true);
-    }
-  };
+
 
   const handleCheckboxChange = (uid) => {
     setSelectedUids((prevSelectedUids) => {
@@ -75,14 +75,6 @@ const AddUserManagement = () => {
         return [...prevSelectedUids, uid];
       }
     });
-  };
-
-  const handleEdit = (e) => {
-    const { name, value } = e.target;
-    setEditUserData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
   };
 
   const companyProfileDetails = useSelector(
@@ -124,100 +116,64 @@ const AddUserManagement = () => {
     formData.append("phone_number", createUserData.phoneNumber);
     formData.append("user_role", "9b476335-0e67-4e01-9997-88ba8d2cf6e2");
     formData.append("company", JSON.stringify([companyProfileDetails?.uid]));
-    const token = getToken();
-    const headers = {
-      Authorization: `Bearer ${token}`, // Bearer token for authorization
-      "Content-Type": "multipart/form-data", // Since you're using FormData, this is needed
-    };
-
     try {
-      const response = await axios.post(
-        "https://bittrend.shubansoftware.com/account-api/create-user-api/",
-        formData,
-        { headers }
-      );
+      const response = await createUserApi(formData);
+      setIsLoading(false);
       if (response.data.status == 200) {
         setIsLoading(false);
-        console.log("User Created:", response.data);
         companyUserListAPI();
       }
     } catch (error) {
       setIsLoading(false);
       const errorData = error?.response?.data?.response;
-
-      // Check for specific errors and display messages
       if (errorData) {
         errorData?.email?.[0] && toast.error(errorData.email[0]);
         errorData?.phone_number?.[0] && toast.error(errorData.phone_number[0]);
       }
-      // If needed, log the full error
-      console.error("Error:", error?.response?.data);
+      if(error?.response?.status === 401 || error?.response?.data?.detail?.includes( "Given token not valid for any token type")){
+        console.log("Token expired, redirecting to login");
+        removeToken();
+        navigate("/loginwithpassword");
+      }
+     }
+    }
+  
+
+  const deleteUser = async (uid) => {
+    setIsLoading(true);
+    const formdata = new FormData();
+    formdata.append("uids", JSON.stringify(uid));
+    try {
+      const response = await deleteUserApi(formdata);
+      setIsLoading(false);
+      if (response.data == 200) {
+        toast.success("User deleted successfully!");
+        companyUserListAPI();
+      }
+    } catch (error) {
+      setIsLoading(false);
+      toast.error("An error occurred while deleting the user.");
     }
   };
 
-  const deleteUser = (uid) => {
-    const token = getToken();
-    const headers = {
-      Authorization: `Bearer ${token}`, // Bearer token for authorization
-      "Content-Type": "multipart/form-data", // Since you're using FormData, this is needed
-    };
-    setIsLoading(true);
-    const formdata = new FormData();
-    // formdata.append("uids", JSON.stringify([uid]));
-    formdata.append("uids", JSON.stringify(uid));
-
-    const requestOptions = {
-      method: "DELETE",
-      headers: headers,
-      data: formdata, // Axios uses 'data' instead of 'body'
-    };
-
-    axios
-      .delete(
-        "https://bittrend.shubansoftware.com/account-api/delete-user-api/",
-        requestOptions
-      )
-      .then((response) => {
-        setIsLoading(false);
-        if (response.data == 200) {
-          console.log("Response: ", response.data);
-          toast.success("User deleted successfully!");
-          companyUserListAPI();
-        }
-      })
-      .catch((error) => {
-        setIsLoading(false);
-        console.error("Error: ", error);
-        toast.error("An error occurred while deleting the user.");
-      });
-  };
-
-  const updateUserStatus = (uid, statusAction) => {
-    const token = getToken();
-    const myHeaders = {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "multipart/form-data",
-    };
+  const updateUserStatus = async (uid, statusAction) => {
     setIsLoading(true);
     const formdata = new FormData();
     formdata.append("uids", JSON.stringify([uid]));
     formdata.append("status", statusAction);
-
-    axios
-      .put(
-        `https://bittrend.shubansoftware.com/account-api/user-de-re-activate-unlock-api/`,
-        formdata,
-        { headers: myHeaders }
-      )
-      .then((response) => {
+    try {
+      const response = await UserStatusUpdateApi(formdata);
+      setIsLoading(false);
+      if (response.data.status == 200) {
         setIsLoading(false);
+        window.location.reload(); //checkkkk
         console.log(response.data);
-      })
-      .catch((error) => {
-        setIsLoading(false);
-        console.error("There was an error!", error);
-        toast.error("An error occurred while deleting the user.");
-      });
+      }
+    } catch (error) {
+      setIsLoading(false);
+      const errorData = error?.response?.data?.response;
+      toast.error(errorData);
+    }
   };
 
   const EditUser = (uid) => {
@@ -272,19 +228,12 @@ const AddUserManagement = () => {
   };
 
   const companyUserListAPI = async (searchQuery) => {
-    const token = getToken();
     setIsLoading(true);
+    const url = searchQuery
+      ? `https://bittrend.shubansoftware.com/account-api/company-user-list-api/b6cadaab-69bc-4707-8656-2e8573e17547/?search=${searchQuery}`
+      : `https://bittrend.shubansoftware.com/account-api/company-user-list-api/b6cadaab-69bc-4707-8656-2e8573e17547/`;
     try {
-      const url = searchQuery
-        ? `https://bittrend.shubansoftware.com/account-api/company-user-list-api/b6cadaab-69bc-4707-8656-2e8573e17547/?search=${searchQuery}`
-        : `https://bittrend.shubansoftware.com/account-api/company-user-list-api/b6cadaab-69bc-4707-8656-2e8573e17547/`;
-
-      const response = await axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
+      const response = await CompanyUserListGetApi(url);
       setIsLoading(false);
       setCompanyUserList(response.data.response);
     } catch (error) {
@@ -309,7 +258,7 @@ const AddUserManagement = () => {
   useEffect(() => {
     const debounceTimer = setTimeout(() => {
       companyUserListAPI(searchTerm);
-    }, 500);
+    }, 300);
 
     return () => clearTimeout(debounceTimer);
   }, [searchTerm]);
@@ -633,7 +582,7 @@ const AddUserManagement = () => {
                               onChange={handlechanges}
                               value={createUserData.email}
                               name="email"
-                              onBlur={handleRowFill}
+                             
                             />
                           </Form.Group>
                         </div>
@@ -647,7 +596,7 @@ const AddUserManagement = () => {
                             onChange={handlechanges}
                             value={createUserData.name}
                             name="name"
-                            onBlur={handleRowFill}
+                           
                           />
                         </Form.Group>
                       </td>

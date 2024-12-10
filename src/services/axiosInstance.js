@@ -20,12 +20,21 @@ export const baseHeadersWithoutToken = () => {
     "content-type": "application/json",
   };
 };
+
+export const baseHeadersForToken = () => {
+  const token = getToken();
+  return {
+    Authorization: `Bearer ${token}`,
+  };
+};
+
 const baseHeadersForUploads = () => {
   const token = getToken();
   return {
-    Accept: "application/json",
+    // Accept: "application/json",
     "content-type": "multipart/form-data",
-    Authorization: token ? `Bearer ${token}` : null,
+    Authorization: `Bearer ${token}`,
+    // Authorization: token ? `Bearer ${token}` : null,
   };
 };
 
@@ -36,6 +45,14 @@ export const get = async (url, params) => {
     data: params,
     headers: baseHeadersForRequest(),
   }).then((res) => res.data);
+}
+export const getWithToken = async (url, params) => {
+  return instance({
+    url,
+    method: "GET",
+    data: params,
+    headers: baseHeadersForToken(),
+  })
 };
 export const getwithoutToken = async (url, params) => {
   return instance({
@@ -94,15 +111,36 @@ export const deleteReq = async (url, params) => {
   });
 };
 
+export const deleteWithUpload = async (url, params) => {
+  return instance({
+    url,
+    method: "DELETE",
+    data: params,
+    headers: baseHeadersForUploads(),
+  });
+};
+
+export const putWithUpload = async (url, params) => {
+  return instance({
+    url,
+    method: "PUT",
+    data: params,
+    headers: baseHeadersForUploads(),
+  });
+};
+
 const client = {
   get,
   post,
   put,
   deleteReq,
+  deleteWithUpload,
   postWithoutToken,
   postWithUpload,
   getwithoutToken,
   putWithoutToken,
+  putWithUpload,
+  getWithToken
 };
 
 export default client;
