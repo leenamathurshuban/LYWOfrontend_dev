@@ -95,6 +95,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
       setImage(URL.createObjectURL(file));
       setImageName(file.name);
       setLogoModal(true);
+      console.log("file------",file)
       setImageFile(file);
     }
   };
@@ -378,6 +379,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
   };
 
   const updateCompanyProfile = async () => {
+    console.log("description======",description)
     if (companyUpdateError?.websiteError) {
       console.log("Invalid URL, cannot submit.");
       return;
@@ -385,13 +387,20 @@ const CompanyEditProfile = ({ show, handleClose }) => {
 
     try {
       const data = new FormData();
+
       data.append("description", description);
       data.append("website_url", website);
       data.append("company_type", selectedCompanyType);
       data.append("number_of_employees", noOfEmploy);
       data.append("industry", ids?.industryUid);
       data.append("location", ids?.locationUid);
-      data.append("logo", imageFile);
+      data.append("logo", imageFile) 
+      // if(imageFile){
+      //   data.append("logo", imageFile) 
+      // }
+      
+
+      // console.log("data--imageFile----->>>>>>>>",imageFile)
 
       const response = await axios.put(
         `https://bittrend.shubansoftware.com/account-api/update-company-api/${uid}/`,
@@ -452,6 +461,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
   };
 
   const handleDeleteImage = () => {
+    console.log("deleteddd----")
     setImage(null);
     setImageName("");
     setImageFile("");

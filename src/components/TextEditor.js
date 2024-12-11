@@ -64,14 +64,29 @@
 import React, { useState, useEffect } from 'react';
 import ReactQuill from 'react-quill'; 
 import 'react-quill/dist/quill.snow.css'; 
+import { useDispatch, useSelector } from 'react-redux';
+import { setCompanyProfileDetails } from '../Slice/Login/LoginSlice';
 
 const TextEditor = ({ data, onUpdate }) => {
   const [editorValue, setEditorValue] = useState(data || ''); 
   const [errorMessage, setErrorMessage] = useState(''); 
 
+  const companyProfileDetails = useSelector(
+    (state) => state.login.CompanyProfileDetails
+  );
+
+  const dispatch = useDispatch()
+  // console.log("companyProfileDetails--description--->>>>>",companyProfileDetails.description)
+
   const maxWords = 500;
 
   const handleChange = (value) => {
+    
+     const data = {...companyProfileDetails, ["description"] : value}
+     dispatch(setCompanyProfileDetails(data))
+
+    // companyProfileDetails.description = value
+   
     const wordCount = getWordCount(value);
 
     if (wordCount <= maxWords) {

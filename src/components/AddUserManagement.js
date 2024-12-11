@@ -152,16 +152,11 @@ const navigate = useNavigate()
       }
     } catch (error) {
       setIsLoading(false);
-      toast.error("An error occurred while deleting the user.");
+      toast.error("Please select user to delete");
     }
   };
 
   const updateUserStatus = async (uid, statusAction) => {
-    
-    // if (Array.isArray(uid) && Array.isArray(uid[0])) {
-    //   uid = uid[0];  // Flatten the array by accessing the first element
-    // }
-
     setIsLoading(true);
     const formdata = new FormData();
     formdata.append("uids", JSON.stringify(uid));
@@ -171,8 +166,8 @@ const navigate = useNavigate()
       setIsLoading(false);
       if (response.data.status == 200) {
         setIsLoading(false);
-        window.location.reload(); //checkkkk
-        console.log(response.data);
+        // window.location.reload(); 
+        // console.log(response.data);
       }
     } catch (error) {
       setIsLoading(false);
