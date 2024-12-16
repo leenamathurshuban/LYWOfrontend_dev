@@ -14,8 +14,9 @@ const ActiveUsersSection = ({
 
 
   const handleEdit = (e, uid) => {
+    
     const { name, value, type, checked } = e.target;
-
+    console.log("checked----",checked)
     if (name === "phone_number" || name === "first_name") {
      
       setEditUserData((prev) => ({

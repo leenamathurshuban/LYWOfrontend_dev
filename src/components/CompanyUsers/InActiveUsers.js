@@ -18,7 +18,7 @@ const InActiveUserSection = ({
     const { name, value, type, checked } = e.target;
 
     if (name === "phone_number" || name === "first_name") {
-     
+     console.log("Active user checked-----",checked)
       setEditUserData((prev) => ({
         ...prev,
         [uid]: {
