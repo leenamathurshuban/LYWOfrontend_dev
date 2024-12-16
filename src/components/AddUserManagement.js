@@ -45,6 +45,8 @@ const AddUserManagement = () => {
   const [selectedUids, setSelectedUids] = useState([]);
   const [editUserData, setEditUserData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+
+
 const navigate = useNavigate()
 
   const handleAddNewUserRow = () => {
@@ -114,7 +116,7 @@ const navigate = useNavigate()
     formData.append("email", createUserData.email);
     formData.append("first_name", createUserData.name);
     formData.append("phone_number", createUserData.phoneNumber);
-    formData.append("user_role", "9b476335-0e67-4e01-9997-88ba8d2cf6e2");
+    formData.append("user_role", "9b476335-0e67-4e01-9997-88ba8d2cf6e2"); // ComputerUser
     formData.append("company", JSON.stringify([companyProfileDetails?.uid]));
     try {
       const response = await createUserApi(formData);
@@ -131,7 +133,7 @@ const navigate = useNavigate()
         errorData?.phone_number?.[0] && toast.error(errorData.phone_number[0]);
       }
       if(error?.response?.status === 401 || error?.response?.data?.detail?.includes( "Given token not valid for any token type")){
-        console.log("Token expired, redirecting to login");
+        //console.log("Token expired, redirecting to login");
         removeToken();
         navigate("/loginwithpassword");
       }
@@ -184,12 +186,16 @@ const navigate = useNavigate()
     };
 
     const formdata = new FormData();
+    // console.log("editUserData[uid].user_role------",editUserData[uid].user_role?.uid)
 
     if (editUserData[uid]?.first_name) {
       formdata.append("first_name", editUserData[uid].first_name);
     }
     if (editUserData[uid]?.phone_number) {
       formdata.append("phone_number", editUserData[uid].phone_number);
+    }
+    if (editUserData[uid]?.user_role?.uid) {
+      formdata.append("user_role", editUserData[uid].user_role?.uid);
     }
     setIsLoading(true);
 
@@ -201,10 +207,19 @@ const navigate = useNavigate()
       )
       .then((response) => {
         setIsLoading(false);
-        console.log(response.data);
+        // console.log(response.data);
+        if(response.data){
+          setCompanyUserList((prevList) =>
+            prevList.map((user) =>
+              user.uid === uid ? { ...user, ...formdata } : user
+            )
+          );
+          alert("User updated successfully!");
+        }
       })
       .catch((error) => {
         setIsLoading(false);
+        
         console.error("There was an error!", error);
       });
   };
@@ -263,6 +278,8 @@ const navigate = useNavigate()
     return () => clearTimeout(debounceTimer);
   }, [searchTerm]);
 
+
+  
   return (
     <Row>
       <Col md={9}>
@@ -457,7 +474,7 @@ const navigate = useNavigate()
                     <>
                       <ActiveUsersSection
                         activeUsers={activeUsers}
-                        companyUserListAPI={companyUserListAPI}
+                        // companyUserListAPI={companyUserListAPI}
                         selectedUids={selectedUids}
                         setSelectedUids={setSelectedUids}
                         deleteUser={deleteUser}
@@ -465,7 +482,7 @@ const navigate = useNavigate()
                         handleCheckboxChange={handleCheckboxChange}
                         EditUser={EditUser}
                         editUserData={editUserData}
-                        setEditUserData={setEditUserData}
+                        setEditUserData={setEditUserData}  
                       />
                       <AdmidUserSection
                         adminUsers={adminUsers}

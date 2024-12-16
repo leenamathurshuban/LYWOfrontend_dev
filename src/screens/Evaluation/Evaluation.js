@@ -64,6 +64,7 @@ const Evalation = () => {
   const [EvaluationList, setEvaluationList] = useState([]);
   const [EvaluationListDetails, setEvaluationListDetails] = useState([]);
   const [SerachList, setSerachList] = useState("");
+  // const [activeItem, setActiveItem] = useState([]);
 
   const accordionItems = [
     {
@@ -107,24 +108,6 @@ const Evalation = () => {
       body: "Content for item 3",
     },
   ];
-
-  const toggleAll = () => {
-   
-    if (activeKeys.length === accordionItems.length) {
-      setActiveKeys([]); 
-    } else {
-      setActiveKeys(accordionItems.map((item) => item.id)); 
-      console.log(accordionItems.map((item) => item.id));
-    }
-  };
-
-  const toggleItem = (id) => {
-    if (activeKeys.includes(id)) {
-      setActiveKeys(activeKeys.filter((key) => key !== id)); 
-    } else {
-      setActiveKeys([...activeKeys, id]); 
-    }
-  };
 
   const revaluationsListAPI = async (SerachQuestion) => {
     setIsLoading(true);
@@ -213,6 +196,44 @@ const Evalation = () => {
       ) + 1;
 
     return position;
+  };
+
+  const handleToggleExpandCollapse = () => {
+   
+    if (
+      activeKeys.length === EvaluationListDetails?.[0]?.section_asset.length
+    ) {
+     
+      setActiveKeys([]);
+    } else {
+      
+      setActiveKeys(
+        EvaluationListDetails?.[0]?.section_asset.map((item) => item.id)
+      ); 
+    }
+  };
+
+  const handleToggle = (id) => {
+    setActiveKeys((prevActiveItems) => {
+      
+      if (prevActiveItems.includes(id)) {
+       
+        return prevActiveItems.filter((itemId) => itemId !== id);
+      } else {
+        
+        return [...prevActiveItems, id];
+      }
+    });
+  };
+
+  const handleListItemClick = (id) => {
+   
+    const element = document.getElementById(`accordion-item-${id}`);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+   
+    handleToggle(id);
   };
 
   return (
@@ -305,7 +326,6 @@ const Evalation = () => {
                         (item) => (
                           <tr>
                             <td
-                             
                               onClick={() => quizModal(item.uid)}
                               style={{ cursor: "pointer" }}
                             >
@@ -354,7 +374,6 @@ const Evalation = () => {
                                 <Dropdown.Menu>
                                   <Dropdown.Item
                                     href="#/action-1"
-                                   
                                     onClick={() => quizModal(item.uid)}
                                   >
                                     Preview
@@ -453,12 +472,13 @@ const Evalation = () => {
                   </span>
                   <p className="text-muted font-sm m-0">Pass Criteria</p>
                 </li>
-                <li onClick={toggleAll}>
+                <li onClick={handleToggleExpandCollapse}>
                   <span className="outline_scorebtn">
                     <img src={expandIcon} className="m-0" />
                   </span>
                   <p className="text-muted font-sm m-0">
-                    {activeKeys.length === accordionItems.length
+                    {activeKeys.length ===
+                    EvaluationListDetails?.[0]?.section_asset
                       ? "Collapse"
                       : "Expand"}
                   </p>
@@ -488,7 +508,10 @@ const Evalation = () => {
                   </div>
                   <Nav variant="pills" className="flex-column">
                     <Nav.Item>
-                      <Nav.Link href="#qes_section02" eventKey="second">
+                      <Nav.Link
+                      //href="#qes_section02"
+                      // eventKey="second"
+                      >
                         {EvaluationListDetails[0].section_asset.map((item) => (
                           <>
                             <h5>{item.section_title}</h5>
@@ -499,13 +522,26 @@ const Evalation = () => {
                                 {item.fixed_time},{item.pass_criteria}
                               </p>
                             ))}
-                            {item.question_section.map((item) => (
-                              <ul className="qs_numlist">
-                                <li>
-                                  <span className="qs_count">{item.id}</span>
-                                </li>
-                              </ul>
-                            ))}
+                            <ul className="qs_numlist">
+                              {item.question_section.map(
+                                (quesItem, quesIndex) => (
+                                  <li
+                                    key={quesItem.id}
+                                    style={{ cursor: "pointer" }}
+                                    onClick={() =>
+                                      handleListItemClick(quesItem.id)
+                                    }
+                                  >
+                                    <span className="qs_count">
+                                      {" "}
+                                      {quesIndex + 1}
+                                    </span>
+                                    
+                                  </li>
+                                )
+                                
+                              )}
+                            </ul>
                           </>
                         ))}
                       </Nav.Link>
@@ -525,6 +561,7 @@ const Evalation = () => {
                         >
                           <div className="d-flex justify-content-between mb-2">
                             <h6>{item.section_title}</h6>
+
                             <span>
                               Questions
                               <strong className="font-weight-600 ms-1">
@@ -537,18 +574,28 @@ const Evalation = () => {
                         </div>
                         <Accordion
                           className="quetions_list mt-4"
-                          activeKey={activeKeys}
+                          
                           alwaysOpen
+                         
+                          activeKey={activeKeys.map((item) => item.toString())}
                         >
                           {item.question_section.map((item) => (
-                            <Accordion.Item eventKey={item.id} key={item.id}>
+                            <Accordion.Item
+                              eventKey={item.id.toString()}
+                            
+
+                              key={item.id}
+                              id={`accordion-item-${item.id}`}
+                            >
                               <Accordion.Header
-                                onClick={() => toggleItem(item.id)}
+                               
+                                onClick={() => handleToggle(item.id)}
                               >
+                                {/* <h1>activeItem{activeItem}</h1> */}
                                 <span
                                   className={item.is_mandatory && "question"}
                                 >
-                                  {item.question_title}
+                                  {item.question_title} 
                                 </span>{" "}
                                 <span className="que_points">
                                   {item.question_points} points{" "}
@@ -556,210 +603,73 @@ const Evalation = () => {
                                 </span>
                               </Accordion.Header>
                               <Accordion.Body>
-                                <Form>
+                                {item.quiz_type == "MCQ-Multi" && (
+                                  <ul className="que_options">
+                                    {item.question_option.part1?.map(
+                                      (option, index) => {
+                                        const isChecked =
+                                          item.questions_answer.some(
+                                            (answer) =>
+                                              answer.replace(/'/g, "") ===
+                                              option
+                                          );
+
+                                        return (
+                                          <li key={index}>
+                                            <Form.Check
+                                              type="radio"
+                                              id={`custom-radio${index + 1}`}
+                                              label={option}
+                                              checked={isChecked}
+                                            />
+                                          </li>
+                                        );
+                                      }
+                                    )}
+                                  </ul>
+                                )}
+
+                                {item.quiz_type === "MCQ" && (
                                   
-
-
-                               
-
-                                  {item.quiz_type == "MCQ-Multi" && (
-                                    <ul className="que_options">
-                                      {item.question_option.part1?.map(
-                                        (option, index) => {
-                                          // Check if the current option is part of the correct answers
-                                          const isChecked =
-                                            item.questions_answer.some(
-                                              (answer) =>
-                                                answer.replace(/'/g, "") ===
-                                                option
-                                            );
-
-                                          return (
-                                            <li key={index}>
-                                              <Form.Check
-                                                type="radio"
-                                                id={`custom-radio${index + 1}`}
-                                                label={option}
-                                                checked={isChecked}
-                                              />
-                                            </li>
+                                  <ul className="que_options">
+                                    {item.question_option.part1?.map(
+                                      (option, index) => {
+                                        const isChecked =
+                                          item.questions_answer.some(
+                                            (answer) =>
+                                              answer.replace(/'/g, "") ===
+                                              option
                                           );
-                                        }
-                                      )}
-                                    </ul>
-                                  )}
 
-                                  {item.quiz_type == "MCQ" && (
-                                    <ul className="que_options">
-                                      {item.question_option.part1?.map(
-                                        (option, index) => {
-                                          // Check if the current option is part of the correct answers
-                                          const isChecked =
-                                            item.questions_answer.some(
-                                              (answer) =>
-                                                answer.replace(/'/g, "") ===
-                                                option
-                                            );
+                                        return (
+                                          <li key={index}>
+                                            <Form.Check
+                                              type="radio"
+                                              id={`custom-radio${index + 1}`}
+                                              label={option}
+                                              checked={isChecked}
+                                            />
+                                          </li>
+                                        );
+                                      }
+                                    )}
+                                  </ul>
+                                )}
 
-                                          return (
-                                            <li key={index}>
-                                              <Form.Check
-                                                type="radio"
-                                                id={`custom-radio${index + 1}`}
-                                                label={option}
-                                                checked={isChecked}
-                                              />
-                                            </li>
-                                          );
-                                        }
-                                      )}
-                                    </ul>
-                                  )}
+                                {/* Quiz 2nd  workinggggg */}
 
-                                  {item.assignment_type ==
-                                  "Text-Video-Mandatory" ? (
-                                    <>
-                                      <div className="que_attachment me-2">
-                                        <h6>
-                                          <img src={fileIcon} alt="" />
-                                          Text
-                                          <span className="text-danger">*</span>
-                                        </h6>
-                                        <p className="text-muted">
-                                          Max 3,000 Words
-                                        </p>
-                                      </div>
+                                 {item.quiz_type == "Match" && (
+                                  <ol className="qus_crossed">
+                                    {item?.question_option.part1?.map(
+                                      (data, index) => {
+                                        const correctCapital =
+                                          item?.questions_answer[index]
+                                            ?.replace("'", "")
+                                            ?.replace("'", "");
 
-                                      <div className="que_attachment me-2">
-                                        <h6>
-                                          <img src={videoRecoder} alt="" />
-                                          Video
-                                          <span className="text-danger">*</span>
-                                          <span className="text-muted font-light">
-                                            (Record Online)
-                                          </span>
-                                        </h6>
-                                        <p className="text-muted">
-                                          5 - 10 mins
-                                        </p>
-                                      </div>
-                                      <div className="accordion_footer">
-                                        <p>{item.question_points} Point</p>
-                                        {item.is_random && (
-                                          <Form.Check // prettier-ignore
-                                            type="checkbox"
-                                            id="custom-checkbox"
-                                            label="Randomise Responses"
-                                            checked={true}
-                                          />
-                                        )}
-                                      </div>
-                                    </>
-                                  ) : item.assignment_type == "Video-Only" ? (
-                                    <>
-                                      <div className="que_attachment me-2">
-                                        <h6>
-                                          <img src={videoRecoder} alt="" />
-                                          Video
-                                          <span className="text-danger">*</span>
-                                          <span className="text-muted font-light">
-                                            (Record Online)
-                                          </span>
-                                        </h6>
-                                        <p className="text-muted">
-                                          5 - 10 mins
-                                        </p>
-                                      </div>
-                                      <div className="accordion_footer">
-                                        <p>{item.question_points} Point</p>
-                                        {item.is_random && (
-                                          <Form.Check // prettier-ignore
-                                            type="checkbox"
-                                            id="custom-checkbox"
-                                            label="Randomise Responses"
-                                            checked={true}
-                                          />
-                                        )}
-                                      </div>
-                                    </>
-                                  ) : item.assignment_type ==
-                                    "Text-Attachment-Optional" ? (
-                                    <>
-                                      <div className="que_attachment me-2">
-                                        <h6>
-                                          <img src={fileIcon} alt="" />
-                                          Text
-                                          <span className="text-danger">*</span>
-                                        </h6>
-                                        <p className="text-muted">
-                                          Max 3,000 Words
-                                        </p>
-                                      </div>
-                                      <div className="que_attachment me-2">
-                                        <h6>
-                                          <img src={attachmentPin} alt="" />
-                                          Attachment
-                                          <span className="text-muted font-light">
-                                            (Optional)
-                                          </span>
-                                        </h6>
-                                        <p className="text-muted">
-                                          <span className="att_img">PDF</span>
-                                          <span className="att_img">PNG</span>
-                                          (Size Limit: 1MB)
-                                        </p>
-                                      </div>
-                                      <div className="accordion_footer">
-                                        <p>{item.question_points} Point</p>
-                                        {item.is_random && (
-                                          <Form.Check // prettier-ignore
-                                            type="checkbox"
-                                            id="custom-checkbox"
-                                            label="Randomise Responses"
-                                            checked={true}
-                                          />
-                                        )}
-                                      </div>
-                                    </>
-                                  ) : item.assignment_type == "Text-Only" ? (
-                                    <>
-                                      <div className="que_attachment me-2">
-                                        <h6>
-                                          <img src={fileIcon} alt="" />
-                                          Text
-                                          <span className="text-danger">*</span>
-                                        </h6>
-                                        <p className="text-muted">
-                                          Max 3,000 Words
-                                        </p>
-                                      </div>
-                                      <div className="accordion_footer">
-                                        <p>{item.question_points} Point</p>
-                                        {item.is_random && (
-                                          <Form.Check // prettier-ignore
-                                            type="checkbox"
-                                            id="custom-checkbox"
-                                            label="Randomise Responses"
-                                            checked={true}
-                                          />
-                                        )}
-                                      </div>
-                                    </>
-                                  ) : null}
-
-                                  {item.quiz_type == "Match" && (
-                                
-
-                                    <ol className="qus_crossed">
-                                      {item?.question_option.part1?.map(
-                                        (data, index) => {
-                                          const correctCapital =
-                                            item?.questions_answer[index]
-                                              ?.replace("'", "")
-                                              ?.replace("'", ""); 
-
-                                          return (
-                                            <li key={index}>
+                                        return (
+                                          <li key={index}>
+                                            <div className="crossd_answarp">
                                               <span className="crossd_ans">
                                                 {data}
                                               </span>
@@ -767,39 +677,171 @@ const Evalation = () => {
                                               <span className="crossd_ans">
                                                 {correctCapital}
                                               </span>
-                                            </li>
-                                          );
-                                        }
-                                      )}
-                                    </ol>
-                                  )}
+                                            </div>
+                                          </li>
+                                        );
+                                      }
+                                    )}
+                                  </ol>
+                                )} 
+                                
+                                {/* Quiz 2nd workinggggg */}
 
-                                  {item.quiz_type == "Arrange" && (
-                                   
-                                    <ul className="qus_numbered">
-                                      {item.questions_answer.map(
-                                        (answer, index) => (
-                                          <li key={index}>
+                                {/* !st QUIz start workinggggg  */}
+
+                                {item.quiz_type == "Arrange" && (
+                                  <ul className="qus_numbered">
+                                    {item.questions_answer.map(
+                                      (answer, index) => (
+                                        <li key={index}>
+                                          <div className="crossd_answarp">
                                             <span className="option_count">
                                               {getPosition(answer)}
                                             </span>
                                             <span>{answer}</span>
-                                          </li>
-                                        )
-                                      )}
-                                    </ul>
-                                  )}
+                                          </div>
+                                        </li>
+                                      )
+                                    )}
+                                  </ul>
+                                )}
 
-                                  <Form></Form>
-                                </Form>
+                                 {/* !st QUIz enddddd workinggggg*/}
+
+                                {item.assignment_type ==
+                                "Text-Video-Mandatory" ? (
+                                  <>
+                                    <div className="que_attachment me-2">
+                                      <h6>
+                                        <img src={fileIcon} alt="" />
+                                        Text
+                                        <span className="text-danger">*</span>
+                                      </h6>
+                                      <p className="text-muted">
+                                        Max 3,000 Words
+                                      </p>
+                                    </div>
+
+                                    <div className="que_attachment me-2">
+                                      <h6>
+                                        <img src={videoRecoder} alt="" />
+                                        Video
+                                        <span className="text-danger">*</span>
+                                        <span className="text-muted font-light">
+                                          (Record Online)
+                                        </span>
+                                      </h6>
+                                      <p className="text-muted">5 - 10 mins</p>
+                                    </div>
+                                    <div className="accordion_footer">
+                                      <p>{item.question_points} Point</p>
+                                      {item.is_random && (
+                                        <Form.Check 
+                                          type="checkbox"
+                                          id="custom-checkbox"
+                                          label="Randomise Responses"
+                                          checked={true}
+                                        />
+                                      )}
+                                    </div>
+                                  </>
+                                ) : item.assignment_type == "Video-Only" ? (
+                                  <>
+                                    <div className="que_attachment me-2">
+                                      <h6>
+                                        <img src={videoRecoder} alt="" />
+                                        Video
+                                        <span className="text-danger">*</span>
+                                        <span className="text-muted font-light">
+                                          (Record Online)
+                                        </span>
+                                      </h6>
+                                      <p className="text-muted">5 - 10 mins</p>
+                                    </div>
+                                    <div className="accordion_footer">
+                                      <p>{item.question_points} Point</p>
+                                      {item.is_random && (
+                                        <Form.Check 
+                                          type="checkbox"
+                                          id="custom-checkbox"
+                                          label="Randomise Responses"
+                                          checked={true}
+                                        />
+                                      )}
+                                    </div>
+                                  </>
+                                ) : item.assignment_type ==
+                                  "Text-Attachment-Optional" ? (
+                                  <>
+                                    <div className="que_attachment me-2">
+                                      <h6>
+                                        <img src={fileIcon} alt="" />
+                                        Text
+                                        <span className="text-danger">*</span>
+                                      </h6>
+                                      <p className="text-muted">
+                                        Max 3,000 Words
+                                      </p>
+                                    </div>
+                                    <div className="que_attachment me-2">
+                                      <h6>
+                                        <img src={attachmentPin} alt="" />
+                                        Attachment
+                                        <span className="text-muted font-light">
+                                          (Optional)
+                                        </span>
+                                      </h6>
+                                      <p className="text-muted">
+                                        <span className="att_img">PDF</span>
+                                        <span className="att_img">PNG</span>
+                                        (Size Limit: 1MB)
+                                      </p>
+                                    </div>
+                                    <div className="accordion_footer">
+                                      <p>{item.question_points} Point</p>
+                                      {item.is_random && (
+                                        <Form.Check 
+                                          type="checkbox"
+                                          id="custom-checkbox"
+                                          label="Randomise Responses"
+                                          checked={true}
+                                        />
+                                      )}
+                                    </div>
+                                  </>
+                                ) : item.assignment_type == "Text-Only" ? (
+                                  <>
+                                    <div className="que_attachment me-2">
+                                      <h6>
+                                        <img src={fileIcon} alt="" />
+                                        Text
+                                        <span className="text-danger">*</span>
+                                      </h6>
+                                      <p className="text-muted">
+                                        Max 3,000 Words
+                                      </p>
+                                    </div>
+                                    <div className="accordion_footer">
+                                      <p>{item.question_points} Point</p>
+                                      {item.is_random && (
+                                        <Form.Check 
+                                          type="checkbox"
+                                          id="custom-checkbox"
+                                          label="Randomise Responses"
+                                          checked={true}
+                                        />
+                                      )}
+                                    </div>
+                                  </>
+                                ) : null}
+
+                               
                               </Accordion.Body>
                             </Accordion.Item>
                           ))}
                         </Accordion>
                       </div>
                     ))}
-                    
-                    
                   </div>
                 </Col>
                 <Col md={3} lg={2} className="queRight_panel">
@@ -828,9 +870,6 @@ const Evalation = () => {
         </Modal>
       ))}
 
-
-
-
       <Modal
         show={showinstruction}
         onHide={handleInstructionClose}
@@ -848,9 +887,8 @@ const Evalation = () => {
             etc: skills selected in the formation of the test] as part of the
             recruitment assessment procedure.
           </p>
-          {
-            EvaluationListDetails.map((item)=> (
-              <Row>
+          {EvaluationListDetails.map((item) => (
+            <Row>
               <Col md={4}>
                 <div className="inst_iconbox">
                   <span className="inst_icon">
@@ -875,12 +913,20 @@ const Evalation = () => {
                     <img src={mandatoryIcon} />
                   </span>
                   <label>Mandatory</label>
-                  {item.total_mandatory_questions == item.total_number_of_question ?  <h4>All</h4> : `${item.total_mandatory_questions} / ${item.total_number_of_question}` }
-                 
+                  {item.total_mandatory_questions ==
+                  item.total_number_of_question ? (
+                    <h4>All</h4>
+                  ) : (
+                    `${item.total_mandatory_questions} / ${item.total_number_of_question}`
+                  )}
                 </div>
               </Col>
               <Col md={4}>
-                <div className={`inst_iconbox ${!item.fixed_time ? 'disabled' : ''}`}>
+                <div
+                  className={`inst_iconbox ${
+                    !item.fixed_time ? "disabled" : ""
+                  }`}
+                >
                   <span className="inst_icon">
                     <img src={timerIcon} />
                   </span>
@@ -889,28 +935,34 @@ const Evalation = () => {
                 </div>
               </Col>
               <Col md={4}>
-              <div className={`inst_iconbox ${!item.is_negative_scoring ? 'disabled' : ''}`}>
+                <div
+                  className={`inst_iconbox ${
+                    !item.is_negative_scoring ? "disabled" : ""
+                  }`}
+                >
                   <span className="inst_icon">
                     <img src={saveProssIcon} />
                   </span>
                   <label>Negative Scoring</label>
-                  {item.is_negative_scoring ?  <h4>Applicable</h4> :  <h4>Not Applicable</h4>}
-                 
+                  {item.is_negative_scoring ? (
+                    <h4>Applicable</h4>
+                  ) : (
+                    <h4>Not Applicable</h4>
+                  )}
                 </div>
               </Col>
               <Col md={4}>
                 <div className="inst_iconbox">
                   <span className="inst_icon">
-                    <img src={ngtscoringIcon}  />
+                    <img src={ngtscoringIcon} />
                   </span>
                   <label>Save Progress</label>
-                 {item.save_progress ?  <h4>Allowed</h4> : <h4>Not Allowed</h4>}
+                  {item.save_progress ? <h4>Allowed</h4> : <h4>Not Allowed</h4>}
                 </div>
               </Col>
             </Row>
-            ))
-          }
-         
+          ))}
+
           <h5 className="border_hadding">Key Points to Note</h5>
           <ul>
             <li>
@@ -940,8 +992,6 @@ const Evalation = () => {
           </ul>
         </Modal.Body>
       </Modal>
-
-     
     </>
   );
 };

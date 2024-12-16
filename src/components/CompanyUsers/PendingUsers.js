@@ -11,16 +11,61 @@ const PendingUserSection = ({
   editUserData,
   setEditUserData,
 }) => {
-  const handleEdit = (e, uid) => {
-    const { name, value } = e.target;
+  // const handleEdit = (e, uid) => {
+  //   const { name, value } = e.target;
 
-    setEditUserData((prev) => ({
-      ...prev,
-      [uid]: {
-        ...prev[uid],
-        [name]: value,
-      },
-    }));
+  //   setEditUserData((prev) => ({
+  //     ...prev,
+  //     [uid]: {
+  //       ...prev[uid],
+  //       [name]: value,
+  //     },
+  //   }));
+  // };
+
+  // const handleToggleChange = async (id) => {
+  //   const updatedUsersData = pendingUsers.map((user) =>
+  //     user.id === id
+  //       ? {
+  //           ...user,
+  //           user_role: {
+  //             ...user.user_role,
+  //             uid: user.user_role.uid === "1c7e16dc-c9f0-45a7-aeaa-1471e63a83fa" ? "9b476335-0e67-4e01-9997-88ba8d2cf6e2" : "1c7e16dc-c9f0-45a7-aeaa-1471e63a83fa",
+  //           },
+  //         }
+  //       : user
+  //   );
+
+  //   setEditUserData(updatedUsersData);
+
+  //   const updatedUser = updatedUsersData.find((user) => user.id === id);
+  //   handleEdit({ target: { name: 'user_role', value: updatedUser.user_role.uid } }, updatedUser.uid);
+  // };
+
+  const handleEdit = (e, uid) => {
+    const { name, value, type, checked } = e.target;
+
+    if (name === "phone_number" || name === "first_name") {
+      setEditUserData((prev) => ({
+        ...prev,
+        [uid]: {
+          ...prev[uid],
+          [name]: value,
+        },
+      }));
+    } else if (type === "checkbox" || type === "switch") {
+      const newRole = checked
+        ? "1c7e16dc-c9f0-45a7-aeaa-1471e63a83fa" // Admin role ID
+        : "9b476335-0e67-4e01-9997-88ba8d2cf6e2";
+      //console.log(newRole, "newRole---");
+      setEditUserData((prevData) => ({
+        ...prevData,
+        [uid]: {
+          ...prevData[uid],
+          user_role: { uid: newRole },
+        },
+      }));
+    }
   };
 
   return (
@@ -88,11 +133,16 @@ const PendingUserSection = ({
           </td>
           <td>
             <Form.Check
+              key={item.id}
               className="inline-checkbox"
               type="switch"
-              id="custom-switch"
-              checked={item.user_role.role_name === "Admin"}
-              readOnly
+              id={`custom-switch-${item.id}`}
+              checked={
+                editUserData[item.uid]?.user_role?.uid === "1c7e16dc-c9f0-45a7-aeaa-1471e63a83fa" 
+                  ||
+                item.user_role.uid === "1c7e16dc-c9f0-45a7-aeaa-1471e63a83fa"
+              }
+              onChange={(e) => handleEdit(e, item.uid)}
             />
           </td>
           <td>
@@ -144,7 +194,9 @@ const PendingUserSection = ({
                     </Dropdown.Item>
                     <Dropdown.Item
                       href="#/action-2"
-                      onClick={() => updateUserStatus([item.uid], "Deactivated")}
+                      onClick={() =>
+                        updateUserStatus([item.uid], "Deactivated")
+                      }
                     >
                       Deactivate
                     </Dropdown.Item>

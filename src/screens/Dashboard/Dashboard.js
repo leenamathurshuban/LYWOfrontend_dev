@@ -1,31 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
-  Accordion,
   Breadcrumb,
   Button,
   Card,
   Col,
   Container,
-  Form,
-  Modal,
-  Nav,
-  Row,
-  Tab,
+  Row
 } from "react-bootstrap";
 import FileUploader from "../../components/FileUploader";
-import Header from "../../components/Header";
-import Sidebar from "../../components/Sidebar";
-import { cprofilelogo, liwotextlogo, starIcon } from "../../images/assest";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { logoMaker, removeToken } from "../../helpers/helper";
 import CompanyEditProfile from "../../components/CompanyEditProfile";
-import { GetcompanyDetailsApi, LogInCall } from "../../services/provider";
+import Header from "../../components/Header";
+import Sidebar from "../../components/Sidebar";
+import { logoMaker, removeToken } from "../../helpers/helper";
+import { liwotextlogo } from "../../images/assest";
+import { GetcompanyDetailsApi } from "../../services/provider";
 import { setCompanyProfileDetails } from "../../Slice/Login/LoginSlice";
 
 const Dashboard = () => {
   const [show, setShow] = useState(false);
-  const [getDetails, setGetDetails] = useState("");
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -47,16 +41,9 @@ const Dashboard = () => {
         console.log("dispatch calll", res?.response);
         dispatch(setCompanyProfileDetails(res?.response));
       })
-      // .catch((error)=>{
-      //   navigate("/loginwithpassword")
-      //   // if(error?.response?.data?.detail){
-      //   //   console.log("eroorrrr",error?.response?.data?.detail)
-      //   //   // navigate("/loginwithpassword")
-      //   // }
-      // })
-      // setGetDetails(res?.response) )
+     
       .catch((error) => {
-        // Check if the error is a 401 Unauthorized (Token Expired)
+        
         if (
           error?.response?.status === 401 ||
           error?.response?.data?.detail?.includes(
@@ -67,7 +54,7 @@ const Dashboard = () => {
           removeToken();
           navigate("/loginwithpassword");
         } else {
-          // Handle other errors (network errors, server errors, etc.)
+          
           console.error("An error occurred:", error);
         }
       });

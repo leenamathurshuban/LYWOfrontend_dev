@@ -379,7 +379,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
   };
 
   const updateCompanyProfile = async () => {
-    console.log("description======",description)
+   
     if (companyUpdateError?.websiteError) {
       console.log("Invalid URL, cannot submit.");
       return;
@@ -395,12 +395,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
       data.append("industry", ids?.industryUid);
       data.append("location", ids?.locationUid);
       data.append("logo", imageFile) 
-      // if(imageFile){
-      //   data.append("logo", imageFile) 
-      // }
-      
-
-      // console.log("data--imageFile----->>>>>>>>",imageFile)
+    
 
       const response = await axios.put(
         `https://bittrend.shubansoftware.com/account-api/update-company-api/${uid}/`,
@@ -412,7 +407,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
         }
       );
       if (response === 200) {
-        // setCompanyUpdateError.websiteError("");
+        
         setCompanyUpdateError((prevState) => ({
           ...prevState,
           websiteError: "", // Clear websiteError on successful update
@@ -461,11 +456,11 @@ const CompanyEditProfile = ({ show, handleClose }) => {
   };
 
   const handleDeleteImage = () => {
-    console.log("deleteddd----")
+   
     setImage(null);
     setImageName("");
     setImageFile("");
-    toast.success("Logo deleted successfully!");
+    toast.success("Logo delete Press save button!");
   };
 
   const handleEditImage = () => {
@@ -925,192 +920,6 @@ const CompanyEditProfile = ({ show, handleClose }) => {
               </Tab.Pane>
               <Tab.Pane eventKey="second">
                 <Modal.Body>
-                  {/* <Row>
-                    <Col md={9}>
-                      <div className="mdl_pagetitle d-flex justify-content-between align-items-center">
-                        <h5>User Management</h5>
-                        <InputGroup className="header_serach">
-                          <Button id="basic-addon1">
-                            <svg
-                              width="18"
-                              height="18"
-                              viewBox="0 0 18 18"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M16.5 16.5L11.5001 11.5M13.1667 7.33333C13.1667 10.555 10.555 13.1667 7.33333 13.1667C4.11167 13.1667 1.5 10.555 1.5 7.33333C1.5 4.11167 4.11167 1.5 7.33333 1.5C10.555 1.5 13.1667 4.11167 13.1667 7.33333Z"
-                                stroke="#667085"
-                                stroke-width="1.66667"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              />
-                            </svg>
-                          </Button>
-                          <Form.Control
-                            placeholder="Serach"
-                            aria-label="Serach"
-                            aria-describedby="basic-addon1"
-                          />
-                        </InputGroup>
-                        <div className="btn_group">
-                          <Button
-                            variant="link"
-                            className="btn-link-muted"
-                            disabled
-                          >
-                            <svg
-                              width="20"
-                              height="20"
-                              viewBox="0 0 20 20"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M5.8335 8.33333V6.66667C5.8335 4.36548 7.69898 2.5 10.0002 2.5C11.7088 2.5 13.1772 3.52841 13.8201 5M10.0002 12.0833V13.75M7.3335 17.5H12.6668C14.067 17.5 14.767 17.5 15.3018 17.2275C15.7722 16.9878 16.1547 16.6054 16.3943 16.135C16.6668 15.6002 16.6668 14.9001 16.6668 13.5V12.3333C16.6668 10.9332 16.6668 10.2331 16.3943 9.69836C16.1547 9.22795 15.7722 8.8455 15.3018 8.60582C14.767 8.33333 14.067 8.33333 12.6668 8.33333H7.3335C5.93336 8.33333 5.2333 8.33333 4.69852 8.60582C4.22811 8.8455 3.84566 9.22795 3.60598 9.69836C3.3335 10.2331 3.3335 10.9332 3.3335 12.3333V13.5C3.3335 14.9001 3.3335 15.6002 3.60598 16.135C3.84566 16.6054 4.22811 16.9878 4.69852 17.2275C5.2333 17.5 5.93336 17.5 7.3335 17.5Z"
-                                stroke="#4C60E5"
-                                stroke-width="1.5"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              />
-                            </svg>
-                            Unlock
-                          </Button>
-                          <Button
-                            variant="link"
-                            className="btn-link-muted"
-                            disabled
-                          >
-                            <svg
-                              width="20"
-                              height="20"
-                              viewBox="0 0 20 20"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M8.74976 11.2501L17.4998 2.50014M8.85608 11.5235L11.0462 17.1552C11.2391 17.6513 11.3356 17.8994 11.4746 17.9718C11.5951 18.0346 11.7386 18.0347 11.8592 17.972C11.9983 17.8998 12.095 17.6518 12.2886 17.1559L17.7805 3.08281C17.9552 2.63516 18.0426 2.41133 17.9948 2.26831C17.9533 2.1441 17.8558 2.04663 17.7316 2.00514C17.5886 1.95736 17.3647 2.0447 16.9171 2.21939L2.84398 7.71134C2.34808 7.90486 2.10013 8.00163 2.02788 8.14071C1.96524 8.26129 1.96532 8.40483 2.0281 8.52533C2.10052 8.66433 2.34859 8.7608 2.84471 8.95373L8.47638 11.1438C8.57708 11.183 8.62744 11.2026 8.66984 11.2328C8.70742 11.2596 8.74028 11.2925 8.76709 11.3301C8.79734 11.3725 8.81692 11.4228 8.85608 11.5235Z"
-                                stroke="#4C60E5"
-                                stroke-width="1.5"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              />
-                            </svg>
-                            Re-Invite
-                          </Button>
-                          <Button variant="link" className="btn-link-muted">
-                            <svg
-                              width="20"
-                              height="20"
-                              viewBox="0 0 20 20"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <g clip-path="url(#clip0_1111_5848)">
-                                <path
-                                  d="M4.10817 4.10841L15.8915 15.8917M18.3332 10.0001C18.3332 14.6025 14.6022 18.3334 9.99984 18.3334C5.39746 18.3334 1.6665 14.6025 1.6665 10.0001C1.6665 5.39771 5.39746 1.66675 9.99984 1.66675C14.6022 1.66675 18.3332 5.39771 18.3332 10.0001Z"
-                                  stroke="#4C60E5"
-                                  stroke-width="1.5"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                />
-                              </g>
-                              <defs>
-                                <clipPath id="clip0_1111_5848">
-                                  <rect width="20" height="20" fill="white" />
-                                </clipPath>
-                              </defs>
-                            </svg>
-                            Deactivate
-                          </Button>
-                          <Button variant="link" className="btn-link-muted">
-                            <svg
-                              width="20"
-                              height="20"
-                              viewBox="0 0 20 20"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M13.3333 5.00008V4.33341C13.3333 3.39999 13.3333 2.93328 13.1517 2.57676C12.9919 2.26316 12.7369 2.00819 12.4233 1.8484C12.0668 1.66675 11.6001 1.66675 10.6667 1.66675H9.33333C8.39991 1.66675 7.9332 1.66675 7.57668 1.8484C7.26308 2.00819 7.00811 2.26316 6.84832 2.57676C6.66667 2.93328 6.66667 3.39999 6.66667 4.33341V5.00008M8.33333 9.58342V13.7501M11.6667 9.58342V13.7501M2.5 5.00008H17.5M15.8333 5.00008V14.3334C15.8333 15.7335 15.8333 16.4336 15.5608 16.9684C15.3212 17.4388 14.9387 17.8212 14.4683 18.0609C13.9335 18.3334 13.2335 18.3334 11.8333 18.3334H8.16667C6.76654 18.3334 6.06647 18.3334 5.53169 18.0609C5.06129 17.8212 4.67883 17.4388 4.43915 16.9684C4.16667 16.4336 4.16667 15.7335 4.16667 14.3334V5.00008"
-                                stroke="#4C60E5"
-                                stroke-width="1.5"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              />
-                            </svg>
-                            Delete
-                          </Button>
-                          <Button variant="primary">
-                            <i className="fa fa-plus me-2"></i>Add User
-                          </Button>
-                        </div>
-                      </div>
-                      <Card className="usermanagement_table shadow-md border-light">
-                        <AddUserManagement />
-                      </Card>
-                    </Col>
-                    <Col md={3} className="usermanagement_panel">
-                      <div className="rects-panel">
-                        <h5 className="hadding_h5">Admin User</h5>
-                        <ul className="bullet_list mb-0">
-                          <li>Should have at least one admin</li>
-                          <li>Can add/remove users</li>
-                          <li>Can make others admin</li>
-                          <li>Can edit profile, unlock users</li>
-                          <li>Can resend invitations</li>
-                          <li>Can inactivate users</li>
-                          <li>Can manage all jobs</li>
-                        </ul>
-                      </div>
-                      <div className="rects-panel">
-                        <h5 className="hadding_h5">Regular User</h5>
-                        <ul className="bullet_list mb-0">
-                          <li>Can see all jobs</li>
-                          <li>Can only edit the jobs that they create</li>
-                          <li>Can add collaborators to their jobs</li>
-                        </ul>
-                      </div>
-                      <div className="rects-panel">
-                        <h5 className="hadding_h5">How to Add User</h5>
-                        <ul className="bullet_list mb-0">
-                          <li>Add any valid email address</li>
-                          <li>Resend invitation if needed</li>
-                          <li>Can deactivate/delete users</li>
-                        </ul>
-                      </div>
-                      <div className="rects-panel">
-                        <h5 className="hadding_h5 d-flex justify-content-between">
-                          User Summary{" "}
-                          <Button variant="link" className="link-sm p-0">
-                            Clear Filter
-                          </Button>
-                        </h5>
-                        <div className="flter_count">
-                          <span>Showing 5/15</span>
-                          <span>1/5 Selected</span>
-                        </div>
-                        <ul className="rects_list">
-                          <li>
-                            <img src={starIcon} />
-                            Add Logo
-                          </li>
-                          <li>
-                            <img src={starIcon} />
-                            Add Website
-                          </li>
-                          <li>
-                            <img src={starIcon} />
-                            Add Detailed Discription
-                          </li>
-                          <li className="active">
-                            <img src={starIcon} />
-                            Select Company Size
-                          </li>
-                        </ul>
-                      </div>
-                    </Col>
-                  </Row> */}
                   <AddUserManagement />
                 </Modal.Body>
               </Tab.Pane>

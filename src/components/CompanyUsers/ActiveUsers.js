@@ -3,33 +3,43 @@ import { getStatusLabel } from "../../helpers/helper";
 
 const ActiveUsersSection = ({
   activeUsers,
-  companyUserListAPI,
   selectedUids,
-  setSelectedUids,
   deleteUser,
   updateUserStatus,
   handleCheckboxChange,
   EditUser,
   editUserData,
   setEditUserData,
-  
 }) => {
 
 
-
   const handleEdit = (e, uid) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
 
-    setEditUserData((prev) => ({
-      ...prev,
-      [uid]: {
-        ...prev[uid],
-        [name]: value,
-      },
-    }));
+    if (name === "phone_number" || name === "first_name") {
+     
+      setEditUserData((prev) => ({
+        ...prev,
+        [uid]: {
+          ...prev[uid],
+          [name]: value,
+        },
+      }));
+    } else if (type === "checkbox" || type === "switch") {
+     
+      const newRole = checked
+        ? "1c7e16dc-c9f0-45a7-aeaa-1471e63a83fa" // Admin role ID
+        : "9b476335-0e67-4e01-9997-88ba8d2cf6e2";
+      console.log(newRole, "newRole---");
+      setEditUserData((prevData) => ({
+        ...prevData,
+        [uid]: {
+          ...prevData[uid],
+          user_role: { uid: newRole },
+        },
+      }));
+    }
   };
-
- 
 
   return (
     <>
@@ -90,20 +100,24 @@ const ActiveUsersSection = ({
               />
             </Form.Group>
           </td>
-         
+
           <td>
             <span>
-           
               {getStatusLabel(item.status, item.status_time_interval)}
             </span>
           </td>
           <td>
             <Form.Check
+              key={item.id}
               className="inline-checkbox"
               type="switch"
-              id="custom-switch"
-              checked={item.user_role.role_name === "Admin"}
-              readOnly
+              id={`custom-switch-${item.id}`}
+              checked={
+                editUserData[item.uid]?.user_role?.uid ===
+                  "1c7e16dc-c9f0-45a7-aeaa-1471e63a83fa" ||
+                   item.user_role.uid === "1c7e16dc-c9f0-45a7-aeaa-1471e63a83fa"
+              }
+              onChange={(e) => handleEdit(e, item.uid)} 
             />
           </td>
           <td>
@@ -187,7 +201,9 @@ const ActiveUsersSection = ({
                     </Dropdown.Item>
                     <Dropdown.Item
                       href="#/action-5"
-                      onClick={() => updateUserStatus([item.uid], "Deactivated")}
+                      onClick={() =>
+                        updateUserStatus([item.uid], "Deactivated")
+                      }
                     >
                       Deactivated
                     </Dropdown.Item>
@@ -203,7 +219,9 @@ const ActiveUsersSection = ({
                   <>
                     <Dropdown.Item
                       href="#/action-5"
-                      onClick={() => updateUserStatus([item.uid], "Deactivated")}
+                      onClick={() =>
+                        updateUserStatus([item.uid], "Deactivated")
+                      }
                     >
                       Deactivated
                     </Dropdown.Item>
