@@ -42,6 +42,7 @@ import ngtscoringIcon from "../../images/icons/negative_scoring.svg";
 import belltedArrow from "../../images/icons/bullt_arrow.svg";
 import attachmentPin from "../../images/icons/attachment_pin.svg";
 import videoRecoder from "../../images/icons/video-recorder.svg";
+import CollapsedButton from "../../images/icons/CollapsedButton.svg";
 
 import { useNavigate } from "react-router-dom";
 import { removeToken } from "../../helpers/helper";
@@ -446,12 +447,12 @@ const Evalation = () => {
             </Col>
             <Col md={4} className="d-flex align-items-center">
               <p className="m-0 font-13">
-                <span className="font-weight-600 me-2">20%</span>completed
+                <span className="font-weight-600 me-2">100%</span>completed
               </p>
               <ProgressBar
                 className="ms-3"
                 style={{ width: "215px", height: "8px" }}
-                now={20}
+                now={100}
               />
             </Col>
             <Col md={4} className="score_panel">
@@ -480,11 +481,12 @@ const Evalation = () => {
 
                 <li onClick={handleToggleExpandCollapse}>
                   <span className="outline_scorebtn">
-                    <img src={expandIcon} className="m-0" />
+                    {activeKeys.length > 2 ? <img src={CollapsedButton} className="m-0" /> : <img src={expandIcon} className="m-0" />}
+                    
                   </span>
 
                   <p className="text-muted font-sm m-0">
-                    {activeKeys.length > 2 ? "Expand " : "Collapse "}
+                    {activeKeys.length > 2 ? "Collapse" : "Expand"}
                   </p>
                 </li>
 
@@ -521,11 +523,18 @@ const Evalation = () => {
                           (item, sectionIndex) => (
                             <>
                               <h5>{item.section_title}</h5>
-                              {EvaluationListDetails.map((item) => (
+                              <p>{item.total_number_of_question} Q’s{" "}
+                              {item.total_questions_point} points ~
+                              {item.total_question_time}
+                              {item?.section_pass_criteria ?  item?.section_pass_criteria : null}
+                              </p>
+
+                              {item.question_section.map((item) => (
                                 <p>
-                                  {item.total_number_of_question} Q’s{" "}
-                                  {item.total_questions_point} points ~
-                                  {item.fixed_time},{item.pass_criteria}
+                                  {/* {item.section} Q’s{" "}
+                                  {item.question_points} points  */}
+                                  {/* ~
+                                  {item.tentative_time}{item.section_pass_criteria} */}
                                 </p>
                               ))}
                               <ul className="qs_numlist">
@@ -564,7 +573,9 @@ const Evalation = () => {
                   <div className="que_mainsection">
                     {EvaluationListDetails[0].section_asset.map(
                       (item, quesIndex) => (
-                        <div id="qes_section01" className="qes_section01 mb-4">
+                        <div 
+                       // id="qes_section01" 
+                        className="qes_section01 mb-4">
                           <div
                             className={
                               activeKeys.length > 0
@@ -572,8 +583,11 @@ const Evalation = () => {
                                 : "que_head ellipsis"
                             }
                           >
+                             
                             <div className="d-flex justify-content-between mb-2">
                               <h6>{item.section_title}</h6>
+                              {/* <h6>{quesIndex + 1} {item.section_title}</h6> */}
+                             
 
                               <span>
                                 Questions
