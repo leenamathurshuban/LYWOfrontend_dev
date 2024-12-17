@@ -215,6 +215,8 @@ const Evalation = () => {
     if (element) {
       element.scrollIntoView({ behavior: "smooth", block: "start" });
     }
+// Scroll to the top of the page
+// window.scrollTo({ top: 0, behavior: 'smooth' });
 
     handleToggle(id);
   };
@@ -530,14 +532,7 @@ const Evalation = () => {
                               {item?.section_pass_criteria ?  item?.section_pass_criteria : null}
                               </p>
 
-                              {item.question_section.map((item) => (
-                                <p>
-                                  {/* {item.section} Q’s{" "}
-                                  {item.question_points} points  */}
-                                  {/* ~
-                                  {item.tentative_time}{item.section_pass_criteria} */}
-                                </p>
-                              ))}
+                      
                               <ul className="qs_numlist">
                                 {item.question_section.map(
                                   (quesItem, quesIndex) => (
@@ -559,6 +554,9 @@ const Evalation = () => {
                                         {" "}
                                         {quesIndex + 1}
                                       </span>
+
+
+
                                     </li>
                                   )
                                 )}
@@ -586,12 +584,12 @@ const Evalation = () => {
                           >
                              
                             <div className="d-flex justify-content-between mb-2">
-                              <h6>{item.section_title}</h6>
+                              <h6> {item.section_title}</h6>
                               {/* <h6>{quesIndex + 1} {item.section_title}</h6> */}
                              
 
                               <span>
-                                Questions
+                                Questions 
                                 <strong className="font-weight-600 ms-1">
                                   {item.total_number_of_question}
                                 </strong>
@@ -600,7 +598,8 @@ const Evalation = () => {
                             <p className="text-sm">
                               {item.section_description}
                             </p>
-                            <strong className="qus_number">{item.id}</strong>
+                            {/* <strong className="qus_number">1{item.id}</strong> */}
+                            <strong className="qus_number">{quesIndex + 1}</strong>
                           </div>
                           <Accordion
                             className="quetions_list mt-4"
