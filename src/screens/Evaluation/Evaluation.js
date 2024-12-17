@@ -43,6 +43,7 @@ import belltedArrow from "../../images/icons/bullt_arrow.svg";
 import attachmentPin from "../../images/icons/attachment_pin.svg";
 import videoRecoder from "../../images/icons/video-recorder.svg";
 import CollapsedButton from "../../images/icons/CollapsedButton.svg";
+import NotAllowed from "../../images/icons/NotAllowed.svg";
 
 import { useNavigate } from "react-router-dom";
 import { removeToken } from "../../helpers/helper";
@@ -962,7 +963,7 @@ const Evalation = () => {
                   }`}
                 >
                   <span className="inst_icon">
-                    <img src={saveProssIcon} />
+                    <img src={ngtscoringIcon} />
                   </span>
                   <label>Negative Scoring</label>
                   {item.is_negative_scoring ? (
@@ -975,7 +976,8 @@ const Evalation = () => {
               <Col md={4}>
                 <div className="inst_iconbox">
                   <span className="inst_icon">
-                    <img src={ngtscoringIcon} />
+                  {item.save_progress ? <img src={saveProssIcon} /> : <img src={NotAllowed} />}
+                    
                   </span>
                   <label>Save Progress</label>
                   {item.save_progress ? <h4>Allowed</h4> : <h4>Not Allowed</h4>}
