@@ -1020,7 +1020,7 @@ button.btn-link-muted {
         font-size: 12px;
         color: #344054;
         border-right: solid 1px #D0D5DD;
-        padding: 10px 15px;
+        padding: 8px 12px;
         font-weight: 600;
         display: inline-block;
         cursor: pointer;
@@ -1038,7 +1038,7 @@ button.btn-link-muted {
 .elv_datatable {
     border: solid 1px #EAECF0;
     border-radius: 8px;
-    margin-top: 10px;
+    margin-top: 5px;
     overflow: hidden;
     box-shadow: 0 2px 4px rgb(0 0 0 / 7%);
     tr {
@@ -1319,6 +1319,7 @@ select.h-36.form-select {
         padding: 8px;
         .que_points img {
             max-width: 17px;
+            margin-left: 4px;
         }
         .accordion-button {
             display: flex ;
@@ -1336,12 +1337,12 @@ select.h-36.form-select {
             }
             .question {
                 position: relative;
-                flex: 0 0 90%;
+                flex: 0 0 89%;
                 &::after{
                     width: 6px;
                     height: 6px;
                     background-color: #F97066;
-                    border-radius: 5px;
+                    border-radius: 4px;
                     content: "";
                     position: absolute;
                     right: -12px;
@@ -1349,7 +1350,7 @@ select.h-36.form-select {
                 }
             }
             .que_points {
-                flex: 0 0 10%;
+                flex: 0 0 11%;
                 text-align: right;
             }
         }
@@ -1864,5 +1865,28 @@ select.h-36.form-select {
         background-color: #fff;
         margin: 0;
         padding: 0;
+    }
+}
+.p-2-5 {
+    padding: 0.75rem !important;
+}
+.my-2-5 {
+    margin-top: 0.75rem !important;
+    margin-bottom: 0.75rem !important;
+}
+.input-sm.defult_serachbox{
+    .form-control {
+        padding-left: 0;
+        min-height: 36px;
+        font-size: 13px;
+    }
+    .btn-primary {
+        font-size: 12px;
+        padding: 5px 10px;
+        svg {
+            width: 14px;
+            height: 14px;
+
+        }
     }
 }
