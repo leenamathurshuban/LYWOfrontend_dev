@@ -206,11 +206,12 @@ const Evalation = () => {
       <Container fluid>
         <Row>
           <Col md={12}>
-            <h4 className="my-3 pagetitle">Evaluations</h4>
+            {/* <h4 className="my-3 pagetitle">Evaluations</h4> */}
+            <h6 className="my-2-5 pagetitle">Evaluations</h6>
           </Col>
         </Row>
         <Card className="shadow-sm border-0 evaluations_data">
-          <Card.Header className="py-3">
+          <Card.Header className="p-2-5">
             <Row>
               <Col md={3}>
                 <InputGroup className="defult_serachbox">
@@ -241,7 +242,7 @@ const Evalation = () => {
               </Col>
             </Row>
           </Card.Header>
-          <Card.Body>
+          <Card.Body className="p-2-5">
             <ul className="head_filterlist">
               <li
                 className={activeTab === "viewAll" ? "active" : ""}
