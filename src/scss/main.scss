@@ -478,6 +478,11 @@ ol.breadcrumb {
     height: 100vh;
     border-right: solid 1px #EAECF0;
     padding: 0;
+    position: fixed;
+    left: 0;
+    top: 0px;
+    z-index: 9;
+    background-color: #fff;
     .md_sdrlogo {
         padding: 20px 30px;
         height: 71px;
@@ -508,6 +513,7 @@ ol.breadcrumb {
     width: 89%;
     padding-left: 0;
     background-color: #F9FAFB;
+    margin-left: 180px;
 }
 .modal-header {
     box-shadow: 3px 0px 6px #0000001c;
@@ -582,6 +588,7 @@ ol.breadcrumb {
 .cmprofile_mdl {
     .modal-body {
         padding: 1.15rem;
+        margin-top: 70px;
     }
 }
 .form_card {
@@ -816,7 +823,7 @@ button.btn-link-muted {
     color: #475467;
     font-size: 13px;
     font-weight: 600;
-    padding: 0.9rem;
+    padding: 0.6rem 0.9rem;
     border-bottom: solid 1px #EAECF0;
 }
 .bullet_list {
@@ -835,10 +842,14 @@ button.btn-link-muted {
 .ql-container.ql-snow {
     border-radius: 0 0 8px 8px;
 }
+.mh-100 {
+    height: 80px;
+    overflow-y: auto;
+}
 /**=========SCROLLBAR-CSS==========**/
 /* width */
 .ct_scrollbar::-webkit-scrollbar {
-    width: 8px;
+    width: 6px;
   }
   
   /* Track */
@@ -1163,6 +1174,7 @@ button.btn-link-muted {
                 left: 0;
                 width: 100%;
                 text-align: center;
+                min-width: 65px;
             }
         }
     }
@@ -1889,4 +1901,14 @@ select.h-36.form-select {
 
         }
     }
+}
+.fixed-header {
+    position: fixed;
+    width: 100%;
+    top: 0;
+}
+.sd-rightFixed {
+    position: fixed;
+    right: 15px;
+    width: 335px;
 }

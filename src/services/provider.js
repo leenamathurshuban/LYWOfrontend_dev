@@ -77,5 +77,12 @@ export const EvalationAssestDetails = (url) =>{
 }
 
 
+//Job Url
+
+export const JobList = (url) =>{
+  const JobList = client.getWithToken(url)
+  return JobList
+}
+
 
 

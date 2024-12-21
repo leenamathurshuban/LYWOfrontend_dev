@@ -2,6 +2,9 @@ import { createBrowserRouter } from "react-router-dom";
 import { Login, Dashboard, SetPassword, EmailPasswordVerifyContainer, EmailVerify, NotFound,OtpVerifyContainer } from "../screens/";
 import ProtectedRoute from "./protectedRoute"; // Import the ProtectedRoute component
 import Evalation from "../screens/Evaluation/Evaluation";
+import Jobs from "../screens/Jobs/Jobs";
+import JobsList from "../screens/Jobs/JobList";
+
 
 export const router = createBrowserRouter([
   {
@@ -51,6 +54,15 @@ export const router = createBrowserRouter([
   {
     path: "/evaluation",
     element: <ProtectedRoute element={<Evalation />} allowAuthenticated={false} />,  // Only allow authenticated users here
+  },
+  ,
+  {
+    path: "/jobs",
+    element: <ProtectedRoute element={<Jobs />} allowAuthenticated={false} />,  // Only allow authenticated users here
+  },
+  {
+    path: "/jobslist",
+    element: <ProtectedRoute element={<JobsList />} allowAuthenticated={false} />,  // Only allow authenticated users here
   },
   {
     path: "*",

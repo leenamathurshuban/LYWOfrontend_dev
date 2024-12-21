@@ -509,7 +509,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
             </Nav>
           </aside>
           <Col md={10} className="cprofile_right">
-            <Modal.Header closeButton>
+          <Modal.Header closeButton className="fixed-header">
               <Modal.Title>Company Settings</Modal.Title>
             </Modal.Header>
             <Tab.Content>
@@ -856,7 +856,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                               </div>
                             )}
 
-                            <ul className="cmp_info">
+                            <ul className="cmp_info ct_scrollbar mh-100">
                               <li>
                                 <strong>
                                   {companyProfileDetails?.company_name}

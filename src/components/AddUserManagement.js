@@ -694,7 +694,7 @@ const navigate = useNavigate()
         </Card>
       </Col>
 
-      <Col md={3} className="usermanagement_panel">
+      <Col md={3} className="usermanagement_panel sd-rightFixed">
         <AddUserguide />
         <div className="rects-panel">
           <h5 className="hadding_h5 d-flex justify-content-between">
