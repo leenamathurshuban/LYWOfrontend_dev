@@ -1,4 +1,4 @@
-import { AuthUrl ,CompanyUrl, UsersUrl} from "./apiUrl";
+import { AuthUrl ,CompanyUrl, UsersUrl,JobsUrl} from "./apiUrl";
 import client from "./axiosInstance";
 
 
@@ -83,6 +83,39 @@ export const JobList = (url) =>{
   const JobList = client.getWithToken(url)
   return JobList
 }
+
+
+export const CreateJobIsLike = (url) =>{
+  const IsLike = client.getWithToken(url)
+  return IsLike
+}
+
+
+export const CreateJobDepartment = (url) =>{
+  const Department= client.getWithToken(url)
+  return Department
+}
+
+
+export const CreateJobLocation = (url) =>{
+  const Location= client.getWithToken(url)
+  return Location
+
+}
+
+export const GetBenifints = ()=>{
+  const Benifits = client.getWithToken(JobsUrl.GetBenifitsList)
+  return Benifits
+  
+}
+
+export const addCustomeBenifitsApi = (data) =>{
+  const CustomeBenifits = client.postWithUpload(data,JobsUrl.addCustomBenifits)
+
+  return CustomeBenifits
+}
+
+
 
 
 

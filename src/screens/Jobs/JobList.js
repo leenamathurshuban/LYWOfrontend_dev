@@ -1,9 +1,22 @@
-import React, { useEffect } from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
+import {
+  Button,
+  Card,
+  Col,
+  Container,
+  Dropdown,
+  Form,
+  InputGroup,
+  Row,
+  Spinner,
+  Table
+} from "react-bootstrap";
 import Header from "../../components/Header";
+import CreateJobs from "../../components/Jobs/CreateJobs";
+import FilterJobs from "../../components/Jobs/FilterJobs";
 import Sidebar from "../../components/Sidebar";
-import threeDots from "../../images/icons/dots-vertical_icon.svg";
 import baseCheckbox from "../../images/icons/Checkbox_base.svg";
+import threeDots from "../../images/icons/dots-vertical_icon.svg";
 import DropD_check from "../../images/icons/DropD_check-circle.svg";
 import DropD_copy from "../../images/icons/DropD_copy-06.svg";
 import DropD_edit from "../../images/icons/DropD_edit-03.svg";
@@ -11,34 +24,34 @@ import DropD_eye from "../../images/icons/DropD_eye.svg";
 import DropD_link from "../../images/icons/DropD_link-03.svg";
 import DropD_mail from "../../images/icons/DropD_mail-02.svg";
 import DropD_pause from "../../images/icons/DropD_pause-circle.svg";
-import filterLines from "../../images/icons/filter-lines.svg";
-import threeLayers from "../../images/icons/layers-three-01.svg";
-import {
-  Card,
-  Col,
-  Container,
-  Row,
-  InputGroup,
-  Button,
-  Form,
-  Table,
-  Accordion,
-  Offcanvas,
-  Dropdown,
-  Badge,
-  Spinner,
-} from "react-bootstrap";
 import { JobList } from "../../services/provider";
 
 const JobsList = () => {
-  const [show, setShow] = useState(false);
+  const [modal, setModal] = useState({
+    createModal : false,
+    MoreFilterModal : false
+  });
   const [jobData, setJobData] = useState([]);
   const [SerachList, setSerachList] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [loadeMoreCount, setLoadeMoreCount] = useState(10);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+
+  const handleShow = (modalName) => {
+    setModal((prevModals) => ({
+      ...prevModals,
+      [modalName]: true,
+    }));
+  };
+
+  const handleClose = (modalName) => {
+    setModal((prevModals) => ({
+      ...prevModals,
+      [modalName]: false,
+    }));
+  };
+
+
 
   const JobListApi = async (SerachList) => {
     setIsLoading(true);
@@ -63,7 +76,7 @@ const JobsList = () => {
     const debounceTimer = setTimeout(() => {
       JobListApi(SerachList);
     }, 500);
-  
+
     return () => clearTimeout(debounceTimer);
   }, [SerachList]);
 
@@ -75,7 +88,7 @@ const JobsList = () => {
     setLoadeMoreCount(loadeMoreCount + 10);
   };
 
-
+  
   return (
     <>
       <Sidebar />
@@ -94,7 +107,7 @@ const JobsList = () => {
               className="d-flex justify-content-between align-items-center"
             >
               <h4 class="my-3 pagetitle">Create a New Job</h4>
-              <Button variant="primary" className="btn-md" onClick={handleShow}>
+              <Button variant="primary" className="btn-md" onClick={()=>handleShow('createModal')}>
                 <svg
                   width="18"
                   className="me-1"
@@ -150,7 +163,7 @@ const JobsList = () => {
             <Card.Body>
               <div className="joblist_filter d-flex justify-content-between align-items-center">
                 <span className="jobs_count">30 Active Jobs</span>
-                <Button className="btn btn-light-outline" onClick={handleShow}>
+                <Button className="btn btn-light-outline" onClick={()=>handleShow("MoreFilterModal")}>
                   <svg
                     width="20"
                     height="20"
@@ -454,404 +467,36 @@ const JobsList = () => {
                       </td>
                     </tr> */}
 
-{loadeMoreCount < jobData.length && (
-                    <tr>
-                      <td colSpan={2}>
-                        <Button
-                          className="btn-light-outline"
-                          onClick={handleLoadMore}
-                        >
-                          Load More
-                        </Button>
-                      </td>
-                      <td colSpan={7} className="text-end pe-3">
-                        <span className="pagination_count">
-                          Showing 10 items
-                        </span>
-                      </td>
-                    </tr>
-                  )}
+                    {loadeMoreCount < jobData.length && (
+                      <tr>
+                        <td colSpan={2}>
+                          <Button
+                            className="btn-light-outline"
+                            onClick={handleLoadMore}
+                          >
+                            Load More
+                          </Button>
+                        </td>
+                        <td colSpan={7} className="text-end pe-3">
+                          <span className="pagination_count">
+                            Showing 10 items
+                          </span>
+                        </td>
+                      </tr>
+                    )}
                   </tfoot>
                 </Table>
               </div>
             </Card.Body>
           </Card>
-          {/**Filter Drawer
-          <Offcanvas show={show} onHide={handleClose} backdrop={false} placement="end" className="shadow-md border-0">
-            <Offcanvas.Header closeButton>
-              <Offcanvas.Title><img src={filterLines} alt="" />More Filters</Offcanvas.Title>
-              <span className="applied_count">Applied (2)</span>
-            </Offcanvas.Header>
-            <Offcanvas.Body className="filter_warp">
-              <Accordion defaultActiveKey={['0', '1', '2', '3', '4']} alwaysOpen>
-                <div className="filter_item">
-                  <Accordion.Item eventKey="0">
-                    <Accordion.Header>Job Type</Accordion.Header>
-                    <Accordion.Body>
-                      <ul className="filter_itemlist">
-                        <li>
-                          <Form.Check
-                            className="inline-checkbox"
-                            name="group1"
-                            type="checkbox"
-                            label="Full -Time"
-                          />
-                        </li>
-                        <li>
-                          <Form.Check
-                            className="inline-checkbox"
-                            name="group1"
-                            type="checkbox"
-                            label="Part -Time"
-                          />
-                        </li>
-                      </ul>
-                    </Accordion.Body>
-                  </Accordion.Item>
-                </div>
-                <div className="filter_item">
-                  <Accordion.Item eventKey="1">
-                    <Accordion.Header>Workplace Type</Accordion.Header>
-                    <Accordion.Body>
-                      <ul className="filter_itemlist">
-                        <li>
-                          <Form.Check
-                            className="inline-checkbox"
-                            name="group1"
-                            type="checkbox"
-                            label="Work from office"
-                          />
-                        </li>
-                        <li>
-                          <Form.Check
-                            className="inline-checkbox"
-                            name="group1"
-                            type="checkbox"
-                            label="Remote"
-                          />
-                        </li>
-                        <li>
-                          <Form.Check
-                            className="inline-checkbox"
-                            name="group1"
-                            type="checkbox"
-                            label="Hybrid"
-                          />
-                        </li>
-                        <li>
-                          <Form.Check
-                            className="inline-checkbox"
-                            name="group1"
-                            type="checkbox"
-                            label="Work from Home"
-                          />
-                        </li>
-                      </ul>
-                    </Accordion.Body>
-                  </Accordion.Item>
-                </div>
-                <div className="filter_item">
-                  <Accordion.Item eventKey="2">
-                    <Accordion.Header>Location</Accordion.Header>
-                    <Accordion.Body>
-                      <ul className="filter_itemlist">
-                        <li>
-                          <Form.Check
-                            className="inline-checkbox"
-                            name="group1"
-                            type="checkbox"
-                            label="Delhi"
-                          />
-                        </li>
-                        <li>
-                          <Form.Check
-                            className="inline-checkbox"
-                            name="group1"
-                            type="checkbox"
-                            label="Mumbai"
-                          />
-                        </li>
-                        <li>
-                          <Form.Check
-                            className="inline-checkbox"
-                            name="group1"
-                            type="checkbox"
-                            label="Bengaluru"
-                          />
-                        </li>
-                        <li>
-                          <Form.Check
-                            className="inline-checkbox"
-                            name="group1"
-                            type="checkbox"
-                            label="Hyderabad"
-                          />
-                        </li>
-                      </ul>
-                      <Button variant="link">View More</Button>
-                    </Accordion.Body>
-                  </Accordion.Item>
-                </div>
-                <div className="filter_item">
-                  <Accordion.Item eventKey="3">
-                    <Accordion.Header>Department</Accordion.Header>
-                    <Accordion.Body>
-                      <ul className="filter_itemlist">
-                        <li>
-                          <Form.Check
-                            className="inline-checkbox"
-                            name="group1"
-                            type="checkbox"
-                            label="Engineering - Software"
-                          />
-                        </li>
-                        <li>
-                          <Form.Check
-                            className="inline-checkbox"
-                            name="group1"
-                            type="checkbox"
-                            label="Sales & Business Dev"
-                          />
-                        </li>
-                        <li>
-                          <Form.Check
-                            className="inline-checkbox"
-                            name="group1"
-                            type="checkbox"
-                            label="Marketing & Communication"
-                          />
-                        </li>
-                        <li>
-                          <Form.Check
-                            className="inline-checkbox"
-                            name="group1"
-                            type="checkbox"
-                            label="Customer Service"
-                          />
-                        </li>
-                      </ul>
-                      <Button variant="link">View More</Button>
-                    </Accordion.Body>
-                  </Accordion.Item>
-                </div>
-                <div className="filter_item">
-                  <Accordion.Item eventKey="4">
-                    <Accordion.Header>Status</Accordion.Header>
-                    <Accordion.Body>
-                      <ul className="filter_itemlist">
-                        <li>
-                          <Form.Check
-                            className="inline-checkbox"
-                            name="group1"
-                            type="checkbox"
-                            label="Active"
-                          />
-                        </li>
-                        <li>
-                          <Form.Check
-                            className="inline-checkbox"
-                            name="group1"
-                            type="checkbox"
-                            label="Draft"
-                          />
-                        </li>
-                        <li>
-                          <Form.Check
-                            className="inline-checkbox"
-                            name="group1"
-                            type="checkbox"
-                            label="App. Stopped"
-                          />
-                        </li>
-                        <li>
-                          <Form.Check
-                            className="inline-checkbox"
-                            name="group1"
-                            type="checkbox"
-                            label="Closed"
-                          />
-                        </li>
-                      </ul>
-                    </Accordion.Body>
-                  </Accordion.Item>
-                </div>
-              </Accordion>
-              <div className="filter_item">
-                  <h5 className="fltitem_title">Target Hire Date</h5>
-                  <Row>
-                    <Col xs={4} className="pe-0">
-                        <Form.Select>
-                          <option>On</option>
-                          <option value="1">One</option>
-                          <option value="2">Two</option>
-                          <option value="3">Three</option>
-                        </Form.Select>
-                    </Col>
-                    <Col xs={8}>
-                      <Form.Group controlId="exampleForm.ControlInput1">
-                        <Form.Control type="date" placeholder="09/12/2024" />
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                  <h5 className="fltitem_title">Posted On</h5>
-                  <Row>
-                    <Col xs={4} className="pe-0">
-                        <Form.Select>
-                          <option>On</option>
-                          <option value="1">One</option>
-                          <option value="2">Two</option>
-                          <option value="3">Three</option>
-                        </Form.Select>
-                    </Col>
-                    <Col xs={8}>
-                      <Form.Group controlId="exampleForm.ControlInput1">
-                        <Form.Control type="date" placeholder="09/12/2024" />
-                      </Form.Group>
-                    </Col>
-                  </Row>
-              </div>
-            </Offcanvas.Body>
-             <div className="offcanvas-footer text-end">
-              <Button variant="light" className="me-3">Clear All</Button>
-              <Button variant="primary">Apply</Button>
-             </div>
-          </Offcanvas> **/}
 
-          {/**Create JOb Drawer**/}
-          <Offcanvas
-            show={show}
-            onHide={handleClose}
-            backdrop={false}
-            placement="end"
-            className="createjob_drawer lg-drawer shadow-md border-0"
-          >
-            <Offcanvas.Header closeButton>
-              <Offcanvas.Title>
-                <img src={threeLayers} alt="" />
-                Create a New Job
-              </Offcanvas.Title>
-            </Offcanvas.Header>
-            <Offcanvas.Body>
-              <Form className="row">
-                <Form.Group
-                  className="col-md-12 mb-2"
-                  controlId="exampleForm.ControlInput1"
-                >
-                  <Form.Label>Job Title</Form.Label>
-                  <Form.Control type="text" placeholder="Job Title" />
-                </Form.Group>
-                <Form.Group
-                  className="col-md-6 mb-2"
-                  controlId="exampleForm.ControlInput1"
-                >
-                  <Form.Label>Is Like</Form.Label>
-                  <Form.Control type="text" placeholder="Is Like" />
-                </Form.Group>
-                <Form.Group
-                  className="col-md-6 mb-2"
-                  controlId="exampleForm.ControlInput1"
-                >
-                  <Form.Label>No. of Positions</Form.Label>
-                  <Form.Control type="text" placeholder="No. of Positions" />
-                </Form.Group>
-                <Form.Group
-                  className="col-md-6 mb-2"
-                  controlId="exampleForm.ControlInput1"
-                >
-                  <Form.Label>Department</Form.Label>
-                  <Form.Control type="text" placeholder="Department" />
-                </Form.Group>
-                <Form.Group
-                  className="col-md-6 mb-2"
-                  controlId="exampleForm.ControlInput1"
-                >
-                  <Form.Label>Location</Form.Label>
-                  <Form.Control type="text" placeholder="Location" />
-                </Form.Group>
-                {["radio"].map((type) => (
-                  <div key={`inline-${type}`} className="checkbox-group my-2">
-                    <label class="form-label me-3 mb-0">Requires Travel?</label>
-                    <Form.Check
-                      inline
-                      label="Regularly"
-                      name="group1"
-                      type={type}
-                      id={`inline-${type}-1`}
-                    />
-                    <Form.Check
-                      inline
-                      label="Sometimes"
-                      name="group1"
-                      type={type}
-                      id={`inline-${type}-2`}
-                    />
-                    <Form.Check
-                      inline
-                      label="Rarely"
-                      type={type}
-                      id={`inline-${type}-3`}
-                    />
-                  </div>
-                ))}
-                <Form.Group
-                  className="mb-2"
-                  controlId="exampleForm.ControlTextarea1"
-                >
-                  <Form.Label>
-                    Job Description{" "}
-                    <span className="font-light">(Min 50 words)</span>
-                  </Form.Label>
-                  <Form.Control as="textarea" rows={12} />
-                </Form.Group>
-                <Col md={6} className="mb-2">
-                  <Form.Label>Job Title</Form.Label>
-                  <Form.Select>
-                    <option>Job Type</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
-                  </Form.Select>
-                </Col>
-                <Col md={6} className="mb-2">
-                  <Form.Label>Workplace Type</Form.Label>
-                  <Form.Select>
-                    <option>Workplace Type</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
-                  </Form.Select>
-                </Col>
-                <Form.Group
-                  className="mb-2"
-                  controlId="exampleForm.ControlTextarea1"
-                >
-                  <Form.Label>
-                    Benefits <span className="font-light">(optional)</span>
-                  </Form.Label>
-                  <div className="tagarea">
-                    <span className="badge-gray active">Microsoft Office</span>
-                    <span className="badge-gray">Provident Fund</span>
-                    <span className="badge-gray">Cell Phone Reimbursement</span>
-                    <span className="badge-gray">Paid Sick Time</span>
-                    <span className="badge-gray">Work From Home</span>
-                    <span className="badge-gray">Food Provided</span>
-                    <span className="badge-gray">Life Insurance</span>
-                    <span className="badge-gray active">Paid Time Off</span>
-                    <span className="badge-gray">Internet Reimbursement</span>
-                    <Button className="btn-light-gray">
-                      <i className="fa fa-plus text-primary me-1"></i>Add Custom
-                    </Button>
-                  </div>
-                </Form.Group>
-              </Form>
-            </Offcanvas.Body>
-            <div className="offcanvas-footer text-end">
-              <Button variant="light" className="me-3">
-                Back
-              </Button>
-              <Button variant="primary">Next</Button>
-            </div>
-          </Offcanvas>
+          <FilterJobs show={modal.MoreFilterModal} 
+            handleClose={()=>handleClose('MoreFilterModal')}
+           />
+          <CreateJobs 
+           show={modal.createModal}
+           handleClose={() => handleClose('createModal')}
+           />
         </Container>
       </div>
     </>

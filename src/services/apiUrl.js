@@ -22,4 +22,9 @@ export const AuthUrl = {
     EditUser : "account-api/update-user-api/"
   }
 
+  export const JobsUrl = {
+    GetBenifitsList : "assets-api/benefits-list-api/?page=1&limit=10",
+    addCustomBenifits : "assets-api/benefits-post-api/"
+  }
+
  

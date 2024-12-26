@@ -95,7 +95,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
       setImage(URL.createObjectURL(file));
       setImageName(file.name);
       setLogoModal(true);
-      console.log("file------",file)
+      // console.log("file------",file)
       setImageFile(file);
     }
   };
