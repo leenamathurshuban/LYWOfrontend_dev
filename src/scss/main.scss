@@ -1912,3 +1912,47 @@ select.h-36.form-select {
     right: 15px;
     width: 335px;
 }
+
+.filter_modal .modal-dialog {
+    max-width: 95%;
+}
+
+.filter_modal .modal-header {
+    border-bottom: solid 1px #ddd;
+    padding: 16px 20px;
+}
+
+.filter_modal .modal-header h4 {
+    font-size: 22px;
+}
+
+.filter_modal ul {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+}
+
+.filter_modal  .text-center.modal-body {
+    padding: 25px;
+}
+
+.filter_modal ul li {
+    width: 20%;
+    text-align: left;
+    margin-bottom: 15px;
+}
+
+.filter_modal ul li label.form-check-label {
+    font-size: 14px;
+    line-height: 1;
+}
+
+.filter_modal ul li .form-check {
+    line-height: 1;
+}
+
+.filter_modal .modal-content {
+    height: 85vh;
+    overflow: auto;
+}

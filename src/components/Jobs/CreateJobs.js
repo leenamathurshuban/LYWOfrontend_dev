@@ -1,6 +1,7 @@
 import { Button, Col, Form, Offcanvas } from "react-bootstrap";
 import threeLayers from "../../images/icons/layers-three-01.svg";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+
 import {
   addCustomeBenifitsApi,
   CreateJobDepartment,
@@ -14,7 +15,7 @@ import axios from "axios";
 const CreateJobs = ({ show, handleClose }) => {
   const [jobTitle, setJobTitle] = useState("");
   const [isLike, setIsLike] = useState("");
-  const [isLikeUid, setIsLikeUid] = useState("");
+  const [isLikeUid, setIsLikeUid] = useState([]);
 
   const [noOfPosition, setNoOfPosition] = useState("");
   const [department, setDepartment] = useState("");
@@ -41,6 +42,142 @@ const CreateJobs = ({ show, handleClose }) => {
   const [jobType, setJobType] = useState("");
   const [workPlaceType, setWorkPlace] = useState("");
   const [travelOption, setTravelOption] = useState("");
+
+  //Editor states
+
+  const [editorContent, setEditorContent] = useState("");
+  const [fileUrl, setFileUrl] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [descriptionError, setDescriptionError] = useState("");
+
+  const MAX_FILE_SIZE = 5 * 1024 * 1024;
+  const MAX_DESCRIPTION_WORDS = 500;
+
+  const quillRef = useRef(null);
+  const fileInputRef = useRef(null);
+
+  //Errors
+
+  const [errors, setErrors] = useState({
+    jobTitle: "",
+    isLike: "",
+    noOfPosition: "",
+    department: "",
+    location: "",
+    travelOption: "",
+    description: "",
+    jobType: "",
+    workPlaceType: "",
+  });
+
+  const CheckValidation = () => {
+    console.log("!jobTitle-----", !jobTitle);
+    console.log("!isLike-----", !isLike);
+    const newErrors = {
+      jobTitle: "",
+      isLike: "",
+      noOfPosition: "",
+      department: "",
+      location: "",
+      travelOption: "",
+      description: "",
+      jobType: "",
+      workPlaceType: "",
+    };
+
+    let isValid = true;
+
+    if (!jobTitle) {
+      newErrors.jobTitle = "Job Title is required";
+      isValid = false;
+    }
+
+    if (!isLike) {
+      newErrors.isLike = "isLike is required";
+      isValid = false;
+    }
+    if (!department) {
+      newErrors.department = "This Field is required";
+      isValid = false;
+    }
+    if (!location) {
+      newErrors.location = "This Field is required";
+      isValid = false;
+    }
+    if (!travelOption) {
+      newErrors.travelOption = "This Field is required";
+      isValid = false;
+    }
+    if (!description) {
+      newErrors.description = "This Field is required";
+      isValid = false;
+    }
+    if (!jobType) {
+      newErrors.jobType = "This Field is required";
+      isValid = false;
+    }
+    if (!workPlaceType) {
+      newErrors.workPlaceType = "This Field is required";
+      isValid = false;
+    }
+
+    if (!noOfPosition) {
+      newErrors.noOfPosition = "noOfPosition is required";
+      isValid = false;
+    }
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  const handleEditorChange = (value) => {
+    const wordCount = value.trim().split(/\s+/).length;
+
+    if (wordCount <= MAX_DESCRIPTION_WORDS) {
+      setDescription(value);
+      setDescriptionError("");
+    } else {
+      setDescriptionError(
+        `You can only enter up to ${MAX_DESCRIPTION_WORDS} words.`
+      );
+    }
+  };
+
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+
+    if (!file) return;
+
+    if (file.size > MAX_FILE_SIZE) {
+      setErrorMessage(
+        "Attachement failed. The attachment exceeds the allowed file size."
+      );
+      return;
+    } else {
+      setErrorMessage("");
+    }
+
+    if (file.type.startsWith("image/")) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const quill = quillRef.current.getEditor();
+        const range = quill.getSelection();
+        if (range) {
+          quill.insertEmbed(range.index, "image", reader.result);
+        }
+      };
+      reader.readAsDataURL(file);
+    } else if (file.type === "application/pdf") {
+      const fileUrl = URL.createObjectURL(file);
+      setFileUrl(fileUrl);
+      const quill = quillRef.current.getEditor();
+      const range = quill.getSelection();
+      if (range) {
+        quill.insertEmbed(range.index, "link", fileUrl);
+      }
+    } else {
+      alert("Please upload a valid image or PDF file.");
+    }
+  };
 
   const handleJobTypeChange = (e) => {
     setJobType(e.target.value);
@@ -79,11 +216,12 @@ const CreateJobs = ({ show, handleClose }) => {
   };
   const handleAddNewCustomeBenifits = (addCustomeBenifitsQuery) => {
     const formData = new FormData();
-    formData.append("benefit_name", customValue);
+    formData.append("benefit_name", addCustomeBenifitsQuery);
 
     addCustomeBenifitsApi(formData)
       .then((res) => {
-        setLocationData(res.data.response);
+        setCustomValue(res.data.response);
+        GetBenifints();
       })
       .catch((error) => console.log("errooorrr----", error));
   };
@@ -109,7 +247,6 @@ const CreateJobs = ({ show, handleClose }) => {
   const getSelectedBenefitUids = () => {
     return SelectBenefitsData.map((item) => item.uid);
   };
-
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -160,7 +297,8 @@ const CreateJobs = ({ show, handleClose }) => {
 
   const handleSelectedLikeItems = (item) => {
     setIsLike(item.is_like_name);
-    setIsLikeUid(item.uid);
+    setIsLikeUid((prevSelectedItems) => [...prevSelectedItems, item.uid]);
+
     setIsLikeDropdown(false);
   };
 
@@ -186,43 +324,61 @@ const CreateJobs = ({ show, handleClose }) => {
     setIsLocationDropdown(false);
   };
 
-  const prepareFormData = () => {
-    const selectedUids = getSelectedBenefitUids();
-    console.log("selectedUids------>>>>>>>>>",selectedUids)
-    console.log("isLikeUid------>>>>>>>>>",[isLikeUid])
-    const formData = new FormData();
-    formData.append("job_title", jobTitle);
-    formData.append("is_like", [isLikeUid]); // assuming isLike is a string or array
-    formData.append("number_of_positions", noOfPosition);
-    formData.append("department", departmentUid);
-    formData.append("job_location", locationUid);
-    formData.append("requires_travel", travelOption); // Example, replace with actual value
-    formData.append("detailed_description", description);
-    formData.append("job_type", jobType); // Example, replace with actual value
-    formData.append("workplace_type", workPlaceType); // Example, replace with actual value
-    formData.append("job_benefits", selectedUids); // Example value
-    return formData;
-  };
-
   const handleCreateForm = () => {
-    const url = `https://bittrend.shubansoftware.com/assets-api/job-post-api/`;
-    const formData = prepareFormData();
-    axios
-      .post(url, formData, {
-        headers: {
-          Authorization:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MjA2MTM1LCJpYXQiOjE3MzUxMTk3MzUsImp0aSI6IjE0OWM5MmYwZGI3MTQ3YzA5MzU3ZjhhMWRhYzIxN2E0IiwidXNlcl9pZCI6OSwibmFtZSI6bnVsbCwiZW1haWwiOiJheWFuLmRldmVsb3BlcjE3QGdtYWlsLmNvbSJ9.vNWh2DmtjMfifw96a3WIv1EcpCzX6LU-dJ3zvOsT1dA", // Replace with actual token
-        },
-      })
-      .then((response) => console.log("yha-------->>>>>>>>",response))
-      .catch((error) => console.log(error));
+    // e.preventDefault();
+    if (CheckValidation()) {
+      const textWithHtmlTags = description;
+      const descriptionWithoutTags = textWithHtmlTags.replace(/<[^>]*>/g, "");
+      const selectedUids = getSelectedBenefitUids();
+      const myHeaders = {
+        Authorization:
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM1MzU4NjUxLCJpYXQiOjE3MzUyNzIyNTEsImp0aSI6IjNmMWJkNzVkN2M2ZDQ5MTI5YzRiZjg3MDViNjI1M2YwIiwidXNlcl9pZCI6OSwibmFtZSI6bnVsbCwiZW1haWwiOiJheWFuLmRldmVsb3BlcjE3QGdtYWlsLmNvbSJ9.PDF1ye-d-Qu0FTsjkEmcTQSLWzD_UAWqaUUgHM5fRO0",
+      };
+
+      const formdata = new FormData();
+      formdata.append("job_title", jobTitle);
+      formdata.append("is_like", JSON.stringify(isLikeUid));
+      formdata.append("number_of_positions", noOfPosition);
+      formdata.append("department", departmentUid);
+      formdata.append("job_location", locationUid);
+      formdata.append("requires_travel", travelOption);
+      formdata.append("detailed_description", descriptionWithoutTags);
+      formdata.append("job_type", jobType);
+      formdata.append("workplace_type", workPlaceType);
+      formdata.append("job_benefits", JSON.stringify(selectedUids));
+
+      axios
+        .post(
+          "https://bittrend.shubansoftware.com/assets-api/job-post-api/",
+          formdata,
+          {
+            headers: myHeaders,
+          }
+        )
+        .then((response) => {
+          console.log("responsw--------", response.data);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    } else {
+      console.log("job createddd-----");
+    }
   };
 
   const handleCustomeBeniftsAdd = () => {
-    const CreateCustomLabel = { Label: "createddd" };
+    const CreateCustomLabel = { Label: "" };
     setAddCustomeBenifits((prev) => [...prev, CreateCustomLabel]);
   };
 
+
+  const handleClearCustomInput = () =>{
+    console.log("clearrrrrr")
+  }
+
+  const isNextButtonDisable = !jobTitle;
+
+  
 
   return (
     <Offcanvas
@@ -239,7 +395,7 @@ const CreateJobs = ({ show, handleClose }) => {
         </Offcanvas.Title>
       </Offcanvas.Header>
       <Offcanvas.Body>
-        <Form className="row">
+        <Form className="row" onSubmit={handleCreateForm}>
           <Form.Group className="col-md-12 mb-2" controlId="jobTitle">
             <Form.Label>Job Title</Form.Label>
             <Form.Control
@@ -247,7 +403,11 @@ const CreateJobs = ({ show, handleClose }) => {
               placeholder="Job Title"
               value={jobTitle}
               onChange={(e) => setJobTitle(e.target.value)}
+              isInvalid={errors.jobTitle}
             />
+            <Form.Control.Feedback type="invalid">
+              {errors.jobTitle}
+            </Form.Control.Feedback>
           </Form.Group>
 
           <Form.Group className="col-md-6 mb-2" controlId="isLike">
@@ -257,8 +417,13 @@ const CreateJobs = ({ show, handleClose }) => {
               placeholder="Is Like"
               value={isLike}
               onChange={handleLike}
+              // isValid={errors.isLike}
             />
+            {/* <Form.Control.Feedback type="invalid">
+              {errors.isLike}
+            </Form.Control.Feedback> */}
           </Form.Group>
+          <p style={{ color: "red" }}>{errors.isLike}</p>
 
           {isLikeDropdown && isLikeData.length > 0 && (
             <ul>
@@ -285,8 +450,13 @@ const CreateJobs = ({ show, handleClose }) => {
               placeholder="No. of Positions"
               value={noOfPosition}
               onChange={(e) => setNoOfPosition(e.target.value)}
+              // isValid={errors.noOfPosition}
             />
+            {/* <Form.Control.Feedback type="invalid">
+              {errors.noOfPosition}
+            </Form.Control.Feedback> */}
           </Form.Group>
+          <span style={{ color: "red" }}>{errors.noOfPosition}</span>
 
           <Form.Group className="col-md-6 mb-2" controlId="department">
             <Form.Label>Department</Form.Label>
@@ -297,7 +467,7 @@ const CreateJobs = ({ show, handleClose }) => {
               onChange={handleDepartment}
             />
           </Form.Group>
-
+          <span style={{ color: "red" }}>{errors.department}</span>
           {isDepartmentDropdown && departmentData.length > 0 && (
             <ul>
               {departmentData.map((item) => (
@@ -325,6 +495,7 @@ const CreateJobs = ({ show, handleClose }) => {
               onChange={handleLocation}
             />
           </Form.Group>
+          <span style={{ color: "red" }}>{errors.location}</span>
           {isLocationDropdown && locationData.length > 0 && (
             <ul>
               {locationData.map((item) => (
@@ -363,8 +534,8 @@ const CreateJobs = ({ show, handleClose }) => {
                 name="group1"
                 type={type}
                 id={`inline-${type}-2`}
-                value="Sometimes"
-                checked={travelOption === "Sometimes"}
+                value="Sometime"
+                checked={travelOption === "Sometime"}
                 onChange={handleTravelChange}
               />
               <Form.Check
@@ -389,7 +560,7 @@ const CreateJobs = ({ show, handleClose }) => {
               />
             </div>
           ))}
-
+          <span style={{ color: "red" }}>{errors.travelOption}</span>
           <Form.Group className="mb-2" controlId="jobDescription">
             <Form.Label>
               Job Description <span className="font-light">(Min 50 words)</span>
@@ -398,13 +569,33 @@ const CreateJobs = ({ show, handleClose }) => {
             <div>
               <ReactQuill
                 value={description}
-                onChange={(newValue) => setDescription(newValue)}
+                onChange={handleEditorChange}
+                theme="snow"
+                ref={quillRef}
                 modules={{
                   toolbar: [["bold", "italic", "underline"], ["link"]],
                 }}
-                placeholder="Write something..."
-                style={{ height: "360px" }}
               />
+
+              {errorMessage && (
+                <div style={{ color: "red", marginBottom: "10px" }}>
+                  {errorMessage}
+                </div>
+              )}
+              <div style={{ marginTop: "20px" }}>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  accept="image/*,application/pdf"
+                  onChange={handleFileUpload}
+                />
+              </div>
+
+              {descriptionError && (
+                <div style={{ color: "red", marginBottom: "10px" }}>
+                  {descriptionError}
+                </div>
+              )}
             </div>
           </Form.Group>
 
@@ -415,6 +606,7 @@ const CreateJobs = ({ show, handleClose }) => {
               <option value="Full-time">Full -Time</option>
               <option value="Part-time">Part -Time</option>
             </Form.Select>
+            <span style={{ color: "red" }}>{errors.jobType}</span>
           </Col>
 
           <Col md={6} className="mb-2">
@@ -426,6 +618,7 @@ const CreateJobs = ({ show, handleClose }) => {
               <option value="Hybrid">Hybrid</option>
               <option value="Work-from-home">Work from Home</option>
             </Form.Select>
+            <span style={{ color: "red" }}>{errors.workPlaceType}</span>
           </Col>
 
           <Form.Group className="mb-2" controlId="benefits">
@@ -445,7 +638,7 @@ const CreateJobs = ({ show, handleClose }) => {
                 </span>
               ))}
               {addCustomeBenifits.map((item) => (
-                <>
+               <div className="input-container d-flex align-items-center position-relative">
                   <input
                     value={customValue}
                     onChange={(e) => setCustomValue(e.target.value)}
@@ -454,7 +647,8 @@ const CreateJobs = ({ show, handleClose }) => {
                     }`}
                     placeholder="Add Custom"
                   />
-                </>
+                   <i className="fa fa-xmark text-primary me-1" onClick={handleClearCustomInput}></i>
+                </div>
               ))}
 
               <Button
@@ -472,7 +666,11 @@ const CreateJobs = ({ show, handleClose }) => {
         <Button variant="light" className="me-3" onClick={handleClose}>
           Back
         </Button>
-        <Button variant="primary" onClick={handleCreateForm}>
+        <Button
+          variant="primary"
+          disabled={isNextButtonDisable}
+          onClick={handleCreateForm}
+        >
           Next
         </Button>
       </div>
