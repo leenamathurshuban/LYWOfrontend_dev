@@ -477,7 +477,7 @@ const JobsList = () => {
                 </svg>
                 Create a New Job
               </Button>
-              <Button
+              {/* <Button
                 variant="primary"
                 className="btn-md"
                 onClick={() => handleShow("createJobRevisedModal")}
@@ -499,7 +499,7 @@ const JobsList = () => {
                   />
                 </svg>
                   JobRevised popup
-              </Button>
+              </Button> */}
 
             </Col>
           </Row>
@@ -727,10 +727,10 @@ const JobsList = () => {
 
           {/* job revised */}
 
-          <CreateJobsRevised  
+          {/* <CreateJobsRevised  
             show={modal.createJobRevisedModal}
             handleClose={() => handleClose("createJobRevisedModal")}
-            />
+            /> */}
         </Container>
       </div>
     </>
