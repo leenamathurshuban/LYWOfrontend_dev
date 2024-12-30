@@ -36,7 +36,6 @@
 //   const [isLoading, setIsLoading] = useState(false);
 //   const [loadeMoreCount, setLoadeMoreCount] = useState(10);
 
-
 //   const handleShow = (modalName) => {
 //     setModal((prevModals) => ({
 //       ...prevModals,
@@ -50,8 +49,6 @@
 //       [modalName]: false,
 //     }));
 //   };
-
-
 
 //   const JobListApi = async (SerachList) => {
 //     setIsLoading(true);
@@ -88,7 +85,6 @@
 //     setLoadeMoreCount(loadeMoreCount + 10);
 //   };
 
-  
 //   return (
 //     <>
 //       <Sidebar />
@@ -278,10 +274,8 @@
 //                       </tr>
 //                     ))}
 
-                 
 //                   </tbody>
 //                   <tfoot>
-                   
 
 //                     {loadeMoreCount < jobData.length && (
 //                       <tr>
@@ -306,10 +300,10 @@
 //             </Card.Body>
 //           </Card>
 
-//           <FilterJobs show={modal.MoreFilterModal} 
+//           <FilterJobs show={modal.MoreFilterModal}
 //             handleClose={()=>handleClose('MoreFilterModal')}
 //            />
-//           <CreateJobs 
+//           <CreateJobs
 //            show={modal.createModal}
 //            handleClose={() => handleClose('createModal')}
 //            />
@@ -321,20 +315,24 @@
 
 // export default JobsList;
 
-
-
 import React, { useEffect, useState } from "react";
 import {
-  Button,
   Card,
   Col,
   Container,
-  Dropdown,
-  Form,
-  InputGroup,
   Row,
+  InputGroup,
+  Button,
+  Form,
+  Table,
+  Modal,
+  Offcanvas,
+  Dropdown,
+  Accordion,
+  Badge,
+  Stack,
+  ProgressBar,
   Spinner,
-  Table
 } from "react-bootstrap";
 import Header from "../../components/Header";
 import CreateJobs from "../../components/Jobs/CreateJobs";
@@ -350,26 +348,35 @@ import DropD_link from "../../images/icons/DropD_link-03.svg";
 import DropD_mail from "../../images/icons/DropD_mail-02.svg";
 import DropD_pause from "../../images/icons/DropD_pause-circle.svg";
 import { JobList } from "../../services/provider";
+import RangeSlider from "../../components/RangeSilder";
+import logoIcon from "../../images/logo_icon.png";
+import Edit03 from "../../images/icons/edit-0303.svg";
+import CreateJobsRevised from "../../components/Jobs/CreateJobsRevised";
 
 const JobsList = () => {
   const [modal, setModal] = useState({
-    createModal : false,
-    MoreFilterModal : false
+    createModal: false,
+    MoreFilterModal: false,
+    createJobRevisedModal : false
   });
+  // const [show, setShow] = useState(false);
+
+  // const handleClose1 = () => setShow(false);
+  // const handleShow1 = () => setShow(true);
+
   const [jobData, setJobData] = useState([]);
   const [SerachList, setSerachList] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [loadeMoreCount, setLoadeMoreCount] = useState(10);
-  const[filtersList,setFilters]=useState({
-    job_type:"",
-    workplace_type:"",
-    job_location:"",
-    job_status:"",
-    targate_hire_date:"",
-    department:"",
-    posted_on:"",
-  })
-
+  const [filtersList, setFilters] = useState({
+    job_type: "",
+    workplace_type: "",
+    job_location: "",
+    job_status: "",
+    targate_hire_date: "",
+    department: "",
+    posted_on: "",
+  });
 
   const handleShow = (modalName) => {
     setModal((prevModals) => ({
@@ -385,21 +392,19 @@ const JobsList = () => {
     }));
   };
 
-
-
   const JobListApi = async (SerachList) => {
     setIsLoading(true);
-  
+
     // Base API URL
     let url = `https://bittrend.shubansoftware.com/assets-api/job-list-api/?page=1&limit=10&search=${SerachList}`;
-  
+
     // Add filters to the URL dynamically
     Object.entries(filtersList).forEach(([key, value]) => {
       if (value) {
         url += `&${key}=${encodeURIComponent(value)}`;
       }
     });
-  
+
     try {
       const response = await JobList(url);
       setIsLoading(false);
@@ -416,12 +421,13 @@ const JobsList = () => {
   }, []);
 
   useEffect(() => {
+    if (SerachList || !modal.MoreFilterModal) {
+      const debounceTimer = setTimeout(() => {
+        JobListApi(SerachList);
+      }, 500);
 
-    if(SerachList||!modal.MoreFilterModal){const debounceTimer = setTimeout(() => {
-      JobListApi(SerachList);
-    }, 500);
-  
-    return () => clearTimeout(debounceTimer);}
+      return () => clearTimeout(debounceTimer);
+    }
   }, [SerachList, modal.MoreFilterModal]);
 
   const handleSearch = (e) => {
@@ -432,7 +438,6 @@ const JobsList = () => {
     setLoadeMoreCount(loadeMoreCount + 10);
   };
 
-  
   return (
     <>
       <Sidebar />
@@ -444,6 +449,7 @@ const JobsList = () => {
       )}
 
       <div className="page-body">
+        
         <Container fluid>
           <Row>
             <Col
@@ -451,7 +457,11 @@ const JobsList = () => {
               className="d-flex justify-content-between align-items-center"
             >
               <h4 class="my-3 pagetitle">Create a New Job</h4>
-              <Button variant="primary" className="btn-md" onClick={()=>handleShow('createModal')}>
+              <Button
+                variant="primary"
+                className="btn-md"
+                onClick={() => handleShow("createModal")}
+              >
                 <svg
                   width="18"
                   className="me-1"
@@ -470,6 +480,30 @@ const JobsList = () => {
                 </svg>
                 Create a New Job
               </Button>
+              {/* <Button
+                variant="primary"
+                className="btn-md"
+                onClick={() => handleShow("createJobRevisedModal")}
+              >
+                <svg
+                  width="18"
+                  className="me-1"
+                  height="18"
+                  viewBox="0 0 18 18"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M7.99992 3.33331V12.6666M3.33325 7.99998H12.6666"
+                    stroke="white"
+                    stroke-width="1.66667"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                JobRevised popup
+              </Button> */}
+
             </Col>
           </Row>
           <Card className="shadow-sm border-0 evaluations_data">
@@ -508,52 +542,60 @@ const JobsList = () => {
               <div className="joblist_filter d-flex justify-content-between align-items-center">
                 <span className="jobs_count">30 Active Jobs</span>
                 <div>
-                <Button className="btn btn-light-outline" onClick={()=>{setFilters({
-    job_type:"",
-    workplace_type:"",
-    job_location:"",
-    job_status:"",
-    targate_hire_date:"",
-    department:"",
-    posted_on:"",
-  })}}>
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    className="me-2"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
+                  <Button
+                    className="btn btn-light-outline"
+                    onClick={() => {
+                      setFilters({
+                        job_type: "",
+                        workplace_type: "",
+                        job_location: "",
+                        job_status: "",
+                        targate_hire_date: "",
+                        department: "",
+                        posted_on: "",
+                      });
+                    }}
                   >
-                    <path
-                      d="M5 10H15M2.5 5H17.5M7.5 15H12.5"
-                      stroke="#344054"
-                      stroke-width="1.66667"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                  Clear All Filter
-                </Button>
-                <Button className="btn btn-light-outline" onClick={()=>handleShow("MoreFilterModal")}>
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    className="me-2"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      className="me-2"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M5 10H15M2.5 5H17.5M7.5 15H12.5"
+                        stroke="#344054"
+                        stroke-width="1.66667"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                    Clear All Filter
+                  </Button>
+                  <Button
+                    className="btn btn-light-outline"
+                    onClick={() => handleShow("MoreFilterModal")}
                   >
-                    <path
-                      d="M5 10H15M2.5 5H17.5M7.5 15H12.5"
-                      stroke="#344054"
-                      stroke-width="1.66667"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                  More filters
-                </Button>
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      className="me-2"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M5 10H15M2.5 5H17.5M7.5 15H12.5"
+                        stroke="#344054"
+                        stroke-width="1.66667"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                    More filters
+                  </Button>
                 </div>
               </div>
               <div className="elv_datatable joblist_data">
@@ -650,12 +692,8 @@ const JobsList = () => {
                         </td>
                       </tr>
                     ))}
-
-               
                   </tbody>
                   <tfoot>
-                   
-
                     {loadeMoreCount < jobData.length && (
                       <tr>
                         <td colSpan={2}>
@@ -679,15 +717,23 @@ const JobsList = () => {
             </Card.Body>
           </Card>
 
-          <FilterJobs show={modal.MoreFilterModal} 
-            handleClose={()=>handleClose('MoreFilterModal')}
+          <FilterJobs
+            show={modal.MoreFilterModal}
+            handleClose={() => handleClose("MoreFilterModal")}
             setFilters={setFilters}
             filtersList={filtersList}
-           />
-          <CreateJobs 
-           show={modal.createModal}
-           handleClose={() => handleClose('createModal')}
-           />
+          />
+          <CreateJobs
+            show={modal.createModal}
+            handleClose={() => handleClose("createModal")}
+          />
+
+          {/* job revised */}
+
+          <CreateJobsRevised  
+            show={modal.createJobRevisedModal}
+            handleClose={() => handleClose("createJobRevisedModal")}
+            />
         </Container>
       </div>
     </>

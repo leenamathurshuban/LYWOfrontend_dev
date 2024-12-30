@@ -54,6 +54,9 @@ export const getWithToken = async (url, params) => {
     headers: baseHeadersForToken(),
   })
 };
+
+
+
 export const getwithoutToken = async (url, params) => {
   return instance({
     url,
@@ -70,6 +73,15 @@ export const post = async (url, params) => {
     headers: baseHeadersForRequest(),
   });
 };
+export const postWithToken = async (url, params) => {
+  return instance({
+    url,
+    method: "POST",
+    data: params,
+    headers: baseHeadersForToken(),
+  })
+};
+
 export const postWithoutToken = async (url, params) => {
   return instance({
     url,
@@ -140,7 +152,8 @@ const client = {
   getwithoutToken,
   putWithoutToken,
   putWithUpload,
-  getWithToken
+  getWithToken,
+  postWithToken
 };
 
 export default client;

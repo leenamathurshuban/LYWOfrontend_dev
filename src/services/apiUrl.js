@@ -24,7 +24,9 @@ export const AuthUrl = {
 
   export const JobsUrl = {
     GetBenifitsList : "assets-api/benefits-list-api/?page=1&limit=10",
-    addCustomBenifits : "assets-api/benefits-post-api/"
+    addCustomBenifits : "assets-api/benefits-post-api/",
+    CreateCustomBenifits : "assets-api/benefits-post-api/",
+    createJobForm : "assets-api/job-post-api/"
   }
 
  

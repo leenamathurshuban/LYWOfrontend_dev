@@ -79,6 +79,9 @@ export const EvalationAssestDetails = (url) =>{
 
 //Job Url
 
+
+
+
 export const JobList = (url) =>{
   const JobList = client.getWithToken(url)
   return JobList
@@ -113,6 +116,19 @@ export const addCustomeBenifitsApi = (data) =>{
   const CustomeBenifits = client.postWithUpload(data,JobsUrl.addCustomBenifits)
 
   return CustomeBenifits
+}
+
+
+export const createCustomeBenifitsApi = (data) =>{
+  const createCustomeBenifits = client.postWithUpload(JobsUrl.CreateCustomBenifits,data)
+
+  return createCustomeBenifits
+}
+
+
+export const CreateJobForm = (data) =>{
+  const CreateJobForm = client.postWithUpload(JobsUrl.createJobForm,data)
+  return CreateJobForm
 }
 
 
