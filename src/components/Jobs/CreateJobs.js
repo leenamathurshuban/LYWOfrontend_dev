@@ -686,13 +686,16 @@ import {
   CreateJobLocation,
   GetBenifints,
 } from "../../services/provider";
+import { removeToken } from "../../helpers/helper";
+import { useNavigate } from "react-router-dom";
+import CreateJobsRevised from "./CreateJobsRevised";
 
 const CreateJobs = ({ show, handleClose }) => {
   const [createFormData, setCreateFormData] = useState({
     jobTitle: "",
     jobType: "",
     workPlaceType: "",
-    noOfPosition: ""
+    noOfPosition: "",
   });
 
   const [travelOption, setTravelOption] = useState("");
@@ -701,7 +704,6 @@ const CreateJobs = ({ show, handleClose }) => {
   const [isLikeUid, setIsLikeUid] = useState([]);
   const [isLikeDropdown, setIsLikeDropdown] = useState(false);
   const [isLikeData, setIsLikeData] = useState([]);
-
 
   const [department, setDepartment] = useState("");
   const [location, setLocation] = useState("");
@@ -727,15 +729,6 @@ const CreateJobs = ({ show, handleClose }) => {
   const [fileUrl, setFileUrl] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [descriptionError, setDescriptionError] = useState("");
-
-  const MAX_FILE_SIZE = 5 * 1024 * 1024;
-  const MAX_DESCRIPTION_WORDS = 500;
-
-  const quillRef = useRef(null);
-  const fileInputRef = useRef(null);
-
-  //Errors
-
   const [errors, setErrors] = useState({
     jobTitle: "",
     isLike: "",
@@ -747,6 +740,31 @@ const CreateJobs = ({ show, handleClose }) => {
     jobType: "",
     workPlaceType: "",
   });
+
+  const [modal, setModal] = useState({
+    createJobRevisedModal: false,
+  });
+
+  const MAX_FILE_SIZE = 5 * 1024 * 1024;
+  const MAX_DESCRIPTION_WORDS = 500;
+
+  const quillRef = useRef(null);
+  const fileInputRef = useRef(null);
+  const navigate = useNavigate();
+
+  const handleJobModalShow = (modalName) => {
+    setModal((prev) => ({
+      ...prev,
+      [modalName]: true,
+    }));
+  };
+
+  const handleJobModalClose = (modalName) => {
+    setModal((prev) => ({
+      ...prev,
+      [modalName]: false,
+    }));
+  };
 
   const CheckValidation = () => {
     const newErrors = {
@@ -813,7 +831,6 @@ const CreateJobs = ({ show, handleClose }) => {
     });
   };
 
-
   const handleLike = (e) => {
     setIsLike(e.target.value);
     setIsLikeDropdown(true);
@@ -824,8 +841,6 @@ const CreateJobs = ({ show, handleClose }) => {
     setIsLikeUid((prevSelectedItems) => [...prevSelectedItems, item.uid]);
     setIsLikeDropdown(false);
   };
-  
-
 
   const handleEditorChange = (value) => {
     const wordCount = value.trim().split(/\s+/).length;
@@ -894,7 +909,18 @@ const CreateJobs = ({ show, handleClose }) => {
       .then((res) => {
         setIsLikeData(res.data.response);
       })
-      .catch((error) => console.log("errooorrr----", error));
+      .catch((error) => {
+        if (
+          error?.response?.status === 401 ||
+          error?.response?.data?.detail?.includes(
+            "Given token not valid for any token type"
+          )
+        ) {
+          //console.log("Token expired, redirecting to login");
+          removeToken();
+          navigate("/loginwithpassword");
+        }
+      });
   };
   const handleDepartmentApi = (departmentQuery) => {
     const url = `https://bittrend.shubansoftware.com/assets-api/department-list-api/?search=${departmentQuery}&page=1&limit=10`;
@@ -902,7 +928,18 @@ const CreateJobs = ({ show, handleClose }) => {
       .then((res) => {
         setDepartmentData(res.data.response);
       })
-      .catch((error) => console.log("errooorrr----", error));
+      .catch((error) => {
+        if (
+          error?.response?.status === 401 ||
+          error?.response?.data?.detail?.includes(
+            "Given token not valid for any token type"
+          )
+        ) {
+          //console.log("Token expired, redirecting to login");
+          removeToken();
+          navigate("/loginwithpassword");
+        }
+      });
   };
   const handleLocationApi = (locationQuery) => {
     const url = `https://bittrend.shubansoftware.com/account-api/location-list-api/?page=1&limit=500&search=${locationQuery}`;
@@ -910,7 +947,18 @@ const CreateJobs = ({ show, handleClose }) => {
       .then((res) => {
         setLocationData(res.data.response);
       })
-      .catch((error) => console.log("errooorrr----", error));
+      .catch((error) => {
+        if (
+          error?.response?.status === 401 ||
+          error?.response?.data?.detail?.includes(
+            "Given token not valid for any token type"
+          )
+        ) {
+          //console.log("Token expired, redirecting to login");
+          removeToken();
+          navigate("/loginwithpassword");
+        }
+      });
   };
 
   const benifitsList = () => {
@@ -920,7 +968,18 @@ const CreateJobs = ({ show, handleClose }) => {
         (res) => setBenefitsData(res.data.response)
         //  console.log("res-----",res.data.response)
       )
-      .catch((error) => console.log("error----", error));
+      .catch((error) => {
+        if (
+          error?.response?.status === 401 ||
+          error?.response?.data?.detail?.includes(
+            "Given token not valid for any token type"
+          )
+        ) {
+          //console.log("Token expired, redirecting to login");
+          removeToken();
+          navigate("/loginwithpassword");
+        }
+      });
   };
 
   const handleBenifts = (benefititem) => {
@@ -1020,10 +1079,21 @@ const CreateJobs = ({ show, handleClose }) => {
       try {
         const response = await CreateJobForm(formdata);
         if (response.data.status == 200) {
+          handleJobModalShow("createJobRevisedModal");
           console.log("res=-------", response);
         }
       } catch (error) {
-        console.log("error=-------", error);
+        console.log("create eroor------", error);
+        if (
+          error?.response?.status === 401 ||
+          error?.response?.data?.detail?.includes(
+            "Given token not valid for any token type"
+          )
+        ) {
+          //console.log("Token expired, redirecting to login");
+          removeToken();
+          navigate("/loginwithpassword");
+        }
       }
     }
   };
@@ -1045,11 +1115,21 @@ const CreateJobs = ({ show, handleClose }) => {
       try {
         const response = await createCustomeBenifitsApi(formdata);
         if (response.data.status == 200) {
-          console.log("res=-------", response);
+          //console.log("res=-------", response);
           benifitsList();
         }
       } catch (error) {
         console.log("error=-------", error);
+        if (
+          error?.response?.status === 401 ||
+          error?.response?.data?.detail?.includes(
+            "Given token not valid for any token type"
+          )
+        ) {
+          //console.log("Token expired, redirecting to login");
+          removeToken();
+          navigate("/loginwithpassword");
+        }
       }
     }
   };
@@ -1096,9 +1176,10 @@ const CreateJobs = ({ show, handleClose }) => {
               value={isLike}
               onChange={handleLike}
             />
-          </Form.Group>
-          <p style={{ color: "red" }}>{errors.isLike}</p>
-
+         
+         
+          <p className="m-0" style={{ color: "red" }}>{errors.isLike}</p>
+          <div className="ctm_dropdown ct_scrollbar">
           {isLikeDropdown && isLikeData.length > 0 && (
             <ul>
               {isLikeData.map((item) => (
@@ -1116,6 +1197,8 @@ const CreateJobs = ({ show, handleClose }) => {
               <li>No data found</li>
             </ul>
           )}
+            </div>
+            </Form.Group>
 
           <Form.Group className="col-md-6 mb-2" controlId="noOfPosition">
             <Form.Label>No. of Positions</Form.Label>
@@ -1137,25 +1220,28 @@ const CreateJobs = ({ show, handleClose }) => {
               value={department}
               onChange={handleDepartment}
             />
-          </Form.Group>
+          
           <span style={{ color: "red" }}>{errors.department}</span>
-          {isDepartmentDropdown && departmentData.length > 0 && (
-            <ul>
-              {departmentData.map((item) => (
-                <li
-                  key={item.department_name}
-                  onClick={() => handleDepartmentItem(item)}
-                >
-                  {item.department_name}
-                </li>
-              ))}
-            </ul>
-          )}
-          {isDepartmentDropdown && departmentData.length === 0 && (
-            <ul>
-              <li>No data found</li>
-            </ul>
-          )}
+          <div className="ctm_dropdown ct_scrollbar">
+            {isDepartmentDropdown && departmentData.length > 0 && (
+              <ul>
+                {departmentData.map((item) => (
+                  <li
+                    key={item.department_name}
+                    onClick={() => handleDepartmentItem(item)}
+                  >
+                    {item.department_name}
+                  </li>
+                ))}
+              </ul>
+            )}
+            {isDepartmentDropdown && departmentData.length === 0 && (
+              <ul>
+                <li>No data found</li>
+              </ul>
+            )}
+          </div>
+          </Form.Group>
 
           <Form.Group className="col-md-6 mb-2" controlId="location">
             <Form.Label>Location</Form.Label>
@@ -1165,27 +1251,29 @@ const CreateJobs = ({ show, handleClose }) => {
               value={location}
               onChange={handleLocation}
             />
-          </Form.Group>
+         
           <span style={{ color: "red" }}>{errors.location}</span>
-          {isLocationDropdown && locationData.length > 0 && (
-            <ul>
-              {locationData.map((item) => (
-                <li
-                  key={item.location_name}
-                  onClick={() => handleLocationItems(item)}
-                >
-                  {item.location_name}
-                </li>
-              ))}
-            </ul>
-          )}
+          <div className="ctm_dropdown ct_scrollbar">
+            {isLocationDropdown && locationData.length > 0 && (
+              <ul>
+                {locationData.map((item) => (
+                  <li
+                    key={item.location_name}
+                    onClick={() => handleLocationItems(item)}
+                  >
+                    {item.location_name}
+                  </li>
+                ))}
+              </ul>
+            )}
 
-          {isLocationDropdown && locationData.length === 0 && (
-            <ul>
-              <li>No data found</li>
-            </ul>
-          )}
-
+            {isLocationDropdown && locationData.length === 0 && (
+              <ul>
+                <li>No data found</li>
+              </ul>
+            )}
+          </div>
+          </Form.Group>
           {["radio"].map((type) => (
             <div key={`inline-${type}`} className="checkbox-group my-2">
               <label className="form-label me-3 mb-0">Requires Travel?</label>
@@ -1237,7 +1325,7 @@ const CreateJobs = ({ show, handleClose }) => {
               Job Description <span className="font-light">(Min 50 words)</span>
             </Form.Label>
 
-            <div>
+            <div className="texteditor_warp">
               <ReactQuill
                 value={description}
                 onChange={handleEditorChange}
@@ -1253,7 +1341,7 @@ const CreateJobs = ({ show, handleClose }) => {
                   {errorMessage}
                 </div>
               )}
-              <div style={{ marginTop: "20px" }}>
+              <div className="custome_file">
                 <input
                   type="file"
                   ref={fileInputRef}
@@ -1333,7 +1421,9 @@ const CreateJobs = ({ show, handleClose }) => {
                   ></i>
                 </div>
               ))}
-
+              <span class="badge-gray ">
+                Reimburs| <i className="fas fa-close text-primary ms-1"></i>
+              </span>
               <Button
                 className="btn-light-gray"
                 onClick={handleCustomeBeniftsAdd}
@@ -1357,6 +1447,12 @@ const CreateJobs = ({ show, handleClose }) => {
           Next
         </Button>
       </div>
+      {modal.createJobRevisedModal && (
+        <CreateJobsRevised
+          show={modal.createJobRevisedModal}
+          handleClose={() => handleJobModalClose("createJobRevisedModal")}
+        />
+      )}
     </Offcanvas>
   );
 };

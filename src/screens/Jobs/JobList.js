@@ -359,10 +359,7 @@ const JobsList = () => {
     MoreFilterModal: false,
     createJobRevisedModal : false
   });
-  // const [show, setShow] = useState(false);
 
-  // const handleClose1 = () => setShow(false);
-  // const handleShow1 = () => setShow(true);
 
   const [jobData, setJobData] = useState([]);
   const [SerachList, setSerachList] = useState("");
@@ -430,9 +427,9 @@ const JobsList = () => {
     }
   }, [SerachList, modal.MoreFilterModal]);
 
-  const handleSearch = (e) => {
-    setSerachList(e.target.value);
-  };
+  // const handleSearch = (e) => {
+  //   setSerachList(e.target.value);
+  // };
 
   const handleLoadMore = () => {
     setLoadeMoreCount(loadeMoreCount + 10);
@@ -480,7 +477,7 @@ const JobsList = () => {
                 </svg>
                 Create a New Job
               </Button>
-              {/* <Button
+              <Button
                 variant="primary"
                 className="btn-md"
                 onClick={() => handleShow("createJobRevisedModal")}
@@ -501,8 +498,8 @@ const JobsList = () => {
                     stroke-linejoin="round"
                   />
                 </svg>
-                JobRevised popup
-              </Button> */}
+                  JobRevised popup
+              </Button>
 
             </Col>
           </Row>
@@ -532,7 +529,7 @@ const JobsList = () => {
                       placeholder="Serach"
                       aria-label="Serach"
                       aria-describedby="basic-addon1"
-                      onChange={(e) => handleSearch(e)}
+                      onChange={(e) => setSerachList(e.target.value)}
                     />
                   </InputGroup>
                 </Col>
