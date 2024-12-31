@@ -195,6 +195,7 @@ const EmailVerify = () => {
         setIsLoading(false);
         if (
           response.data.response.is_first_time_user === false &&
+          response.data.response.is_password_set === false ||  response.data.response.is_first_time_user === true &&
           response.data.response.is_password_set === false
         ) {
           navigate("/otp");
