@@ -672,6 +672,11 @@
 
 // export default CreateJobs;
 
+
+
+
+
+
 import { useEffect, useRef, useState } from "react";
 import { Button, Col, Form, Offcanvas } from "react-bootstrap";
 import threeLayers from "../../images/icons/layers-three-01.svg";
@@ -1060,7 +1065,7 @@ const CreateJobs = ({ show, handleClose }) => {
   };
 
   const handleCreateForm = async () => {
-    // handleJobModalShow("createJobRevisedModal");
+   // handleJobModalShow("createJobRevisedModal");
     if (CheckValidation()) {
       const textWithHtmlTags = description;
       const descriptionWithoutTags = textWithHtmlTags.replace(/<[^>]*>/g, "");
@@ -1080,8 +1085,9 @@ const CreateJobs = ({ show, handleClose }) => {
       try {
         const response = await CreateJobForm(formdata);
         if (response.data.status == 200) {
+          console.log("res create jobbbbb=-------", response.data.response.uid);
           handleJobModalShow("createJobRevisedModal");
-          console.log("res=-------", response);
+          
         }
       } catch (error) {
         console.log("create eroor------", error);
@@ -1179,11 +1185,12 @@ const CreateJobs = ({ show, handleClose }) => {
               onChange={handleLike}
             />
 
-            <p className="m-0" style={{ color: "red" }}>
+            <p className="m-0 error">
               {errors.isLike}
             </p>
-            <div className="ctm_dropdown ct_scrollbar">
+            
               {isLikeDropdown && isLikeData.length > 0 && (
+                <div className="ctm_dropdown ct_scrollbar">
                 <ul>
                   {isLikeData.map((item) => (
                     <li
@@ -1194,13 +1201,14 @@ const CreateJobs = ({ show, handleClose }) => {
                     </li>
                   ))}
                 </ul>
+                </div>
               )}
               {isLikeDropdown && isLikeData.length === 0 && (
                 <ul>
                   <li>No data found</li>
                 </ul>
               )}
-            </div>
+            
           </Form.Group>
 
           <Form.Group className="col-md-6 mb-2" controlId="noOfPosition">
@@ -1212,7 +1220,7 @@ const CreateJobs = ({ show, handleClose }) => {
               value={createFormData.noOfPosition}
               onChange={handleFormData}
             />
-             <span style={{ color: "red" }}>{errors.noOfPosition}</span>
+             <span className="error">{errors.noOfPosition}</span>
 
           </Form.Group>
          
@@ -1225,9 +1233,10 @@ const CreateJobs = ({ show, handleClose }) => {
               onChange={handleDepartment}
             />
 
-            <span style={{ color: "red" }}>{errors.department}</span>
-            <div className="ctm_dropdown ct_scrollbar">
+            <span className="error">{errors.department}</span>
+           
               {isDepartmentDropdown && departmentData.length > 0 && (
+                 <div className="ctm_dropdown ct_scrollbar">
                 <ul>
                   {departmentData.map((item) => (
                     <li
@@ -1238,13 +1247,14 @@ const CreateJobs = ({ show, handleClose }) => {
                     </li>
                   ))}
                 </ul>
+                </div>
               )}
               {isDepartmentDropdown && departmentData.length === 0 && (
                 <ul>
                   <li>No data found</li>
                 </ul>
               )}
-            </div>
+            
           </Form.Group>
 
           <Form.Group className="col-md-6 mb-2" controlId="location">
@@ -1256,9 +1266,10 @@ const CreateJobs = ({ show, handleClose }) => {
               onChange={handleLocation}
             />
 
-            <span style={{ color: "red" }}>{errors.location}</span>
-            <div className="ctm_dropdown ct_scrollbar">
+            <span className="error">{errors.location}</span>
+           
               {isLocationDropdown && locationData.length > 0 && (
+                 <div className="ctm_dropdown ct_scrollbar">
                 <ul>
                   {locationData.map((item) => (
                     <li
@@ -1269,6 +1280,7 @@ const CreateJobs = ({ show, handleClose }) => {
                     </li>
                   ))}
                 </ul>
+                </div>
               )}
 
               {isLocationDropdown && locationData.length === 0 && (
@@ -1276,7 +1288,7 @@ const CreateJobs = ({ show, handleClose }) => {
                   <li>No data found</li>
                 </ul>
               )}
-            </div>
+           
           </Form.Group>
           {["radio"].map((type) => (
             <div key={`inline-${type}`} className="checkbox-group my-2">
@@ -1354,12 +1366,14 @@ const CreateJobs = ({ show, handleClose }) => {
                 />
               </div>
 
-              {descriptionError && (
-                <div style={{ color: "red", marginBottom: "10px" }}>
+              
+            </div>
+         
+            {descriptionError && (
+                <div className="error">
                   {descriptionError}
                 </div>
               )}
-            </div>
           </Form.Group>
 
           <Col md={6} className="mb-2">
