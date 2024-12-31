@@ -290,6 +290,7 @@ const FilterJobs = ({ show, handleClose, filtersList, setFilters }) => {
       handleLocationApi();
     }
   }, [show]);
+  
   const handleDepartmentApi = () => {
     const url = `https://bittrend.shubansoftware.com/assets-api/department-list-api/?page=1&limit=10`;
     CreateJobDepartment(url)

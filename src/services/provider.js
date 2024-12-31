@@ -132,6 +132,11 @@ export const CreateJobForm = (data) =>{
 }
 
 
+export const getJobDetailsApi = (url) =>{
+  const getJobDetails = client.getWithToken(url)
+  return getJobDetails
+}
+
 
 
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Accordion,
   Badge,
@@ -14,9 +14,45 @@ import {
 import RangeSlider from "../../components/RangeSilder";
 import Edit03 from "../../images/icons/edit-0303.svg";
 import logoIcon from "../../images/logo_icon.png";
+import { getJobDetailsApi } from "../../services/provider";
+import { removeToken } from "../../helpers/helper";
+import { useNavigate } from "react-router-dom";
+
 
 const CreateJobsRevised = ({ show, handleClose }) => {
+
+  const [createRevisedJobData,setCreateRevisedJobData] = useState([])
+  const navigate = useNavigate();
+
+
+const getJobDetails = async() => {
+  const url = "https://bittrend.shubansoftware.com/assets-api/job-detail-api/03c2f0bb-43b5-4b43-a36d-56109383116b/"
+try {
+  const response = await getJobDetailsApi(url)
+  setCreateRevisedJobData(response.data.response)
+  console.log("response----->>>>>>",JSON.stringify(response.data.response,null,4))
+  
+} catch (error) {
+  console.log("error response----->>>>>>",error)
+  if (
+    error?.response?.status === 401 ||
+    error?.response?.data?.detail?.includes(
+      "Given token not valid for any token type"
+    )
+  ) {
+    //console.log("Token expired, redirecting to login");
+    removeToken();
+    navigate("/loginwithpassword");
+  }
+}
+}
+
+  useEffect(()=>{
+    getJobDetails()
+  },[])
+
   return (
+    
     <Modal
       show={show}
       onHide={handleClose}

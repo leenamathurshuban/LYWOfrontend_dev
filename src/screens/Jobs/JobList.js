@@ -357,9 +357,8 @@ const JobsList = () => {
   const [modal, setModal] = useState({
     createModal: false,
     MoreFilterModal: false,
-    createJobRevisedModal : false
+    createJobRevisedModal: false,
   });
-
 
   const [jobData, setJobData] = useState([]);
   const [SerachList, setSerachList] = useState("");
@@ -446,7 +445,6 @@ const JobsList = () => {
       )}
 
       <div className="page-body">
-        
         <Container fluid>
           <Row>
             <Col
@@ -477,30 +475,8 @@ const JobsList = () => {
                 </svg>
                 Create a New Job
               </Button>
-              {/* <Button
-                variant="primary"
-                className="btn-md"
-                onClick={() => handleShow("createJobRevisedModal")}
-              >
-                <svg
-                  width="18"
-                  className="me-1"
-                  height="18"
-                  viewBox="0 0 18 18"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M7.99992 3.33331V12.6666M3.33325 7.99998H12.6666"
-                    stroke="white"
-                    stroke-width="1.66667"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-                  JobRevised popup
-              </Button> */}
 
+              
             </Col>
           </Row>
           <Card className="shadow-sm border-0 evaluations_data">
@@ -724,13 +700,6 @@ const JobsList = () => {
             show={modal.createModal}
             handleClose={() => handleClose("createModal")}
           />
-
-          {/* job revised */}
-
-          {/* <CreateJobsRevised  
-            show={modal.createJobRevisedModal}
-            handleClose={() => handleClose("createJobRevisedModal")}
-            /> */}
         </Container>
       </div>
     </>
