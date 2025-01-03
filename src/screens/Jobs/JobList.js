@@ -76,7 +76,7 @@ const JobsList = () => {
     setIsLoading(true);
 
     // Base API URL
-    let url = `https://bittrend.shubansoftware.com/assets-api/job-list-api/?page=1&limit=10&search=${SerachList}`;
+    let url = `https://bittrend.shubansoftware.com/assets-api/job-list-api/?page=1&limit=200&search=${SerachList}`;
 
     // Add filters to the URL dynamically
     Object.entries(filtersList).forEach(([key, value]) => {
@@ -89,7 +89,7 @@ const JobsList = () => {
       const response = await JobList(url);
       setIsLoading(false);
       setJobData(response?.data?.response);
-      // console.log("response  job-----", JSON.stringify(response?.data?.response, null, 4))
+      console.log("response  job-----", JSON.stringify(response?.data?.response, null, 4))
     } catch (error) {
       setIsLoading(false);
       console.log("response  error-----", error);
@@ -119,6 +119,9 @@ const JobsList = () => {
   const handleLoadMore = () => {
     setLoadeMoreCount(loadeMoreCount + 10);
   };
+
+
+  console.log("jobData.length------",jobData.length)
 
   return (
     <>

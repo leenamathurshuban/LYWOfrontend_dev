@@ -18,41 +18,37 @@ import { getJobDetailsApi } from "../../services/provider";
 import { removeToken } from "../../helpers/helper";
 import { useNavigate } from "react-router-dom";
 
-
-const CreateJobsRevised = ({ show, handleClose }) => {
-
-  const [createRevisedJobData,setCreateRevisedJobData] = useState([])
+const CreateJobsRevised = ({ show, handleClose, uid }) => {
+  const [createRevisedJobData, setCreateRevisedJobData] = useState({});
   const navigate = useNavigate();
 
+  const getJobDetails = async (uid) => {
+    const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-api/${uid}/`;
+    // const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-api/9e1c32ac-1593-47b7-8e99-77ca31622f19/`;
+    try {
+      const response = await getJobDetailsApi(url);
+      setCreateRevisedJobData(response.data.response);
+    } catch (error) {
+      console.log("error response----->>>>>>", error);
+      if (
+        error?.response?.status === 401 ||
+        error?.response?.data?.detail?.includes(
+          "Given token not valid for any token type"
+        )
+      ) {
+        removeToken();
+        navigate("/loginwithpassword");
+      }
+    }
+  };
 
-const getJobDetails = async() => {
-  const url = "https://bittrend.shubansoftware.com/assets-api/job-detail-api/03c2f0bb-43b5-4b43-a36d-56109383116b/"
-try {
-  const response = await getJobDetailsApi(url)
-  setCreateRevisedJobData(response.data.response)
-  console.log("response----->>>>>>",JSON.stringify(response.data.response,null,4))
-  
-} catch (error) {
-  console.log("error response----->>>>>>",error)
-  if (
-    error?.response?.status === 401 ||
-    error?.response?.data?.detail?.includes(
-      "Given token not valid for any token type"
-    )
-  ) {
-    //console.log("Token expired, redirecting to login");
-    removeToken();
-    navigate("/loginwithpassword");
-  }
-}
-}
-
-  useEffect(()=>{
-    getJobDetails()
-  },[])
+  useEffect(() => {
+    if (uid) {
+      getJobDetails(uid);
+    }
+  }, []);
 
   return (
-    
     <Modal
       show={show}
       onHide={handleClose}
@@ -64,14 +60,18 @@ try {
       <Modal.Header closeButton>
         <img src={logoIcon} className="me-4" />
         <Modal.Title>
-          Sr. Developer - Python
+          {createRevisedJobData.job_title}
           <span className="subtitle">
-            Mumbai, Technology, Full-Time, Remote
+            {createRevisedJobData?.job_location?.location_name},{" "}
+            {createRevisedJobData?.department?.department_name},{" "}
+            {createRevisedJobData?.job_type},{" "}
+            {createRevisedJobData?.workplace_type}
           </span>
           <button type="button" className="edit-btnicon">
             <img src={Edit03} />
           </button>
         </Modal.Title>
+
         <button type="button" className="view-btnicon">
           <i className="fa fa-eye"></i>
         </button>
@@ -137,6 +137,50 @@ try {
             </ul>
           </Col>
           <Col md={7} lg={8} className="jobMain_panel">
+
+          <div className="lw-toolbar">
+
+              <ul>
+
+                <li>
+
+                  <a href="#"><i class="fa fa-undo"></i></a>
+
+                </li>
+
+                <li>
+
+                  <a href="#" className="text-danger"><i class="far fa-flag"></i></a>
+
+                </li>
+
+                <li>
+
+                  <a href="#"><i class="fa fa-flag"></i></a>
+
+                </li>
+
+                <li>
+
+                  <a href="#"><i class="far fa-plus"></i></a>
+
+                </li>
+
+                <li>
+
+                  <a href="#"><i class="fa fa-times"></i></a>
+
+                </li>
+
+                <li>
+
+                  <a href="#"><i class="fa fa-magic"></i></a>
+
+                </li>
+
+              </ul>
+
+            </div>
             <Accordion defaultActiveKey={["0", "8", "7", "10"]} alwaysOpen>
               <Accordion.Item eventKey="0">
                 <Accordion.Header>Requirements</Accordion.Header>
@@ -1021,14 +1065,18 @@ try {
             </Accordion>
           </Col>
           <Col md={3} lg={2} className="jobpre_Rightpanel">
-            <h5>Sr. Developer - Python</h5>
+            <h5>{createRevisedJobData?.job_title}</h5>
             <p>
-              Like Software Developer, 10 Positions
+              {createRevisedJobData?.department?.department_name},{" "}
+              {createRevisedJobData?.number_of_positions} Positions
               <br />
-              Technology, Mumbai,
+              {/* Technology, */}
+              {createRevisedJobData?.job_location?.location_name},
               <br />
-              Full-Time, Remote
+              {createRevisedJobData?.job_type},{" "}
+              {createRevisedJobData?.workplace_type}
             </p>
+
             <div className="ct_scrollbar pb-3">
               <div className="user_bsinfo">
                 <h6>Expectations</h6>

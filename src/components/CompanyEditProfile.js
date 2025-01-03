@@ -379,7 +379,6 @@ const CompanyEditProfile = ({ show, handleClose }) => {
   };
 
   const updateCompanyProfile = async () => {
-   
     if (companyUpdateError?.websiteError) {
       console.log("Invalid URL, cannot submit.");
       return;
@@ -394,8 +393,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
       data.append("number_of_employees", noOfEmploy);
       data.append("industry", ids?.industryUid);
       data.append("location", ids?.locationUid);
-      data.append("logo", imageFile) 
-    
+      data.append("logo", imageFile);
 
       const response = await axios.put(
         `https://bittrend.shubansoftware.com/account-api/update-company-api/${uid}/`,
@@ -407,7 +405,6 @@ const CompanyEditProfile = ({ show, handleClose }) => {
         }
       );
       if (response === 200) {
-        
         setCompanyUpdateError((prevState) => ({
           ...prevState,
           websiteError: "", // Clear websiteError on successful update
@@ -456,7 +453,6 @@ const CompanyEditProfile = ({ show, handleClose }) => {
   };
 
   const handleDeleteImage = () => {
-   
     setImage(null);
     setImageName("");
     setImageFile("");
@@ -509,7 +505,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
             </Nav>
           </aside>
           <Col md={10} className="cprofile_right">
-          <Modal.Header closeButton className="fixed-header">
+            <Modal.Header closeButton className="fixed-header">
               <Modal.Title>Company Settings</Modal.Title>
             </Modal.Header>
             <Tab.Content>
@@ -579,7 +575,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                   </p>
                                 )}
 
-                                <Form.Group className="mb-3">
+                                {/* <Form.Group className="mb-3">
                                   <Form.Label>Industry</Form.Label>
 
                                   <input
@@ -620,7 +616,56 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                       </div>
                                     )}
 
-                                  {/* Show no results if no industries are found */}
+                                  {!selectedIndustry &&
+                                    industries.length === 0 &&
+                                    !loading &&
+                                    !error &&
+                                    searchTerm.trim() !== "" && (
+                                      <p className="text-sm">
+                                        No results found.
+                                      </p>
+                                    )}
+                                </Form.Group> */}
+
+                                <Form.Group className="col-md-12 mb-3">
+                                  <Form.Label>Industry</Form.Label>
+                                  <Form.Control
+                                    type="text"
+                                    placeholder="Search for an industry.."
+                                    value={searchTerm}
+                                    onChange={handleSearchChange}
+                                  />
+
+                                  {loading && (
+                                    <p className="text-sm">Loading...</p>
+                                  )}
+                                  {error && (
+                                    <p style={{ color: "red" }}>{error}</p>
+                                  )}
+
+                                  {!selectedIndustry &&
+                                    industries.length > 0 &&
+                                    !loading &&
+                                    !error && (
+                                      <div className="ctm_dropdown ct_scrollbar">
+                                        <ul>
+                                          {industries.map((industry) =>
+                                            searchTerm !==
+                                            industry?.industry_name ? (
+                                              <li
+                                                key={industry.id}
+                                                onClick={() =>
+                                                  handleIndustrySelect(industry)
+                                                }
+                                              >
+                                                {industry?.industry_name}
+                                              </li>
+                                            ) : null
+                                          )}
+                                        </ul>
+                                      </div>
+                                    )}
+
                                   {!selectedIndustry &&
                                     industries.length === 0 &&
                                     !loading &&
@@ -712,17 +757,16 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                     </option>
                                   </Form.Select>
                                 </Form.Group>
-                                <Form.Group className="mb-3">
+                               
                                   <Form.Group className="mb-3">
                                     <Form.Label>Headquarter</Form.Label>
-
-                                    <input
+                                    <Form.Control
                                       type="text"
-                                      value={searchLocationTerm}
-                                      onChange={handleLocationSearchChange} // Updated to handle reset on input change
                                       placeholder="Search for an Headquarter..."
-                                      className="form-control"
+                                      value={searchLocationTerm}
+                                      onChange={handleLocationSearchChange}
                                     />
+                                   
 
                                     {loading && (
                                       <p className="text-sm">Loading...</p>
@@ -768,7 +812,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                         </p>
                                       )}
                                   </Form.Group>
-                                </Form.Group>
+                               
                                 <Form.Group className="mb-3">
                                   <Form.Label>Add Company Logo</Form.Label>
 

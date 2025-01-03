@@ -622,10 +622,14 @@ ol.breadcrumb {
   background-color: transparent !important;
   border: transparent !important;
 }
+.my-2-5 {
+  margin-top: 0.75rem !important;
+  margin-bottom: 0.75rem !important;
+}
 .cmprofile_mdl {
   .modal-body {
     padding: 1.15rem;
-    margin-top: 70px;
+    // margin-top: 70px;
   }
 }
 .form_card {
@@ -2016,6 +2020,7 @@ select.h-36.form-select {
   padding: 24px 20px 20px 0;
   box-sizing: border-box;
   width: calc(100% - 34%);
+  position: relative;
   .accordion-item {
     margin-bottom: 8px;
     border-radius: 8px;
@@ -2376,6 +2381,53 @@ select.h-36.form-select {
   margin-left: 5px;
   color: #667085;
 }
+.input-container {
+  display: inline-block;
+  .remove-tag {
+    position: absolute;
+    right: 11px;
+    top: 6px;
+    border: solid 2px #4c60e5;
+    width: 18px;
+    height: 18px;
+    line-height: 16px;
+    text-align: center;
+    font-size: 12px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+}
+.ql-editor img {
+  max-width: 100%;
+  max-width: 100px;
+  display: block;
+  border: solid 1px #bac5da;
+  padding: 4px;
+  border-radius: 4px;
+}
+.lw-toolbar {
+  position: absolute;
+  right: -29px;
+  top: 70px;
+  ul {
+    margin: 0;
+    padding: 6px;
+    list-style: none;
+    background-color: #fff;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+  }
+  li {
+    width: 28px;
+    height: 28px;
+    text-align: center;
+    line-height: 28px;
+    a {
+      color: #475467;
+      font-size: 13px;
+    }
+  }
+}
 
 @media (min-width: 992px) {
   .modal-lg,
@@ -2407,3 +2459,4 @@ select.h-36.form-select {
     font-size: 12px;
   }
 }
+
