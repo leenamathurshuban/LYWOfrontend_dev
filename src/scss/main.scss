@@ -2459,4 +2459,8 @@ select.h-36.form-select {
     font-size: 12px;
   }
 }
-
+.no-bottom-border-transparent {
+  border-bottom: 1px solid white !important;  /* Sets bottom border to transparent */
+  box-shadow: none !important;  /* Remove any shadow that may appear on focus */
+  margin-top: 2;
+}

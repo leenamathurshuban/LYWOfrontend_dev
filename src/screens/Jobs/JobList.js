@@ -1,21 +1,15 @@
 import React, { useEffect, useState } from "react";
 import {
+  Button,
   Card,
   Col,
   Container,
-  Row,
-  InputGroup,
-  Button,
-  Form,
-  Table,
-  Modal,
-  Offcanvas,
   Dropdown,
-  Accordion,
-  Badge,
-  Stack,
-  ProgressBar,
+  Form,
+  InputGroup,
+  Row,
   Spinner,
+  Table,
 } from "react-bootstrap";
 import Header from "../../components/Header";
 import CreateJobs from "../../components/Jobs/CreateJobs";
@@ -31,10 +25,6 @@ import DropD_link from "../../images/icons/DropD_link-03.svg";
 import DropD_mail from "../../images/icons/DropD_mail-02.svg";
 import DropD_pause from "../../images/icons/DropD_pause-circle.svg";
 import { JobList } from "../../services/provider";
-import RangeSlider from "../../components/RangeSilder";
-import logoIcon from "../../images/logo_icon.png";
-import Edit03 from "../../images/icons/edit-0303.svg";
-import CreateJobsRevised from "../../components/Jobs/CreateJobsRevised";
 
 const JobsList = () => {
   const [modal, setModal] = useState({
@@ -44,10 +34,12 @@ const JobsList = () => {
   });
 
   const [jobData, setJobData] = useState([]);
+  const [VisiblejobData, setJVisiblejobData] = useState(jobData.slice(0, 10));
+  const [count, setCount] = useState(10);
   const [SerachList, setSerachList] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [loadeMoreCount, setLoadeMoreCount] = useState(10);
-  const [filterAppliedCount,setFilterAppliedCount]=useState(0)
+
+  const [filterAppliedCount, setFilterAppliedCount] = useState(0);
   const [filtersList, setFilters] = useState({
     job_type: "",
     workplace_type: "",
@@ -76,20 +68,13 @@ const JobsList = () => {
     setIsLoading(true);
 
     // Base API URL
-    let url = `https://bittrend.shubansoftware.com/assets-api/job-list-api/?page=1&limit=200&search=${SerachList}`;
-
-    // Add filters to the URL dynamically
-    Object.entries(filtersList).forEach(([key, value]) => {
-      if (value) {
-        url += `&${key}=${encodeURIComponent(value)}`;
-      }
-    });
+    let url = `https://bittrend.shubansoftware.com/assets-api/job-list-api/?page=1&limit=2000&search=${SerachList}`;
 
     try {
       const response = await JobList(url);
       setIsLoading(false);
       setJobData(response?.data?.response);
-      console.log("response  job-----", JSON.stringify(response?.data?.response, null, 4))
+      
     } catch (error) {
       setIsLoading(false);
       console.log("response  error-----", error);
@@ -97,13 +82,20 @@ const JobsList = () => {
   };
 
   useEffect(() => {
+    setJVisiblejobData(jobData.slice(0, 10));
+    setCount(10);
+  }, [jobData]);
+
+  useEffect(() => {
     JobListApi();
   }, []);
 
   useEffect(() => {
     if (SerachList || !modal.MoreFilterModal) {
-      let count = Object.values(filtersList).filter(value => value !== null && value !== undefined && value !== "").length;
-      setFilterAppliedCount(count)
+      let count = Object.values(filtersList).filter(
+        (value) => value !== null && value !== undefined && value !== ""
+      ).length;
+      setFilterAppliedCount(count);
       const debounceTimer = setTimeout(() => {
         JobListApi(SerachList);
       }, 500);
@@ -112,16 +104,11 @@ const JobsList = () => {
     }
   }, [SerachList, modal.MoreFilterModal]);
 
-  // const handleSearch = (e) => {
-  //   setSerachList(e.target.value);
-  // };
-
   const handleLoadMore = () => {
-    setLoadeMoreCount(loadeMoreCount + 10);
+    const nextData = jobData.slice(count, count + 10);
+    setJVisiblejobData([...VisiblejobData, ...nextData]);
+    setCount(count + 10);
   };
-
-
-  console.log("jobData.length------",jobData.length)
 
   return (
     <>
@@ -164,8 +151,6 @@ const JobsList = () => {
                 </svg>
                 Create a New Job
               </Button>
-
-              
             </Col>
           </Row>
           <Card className="shadow-sm border-0 evaluations_data">
@@ -203,28 +188,28 @@ const JobsList = () => {
             <Card.Body>
               <div className="joblist_filter d-flex justify-content-between align-items-center">
                 <span className="jobs_count">30 Active Jobs</span>
-                  <Button
-                    className="btn btn-light-outline"
-                    onClick={() => handleShow("MoreFilterModal")}
+                <Button
+                  className="btn btn-light-outline"
+                  onClick={() => handleShow("MoreFilterModal")}
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 20 20"
+                    className="me-2"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
                   >
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 20 20"
-                      className="me-2"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M5 10H15M2.5 5H17.5M7.5 15H12.5"
-                        stroke="#344054"
-                        stroke-width="1.66667"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                    </svg>
-                    More filters
-                  </Button>
+                    <path
+                      d="M5 10H15M2.5 5H17.5M7.5 15H12.5"
+                      stroke="#344054"
+                      stroke-width="1.66667"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                  More filters
+                </Button>
               </div>
               <div className="elv_datatable joblist_data">
                 <Table striped className="m-0">
@@ -247,7 +232,7 @@ const JobsList = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {jobData.map((item) => (
+                    {VisiblejobData.map((item) => (
                       <tr>
                         <td>
                           <Form.Check
@@ -322,7 +307,7 @@ const JobsList = () => {
                     ))}
                   </tbody>
                   <tfoot>
-                    {loadeMoreCount < jobData.length && (
+                    {count < jobData.length && (
                       <tr>
                         <td colSpan={2}>
                           <Button
@@ -334,7 +319,7 @@ const JobsList = () => {
                         </td>
                         <td colSpan={7} className="text-end pe-3">
                           <span className="pagination_count">
-                            Showing 10 items
+                            Showing {VisiblejobData.length} items
                           </span>
                         </td>
                       </tr>

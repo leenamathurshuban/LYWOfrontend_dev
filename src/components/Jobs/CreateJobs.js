@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { Button, Col, Form, Offcanvas } from "react-bootstrap";
 import threeLayers from "../../images/icons/layers-three-01.svg";
+import axios from "axios";
+
 
 import ReactQuill from "react-quill";
 import { useNavigate } from "react-router-dom";
-import { removeToken } from "../../helpers/helper";
 import {
   createCustomeBenifitsApi,
   CreateJobDepartment,
@@ -12,8 +13,12 @@ import {
   CreateJobIsLike,
   CreateJobLocation,
   GetBenifints,
+  UpdateJobForm,
 } from "../../services/provider";
 import CreateJobsRevised from "./CreateJobsRevised";
+import { removeToken } from "../../helpers/helper";
+
+
 
 const CreateJobs = ({ show, handleClose }) => {
   const [createFormData, setCreateFormData] = useState({
@@ -50,6 +55,106 @@ const CreateJobs = ({ show, handleClose }) => {
   const [isLocationDropdown, setIsLocationDropdown] = useState(false);
 
   const [createJobUid,setCreateJobUid] = useState("")
+  const [createUid,setCreatedUid]=useState('')
+
+
+  const [minEdu,setMinEdu]=useState("");
+
+
+
+  const [badges, setBadges] = useState([]);
+
+
+
+  const [updateFormData,setUpdateFormData] = useState({
+
+    display_salary:"",
+
+    max_salary:"",
+
+    min_salary:"",
+
+    currency:"INR",
+
+    salary_type:"",
+
+    salary_price_type:"Salary-range",
+
+    workplace_type:"",
+
+    job_type:"",
+
+    description_attachment:"",
+
+    detailed_description:"",
+
+    number_of_positions:"",
+
+    requires_travel:"",
+
+    job_location:"",
+
+    department:"",
+
+    job_benefits:"",
+
+    is_like:"",
+
+    job_title:"",
+
+    job_company:"",
+
+    non_negotiable_salary:"",
+
+    minimum_education:"",
+
+    area_of_education:"",
+
+    higher_qualification_preferred:"",
+
+    other_areas_acceptable:"",
+
+    year_of_experience_type:"",
+
+    min_exp:"",
+
+    max_exp:"",
+
+    restricted_industries:"",
+
+    define_current_role:"",
+
+    shortlisted_industry:"",
+
+    restricted_roles:"",
+
+    targate_hire_date:"",
+
+    immediate_hiring:"",
+
+    explore_buy_out_option:"",
+
+    spoken_language:"",
+
+    read_write_language:"",
+
+    no_specific_language_require:"",
+
+    preferred_geography:"",
+
+    no_specific_location:"",
+
+    relocation_cost_covered:"",
+
+    skills:"",
+
+    must_have_skills:"",
+
+    job_status:"",
+
+  })
+
+  const [isUpdated,setIsUpdated]=useState(false)
 
   //Editor states
 
@@ -157,6 +262,20 @@ const CreateJobs = ({ show, handleClose }) => {
       ...createFormData,
       [name]: value,
     });
+  };
+
+  const handleUpdateFormData = (e) => {
+
+    const { name, value } = e.target;
+
+    setUpdateFormData({
+
+      ...updateFormData,
+
+      [name]: value,
+
+    });
+
   };
 
   const handleLike = (e) => {
@@ -428,6 +547,160 @@ const CreateJobs = ({ show, handleClose }) => {
       }
     }
   };
+
+  const handleUpdateForm = async () => {
+
+    const formdata = new FormData();
+
+    for (const key in updateFormData) {
+
+     if (key === "area_of_education"&&badges.length>0) {
+
+       const uids = badges.map((item) => item?.uid)
+
+       console.log(uids,typeof(uids))
+
+       formdata.append(key, JSON.stringify(uids));
+
+     }else if(key==="higher_qualification_preferred"||key==="other_areas_acceptable"||key==="non_negotiable_salary"||key==="display_salary"&&updateFormData[key] !== ""){
+
+       formdata.append(key, updateFormData[key]==="on"?"True":'False');
+
+     } else if (updateFormData[key] !== "") {
+
+       formdata.append(key, updateFormData[key]);
+
+     }
+
+   }
+
+
+
+    try {
+
+      const response = await UpdateJobForm(formdata,createUid);
+
+      if (response.data.status == 200) {
+
+       alert("Job updated successfully!");
+
+       setUpdateFormData({
+
+         display_salary:"",
+
+         max_salary:"",
+
+         min_salary:"",
+
+         currency:"INR",
+
+         salary_type:"",
+
+         salary_price_type:"Salary_range",
+
+         workplace_type:"",
+
+         job_type:"",
+
+         description_attachment:"",
+
+         detailed_description:"",
+
+         number_of_positions:"",
+
+         requires_travel:"",
+
+         job_location:"",
+
+         department:"",
+
+         job_benefits:"",
+
+         is_like:"",
+
+         job_title:"",
+
+         job_company:"",
+
+         non_negotiable_salary:"",
+
+         minimum_education:"",
+
+         area_of_education:"",
+
+         higher_qualification_preferred:"",
+
+         other_areas_acceptable:"",
+
+         year_of_experience_type:"",
+
+         min_exp:"",
+
+         max_exp:"",
+
+         restricted_industries:"",
+
+         define_current_role:"",
+
+         shortlisted_industry:"",
+
+         restricted_roles:"",
+
+         targate_hire_date:"",
+
+         immediate_hiring:"",
+
+         explore_buy_out_option:"",
+
+         spoken_language:"",
+
+         read_write_language:"",
+
+         no_specific_language_require:"",
+
+         preferred_geography:"",
+
+         no_specific_location:"",
+
+         relocation_cost_covered:"",
+
+         skills:"",
+
+         must_have_skills:"",
+
+         job_status:"",
+
+       })
+
+      }
+
+    } catch (error) {
+
+      console.log("create eroor------", error);
+
+      if (
+
+        error?.response?.status === 401 ||
+
+        error?.response?.data?.detail?.includes(
+
+          "Given token not valid for any token type"
+
+        )
+
+      ) {
+
+        //console.log("Token expired, redirecting to login");
+
+        removeToken();
+
+        navigate("/loginwithpassword");
+
+      }
+
+        }
+
+};
 
   const handleCustomeBeniftsAdd = () => {
     const CreateCustomLabel = { Label: "" };
@@ -797,6 +1070,23 @@ const CreateJobs = ({ show, handleClose }) => {
           show={modal.createJobRevisedModal}
           handleClose={() => handleJobModalClose("createJobRevisedModal")}
           uid={createJobUid}
+          handleFormData={handleUpdateFormData}
+
+          handleCreateForm={handleUpdateForm}
+
+          setCreatedUid={setCreatedUid}
+
+          setBadges={setBadges}
+
+          badges={badges}
+
+          minEdu={minEdu}
+
+          setMinEdu={setMinEdu}
+
+          setIsUpdated={setIsUpdated}
+
+          isUpdated={isUpdated}
         />
       )}
     </Offcanvas>

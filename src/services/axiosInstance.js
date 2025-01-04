@@ -28,6 +28,22 @@ export const baseHeadersForToken = () => {
   };
 };
 
+export const putForUpload = async (url, params) => {
+
+  return instance({
+
+    url,
+
+    method: "PUT",
+
+    data: params,
+
+    headers: baseHeadersForUploads(),
+
+  });
+
+};
+
 const baseHeadersForUploads = () => {
   const token = getToken();
   return {
@@ -153,7 +169,8 @@ const client = {
   putWithoutToken,
   putWithUpload,
   getWithToken,
-  postWithToken
+  postWithToken,
+  putForUpload
 };
 
 export default client;

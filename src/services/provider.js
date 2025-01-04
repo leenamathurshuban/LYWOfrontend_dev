@@ -138,5 +138,26 @@ export const getJobDetailsApi = (url) =>{
 }
 
 
+export const UpdateJobForm = (data,id) =>{
 
+  console.log(data)
+
+  const UpdateJobForm = client.putForUpload(`${JobsUrl.UpdateJobForm}${id}/`,data)
+
+  return UpdateJobForm
+
+}
+
+
+// Qualification List By Course Id
+
+
+
+export const getQualificationListApi = (url) =>{
+
+  const getJobDetails = client.getWithToken(url)
+
+  return getJobDetails
+
+}
 

@@ -627,7 +627,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                     )}
                                 </Form.Group> */}
 
-                                <Form.Group className="col-md-12 mb-3">
+                                {/* <Form.Group className="col-md-12 mb-3">
                                   <Form.Label>Industry</Form.Label>
                                   <Form.Control
                                     type="text"
@@ -636,12 +636,14 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                     onChange={handleSearchChange}
                                   />
 
-                                  {loading && (
+                                {loading && (
                                     <p className="text-sm">Loading...</p>
                                   )}
                                   {error && (
                                     <p style={{ color: "red" }}>{error}</p>
-                                  )}
+                                  )} 
+
+                                     
 
                                   {!selectedIndustry &&
                                     industries.length > 0 &&
@@ -675,7 +677,52 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                         No results found.
                                       </p>
                                     )}
-                                </Form.Group>
+
+                                </Form.Group> */}
+
+
+<Form.Group className="col-md-12 mb-3">
+  <Form.Label>Industry</Form.Label>
+  <Form.Control
+    type="text"
+    placeholder="Search for an industry.."
+    value={searchTerm}
+    onChange={handleSearchChange}
+    style={{
+      borderBottom: searchTerm ? '1px solid transparent' : '',  // Set transparent bottom border
+      // borderColor: searchTerm ? 'transparent' : '',  // Ensure border color is transparent
+      // boxShadow: searchTerm ? 'none' : ''  // Remove any shadow if there is a search term
+    }}
+  />
+
+  {loading && <p className="text-sm">Loading...</p>}
+  {error && <p style={{ color: 'red' }}>{error}</p>}
+
+  {!selectedIndustry && industries.length > 0 && !loading && !error && (
+    <div className="ctm_dropdown ct_scrollbar">
+      <ul>
+        {industries.map((industry) =>
+          searchTerm !== industry?.industry_name ? (
+            <li
+              key={industry.id}
+              onClick={() => handleIndustrySelect(industry)}
+            >
+              {industry?.industry_name}
+            </li>
+          ) : null
+        )}
+      </ul>
+    </div>
+  )}
+
+  {!selectedIndustry &&
+    industries.length === 0 &&
+    !loading &&
+    !error &&
+    searchTerm.trim() !== '' && (
+      <p className="text-sm">No results found.</p>
+    )}
+</Form.Group>
 
                                 {/* // try enddd */}
 
