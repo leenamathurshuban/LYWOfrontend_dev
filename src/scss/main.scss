@@ -234,6 +234,10 @@ fieldset:disabled .btn {
         }
         &.active {
           background-color: #f5f8ff;
+          border-right: solid 3px #6172F3;
+          span{
+            color: #6172F3;;
+          }
         }
       }
     }
@@ -395,8 +399,7 @@ fieldset:disabled .btn {
       border-bottom: solid 1px #eaecf0;
     }
     .dropdown-item {
-      color: #344054;
-      line-height: 36px;
+      color: #344054
       img {
         margin-right: 10px;
       }
@@ -485,18 +488,13 @@ ol.breadcrumb {
   border-right: solid 1px #eaecf0;
   padding: 0;
   position: fixed;
-
   left: 0;
-
   top: 0px;
-
-  z-index: 9;
-
+  z-index: 999999;
   background-color: #fff;
   .md_sdrlogo {
-    padding: 20px 30px;
-
-    height: 71px;
+    padding: 25px 30px;
+    height: 80px;
   }
   .mdl_sdbarmenu {
     .nav-item {
@@ -515,25 +513,49 @@ ol.breadcrumb {
         }
         &.active {
           background-color: #f5f8ff;
+          border-right: solid 3px #6172F3;
+          color: #6172F3;
         }
       }
     }
   }
 }
+.addUserguide {
+  max-height: 380px;
+  overflow-y: auto;
+}
 .cprofile_right {
-  width: 89%;
+  width: calc(100% - 34%);
   padding-left: 0;
   background-color: #f9fafb;
-  margin-left: 180px;
+  margin-left: 11%;
+  padding-top: 75px;
+  margin-right: 25%;
+  padding-left: 10px;
+}
+.sd-rightFixed {
+  position: fixed;
+  top: 0;
+  right: -15px;
+  height: 100vh;
+  padding-top: 80px;
+  z-index: 99;
+  background-color: #f9fafb;
+}
+.usermanagement_panel {
+  right: 0;
 }
 .modal-header {
-  box-shadow: 3px 0px 6px #0000001c;
-  border: none;
-  padding: 22px 20px;
-  background-color: #fff;
-  border-radius: 0;
-  z-index: 99;
-  height: 79px;
+  box-shadow: 3px 0px 6px rgba(0, 0, 0, 0.1098039216);
+    border: none;
+    padding: 22px 20px;
+    background-color: #fff;
+    border-radius: 0;
+    z-index: 999;
+    height: 79px;
+    position: fixed;
+    top: 0;
+    width: 100%;
   .modal-title {
     color: #101828;
     font-weight: 600;
@@ -749,9 +771,11 @@ label.required.form-label {
     }
   }
   .cmp_info {
-    margin: 15px 0 40px 0;
+    margin: 15px 0 0 0;
     padding: 0 0 15px 0;
     border-bottom: solid 1px #eaecf0;
+    max-height: 250px;
+    overflow-y: auto;
     li {
       list-style: none;
       font-size: 13px;
@@ -2371,7 +2395,24 @@ select.h-36.form-select {
     margin-right: 8px;
     margin-bottom: 8px;
     cursor: pointer;
+    &.active{
+      border-color: #6172F3;
+    }
   }
+}
+.text-primerylight {
+  color: #6172F3 !important;
+}
+.tag_remove {
+  border: solid 2px #6172F3;
+  width: 14px;
+  height: 14px;
+  line-height: 12px !important;
+  text-align: center;
+  font-size: 9px;
+  border-radius: 50%;
+  cursor: pointer;
+  color: #6172F3;
 }
 .icon-btn {
   background-color: transparent;
@@ -2428,6 +2469,36 @@ select.h-36.form-select {
     }
   }
 }
+.border_box {
+  min-height: 34px;
+  font-size: 12px;
+  border-radius: 6px;
+  color: #344054;
+  font-weight: 500;
+  border: solid 1px #D0D5DD;
+  display: flex;
+  align-items: center;
+  padding: 7px 12px;
+  width: 100%;
+}
+.hadding-xs{
+  font-size: 13px;
+  color: #344054;
+  font-weight: 600;
+}
+.cmt_questions {
+  .form-check {
+    margin: 10px 0;
+    label {
+      background-color: #F9FAFB;
+      color: #1D2939;
+      font-size: 12px;
+      width: 350px;
+      padding: 4px 8px;
+    }
+
+  }
+}
 
 @media (min-width: 992px) {
   .modal-lg,
@@ -2464,3 +2535,4 @@ select.h-36.form-select {
   box-shadow: none !important;  /* Remove any shadow that may appear on focus */
   margin-top: 2;
 }
+

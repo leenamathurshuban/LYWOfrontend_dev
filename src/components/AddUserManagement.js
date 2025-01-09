@@ -282,7 +282,7 @@ const navigate = useNavigate()
   
   return (
     <Row>
-      <Col md={9}>
+      <Col md={12}>
         <div className="mdl_pagetitle d-flex justify-content-between align-items-center">
           <h5>User Management</h5>
           <InputGroup className="header_serach">
@@ -695,7 +695,9 @@ const navigate = useNavigate()
       </Col>
 
       <Col md={3} className="usermanagement_panel sd-rightFixed">
-        <AddUserguide />
+        <div className="ct_scrollbar addUserguide">
+          <AddUserguide />
+        </div>
         <div className="rects-panel">
           <h5 className="hadding_h5 d-flex justify-content-between">
             User Summary{" "}

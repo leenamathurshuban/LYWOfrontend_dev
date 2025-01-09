@@ -33,8 +33,11 @@ const JobsList = () => {
     createJobRevisedModal: false,
   });
 
-  const [jobData, setJobData] = useState([]);
-  const [VisiblejobData, setJVisiblejobData] = useState(jobData.slice(0, 10));
+  const [jobData, setJobData] = useState({
+    jobs: [],
+    total_active_job_count : 0
+  });
+  const [VisiblejobData, setJVisiblejobData] = useState(jobData.jobs.slice(0, 10));
   const [count, setCount] = useState(10);
   const [SerachList, setSerachList] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -73,7 +76,11 @@ const JobsList = () => {
     try {
       const response = await JobList(url);
       setIsLoading(false);
-      setJobData(response?.data?.response);
+      
+      setJobData({
+        jobs: response?.data?.response || [],
+        total_active_job_count : response?.data?.total_active_job_count  || 0 
+       });
       
     } catch (error) {
       setIsLoading(false);
@@ -82,9 +89,9 @@ const JobsList = () => {
   };
 
   useEffect(() => {
-    setJVisiblejobData(jobData.slice(0, 10));
+    setJVisiblejobData(jobData.jobs.slice(0, 10));
     setCount(10);
-  }, [jobData]);
+  }, [jobData.jobs]);
 
   useEffect(() => {
     JobListApi();
@@ -105,10 +112,13 @@ const JobsList = () => {
   }, [SerachList, modal.MoreFilterModal]);
 
   const handleLoadMore = () => {
-    const nextData = jobData.slice(count, count + 10);
+    const nextData = jobData.jobs.slice(count, count + 10);
     setJVisiblejobData([...VisiblejobData, ...nextData]);
     setCount(count + 10);
   };
+
+
+  // console.log("jobData------",JSON.stringify(jobData[0],null,4))
 
   return (
     <>
@@ -187,7 +197,7 @@ const JobsList = () => {
             </Card.Header>
             <Card.Body>
               <div className="joblist_filter d-flex justify-content-between align-items-center">
-                <span className="jobs_count">30 Active Jobs</span>
+                <span className="jobs_count">{jobData?.total_active_job_count} Active Jobs</span>
                 <Button
                   className="btn btn-light-outline"
                   onClick={() => handleShow("MoreFilterModal")}
@@ -244,7 +254,7 @@ const JobsList = () => {
                             {item.job_title}
                           </span>
                         </td>
-                        <td>{item.job_location.location_name}</td>
+                        <td>{item?.job_location?.location_name}</td>
                         <td>{item.department.department_name}</td>
                         <td>{item.job_type}</td>
                         <td>{item.workplace_type}</td>
@@ -307,7 +317,7 @@ const JobsList = () => {
                     ))}
                   </tbody>
                   <tfoot>
-                    {count < jobData.length && (
+                    {count < jobData.jobs.length && (
                       <tr>
                         <td colSpan={2}>
                           <Button

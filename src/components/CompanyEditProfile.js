@@ -7,7 +7,6 @@ import {
   Card,
   Col,
   Form,
-  InputGroup,
   Modal,
   Nav,
   Row,
@@ -15,29 +14,28 @@ import {
 } from "react-bootstrap";
 import { useDropzone } from "react-dropzone";
 import { useSelector } from "react-redux";
-import { logoMaker } from "../helpers/helper";
+import { toast } from "react-toastify";
+import { logoMaker, removeToken } from "../helpers/helper";
 import { cprofilelogo, starIcon } from "../images/assest";
+import imgpEdit from "../images/icons/edit-01.svg";
 import imgplusIcon from "../images/icons/image-plus.svg";
+import imgpTrash from "../images/icons/trash-01.svg";
 import AddUserManagement from "./AddUserManagement";
 import TextEditor from "./TextEditor";
-import imgpTrash from "../images/icons/trash-01.svg";
-import imgpEdit from "../images/icons/edit-01.svg";
-import { toast } from "react-toastify";
+import { IndustrySelection, LocationSelection } from "../services/provider";
+import { useNavigate } from "react-router-dom";
 
 const CompanyEditProfile = ({ show, handleClose }) => {
   const companyProfileDetails = useSelector(
     (state) => state.login.CompanyProfileDetails
   );
 
-  //industry state
   const [industries, setIndustries] = useState([]);
   const [selectedIndustry, setSelectedIndustry] = useState(null);
 
-  //location state
   const [Location, setLocation] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState(null);
 
-  //update profile state
   const [description, setDescription] = useState(
     companyProfileDetails?.description || ""
   );
@@ -45,9 +43,12 @@ const CompanyEditProfile = ({ show, handleClose }) => {
     companyProfileDetails?.website_url || ""
   );
 
-  const [searchTerm, setSearchTerm] = useState(
+  const [IndustrySearch, SetIndustrySearch] = useState(
     companyProfileDetails?.industry?.industry_name || ""
-  ); // industry state
+  );
+  const [IndustrySearchDropdown, setIndustrySearchDropdown] = useState(false);
+  const [LocationSearchDropdown, setLocationSearchDropdown] = useState(false);
+
   const [selectedCompanyType, setSelectedCompanyType] = useState(
     companyProfileDetails?.company_type || ""
   );
@@ -83,6 +84,8 @@ const CompanyEditProfile = ({ show, handleClose }) => {
   const [aspectRatio, setAspectRatio] = useState(1);
   const [showLogoModal, setLogoModal] = useState(false);
   const [imageFile, setImageFile] = useState(null);
+
+  const navigate = useNavigate();
 
   const aspectRatios = [
     { label: "1:1", value: 3 / 2 },
@@ -253,45 +256,6 @@ const CompanyEditProfile = ({ show, handleClose }) => {
     return Math.min(completionPercentage, 100);
   };
 
-  useEffect(() => {
-    const fetchIndustries = async () => {
-      if (typeof searchTerm !== "string" || searchTerm.trim() === "") {
-        setIndustries([]);
-        return;
-      }
-
-      setLoading(true);
-      setError(null);
-
-      try {
-        const response = await axios.get(
-          "https://bittrend.shubansoftware.com/account-api/industry-list-api/",
-          {
-            params: {
-              page: 1,
-              limit: 500,
-              search: searchTerm,
-            },
-          }
-        );
-
-        if (response.data.success) {
-          setIndustries(response.data.response);
-        } else {
-          setIndustries([]);
-        }
-      } catch (err) {
-        console.error("Error fetching data:", err);
-        setError("An error occurred while fetching industries.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    const debounceTimeout = setTimeout(fetchIndustries, 500);
-    return () => clearTimeout(debounceTimeout);
-  }, [searchTerm]);
-
   const handleIndustrySelect = (industryName) => {
     setSelectedIndustry({
       industryName: industryName?.industry_name,
@@ -303,61 +267,42 @@ const CompanyEditProfile = ({ show, handleClose }) => {
       industryUid: industryName?.uid,
     });
 
-    setSearchTerm(industryName?.industry_name);
+    SetIndustrySearch(industryName?.industry_name);
+    setIndustrySearchDropdown(false);
     setIndustries([]);
   };
 
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-    // if (selectedIndustry) {
-    //   setSelectedIndustry(null);
-    // }
+  const handleIndustrySearchChange = (e) => {
+    SetIndustrySearch(e.target.value);
+    setIndustrySearchDropdown(true);
   };
 
-  // Location
+  const isHeadQuerterHandleApi = (LocationQuery) => {
+    const url = `https://bittrend.shubansoftware.com/account-api/location-list-api/?page=1&limit=500&search=${LocationQuery}`;
+    LocationSelection(url)
+      .then((res) => {
+        setLocation(res.data.response);
+      })
+      .catch((error) => {
+        if (
+          error?.response?.status === 401 ||
+          error?.response?.data?.detail?.includes(
+            "Given token not valid for any token type"
+          )
+        ) {
+          removeToken();
+          navigate("/loginwithpassword");
+        }
+      });
+  };
 
   useEffect(() => {
-    const fetchLocation = async () => {
-      // if (searchLocationTerm.trim() === "") {
-      if (
-        typeof searchLocationTerm !== "string" ||
-        searchLocationTerm.trim() === ""
-      ) {
-        setLocation([]);
-        return;
-      }
-
-      setLoading(true);
-      setError(null);
-
-      try {
-        const response = await axios.get(
-          "https://bittrend.shubansoftware.com/account-api/location-list-api",
-          {
-            params: {
-              page: 1,
-              limit: 500,
-              search: searchLocationTerm,
-            },
-          }
-        );
-
-        if (response.data.success) {
-          // console.log("response.data.response------", response.data.response);
-          setLocation(response.data.response);
-        } else {
-          setLocation([]);
-        }
-      } catch (err) {
-        console.error("Error fetching data:", err);
-        setError("An error occurred while fetching industries.");
-      } finally {
-        setLoading(false);
-      }
+    const timeoutId = setTimeout(() => {
+      isHeadQuerterHandleApi(searchLocationTerm);
+    }, 500);
+    return () => {
+      clearTimeout(timeoutId);
     };
-
-    const debounceTimeout = setTimeout(fetchLocation, 500);
-    return () => clearTimeout(debounceTimeout);
   }, [searchLocationTerm]);
 
   const handleLocationSelect = (LocationName) => {
@@ -371,11 +316,13 @@ const CompanyEditProfile = ({ show, handleClose }) => {
       location_name: LocationName?.location_name,
     });
     setLocationSearchTerm(LocationName?.location_name);
+    setLocationSearchDropdown(false);
     setLocation([]);
   };
 
   const handleLocationSearchChange = (e) => {
     setLocationSearchTerm(e.target.value);
+    setLocationSearchDropdown(true);
   };
 
   const updateCompanyProfile = async () => {
@@ -469,6 +416,35 @@ const CompanyEditProfile = ({ show, handleClose }) => {
     setCompletionPercentage(calculateProfileCompletion());
   }, [companyProfileDetails]);
 
+  const isIndustryHandleApi = (query) => {
+    const url = `https://bittrend.shubansoftware.com/account-api/industry-list-api/?page=1&limit=500&search=${query}`;
+    IndustrySelection(url)
+      .then((res) => {
+        setIndustries(res.data.response);
+      })
+      .catch((error) => {
+        if (
+          error?.response?.status === 401 ||
+          error?.response?.data?.detail?.includes(
+            "Given token not valid for any token type"
+          )
+        ) {
+          //console.log("Token expired, redirecting to login");
+          removeToken();
+          navigate("/loginwithpassword");
+        }
+      });
+  };
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      isIndustryHandleApi(IndustrySearch);
+    }, 500);
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [IndustrySearch]);
+
   const filePath = companyProfileDetails?.logo;
 
   const LogoName = filePath?.split("/").pop();
@@ -512,7 +488,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
               <Tab.Pane eventKey="first">
                 <Modal.Body>
                   <Row>
-                    <Col md={9}>
+                    <Col md={12}>
                       <div className="mdl_pagetitle d-flex justify-content-between align-items-center">
                         <h5>Basic Information</h5>
                         <div className="btn_group">
@@ -575,156 +551,46 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                   </p>
                                 )}
 
-                                {/* <Form.Group className="mb-3">
-                                  <Form.Label>Industry</Form.Label>
-
-                                  <input
-                                    type="text"
-                                    value={searchTerm}
-                                    onChange={handleSearchChange}
-                                    placeholder="Search for an industry..."
-                                    className="form-control"
-                                  />
-
-                                  {loading && (
-                                    <p className="text-sm">Loading...</p>
-                                  )}
-                                  {error && (
-                                    <p style={{ color: "red" }}>{error}</p>
-                                  )}
-
-                                  {!selectedIndustry &&
-                                    industries.length > 0 &&
-                                    !loading &&
-                                    !error && (
-                                      <div className="ctm_dropdown ct_scrollbar">
-                                        {industries.map((industry) =>
-                                          searchTerm !==
-                                          industry?.industry_name ? (
-                                            <ul>
-                                              <li
-                                                key={industry.id}
-                                                onClick={() =>
-                                                  handleIndustrySelect(industry)
-                                                }
-                                              >
-                                                {industry?.industry_name}
-                                              </li>
-                                            </ul>
-                                          ) : null
-                                        )}
-                                      </div>
-                                    )}
-
-                                  {!selectedIndustry &&
-                                    industries.length === 0 &&
-                                    !loading &&
-                                    !error &&
-                                    searchTerm.trim() !== "" && (
-                                      <p className="text-sm">
-                                        No results found.
-                                      </p>
-                                    )}
-                                </Form.Group> */}
-
-                                {/* <Form.Group className="col-md-12 mb-3">
+                                <Form.Group className="col-md-12 mb-3">
                                   <Form.Label>Industry</Form.Label>
                                   <Form.Control
                                     type="text"
                                     placeholder="Search for an industry.."
-                                    value={searchTerm}
-                                    onChange={handleSearchChange}
+                                    value={IndustrySearch}
+                                    onChange={handleIndustrySearchChange}
                                   />
 
-                                {loading && (
-                                    <p className="text-sm">Loading...</p>
-                                  )}
-                                  {error && (
-                                    <p style={{ color: "red" }}>{error}</p>
-                                  )} 
-
-                                     
-
-                                  {!selectedIndustry &&
-                                    industries.length > 0 &&
-                                    !loading &&
-                                    !error && (
+                                  {IndustrySearchDropdown &&
+                                    industries.length > 0 && (
                                       <div className="ctm_dropdown ct_scrollbar">
                                         <ul>
-                                          {industries.map((industry) =>
-                                            searchTerm !==
-                                            industry?.industry_name ? (
-                                              <li
-                                                key={industry.id}
-                                                onClick={() =>
-                                                  handleIndustrySelect(industry)
-                                                }
-                                              >
-                                                {industry?.industry_name}
-                                              </li>
-                                            ) : null
+                                          {industries.map(
+                                            (industry) =>
+                                              IndustrySearch !==
+                                                industry?.industry_name && (
+                                                <li
+                                                  key={industry.id}
+                                                  onClick={() =>
+                                                    handleIndustrySelect(
+                                                      industry
+                                                    )
+                                                  }
+                                                >
+                                                  {industry?.industry_name}
+                                                </li>
+                                              )
                                           )}
                                         </ul>
                                       </div>
                                     )}
 
-                                  {!selectedIndustry &&
-                                    industries.length === 0 &&
-                                    !loading &&
-                                    !error &&
-                                    searchTerm.trim() !== "" && (
-                                      <p className="text-sm">
-                                        No results found.
-                                      </p>
+                                  {IndustrySearchDropdown &&
+                                    industries.length === 0 && (
+                                      <ul>
+                                        <li>No data found</li>
+                                      </ul>
                                     )}
-
-                                </Form.Group> */}
-
-
-<Form.Group className="col-md-12 mb-3">
-  <Form.Label>Industry</Form.Label>
-  <Form.Control
-    type="text"
-    placeholder="Search for an industry.."
-    value={searchTerm}
-    onChange={handleSearchChange}
-    style={{
-      borderBottom: searchTerm ? '1px solid transparent' : '',  // Set transparent bottom border
-      // borderColor: searchTerm ? 'transparent' : '',  // Ensure border color is transparent
-      // boxShadow: searchTerm ? 'none' : ''  // Remove any shadow if there is a search term
-    }}
-  />
-
-  {loading && <p className="text-sm">Loading...</p>}
-  {error && <p style={{ color: 'red' }}>{error}</p>}
-
-  {!selectedIndustry && industries.length > 0 && !loading && !error && (
-    <div className="ctm_dropdown ct_scrollbar">
-      <ul>
-        {industries.map((industry) =>
-          searchTerm !== industry?.industry_name ? (
-            <li
-              key={industry.id}
-              onClick={() => handleIndustrySelect(industry)}
-            >
-              {industry?.industry_name}
-            </li>
-          ) : null
-        )}
-      </ul>
-    </div>
-  )}
-
-  {!selectedIndustry &&
-    industries.length === 0 &&
-    !loading &&
-    !error &&
-    searchTerm.trim() !== '' && (
-      <p className="text-sm">No results found.</p>
-    )}
-</Form.Group>
-
-                                {/* // try enddd */}
+                                </Form.Group>
 
                                 <Form.Group className="mb-3">
                                   <Form.Label>Company Type</Form.Label>
@@ -804,62 +670,46 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                     </option>
                                   </Form.Select>
                                 </Form.Group>
-                               
-                                  <Form.Group className="mb-3">
-                                    <Form.Label>Headquarter</Form.Label>
-                                    <Form.Control
-                                      type="text"
-                                      placeholder="Search for an Headquarter..."
-                                      value={searchLocationTerm}
-                                      onChange={handleLocationSearchChange}
-                                    />
-                                   
 
-                                    {loading && (
-                                      <p className="text-sm">Loading...</p>
-                                    )}
-                                    {error && (
-                                      <p style={{ color: "red" }}>{error}</p>
-                                    )}
+                                <Form.Group className="mb-3">
+                                  <Form.Label>Headquarter</Form.Label>
+                                  <Form.Control
+                                    type="text"
+                                    placeholder="Search for an Headquarter..."
+                                    value={searchLocationTerm}
+                                    onChange={handleLocationSearchChange}
+                                  />
 
-                                    {/* Only show the dropdown if no Headquarter is selected */}
-                                    {!selectedLocation &&
-                                      Location.length > 0 &&
-                                      !loading &&
-                                      !error && (
-                                        <div className="ctm_dropdown ct_scrollbar">
-                                          <ul>
-                                            {Location.map((location) =>
+                                  {LocationSearchDropdown &&
+                                    Location.length > 0 && (
+                                      <div className="ctm_dropdown ct_scrollbar">
+                                        <ul>
+                                          {Location.map(
+                                            (item) =>
                                               searchLocationTerm !==
-                                              location?.location_name ? (
+                                                item?.location_name && (
                                                 <li
-                                                  key={location.id}
+                                                  key={item.id}
                                                   onClick={() =>
-                                                    handleLocationSelect(
-                                                      location
-                                                    )
+                                                    handleLocationSelect(item)
                                                   }
                                                 >
-                                                  {location?.location_name}
+                                                  {item?.location_name}
                                                 </li>
-                                              ) : null
-                                            )}
-                                          </ul>
-                                        </div>
-                                      )}
+                                              )
+                                          )}
+                                        </ul>
+                                      </div>
+                                    )}
 
-                                    {/* Show no results if no industries are found */}
-                                    {!selectedLocation &&
-                                      Location.length === 0 &&
-                                      !loading &&
-                                      !error &&
-                                      searchLocationTerm.trim() !== "" && (
-                                        <p className="text-sm">
-                                          No results found.
-                                        </p>
-                                      )}
-                                  </Form.Group>
-                               
+                                  {LocationSearchDropdown &&
+                                    Location.length === 0 && (
+                                      <ul>
+                                        <li>No data found</li>
+                                      </ul>
+                                    )}
+                                </Form.Group>
+
                                 <Form.Group className="mb-3">
                                   <Form.Label>Add Company Logo</Form.Label>
 
@@ -927,7 +777,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                         </Card.Body>
                       </Card>
                     </Col>
-                    <Col md={3} className="cmp_details">
+                    <Col md={3} className="cmp_details sd-rightFixed">
                       <Accordion defaultActiveKey="0" flush>
                         <Accordion.Item eventKey="0">
                           <Accordion.Header>Company Details</Accordion.Header>
@@ -947,27 +797,43 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                               </div>
                             )}
 
-                            <ul className="cmp_info ct_scrollbar mh-100">
+                            <ul className="cmp_info ct_scrollbar">
                               <li>
                                 <strong>
                                   {companyProfileDetails?.company_name}
                                 </strong>
                               </li>
-                              <li>{companyProfileDetails?.website_url}</li>
                               <li>
-                                {companyProfileDetails?.industry?.industry_name}
+                                {website
+                                  ? website
+                                  : companyProfileDetails?.website_url}
                               </li>
-                              <li>{companyProfileDetails?.company_type}</li>
+                              <li>
+                                {IndustrySearch
+                                  ? IndustrySearch
+                                  : companyProfileDetails?.industry
+                                      ?.industry_name}
+                              </li>
+                              <li>
+                                {selectedCompanyType
+                                  ? selectedCompanyType
+                                  : companyProfileDetails?.company_type}
+                              </li>
                               <p
                                 dangerouslySetInnerHTML={{
                                   __html: companyProfileDetails?.description,
                                 }}
                               />
                               <li>
-                                {companyProfileDetails?.number_of_employees}
+                                {noOfEmploy
+                                  ? noOfEmploy
+                                  : companyProfileDetails?.number_of_employees}
                               </li>
                               <li>
-                                {companyProfileDetails?.location?.location_name}
+                                {searchLocationTerm
+                                  ? searchLocationTerm
+                                  : companyProfileDetails?.location
+                                      ?.location_name}
                               </li>
                             </ul>
                           </Accordion.Body>

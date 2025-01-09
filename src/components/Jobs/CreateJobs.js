@@ -3,7 +3,6 @@ import { Button, Col, Form, Offcanvas } from "react-bootstrap";
 import threeLayers from "../../images/icons/layers-three-01.svg";
 import axios from "axios";
 
-
 import ReactQuill from "react-quill";
 import { useNavigate } from "react-router-dom";
 import {
@@ -17,8 +16,6 @@ import {
 } from "../../services/provider";
 import CreateJobsRevised from "./CreateJobsRevised";
 import { removeToken } from "../../helpers/helper";
-
-
 
 const CreateJobs = ({ show, handleClose }) => {
   const [createFormData, setCreateFormData] = useState({
@@ -34,6 +31,16 @@ const CreateJobs = ({ show, handleClose }) => {
   const [isLikeUid, setIsLikeUid] = useState([]);
   const [isLikeDropdown, setIsLikeDropdown] = useState(false);
   const [isLikeData, setIsLikeData] = useState([]);
+  const [isDisabledTarget, setIsDisabledTarget] = useState(true);
+
+  const [ishideIndustries, setIsHideIndustries] = useState(true);
+
+  const [isHideRestrictedRoles, setIsHideRestrictedRoles] = useState(true);
+
+  const [isHideLocation, setIsHideLLocation] = useState(true);
+
+  const [isSpecificLanguareRequired, setIsSpecificLanguareRequired] =
+    useState(true);
 
   const [department, setDepartment] = useState("");
   const [location, setLocation] = useState("");
@@ -54,107 +61,105 @@ const CreateJobs = ({ show, handleClose }) => {
   const [isDepartmentDropdown, setIsDepartmentDropdown] = useState(false);
   const [isLocationDropdown, setIsLocationDropdown] = useState(false);
 
-  const [createJobUid,setCreateJobUid] = useState("")
-  const [createUid,setCreatedUid]=useState('')
+  const [createJobUid, setCreateJobUid] = useState("");
+  const [createUid, setCreatedUid] = useState("");
 
-
-  const [minEdu,setMinEdu]=useState("");
-
-
+  const [minEdu, setMinEdu] = useState("");
 
   const [badges, setBadges] = useState([]);
+  const [IndustriesBadges, setIndustriesBadge] = useState([]);
 
+  const [restrictedRoleBadges, setRestrictedRoleBadges] = useState([]);
 
+  const [spokenLanguageBadges, setSpokenLanguageBadges] = useState([]);
 
-  const [updateFormData,setUpdateFormData] = useState({
+  const [rdnwBadges, setrdnwBadges] = useState([]);
 
-    display_salary:"",
+  const [locationBadges, setLocationBadges] = useState([]);
+  const [fileName, setFileName] = useState("");
 
-    max_salary:"",
+  const [updateFormData, setUpdateFormData] = useState({
+    display_salary: "",
+    max_salary: "",
+    min_salary: "",
+    currency: "INR",
+    salary_type: "",
+    salary_price_type: "Salary-range",
 
-    min_salary:"",
+    workplace_type: "",
 
-    currency:"INR",
+    job_type: "",
 
-    salary_type:"",
+    description_attachment: "",
 
-    salary_price_type:"Salary-range",
+    detailed_description: "",
 
-    workplace_type:"",
+    number_of_positions: "",
 
-    job_type:"",
+    requires_travel: "",
 
-    description_attachment:"",
+    job_location: "",
 
-    detailed_description:"",
+    department: "",
 
-    number_of_positions:"",
+    job_benefits: "",
 
-    requires_travel:"",
+    is_like: "",
 
-    job_location:"",
+    job_title: "",
 
-    department:"",
+    job_company: "",
 
-    job_benefits:"",
+    non_negotiable_salary: "",
 
-    is_like:"",
+    minimum_education: "",
 
-    job_title:"",
+    area_of_education: "",
 
-    job_company:"",
+    higher_qualification_preferred: "",
 
-    non_negotiable_salary:"",
+    other_areas_acceptable: "",
 
-    minimum_education:"",
+    year_of_experience_type: "",
 
-    area_of_education:"",
+    min_exp: "",
 
-    higher_qualification_preferred:"",
+    max_exp: "",
 
-    other_areas_acceptable:"",
+    restricted_industries: "",
 
-    year_of_experience_type:"",
+    define_current_role: "",
 
-    min_exp:"",
+    shortlisted_industry: "",
 
-    max_exp:"",
+    restricted_roles: "",
 
-    restricted_industries:"",
+    targate_hire_date: "",
 
-    define_current_role:"",
+    immediate_hiring: "",
 
-    shortlisted_industry:"",
+    explore_buy_out_option: "",
 
-    restricted_roles:"",
+    spoken_language: "",
 
-    targate_hire_date:"",
+    read_write_language: "",
 
-    immediate_hiring:"",
+    no_specific_language_require: "",
 
-    explore_buy_out_option:"",
+    preferred_geography: "",
 
-    spoken_language:"",
+    no_specific_location: "",
 
-    read_write_language:"",
+    relocation_cost_covered: "",
 
-    no_specific_language_require:"",
+    skills: "",
 
-    preferred_geography:"",
+    must_have_skills: "",
 
-    no_specific_location:"",
+    job_status: "",
+  });
 
-    relocation_cost_covered:"",
-
-    skills:"",
-
-    must_have_skills:"",
-
-    job_status:"",
-
-  })
-
-  const [isUpdated,setIsUpdated]=useState(false)
+  const [isUpdated, setIsUpdated] = useState(false);
 
   //Editor states
 
@@ -184,7 +189,7 @@ const CreateJobs = ({ show, handleClose }) => {
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
 
-  const handleJobModalShow = (modalName,createJobuid) => {
+  const handleJobModalShow = (modalName, createJobuid) => {
     setModal((prev) => ({
       ...prev,
       [modalName]: true,
@@ -265,17 +270,13 @@ const CreateJobs = ({ show, handleClose }) => {
   };
 
   const handleUpdateFormData = (e) => {
-
     const { name, value } = e.target;
 
     setUpdateFormData({
-
       ...updateFormData,
 
       [name]: value,
-
     });
-
   };
 
   const handleLike = (e) => {
@@ -297,7 +298,7 @@ const CreateJobs = ({ show, handleClose }) => {
       setDescriptionError("");
     } else {
       setDescriptionError(
-        `You can only enter up to ${MAX_DESCRIPTION_WORDS} words.`
+        `You have reached the maximum limit of ${MAX_DESCRIPTION_WORDS} words.`
       );
     }
   };
@@ -307,18 +308,24 @@ const CreateJobs = ({ show, handleClose }) => {
 
     if (!file) return;
 
+    // Check if the file size exceeds 5MB
     if (file.size > MAX_FILE_SIZE) {
       setErrorMessage(
         "Attachement failed. The attachment exceeds the allowed file size."
       );
-      return;
+      return; // Exit early if the file is too large
     } else {
-      setErrorMessage("");
+      setErrorMessage(""); // Clear error message if file is valid
     }
 
+    // Set the file name to display it
+    setFileName(file.name);
+
     if (file.type.startsWith("image/")) {
+      // Handle Image Upload
       const reader = new FileReader();
       reader.onloadend = () => {
+        // Insert image into Quill editor
         const quill = quillRef.current.getEditor();
         const range = quill.getSelection();
         if (range) {
@@ -327,8 +334,10 @@ const CreateJobs = ({ show, handleClose }) => {
       };
       reader.readAsDataURL(file);
     } else if (file.type === "application/pdf") {
+      // Handle PDF Upload
       const fileUrl = URL.createObjectURL(file);
       setFileUrl(fileUrl);
+      // Optionally, insert PDF link into the editor
       const quill = quillRef.current.getEditor();
       const range = quill.getSelection();
       if (range) {
@@ -355,6 +364,12 @@ const CreateJobs = ({ show, handleClose }) => {
     CreateJobIsLike(url)
       .then((res) => {
         setIsLikeData(res.data.response);
+        if (res?.data?.response.length > 0 && !isLikeDropdown) {
+          setRestrictedRoleBadges((prevBadges) => [
+            ...prevBadges,
+            res?.data?.response[0],
+          ]);
+        }
       })
       .catch((error) => {
         if (
@@ -393,6 +408,12 @@ const CreateJobs = ({ show, handleClose }) => {
     CreateJobLocation(url)
       .then((res) => {
         setLocationData(res.data.response);
+        if (res.data.response.length > 0) {
+          setLocationBadges((prevBadges) => [
+            ...prevBadges,
+            res?.data?.response[0],
+          ]);
+        }
       })
       .catch((error) => {
         if (
@@ -501,13 +522,13 @@ const CreateJobs = ({ show, handleClose }) => {
   };
 
   const handleLocationItems = (item) => {
-    setLocation(item.location_name);
+    setLocation(item?.location_name);
     setLocationUid(item.uid);
     setIsLocationDropdown(false);
   };
 
   const handleCreateForm = async () => {
-   //handleJobModalShow("createJobRevisedModal");
+    //handleJobModalShow("createJobRevisedModal");
     if (CheckValidation()) {
       const textWithHtmlTags = description;
       const descriptionWithoutTags = textWithHtmlTags.replace(/<[^>]*>/g, "");
@@ -527,10 +548,10 @@ const CreateJobs = ({ show, handleClose }) => {
       try {
         const response = await CreateJobForm(formdata);
         if (response.data.status == 200) {
-          setCreateJobUid(response.data.response.uid)
-          const createJobuid = response.data.response.uid
-          handleJobModalShow("createJobRevisedModal",createJobuid);
-          
+          setCreateJobUid(response.data.response.uid);
+          const createJobuid = response.data.response.uid;
+          handleJobModalShow("createJobRevisedModal", createJobuid);
+          setRestrictedRoleBadges([]);
         }
       } catch (error) {
         console.log("create eroor------", error);
@@ -540,7 +561,6 @@ const CreateJobs = ({ show, handleClose }) => {
             "Given token not valid for any token type"
           )
         ) {
-          
           removeToken();
           navigate("/loginwithpassword");
         }
@@ -549,158 +569,199 @@ const CreateJobs = ({ show, handleClose }) => {
   };
 
   const handleUpdateForm = async () => {
-
     const formdata = new FormData();
 
     for (const key in updateFormData) {
+      if (key === "area_of_education" && badges.length > 0) {
+        let uids = badges.map((item) => item?.uid);
 
-     if (key === "area_of_education"&&badges.length>0) {
+        formdata.append(key, JSON.stringify(uids));
+      } else if (
+        key === "shortlisted_industry" &&
+        IndustriesBadges.length > 0
+      ) {
+        let uids = IndustriesBadges.map((item) => item?.uid);
 
-       const uids = badges.map((item) => item?.uid)
+        formdata.append(key, JSON.stringify(uids));
+      } else if (
+        key === "restricted_roles" &&
+        restrictedRoleBadges.length > 0
+      ) {
+        let uids = restrictedRoleBadges.map((item) => item?.uid);
 
-       console.log(uids,typeof(uids))
+        formdata.append(key, JSON.stringify(uids));
+      } else if (key === "spoken_language" && spokenLanguageBadges.length > 0) {
+        let uids = spokenLanguageBadges.map((item) => item?.uid);
 
-       formdata.append(key, JSON.stringify(uids));
+        formdata.append(key, JSON.stringify(uids));
+      } else if (key === "read_write_language" && rdnwBadges.length > 0) {
+        let uids = rdnwBadges.map((item) => item?.uid);
 
-     }else if(key==="higher_qualification_preferred"||key==="other_areas_acceptable"||key==="non_negotiable_salary"||key==="display_salary"&&updateFormData[key] !== ""){
+        formdata.append(key, JSON.stringify(uids));
+      } else if (key === "preferred_geography" && locationBadges.length > 0) {
+        let uids = locationBadges.map((item) => item?.uid);
 
-       formdata.append(key, updateFormData[key]==="on"?"True":'False');
+        formdata.append(key, JSON.stringify(uids));
+      } else if (
+        key === "higher_qualification_preferred" ||
+        key === "other_areas_acceptable" ||
+        key === "non_negotiable_salary" ||
+        key === "display_salary" ||
+        (key === "explore_buy_out_option" && updateFormData[key] !== "")
+      ) {
+        if (updateFormData[key] === "on") {
+          formdata.append(key, "True");
+        }
+      } else if (key === "restricted_industries") {
+        if (!ishideIndustries) {
+          formdata.append(key, "False");
+        } else if (ishideIndustries) {
+          formdata.append(key, "True");
+        }
+      } else if (key === "define_current_role") {
+        if (!isHideRestrictedRoles) {
+          formdata.append(key, "False");
+        } else if (isHideRestrictedRoles) {
+          formdata.append(key, "True");
+        }
+      } else if (key === "immediate_hiring") {
+        if (!isDisabledTarget) {
+          formdata.append(key, "False");
+        } else if (isDisabledTarget) {
+          formdata.append(key, "True");
+        }
+      } else if (key === "no_specific_language_require") {
+        if (!isSpecificLanguareRequired) {
+          formdata.append(key, "False");
+        } else if (isSpecificLanguareRequired) {
+          formdata.append(key, "True");
+        }
+      } else if (key === "no_specific_location") {
+        if (!isHideLocation) {
+          formdata.append(key, "False");
+        } else if (isHideLocation) {
+          formdata.append(key, "True");
+        }
+      } else if (updateFormData[key] !== "") {
+        formdata.append(key, updateFormData[key]);
+      }
+    }
 
-     } else if (updateFormData[key] !== "") {
+    //  for (const pair of formdata.entries()) {
 
-       formdata.append(key, updateFormData[key]);
+    //   console.log(pair[0] + ": " + pair[1]);
 
-     }
-
-   }
-
-
+    // }
 
     try {
-
-      const response = await UpdateJobForm(formdata,createUid);
+      const response = await UpdateJobForm(formdata, createUid);
 
       if (response.data.status == 200) {
+        alert("Job updated successfully!");
 
-       alert("Job updated successfully!");
+        setUpdateFormData({
+          display_salary: "",
 
-       setUpdateFormData({
+          max_salary: "",
 
-         display_salary:"",
+          min_salary: "",
 
-         max_salary:"",
+          currency: "INR",
 
-         min_salary:"",
+          salary_type: "",
 
-         currency:"INR",
+          salary_price_type: "Salary_range",
 
-         salary_type:"",
+          workplace_type: "",
 
-         salary_price_type:"Salary_range",
+          job_type: "",
 
-         workplace_type:"",
+          description_attachment: "",
 
-         job_type:"",
+          detailed_description: "",
 
-         description_attachment:"",
+          number_of_positions: "",
 
-         detailed_description:"",
+          requires_travel: "",
 
-         number_of_positions:"",
+          job_location: "",
 
-         requires_travel:"",
+          department: "",
 
-         job_location:"",
+          job_benefits: "",
 
-         department:"",
+          is_like: "",
 
-         job_benefits:"",
+          job_title: "",
 
-         is_like:"",
+          job_company: "",
 
-         job_title:"",
+          non_negotiable_salary: "",
 
-         job_company:"",
+          minimum_education: "",
 
-         non_negotiable_salary:"",
+          area_of_education: "",
 
-         minimum_education:"",
+          higher_qualification_preferred: "",
 
-         area_of_education:"",
+          other_areas_acceptable: "",
 
-         higher_qualification_preferred:"",
+          year_of_experience_type: "",
 
-         other_areas_acceptable:"",
+          min_exp: "",
 
-         year_of_experience_type:"",
+          max_exp: "",
 
-         min_exp:"",
+          restricted_industries: "",
 
-         max_exp:"",
+          define_current_role: "",
 
-         restricted_industries:"",
+          shortlisted_industry: "",
 
-         define_current_role:"",
+          restricted_roles: "",
 
-         shortlisted_industry:"",
+          targate_hire_date: "",
 
-         restricted_roles:"",
+          immediate_hiring: "",
 
-         targate_hire_date:"",
+          explore_buy_out_option: "",
 
-         immediate_hiring:"",
+          spoken_language: "",
 
-         explore_buy_out_option:"",
+          read_write_language: "",
 
-         spoken_language:"",
+          no_specific_language_require: "",
 
-         read_write_language:"",
+          preferred_geography: "",
 
-         no_specific_language_require:"",
+          no_specific_location: "",
 
-         preferred_geography:"",
+          relocation_cost_covered: "",
 
-         no_specific_location:"",
+          skills: "",
 
-         relocation_cost_covered:"",
+          must_have_skills: "",
 
-         skills:"",
-
-         must_have_skills:"",
-
-         job_status:"",
-
-       })
-
+          job_status: "",
+        });
       }
-
     } catch (error) {
-
       console.log("create eroor------", error);
 
       if (
-
         error?.response?.status === 401 ||
-
         error?.response?.data?.detail?.includes(
-
           "Given token not valid for any token type"
-
         )
-
       ) {
-
         //console.log("Token expired, redirecting to login");
 
         removeToken();
 
         navigate("/loginwithpassword");
-
       }
-
-        }
-
-};
+    }
+  };
 
   const handleCustomeBeniftsAdd = () => {
     const CreateCustomLabel = { Label: "" };
@@ -721,7 +782,7 @@ const CreateJobs = ({ show, handleClose }) => {
         if (response.data.status == 200) {
           //console.log("res=-------", response);
           benifitsList();
-          setCustomValue("")
+          setCustomValue("");
         }
       } catch (error) {
         console.log("error=-------", error);
@@ -740,8 +801,6 @@ const CreateJobs = ({ show, handleClose }) => {
   };
 
   const isNextButtonDisable = !createFormData.jobTitle;
-
-
 
   return (
     <Offcanvas
@@ -784,12 +843,10 @@ const CreateJobs = ({ show, handleClose }) => {
               onChange={handleLike}
             />
 
-            <p className="m-0 error">
-              {errors.isLike}
-            </p>
-            
-              {isLikeDropdown && isLikeData.length > 0 && (
-                <div className="ctm_dropdown ct_scrollbar">
+            <p className="m-0 error">{errors.isLike}</p>
+
+            {isLikeDropdown && isLikeData.length > 0 && (
+              <div className="ctm_dropdown ct_scrollbar">
                 <ul>
                   {isLikeData.map((item) => (
                     <li
@@ -800,14 +857,13 @@ const CreateJobs = ({ show, handleClose }) => {
                     </li>
                   ))}
                 </ul>
-                </div>
-              )}
-              {isLikeDropdown && isLikeData.length === 0 && (
-                <ul>
-                  <li>No data found</li>
-                </ul>
-              )}
-            
+              </div>
+            )}
+            {isLikeDropdown && isLikeData.length === 0 && (
+              <ul>
+                <li>No data found</li>
+              </ul>
+            )}
           </Form.Group>
 
           <Form.Group className="col-md-6 mb-2" controlId="noOfPosition">
@@ -819,10 +875,9 @@ const CreateJobs = ({ show, handleClose }) => {
               value={createFormData.noOfPosition}
               onChange={handleFormData}
             />
-             <span className="error">{errors.noOfPosition}</span>
-
+            <span className="error">{errors.noOfPosition}</span>
           </Form.Group>
-         
+
           <Form.Group className="col-md-6 mb-2" controlId="department">
             <Form.Label>Department</Form.Label>
             <Form.Control
@@ -833,9 +888,9 @@ const CreateJobs = ({ show, handleClose }) => {
             />
 
             <span className="error">{errors.department}</span>
-           
-              {isDepartmentDropdown && departmentData.length > 0 && (
-                 <div className="ctm_dropdown ct_scrollbar">
+
+            {isDepartmentDropdown && departmentData.length > 0 && (
+              <div className="ctm_dropdown ct_scrollbar">
                 <ul>
                   {departmentData.map((item) => (
                     <li
@@ -846,14 +901,13 @@ const CreateJobs = ({ show, handleClose }) => {
                     </li>
                   ))}
                 </ul>
-                </div>
-              )}
-              {isDepartmentDropdown && departmentData.length === 0 && (
-                <ul>
-                  <li>No data found</li>
-                </ul>
-              )}
-            
+              </div>
+            )}
+            {isDepartmentDropdown && departmentData.length === 0 && (
+              <ul>
+                <li>No data found</li>
+              </ul>
+            )}
           </Form.Group>
 
           <Form.Group className="col-md-6 mb-2" controlId="location">
@@ -866,28 +920,27 @@ const CreateJobs = ({ show, handleClose }) => {
             />
 
             <span className="error">{errors.location}</span>
-           
-              {isLocationDropdown && locationData.length > 0 && (
-                 <div className="ctm_dropdown ct_scrollbar">
+
+            {isLocationDropdown && locationData.length > 0 && (
+              <div className="ctm_dropdown ct_scrollbar">
                 <ul>
                   {locationData.map((item) => (
                     <li
-                      key={item.location_name}
+                      key={item?.location_name}
                       onClick={() => handleLocationItems(item)}
                     >
-                      {item.location_name}
+                      {item?.location_name}
                     </li>
                   ))}
                 </ul>
-                </div>
-              )}
+              </div>
+            )}
 
-              {isLocationDropdown && locationData.length === 0 && (
-                <ul>
-                  <li>No data found</li>
-                </ul>
-              )}
-           
+            {isLocationDropdown && locationData.length === 0 && (
+              <ul>
+                <li>No data found</li>
+              </ul>
+            )}
           </Form.Group>
           {["radio"].map((type) => (
             <div key={`inline-${type}`} className="checkbox-group my-2">
@@ -951,28 +1004,55 @@ const CreateJobs = ({ show, handleClose }) => {
                 }}
               />
 
-              {errorMessage && (
-                <div style={{ color: "red", marginBottom: "10px" }}>
-                  {errorMessage}
-                </div>
-              )}
-              <div className="custome_file">
+              <div
+                className="custome_file"
+                style={{ display: "flex", alignItems: "center" }}
+              >
+                <label
+                  htmlFor="file-upload"
+                  style={{
+                    cursor: "pointer",
+                    color: "#475467",
+                    fontWeight: "bold",
+                    marginRight: "10px",
+                    fontSize: 13,
+                  }}
+                >
+                  <i
+                    className="fas fa-paperclip"
+                    style={{ marginRight: "5px" }}
+                  ></i>
+                  Attach File
+                </label>
                 <input
                   type="file"
+                  id="file-upload"
                   ref={fileInputRef}
                   accept="image/*,application/pdf"
                   onChange={handleFileUpload}
+                  style={{ display: "none" }}
                 />
-              </div>
 
-              
-            </div>
-         
-            {descriptionError && (
-                <div className="error">
-                  {descriptionError}
+                <div style={{ marginTop: "15px" }}>
+                  <p
+                    style={{
+                      fontSize: 12,
+                      color: errorMessage ? "red" : "black",
+                    }}
+                  >
+                    {errorMessage
+                      ? errorMessage
+                      : fileName
+                      ? fileName
+                      : "Doc, PNG, JPG or PDF (max. size 5 mb)"}
+                  </p>
                 </div>
-              )}
+              </div>
+            </div>
+
+            {descriptionError && (
+              <div className="error">{descriptionError}</div>
+            )}
           </Form.Group>
 
           <Col md={6} className="mb-2">
@@ -1022,7 +1102,7 @@ const CreateJobs = ({ show, handleClose }) => {
                 </span>
               ))}
               {addCustomeBenifits.map((item, index) => (
-                <div className="input-container d-flex align-items-center position-relative">
+                <div className="input-container position-relative">
                   <input
                     value={customValue}
                     onChange={(e) => setCustomValue(e.target.value)}
@@ -1034,7 +1114,6 @@ const CreateJobs = ({ show, handleClose }) => {
                   />
                   <i
                     className="fa fa-xmark text-primary me-1 remove-tag"
-                    
                     onClick={() => handleClearCustomInput(index)}
                   ></i>
                 </div>
@@ -1069,24 +1148,43 @@ const CreateJobs = ({ show, handleClose }) => {
         <CreateJobsRevised
           show={modal.createJobRevisedModal}
           handleClose={() => handleJobModalClose("createJobRevisedModal")}
-          uid={createJobUid}
           handleFormData={handleUpdateFormData}
-
           handleCreateForm={handleUpdateForm}
-
           setCreatedUid={setCreatedUid}
-
           setBadges={setBadges}
-
           badges={badges}
-
           minEdu={minEdu}
-
           setMinEdu={setMinEdu}
-
           setIsUpdated={setIsUpdated}
-
           isUpdated={isUpdated}
+          setRestrictedRoleBadges={setRestrictedRoleBadges}
+          restrictedRoleBadges={restrictedRoleBadges}
+          IndustriesBadges={IndustriesBadges}
+          setIndustriesBadge={setIndustriesBadge}
+          isLike={isLike}
+          setIsLike={setIsLike}
+          isLikeData={isLikeData}
+          setIsLikeData={setIsLikeData}
+          handleLike={handleLike}
+          isLikeDropdown={isLikeDropdown}
+          handleSelectedLikeItems={handleSelectedLikeItems}
+          isHideRestrictedRoles={isHideRestrictedRoles}
+          setIsHideRestrictedRoles={setIsHideRestrictedRoles}
+          setIsHideIndustries={setIsHideIndustries}
+          ishideIndustries={ishideIndustries}
+          setIsDisabledTarget={setIsDisabledTarget}
+          isDisabledTarget={isDisabledTarget}
+          setIsSpecificLanguareRequired={setIsSpecificLanguareRequired}
+          isSpecificLanguareRequired={isSpecificLanguareRequired}
+          setSpokenLanguageBadges={setSpokenLanguageBadges}
+          spokenLanguageBadges={spokenLanguageBadges}
+          setrdnwBadges={setrdnwBadges}
+          rdnwBadges={rdnwBadges}
+          locationBadges={locationBadges}
+          setLocationBadges={setLocationBadges}
+          setIsHideLLocation={setIsHideLLocation}
+          isHideLocation={isHideLocation}
+          handleLocationApi={handleLocationApi}
         />
       )}
     </Offcanvas>

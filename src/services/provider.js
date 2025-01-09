@@ -87,6 +87,17 @@ export const JobList = (url) =>{
   return JobList
 }
 
+export const IndustrySelection = (url) =>{
+  const Industry = client.getWithToken(url)
+  return Industry
+}
+
+
+export const LocationSelection = (url) =>{
+  const Location = client.getWithToken(url)
+  return Location
+}
+
 
 export const CreateJobIsLike = (url) =>{
   const IsLike = client.getWithToken(url)

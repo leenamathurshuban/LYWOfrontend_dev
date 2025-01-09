@@ -15,7 +15,13 @@ import {
 import filterLines from "../../images/icons/filter-lines.svg";
 import { height } from "@fortawesome/free-solid-svg-icons/fa0";
 
-const FilterJobs = ({ show, handleClose, filtersList, filterAppliedCount, setFilters }) => {
+const FilterJobs = ({
+  show,
+  handleClose,
+  filtersList,
+  filterAppliedCount,
+  setFilters,
+}) => {
   const [departmentData, setDepartmentData] = useState([]);
   const [locationData, setLocationData] = useState([]);
   const [viewMore, setViewMore] = useState({
@@ -30,7 +36,7 @@ const FilterJobs = ({ show, handleClose, filtersList, filterAppliedCount, setFil
       handleLocationApi();
     }
   }, [show]);
-  
+
   const handleDepartmentApi = () => {
     const url = `https://bittrend.shubansoftware.com/assets-api/department-list-api/?page=1&limit=10`;
     CreateJobDepartment(url)

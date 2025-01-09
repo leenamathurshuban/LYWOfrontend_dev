@@ -258,6 +258,10 @@ fieldset:disabled .btn {
 }
 .sidebar-wrapper nav.sidebar-menu ul li.active {
   background-color: #f5f8ff;
+  border-right: solid 3px #6172F3;
+}
+.sidebar-wrapper nav.sidebar-menu ul li.active span {
+  color: #6172F3;
 }
 
 .main_header {
@@ -419,11 +423,8 @@ fieldset:disabled .btn {
   border-bottom: solid 1px #eaecf0;
 }
 .header_right .dropdown-menu .dropdown-item {
-  color: #344054;
-  line-height: 36px;
-}
-.header_right .dropdown-menu .dropdown-item img {
-  margin-right: 10px;
+  color: #344054 img;
+  color-margin-right: 10px;
 }
 .header_right .dropdown-menu .dropdown-item:last-child {
   border-top: solid 1px #eaecf0;
@@ -514,12 +515,12 @@ ol.breadcrumb {
   position: fixed;
   left: 0;
   top: 0px;
-  z-index: 9;
+  z-index: 999999;
   background-color: #fff;
 }
 .model_sidebar .md_sdrlogo {
-  padding: 20px 30px;
-  height: 71px;
+  padding: 25px 30px;
+  height: 80px;
 }
 .model_sidebar .mdl_sdbarmenu .nav-item .nav-link {
   padding: 15px 30px;
@@ -537,13 +538,37 @@ ol.breadcrumb {
 }
 .model_sidebar .mdl_sdbarmenu .nav-item .nav-link.active {
   background-color: #f5f8ff;
+  border-right: solid 3px #6172F3;
+  color: #6172F3;
+}
+
+.addUserguide {
+  max-height: 380px;
+  overflow-y: auto;
 }
 
 .cprofile_right {
-  width: 89%;
+  width: 66%;
   padding-left: 0;
   background-color: #f9fafb;
-  margin-left: 180px;
+  margin-left: 11%;
+  padding-top: 75px;
+  margin-right: 25%;
+  padding-left: 10px;
+}
+
+.sd-rightFixed {
+  position: fixed;
+  top: 0;
+  right: -15px;
+  height: 100vh;
+  padding-top: 80px;
+  z-index: 99;
+  background-color: #f9fafb;
+}
+
+.usermanagement_panel {
+  right: 0;
 }
 
 .modal-header {
@@ -552,8 +577,11 @@ ol.breadcrumb {
   padding: 22px 20px;
   background-color: #fff;
   border-radius: 0;
-  z-index: 99;
+  z-index: 999;
   height: 79px;
+  position: fixed;
+  top: 0;
+  width: 100%;
 }
 .modal-header .modal-title {
   color: #101828;
@@ -781,9 +809,11 @@ label.required.form-label {
      object-fit: contain;
 }
 .cmp_details .cmp_info {
-  margin: 15px 0 40px 0;
+  margin: 15px 0 0 0;
   padding: 0 0 15px 0;
   border-bottom: solid 1px #eaecf0;
+  max-height: 250px;
+  overflow-y: auto;
 }
 .cmp_details .cmp_info li {
   list-style: none;
@@ -2424,6 +2454,25 @@ select.h-36.form-select {
   margin-bottom: 8px;
   cursor: pointer;
 }
+.stag_list .stag_item.active {
+  border-color: #6172F3;
+}
+
+.text-primerylight {
+  color: #6172F3 !important;
+}
+
+.tag_remove {
+  border: solid 2px #6172F3;
+  width: 14px;
+  height: 14px;
+  line-height: 12px !important;
+  text-align: center;
+  font-size: 9px;
+  border-radius: 50%;
+  cursor: pointer;
+  color: #6172F3;
+}
 
 .icon-btn {
   background-color: transparent;
@@ -2482,6 +2531,36 @@ select.h-36.form-select {
 .lw-toolbar li a {
   color: #475467;
   font-size: 13px;
+}
+
+.border_box {
+  min-height: 34px;
+  font-size: 12px;
+  border-radius: 6px;
+  color: #344054;
+  font-weight: 500;
+  border: solid 1px #D0D5DD;
+  display: flex;
+  align-items: center;
+  padding: 7px 12px;
+  width: 100%;
+}
+
+.hadding-xs {
+  font-size: 13px;
+  color: #344054;
+  font-weight: 600;
+}
+
+.cmt_questions .form-check {
+  margin: 10px 0;
+}
+.cmt_questions .form-check label {
+  background-color: #F9FAFB;
+  color: #1D2939;
+  font-size: 12px;
+  width: 350px;
+  padding: 4px 8px;
 }
 
 @media (min-width: 992px) {
