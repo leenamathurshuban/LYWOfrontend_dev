@@ -843,7 +843,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                           </Accordion.Body>
                         </Accordion.Item>
                       </Accordion>
-                      <div className="rects-panel">
+                      <div className="rects-panel bottom-fixed">
                         <h5>Recommendations</h5>
                         <ul className="rects_list">
                           {companyProfileDetails?.logo == null && (
