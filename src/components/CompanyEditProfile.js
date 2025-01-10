@@ -449,6 +449,9 @@ const CompanyEditProfile = ({ show, handleClose }) => {
 
   const LogoName = filePath?.split("/").pop();
 
+
+
+
   return (
     <Modal
       show={show}
@@ -461,7 +464,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
         <Row>
           <aside className="model_sidebar col-md-2">
             <div className="md_sdrlogo">
-              <img src={cprofilelogo} alt="" />
+              <img src={cprofilelogo} alt=""  onClick={handleClose}/>
             </div>
             <Nav variant="pills" className="flex-column mdl_sdbarmenu">
               <Nav.Item>
@@ -481,8 +484,9 @@ const CompanyEditProfile = ({ show, handleClose }) => {
             </Nav>
           </aside>
           <Col md={10} className="cprofile_right">
-            <Modal.Header closeButton className="fixed-header">
+            <Modal.Header closeButton className="fixed-header" >
               <Modal.Title>Company Settings</Modal.Title>
+              
             </Modal.Header>
             <Tab.Content>
               <Tab.Pane eventKey="first">
