@@ -698,7 +698,7 @@ const navigate = useNavigate()
         <div className="ct_scrollbar addUserguide">
           <AddUserguide />
         </div>
-        <div className="rects-panel">
+        <div className="rects-panel bottom-fixed">
           <h5 className="hadding_h5 d-flex justify-content-between">
             User Summary{" "}
             <Button

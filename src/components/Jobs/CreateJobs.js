@@ -1064,7 +1064,7 @@ const CreateJobs = ({ show, handleClose }) => {
                   style={{ display: "none" }}
                 />
 
-                <div style={{ marginTop: "15px" }}>
+                <div>
                   <p
                     style={{
                       fontSize: 12,

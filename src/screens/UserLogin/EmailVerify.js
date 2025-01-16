@@ -1,8 +1,10 @@
+//Dinesh Sir code 4 dec
+
 // import React, { useEffect, useState } from "react";
 // import { Button, Col, Container, Form, Row, Spinner } from "react-bootstrap";
 // import { useDispatch, useSelector } from "react-redux";
 // import { useNavigate } from "react-router-dom";
-// import { setEmailValue } from "../../Slice/Login/LoginSlice"; // Import your action
+// import { setEmailValue } from "../../Slice/Login/LoginSlice"; 
 // import { IsEmailVerify } from "../../services/provider";
 // import Getstarted from "../GetStarted/GetStarted";
 
@@ -16,8 +18,7 @@
 //   const navigate = useNavigate();
 //   const dispatch = useDispatch();
 //   const loginUserInfo = useSelector(state => state.login.loginUserInfo);
-//   const emailValue = useSelector((state) => state.login.emailValue); // Get email from Redux store
-//   console.log("emailValue-----------", emailValue);
+//   const emailValue = useSelector((state) => state.login.emailValue); 
 
 //   const handleSubmit = (event) => {
 //     event.preventDefault();
@@ -40,6 +41,7 @@
 //         setIsLoading(false);
 //         if (
 //           response.data.response.is_first_time_user === false &&
+//           response.data.response.is_password_set === false ||  response.data.response.is_first_time_user === true &&
 //           response.data.response.is_password_set === false
 //         ) {
 //           navigate("/otp");
@@ -136,11 +138,11 @@
 //                   <Spinner animation="border" role="status" className="ml-3" />
 //                 )} */}
 //               <Button type="submit" className="btn-full mt-1">
+//                 {isLoading && (
+//                   <Spinner animation="border" role="status" className="me-2" />
+//                 )}
 //                 Verify
 //               </Button>
-//               {isLoading && (
-//                 <Spinner animation="border" role="status" className="ml-3" />
-//               )}
 //             </Form>
 //           </div>
 //         </Col>
@@ -152,7 +154,8 @@
 // export default EmailVerify;
 
 
-//Dinesh Sir code 4 dec
+// 16 jan code
+
 
 import React, { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row, Spinner } from "react-bootstrap";
@@ -161,6 +164,7 @@ import { useNavigate } from "react-router-dom";
 import { setEmailValue } from "../../Slice/Login/LoginSlice"; 
 import { IsEmailVerify } from "../../services/provider";
 import Getstarted from "../GetStarted/GetStarted";
+import appbrand from '../../images/LYWO_logo.png';
 
 const EmailVerify = () => {
   const [email, setEmail] = useState("");
@@ -245,63 +249,68 @@ const EmailVerify = () => {
   })
 
   return (
-    <Container fluid className="p-0">
-      <Row className="authentication-inner m-0 min-h-full">
-        <Col
-          md={4}
-          className="justify-content-center align-items-center d-flex"
-        >
-          <Getstarted />
-        </Col>
-        <Col
-          md={8}
-          className="justify-content-center align-items-center d-flex bg-white authent-form"
-        >
-          <div className="w-px-400 mx-auto">
-            <h3>Welcome to LYWO</h3>
-            <p>Please enter your details.</p>
-            <Form noValidate validated={validated} onSubmit={handleSubmit}>
-              <Form.Group
-                as={Col}
-                md="12"
-                controlId="validationCustom03"
-                className="form-group"
-              >
-                <Form.Label>Email ID</Form.Label>
-                <Form.Control
-                  type="email"
-                  placeholder="Enter your email"
-                  onChange={(e) => handleEmail(e)}
-                  required
-                  value={emailValue}
-                  isInvalid={emailError !== ""}
-                />
-                {/* <Form.Control.Feedback type="invalid">
-                    Email not registered. Please contact administrator.
-                  </Form.Control.Feedback> */}
-                <Form.Control.Feedback type="invalid">
-                  {emailError ||
-                    "Email not registered. Please contact administrator."}
-                </Form.Control.Feedback>
-              </Form.Group>
+    <div className='authentication-wrapper authcover-bg'>
+      <a href='#' className='app-brand'>
+        <img src={appbrand} alt="Logo" />
+      </a>
+      <Container fluid className="p-0">
+        <Row className="authentication-inner m-0 min-h-full">
+          <Col
+            md={4}
+            className="justify-content-center align-items-center d-flex"
+          >
+            <Getstarted />
+          </Col>
+          <Col
+            md={8}
+            className="justify-content-center align-items-center d-flex bg-white authent-form"
+          >
+            <div className="w-px-400 mx-auto">
+              <h3>Welcome to LYWO</h3>
+              <p>Please enter your details.</p>
+              <Form noValidate validated={validated} onSubmit={handleSubmit}>
+                <Form.Group
+                  as={Col}
+                  md="12"
+                  controlId="validationCustom03"
+                  className="form-group"
+                >
+                  <Form.Label>Email ID</Form.Label>
+                  <Form.Control
+                    type="email"
+                    placeholder="Enter your email"
+                    onChange={(e) => handleEmail(e)}
+                    required
+                    value={emailValue}
+                    isInvalid={emailError !== ""}
+                  />
+                  {/* <Form.Control.Feedback type="invalid">
+                      Email not registered. Please contact administrator.
+                    </Form.Control.Feedback> */}
+                  <Form.Control.Feedback type="invalid">
+                    {emailError ||
+                      "Email not registered. Please contact administrator."}
+                  </Form.Control.Feedback>
+                </Form.Group>
 
-              {/* <Button type="submit" className="btn-full mt-1">
+                {/* <Button type="submit" className="btn-full mt-1">
+                    Verify
+                  </Button>
+                  {isLoading && (
+                    <Spinner animation="border" role="status" className="ml-3" />
+                  )} */}
+                <Button type="submit" className="btn-full mt-1">
+                  {isLoading && (
+                    <Spinner animation="border" role="status" className="me-2" />
+                  )}
                   Verify
                 </Button>
-                {isLoading && (
-                  <Spinner animation="border" role="status" className="ml-3" />
-                )} */}
-              <Button type="submit" className="btn-full mt-1">
-                {isLoading && (
-                  <Spinner animation="border" role="status" className="me-2" />
-                )}
-                Verify
-              </Button>
-            </Form>
-          </div>
-        </Col>
-      </Row>
-    </Container>
+              </Form>
+            </div>
+          </Col>
+        </Row>
+      </Container>
+    </div>
   );
 };
 

@@ -64,6 +64,7 @@ a {
     color: #667085;
     font-family: "Sofia Pro Light";
     font-weight: normal;
+    min-height: 155px;
   }
 }
 .carousel-indicators {
@@ -297,7 +298,7 @@ fieldset:disabled .btn {
       border-color: #d0d5dd;
       border-radius: 4px;
     }
-    .btn {
+    .btn,.input-group-text {
       background-color: transparent !important;
       border-color: #d0d5dd;
       border-right: transparent;
@@ -400,7 +401,7 @@ fieldset:disabled .btn {
     }
     .dropdown-item {
       color: #344054;
-      line-height: 36px;
+      // line-height: 36px;
       img {
         margin-right: 10px;
       }
@@ -526,7 +527,7 @@ ol.breadcrumb {
   overflow-y: auto;
 }
 .cprofile_right {
-  width: calc(100% - 34%);
+  width: calc(100% - 35%);
   padding-left: 0;
   background-color: #f9fafb;
   margin-left: 11%;
@@ -537,14 +538,18 @@ ol.breadcrumb {
 .sd-rightFixed {
   position: fixed;
   top: 0;
-  right: -15px;
+  right: 0;
+  width: 24%;
   height: 100vh;
   padding-top: 80px;
   z-index: 99;
-  background-color: #f9fafb;
+  background-color: #ffffff;
+  border-left: solid 1px #eaecf0;
 }
 .usermanagement_panel {
-  right: 0;
+  .bottom-fixed {
+    padding: 0 15px;
+  }
 }
 .modal-header {
   box-shadow: 3px 0px 6px rgba(0, 0, 0, 0.1098039216);
@@ -553,10 +558,12 @@ ol.breadcrumb {
     background-color: #fff;
     border-radius: 0;
     z-index: 999;
-    height: 79px;
-    position: fixed;
-    top: 0;
-    width: 100%;
+    &.fixed-header {
+      height: 79px;
+      position: fixed;
+      top: 0;
+      width: 100%;
+    }
   .modal-title {
     color: #101828;
     font-weight: 600;
@@ -650,6 +657,9 @@ ol.breadcrumb {
   margin-bottom: 0.75rem !important;
 }
 .cmprofile_mdl {
+  .modal-header {
+    width: 89%;
+  }
   .modal-body {
     padding: 1.15rem;
     // margin-top: 70px;
@@ -749,6 +759,7 @@ label.required.form-label {
     }
     &::after {
       background-size: 75%;
+      background: none;
     }
   }
   .cmp_textlogo {
@@ -777,6 +788,7 @@ label.required.form-label {
     border-bottom: solid 1px #eaecf0;
     max-height: 250px;
     overflow-y: auto;
+    min-height: 230px;
     li {
       list-style: none;
       font-size: 13px;
@@ -800,6 +812,11 @@ label.required.form-label {
   }
 }
 .rects-panel {
+  &.bottom-fixed {
+    box-shadow: 0 -3px 3px rgba(0, 0, 0, 0.06);
+    margin-left: -15px;
+    margin-right: -15px;
+  }
   .rects_list {
     margin: 0;
     padding: 0;
@@ -1215,6 +1232,7 @@ button.btn-link-muted {
   border-radius: 8px;
   margin-bottom: 2px;
   display: inline-block;
+  min-width: 65px;
   img {
     margin-right: 5px;
     vertical-align: text-top;
@@ -1245,6 +1263,7 @@ button.btn-link-muted {
         left: 0;
         width: 100%;
         text-align: center;
+        min-width: 65px;
       }
     }
   }
@@ -2565,6 +2584,7 @@ select.h-36.form-select {
   box-shadow: none !important;  /* Remove any shadow that may appear on focus */
   margin-top: 2;
 }
+
 .error-border {
   border: 1px solid red;
 }
