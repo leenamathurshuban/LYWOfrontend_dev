@@ -205,16 +205,16 @@ const OtpVerifyContainer = () => {
               <a
                 href="#"
                 className={`font-weight-600 text-center mt-4 d-block text-base`}
-                style={{
-                  color:
-                    otpErrormsg === "OTP verified successfully." ||
-                    otpErrormsg == "Incorrect OTP. Please try again."
-                      ? "#3538CD"
-                      : "#D0D5DD",
-                  // pointerEvents: otpErrormsg === "OTP verified successfully." ? 'auto' : 'none', // Disable pointer events if not verified
-                  // cursor: otpErrormsg === "OTP verified successfully." ? 'pointer' : 'not-allowed' // Change cursor to show disabled state
-                }}
-                disabled={otpErrormsg !== "OTP verified successfully."}
+                // style={{
+                //   color:
+                //     otpErrormsg === "OTP verified successfully." ||
+                //     otpErrormsg == "Incorrect OTP. Please try again."
+                //       ? "#3538CD"
+                //       : "#D0D5DD",
+                //   // pointerEvents: otpErrormsg === "OTP verified successfully." ? 'auto' : 'none', // Disable pointer events if not verified
+                //   // cursor: otpErrormsg === "OTP verified successfully." ? 'pointer' : 'not-allowed' // Change cursor to show disabled state
+                // }}
+                // disabled={otpErrormsg !== "OTP verified successfully."}
                 // onClick={SetPasswordContainer}
                 onClick={(e) => {
                   e.preventDefault();

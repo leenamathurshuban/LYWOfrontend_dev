@@ -2565,3 +2565,6 @@ select.h-36.form-select {
   box-shadow: none !important;  /* Remove any shadow that may appear on focus */
   margin-top: 2;
 }
+.error-border {
+  border: 1px solid red;
+}

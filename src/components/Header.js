@@ -13,7 +13,10 @@ import { logoutApi } from "../services/provider";
 
 const Header = () => {
   const userInfo = useSelector((state) => state.login.loginUserInfo);
-  const logoname = logoMaker(userInfo?.default_company?.company_name);
+  const logoname = logoMaker(userInfo?.default_company?.company_name  ?? "Infograins Techno");
+
+
+  
   const navigate = useNavigate();
   // const dispatch = useDispatch();
 
@@ -52,8 +55,8 @@ const Header = () => {
               </svg>
             </InputGroup.Text>
             <Form.Control
-              placeholder="Serach"
-              aria-label="Serach"
+              placeholder="Search"
+              aria-label="Search"
               aria-describedby="basic-addon1"
             />
           </InputGroup>
@@ -107,7 +110,7 @@ const Header = () => {
                   </p>
                   <div className="usr_info">
                     <strong>Olivia Rhye</strong>
-                    <a href="#">olivia@untitledui.com</a>
+                    <a href="#">{userInfo?.email}</a>
                   </div>
                 </div>
                 <Dropdown.Item href="#/action-1">

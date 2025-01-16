@@ -7,11 +7,13 @@ import passtrue from "../../images/icons/check-tick-circle.svg";
 import passfalse from "../../images/icons/minus-circle.svg";
 import { setPasswordVerifyApi } from "../../services/provider";
 import Getstarted from "../GetStarted/GetStarted";
+import { useDispatch, useSelector } from "react-redux";
+
 
 const SetPassword = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [initialCount, setInitialCount] = useState(0);
-  const [email, setEmail] = useState(""); 
+  // const [email, setEmail] = useState(""); 
   const [validated, setValidated] = useState(false);
 
   const [password, setPassword] = useState("");
@@ -28,6 +30,9 @@ const SetPassword = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
+  const email = useSelector((state) => state.login.emailValue);
+
+
   const handleSubmitSetPassword = (event) => {
     event.preventDefault();
   };
@@ -35,7 +40,7 @@ const SetPassword = () => {
   const setPasswordApi = async () => {
     setIsLoading(true);
     const data = {
-           email,
+          email,
           password,
           confirm_password
     }
@@ -151,12 +156,14 @@ const SetPassword = () => {
                   onChange={handleConfirmPasswordChange}
                   placeholder="Confirm Password"
                   required
+                  // isInvalid={passwordErrormsg}
+                  className={passwordErrormsg ? 'error-border' : ''}
                 />
                 <span
                   onClick={togglePasswordVisibility}
                   className="pass_eyeicon"
                 >
-                  <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+                 <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
                 </span>
 
                 <p className="error">{passwordErrormsg}</p>

@@ -65,7 +65,9 @@ const Evalation = () => {
   const [EvaluationList, setEvaluationList] = useState([]);
   const [EvaluationListDetails, setEvaluationListDetails] = useState([]);
   const [SerachList, setSerachList] = useState("");
-  const [activeKeys, setActiveKeys] = useState(["0-0"]); 
+  const [activeKeys, setActiveKeys] = useState(["0-0"]);
+  const [selectedSection, setSelectedSection] = useState('');
+ 
 
   const revaluationsListAPI = async (SerachQuestion) => {
     setIsLoading(true);
@@ -203,6 +205,17 @@ const Evalation = () => {
     }
   };
 
+  const handleSelectChange = (e) => {
+    const sectionId = e.target.value;
+    setSelectedSection(sectionId);
+
+    const sectionElement = document.getElementById(sectionId);
+    if (sectionElement) {
+      sectionElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+
   const EvaluationTable = () => {
     return (
       <Container fluid>
@@ -235,8 +248,8 @@ const Evalation = () => {
                     </svg>
                   </Button>
                   <Form.Control
-                    placeholder="Serach"
-                    aria-label="Serach"
+                    placeholder="Search"
+                    aria-label="Search"
                     aria-describedby="basic-addon1"
                     onChange={(e) => handleSearch(e)}
                   />
@@ -596,10 +609,12 @@ const Evalation = () => {
                   <Form.Select
                     aria-label="Default select example"
                     className="h-36"
+                    onChange={handleSelectChange} value={selectedSection}
                   >
                     <option>Show All</option>
                     {EvaluationListDetails[0].section_asset.map((item) => (
-                      <option value="1">{item.section_title}</option>
+                  
+                      <option key={item.id} value={item.id}>{item.section_title}</option>
                     ))}
                   </Form.Select>
                 </div>

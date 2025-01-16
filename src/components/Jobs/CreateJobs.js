@@ -263,11 +263,35 @@ const CreateJobs = ({ show, handleClose }) => {
 
   const handleFormData = (e) => {
     const { name, value } = e.target;
+    console.log("input name-----",name)
+
     setCreateFormData({
       ...createFormData,
       [name]: value,
     });
+    // if (name === 'noOfPosition') {
+    //   setErrors(/[^0-9]/.test(value) ? 'Please enter only numeric values.' : '');
+    // }
+
+
+     // Validation for noOfPosition (should be a numeric value)
+     if (name === 'noOfPosition') {
+      if (/[^0-9]/.test(value)) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          noOfPosition: 'Please enter only numeric values',
+        }));
+      } else {
+        // Clear error if value is valid
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          noOfPosition: '',
+        }));
+      }
+    }
   };
+
+
 
   const handleUpdateFormData = (e) => {
     const { name, value } = e.target;
@@ -802,6 +826,8 @@ const CreateJobs = ({ show, handleClose }) => {
 
   const isNextButtonDisable = !createFormData.jobTitle;
 
+
+
   return (
     <Offcanvas
       show={show}
@@ -817,7 +843,7 @@ const CreateJobs = ({ show, handleClose }) => {
         </Offcanvas.Title>
       </Offcanvas.Header>
       <Offcanvas.Body>
-        <Form className="row" onSubmit={handleCreateForm}>
+        <Form className="row" onSubmit={handleCreateForm} autocomplete="off">
           <Form.Group className="col-md-12 mb-2" controlId="jobTitle">
             <Form.Label>Job Title</Form.Label>
             <Form.Control
@@ -874,8 +900,13 @@ const CreateJobs = ({ show, handleClose }) => {
               name="noOfPosition"
               value={createFormData.noOfPosition}
               onChange={handleFormData}
+              isInvalid={!!errors.noOfPosition} 
+           
             />
-            <span className="error">{errors.noOfPosition}</span>
+           
+            {errors.noOfPosition && (
+          <span className="error text-danger">{errors.noOfPosition}</span>
+        )}
           </Form.Group>
 
           <Form.Group className="col-md-6 mb-2" controlId="department">

@@ -204,7 +204,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
   const handlecustomModalClose = () => setCustomShowModal(false);
 
   const userInfo = useSelector((state) => state.login.loginUserInfo);
-  const uid = userInfo?.default_company?.uid;
+  const uid = userInfo?.uid;
 
   const logoname = logoMaker(companyProfileDetails?.company_name);
 
@@ -449,9 +449,6 @@ const CompanyEditProfile = ({ show, handleClose }) => {
 
   const LogoName = filePath?.split("/").pop();
 
-
-
-
   return (
     <Modal
       show={show}
@@ -464,7 +461,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
         <Row>
           <aside className="model_sidebar col-md-2">
             <div className="md_sdrlogo">
-              <img src={cprofilelogo} alt=""  onClick={handleClose}/>
+              <img src={cprofilelogo} alt="" onClick={handleClose} />
             </div>
             <Nav variant="pills" className="flex-column mdl_sdbarmenu">
               <Nav.Item>
@@ -484,9 +481,8 @@ const CompanyEditProfile = ({ show, handleClose }) => {
             </Nav>
           </aside>
           <Col md={10} className="cprofile_right">
-            <Modal.Header closeButton className="fixed-header" >
+            <Modal.Header closeButton className="fixed-header">
               <Modal.Title>Company Settings</Modal.Title>
-              
             </Modal.Header>
             <Tab.Content>
               <Tab.Pane eventKey="first">
@@ -846,33 +842,65 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                       <div className="rects-panel bottom-fixed">
                         <h5>Recommendations</h5>
                         <ul className="rects_list">
-                          {companyProfileDetails?.logo == null && (
+                          {!companyProfileDetails?.logo && (
                             <li>
                               <img src={starIcon} />
                               Add Logo
                             </li>
                           )}
 
-                          {companyProfileDetails?.website_url == null && (
+                          {(!companyProfileDetails?.website_url ||
+                            companyProfileDetails.website_url.trim() === "") &&
+                            !website && (
+                              <li>
+                                <img src={starIcon} alt="star" />
+                                Add Website
+                              </li>
+                            )}
+
+                          {!companyProfileDetails?.industry &&
+                            !IndustrySearch && (
+                              <li>
+                                <img src={starIcon} />
+                                Add Industry Type
+                              </li>
+                            )}
+
+                          {(!companyProfileDetails?.description ||
+                            companyProfileDetails.description
+                              .replace(/<[^>]*>/g, "")
+                              .trim() === "") && (
                             <li>
-                              <img src={starIcon} />
-                              Add Website
+                              <img src={starIcon} alt="star" />
+                              Add Description
                             </li>
                           )}
 
-                          {companyProfileDetails?.description == "" && (
-                            <li>
-                              <img src={starIcon} />
-                              Add Detailed Discription
-                            </li>
-                          )}
+                          {(!companyProfileDetails?.selectedCompanyType &&
+                            !selectedCompanyType) ||
+                            (selectedCompanyType == "Company Type" && (
+                              <li>
+                                <img src={starIcon} />
+                                Add Company Type
+                              </li>
+                            ))}
 
-                          {companyProfileDetails?.number_of_employees == "" && (
-                            <li>
-                              <img src={starIcon} />
-                              Select Company Size
-                            </li>
-                          )}
+                          {(!companyProfileDetails?.number_of_employees &&
+                            !noOfEmploy) ||
+                            (noOfEmploy == "Company Size" && (
+                              <li>
+                                <img src={starIcon} />
+                                Add Company Size
+                              </li>
+                            ))}
+
+                          {!companyProfileDetails?.location &&
+                            !searchLocationTerm && (
+                              <li>
+                                <img src={starIcon} />
+                                Add Headquarter
+                              </li>
+                            )}
                         </ul>
                       </div>
                     </Col>

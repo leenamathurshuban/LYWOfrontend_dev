@@ -28,12 +28,14 @@ const Dashboard = () => {
 
   const userInfo = useSelector((state) => state.login.loginUserInfo);
 
-  const uid = userInfo?.default_company?.uid;
+  const uid = userInfo?.uid;
 
   const logoname = logoMaker(
-    userInfo?.default_company?.company_name ?? "infograins techno"
+    userInfo?.default_company?.company_name ?? "Infograins Techno"
   );
 
+
+ // console.log("logoname-----",logoname)
   const GetCompanyDetails = (uid) => {
     handleShow();
     GetcompanyDetailsApi(uid)
