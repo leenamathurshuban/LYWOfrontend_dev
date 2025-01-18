@@ -27,6 +27,11 @@ export const JobsUrl = {
   CreateCustomBenifits : "assets-api/benefits-post-api/",
   createJobForm : "assets-api/job-post-api/",
   UpdateJobForm : "assets-api/update-job-api/",
-  
+  createJobQuestion : "assets-api/create-job-question-api/",
+}
+
+export const SkillsUrl = {
+  skillPost : "assets-api/skill-post-api/",
+  skillGroupPost : "assets-api/skill-group-post-api/",
 }
 

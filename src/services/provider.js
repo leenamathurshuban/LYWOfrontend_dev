@@ -1,4 +1,4 @@
-import { AuthUrl ,CompanyUrl, UsersUrl,JobsUrl} from "./apiUrl";
+import { AuthUrl ,CompanyUrl, UsersUrl,JobsUrl, SkillsUrl} from "./apiUrl";
 import client from "./axiosInstance";
 
 
@@ -142,6 +142,30 @@ export const CreateJobForm = (data) =>{
   return CreateJobForm
 }
 
+export const CreateJobQuestion = (data) =>{
+  const CreateJobQuestion = client.postWithUpload(JobsUrl.createJobQuestion,data)
+  return CreateJobQuestion
+}
+
+export const addSkill = (data) =>{
+  const addSkill = client.postWithUpload(SkillsUrl.skillPost,data)
+  return addSkill
+}
+export const addSkillGroupPost = (data) =>{
+  const addSkillGroup = client.postWithUpload(SkillsUrl.skillGroupPost,data)
+  return addSkillGroup
+}
+
+export const getSkillList = (url) =>{
+  const skillList = client.getWithToken(url)
+  return skillList
+}
+
+
+export const getSkillGroupDetailsApi = (url) =>{
+  const getJobDetails = client.getWithToken(url)
+  return getJobDetails
+}
 
 export const getJobDetailsApi = (url) =>{
   const getJobDetails = client.getWithToken(url)
@@ -150,11 +174,7 @@ export const getJobDetailsApi = (url) =>{
 
 
 export const UpdateJobForm = (data,id) =>{
-
-  console.log(data)
-
   const UpdateJobForm = client.putForUpload(`${JobsUrl.UpdateJobForm}${id}/`,data)
-
   return UpdateJobForm
 
 }

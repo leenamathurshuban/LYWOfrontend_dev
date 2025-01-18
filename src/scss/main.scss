@@ -1133,6 +1133,9 @@ button.btn-link-muted {
 .font-weight-600 {
   font-weight: 600;
 }
+.queMain_panel {
+  height: 100vh;
+}
 .elv_datatable {
   border: solid 1px #eaecf0;
   border-radius: 8px;
@@ -2110,6 +2113,13 @@ select.h-36.form-select {
         width: 17px;
         height: 17px;
       }
+      .flag_icon2 {
+        position: absolute;
+        right: 22px;
+        top: 24px;
+        width: 17px;
+        height: 17px;
+      }
     }
     .accordion-button:not(.collapsed) {
       background-color: #f5f8ff;
@@ -2549,6 +2559,78 @@ select.h-36.form-select {
   height: 100%;
   padding: 0 15px;
 }
+.behav_assmnt {
+  background-color: #FCFCFD;
+  border: solid 1px #EAECF0;
+  padding: 8px;
+  border-radius: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  .assmntbox {
+    border: solid 1px #EAECF0;
+    padding: 8px;
+    border-radius: 6px;
+    background-color: #fff;
+    min-height: 100px;
+    margin: 5px;
+    &.active {
+      border-color: #444CE7;
+      background-color: #F5F8FF;
+      .assmntbox-head h6 {
+        color: #2D3282;
+      }
+    }
+    &-head{
+      display: flex;
+      justify-content: space-between;
+      h6 {
+        font-size: 14px;
+        color: #101828;
+      }
+      i {
+        color: #D0D5DD;
+      }
+    }
+    &-body {
+      margin-top: 10px;
+      p {
+        color: #667085;
+        font-size: 12px;
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+.perlity_mth {
+  h5 {
+    font-size: 15px;
+    margin-bottom: 5px;
+  }
+}
+.perlitymth-card {
+  border: solid 1px #D0D5DD;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 3px 4px rgb(0 0 0 / 11%);
+  .perlitymth-head {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    .prtmth_icon {
+      margin-right: 15px;
+    }
+    .prtmth_title {
+      margin-top: 8px;
+      h6 {
+        font-size:12px;
+      }
+      span{
+        color: #4C60E5;
+        font-size:12px;
+      }
+    }
+  }
+}
 @media (min-width: 992px) {
   .modal-lg,
   .modal-xl {
@@ -2587,4 +2669,87 @@ select.h-36.form-select {
 
 .error-border {
   border: 1px solid red;
+}
+.modal-dialog.modal-md {
+  max-width: 800px;
+}
+.indleffort-mdl {
+  .modal-header {
+    background-color: #FFE6D5;
+    box-shadow: none;
+    button.btn-close {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+  }
+    img {
+      width: 240px;
+    }
+    .modal-title {
+      color: #1D2939;
+      font-size: 48px;
+      left: 20%;
+      bottom: -35px;
+      position: relative;
+    }
+    .count {
+      border: solid 1px #F7B27A;
+      background-color: #fff;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: block;
+      text-align: center;
+      line-height: 48px;
+      color: #EF6820;
+      font-size: 30px;
+      margin: auto;
+    }
+  }
+  .h2_title {
+    color: #1D2939;
+    font-size: 30px;
+    display: flex;
+    align-items: center;
+    .count {
+      border: solid 1px #F7B27A;
+      background-color: #fff;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      display: inline-block;
+      text-align: center;
+      line-height: 45px;
+      color: #EF6820;
+      font-size: 26px;
+      margin-right: 8px;
+    }
+  }
+  .indleffort-text {
+    padding: 10px 55px;
+    p {
+      font-size: 12px;
+      color: #475467;
+      line-height: 20px;
+    }
+    ul {
+      margin: 0;
+      padding: 0;
+      border-top: solid 1px #D0D5DD;
+      padding-top: 15px;  
+      li {
+        list-style: none;
+        color: #475467;
+        font-size: 12px;
+        display: flex;
+        strong {
+          color: #1D2939;
+          margin-right: 20px;
+          font-weight: 600;
+          min-width: 100px;
+        }
+      }
+    }
+  }
+ 
 }

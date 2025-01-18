@@ -32,52 +32,121 @@ const CreateJobs = ({ show, handleClose }) => {
   const [isLikeDropdown, setIsLikeDropdown] = useState(false);
   const [isLikeData, setIsLikeData] = useState([]);
   const [isDisabledTarget, setIsDisabledTarget] = useState(true);
-
   const [ishideIndustries, setIsHideIndustries] = useState(true);
-
   const [isHideRestrictedRoles, setIsHideRestrictedRoles] = useState(true);
-
+  const [SelectSkillsData, setSelectSkillsData] = useState([]);
   const [isHideLocation, setIsHideLLocation] = useState(true);
-
   const [isSpecificLanguareRequired, setIsSpecificLanguareRequired] =
     useState(true);
-
   const [department, setDepartment] = useState("");
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
-
   const [departmentUid, setDepartmentUid] = useState("");
-
   const [locationUid, setLocationUid] = useState("");
-
   const [departmentData, setDepartmentData] = useState([]);
   const [locationData, setLocationData] = useState([]);
-
   const [benefitsData, setBenefitsData] = useState([]);
   const [SelectBenefitsData, setSelectBenefitsData] = useState([]);
   const [addCustomeBenifits, setAddCustomeBenifits] = useState([]);
   const [customValue, setCustomValue] = useState("");
-
   const [isDepartmentDropdown, setIsDepartmentDropdown] = useState(false);
   const [isLocationDropdown, setIsLocationDropdown] = useState(false);
-
   const [createJobUid, setCreateJobUid] = useState("");
   const [createUid, setCreatedUid] = useState("");
-
   const [minEdu, setMinEdu] = useState("");
-
   const [badges, setBadges] = useState([]);
   const [IndustriesBadges, setIndustriesBadge] = useState([]);
-
   const [restrictedRoleBadges, setRestrictedRoleBadges] = useState([]);
-
   const [spokenLanguageBadges, setSpokenLanguageBadges] = useState([]);
-
   const [rdnwBadges, setrdnwBadges] = useState([]);
-
   const [locationBadges, setLocationBadges] = useState([]);
   const [fileName, setFileName] = useState("");
-
+  const [behaviours, setBehaviours] = useState([
+    {
+      heading: "Efficiency",
+      data: "Sense of Urgency, Organization and Resourcefulness",
+      uid: "93a2b8af-3af5-4d7f-bc39-165c8fdefd81",
+      markedImportant: false,
+      isSelected: false,
+    },
+    {
+      heading: "Accuracy",
+      data: "Correctness and Completeness",
+      uid: "af0b3a0b-90ec-4df0-bd82-8b633ce993d5",
+      markedImportant: false,
+      isSelected: false,
+    },
+    {
+      heading: "Cooperativeness",
+      data: "Generally Agreeable and Seeks Collective Solutions",
+      uid: "bf72d375-bd6f-498f-800c-af60189a1f77",
+      markedImportant: false,
+      isSelected: false,
+    },
+    {
+      heading: "Enthusiasm",
+      data: "Excitement and Energy",
+      uid: "dc5eb856-b6b6-404a-955e-5e034424fe31",
+      markedImportant: false,
+      isSelected: false,
+    },
+    {
+      heading: "Patience",
+      data: "Tolerance for delays,challenges, and difficulties",
+      uid: "ebc2a4a2-3e61-463a-a2cc-cec72b5894a9",
+      markedImportant: false,
+      isSelected: false,
+    },
+    {
+      heading: "Friendliness",
+      data: "Openness and Warmth,Sympathetic",
+      uid: "815db2c5-bac6-4eff-a629-698eb1aa9551",
+      markedImportant: false,
+      isSelected: false,
+    },
+    {
+      heading: "Independence",
+      data: "Free from needing supportand direction",
+      uid: "64715729-4e7a-49d3-9ffd-6ea627116b2c",
+      markedImportant: false,
+      isSelected: false,
+    },
+    {
+      heading: "Self Confidence",
+      data: "Faith in self for abilities andjudgement",
+      uid: "db1aa38a-0db6-4871-88b1-085010b1c346",
+      markedImportant: false,
+      isSelected: false,
+    },
+    {
+      heading: "Self Motivation",
+      data: "Being a Self-Starter andInitiator",
+      uid: "64d932b7-89d3-4270-b553-58b6bdc66be1",
+      markedImportant: false,
+      isSelected: false,
+    },
+    {
+      heading: "Sensitivity",
+      data: "Being aware of other’sfeelings and impact of work",
+      uid: "424b93e6-d4d7-4d43-af55-c40c7c809071",
+      markedImportant: false,
+      isSelected: false,
+    },
+    {
+      heading: "Thoughtfulness",
+      data: "Thinking carefully aboutthings before acting",
+      uid: "  52261636-2fab-4935-ad9c-f2a3fa9f8be4",
+      markedImportant: false,
+      isSelected: false,
+    },
+    {
+      heading: "Persistence",
+      data: "Ability to Stick to a Subjectin-spite of opposition",
+      uid: "5be7e9c5-c0c2-45d6-8866-5381976dd92c",
+      markedImportant: false,
+      isSelected: false,
+    },
+  ]);
   const [updateFormData, setUpdateFormData] = useState({
     display_salary: "",
     max_salary: "",
@@ -85,84 +154,47 @@ const CreateJobs = ({ show, handleClose }) => {
     currency: "INR",
     salary_type: "",
     salary_price_type: "Salary-range",
-
     workplace_type: "",
-
     job_type: "",
-
     description_attachment: "",
-
     detailed_description: "",
-
     number_of_positions: "",
-
     requires_travel: "",
-
     job_location: "",
-
     department: "",
-
     job_benefits: "",
-
     is_like: "",
-
     job_title: "",
-
     job_company: "",
-
     non_negotiable_salary: "",
-
     minimum_education: "",
-
     area_of_education: "",
-
     higher_qualification_preferred: "",
-
     other_areas_acceptable: "",
-
     year_of_experience_type: "",
-
     min_exp: "",
-
     max_exp: "",
-
     restricted_industries: "",
-
     define_current_role: "",
-
     shortlisted_industry: "",
-
     restricted_roles: "",
-
     targate_hire_date: "",
-
     immediate_hiring: "",
-
     explore_buy_out_option: "",
-
     spoken_language: "",
-
     read_write_language: "",
-
     no_specific_language_require: "",
-
     preferred_geography: "",
-
     no_specific_location: "",
-
     relocation_cost_covered: "",
-
     skills: "",
-
     must_have_skills: "",
-
     job_status: "",
+    important_behaviour:"",
+    selected_behaviour:"",
   });
-
   const [isUpdated, setIsUpdated] = useState(false);
-
   //Editor states
-
   const [fileUrl, setFileUrl] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [descriptionError, setDescriptionError] = useState("");
@@ -177,18 +209,14 @@ const CreateJobs = ({ show, handleClose }) => {
     jobType: "",
     workPlaceType: "",
   });
-
   const [modal, setModal] = useState({
     createJobRevisedModal: false,
   });
-
   const MAX_FILE_SIZE = 5 * 1024 * 1024;
   const MAX_DESCRIPTION_WORDS = 500;
-
   const quillRef = useRef(null);
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
-
   const handleJobModalShow = (modalName, createJobuid) => {
     setModal((prev) => ({
       ...prev,
@@ -196,14 +224,12 @@ const CreateJobs = ({ show, handleClose }) => {
       // [modalName]: {show : true,createJobuid},
     }));
   };
-
   const handleJobModalClose = (modalName) => {
     setModal((prev) => ({
       ...prev,
       [modalName]: false,
     }));
   };
-
   const CheckValidation = () => {
     const newErrors = {
       jobTitle: "",
@@ -260,10 +286,9 @@ const CreateJobs = ({ show, handleClose }) => {
     setErrors(newErrors);
     return isValid;
   };
-
   const handleFormData = (e) => {
     const { name, value } = e.target;
-    console.log("input name-----",name)
+    console.log("input name-----", name);
 
     setCreateFormData({
       ...createFormData,
@@ -273,26 +298,22 @@ const CreateJobs = ({ show, handleClose }) => {
     //   setErrors(/[^0-9]/.test(value) ? 'Please enter only numeric values.' : '');
     // }
 
-
-     // Validation for noOfPosition (should be a numeric value)
-     if (name === 'noOfPosition') {
+    // Validation for noOfPosition (should be a numeric value)
+    if (name === "noOfPosition") {
       if (/[^0-9]/.test(value)) {
         setErrors((prevErrors) => ({
           ...prevErrors,
-          noOfPosition: 'Please enter only numeric values',
+          noOfPosition: "Please enter only numeric values",
         }));
       } else {
         // Clear error if value is valid
         setErrors((prevErrors) => ({
           ...prevErrors,
-          noOfPosition: '',
+          noOfPosition: "",
         }));
       }
     }
   };
-
-
-
   const handleUpdateFormData = (e) => {
     const { name, value } = e.target;
 
@@ -302,18 +323,15 @@ const CreateJobs = ({ show, handleClose }) => {
       [name]: value,
     });
   };
-
   const handleLike = (e) => {
     setIsLike(e.target.value);
     setIsLikeDropdown(true);
   };
-
   const handleSelectedLikeItems = (item) => {
     setIsLike(item.is_like_name);
     setIsLikeUid((prevSelectedItems) => [...prevSelectedItems, item.uid]);
     setIsLikeDropdown(false);
   };
-
   const handleEditorChange = (value) => {
     const wordCount = value.trim().split(/\s+/).length;
 
@@ -326,7 +344,6 @@ const CreateJobs = ({ show, handleClose }) => {
       );
     }
   };
-
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
 
@@ -371,7 +388,6 @@ const CreateJobs = ({ show, handleClose }) => {
       alert("Please upload a valid image or PDF file.");
     }
   };
-
   // const handleJobTypeChange = (e) => {
   //   setJobType(e.target.value);
   // };
@@ -382,7 +398,6 @@ const CreateJobs = ({ show, handleClose }) => {
   const handleTravelChange = (e) => {
     setTravelOption(e.target.value);
   };
-
   const isLikeHandleApi = (query) => {
     const url = `https://bittrend.shubansoftware.com/assets-api/islike-list-api/?search=${query}&page=1&limit=10`;
     CreateJobIsLike(url)
@@ -452,7 +467,6 @@ const CreateJobs = ({ show, handleClose }) => {
         }
       });
   };
-
   const benifitsList = () => {
     //console.log("callledd apiiii11111");
     GetBenifints()
@@ -473,7 +487,6 @@ const CreateJobs = ({ show, handleClose }) => {
         }
       });
   };
-
   const handleBenifts = (benefititem) => {
     setSelectBenefitsData((prevState) =>
       prevState.includes(benefititem)
@@ -481,11 +494,9 @@ const CreateJobs = ({ show, handleClose }) => {
         : [...prevState, benefititem]
     );
   };
-
   const getSelectedBenefitUids = () => {
     return SelectBenefitsData.map((item) => item.uid);
   };
-
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       isLikeHandleApi(isLike);
@@ -494,7 +505,6 @@ const CreateJobs = ({ show, handleClose }) => {
       clearTimeout(timeoutId);
     };
   }, [isLike]);
-
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       handleDepartmentApi(department);
@@ -503,7 +513,6 @@ const CreateJobs = ({ show, handleClose }) => {
       clearTimeout(timeoutId); // Clear previous timeout
     };
   }, [department]);
-
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       handleLocationApi(location);
@@ -513,11 +522,9 @@ const CreateJobs = ({ show, handleClose }) => {
       clearTimeout(timeoutId);
     };
   }, [location]);
-
   useEffect(() => {
     benifitsList();
   }, []);
-
   // const handleLike = (e) => {
   //   setIsLike(e.target.value);
   //   setIsLikeDropdown(true);
@@ -528,6 +535,8 @@ const CreateJobs = ({ show, handleClose }) => {
   //   setIsLikeUid((prevSelectedItems) => [...prevSelectedItems, item.uid]);
   //   setIsLikeDropdown(false);
   // };
+
+  const hasSelectedAndImportant = behaviours.some((item) => (item?.isSelected || item?.markedImportant));
 
   const handleDepartment = (e) => {
     setDepartment(e.target.value);
@@ -596,6 +605,7 @@ const CreateJobs = ({ show, handleClose }) => {
     const formdata = new FormData();
 
     for (const key in updateFormData) {
+      console.log(key === "selected_behaviour",key === "important_behaviour",hasSelectedAndImportant,key)
       if (key === "area_of_education" && badges.length > 0) {
         let uids = badges.map((item) => item?.uid);
 
@@ -626,6 +636,33 @@ const CreateJobs = ({ show, handleClose }) => {
         let uids = locationBadges.map((item) => item?.uid);
 
         formdata.append(key, JSON.stringify(uids));
+      } else if (key === "skills" && SelectSkillsData.length > 0) {
+        let skillID = SelectSkillsData?.map((item) => item?.uid) // Extract skill_name values
+          ?.filter((skill) => skill !== "") // Filter out empty strings
+          ?.join(",");
+
+        formdata.append("skill_name", skillID);
+      } else if ((key === "selected_behaviour" || key === "important_behaviour")&&hasSelectedAndImportant) {
+        let selectedBehaviourUids = [];
+        let importantBehaviourUids = [];
+
+        behaviours.forEach((item) => {
+          if (item?.isSelected) {
+            selectedBehaviourUids.push(item.uid);
+          }
+          if (item?.markedImportant) {
+            importantBehaviourUids.push(item.uid);
+          }
+        });
+
+        formdata.append(
+          "selected_behaviour",
+          JSON.stringify(selectedBehaviourUids)
+        );
+        formdata.append(
+          "important_behaviour",
+          JSON.stringify(importantBehaviourUids)
+        );
       } else if (
         key === "higher_qualification_preferred" ||
         key === "other_areas_acceptable" ||
@@ -670,121 +707,115 @@ const CreateJobs = ({ show, handleClose }) => {
         formdata.append(key, updateFormData[key]);
       }
     }
+    // try {
+    //   const response = await UpdateJobForm(formdata, createUid);
 
-    //  for (const pair of formdata.entries()) {
+    //   if (response.data.status == 200) {
+    //     alert("Job updated successfully!");
+    //     setSelectSkillsData([]);
+    //     setIsUpdated(true)
+    //     setUpdateFormData({
+    //       display_salary: "",
 
-    //   console.log(pair[0] + ": " + pair[1]);
+    //       max_salary: "",
 
+    //       min_salary: "",
+
+    //       currency: "INR",
+
+    //       salary_type: "",
+
+    //       salary_price_type: "Salary_range",
+
+    //       workplace_type: "",
+
+    //       job_type: "",
+
+    //       description_attachment: "",
+
+    //       detailed_description: "",
+
+    //       number_of_positions: "",
+
+    //       requires_travel: "",
+
+    //       job_location: "",
+
+    //       department: "",
+
+    //       job_benefits: "",
+
+    //       is_like: "",
+
+    //       job_title: "",
+
+    //       job_company: "",
+
+    //       non_negotiable_salary: "",
+
+    //       minimum_education: "",
+
+    //       area_of_education: "",
+
+    //       higher_qualification_preferred: "",
+
+    //       other_areas_acceptable: "",
+
+    //       year_of_experience_type: "",
+
+    //       min_exp: "",
+
+    //       max_exp: "",
+
+    //       restricted_industries: "",
+
+    //       define_current_role: "",
+
+    //       shortlisted_industry: "",
+
+    //       restricted_roles: "",
+
+    //       targate_hire_date: "",
+
+    //       immediate_hiring: "",
+
+    //       explore_buy_out_option: "",
+
+    //       spoken_language: "",
+
+    //       read_write_language: "",
+
+    //       no_specific_language_require: "",
+
+    //       preferred_geography: "",
+
+    //       no_specific_location: "",
+
+    //       relocation_cost_covered: "",
+
+    //       skills: "",
+
+    //       must_have_skills: "",
+
+    //       job_status: "",
+    //     });
+    //   }
+    // } catch (error) {
+    //   console.log("create eroor------", error);
+
+    //   if (
+    //     error?.response?.status === 401 ||
+    //     error?.response?.data?.detail?.includes(
+    //       "Given token not valid for any token type"
+    //     )
+    //   ) {
+    //     //console.log("Token expired, redirecting to login");
+
+    //     removeToken();
+
+    //     navigate("/loginwithpassword");
+    //   }
     // }
-
-    try {
-      const response = await UpdateJobForm(formdata, createUid);
-
-      if (response.data.status == 200) {
-        alert("Job updated successfully!");
-
-        setUpdateFormData({
-          display_salary: "",
-
-          max_salary: "",
-
-          min_salary: "",
-
-          currency: "INR",
-
-          salary_type: "",
-
-          salary_price_type: "Salary_range",
-
-          workplace_type: "",
-
-          job_type: "",
-
-          description_attachment: "",
-
-          detailed_description: "",
-
-          number_of_positions: "",
-
-          requires_travel: "",
-
-          job_location: "",
-
-          department: "",
-
-          job_benefits: "",
-
-          is_like: "",
-
-          job_title: "",
-
-          job_company: "",
-
-          non_negotiable_salary: "",
-
-          minimum_education: "",
-
-          area_of_education: "",
-
-          higher_qualification_preferred: "",
-
-          other_areas_acceptable: "",
-
-          year_of_experience_type: "",
-
-          min_exp: "",
-
-          max_exp: "",
-
-          restricted_industries: "",
-
-          define_current_role: "",
-
-          shortlisted_industry: "",
-
-          restricted_roles: "",
-
-          targate_hire_date: "",
-
-          immediate_hiring: "",
-
-          explore_buy_out_option: "",
-
-          spoken_language: "",
-
-          read_write_language: "",
-
-          no_specific_language_require: "",
-
-          preferred_geography: "",
-
-          no_specific_location: "",
-
-          relocation_cost_covered: "",
-
-          skills: "",
-
-          must_have_skills: "",
-
-          job_status: "",
-        });
-      }
-    } catch (error) {
-      console.log("create eroor------", error);
-
-      if (
-        error?.response?.status === 401 ||
-        error?.response?.data?.detail?.includes(
-          "Given token not valid for any token type"
-        )
-      ) {
-        //console.log("Token expired, redirecting to login");
-
-        removeToken();
-
-        navigate("/loginwithpassword");
-      }
-    }
   };
 
   const handleCustomeBeniftsAdd = () => {
@@ -825,8 +856,6 @@ const CreateJobs = ({ show, handleClose }) => {
   };
 
   const isNextButtonDisable = !createFormData.jobTitle;
-
-
 
   return (
     <Offcanvas
@@ -900,13 +929,12 @@ const CreateJobs = ({ show, handleClose }) => {
               name="noOfPosition"
               value={createFormData.noOfPosition}
               onChange={handleFormData}
-              isInvalid={!!errors.noOfPosition} 
-           
+              isInvalid={!!errors.noOfPosition}
             />
-           
+
             {errors.noOfPosition && (
-          <span className="error text-danger">{errors.noOfPosition}</span>
-        )}
+              <span className="error text-danger">{errors.noOfPosition}</span>
+            )}
           </Form.Group>
 
           <Form.Group className="col-md-6 mb-2" controlId="department">
@@ -1216,6 +1244,11 @@ const CreateJobs = ({ show, handleClose }) => {
           setIsHideLLocation={setIsHideLLocation}
           isHideLocation={isHideLocation}
           handleLocationApi={handleLocationApi}
+          createJobUid={createJobUid}
+          SelectSkillsData={SelectSkillsData}
+          setSelectSkillsData={setSelectSkillsData}
+          behaviours={behaviours}
+          setBehaviours={setBehaviours}
         />
       )}
     </Offcanvas>
