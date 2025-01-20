@@ -28,6 +28,8 @@ export const JobsUrl = {
   createJobForm : "assets-api/job-post-api/",
   UpdateJobForm : "assets-api/update-job-api/",
   createJobQuestion : "assets-api/create-job-question-api/",
+  cloneJobGet:"assets-api/clone-job-api/",
+  UpdateMultipleJobApi:"assets-api/update-multiple-job-api/"
 }
 
 export const SkillsUrl = {
