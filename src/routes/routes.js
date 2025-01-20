@@ -5,6 +5,7 @@ import Evalation from "../screens/Evaluation/Evaluation";
 import Jobs from "../screens/Jobs/Jobs";
 import JobsList from "../screens/Jobs/JobList";
 import JobPosts from "../screens/Jobs/JobPosts";
+import JobSummary from "../screens/Jobs/JobSummary";
 
 
 export const router = createBrowserRouter([
@@ -69,6 +70,10 @@ export const router = createBrowserRouter([
     path: "/jobposts/:id",
     // path: "/JobPosts",
     element: <ProtectedRoute element={<JobPosts />} allowAuthenticated={false} />,  // Only allow authenticated users here
+  },
+  {
+    path: "/jobSummary/:id",
+    element: <ProtectedRoute element={<JobSummary />} allowAuthenticated={false} />,  // Only allow authenticated users here
   },
   {
     path: "*",

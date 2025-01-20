@@ -184,7 +184,15 @@ export const UpdateJobForm = (data,id) =>{
 
 }
 
+export const CloneJobGet = (id) => {
+  const getCloneJob = client.getWithToken(`${JobsUrl.cloneJobGet}${id}`)
+  return getCloneJob
+}
 
+export const UpdateMultipleJobApi=(data)=>{
+  const UpdateMultipleJob = client.putWithUpload(`${JobsUrl.UpdateMultipleJobApi}`,data)
+  return UpdateMultipleJob
+}
 // Qualification List By Course Id
 
 

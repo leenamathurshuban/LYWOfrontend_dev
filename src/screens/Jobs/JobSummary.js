@@ -1,0 +1,339 @@
+import React, { useEffect, useState } from 'react';
+import { Button, Card, Col, Form, Modal, Row } from 'react-bootstrap';
+import Applicants_mail from "../../images/icons/mail-04-primery.svg";
+import Downloadprimery from "../../images/icons/download-01-primery.svg";
+import logoIcon from "../../images/logo_icon.png";
+import CompLogo from "../../images/comp_logo.png";
+import Edit03 from "../../images/icons/edit-0303.svg";
+import AchieverIcn from "../../images/icons/Achiever-icon.svg";
+import LeaderIcn from "../../images/icons/Leader-icon.svg";
+import InfluencerIcn from "../../images/icons/Influencer-icon.svg";
+import PioneerIcn from "../../images/icons/Pioneer-icon.svg";
+import flagODanger from "../../images/icons/flag-o-danger.svg";
+import { GetcompanyDetailsApi, getJobDetailsApi } from '../../services/provider';
+import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
+const JobSummary = () => {
+    const [show, setShow] = useState(true);
+    const [data, setData] = useState({})
+    const [company, setCompany] = useState({})
+    const [skills, setSkills] = useState()
+    const { id } = useParams();
+    const userInfo = useSelector((state) => state.login.loginUserInfo);
+    const uid = userInfo?.default_company?.uid;
+    const handleClose = (modalName) => {
+        setShow(false)
+    };
+    const GetCompanyDetails = () => {
+        // handleShow();
+        GetcompanyDetailsApi(uid)
+            .then((res) => {
+                console.log("dispatch calll", res?.response);
+                // dispatch(setCompanyProfileDetails(res?.response));
+                setCompany(res?.response)
+            })
+
+            .catch((error) => {
+                if (
+                    error?.response?.status === 401 ||
+                    error?.response?.data?.detail?.includes(
+                        "Given token not valid for any token type"
+                    )
+                ) {
+                    console.log("Token expired, redirecting to login");
+                    //   removeToken();
+                    //   navigate("/loginwithpassword");
+                } else {
+
+                    console.error("An error occurred:", error);
+                }
+            });
+    };
+    const getJobDetails = async () => {
+        const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-api/${id}/`;
+        try {
+            const response = await getJobDetailsApi(url);
+            if (response?.data?.success) {
+                setData(response.data.response)
+                const output = response?.data?.response?.skills?.reduce((acc, item) => {
+                    acc[item.skill_group.skill_group_name] = acc[item.skill_group.skill_group_name]
+                        ? `${acc[item.skill_group.skill_group_name]} ,${item.skill_name}`
+                        : item.skill_name;
+                    return acc;
+                }, {});
+                const formattedOutput = Object.entries(output)
+                setSkills(formattedOutput)
+            }
+        } catch (error) {
+        }
+    }
+    useEffect(() => {
+        getJobDetails()
+        GetCompanyDetails()
+    }, [])
+    console.log(data)
+    // console.log(company)
+    return (
+        <div>
+            <Modal
+                show={show}
+                onHide={handleClose}
+                animation={false}
+                size="lg"
+                backdrop={false}
+                className="jobrevised_mdl"
+            >
+                <Modal.Header closeButton>
+                    <img src={logoIcon} className="me-4" />
+                    <Modal.Title>
+                        {/* Sr. Developer - Python */}
+                        {data?.job_title}
+                        <span className="subtitle">{data?.job_location?.location_name}, {data?.department?.department_name}, {data?.job_type}, {data?.workplace_type}</span>
+                        <button type="button" className="edit-btnicon">
+                            <img src={Edit03} />
+                        </button>
+                    </Modal.Title>
+                    <button type="button" className="view-btnicon" style={{ right: '65px' }}>
+                        <img src={Edit03} />
+                    </button>
+                </Modal.Header>
+                <Modal.Body className="bg-lightgray px-4">
+                    <div className="jobrvsd_head d-flex justify-content-between align-items-center">
+                        <h6>Job Summary</h6>
+                        <ul className="list-inline">
+                            <li>
+                                <a href="#"><img src={Applicants_mail} />Invite Applicants</a>
+                            </li>
+                            <li>
+                                <a href="#"><img src={Downloadprimery} />Download</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <Card className="card-light mt-3">
+                        <Card.Body>
+                            <Card.Title>Company Information</Card.Title>
+                            <div className="compinfo_head">
+                                <span className="complogo">
+                                    {/* <img src={CompLogo} /> */}
+                                    <img src={'https://bittrend.shubansoftware.com' + company?.logo} />
+                                </span>
+                                <div className="compinfo-text">
+                                    <h6>{company?.company_name}, <span className="text-lightgray"> {company?.location?.location_name}, India</span></h6>
+                                    <ul className="list-inline">
+                                        <li>{company?.website_url}</li>
+                                        <li>{company?.industry?.industry_name}</li>
+                                        <li>{company?.company_type}</li>
+                                        <li>{company?.number_of_employees}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <Card.Text className="mt-3" dangerouslySetInnerHTML={{ __html: company?.description }}></Card.Text>
+                        </Card.Body>
+                    </Card>
+                    <Row>
+                        <Col md={6}>
+                            <Card className="card-light mt-3">
+                                <Card.Body>
+                                    <Card.Title>Requirements</Card.Title>
+                                    <table className="reqinfo_table">
+                                        <tr>
+                                            <td>Salary</td>
+                                            <td><strong>
+                                                {data?.currency == "INR" ? 'Rs.' : data?.currency}{data?.min_salary ? data?.min_salary : ''} - {data?.max_salary ? data?.max_salary : ''} {data?.salary_type} <img src={flagODanger} /></strong></td>
+                                            <td><span>{data?.display_salary ? 'Don’t Display' : ''}, {data?.non_negotiable_salary ? 'Non Negotiable' : ''}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Target Hire Date</td>
+                                            <td><strong>{data?.targate_hire_date ? data?.targate_hire_date : 'Immediate'}</strong></td>
+                                            <td><span>{data?.explore_buy_out_option && 'will explore buy out option'}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Experience</td>
+                                            <td><strong>{data?.min_exp} - {data?.max_exp} Years <img src={flagODanger} /></strong></td>
+                                            <td><span>
+                                                {data?.restricted_industries && (
+                                                    <>Industries: {data?.shortlisted_industry?.length ? data?.shortlisted_industry?.map((val) => (
+                                                        <>{val}</>
+                                                    )) : ''}</>
+                                                )}<br />
+                                                {data?.define_current_role && (
+                                                    <>Roles: {data?.restricted_roles?.length ? data?.restricted_roles?.map((val) => (
+                                                        <>{val?.is_like_name}</>
+                                                    )) : ''}</>
+                                                )}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Language</td>
+                                            <td>{data?.no_specific_language_require && (
+                                                <>{data?.read_write_language?.length ? data?.read_write_language?.map((val) => (
+                                                    <strong>{val}</strong>
+                                                )) : ''}</>
+                                            )}
+                                            </td>
+                                            <td><span>{data?.explore_buy_out_option && 'will explore buy out option'}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Education</td>
+                                            <td><strong>{data?.minimum_education ? data?.minimum_education : ''}</strong></td>
+                                            <td><span>{data?.area_of_education?.length ? data?.area_of_education?.map((val) => (
+                                                <>{val}</>
+                                            )) : ''}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Geography</td>
+                                            <td><strong>{data?.preferred_geography?.length ? data?.preferred_geography?.map((val) => (
+                                                <>{val?.location_name}</>
+                                            )) : ''}</strong></td>
+                                            <td><span>{data?.explore_buy_out_option && 'will explore buy out option'}</span></td>
+                                        </tr>
+                                    </table>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                        <Col md={6}>
+                            <Card className="card-light mt-3">
+                                <Card.Body>
+                                    <Card.Title>Skills</Card.Title>
+                                    <ul className="skills_list">
+                                        {skills?.map(([skill_group_name, skill_name], index) => (
+                                            <li><span>{skill_group_name}</span><strong>{skill_name}</strong></li>
+                                        ))}
+                                        {data?.must_have_skills?.map((item) => (
+                                            <li><span>{item?.skill_group?.skill_group_name}</span><strong>{item?.skill_name}<i className="fa fa-star text-primery ms-1"></i></strong></li>
+                                        ))}
+                                        {/* <li><span>Software Languages</span><strong>Java,Python<i className="fa fa-star text-primery ms-1"></i></strong></li>
+                                        <li><span>Art And Design</span><strong>Adobe Photoshop,Figma,<i className="fa fa-star text-primery ms-1"></i> CorelDRAW</strong></li>
+                                        <li><span>Productivity Tools</span><strong>Powerpoint, Excel</strong></li> */}
+                                    </ul>
+                                    <h6 className="text-base mt-4">Custom Questions</h6>
+                                    <ul className="customq_list">
+                                        {/* <li>
+                                            <p>Are there any constraints or considerations we should know about, such as location, work hours, or travel?</p>
+                                            <Form>
+                                                <Form.Check
+                                                    type="checkbox"
+                                                    id="custom-checkbox"
+                                                    label="No"
+                                                    checked
+                                                    className="success-check"
+                                                />
+                                            </Form>
+                                        </li> */}
+                                        {data?.question_job?.map((Val) => (
+                                            <li>
+                                                <p>{Val?.question_title} {Val?.is_mandatory && <i className="fa fa-star text-primery ms-1"></i>}</p>
+                                                <Form>
+                                                    {Val?.questions_answer?.map((val) => (
+                                                        <Form.Check
+                                                            type="checkbox"
+                                                            id="custom-checkbox"
+                                                            checked
+                                                            label={val}
+                                                            className="success-check"
+                                                        />
+                                                    ))}
+                                                </Form>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                    <a href="#" className="btn-scroll">Scroll for more</a>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                    </Row>
+                    <Card className="card-light mt-3 mb-5">
+                        <Card.Body>
+                            <Card.Title>Ideal Behaviour and Personalities</Card.Title>
+                            <div className="bsment_tag">
+                                <h6>Behaviour Assessment</h6>
+                                <div className="taglist">
+                                    {data?.calculation_job?.[0]?.behaviour?.map((item) => (
+                                        <span className="bs_tag">{item?.behaviour_name}</span>
+                                    ))}
+                                    {data?.calculation_job?.[0]?.important_behaviour?.map((item) => (
+                                        <span className="bs_tag">{item?.behaviour_name}<i className="fa fa-star text-primery ms-1"></i></span>
+                                    ))}
+                                    {/* <span className="bs_tag">Accuracy<i className="fa fa-star text-primery ms-1"></i></span>
+                                    <span className="bs_tag">Thoughtfulness</span>
+                                    <span className="bs_tag">Cooperativeness</span>
+                                    <span className="bs_tag">Self Motivation</span>
+                                    <span className="bs_tag">Friendliness<i className="fa fa-star text-primery ms-1"></i></span>
+                                    <span className="bs_tag">Patience</span> */}
+                                </div>
+                            </div>
+                            <Row className="mt-3">
+                                <Col md={3}>
+                                    <div className="perlitymth-card">
+                                        <div className="perlitymth-head">
+                                            <span className="prtmth_icon"><img src={LeaderIcn} /></span>
+                                            <div className="prtmth_title">
+                                                <h6>Leader</h6>
+                                                <span>83%</span>
+                                            </div>
+                                        </div>
+                                        <div className="perlitymth-body">
+                                            <p className="m-0">They are in constant pursuit of innovative solutions and seek new horizons</p>
+                                        </div>
+                                    </div>
+                                </Col>
+                                <Col md={3}>
+                                    <div className="perlitymth-card">
+                                        <div className="perlitymth-head">
+                                            <span className="prtmth_icon"><img src={InfluencerIcn} /></span>
+                                            <div className="prtmth_title">
+                                                <h6>Influencer</h6>
+                                                <span>83%</span>
+                                            </div>
+                                        </div>
+                                        <div className="perlitymth-body">
+                                            <p className="m-0">They are in constant pursuit of innovative solutions and seek new horizons</p>
+                                        </div>
+                                    </div>
+                                </Col>
+                                <Col md={3}>
+                                    <div className="perlitymth-card">
+                                        <div className="perlitymth-head">
+                                            <span className="prtmth_icon"><img src={PioneerIcn} /></span>
+                                            <div className="prtmth_title">
+                                                <h6>Pioneer</h6>
+                                                <span>83%</span>
+                                            </div>
+                                        </div>
+                                        <div className="perlitymth-body">
+                                            <p className="m-0">They are in constant pursuit of innovative solutions and seek new horizons</p>
+                                        </div>
+                                    </div>
+                                </Col>
+                                <Col md={3}>
+                                    <div className="perlitymth-card">
+                                        <div className="perlitymth-head">
+                                            <span className="prtmth_icon"><img src={AchieverIcn} /></span>
+                                            <div className="prtmth_title">
+                                                <h6>Achiever</h6>
+                                                <span>83%</span>
+                                            </div>
+                                        </div>
+                                        <div className="perlitymth-body">
+                                            <p className="m-0">They are in constant pursuit of innovative solutions and seek new horizons</p>
+                                        </div>
+                                    </div>
+                                </Col>
+                            </Row>
+                        </Card.Body>
+                    </Card>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button className="me-3 btn btn-light">
+                        Edit Job
+                    </Button>
+                    <Button className="btn btn-primary">
+                        Post Job
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        </div>
+    )
+}
+
+export default JobSummary
