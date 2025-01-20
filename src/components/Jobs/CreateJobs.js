@@ -707,115 +707,115 @@ const CreateJobs = ({ show, handleClose }) => {
         formdata.append(key, updateFormData[key]);
       }
     }
-    // try {
-    //   const response = await UpdateJobForm(formdata, createUid);
+    try {
+      const response = await UpdateJobForm(formdata, createUid);
 
-    //   if (response.data.status == 200) {
-    //     alert("Job updated successfully!");
-    //     setSelectSkillsData([]);
-    //     setIsUpdated(true)
-    //     setUpdateFormData({
-    //       display_salary: "",
+      if (response.data.status == 200) {
+        alert("Job updated successfully!");
+        setSelectSkillsData([]);
+        setIsUpdated(true)
+        setUpdateFormData({
+          display_salary: "",
 
-    //       max_salary: "",
+          max_salary: "",
 
-    //       min_salary: "",
+          min_salary: "",
 
-    //       currency: "INR",
+          currency: "INR",
 
-    //       salary_type: "",
+          salary_type: "",
 
-    //       salary_price_type: "Salary_range",
+          salary_price_type: "Salary_range",
 
-    //       workplace_type: "",
+          workplace_type: "",
 
-    //       job_type: "",
+          job_type: "",
 
-    //       description_attachment: "",
+          description_attachment: "",
 
-    //       detailed_description: "",
+          detailed_description: "",
 
-    //       number_of_positions: "",
+          number_of_positions: "",
 
-    //       requires_travel: "",
+          requires_travel: "",
 
-    //       job_location: "",
+          job_location: "",
 
-    //       department: "",
+          department: "",
 
-    //       job_benefits: "",
+          job_benefits: "",
 
-    //       is_like: "",
+          is_like: "",
 
-    //       job_title: "",
+          job_title: "",
 
-    //       job_company: "",
+          job_company: "",
 
-    //       non_negotiable_salary: "",
+          non_negotiable_salary: "",
 
-    //       minimum_education: "",
+          minimum_education: "",
 
-    //       area_of_education: "",
+          area_of_education: "",
 
-    //       higher_qualification_preferred: "",
+          higher_qualification_preferred: "",
 
-    //       other_areas_acceptable: "",
+          other_areas_acceptable: "",
 
-    //       year_of_experience_type: "",
+          year_of_experience_type: "",
 
-    //       min_exp: "",
+          min_exp: "",
 
-    //       max_exp: "",
+          max_exp: "",
 
-    //       restricted_industries: "",
+          restricted_industries: "",
 
-    //       define_current_role: "",
+          define_current_role: "",
 
-    //       shortlisted_industry: "",
+          shortlisted_industry: "",
 
-    //       restricted_roles: "",
+          restricted_roles: "",
 
-    //       targate_hire_date: "",
+          targate_hire_date: "",
 
-    //       immediate_hiring: "",
+          immediate_hiring: "",
 
-    //       explore_buy_out_option: "",
+          explore_buy_out_option: "",
 
-    //       spoken_language: "",
+          spoken_language: "",
 
-    //       read_write_language: "",
+          read_write_language: "",
 
-    //       no_specific_language_require: "",
+          no_specific_language_require: "",
 
-    //       preferred_geography: "",
+          preferred_geography: "",
 
-    //       no_specific_location: "",
+          no_specific_location: "",
 
-    //       relocation_cost_covered: "",
+          relocation_cost_covered: "",
 
-    //       skills: "",
+          skills: "",
 
-    //       must_have_skills: "",
+          must_have_skills: "",
 
-    //       job_status: "",
-    //     });
-    //   }
-    // } catch (error) {
-    //   console.log("create eroor------", error);
+          job_status: "",
+        });
+      }
+    } catch (error) {
+      console.log("create eroor------", error);
 
-    //   if (
-    //     error?.response?.status === 401 ||
-    //     error?.response?.data?.detail?.includes(
-    //       "Given token not valid for any token type"
-    //     )
-    //   ) {
-    //     //console.log("Token expired, redirecting to login");
+      if (
+        error?.response?.status === 401 ||
+        error?.response?.data?.detail?.includes(
+          "Given token not valid for any token type"
+        )
+      ) {
+        //console.log("Token expired, redirecting to login");
 
-    //     removeToken();
+        removeToken();
 
-    //     navigate("/loginwithpassword");
-    //   }
-    // }
+        navigate("/loginwithpassword");
+      }
+    }
   };
 
   const handleCustomeBeniftsAdd = () => {

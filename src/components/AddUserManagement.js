@@ -45,7 +45,7 @@ const AddUserManagement = () => {
   const [editUserData, setEditUserData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
-const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const userInfo = useSelector((state) => state.login.loginUserInfo);
   const uid = userInfo?.uid;
@@ -69,10 +69,10 @@ const navigate = useNavigate()
   const handleCheckboxChange = (uid) => {
     setSelectedUids((prevSelectedUids) => {
       if (prevSelectedUids.includes(uid)) {
-        // If UID is already in array, remove it
+        
         return prevSelectedUids.filter((id) => id !== uid);
       } else {
-        // If UID is not in array, add it
+        
         return [...prevSelectedUids, uid];
       }
     });
@@ -131,13 +131,18 @@ const navigate = useNavigate()
         errorData?.email?.[0] && toast.error(errorData.email[0]);
         errorData?.phone_number?.[0] && toast.error(errorData.phone_number[0]);
       }
-      if(error?.response?.status === 401 || error?.response?.data?.detail?.includes( "Given token not valid for any token type")){
+      if (
+        error?.response?.status === 401 ||
+        error?.response?.data?.detail?.includes(
+          "Given token not valid for any token type"
+        )
+      ) {
         //console.log("Token expired, redirecting to login");
         removeToken();
         navigate("/loginwithpassword");
       }
-     }
     }
+  };
 
   const deleteUser = async (uid) => {
     setIsLoading(true);
@@ -206,7 +211,7 @@ const navigate = useNavigate()
       .then((response) => {
         setIsLoading(false);
         // console.log(response.data);
-        if(response.data){
+        if (response.data) {
           setCompanyUserList((prevList) =>
             prevList.map((user) =>
               user.uid === uid ? { ...user, ...formdata } : user
@@ -243,11 +248,11 @@ const navigate = useNavigate()
   const companyUserListAPI = async (searchQuery) => {
     setIsLoading(true);
     const url = searchQuery
-      // ? `https://bittrend.shubansoftware.com/account-api/company-user-list-api/b6cadaab-69bc-4707-8656-2e8573e17547/?search=${searchQuery}`
-      // : `https://bittrend.shubansoftware.com/account-api/company-user-list-api/b6cadaab-69bc-4707-8656-2e8573e17547/`;
+      ? `https://bittrend.shubansoftware.com/account-api/company-user-list-api/b6cadaab-69bc-4707-8656-2e8573e17547/?search=${searchQuery}`
+      : `https://bittrend.shubansoftware.com/account-api/company-user-list-api/b6cadaab-69bc-4707-8656-2e8573e17547/`;
 
-      ? `https://bittrend.shubansoftware.com/account-api/company-user-list-api/${uid}/?search=${searchQuery}`
-      : `https://bittrend.shubansoftware.com/account-api/company-user-list-api/${uid}/`;
+    // ? `https://bittrend.shubansoftware.com/account-api/company-user-list-api/${uid}/?search=${searchQuery}`
+    // : `https://bittrend.shubansoftware.com/account-api/company-user-list-api/${uid}/`;
 
     try {
       const response = await CompanyUserListGetApi(url);
@@ -599,7 +604,6 @@ const navigate = useNavigate()
                               onChange={handlechanges}
                               value={createUserData.email}
                               name="email"
-
                             />
                           </Form.Group>
                         </div>
@@ -613,7 +617,6 @@ const navigate = useNavigate()
                             onChange={handlechanges}
                             value={createUserData.name}
                             name="name"
-
                           />
                         </Form.Group>
                       </td>
@@ -733,6 +736,9 @@ const navigate = useNavigate()
 
 export default AddUserManagement;
 
+
+
+
 ///uppperrr
 
 // dynamic code start below
@@ -808,8 +814,10 @@ export default AddUserManagement;
 //   const companyUserListAPI = async (searchQuery) => {
 //     setIsLoading(true);
 //     const url = searchQuery
-//       ? `https://bittrend.shubansoftware.com/account-api/company-user-list-api/${uid}/?search=${searchQuery}`
-//       : `https://bittrend.shubansoftware.com/account-api/company-user-list-api/${uid}/`;
+//       // ? `https://bittrend.shubansoftware.com/account-api/company-user-list-api/${uid}/?search=${searchQuery}`
+//       // : `https://bittrend.shubansoftware.com/account-api/company-user-list-api/${uid}/`;
+//       ? `https://bittrend.shubansoftware.com/account-api/company-user-list-api/b6cadaab-69bc-4707-8656-2e8573e17547/?search=${searchQuery}`
+//       : `https://bittrend.shubansoftware.com/account-api/company-user-list-api/b6cadaab-69bc-4707-8656-2e8573e17547/`;
 //     try {
 //       const response = await CompanyUserListGetApi(url);
 //       setUsers(response.data.response[0]); // Set the fetched users
@@ -1168,7 +1176,7 @@ export default AddUserManagement;
 //                                 type="email"
 //                                 placeholder="ravi@paperpencilpixel.com"
 //                                 className="sm-fcontrol"
-//                                 value={editedData[user.id]?.email}
+//                                 value={editedData[user.id]?.email || user.email}
 //                               />
 //                             </Form.Group>
 //                           </div>

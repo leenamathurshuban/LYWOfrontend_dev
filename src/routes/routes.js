@@ -4,6 +4,7 @@ import ProtectedRoute from "./protectedRoute"; // Import the ProtectedRoute comp
 import Evalation from "../screens/Evaluation/Evaluation";
 import Jobs from "../screens/Jobs/Jobs";
 import JobsList from "../screens/Jobs/JobList";
+import JobPosts from "../screens/Jobs/JobPosts";
 
 
 export const router = createBrowserRouter([
@@ -63,6 +64,11 @@ export const router = createBrowserRouter([
   {
     path: "/jobslist",
     element: <ProtectedRoute element={<JobsList />} allowAuthenticated={false} />,  // Only allow authenticated users here
+  },
+  {
+    // path: "/JobPosts/:id",
+    path: "/JobPosts",
+    element: <ProtectedRoute element={<JobPosts />} allowAuthenticated={false} />,  // Only allow authenticated users here
   },
   {
     path: "*",

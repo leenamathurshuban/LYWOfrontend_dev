@@ -172,6 +172,11 @@ export const getJobDetailsApi = (url) =>{
   return getJobDetails
 }
 
+export const getPostJobIdApi = (url) =>{
+  const getJobPostId = client.getWithToken(url)
+  return getJobPostId
+}
+
 
 export const UpdateJobForm = (data,id) =>{
   const UpdateJobForm = client.putForUpload(`${JobsUrl.UpdateJobForm}${id}/`,data)

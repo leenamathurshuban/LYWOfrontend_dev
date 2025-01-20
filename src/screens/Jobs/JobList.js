@@ -35,12 +35,15 @@ const JobsList = () => {
 
   const [jobData, setJobData] = useState({
     jobs: [],
-    total_active_job_count : 0
+    total_active_job_count: 0,
   });
-  const [VisiblejobData, setJVisiblejobData] = useState(jobData.jobs.slice(0, 10));
+  const [VisiblejobData, setJVisiblejobData] = useState(
+    jobData.jobs.slice(0, 10)
+  );
   const [count, setCount] = useState(10);
   const [SerachList, setSerachList] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [copyTextSuccess, setTxtCopySuccess] = useState("");
 
   const [filterAppliedCount, setFilterAppliedCount] = useState(0);
   const [filtersList, setFilters] = useState({
@@ -76,12 +79,11 @@ const JobsList = () => {
     try {
       const response = await JobList(url);
       setIsLoading(false);
-      
+
       setJobData({
         jobs: response?.data?.response || [],
-        total_active_job_count : response?.data?.total_active_job_count  || 0 
-       });
-      
+        total_active_job_count: response?.data?.total_active_job_count || 0,
+      });
     } catch (error) {
       setIsLoading(false);
       console.log("response  error-----", error);
@@ -117,8 +119,19 @@ const JobsList = () => {
     setCount(count + 10);
   };
 
+  const handleCopy = (jobLink) => {
+   
+    navigator.clipboard
+      .writeText(jobLink)
+      // .then(() => {
+      //   setTxtCopySuccess("Link copied to clipboard!");
+      // })
+      // .catch((err) => {
+      //   setTxtCopySuccess("Failed to copy text: " + err);
+      // });
+  };
 
-  // console.log("jobData------",JSON.stringify(jobData[0],null,4))
+  
 
   return (
     <>
@@ -197,7 +210,9 @@ const JobsList = () => {
             </Card.Header>
             <Card.Body>
               <div className="joblist_filter d-flex justify-content-between align-items-center">
-                <span className="jobs_count">{jobData?.total_active_job_count} Active Jobs</span>
+                <span className="jobs_count">
+                  {jobData?.total_active_job_count} Active Jobs
+                </span>
                 <Button
                   className="btn btn-light-outline"
                   onClick={() => handleShow("MoreFilterModal")}
@@ -262,7 +277,7 @@ const JobsList = () => {
                         <td>2154</td>
                         <td className="avgscore">12</td>
                         <td>05/11/2024</td>
-                        <td>Active</td>
+                        <td>{item.job_status}</td>
                         <td className="action" style={{ width: "42px" }}>
                           <Dropdown className="action_dropdown">
                             <Dropdown.Toggle
@@ -286,10 +301,20 @@ const JobsList = () => {
                                 <img className="me-2" src={DropD_copy} alt="" />
                                 Clone
                               </Dropdown.Item>
-                              <Dropdown.Item href="#/action-3">
-                                <img className="me-2" src={DropD_link} alt="" />
-                                Copy Link
-                              </Dropdown.Item>
+                              {item?.job_status == "Active" && (
+                                <Dropdown.Item
+                                  href="#/action-3"
+                                  onClick={() => handleCopy(item?.job_link)}
+                                >
+                                  <img
+                                    className="me-2"
+                                    src={DropD_link}
+                                    alt=""
+                                  />
+                                  Copy Link
+                                </Dropdown.Item>
+                              )}
+
                               <Dropdown.Item href="#/action-3">
                                 <img className="me-2" src={DropD_mail} alt="" />
                                 Invite
