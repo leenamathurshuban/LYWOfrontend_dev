@@ -36,8 +36,14 @@ import LeaderIcn from "../../images/icons/Leader-icon.svg";
 import InfluencerIcn from "../../images/icons/Influencer-icon.svg";
 import PioneerIcn from "../../images/icons/Pioneer-icon.svg";
 import flagODanger from "../../images/icons/flag-o-danger.svg";
-import { CloneJobGet, JobList, UpdateMultipleJobApi } from "../../services/provider";
+import printer16 from "../../images/icons/printer-16x16.svg";
+import download16 from "../../images/icons/download-01-16x16.svg";
+import closeI from "../../images/icons/closeI-16x16.svg";
+import pauseCircle16 from "../../images/icons/pause-circle-16x16.svg";
+import { CloneJobGet, getJobDetailsApi, JobList, UpdateMultipleJobApi } from "../../services/provider";
 import { useNavigate } from "react-router-dom";
+import UpdateJobs from "../../components/Jobs/UpdateJobs";
+import { CustomPopup } from "../../components/CustomPopup";
 
 const JobsList = () => {
   const [modal, setModal] = useState({
@@ -45,6 +51,12 @@ const JobsList = () => {
     MoreFilterModal: false,
     createJobRevisedModal: false,
   });
+  const [editModal, setEditModal] = useState({
+    createModal: false,
+    MoreFilterModal: false,
+    createJobRevisedModal: false,
+  });
+  const [data, setData] = useState({})
   const navigate = useNavigate();
 
   const [jobData, setJobData] = useState({
@@ -57,6 +69,7 @@ const JobsList = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [activeIds, setActiveIds] = useState([]);
   const [closeIds, setCloseIds] = useState([]);
+  const [modalText, setModalText] = useState({ showPopup: false, heading: '', body: '', sure: false, sureMulti: false, state: '', item: {} })
 
   const [filterAppliedCount, setFilterAppliedCount] = useState(0);
   const [filtersList, setFilters] = useState({
@@ -75,13 +88,36 @@ const JobsList = () => {
       [modalName]: true,
     }));
   };
-
+  const handleEditShow = (modalName) => {
+    setEditModal((prevModals) => ({
+      ...prevModals,
+      [modalName]: true,
+    }));
+  }
   const handleClose = (modalName) => {
     setModal((prevModals) => ({
       ...prevModals,
       [modalName]: false,
     }));
   };
+  const handleClose1 = (modalName) => {
+    setEditModal((prevModals) => ({
+      ...prevModals,
+      [modalName]: false,
+    }));
+  };
+
+  const getJobDetails = async (id) => {
+    const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-api/${id}/`;
+    try {
+      const response = await getJobDetailsApi(url);
+      if (response?.data?.success) {
+        setData(response.data.response)
+        handleEditShow('createModal');
+      }
+    } catch (error) {
+    }
+  }
 
   const JobListApi = async (SerachList) => {
     setIsLoading(true);
@@ -207,10 +243,21 @@ const JobsList = () => {
     }
   }
 
+  useEffect(() => {
+    if (modalText.sure) {
+      handleCommonEvent(modalText.item, modalText.state)
+    }
+  }, [modalText.sure])
+  useEffect(() => {
+    if (modalText.sureMulti) {
+      handleMultipleStopApp('Application-Stopped')
+    }
+  }, [modalText.sureMulti])
   // console.log("jobData------",JSON.stringify(jobData[0],null,4))
   console.log(VisiblejobData)
   console.log(activeIds)
-
+  // console.log(location)
+  console.log(modalText)
   return (
     <>
       <Sidebar />
@@ -284,11 +331,33 @@ const JobsList = () => {
                     />
                   </InputGroup>
                 </Col>
-                <Col md={4}>
-                  <span onClick={() => handleMultipleStopApp('Application-Stopped')}><img className="me-2" src={DropD_pause} alt="" />Stop New Applications</span>
-                  <span onClick={() => handleMultipleCloseApp('closed')}><img className="me-2" src={DropD_check} alt="" />Close</span>
-                  <span>Print</span>
-                  <span>Download</span>
+                <Col md={9} className="d-flex justify-content-end align-items-center">
+                  <Button className="icon_btnlink" onClick={() => {
+                    if (activeIds.length) {
+                      setModalText({
+                        showPopup: true,
+                        heading: `Do you wish to Proceed?`,
+                        body: `You will no longer receive new applications for the ${activeIds?.length} selected jobs.`,
+                        state: 'Application-Stopped',
+                        item: {}
+                      })
+                    }
+                    // handleMultipleStopApp('Application-Stopped')
+                  }}><img className="me-1" src={pauseCircle16} alt="" />Stop New Applications</Button>
+                  <Button className="icon_btnlink" onClick={() => {
+                    if (activeIds.length) {
+                      setModalText({
+                        showPopup: true,
+                        heading: `Do you wish to Proceed?`,
+                        body: `The ${activeIds?.length} selected jobs will be marked as closed, halting new applications and application assessments.`,
+                        state: 'closed',
+                        item: {}
+                      })
+                    }
+                    // handleMultipleCloseApp('closed')
+                  }}><img className="me-1" src={closeI} alt="" />Close</Button>
+                  <Button className="icon_btnlink"><img className="me-1" src={printer16} alt="" />Print</Button>
+                  <Button className="icon_btnlink"><img className="me-1" src={download16} alt="" />Download</Button>
                 </Col>
               </Row>
             </Card.Header>
@@ -338,7 +407,7 @@ const JobsList = () => {
                       <th style={{ width: "42px" }}></th>
                     </tr>
                   </thead>
-                  <tbody>
+                  {/* <tbody>
                     {VisiblejobData.map((item) => (
                       <tr>
                         <td>
@@ -443,6 +512,143 @@ const JobsList = () => {
                         </td>
                       </tr>
                     ))}
+                  </tbody> */}
+                  <tbody>
+                    {VisiblejobData.map((item) => (
+                      <tr>
+                        <td>
+                          <Form.Check
+                            className="inline-checkbox me-2_5"
+                            name="group1"
+                            type="checkbox"
+                            onChange={() => handleMultiple(item)}
+                            checked={activeIds.includes(item.uid) || closeIds.includes(item.uid)}
+                          />
+                          <span className="font-weight-600">
+                            {item.job_title}
+                          </span>
+                        </td>
+                        <td>{item?.job_location?.location_name}</td>
+                        <td>{item.department.department_name}</td>
+                        <td>{item.job_type}</td>
+                        <td>{item.workplace_type}</td>
+                        <td>{item.number_of_positions}</td>
+                        <td>-</td>
+                        <td className="avgscore">-</td>
+                        <td>{item.posted_on ? item.posted_on : '-'}</td>
+                        <td>{item.job_status}</td>
+                        <td className="action" style={{ width: "42px" }}>
+                          <Dropdown className="action_dropdown">
+                            <Dropdown.Toggle
+                              variant="success"
+                              id="dropdown-basic"
+                              className="btn-transpant"
+                            >
+                              <img src={threeDots} />
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu>
+                              <Dropdown.Item href={""} onClick={() => navigate(`/jobSummary/${item?.uid}`)}>
+                                <img className="me-2" src={DropD_eye} alt="" />
+                                View
+                              </Dropdown.Item>
+                              {(item.job_status == 'Application-Stopped' || item.job_status == 'Draft' || item.job_status == 'Active') && (
+                                <Dropdown.Item href={""} onClick={() => {
+                                  // navigate('/jobs', { state: item?.uid })
+                                  // handleEditShow('createModal');
+                                  getJobDetails(item?.uid)
+                                }}>
+                                  <img className="me-2" src={DropD_edit} alt="" />
+                                  Edit
+                                </Dropdown.Item>
+                              )}
+                              <Dropdown.Item href={""} onClick={() => handleClone(item.uid)}>
+                                <img className="me-2" src={DropD_copy} alt="" />
+                                Clone
+                              </Dropdown.Item>
+                              {item.job_status == 'Active' && (
+                                <>
+                                  <Dropdown.Item href={""} onClick={() => handleCopy(item?.job_link)}>
+                                    <img className="me-2" src={DropD_link} alt="" />
+                                    Copy Link
+                                  </Dropdown.Item>
+                                  <Dropdown.Item href={""} onClick={handleEmailClick}>
+                                    <img className="me-2" src={DropD_mail} alt="" />
+                                    Invite
+                                  </Dropdown.Item>
+                                </>
+                              )}
+                              {(item.job_status == 'Application-Stopped' || item.job_status == 'Active') && (
+                                <Dropdown.Item href={""} onClick={() => {
+                                  setModalText({
+                                    showPopup: true,
+                                    heading: `Do you wish to Proceed?`,
+                                    body: `The jobs will be marked as closed, halting new applications and application assessments.`,
+                                    state: 'closed',
+                                    item: item
+                                  })
+                                  // handleCommonEvent(item, "closed")
+                                }}>
+                                  <img
+                                    className="me-2"
+                                    src={DropD_check}
+                                    alt=""
+                                  />
+                                  Close
+                                </Dropdown.Item>
+                              )}
+                              {item.job_status == 'Application-Stopped' && (
+                                <Dropdown.Item href={""} onClick={() => {
+                                  setModalText({
+                                    showPopup: true,
+                                    heading: `Do you wish to Proceed?`,
+                                    body: `You will start receiving new applications for the jobs.`,
+                                    state: 'Active',
+                                    item: item
+                                  })
+                                  // handleCommonEvent(item, "Active")
+                                }}>
+                                  <img
+                                    className="me-2"
+                                    src={DropD_pause}
+                                    alt=""
+                                  />
+                                  Restart App.
+                                </Dropdown.Item>
+                              )}
+                              {item.job_status == 'Active' && (
+                                <Dropdown.Item href={""} onClick={() => {
+                                  setModalText({
+                                    showPopup: true,
+                                    heading: `Do you wish to Proceed?`,
+                                    body: `You will no longer receive new applications for the jobs.`,
+                                    state: 'Application-Stopped',
+                                    item: item
+                                  })
+                                  // handleCommonEvent(item, "Application-Stopped")
+                                }}>
+                                  <img
+                                    className="me-2"
+                                    src={DropD_pause}
+                                    alt=""
+                                  />
+                                  Stop App.
+                                </Dropdown.Item>
+                              )}
+                              {item.job_status == 'closed' && (
+                                <Dropdown.Item href={""} onClick={() => handleCommonEvent(item, "Draft")}>
+                                  <img
+                                    className="me-2"
+                                    src={DropD_pause}
+                                    alt=""
+                                  />
+                                  Open
+                                </Dropdown.Item>
+                              )}
+                            </Dropdown.Menu>
+                          </Dropdown>
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                   <tfoot>
                     {count < jobData.jobs.length && (
@@ -455,7 +661,7 @@ const JobsList = () => {
                             Load More
                           </Button>
                         </td>
-                        <td colSpan={7} className="text-end pe-3">
+                        <td colSpan={9} className="text-end pe-3">
                           <span className="pagination_count">
                             Showing {VisiblejobData.length} items
                           </span>
@@ -479,9 +685,19 @@ const JobsList = () => {
             show={modal.createModal}
             handleClose={() => handleClose("createModal")}
           />
+          {editModal.createModal && (
+            <UpdateJobs
+              show={editModal.createModal}
+              handleClose={() => handleClose1("createModal")}
+              editData={data}
+            />
+          )}
+          {modalText?.showPopup && (
+            <CustomPopup show={modalText?.showPopup} handleClose={() => setModalText({ ...modalText, showPopup: false })} modalText={modalText} setModalText={setModalText} />
+          )}
         </Container>
-       
-       {/* create job revised 
+
+        {/* create job revised 
         <Modal 
         show={show}
         onHide={handleClose}

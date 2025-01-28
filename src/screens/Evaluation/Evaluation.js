@@ -382,7 +382,7 @@ const Evalation = () => {
                           Load More
                         </Button>
                       </td>
-                      <td colSpan={7} className="text-end pe-3">
+                      <td colSpan={9} className="text-end pe-3">
                         <span className="pagination_count">
                           Showing 10 items
                         </span>
@@ -2009,3 +2009,4 @@ export default Evalation;
 // };
 
 // export default Evalation;
+

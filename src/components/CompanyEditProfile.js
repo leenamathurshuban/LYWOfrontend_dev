@@ -551,7 +551,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                   </p>
                                 )}
 
-                                <Form.Group className="col-md-12 mb-3">
+                                <Form.Group className="col-md-12 mb-3 relative">
                                   <Form.Label>Industry</Form.Label>
                                   <Form.Control
                                     type="text"
@@ -671,7 +671,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                   </Form.Select>
                                 </Form.Group>
 
-                                <Form.Group className="mb-3">
+                                <Form.Group className="mb-3 relative">
                                   <Form.Label>Headquarter</Form.Label>
                                   <Form.Control
                                     type="text"
@@ -927,3 +927,4 @@ const radioButtonStyle = {
 };
 
 export default CompanyEditProfile;
+

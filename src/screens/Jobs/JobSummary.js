@@ -10,18 +10,24 @@ import LeaderIcn from "../../images/icons/Leader-icon.svg";
 import InfluencerIcn from "../../images/icons/Influencer-icon.svg";
 import PioneerIcn from "../../images/icons/Pioneer-icon.svg";
 import flagODanger from "../../images/icons/flag-o-danger.svg";
-import { GetcompanyDetailsApi, getJobDetailsApi } from '../../services/provider';
-import { useParams } from 'react-router-dom';
+import { GetcompanyDetailsApi, getJobDetailsApi, UpdateMultipleJobApi } from '../../services/provider';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { BehaviourResponse } from '../../utils/behaviour';
+import UpdateJobs from '../../components/Jobs/UpdateJobs';
 
 const JobSummary = () => {
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const userInfo = useSelector((state) => state?.login?.loginUserInfo);
+    const uid = userInfo?.default_company?.uid;
     const [show, setShow] = useState(true);
     const [data, setData] = useState({})
     const [company, setCompany] = useState({})
     const [skills, setSkills] = useState()
-    const { id } = useParams();
-    const userInfo = useSelector((state) => state.login.loginUserInfo);
-    const uid = userInfo?.default_company?.uid;
+    const [behaviour, setBehaviour] = useState([])
+
     const handleClose = (modalName) => {
         setShow(false)
     };
@@ -29,7 +35,7 @@ const JobSummary = () => {
         // handleShow();
         GetcompanyDetailsApi(uid)
             .then((res) => {
-                console.log("dispatch calll", res?.response);
+                // console.log("dispatch calll", res?.response);
                 // dispatch(setCompanyProfileDetails(res?.response));
                 setCompany(res?.response)
             })
@@ -64,6 +70,8 @@ const JobSummary = () => {
                 }, {});
                 const formattedOutput = Object.entries(output)
                 setSkills(formattedOutput)
+                const filteredArray = BehaviourResponse.filter((item) => response.data.response.calculation_job[0].personality_data[item.behaviour_type_name]);
+                setBehaviour(filteredArray)
             }
         } catch (error) {
         }
@@ -72,8 +80,39 @@ const JobSummary = () => {
         getJobDetails()
         GetCompanyDetails()
     }, [])
+    const handlePostJob = async () => {
+        const formData = new FormData();
+        formData.append('job_uids', JSON.stringify([id]))
+        formData.append('job_status', 'Active')
+        const res = await UpdateMultipleJobApi(formData)
+        if (res.data.success) {
+            navigate('/jobs')
+        }
+    }
+    //<------------------------------------Edit job--------------------------------------------->
+    const [modal, setModal] = useState({
+        createModal: false,
+        MoreFilterModal: false,
+        createJobRevisedModal: false,
+    });
+    const handleShow = (modalName) => {
+        setModal((prevModals) => ({
+            ...prevModals,
+            [modalName]: true,
+        }));
+        setShow(false)
+    };
+    const handleClose1 = (modalName) => {
+        setModal((prevModals) => ({
+            ...prevModals,
+            [modalName]: false,
+        }));
+        setShow(true)
+    };
+    //<-----------------------------------End of code--------------------------------------------->
     console.log(data)
-    // console.log(company)
+    console.log(behaviour)
+    console.log(location)
     return (
         <div>
             <Modal
@@ -84,19 +123,23 @@ const JobSummary = () => {
                 backdrop={false}
                 className="jobrevised_mdl"
             >
-                <Modal.Header closeButton>
+                <Modal.Header>
                     <img src={logoIcon} className="me-4" />
                     <Modal.Title>
                         {/* Sr. Developer - Python */}
                         {data?.job_title}
                         <span className="subtitle">{data?.job_location?.location_name}, {data?.department?.department_name}, {data?.job_type}, {data?.workplace_type}</span>
-                        <button type="button" className="edit-btnicon">
+                        {location?.state && (
+                            <button type="button" className="edit-btnicon">
+                                <img src={Edit03} />
+                            </button>
+                        )}
+                    </Modal.Title>
+                    {location?.state && (
+                        <button type="button" className="view-btnicon" style={{ right: '65px' }}>
                             <img src={Edit03} />
                         </button>
-                    </Modal.Title>
-                    <button type="button" className="view-btnicon" style={{ right: '65px' }}>
-                        <img src={Edit03} />
-                    </button>
+                    )}
                 </Modal.Header>
                 <Modal.Body className="bg-lightgray px-4">
                     <div className="jobrvsd_head d-flex justify-content-between align-items-center">
@@ -154,7 +197,7 @@ const JobSummary = () => {
                                             <td><span>
                                                 {data?.restricted_industries && (
                                                     <>Industries: {data?.shortlisted_industry?.length ? data?.shortlisted_industry?.map((val) => (
-                                                        <>{val}</>
+                                                        <>{val?.industry_name}</>
                                                     )) : ''}</>
                                                 )}<br />
                                                 {data?.define_current_role && (
@@ -167,7 +210,7 @@ const JobSummary = () => {
                                             <td>Language</td>
                                             <td>{data?.no_specific_language_require && (
                                                 <>{data?.read_write_language?.length ? data?.read_write_language?.map((val) => (
-                                                    <strong>{val}</strong>
+                                                    <strong>{val?.language_name}</strong>
                                                 )) : ''}</>
                                             )}
                                             </td>
@@ -177,7 +220,7 @@ const JobSummary = () => {
                                             <td>Education</td>
                                             <td><strong>{data?.minimum_education ? data?.minimum_education : ''}</strong></td>
                                             <td><span>{data?.area_of_education?.length ? data?.area_of_education?.map((val) => (
-                                                <>{val}</>
+                                                <>{val?.qualification_name}</>
                                             )) : ''}</span></td>
                                         </tr>
                                         <tr>
@@ -263,21 +306,23 @@ const JobSummary = () => {
                                 </div>
                             </div>
                             <Row className="mt-3">
-                                <Col md={3}>
-                                    <div className="perlitymth-card">
-                                        <div className="perlitymth-head">
-                                            <span className="prtmth_icon"><img src={LeaderIcn} /></span>
-                                            <div className="prtmth_title">
-                                                <h6>Leader</h6>
-                                                <span>83%</span>
+                                {behaviour?.map((Val) => (
+                                    <Col md={3}>
+                                        <div className="perlitymth-card">
+                                            <div className="perlitymth-head">
+                                                <span className="prtmth_icon"><img src={LeaderIcn} /></span>
+                                                <div className="prtmth_title">
+                                                    <h6>{Val?.behaviours_name}</h6>
+                                                    <span>83%</span>
+                                                </div>
+                                            </div>
+                                            <div className="perlitymth-body">
+                                                <p className="m-0">{Val?.behaviour_desctiption}</p>
                                             </div>
                                         </div>
-                                        <div className="perlitymth-body">
-                                            <p className="m-0">They are in constant pursuit of innovative solutions and seek new horizons</p>
-                                        </div>
-                                    </div>
-                                </Col>
-                                <Col md={3}>
+                                    </Col>
+                                ))}
+                                {/* <Col md={3}>
                                     <div className="perlitymth-card">
                                         <div className="perlitymth-head">
                                             <span className="prtmth_icon"><img src={InfluencerIcn} /></span>
@@ -318,20 +363,29 @@ const JobSummary = () => {
                                             <p className="m-0">They are in constant pursuit of innovative solutions and seek new horizons</p>
                                         </div>
                                     </div>
-                                </Col>
+                                </Col> */}
                             </Row>
                         </Card.Body>
                     </Card>
                 </Modal.Body>
+                {/* {location.state && ( */}
                 <Modal.Footer>
-                    <Button className="me-3 btn btn-light">
+                    <Button className="me-3 btn btn-light" onClick={() => handleShow("createModal")} >
                         Edit Job
                     </Button>
-                    <Button className="btn btn-primary">
+                    <Button className="btn btn-primary" onClick={handlePostJob}>
                         Post Job
                     </Button>
                 </Modal.Footer>
+                {/* )} */}
             </Modal>
+            {modal.createModal && (
+                <UpdateJobs
+                    show={modal.createModal}
+                    handleClose={() => handleClose1("createModal")}
+                    editData={data}
+                />
+            )}
         </div>
     )
 }
