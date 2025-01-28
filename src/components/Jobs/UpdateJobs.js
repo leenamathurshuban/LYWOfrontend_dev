@@ -4,7 +4,7 @@ import threeLayers from "../../images/icons/layers-three-01.svg";
 import axios from "axios";
 
 import ReactQuill from "react-quill";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   createCustomeBenifitsApi,
   CreateJobDepartment,
@@ -16,19 +16,21 @@ import {
 } from "../../services/provider";
 import CreateJobsRevised from "./CreateJobsRevised";
 import { removeToken } from "../../helpers/helper";
+import UpdateJobsRevised from "./UpdateJobsRevised";
 
-const CreateJobs = ({ show, handleClose }) => {
+const UpdateJobs = ({ show, handleClose, editData }) => {
+  const { id } = useParams();
   const [createFormData, setCreateFormData] = useState({
-    jobTitle: "",
-    jobType: "",
-    workPlaceType: "",
-    noOfPosition: "",
+    jobTitle: editData?.job_title,
+    jobType: editData?.job_type,
+    workPlaceType: editData?.workplace_type,
+    noOfPosition: editData?.number_of_positions,
   });
 
-  const [travelOption, setTravelOption] = useState("");
+  const [travelOption, setTravelOption] = useState(editData?.requires_travel);
 
-  const [isLike, setIsLike] = useState("");
-  const [isLikeUid, setIsLikeUid] = useState([]);
+  const [isLike, setIsLike] = useState(editData?.is_like?.[0]?.is_like_name);
+  const [isLikeUid, setIsLikeUid] = useState(editData?.is_like?.map((Val) => Val?.uid));
   const [isLikeDropdown, setIsLikeDropdown] = useState(false);
   const [isLikeData, setIsLikeData] = useState([]);
   const [isDisabledTarget, setIsDisabledTarget] = useState(true);
@@ -38,15 +40,15 @@ const CreateJobs = ({ show, handleClose }) => {
   const [isHideLocation, setIsHideLLocation] = useState(true);
   const [isSpecificLanguareRequired, setIsSpecificLanguareRequired] =
     useState(true);
-  const [department, setDepartment] = useState("");
-  const [location, setLocation] = useState("");
-  const [description, setDescription] = useState("");
-  const [departmentUid, setDepartmentUid] = useState("");
-  const [locationUid, setLocationUid] = useState("");
+  const [department, setDepartment] = useState(editData?.department?.department_name);
+  const [location, setLocation] = useState(editData?.job_location?.location_name);
+  const [description, setDescription] = useState(editData?.detailed_description);
+  const [departmentUid, setDepartmentUid] = useState(editData?.department?.uid);
+  const [locationUid, setLocationUid] = useState(editData?.job_location?.uid);
   const [departmentData, setDepartmentData] = useState([]);
   const [locationData, setLocationData] = useState([]);
-  const [benefitsData, setBenefitsData] = useState([]);
-  const [SelectBenefitsData, setSelectBenefitsData] = useState([]);
+  const [benefitsData, setBenefitsData] = useState(editData?.job_benefits);
+  const [SelectBenefitsData, setSelectBenefitsData] = useState(editData?.job_benefits?.map((Val) => Val?.uid));
   const [addCustomeBenifits, setAddCustomeBenifits] = useState([]);
   const [customValue, setCustomValue] = useState("");
   const [isDepartmentDropdown, setIsDepartmentDropdown] = useState(false);
@@ -193,6 +195,7 @@ const CreateJobs = ({ show, handleClose }) => {
     important_behaviour: "",
     selected_behaviour: "",
   });
+  // const [updateFormData, setUpdateFormData] = useState({})
   const [isUpdated, setIsUpdated] = useState(false);
   //Editor states
   const [fileUrl, setFileUrl] = useState(null);
@@ -316,13 +319,19 @@ const CreateJobs = ({ show, handleClose }) => {
     }
   };
   const handleUpdateFormData = (e) => {
-    const { name, value } = e.target;
-
-    setUpdateFormData({
-      ...updateFormData,
-
-      [name]: value,
-    });
+    const { name, value, checked } = e.target;
+    debugger
+    if (e.target.type === 'checkbox') {
+      setUpdateFormData({
+        ...updateFormData,
+        [name]: checked,
+      });
+    } else {
+      setUpdateFormData({
+        ...updateFormData,
+        [name]: value,
+      });
+    }
   };
   const handleLike = (e) => {
     setIsLike(e.target.value);
@@ -512,15 +521,21 @@ const CreateJobs = ({ show, handleClose }) => {
       });
   };
   const handleBenifts = (benefititem) => {
-    setSelectBenefitsData((prevState) =>
-      prevState.includes(benefititem)
-        ? prevState.filter((item2) => item2 !== benefititem)
-        : [...prevState, benefititem]
-    );
+    if (!SelectBenefitsData.includes(benefititem.uid)) {
+      setSelectBenefitsData([...SelectBenefitsData, benefititem?.uid])
+    } else {
+      const newArray = SelectBenefitsData.filter((item) => item !== benefititem?.uid)
+      setSelectBenefitsData(newArray)
+    }
+    // setSelectBenefitsData((prevState) =>
+    //   prevState.includes(benefititem)
+    //     ? prevState.filter((item2) => item2 !== benefititem)
+    //     : [...prevState, benefititem]
+    // );
   };
-  const getSelectedBenefitUids = () => {
-    return SelectBenefitsData.map((item) => item.uid);
-  };
+  // const getSelectedBenefitUids = () => {
+  //   return SelectBenefitsData?.map((item) => item.uid);
+  // };
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       isLikeHandleApi(isLike);
@@ -584,12 +599,12 @@ const CreateJobs = ({ show, handleClose }) => {
     setIsLocationDropdown(false);
   };
 
-  const handleCreateForm = async () => {
+  const handleUpdateData = async () => {
     //handleJobModalShow("createJobRevisedModal");
     if (CheckValidation()) {
       const textWithHtmlTags = description;
       const descriptionWithoutTags = textWithHtmlTags.replace(/<[^>]*>/g, "");
-      const selectedUids = getSelectedBenefitUids();
+      // const selectedUids = getSelectedBenefitUids();
 
       const formdata = new FormData();
       formdata.append("job_title", createFormData.jobTitle);
@@ -601,9 +616,9 @@ const CreateJobs = ({ show, handleClose }) => {
       formdata.append("detailed_description", descriptionWithoutTags);
       formdata.append("job_type", createFormData.jobType);
       formdata.append("workplace_type", createFormData.workPlaceType);
-      formdata.append("job_benefits", JSON.stringify(selectedUids));
+      formdata.append("job_benefits", JSON.stringify(SelectBenefitsData));
       try {
-        const response = await CreateJobForm(formdata);
+        const response = await UpdateJobForm(formdata, id ? id : editData?.uid);
         if (response.data.status == 200) {
           setCreateJobUid(response.data.response.uid);
           const createJobuid = response.data.response.uid;
@@ -630,42 +645,47 @@ const CreateJobs = ({ show, handleClose }) => {
 
     for (const key in updateFormData) {
       console.log(key === "selected_behaviour", key === "important_behaviour", hasSelectedAndImportant, key)
-      if (key === "area_of_education" && badges.length > 0) {
-        let uids = badges.map((item) => item?.uid);
+      if (key === "area_of_education" && badges?.length > 0) {
+        let uids = badges?.map((item) => item?.uid);
 
         formdata.append(key, JSON.stringify(uids));
       } else if (
         key === "shortlisted_industry" &&
         IndustriesBadges.length > 0
       ) {
-        let uids = IndustriesBadges.map((item) => item?.uid);
+        let uids = IndustriesBadges?.map((item) => item?.uid);
 
         formdata.append(key, JSON.stringify(uids));
       } else if (
         key === "restricted_roles" &&
-        restrictedRoleBadges.length > 0
+        restrictedRoleBadges?.length > 0
       ) {
-        let uids = restrictedRoleBadges.map((item) => item?.uid);
+        let uids = restrictedRoleBadges?.map((item) => item?.uid);
 
         formdata.append(key, JSON.stringify(uids));
       } else if (key === "spoken_language" && spokenLanguageBadges.length > 0) {
-        let uids = spokenLanguageBadges.map((item) => item?.uid);
+        let uids = spokenLanguageBadges?.map((item) => item?.uid);
 
         formdata.append(key, JSON.stringify(uids));
       } else if (key === "read_write_language" && rdnwBadges.length > 0) {
-        let uids = rdnwBadges.map((item) => item?.uid);
+        let uids = rdnwBadges?.map((item) => item?.uid);
 
         formdata.append(key, JSON.stringify(uids));
       } else if (key === "preferred_geography" && locationBadges.length > 0) {
-        let uids = locationBadges.map((item) => item?.uid);
+        let uids = locationBadges?.map((item) => item?.uid);
 
         formdata.append(key, JSON.stringify(uids));
-      } else if (key === "skills" && SelectSkillsData.length > 0) {
-        let skillID = SelectSkillsData?.map((item) => item?.uid) // Extract skill_name values
-          ?.filter((skill) => skill !== "") // Filter out empty strings
-          ?.join(",");
+      }
+      // else if (key === "skills" && SelectSkillsData.length > 0) {
+      //   let skillID = SelectSkillsData?.map((item) => item?.uid) // Extract skill_name values
+      //     ?.filter((skill) => skill !== "") // Filter out empty strings
+      //     ?.join(",");
 
-        formdata.append("skill_name", skillID);
+      //   formdata.append("skill_name", skillID);
+      // }
+      else if (key === "skills" && SelectSkillsData.length > 0) {
+        let skillID = SelectSkillsData?.map((item) => item?.uid) // Extract skill_name values
+        formdata.append("skills", JSON.stringify(skillID));
       } else if ((key === "selected_behaviour" || key === "important_behaviour") && hasSelectedAndImportant) {
         let selectedBehaviourUids = [];
         let importantBehaviourUids = [];
@@ -694,9 +714,10 @@ const CreateJobs = ({ show, handleClose }) => {
         key === "display_salary" ||
         (key === "explore_buy_out_option" && updateFormData[key] !== "")
       ) {
-        if (updateFormData[key] === "on") {
-          formdata.append(key, "True");
-        }
+        // debugger
+        // if (updateFormData[key] === true) {
+        formdata.append(key, updateFormData[key]);
+        // }
       } else if (key === "restricted_industries") {
         if (!ishideIndustries) {
           formdata.append(key, "False");
@@ -735,7 +756,7 @@ const CreateJobs = ({ show, handleClose }) => {
       const response = await UpdateJobForm(formdata, createUid);
 
       if (response.data.status == 200) {
-        alert("Job updated successfully!");
+        // alert("Job updated successfully!");
         setSelectSkillsData([]);
         setIsUpdated(true)
         setUpdateFormData({
@@ -823,6 +844,7 @@ const CreateJobs = ({ show, handleClose }) => {
 
           job_status: "",
         });
+        navigate(`/jobSummary/${response?.data?.response?.uid}`, { state: 'edit' })
       }
     } catch (error) {
       console.log("create eroor------", error);
@@ -880,7 +902,9 @@ const CreateJobs = ({ show, handleClose }) => {
   };
 
   const isNextButtonDisable = !createFormData.jobTitle;
-
+  console.log('==========>', editData)
+  console.log(createFormData, isLikeUid)
+  console.log(SelectBenefitsData)
   return (
     <Offcanvas
       show={show}
@@ -892,11 +916,11 @@ const CreateJobs = ({ show, handleClose }) => {
       <Offcanvas.Header closeButton>
         <Offcanvas.Title>
           <img src={threeLayers} alt="" />
-          Create a New Job
+          {createFormData.jobTitle}
         </Offcanvas.Title>
       </Offcanvas.Header>
       <Offcanvas.Body>
-        <Form className="row" onSubmit={handleCreateForm} autocomplete="off">
+        <Form className="row" onSubmit={handleUpdateData} autocomplete="off">
           <Form.Group className="col-md-12 mb-2" controlId="jobTitle">
             <Form.Label>Job Title</Form.Label>
             <Form.Control
@@ -913,7 +937,7 @@ const CreateJobs = ({ show, handleClose }) => {
             </Form.Control.Feedback> */}
           </Form.Group>
 
-          <Form.Group className="col-md-6 mb-2 relative" controlId="isLike">
+          <Form.Group className="col-md-6 mb-2" controlId="isLike">
             <Form.Label>Is Like</Form.Label>
             <Form.Control
               type="text"
@@ -924,21 +948,21 @@ const CreateJobs = ({ show, handleClose }) => {
 
             <p className="m-0 error">{errors.isLike}</p>
 
-            {isLikeDropdown && isLikeData.length > 0 && (
+            {isLikeDropdown && isLikeData?.length > 0 && (
               <div className="ctm_dropdown ct_scrollbar">
                 <ul>
-                  {isLikeData.map((item) => (
+                  {isLikeData?.map((item) => (
                     <li
-                      key={item.is_like_name}
+                      key={item?.is_like_name}
                       onClick={() => handleSelectedLikeItems(item)}
                     >
-                      {item.is_like_name}
+                      {item?.is_like_name}
                     </li>
                   ))}
                 </ul>
               </div>
             )}
-            {isLikeDropdown && isLikeData.length === 0 && (
+            {isLikeDropdown && isLikeData?.length === 0 && (
               <ul>
                 <li>No data found</li>
               </ul>
@@ -961,7 +985,7 @@ const CreateJobs = ({ show, handleClose }) => {
             )}
           </Form.Group>
 
-          <Form.Group className="col-md-6 mb-2 relative" controlId="department">
+          <Form.Group className="col-md-6 mb-2" controlId="department">
             <Form.Label>Department</Form.Label>
             <Form.Control
               type="text"
@@ -972,28 +996,28 @@ const CreateJobs = ({ show, handleClose }) => {
 
             <span className="error">{errors.department}</span>
 
-            {isDepartmentDropdown && departmentData.length > 0 && (
+            {isDepartmentDropdown && departmentData?.length > 0 && (
               <div className="ctm_dropdown ct_scrollbar">
                 <ul>
-                  {departmentData.map((item) => (
+                  {departmentData?.map((item) => (
                     <li
-                      key={item.department_name}
+                      key={item?.department_name}
                       onClick={() => handleDepartmentItem(item)}
                     >
-                      {item.department_name}
+                      {item?.department_name}
                     </li>
                   ))}
                 </ul>
               </div>
             )}
-            {isDepartmentDropdown && departmentData.length === 0 && (
+            {isDepartmentDropdown && departmentData?.length === 0 && (
               <ul>
                 <li>No data found</li>
               </ul>
             )}
           </Form.Group>
 
-          <Form.Group className="col-md-6 mb-2 relative" controlId="location">
+          <Form.Group className="col-md-6 mb-2" controlId="location">
             <Form.Label>Location</Form.Label>
             <Form.Control
               type="text"
@@ -1004,10 +1028,10 @@ const CreateJobs = ({ show, handleClose }) => {
 
             <span className="error">{errors.location}</span>
 
-            {isLocationDropdown && locationData.length > 0 && (
+            {isLocationDropdown && locationData?.length > 0 && (
               <div className="ctm_dropdown ct_scrollbar">
                 <ul>
-                  {locationData.map((item) => (
+                  {locationData?.map((item) => (
                     <li
                       key={item?.location_name}
                       onClick={() => handleLocationItems(item)}
@@ -1117,7 +1141,7 @@ const CreateJobs = ({ show, handleClose }) => {
                 />
 
                 <div>
-                  <p className="m-0"
+                  <p
                     style={{
                       fontSize: 12,
                       color: errorMessage ? "red" : "black",
@@ -1193,19 +1217,18 @@ const CreateJobs = ({ show, handleClose }) => {
                 <span
                   key={item}
                   onClick={() => handleBenifts(item)}
-                  className={`badge-gray ${SelectBenefitsData.includes(item) ? "active" : ""
+                  className={`badge-gray ${SelectBenefitsData.includes(item?.uid) ? "active" : ""
                     }`}
                 >
                   {item.benefit_name}
                 </span>
               ))}
-              {addCustomeBenifits.map((item, index) => (
+              {addCustomeBenifits?.map((item, index) => (
                 <div className="input-container position-relative">
                   <input
                     value={customValue}
                     onChange={(e) => setCustomValue(e.target.value)}
-                    className={`badge-gray ${SelectBenefitsData.includes(item) ? "active" : ""
-                      }`}
+                    className={`badge-gray ${SelectBenefitsData.includes(item) && "active"}`}
                     placeholder="Add Custom"
                     onBlur={() => handleBlur(customValue, index)}
                   />
@@ -1236,13 +1259,13 @@ const CreateJobs = ({ show, handleClose }) => {
         <Button
           variant="primary"
           disabled={isNextButtonDisable}
-          onClick={handleCreateForm}
+          onClick={handleUpdateData}
         >
           Next
         </Button>
       </div>
       {modal.createJobRevisedModal && (
-        <CreateJobsRevised
+        <UpdateJobsRevised
           show={modal.createJobRevisedModal}
           handleClose={() => handleJobModalClose("createJobRevisedModal")}
           handleFormData={handleUpdateFormData}
@@ -1288,11 +1311,12 @@ const CreateJobs = ({ show, handleClose }) => {
           setSelectSkillsData={setSelectSkillsData}
           behaviours={behaviours}
           setBehaviours={setBehaviours}
+          updateFormData={updateFormData}
+          setUpdateFormData={setUpdateFormData}
         />
       )}
     </Offcanvas>
   );
 };
 
-export default CreateJobs;
-
+export default UpdateJobs;

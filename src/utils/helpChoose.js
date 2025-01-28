@@ -1,0 +1,22 @@
+export const IndividualEffort = [
+    { key: 'Self Motivation', des: 'Self Motivation is an ideal behaviour for a person when they are required to start things on their own and set their own goals and standards. This typically is necessary when change and improvement is needed but the direction is not very well defined.' },
+    { key: 'Efficiency', des: 'While efficiency is essential for all roles, it should not be picked just because deadlines should be met by the hired person. Choose this when planning, optimization, and streamlining to increase or maintain productivity are the key responsibilities of the role' },
+    { key: 'Independence', des: 'This behavior is essential when an individual must navigate uncertain or challenging situations  without clear guidance. It is particularly relevant in leadership or independent contributor roles, where making autonomous decisions is a regular requirement.' },
+]
+
+export const InterpersonalRelations = [
+    { key: 'Friendliness', des: `This behaviour is crucial for promoting collaboration and teamwork, fostering a supportive and inclusive environment that thrives on strong interpersonal relationships. It's not just about being nice; it's about promoting openness through a fair and collaborative approach.` },
+    { key: 'Self Confidence', des: 'This behaviour is recommended in roles that require individuals to trust their judgement and capabilities, enabling them to lead and inspire others with conviction and clarity. It is particularly desirable in roles where the individual is relied upon for decision-making for the entire team.' },
+    { key: 'Enthusiasm', des: 'Enthusiasm goes beyond being high-spirited. It is most needed when the person in this role needs to promote inquisitiveness, interest and passion in the environment around them by their own heightened interest in the work and achieving goals and outcomes.' },
+]
+
+export const Consistency = [
+    { key: 'Patience', des: 'This behaviour is needed in the following scenarios: first, when the role requires individuals to tolerate delays and obstacles calmly on a daily basis; and second, when the role involves dealing with repetitive tasks or waiting for long-term outcomes.' },
+    { key: 'Persistence', des: 'This is a necessary behaviour for roles which need to deal with delays and difficulties regularly and require that the person actively persists in overcoming them until the goals are achieved. Giving up in the face of challenges is not an option in such roles.' },
+    { key: 'Thoughtfulness', des: 'Some roles require foresight, long term planning, impact assessment. A desired behaviour in persons who need to anticipate all contingencies, risks and benefits before making crucial decisions or recommendations and should try and avoid an unexpected outcome at all costs.' },
+]
+export const Systematic = [
+    { key: 'Accuracy', des: 'Requirement for working without errors should not be the reason for choosing this behaviour. This should be considered when the margin for error in judgement, or decisions is very low and where avoiding mistakes is more important than considerations of time, cost, or other factors.' },
+    { key: 'Sensitivity', des: 'This behaviour is key in roles where understanding and reacting to the subtle cues that are not easily apparent is required. This is not just about interpersonal skills and extends to being able to successfully navigate complex environments with a lot of inter related parts.' },
+    { key: 'Cooperativeness', des: 'Ideal when a role demands effective collaboration across different teams. It involves actively seeking input from others, integrating diverse perspectives, resolving conflicts by finding common ground and willingness to compromise when needed for harmony and productivity.' },
+]
