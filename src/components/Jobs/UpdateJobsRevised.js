@@ -586,8 +586,8 @@ const UpdateJobsRevised = ({
 
         setComponents(updatedComponents);
     };
-
-    const handlesubSkillAdd = () => {
+    const [selectedIndex, setSelectedIndex] = useState([])
+    const handlesubSkillAdd = (index) => {
         const CreateCustomLabel = {
             created_at: "",
             id: 0,
@@ -596,7 +596,14 @@ const UpdateJobsRevised = ({
             uid: "",
             updated_at: "",
         };
-        setAddSubSkill((prev) => [...prev, CreateCustomLabel]);
+        if (!selectedIndex.includes(index)) {
+            setSelectedIndex([index])
+            setAddSubSkill([CreateCustomLabel])
+        } else if (selectedIndex.includes(index)) {
+            setSelectedIndex([...selectedIndex])
+            setAddSubSkill((prev) => [...prev, CreateCustomLabel]);
+        }
+
     };
 
     const handleAddSkillGroup = () => {
@@ -644,7 +651,7 @@ const UpdateJobsRevised = ({
         }
     };
 
-    const handleBlur = async (value,item) => {
+    const handleBlur = async (value, item) => {
         const formdata = new FormData();
         formdata.append("skill_group", item?.uid);
         formdata.append("skill_name", value);
@@ -676,7 +683,7 @@ const UpdateJobsRevised = ({
             const response = await getSkillGroupDetailsApi(url);
             if (response) {
                 setShowSkillList(false);
-                setSkillGroupsData([...skillGroupData, response.data.response]);
+                setSkillGroupsData([...skillGroupData, response.data.response.group_skill]);
                 setskillngroupList([]);
             }
         } catch (error) {
@@ -830,11 +837,25 @@ const UpdateJobsRevised = ({
             }
         }
     }
-    function cusQuestion(){
-        if(components?.[0]?.is_mandatory && components?.[0]?.job_question && components?.[0]?.question_option?.part1?.length>0 && components?.[0]?.question_title && 
-            components?.[0]?.questions_answer?.length>0 && components?.[0]?.quiz_type
-        ){
+    function cusQuestion() {
+        if (components?.[0]?.is_mandatory && components?.[0]?.job_question && components?.[0]?.question_option?.part1?.length > 0 && components?.[0]?.question_title &&
+            components?.[0]?.questions_answer?.length > 0 && components?.[0]?.quiz_type
+        ) {
             return 'active'
+        }
+    }
+    function setClassForSalary() {
+        if (updateFormData?.salary_price_type) {
+            if (updateFormData?.salary_price_type == 'Salary-range' && updateFormData?.min_salary &&
+                updateFormData?.max_salary && updateFormData?.currency && updateFormData?.salary_type) {
+                return 'active'
+            } else if (updateFormData?.salary_price_type == 'Min-range' && updateFormData?.min_salary &&
+                 updateFormData?.currency && updateFormData?.salary_type) {
+                return 'active'
+            } else if (updateFormData?.salary_price_type == 'Max-range' && updateFormData?.max_salary
+                && updateFormData?.currency && updateFormData?.salary_type) {
+                return 'active'
+            }
         }
     }
     // console.log(activeBehaviour)
@@ -846,7 +867,7 @@ const UpdateJobsRevised = ({
     console.log('==========>update======>', updateFormData, badges)
     // console.log('add skill box', addSkillGroup)
     // console.log("customValue,addSubSkill", skillGroupData, SelectSkillsData)
-    console.log(skillGroupData,components)
+    console.log(skillGroupData, components)
     console.log(behaviours)
     return (
         <>
@@ -884,7 +905,7 @@ const UpdateJobsRevised = ({
                         <Col md={3} lg={2} className="jobpre_leftpanel px-2">
                             <h6>Requirements</h6>
                             <ul className="checklist">
-                                <li className="active">
+                                <li className={`${setClassForSalary()}`}>
                                     <Link href={""}>
                                         Salary <i class="fa fa-check" aria-hidden="true"></i>
                                     </Link>
@@ -918,7 +939,7 @@ const UpdateJobsRevised = ({
                             </ul>
                             <h6>Skills</h6>
                             <ul className="checklist">
-                                <li className={`${skillGroupData.length>0 && 'active'}`}>
+                                <li className={`${skillGroupData.length > 0 && 'active'}`}>
                                     <Link href={""}>
                                         Skills <i class="fa fa-check" aria-hidden="true"></i>
                                     </Link>
@@ -932,7 +953,7 @@ const UpdateJobsRevised = ({
                             </ul>
                             <h6>Personality</h6>
                             <ul className="checklist">
-                                <li className={`${behaviours.length==12 && 'active'}`}>
+                                <li className={`${behaviours.length == 12 && 'active'}`}>
                                     <Link href={""}>
                                         Behaviours <i class="fa fa-check" aria-hidden="true"></i>
                                     </Link>
@@ -1933,7 +1954,7 @@ const UpdateJobsRevised = ({
                                             </div>
                                         )} */}
                                         {skillGroupData?.length > 0 && (
-                                            skillGroupData?.map((Val) => (
+                                            skillGroupData?.map((Val, i) => (
                                                 <div className="starttag_box">
                                                     <div className="stagbox_head">
                                                         <h6>{Val?.skill_group_name}</h6>
@@ -1952,7 +1973,7 @@ const UpdateJobsRevised = ({
                                                                 </span>
                                                             ))}
 
-                                                        {addSubSkill?.map((item, index) => (
+                                                        {selectedIndex.includes(Val?.uid) && addSubSkill?.map((item, index) => (
                                                             <span
                                                                 onClick={(e) => {
                                                                     handleSelectedSkill(item);
@@ -1970,7 +1991,7 @@ const UpdateJobsRevised = ({
                                                                         );
                                                                         setAddSubSkill(updatedSkills);
                                                                     }}
-                                                                    onBlur={() => handleBlur(item.skill_name,Val, index)}
+                                                                    onBlur={() => handleBlur(item.skill_name, Val, index)}
                                                                 />{" "}
                                                                 <i
                                                                     onClick={() => {
@@ -1984,7 +2005,7 @@ const UpdateJobsRevised = ({
                                                         <button
                                                             type="button"
                                                             class="btn-light-gray btn btn-primary"
-                                                            onClick={handlesubSkillAdd}
+                                                            onClick={() => handlesubSkillAdd(Val?.uid)}
                                                         >
                                                             <i class="fa fa-plus text-primary me-1"></i>Add Skill
                                                         </button>
@@ -2031,7 +2052,7 @@ const UpdateJobsRevised = ({
                                                 )}
 
                                                 <div className="stag_list mt-2">
-                                                    {addSubSkill.map((item, index) => (
+                                                    {selectedIndex.includes(i) && addSubSkill.map((item, index) => (
                                                         <span
                                                             onClick={(e) => {
                                                                 handleSelectedSkill(item);
@@ -2065,7 +2086,7 @@ const UpdateJobsRevised = ({
                                                     <button
                                                         type="button"
                                                         class="btn-light-gray btn btn-primary"
-                                                        onClick={handlesubSkillAdd}
+                                                        onClick={() => handlesubSkillAdd(i)}
                                                     >
                                                         <i class="fa fa-plus text-primary me-1"></i>Add Skill
                                                     </button>

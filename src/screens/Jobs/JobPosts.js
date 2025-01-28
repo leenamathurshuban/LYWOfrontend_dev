@@ -29,14 +29,14 @@ import { useParams } from "react-router-dom";
 
 const JobPosts = () => {
   const { id } = useParams();
-  const [jobPostData, setJobPostData] = useState({});
+  const [jobPostData,setJobPostData] = useState({})
   const GetJobPostWithId = async () => {
     try {
-      const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/${id}`;
-      // const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/NDFhZGM5ZWQyZg/`;
+      // const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/${id}`;
+      const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/NDFhZGM5ZWQyZg/`;
       const data = await getPostJobIdApi(url);
       //console.log("dat----->>>>",data)
-      setJobPostData(data?.data?.response);
+      setJobPostData(data?.data?.response)
       // console.log(
       //   "dat--sss---->>>>",
       //   JSON.stringify(data?.data?.response, null, 4)
@@ -46,15 +46,18 @@ const JobPosts = () => {
     }
   };
 
-  useEffect(() => {
-    console.log("urlID----->>>>", id);
+  // useEffect(() => {
+  //   console.log("urlID----->>>>", id);
+
+  //   GetJobPostWithId();
+  // }, [id]);
+
+   useEffect(() => {
+   
 
     GetJobPostWithId();
-  }, [id]);
+  }, []);
 
-  // useEffect(() => {
-  //   GetJobPostWithId();
-  // }, []);
 
   const jobDetailsList = [
     {
@@ -80,12 +83,12 @@ const JobPosts = () => {
     {
       tittle: "Key Skills ",
       // value: jobPostData?.skills[0]?.skill_name,
-      value: "skilll",
+      value: "skilll"
     },
     {
       tittle: "Education ",
       // value: jobPostData?.area_of_education[0],
-      value: "Masters",
+      value: "Masters"
     },
     {
       tittle: "Focus Area",
@@ -133,20 +136,11 @@ const JobPosts = () => {
             />
             <Col>
               <h5>{jobPostData?.job_title}</h5>
-              <p>
-                {jobPostData?.job_company?.company_name},{" "}
-                {jobPostData?.job_company?.location}
-              </p>
+              <p>{jobPostData?.job_company?.company_name}, {jobPostData?.job_company?.location}</p>
               <div className="d-flex flex-wrap">
                 <p>{jobPostData?.job_location?.location_name}</p>
-                <p>
-                  {jobPostData?.currency} {jobPostData?.min_salary} -{" "}
-                  {jobPostData?.max_salary}
-                  {jobPostData?.salary_type}
-                </p>
-                <p>
-                  {jobPostData?.min_exp} - {jobPostData?.max_exp} years
-                </p>
+                <p>{jobPostData?.currency} {jobPostData?.min_salary} - {jobPostData?.max_salary}{jobPostData?.salary_type}</p>
+                <p>{jobPostData?.min_exp} - {jobPostData?.max_exp} years</p>
                 <p>{jobPostData?.job_company?.number_of_employees}</p>
               </div>
             </Col>
@@ -331,29 +325,17 @@ const JobPosts = () => {
               <div className="card">
                 <div className="card-body">
                   <h5 className="card-title">About the Company</h5>
-                  <Row>
-                    <img
-                      src={Global}
-                      alt="Global"
-                      style={{ width: "60px", height: "40px" }}
-                    />
-                    <Col>
-                      <p>{jobPostData?.job_company?.company_name}</p>
-                      <div className="d-flex flex-wrap">
-                        <p>{jobPostData?.job_location?.location_name}</p>
-                        <p>
-                          {jobPostData?.currency} {jobPostData?.min_salary} -{" "}
-                          {jobPostData?.max_salary}
-                          {jobPostData?.salary_type}
-                        </p>
-                        <p>
-                          {jobPostData?.min_exp} - {jobPostData?.max_exp} years
-                        </p>
-                        <p>{jobPostData?.job_company?.number_of_employees}</p>
-                      </div>
-                    </Col>
-                  </Row>
-                  <p>{jobPostData?.detailed_description}</p>
+                  <p>
+                    Nunc elementum mi augue, nec pretium massa eleifend quis.
+                    Etiam mollis velit id sapien facilisis, eget feugiat felis
+                    maximus. Donec interdum tortor quis lorem sollicitudin, sed
+                    molestie dui rhoncus. Ut condimentum rutrum neque sit amet
+                    dictum. Duis commodo quam et dui malesuada mollis. Maecenas
+                    tristique, sapien id consectetur fermentum, diam velit
+                    vulputate ante, at imperdiet nisl risus id lorem. Integer
+                    semper mi nec sollicitudin pulvinar. Integer finibus feugiat
+                    odio quis accumsan.
+                  </p>
                 </div>
               </div>
             </Col>

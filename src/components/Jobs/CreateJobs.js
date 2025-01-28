@@ -1288,6 +1288,8 @@ const CreateJobs = ({ show, handleClose }) => {
           setSelectSkillsData={setSelectSkillsData}
           behaviours={behaviours}
           setBehaviours={setBehaviours}
+          updateFormData={updateFormData}
+          setUpdateFormData={setUpdateFormData}
         />
       )}
     </Offcanvas>

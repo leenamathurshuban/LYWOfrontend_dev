@@ -28,7 +28,7 @@ import {
   getSkillList,
 } from "../../services/provider";
 import { removeToken } from "../../helpers/helper";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import HelpChoose from "../../screens/HelpmeChoose/HelpChoose";
 
@@ -77,7 +77,9 @@ const CreateJobsRevised = ({
   setSelectSkillsData,
   SelectSkillsData,
   behaviours,
-  setBehaviours
+  setBehaviours,
+  updateFormData,
+  setUpdateFormData
 }) => {
   const [createRevisedJobData, setCreateRevisedJobData] = useState(null);
   const [components, setComponents] = useState([]);
@@ -741,6 +743,41 @@ const CreateJobsRevised = ({
       getJobDetails();
     }
   }, [isUpdated]);
+  function setClassName() {
+    if (updateFormData?.year_of_experience_type) {
+      if (updateFormData?.year_of_experience_type == 'Range' && updateFormData?.min_exp && updateFormData?.max_exp &&
+        IndustriesBadges?.length > 0 && restrictedRoleBadges?.length > 0) {
+        return 'active'
+      } else if (updateFormData?.year_of_experience_type == 'Min' && updateFormData?.min_exp &&
+        IndustriesBadges?.length > 0 && restrictedRoleBadges?.length > 0) {
+        return 'active'
+      } else if (updateFormData?.year_of_experience_type == 'Max' && updateFormData?.max_exp &&
+        IndustriesBadges?.length > 0 && restrictedRoleBadges?.length > 0) {
+        return 'active'
+      }
+    }
+  }
+  function cusQuestion() {
+    if (components?.[0]?.is_mandatory && components?.[0]?.job_question && components?.[0]?.question_option?.part1?.length > 0 && components?.[0]?.question_title &&
+      components?.[0]?.questions_answer?.length > 0 && components?.[0]?.quiz_type
+    ) {
+      return 'active'
+    }
+  }
+  function setClassForSalary() {
+    if (updateFormData?.salary_price_type) {
+      if (updateFormData?.salary_price_type == 'Salary-range' && updateFormData?.min_salary &&
+        updateFormData?.max_salary && updateFormData?.currency && updateFormData?.salary_type) {
+        return 'active'
+      } else if (updateFormData?.salary_price_type == 'Min-range' && updateFormData?.min_salary &&
+        updateFormData?.currency && updateFormData?.salary_type) {
+        return 'active'
+      } else if (updateFormData?.salary_price_type == 'Max-range' && updateFormData?.max_salary
+        && updateFormData?.currency && updateFormData?.salary_type) {
+        return 'active'
+      }
+    }
+  }
   // console.log(activeBehaviour)
   // const updatedArray = behaviours.map((item)=>({
   //   ...item,
@@ -781,60 +818,59 @@ const CreateJobsRevised = ({
         <Modal.Body className="p-0 bg-lightgray">
           <Row className="justify-content-center">
             <Col md={3} lg={2} className="jobpre_leftpanel px-2">
-              <h6>Requirements</h6>
               <ul className="checklist">
-                <li className="active">
-                  <a href="#item_salary">
+                <li className={`${setClassForSalary()}`}>
+                  <Link href={""}>
                     Salary <i class="fa fa-check" aria-hidden="true"></i>
-                  </a>
+                  </Link>
                 </li>
-                <li>
-                  <a href="#item_edu">
+                <li className={`${badges?.length > 0 && updateFormData?.minimum_education ? "active" : ''}`}>
+                  <Link href={""}>
                     Education <i class="fa fa-check" aria-hidden="true"></i>
-                  </a>
+                  </Link>
                 </li>
-                <li>
-                  <a href="#item_Exp">
+                <li className={`${setClassName()}`}>
+                  <Link href={""}>
                     Experience <i class="fa fa-check" aria-hidden="true"></i>
-                  </a>
+                  </Link>
                 </li>
-                <li>
-                  <a href="#item_Target">
+                <li className={`${updateFormData?.targate_hire_date && 'active'}`}>
+                  <Link href={""}>
                     Target Hire Date{" "}
                     <i class="fa fa-check" aria-hidden="true"></i>
-                  </a>
+                  </Link>
                 </li>
-                <li>
-                  <a href="#item_lang">
+                <li className={`${spokenLanguageBadges?.length > 0 && rdnwBadges?.length > 0 ? 'active' : ''}`}>
+                  <Link href={""}>
                     Language <i class="fa fa-check" aria-hidden="true"></i>
-                  </a>
+                  </Link>
                 </li>
-                <li>
-                  <a href="#item_Geog">
+                <li className={`${locationBadges?.length > 0 ? 'active' : ''}`}>
+                  <Link href={""}>
                     Geography <i class="fa fa-check" aria-hidden="true"></i>
-                  </a>
+                  </Link>
                 </li>
               </ul>
               <h6>Skills</h6>
               <ul className="checklist">
-                <li>
-                  <a href="#">
+                <li className={`${skillGroupData.length > 0 && 'active'}`}>
+                  <Link href={""}>
                     Skills <i class="fa fa-check" aria-hidden="true"></i>
-                  </a>
+                  </Link>
                 </li>
-                <li>
-                  <a href="#">
+                <li className={`${cusQuestion()}`}>
+                  <Link href={""}>
                     Custom Questions{" "}
                     <i class="fa fa-check" aria-hidden="true"></i>
-                  </a>
+                  </Link>
                 </li>
               </ul>
               <h6>Personality</h6>
               <ul className="checklist">
-                <li>
-                  <a href="#">
+                <li className={`${behaviours.length == 12 && 'active'}`}>
+                  <Link href={""}>
                     Behaviours <i class="fa fa-check" aria-hidden="true"></i>
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </Col>

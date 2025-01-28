@@ -320,7 +320,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
   };
   const handleUpdateFormData = (e) => {
     const { name, value, checked } = e.target;
-    debugger
+    // debugger
     if (e.target.type === 'checkbox') {
       setUpdateFormData({
         ...updateFormData,
