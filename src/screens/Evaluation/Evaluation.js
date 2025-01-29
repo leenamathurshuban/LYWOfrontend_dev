@@ -66,8 +66,7 @@ const Evalation = () => {
   const [EvaluationListDetails, setEvaluationListDetails] = useState([]);
   const [SerachList, setSerachList] = useState("");
   const [activeKeys, setActiveKeys] = useState(["0-0"]);
-  const [selectedSection, setSelectedSection] = useState('');
- 
+  const [selectedSection, setSelectedSection] = useState("");
 
   const revaluationsListAPI = async (SerachQuestion) => {
     setIsLoading(true);
@@ -170,7 +169,6 @@ const Evalation = () => {
   };
 
   const handleListItemClick = (id) => {
-   
     const element = document.getElementById(`accordion-item-${id}`);
     if (element) {
       element.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -211,10 +209,9 @@ const Evalation = () => {
 
     const sectionElement = document.getElementById(sectionId);
     if (sectionElement) {
-      sectionElement.scrollIntoView({ behavior: 'smooth' });
+      sectionElement.scrollIntoView({ behavior: "smooth" });
     }
   };
-
 
   const EvaluationTable = () => {
     return (
@@ -609,12 +606,14 @@ const Evalation = () => {
                   <Form.Select
                     aria-label="Default select example"
                     className="h-36"
-                    onChange={handleSelectChange} value={selectedSection}
+                    onChange={handleSelectChange}
+                    value={selectedSection}
                   >
                     <option>Show All</option>
                     {EvaluationListDetails[0].section_asset.map((item) => (
-                  
-                      <option key={item.id} value={item.id}>{item.section_title}</option>
+                      <option key={item.id} value={item.id}>
+                        {item.section_title}
+                      </option>
                     ))}
                   </Form.Select>
                 </div>
@@ -987,7 +986,6 @@ const Evalation = () => {
     );
   };
 
-
   return (
     <>
       <Sidebar />
@@ -1009,10 +1007,7 @@ const Evalation = () => {
 
 export default Evalation;
 
-
-
 // 16 jan check
-
 
 // import React, { useEffect, useState } from "react";
 // import {
@@ -1081,7 +1076,7 @@ export default Evalation;
 //   const [EvaluationList, setEvaluationList] = useState([]);
 //   const [EvaluationListDetails, setEvaluationListDetails] = useState([]);
 //   const [SerachList, setSerachList] = useState("");
-//   const [activeKeys, setActiveKeys] = useState(["0-0"]); 
+//   const [activeKeys, setActiveKeys] = useState(["0-0"]);
 
 //   const revaluationsListAPI = async (SerachQuestion) => {
 //     setIsLoading(true);
@@ -1184,7 +1179,7 @@ export default Evalation;
 //   };
 
 //   const handleListItemClick = (id) => {
-   
+
 //     const element = document.getElementById(`accordion-item-${id}`);
 //     if (element) {
 //       element.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -1987,7 +1982,6 @@ export default Evalation;
 //       </Modal>
 //     );
 //   };
-
 
 //   return (
 //     <>

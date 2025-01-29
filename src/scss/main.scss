@@ -3039,6 +3039,54 @@ select.h-36.form-select {
   }
  
 }
+.custom-card {
+  padding: 16px; 
+  margin: 8px;   
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: none;
+  background-color: #fff;
+}
+.luwoprocess_drawer {
+  h6 {
+    font-size: 16px;
+    color: #101828;
+    margin-bottom: 15px;
+  }
+  p {
+    color: #344054;
+    font-size: 14px;
+    line-height: 18px;
+  }
+  .process_staps {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    li {
+      display: flex;
+      align-items: center;
+      margin: 20px 0;
+      img {
+        max-width: 40px;
+        margin-right: 10px;
+      }
+      .staps_text {
+        h6 {
+          font-size: 14px;
+          margin: 0 0 5px 0;
+        }
+        p {
+          margin: 0;
+        }
+      }
+    }
+  }
+  .bnft_probox {
+    h6 {
+      font-size: 14px;
+      margin: 15px 0 10px 0;
+    }
+  }
+}
 
 //<---------------->help me choose------------------>
 .shadow_none {

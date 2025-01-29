@@ -7,6 +7,7 @@ import JobsList from "../screens/Jobs/JobList";
 import JobPosts from "../screens/Jobs/JobPosts";
 import JobSummary from "../screens/Jobs/JobSummary";
 import HelpChoose from "../screens/HelpmeChoose/HelpChoose";
+import ApplicationJobPostModal from "../screens/Jobs/ApplicationJobPostModal";
 
 
 export const router = createBrowserRouter([
@@ -71,6 +72,11 @@ export const router = createBrowserRouter([
     // path: "/JobPosts/:id",
     path: "/JobPosts",
     element: <ProtectedRoute element={<JobPosts />} allowAuthenticated={false} />,  // Only allow authenticated users here
+  },
+  {
+   
+    path: "/ApplicationJobPostModal",
+    element: <ProtectedRoute element={<ApplicationJobPostModal />} allowAuthenticated={false} />,  // Only allow authenticated users here
   },
   {
     path: "/jobSummary/:id",
