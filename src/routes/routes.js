@@ -69,8 +69,8 @@ export const router = createBrowserRouter([
     element: <ProtectedRoute element={<JobsList />} allowAuthenticated={false} />,  // Only allow authenticated users here
   },
   {
-    // path: "/JobPosts/:id",
-    path: "/JobPosts",
+    path: "/JobPosts/:id",
+    // path: "/JobPosts",
     element: <ProtectedRoute element={<JobPosts />} allowAuthenticated={false} />,  // Only allow authenticated users here
   },
   {
