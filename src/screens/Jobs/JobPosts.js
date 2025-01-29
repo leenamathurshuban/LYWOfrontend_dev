@@ -26,6 +26,7 @@ import AboutLywoModal from "../../components/CustomModals/AboutLywoModal";
 const JobPosts = () => {
   const { id } = useParams();
   const [jobPostData, setJobPostData] = useState({});
+  const [jobPostErrorMsg, setJobPostErrorMsg] = useState("");
 
   const [modalOpen, setModalOpen] = useState({
     showFirstModal: false,
@@ -72,31 +73,44 @@ const JobPosts = () => {
 
   const GetJobPostWithId = async () => {
     try {
-      // const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/${id}`;
-      const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/NDFhZGM5ZWQyZg/`;
+      const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/${id}`;
+      // const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/NDFhZGM5ZWQyZg/`;
+      // const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/ODE2YWNmZjgwZg/`;
       const data = await getPostJobIdApi(url);
-      //console.log("dat----->>>>",data)
+     
       setJobPostData(data?.data?.response)
-      // console.log(
-      //   "dat--sss---->>>>",
-      //   JSON.stringify(data?.data?.response, null, 4)
-      // );
+    
     } catch (error) {
-      console.log("error------>>>>", error);
+      
+
+      if (error.response) {
+ 
+        
+      
+        if (error.response.status === 400) {
+          const message = error.response.data.message;
+          setJobPostErrorMsg(message)
+          
+        }
+      } else if (error.request) {
+        
+        console.error('No response received:', error.request);
+      } else {
+        // Any other error
+        console.error('Error Message:', error.message);
+      }
     }
   };
 
-  // useEffect(() => {
-  //   console.log("urlID----->>>>", id);
-
-  //   GetJobPostWithId();
-  // }, [id]);
-
-   useEffect(() => {
-   
+  useEffect(() => {
+    console.log("urlID----->>>>", id);
 
     GetJobPostWithId();
-  }, []);
+  }, [id]);
+
+  //  useEffect(() => {
+  //   GetJobPostWithId();
+  // }, []);
 
 
   const jobDetailsList = [
@@ -281,14 +295,16 @@ const JobPosts = () => {
                   style={{ width: "60px", height: "40px" }}
                 />
                 <div className="d-flex gap-2 mb-2">
-                  <Button variant="light">Not for Me</Button>
+                  <Button variant="light" disabled={jobPostErrorMsg}>Not for Me</Button>
                   <Button
                     variant="primary"
                     onClick={() => handleShowModal("first")}
+                    disabled={jobPostErrorMsg}
                   >
                     Apply Now
                   </Button>
                 </div>
+                {jobPostErrorMsg && <p className="error">{jobPostErrorMsg}</p>}
               </div>
             </Col>
           </Row>
@@ -352,7 +368,7 @@ const JobPosts = () => {
           <h6>Your Progress</h6>
           <div style={{ border: "1px solid #000", padding: 12 }}>
             <p>Profile Details</p>
-            <Button variant="primary" size="lg">
+            <Button variant="primary" size="lg" disabled={jobPostErrorMsg}>
               Apply Now
             </Button>
           </div>
