@@ -37,6 +37,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
   const [ishideIndustries, setIsHideIndustries] = useState(true);
   const [isHideRestrictedRoles, setIsHideRestrictedRoles] = useState(true);
   const [SelectSkillsData, setSelectSkillsData] = useState([]);
+  const [mustHaveSkills, setMustHaveSkills] = useState([]);
   const [isHideLocation, setIsHideLLocation] = useState(true);
   const [isSpecificLanguareRequired, setIsSpecificLanguareRequired] =
     useState(true);
@@ -320,7 +321,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
   };
   const handleUpdateFormData = (e) => {
     const { name, value, checked } = e.target;
-    debugger
+    // debugger
     if (e.target.type === 'checkbox') {
       setUpdateFormData({
         ...updateFormData,
@@ -686,6 +687,9 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
       else if (key === "skills" && SelectSkillsData.length > 0) {
         let skillID = SelectSkillsData?.map((item) => item?.uid) // Extract skill_name values
         formdata.append("skills", JSON.stringify(skillID));
+      }else if (key === "must_have_skills" && mustHaveSkills.length > 0) {
+        let skillID = mustHaveSkills?.map((item) => item?.uid) // Extract skill_name values
+        formdata.append("must_have_skills", JSON.stringify(skillID));
       } else if ((key === "selected_behaviour" || key === "important_behaviour") && hasSelectedAndImportant) {
         let selectedBehaviourUids = [];
         let importantBehaviourUids = [];
@@ -1137,11 +1141,11 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
                   ref={fileInputRef}
                   accept="image/*,application/pdf"
                   onChange={handleFileUpload}
-                  style={{ display: "none" }}
+                  style={{ display: "none" }}//
                 />
 
                 <div>
-                  <p
+                  <p className="m-0"
                     style={{
                       fontSize: 12,
                       color: errorMessage ? "red" : "black",
@@ -1155,24 +1159,27 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
                   </p>
                 </div>
               </div>
+
+              <div className="img_progress">
+                {uploadProgress > 0 && (
+                  <>
+                    <span className="pclose">
+                      <i className="fas fa-times" onClick={removeFileValue}></i>
+                    </span>
+                    <div className="progress-bar" style={{ height: '10px', width: '500px', backgroundColor: 'white' }}>
+                      <div
+                        className="progress"
+                        style={{
+                          width: `${uploadProgress}%`,
+                          backgroundColor: "blue",
+                        }}
+                      ></div>
+                    </div>
+                    <span>{uploadProgress}%</span>
+                  </>
+                )}
+              </div>
             </div>
-            {uploadProgress > 0 && (
-              <>
-                <span>
-                  <i className="fas fa-times" onClick={removeFileValue}></i>
-                </span>
-                <div className="progress-bar" style={{ height: '10px', width: '500px', backgroundColor: 'white' }}>
-                  <div
-                    className="progress"
-                    style={{
-                      width: `${uploadProgress}%`,
-                      backgroundColor: "blue",
-                    }}
-                  ></div>
-                </div>
-                <span>{uploadProgress}%</span>
-              </>
-            )}
             {descriptionError && (
               <div className="error">{descriptionError}</div>
             )}
@@ -1313,6 +1320,8 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
           setBehaviours={setBehaviours}
           updateFormData={updateFormData}
           setUpdateFormData={setUpdateFormData}
+          mustHaveSkills={mustHaveSkills}
+          setMustHaveSkills={setMustHaveSkills}
         />
       )}
     </Offcanvas>

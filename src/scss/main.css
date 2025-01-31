@@ -2208,6 +2208,25 @@ select.h-36.form-select {
   padding: 15px 14px;
   justify-content: space-between;
 }
+.jobMain_panel .accordion-header .accordion-button .text-muted {
+  margin-left: 15px;
+  font-weight: 400;
+  font-size: 11px;
+}
+.jobMain_panel .accordion-header .accordion-button .text-muted i {
+  position: relative;
+  margin-right: 15px;
+}
+.jobMain_panel .accordion-header .accordion-button .text-muted i::after {
+  content: "";
+  background-color: #D9D9D9;
+  width: 5px;
+  height: 5px;
+  position: absolute;
+  left: -8px;
+  top: 4px;
+  border-radius: 50%;
+}
 .jobMain_panel .accordion-header .accordion-button .flag_icon {
   position: absolute;
   right: 15px;
@@ -2232,6 +2251,12 @@ select.h-36.form-select {
 .jobMain_panel .accordion-header .count {
   color: #667085;
   font-size: 12px;
+  font-weight: 500;
+}
+.jobMain_panel .accordion-header .acheade_right {
+  font-size: 12px;
+  color: #1D2939;
+  margin-right: 30px;
   font-weight: 500;
 }
 .jobMain_panel .accordion-body p {
@@ -2651,7 +2676,7 @@ select.h-36.form-select {
 
 .lw-toolbar {
   position: absolute;
-  right: -29px;
+  right: -30px;
   top: 70px;
 }
 .lw-toolbar ul {
@@ -2663,10 +2688,14 @@ select.h-36.form-select {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 .lw-toolbar li {
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   text-align: center;
-  line-height: 28px;
+  line-height: 30px;
+}
+.lw-toolbar li.active {
+  background-color: #F2F4F7;
+  border-radius: 8px;
 }
 .lw-toolbar li a {
   color: #475467;
@@ -3358,4 +3387,26 @@ select.h-36.form-select {
 .form-row .col-md-1, .form-row .col-md-2, .form-row .col-md-3, .form-row .col-md-4, .form-row .col-md-5, .form-row .col-md-6, .form-row .col-md-7, .form-row .col-md-8, .form-row .col-md-9, .form-row .col-md-10, .form-row .col-md-11, .form-row .col-md-12 {
   padding-left: 5px;
   padding-right: 5px;
+}
+
+.img_progress {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  position: absolute;
+  right: 1px;
+  bottom: 12px;
+  background-color: #fff;
+  padding: 0px 15px;
+}
+.img_progress .pclose {
+  cursor: pointer;
+  font-size: 15px;
+}
+.img_progress .progress-bar {
+  max-width: 300px;
+  margin: 0 8px;
+}
+.img_progress .progress-bar .progress {
+  background-color: #444CE7 !important;
 }/*# sourceMappingURL=main.css.map */

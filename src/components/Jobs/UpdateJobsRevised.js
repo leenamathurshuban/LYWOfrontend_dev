@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
     Accordion,
     Badge,
@@ -13,6 +13,11 @@ import {
 
 import RangeSlider from "../../components/RangeSilder";
 import Edit03 from "../../images/icons/edit-0303.svg";
+import messageIcon from "../../images/icons/message-square-02.svg";
+import pencilIcon from "../../images/icons/pencil-line.svg";
+import simpleFlag from "../../images/icons/Importance-Flag.svg";
+import importantFlagOutline from "../../images/icons/Importance-Flag-01.svg"
+import flagFill from "../../images/icons/Importance-Flag-02.svg";
 import logoIcon from "../../images/logo_icon.png";
 import AchieverIcn from "../../images/icons/Achiever-icon.svg";
 import LeaderIcn from "../../images/icons/Leader-icon.svg";
@@ -30,7 +35,9 @@ import {
 import { removeToken } from "../../helpers/helper";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { motion } from 'framer-motion';
 import HelpChoose from "../../screens/HelpmeChoose/HelpChoose";
+import RangeSliderNew from "../SliderRange";
 
 const UpdateJobsRevised = ({
     show,
@@ -79,7 +86,9 @@ const UpdateJobsRevised = ({
     behaviours,
     setBehaviours,
     updateFormData,
-    setUpdateFormData
+    setUpdateFormData,
+    mustHaveSkills,
+    setMustHaveSkills
 }) => {
     const [createRevisedJobData, setCreateRevisedJobData] = useState(null);
     const [components, setComponents] = useState([]);
@@ -106,6 +115,16 @@ const UpdateJobsRevised = ({
         modal_data: {}
     })
     const [showHelpChoose, setShowHelpChoose] = useState(false);
+    const [selectedIndex, setSelectedIndex] = useState([])
+    const [openStep, setOpenStep] = useState([])
+    const [importantFlag, setImportantFlag] = useState({
+        salary: false,
+        education: false,
+        experience: false,
+        targethiredate: false,
+        language: false,
+        geography: false,
+    })
     //<------------------help me choose------------------------>
     const [isIndex, setIsIndex] = useState([1]);
     const [selectedItem, setSelectedItem] = useState([]);
@@ -264,6 +283,7 @@ const UpdateJobsRevised = ({
             setLocationBadges(response?.data?.response?.preferred_geography)
             setPriceRangeType(response.data.response.salary_price_type)
             setSelectSkillsData(response?.data?.response?.skills)
+            setMustHaveSkills(response?.data?.response?.must_have_skills)
             setSkillGroupDataExist(response?.data?.response?.skills)
             // setSkillGroupsData(response?.data?.response?.skills)
             const formated = response?.data?.response?.skills.reduce((acc, item) => {
@@ -586,8 +606,7 @@ const UpdateJobsRevised = ({
 
         setComponents(updatedComponents);
     };
-
-    const handlesubSkillAdd = () => {
+    const handlesubSkillAdd = (index) => {
         const CreateCustomLabel = {
             created_at: "",
             id: 0,
@@ -596,7 +615,14 @@ const UpdateJobsRevised = ({
             uid: "",
             updated_at: "",
         };
-        setAddSubSkill((prev) => [...prev, CreateCustomLabel]);
+        if (!selectedIndex.includes(index)) {
+            setSelectedIndex([index])
+            setAddSubSkill([CreateCustomLabel])
+        } else if (selectedIndex.includes(index)) {
+            setSelectedIndex([...selectedIndex])
+            setAddSubSkill((prev) => [...prev, CreateCustomLabel]);
+        }
+
     };
 
     const handleAddSkillGroup = () => {
@@ -644,7 +670,7 @@ const UpdateJobsRevised = ({
         }
     };
 
-    const handleBlur = async (value,item) => {
+    const handleBlur = async (value, item) => {
         const formdata = new FormData();
         formdata.append("skill_group", item?.uid);
         formdata.append("skill_name", value);
@@ -676,7 +702,18 @@ const UpdateJobsRevised = ({
             const response = await getSkillGroupDetailsApi(url);
             if (response) {
                 setShowSkillList(false);
-                setSkillGroupsData([...skillGroupData, response.data.response]);
+                setSkillGroupsData((prevItem) => {
+                    const itemExists = prevItem.some((item) => item.uid === response.data.response.uid);
+                    if (itemExists) {
+                        return prevItem.map((item) =>
+                            item.uid === response.data.response.uid ? { ...item, group_skill: response.data.response.group_skill } : item
+                        );
+                    } else {
+                        return [...prevItem, response.data.response];
+                    }
+                })
+                setSelectedIndex([])
+                // setSkillGroupsData([...skillGroupData, response.data.response]);
                 setskillngroupList([]);
             }
         } catch (error) {
@@ -720,10 +757,15 @@ const UpdateJobsRevised = ({
     };
 
     const handleSelectedSkill = (benefititem) => {
+        // setSelectSkillsData((prevState) =>
+        //     prevState.includes(benefititem)
+        //         ? prevState.filter((item2) => item2 !== benefititem)
+        //         : [...prevState, benefititem]
+        // );
         setSelectSkillsData((prevState) =>
-            prevState.includes(benefititem)
-                ? prevState.filter((item2) => item2 !== benefititem)
-                : [...prevState, benefititem]
+            !prevState.includes(benefititem) && prevState.length < 12
+                ? [...prevState, benefititem]
+                : prevState.filter((item2) => item2 !== benefititem)
         );
     };
 
@@ -830,24 +872,165 @@ const UpdateJobsRevised = ({
             }
         }
     }
-    function cusQuestion(){
-        if(components?.[0]?.is_mandatory && components?.[0]?.job_question && components?.[0]?.question_option?.part1?.length>0 && components?.[0]?.question_title && 
-            components?.[0]?.questions_answer?.length>0 && components?.[0]?.quiz_type
-        ){
+    function cusQuestion() {
+        if (components?.[0]?.is_mandatory && components?.[0]?.job_question && components?.[0]?.question_option?.part1?.length > 0 && components?.[0]?.question_title &&
+            components?.[0]?.questions_answer?.length > 0 && components?.[0]?.quiz_type
+        ) {
             return 'active'
         }
     }
+    function setClassForSalary() {
+        if (updateFormData?.salary_price_type) {
+            if (updateFormData?.salary_price_type == 'Salary-range' && updateFormData?.min_salary &&
+                updateFormData?.max_salary && updateFormData?.currency && updateFormData?.salary_type) {
+                return 'active'
+            } else if (updateFormData?.salary_price_type == 'Min-range' && updateFormData?.min_salary &&
+                updateFormData?.currency && updateFormData?.salary_type) {
+                return 'active'
+            } else if (updateFormData?.salary_price_type == 'Max-range' && updateFormData?.max_salary
+                && updateFormData?.currency && updateFormData?.salary_type) {
+                return 'active'
+            }
+        }
+    }
+    function handleMustHaveSkill(benefititem) {
+        setMustHaveSkills((prevState) =>
+            !prevState.includes(benefititem) && prevState.length < 3
+                ? [...prevState, benefititem]
+                : prevState.filter((item2) => item2 !== benefititem)
+        );
+    }
+    const handleOpenStep = (index) => {
+        if (!openStep.includes(index)) {
+            setOpenStep([index])
+        } else {
+            // const newArray = openStep.filter((cv) => cv !== index);
+            setOpenStep([])
+        }
+    }
+    const sectionRefs = useRef([]);
+    const toolbarRef = useRef(null);
+    const [toolbarPosition, setToolbarPosition] = useState(0);
     // console.log(activeBehaviour)
     // const updatedArray = behaviours.map((item)=>({
     //   ...item,
     //   isSelected:activeBehaviour.includes(item.uid)
     // }))
-    // console.log(behaviours)
-    console.log('==========>update======>', updateFormData, badges)
+    useEffect(() => {
+        if (openStep.length && sectionRefs.current[openStep[0]]) {
+            //   const top = sectionRefs.current[openStep[0]].offsetTop;
+            if (openStep[0] === '1') {
+                setToolbarPosition(85);
+            } else if (openStep[0] === '2') {
+                setToolbarPosition(142);
+            } else if (openStep[0] === '3') {
+                setToolbarPosition(200);
+            } else if (openStep[0] === '4') {
+                setToolbarPosition(255);
+            } else if (openStep[0] === '5') {
+                setToolbarPosition(310);
+            } else if (openStep[0] === '6') {
+                setToolbarPosition(367);
+            } else if (openStep[0] === '8') {
+                setToolbarPosition(485);
+            } else if (openStep[0] === '9') {
+                setToolbarPosition(540);
+            } else if (openStep[0] === '11') {
+                setToolbarPosition(675);
+            }
+        }
+    }, [openStep]);
+    const handleImportantFlag = (index) => {
+        if (index === '1') {
+            setImportantFlag({
+                ...importantFlag,
+                ["salary"]: true
+            })
+        } else if (index === '2') {
+            setImportantFlag({
+                ...importantFlag,
+                ["education"]: true
+            })
+        } else if (index === '3') {
+            setImportantFlag({
+                ...importantFlag,
+                ["experience"]: true
+            })
+        } else if (index === '4') {
+            setImportantFlag({
+                ...importantFlag,
+                ["targethiredate"]: true
+            })
+        } else if (index === '5') {
+            setImportantFlag({
+                ...importantFlag,
+                ["language"]: true
+            })
+        } else if (index === '6') {
+            setImportantFlag({
+                ...importantFlag,
+                ["geography"]: true
+            })
+        }
+    }
+    const removeImportantFlag = (index) => {
+        if (index === '1') {
+            setImportantFlag({
+                ...importantFlag,
+                ["salary"]: false
+            })
+        } else if (index === '2') {
+            setImportantFlag({
+                ...importantFlag,
+                ["education"]: false
+            })
+        } else if (index === '3') {
+            setImportantFlag({
+                ...importantFlag,
+                ["experience"]: false
+            })
+        } else if (index === '4') {
+            setImportantFlag({
+                ...importantFlag,
+                ["targethiredate"]: false
+            })
+        } else if (index === '5') {
+            setImportantFlag({
+                ...importantFlag,
+                ["language"]: false
+            })
+        } else if (index === '6') {
+            setImportantFlag({
+                ...importantFlag,
+                ["geography"]: false
+            })
+        }
+    }
+    const handleOutline = () => {
+        if (importantFlag.salary && openStep[0] === '1') {
+            return (<img src={importantFlagOutline} className="flag_icon" />)
+        } else if (importantFlag.education && openStep[0] === '2') {
+            return (<img src={importantFlagOutline} className="flag_icon" />)
+        } else if (importantFlag.experience && openStep[0] === '3') {
+            return (<img src={importantFlagOutline} className="flag_icon" />)
+        } else if (importantFlag.targethiredate && openStep[0] === '4') {
+            return (<img src={importantFlagOutline} className="flag_icon" />)
+        } else if (importantFlag.language && openStep[0] === '5') {
+            return (<img src={importantFlagOutline} className="flag_icon" />)
+        } else if (importantFlag.geography && openStep[0] === '6') {
+            return (<img src={importantFlagOutline} className="flag_icon" />)
+        } else {
+            return (<img src={simpleFlag} className="flag_icon" />)
+        }
+    }
+    console.log(behaviours)
+    console.log('==========>update======>', updateFormData)
     // console.log('add skill box', addSkillGroup)
     // console.log("customValue,addSubSkill", skillGroupData, SelectSkillsData)
-    console.log(skillGroupData,components)
-    console.log(behaviours)
+    // console.log(skillGroupData, components)
+    console.log('======>selecting skills', SelectSkillsData)
+    // console.log(openStep,importantFlag)
+    console.log('important', mustHaveSkills)
     return (
         <>
             <Modal
@@ -884,7 +1067,7 @@ const UpdateJobsRevised = ({
                         <Col md={3} lg={2} className="jobpre_leftpanel px-2">
                             <h6>Requirements</h6>
                             <ul className="checklist">
-                                <li className="active">
+                                <li className={`${setClassForSalary()}`}>
                                     <Link href={""}>
                                         Salary <i class="fa fa-check" aria-hidden="true"></i>
                                     </Link>
@@ -918,7 +1101,7 @@ const UpdateJobsRevised = ({
                             </ul>
                             <h6>Skills</h6>
                             <ul className="checklist">
-                                <li className={`${skillGroupData.length>0 && 'active'}`}>
+                                <li className={`${SelectSkillsData?.length > 0 && 'active'}`}>
                                     <Link href={""}>
                                         Skills <i class="fa fa-check" aria-hidden="true"></i>
                                     </Link>
@@ -932,7 +1115,7 @@ const UpdateJobsRevised = ({
                             </ul>
                             <h6>Personality</h6>
                             <ul className="checklist">
-                                <li className={`${behaviours.length==12 && 'active'}`}>
+                                <li className={`${behaviours.length == 12 && 'active'}`}>
                                     <Link href={""}>
                                         Behaviours <i class="fa fa-check" aria-hidden="true"></i>
                                     </Link>
@@ -940,9 +1123,9 @@ const UpdateJobsRevised = ({
                             </ul>
                         </Col>
                         <Col md={7} lg={8} className="jobMain_panel">
-                            <Accordion defaultActiveKey={["0", "8", "7", "10"]} alwaysOpen>
+                            <Accordion defaultActiveKey={["0", "8", "7", "10"]}>
                                 <Accordion.Item eventKey="0">
-                                    <Accordion.Header>Requirements</Accordion.Header>
+                                    <Accordion.Header onClick={() => setOpenStep([])}>Requirements</Accordion.Header>
                                     <Accordion.Body>
                                         <p>
                                             Use this section to define your ideal hire in more detail.
@@ -982,14 +1165,16 @@ const UpdateJobsRevised = ({
                                     className="accd_child"
                                     id="item_salary"
                                 >
-                                    <Accordion.Header>
-                                        Salary
-                                        <svg
+                                    <Accordion.Header onClick={() => handleOpenStep("1")}>
+                                        <span>Salary
+                                            {!openStep.includes("1") && <small className="text-muted"><i>Don’t Display</i><i>Non Negotiable</i></small>}
+                                        </span>
+                                        {/* <svg
                                             className="flag_icon"
                                             width="16"
                                             height="16"
                                             viewBox="0 0 16 16"
-                                            fill="none"
+                                            fill={importantFlag.salary?"#f97066":'none'}
                                             xmlns="http://www.w3.org/2000/svg"
                                         >
                                             <path
@@ -998,9 +1183,17 @@ const UpdateJobsRevised = ({
                                                 stroke-linecap="round"
                                                 stroke-linejoin="round"
                                             />
-                                        </svg>
+                                        </svg> */}
+                                        {importantFlag.salary ? (
+                                            <img src={flagFill} className="flag_icon" />
+                                        ) : (
+                                            <img src={simpleFlag} className="flag_icon" />
+                                        )}
+                                        {!openStep.includes("1") && (
+                                            <span className="acheade_right">{updateFormData?.currency} {updateFormData?.min_salary} - {updateFormData?.max_salary} {updateFormData?.salary_type}</span>
+                                        )}
                                     </Accordion.Header>
-                                    <Accordion.Body>
+                                    <Accordion.Body ref={(el) => (sectionRefs.current['1'] = el)}>
                                         <Row className="align-items-center mb-3">
                                             <div className="form-group w-auto mb-0">
                                                 <Form.Select
@@ -1116,25 +1309,20 @@ const UpdateJobsRevised = ({
                                     </Accordion.Body>
                                 </Accordion.Item>
                                 <Accordion.Item eventKey="2" className="accd_child" id="item_edu">
-                                    <Accordion.Header>
-                                        Educational Qualification{" "}
-                                        <svg
-                                            className="flag_icon"
-                                            width="16"
-                                            height="16"
-                                            viewBox="0 0 16 16"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                d="M9.33366 4.66667H13.0939C13.3921 4.66667 13.5412 4.66667 13.6284 4.72936C13.7045 4.78406 13.754 4.86826 13.7649 4.96133C13.7774 5.068 13.705 5.19834 13.5601 5.45901L12.6627 7.07432C12.6102 7.16886 12.584 7.21613 12.5737 7.26618C12.5646 7.31049 12.5646 7.35618 12.5737 7.40048C12.584 7.45054 12.6102 7.49781 12.6627 7.59234L13.5601 9.20766C13.7049 9.46833 13.7774 9.59867 13.7649 9.70534C13.754 9.79841 13.7045 9.8826 13.6284 9.93731C13.5412 10 13.3921 10 13.0939 10H8.40033C8.02696 10 7.84027 10 7.69766 9.92734C7.57222 9.86342 7.47024 9.76144 7.40632 9.63599C7.33366 9.49339 7.33366 9.3067 7.33366 8.93333V7.33333M2.66699 14L2.66699 2.66667M2.66699 7.33333H8.26699C8.64036 7.33333 8.82704 7.33333 8.96965 7.26067C9.09509 7.19676 9.19708 7.09477 9.261 6.96933C9.33366 6.82672 9.33366 6.64004 9.33366 6.26667V3.06667C9.33366 2.6933 9.33366 2.50661 9.261 2.36401C9.19708 2.23856 9.09509 2.13658 8.96965 2.07266C8.82704 2 8.64036 2 8.26699 2H3.73366C3.36029 2 3.17361 2 3.031 2.07266C2.90556 2.13658 2.80357 2.23856 2.73965 2.36401C2.66699 2.50661 2.66699 2.6933 2.66699 3.06667V7.33333Z"
-                                                stroke="#98A2B3"
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                            />
-                                        </svg>
+                                    <Accordion.Header onClick={() => handleOpenStep("2")}>
+                                        <span>Educational qualification
+                                            {!openStep.includes('2') && <small className="text-muted"><i>Higher Qualification Preferrable</i><i>Other Areas are Acceptable</i></small>}
+                                        </span>
+                                        {importantFlag.education ? (
+                                            <img src={flagFill} className="flag_icon" />
+                                        ) : (
+                                            <img src={simpleFlag} className="flag_icon" />
+                                        )}
+                                        {!openStep.includes('2') && (
+                                            <span className="acheade_right">{updateFormData?.minimum_education},{badges?.map((cv) => (<>{cv?.qualification_name}</>))}</span>
+                                        )}
                                     </Accordion.Header>
-                                    <Accordion.Body>
+                                    <Accordion.Body ref={(el) => (sectionRefs.current['2'] = el)}>
                                         <Form>
                                             <Form.Group className="mb-3">
                                                 <Form.Label className="sm-label">
@@ -1237,25 +1425,23 @@ const UpdateJobsRevised = ({
                                     </Accordion.Body>
                                 </Accordion.Item>
                                 <Accordion.Item eventKey="3" className="accd_child" id="item_Exp">
-                                    <Accordion.Header>
-                                        Experience{" "}
-                                        <svg
-                                            className="flag_icon"
-                                            width="16"
-                                            height="16"
-                                            viewBox="0 0 16 16"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                d="M9.33366 4.66667H13.0939C13.3921 4.66667 13.5412 4.66667 13.6284 4.72936C13.7045 4.78406 13.754 4.86826 13.7649 4.96133C13.7774 5.068 13.705 5.19834 13.5601 5.45901L12.6627 7.07432C12.6102 7.16886 12.584 7.21613 12.5737 7.26618C12.5646 7.31049 12.5646 7.35618 12.5737 7.40048C12.584 7.45054 12.6102 7.49781 12.6627 7.59234L13.5601 9.20766C13.7049 9.46833 13.7774 9.59867 13.7649 9.70534C13.754 9.79841 13.7045 9.8826 13.6284 9.93731C13.5412 10 13.3921 10 13.0939 10H8.40033C8.02696 10 7.84027 10 7.69766 9.92734C7.57222 9.86342 7.47024 9.76144 7.40632 9.63599C7.33366 9.49339 7.33366 9.3067 7.33366 8.93333V7.33333M2.66699 14L2.66699 2.66667M2.66699 7.33333H8.26699C8.64036 7.33333 8.82704 7.33333 8.96965 7.26067C9.09509 7.19676 9.19708 7.09477 9.261 6.96933C9.33366 6.82672 9.33366 6.64004 9.33366 6.26667V3.06667C9.33366 2.6933 9.33366 2.50661 9.261 2.36401C9.19708 2.23856 9.09509 2.13658 8.96965 2.07266C8.82704 2 8.64036 2 8.26699 2H3.73366C3.36029 2 3.17361 2 3.031 2.07266C2.90556 2.13658 2.80357 2.23856 2.73965 2.36401C2.66699 2.50661 2.66699 2.6933 2.66699 3.06667V7.33333Z"
-                                                stroke="#98A2B3"
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                            />
-                                        </svg>
+                                    <Accordion.Header onClick={() => handleOpenStep("3")}>
+                                        {/* Experience{" "} */}
+                                        <span>Experience
+                                            {!openStep.includes('3') && <small className="text-muted"><i>Restrict Industries</i><i>Define Current Role</i></small>}
+                                        </span>
+                                        {importantFlag.experience ? (
+                                            <img src={flagFill} className="flag_icon" />
+                                        ) : (
+                                            <img src={simpleFlag} className="flag_icon" />
+                                        )}
+                                        {!openStep.includes('3') && (
+                                            <span className="acheade_right">
+                                                {updateFormData?.min_exp} - {updateFormData?.max_exp} Years in {IndustriesBadges?.map((cv) => (<>{cv?.industry_name}</>))}
+                                            </span>
+                                        )}
                                     </Accordion.Header>
-                                    <Accordion.Body>
+                                    <Accordion.Body ref={(el) => (sectionRefs.current['3'] = el)}>
                                         <Form>
                                             <Form.Group className="mb-3">
                                                 <Form.Label className="sm-label">
@@ -1312,12 +1498,19 @@ const UpdateJobsRevised = ({
                                                                 }}
                                                             />
                                                         )}
-                                                    <RangeSlider
+                                                    {/* <RangeSlider
                                                         minValue={minValue}
                                                         setMinValue={setMinValue}
                                                         displayMaxValue={displayMaxValue}
                                                         maxValue={maxValue}
                                                         setMaxValue={setMaxValue}
+                                                    /> */}
+                                                    <RangeSliderNew
+                                                        minExp={minValue}
+                                                        setMinExp={setMinValue}
+                                                        displayMaxValue={displayMaxValue}
+                                                        maxExp={maxValue}
+                                                        setMaxExp={setMaxValue}
                                                     />
                                                 </Row>
                                             </Form.Group>
@@ -1472,25 +1665,23 @@ const UpdateJobsRevised = ({
                                     className="accd_child"
                                     id="item_Target"
                                 >
-                                    <Accordion.Header>
-                                        Target Hire Date{" "}
-                                        <svg
-                                            className="flag_icon"
-                                            width="16"
-                                            height="16"
-                                            viewBox="0 0 16 16"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                d="M9.33366 4.66667H13.0939C13.3921 4.66667 13.5412 4.66667 13.6284 4.72936C13.7045 4.78406 13.754 4.86826 13.7649 4.96133C13.7774 5.068 13.705 5.19834 13.5601 5.45901L12.6627 7.07432C12.6102 7.16886 12.584 7.21613 12.5737 7.26618C12.5646 7.31049 12.5646 7.35618 12.5737 7.40048C12.584 7.45054 12.6102 7.49781 12.6627 7.59234L13.5601 9.20766C13.7049 9.46833 13.7774 9.59867 13.7649 9.70534C13.754 9.79841 13.7045 9.8826 13.6284 9.93731C13.5412 10 13.3921 10 13.0939 10H8.40033C8.02696 10 7.84027 10 7.69766 9.92734C7.57222 9.86342 7.47024 9.76144 7.40632 9.63599C7.33366 9.49339 7.33366 9.3067 7.33366 8.93333V7.33333M2.66699 14L2.66699 2.66667M2.66699 7.33333H8.26699C8.64036 7.33333 8.82704 7.33333 8.96965 7.26067C9.09509 7.19676 9.19708 7.09477 9.261 6.96933C9.33366 6.82672 9.33366 6.64004 9.33366 6.26667V3.06667C9.33366 2.6933 9.33366 2.50661 9.261 2.36401C9.19708 2.23856 9.09509 2.13658 8.96965 2.07266C8.82704 2 8.64036 2 8.26699 2H3.73366C3.36029 2 3.17361 2 3.031 2.07266C2.90556 2.13658 2.80357 2.23856 2.73965 2.36401C2.66699 2.50661 2.66699 2.6933 2.66699 3.06667V7.33333Z"
-                                                stroke="#98A2B3"
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                            />
-                                        </svg>
+                                    <Accordion.Header onClick={() => handleOpenStep("4")}>
+                                        {/* Target Hire Date{" "} */}
+                                        <span>Target Hire Date
+                                            {!openStep.includes('4') && <small className="text-muted"><i>Explore Buy-Out Option</i></small>}
+                                        </span>
+                                        {importantFlag.targethiredate ? (
+                                            <img src={flagFill} className="flag_icon" />
+                                        ) : (
+                                            <img src={simpleFlag} className="flag_icon" />
+                                        )}
+                                        {!openStep.includes('4') && (
+                                            <span className="acheade_right">
+                                                {updateFormData?.immediate_hiring ? 'Immediate Hiring' : `Targate Hire Date  ${updateFormData?.targate_hire_date}`}
+                                            </span>
+                                        )}
                                     </Accordion.Header>
-                                    <Accordion.Body>
+                                    <Accordion.Body ref={(el) => (sectionRefs.current['4'] = el)}>
                                         <Row className="align-items-center">
                                             <Form.Group
                                                 className="mb-3 col-md-4"
@@ -1550,25 +1741,27 @@ const UpdateJobsRevised = ({
                                     className="accd_child"
                                     id="item_lang"
                                 >
-                                    <Accordion.Header>
+                                    <Accordion.Header onClick={() => handleOpenStep("5")}>
                                         Language{" "}
-                                        <svg
-                                            className="flag_icon"
-                                            width="16"
-                                            height="16"
-                                            viewBox="0 0 16 16"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                d="M9.33366 4.66667H13.0939C13.3921 4.66667 13.5412 4.66667 13.6284 4.72936C13.7045 4.78406 13.754 4.86826 13.7649 4.96133C13.7774 5.068 13.705 5.19834 13.5601 5.45901L12.6627 7.07432C12.6102 7.16886 12.584 7.21613 12.5737 7.26618C12.5646 7.31049 12.5646 7.35618 12.5737 7.40048C12.584 7.45054 12.6102 7.49781 12.6627 7.59234L13.5601 9.20766C13.7049 9.46833 13.7774 9.59867 13.7649 9.70534C13.754 9.79841 13.7045 9.8826 13.6284 9.93731C13.5412 10 13.3921 10 13.0939 10H8.40033C8.02696 10 7.84027 10 7.69766 9.92734C7.57222 9.86342 7.47024 9.76144 7.40632 9.63599C7.33366 9.49339 7.33366 9.3067 7.33366 8.93333V7.33333M2.66699 14L2.66699 2.66667M2.66699 7.33333H8.26699C8.64036 7.33333 8.82704 7.33333 8.96965 7.26067C9.09509 7.19676 9.19708 7.09477 9.261 6.96933C9.33366 6.82672 9.33366 6.64004 9.33366 6.26667V3.06667C9.33366 2.6933 9.33366 2.50661 9.261 2.36401C9.19708 2.23856 9.09509 2.13658 8.96965 2.07266C8.82704 2 8.64036 2 8.26699 2H3.73366C3.36029 2 3.17361 2 3.031 2.07266C2.90556 2.13658 2.80357 2.23856 2.73965 2.36401C2.66699 2.50661 2.66699 2.6933 2.66699 3.06667V7.33333Z"
-                                                stroke="#98A2B3"
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                            />
-                                        </svg>
+                                        {importantFlag.language ? (
+                                            <img src={flagFill} className="flag_icon" />
+                                        ) : (
+                                            <img src={simpleFlag} className="flag_icon" />
+                                        )}
+                                        {!openStep.includes('5') && (
+                                            <span className="acheade_right">
+                                                <img src={messageIcon} />&nbsp;&nbsp;
+                                                {spokenLanguageBadges?.map((cv, index) => (
+                                                    <>{cv?.language_name}{index !== spokenLanguageBadges.length - 1 && ", "}</>
+                                                ))}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <img src={pencilIcon} />&nbsp;&nbsp;
+                                                {rdnwBadges?.map((cv, index) => (
+                                                    <>{cv?.language_name}{index !== rdnwBadges.length - 1 && ", "}</>
+                                                ))}
+                                            </span>
+                                        )}
                                     </Accordion.Header>
-                                    <Accordion.Body>
+                                    <Accordion.Body ref={(el) => (sectionRefs.current['5'] = el)}>
                                         {isSpecificLanguareRequired && (
                                             <Form className="row">
                                                 <Form.Group
@@ -1685,25 +1878,15 @@ const UpdateJobsRevised = ({
                                     className="accd_child"
                                     id="item_Geog"
                                 >
-                                    <Accordion.Header>
+                                    <Accordion.Header onClick={() => handleOpenStep("6")}>
                                         Geography{" "}
-                                        <svg
-                                            className="flag_icon"
-                                            width="16"
-                                            height="16"
-                                            viewBox="0 0 16 16"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                d="M9.33366 4.66667H13.0939C13.3921 4.66667 13.5412 4.66667 13.6284 4.72936C13.7045 4.78406 13.754 4.86826 13.7649 4.96133C13.7774 5.068 13.705 5.19834 13.5601 5.45901L12.6627 7.07432C12.6102 7.16886 12.584 7.21613 12.5737 7.26618C12.5646 7.31049 12.5646 7.35618 12.5737 7.40048C12.584 7.45054 12.6102 7.49781 12.6627 7.59234L13.5601 9.20766C13.7049 9.46833 13.7774 9.59867 13.7649 9.70534C13.754 9.79841 13.7045 9.8826 13.6284 9.93731C13.5412 10 13.3921 10 13.0939 10H8.40033C8.02696 10 7.84027 10 7.69766 9.92734C7.57222 9.86342 7.47024 9.76144 7.40632 9.63599C7.33366 9.49339 7.33366 9.3067 7.33366 8.93333V7.33333M2.66699 14L2.66699 2.66667M2.66699 7.33333H8.26699C8.64036 7.33333 8.82704 7.33333 8.96965 7.26067C9.09509 7.19676 9.19708 7.09477 9.261 6.96933C9.33366 6.82672 9.33366 6.64004 9.33366 6.26667V3.06667C9.33366 2.6933 9.33366 2.50661 9.261 2.36401C9.19708 2.23856 9.09509 2.13658 8.96965 2.07266C8.82704 2 8.64036 2 8.26699 2H3.73366C3.36029 2 3.17361 2 3.031 2.07266C2.90556 2.13658 2.80357 2.23856 2.73965 2.36401C2.66699 2.50661 2.66699 2.6933 2.66699 3.06667V7.33333Z"
-                                                stroke="#98A2B3"
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                            />
-                                        </svg>
+                                        {importantFlag.geography ? (
+                                            <img src={flagFill} className="flag_icon" />
+                                        ) : (
+                                            <img src={simpleFlag} className="flag_icon" />
+                                        )}
                                     </Accordion.Header>
-                                    <Accordion.Body>
+                                    <Accordion.Body ref={(el) => (sectionRefs.current['6'] = el)}>
                                         {isHideLocation && (
                                             <Form>
                                                 <Form.Group
@@ -1781,7 +1964,7 @@ const UpdateJobsRevised = ({
                                     </Accordion.Body>
                                 </Accordion.Item>
                                 <Accordion.Item eventKey="7">
-                                    <Accordion.Header>
+                                    <Accordion.Header onClick={() => setOpenStep([])}>
                                         Skills and Other Requirements
                                     </Accordion.Header>
                                     <Accordion.Body>
@@ -1799,7 +1982,7 @@ const UpdateJobsRevised = ({
                                     </Accordion.Body>
                                 </Accordion.Item>
                                 <Accordion.Item eventKey="8" className="accd_child">
-                                    <Accordion.Header>
+                                    <Accordion.Header onClick={() => handleOpenStep("8")}>
                                         Skills
                                         <div className="head_actions">
                                             <span className="imprt_icon text-primery">
@@ -1814,7 +1997,7 @@ const UpdateJobsRevised = ({
                                             <span className="count ms-1">1 of 3</span>
                                         </div>
                                     </Accordion.Header>
-                                    <Accordion.Body>
+                                    <Accordion.Body ref={(el) => (sectionRefs.current['8'] = el)}>
                                         <Row className="skills_seraching">
                                             <Col md={9}>
                                                 <InputGroup className="defult_serachbox">
@@ -1933,7 +2116,7 @@ const UpdateJobsRevised = ({
                                             </div>
                                         )} */}
                                         {skillGroupData?.length > 0 && (
-                                            skillGroupData?.map((Val) => (
+                                            skillGroupData?.map((Val, i) => (
                                                 <div className="starttag_box">
                                                     <div className="stagbox_head">
                                                         <h6>{Val?.skill_group_name}</h6>
@@ -1949,10 +2132,13 @@ const UpdateJobsRevised = ({
                                                                         }`}
                                                                 >
                                                                     {skill.skill_name}
+                                                                    <span className={`imprt_icon ${mustHaveSkills.includes(skill) ? "text-primery" : ""} `} onClick={() => handleMustHaveSkill(skill)}>
+                                                                        <i class={`${mustHaveSkills.includes(skill) ? "fa" : "far"}  fa-star`} aria-hidden="true"></i>
+                                                                    </span>
                                                                 </span>
                                                             ))}
 
-                                                        {addSubSkill?.map((item, index) => (
+                                                        {selectedIndex.includes(Val?.uid) && addSubSkill?.map((item, index) => (
                                                             <span
                                                                 onClick={(e) => {
                                                                     handleSelectedSkill(item);
@@ -1970,7 +2156,7 @@ const UpdateJobsRevised = ({
                                                                         );
                                                                         setAddSubSkill(updatedSkills);
                                                                     }}
-                                                                    onBlur={() => handleBlur(item.skill_name,Val, index)}
+                                                                    onBlur={() => handleBlur(item.skill_name, Val, index)}
                                                                 />{" "}
                                                                 <i
                                                                     onClick={() => {
@@ -1984,7 +2170,7 @@ const UpdateJobsRevised = ({
                                                         <button
                                                             type="button"
                                                             class="btn-light-gray btn btn-primary"
-                                                            onClick={handlesubSkillAdd}
+                                                            onClick={() => handlesubSkillAdd(Val?.uid)}
                                                         >
                                                             <i class="fa fa-plus text-primary me-1"></i>Add Skill
                                                         </button>
@@ -2031,7 +2217,7 @@ const UpdateJobsRevised = ({
                                                 )}
 
                                                 <div className="stag_list mt-2">
-                                                    {addSubSkill.map((item, index) => (
+                                                    {selectedIndex.includes(i) && addSubSkill.map((item, index) => (
                                                         <span
                                                             onClick={(e) => {
                                                                 handleSelectedSkill(item);
@@ -2065,7 +2251,7 @@ const UpdateJobsRevised = ({
                                                     <button
                                                         type="button"
                                                         class="btn-light-gray btn btn-primary"
-                                                        onClick={handlesubSkillAdd}
+                                                        onClick={() => handlesubSkillAdd(i)}
                                                     >
                                                         <i class="fa fa-plus text-primary me-1"></i>Add Skill
                                                     </button>
@@ -2085,12 +2271,13 @@ const UpdateJobsRevised = ({
                                 </Accordion.Item>
                                 <Accordion activeKey={activeKey}>
                                     <Accordion.Item eventKey="9" className="accd_child">
-                                        <Accordion.Header>
+                                        <Accordion.Header onClick={() => handleOpenStep("9")}>
                                             Custom Questions{" "}
                                             <div>
                                                 <button
                                                     type="button"
                                                     onClick={(e) => {
+                                                        handleOpenStep("9")
                                                         setActiveKeyAdd(true);
                                                         setActiveKey("9");
                                                         handleAddComponent(e);
@@ -2126,7 +2313,7 @@ const UpdateJobsRevised = ({
                                                 </div>
                                             </div>
                                         </Accordion.Header>
-                                        <Accordion.Body>
+                                        <Accordion.Body ref={(el) => (sectionRefs.current['9'] = el)}>
                                             <div className="starttag_box ctmqus_panel mt-0">
                                                 {!activeKeyAdd &&
                                                     createRevisedJobData?.question_job?.length > 0 && (
@@ -2298,7 +2485,7 @@ const UpdateJobsRevised = ({
                                     </Accordion.Item>
                                 </Accordion>
                                 <Accordion.Item eventKey="10">
-                                    <Accordion.Header>
+                                    <Accordion.Header onClick={() => setOpenStep([])}>
                                         Ideal Behaviour and Personalities
                                     </Accordion.Header>
                                     <Accordion.Body>
@@ -2320,7 +2507,7 @@ const UpdateJobsRevised = ({
                                     </Accordion.Body>
                                 </Accordion.Item>
                                 <Accordion.Item eventKey="11" className="accd_child">
-                                    <Accordion.Header>
+                                    <Accordion.Header onClick={() => handleOpenStep("11")}>
                                         <div>
                                             Behaviour Assessment{" "}
                                             <svg
@@ -2359,7 +2546,7 @@ const UpdateJobsRevised = ({
                                             Help me Choose
                                         </button>
                                     </Accordion.Header>
-                                    <Accordion.Body>
+                                    <Accordion.Body ref={(el) => (sectionRefs.current['11'] = el)}>
                                         <div className="behav_assmnt">
                                             {behaviours &&
                                                 behaviours.map((item, index) => (
@@ -2432,6 +2619,70 @@ const UpdateJobsRevised = ({
                                     </Accordion.Body>
                                 </Accordion.Item>
                             </Accordion>
+                            {openStep.length > 0 && (
+                                <motion.div
+                                    // className="lw-toolbar"
+                                    ref={toolbarRef}
+                                    className="absolute right-0 w-12 h-12 bg-blue-500 rounded-lg lw-toolbar"
+                                    animate={{ top: toolbarPosition }}
+                                    transition={{ type: "spring", stiffness: 100, damping: 10 }}
+                                >
+                                    <ul>
+                                        {(openStep[0] === '1' || openStep[0] === '2' || openStep[0] === '3' || openStep[0] === '4' || openStep[0] === '5' ||
+                                            openStep[0] === '6') &&
+                                            (
+                                                <>
+                                                    <li>
+                                                        <Link href={''}><i className="fa fa-undo"></i></Link>
+                                                    </li>
+                                                    <li>
+                                                        <Link href={''} onClick={() => removeImportantFlag(openStep?.[0])}>
+                                                            <img src={simpleFlag} className="flag_icon" />
+                                                        </Link>
+                                                    </li>
+                                                    <li>
+                                                        <Link href={''} onClick={() => handleImportantFlag(openStep?.[0])}>
+                                                            {handleOutline()}
+                                                        </Link>
+                                                    </li>
+                                                </>
+                                            )}
+                                        {openStep[0] === '8' && (
+                                            <>
+                                                <li>
+                                                    <Link href={''}><i className="fa fa-undo"></i></Link>
+                                                </li>
+                                                <li>
+                                                    <Link href={''} onClick={handleAddSkillGroup}><i className="fa fa-plus"></i></Link>
+                                                </li>
+                                            </>
+                                        )}
+                                        {openStep[0] === '9' && (
+                                            <>
+                                                <li>
+                                                    <Link href={''}><i className="fa fa-undo"></i></Link>
+                                                </li>
+                                                <li>
+                                                    <Link href={''} onClick={() => setActiveKeyAdd(true)}><i className="fa fa-plus"></i></Link>
+                                                </li>
+                                                <li className="active">
+                                                    <Link href={''} onClick={() => setActiveKeyAdd(false)}><i className="fas fa-times"></i></Link>
+                                                </li>
+                                            </>
+                                        )}
+                                        {openStep[0] === '11' && (
+                                            <>
+                                                <li>
+                                                    <Link href={''}><i className="fa fa-undo"></i></Link>
+                                                </li>
+                                                <li className="active">
+                                                    <Link href={''} onClick={() => setShowHelpChoose(true)}><i class="fa fa-magic" aria-hidden="true"></i></Link>
+                                                </li>
+                                            </>
+                                        )}
+                                    </ul>
+                                </motion.div>
+                            )}
                         </Col>
                         <Col md={3} lg={2} className="jobpre_Rightpanel">
                             <h5>{createRevisedJobData?.job_title}</h5>
@@ -2449,23 +2700,25 @@ const UpdateJobsRevised = ({
                                     <h6>Expectations</h6>
                                     <ul>
                                         <li>
-                                            {createRevisedJobData?.min_exp}-
-                                            {createRevisedJobData?.max_exp} Years Experience{" "}
+                                            {updateFormData?.min_exp}-
+                                            {updateFormData?.max_exp} Years Experience{" "}
                                         </li>
                                         <li>
                                             Salary{" "}
                                             <span className="text-danger italic">
-                                                {createRevisedJobData?.max_salary}
+                                                {updateFormData?.max_salary}
                                             </span>{" "}
                                         </li>
                                         <li>
                                             Minimum Qualification{" "}
-                                            <span className="text-danger italic">Not defined</span>{" "}
+                                            <span className="text-danger italic">{updateFormData?.minimum_education}</span>{" "}
                                         </li>
                                         <li>
                                             Education{" "}
                                             <span className="text-danger italic">
-                                                {createRevisedJobData?.minimum_education}
+                                                {badges?.map((Val, index) => (
+                                                    <>{Val?.qualification_name}{index !== badges.length - 1 && ", "}</>
+                                                ))}
                                             </span>{" "}
                                         </li>
                                     </ul>
@@ -2478,21 +2731,24 @@ const UpdateJobsRevised = ({
                                             <span className="text-danger italic">Not defined</span>
                                         </li>
                                         <li>Needs to Travel Rarely </li>
-                                        <li>Must Speak English, Telugu, Hindi</li>
-                                        <li>Must Read/Write in English</li>
-                                        <li>Should be from Mumbai, Hyderabad, Delhi, Bangalore</li>
+                                        <li>Must Speak {spokenLanguageBadges?.map((lang, index) => (
+                                            <>{lang?.language_name}{index !== spokenLanguageBadges.length - 1 && ", "}</>
+                                        ))}</li>
+                                        <li>Must Read/Write in {rdnwBadges?.map((lang, index) => (
+                                            <>{lang?.language_name}{index !== rdnwBadges.length - 1 && ", "}</>
+                                        ))}</li>
+                                        <li>Should be from {locationBadges?.map((city, index) => (
+                                            <>{city?.location_name}{index !== locationBadges.length - 1 && ", "}</>
+                                        ))}</li>
                                     </ul>
                                 </div>
                                 <div className="user_bsinfo">
                                     <h6>Skills</h6>
                                     <ul>
                                         <li>
-                                            <span className="text-danger italic">
-                                                {!!createRevisedJobData &&
-                                                    createRevisedJobData?.skills
-                                                        ?.forEach((item) => item.skill_name)
-                                                        ?.join(",")}
-                                            </span>
+                                            {SelectSkillsData?.map((skill, index) => (
+                                                <>{skill?.skill_name}{index !== SelectSkillsData.length - 1 && ", "}</>
+                                            ))}
                                         </li>
                                     </ul>
                                 </div>
@@ -2500,7 +2756,24 @@ const UpdateJobsRevised = ({
                                     <h6>Behaviours</h6>
                                     <ul>
                                         <li>
-                                            <span className="text-danger italic">Not defined</span>
+                                            {behaviours?.length > 0 ? behaviours?.map((item, index) => {
+                                                if (item.isSelected) {
+                                                    return (
+                                                        <>
+                                                            {item?.heading}
+                                                            {item?.markedImportant && (
+                                                                <i className={`fa-star ${item.markedImportant ? "fa important" : "far"}`}
+                                                                    onClick={(e) => handleStarClick(index, e)}
+                                                                ></i>
+                                                            )}
+                                                            {index !== behaviours.length - 1 && ", "}
+                                                        </>
+                                                    )
+                                                }
+                                            }) : (
+                                                <span className="text-danger italic">Not defined</span>
+                                            )}
+
                                         </li>
                                     </ul>
                                 </div>
@@ -2518,18 +2791,23 @@ const UpdateJobsRevised = ({
                                         <li>Job details-{createRevisedJobData?.job_title}</li>
                                         <li>{createRevisedJobData?.job_company?.company_name} </li>
                                         <li>
-                                            Area: {createRevisedJobData?.job_location?.location_name}
+                                            Area: {locationBadges?.map((city, index) => (
+                                                <>{city?.location_name}{index !== locationBadges.length - 1 && ", "}</>
+                                            ))}
                                         </li>
                                         <li>
-                                            Experience: {createRevisedJobData?.min_exp}-
-                                            {createRevisedJobData?.max_exp} Years
+                                            Experience: {updateFormData?.min_exp}-
+                                            {updateFormData?.max_exp} Years
                                         </li>
-                                        <li>Role: Manager-Design Engineering/Process Engineering</li>
+                                        <li>Role: {restrictedRoleBadges?.map((Val, index) => (
+                                            <>{Val?.is_like_name}{index !== restrictedRoleBadges.length - 1 && ", "}</>
+                                        ))}</li>
                                         <li>
-                                            Industry type: Specialty Chemicals, Pharmaceuticals,
-                                            agro-chemicals, intermediates plants
+                                            Industry type: {IndustriesBadges?.map((Val, index) => (
+                                                <>{Val?.industry_name}{index !== IndustriesBadges.length - 1 && ", "}</>
+                                            ))}
                                         </li>
-                                        <li>Employment: Fulltime/Contract</li>
+                                        <li>Employment: {`${createRevisedJobData?.job_type}/Contract`}</li>
                                     </ul>
                                 </div>
                                 <div className="user_bsinfo">
