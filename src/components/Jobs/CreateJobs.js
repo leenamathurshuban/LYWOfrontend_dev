@@ -35,6 +35,7 @@ const CreateJobs = ({ show, handleClose }) => {
   const [ishideIndustries, setIsHideIndustries] = useState(true);
   const [isHideRestrictedRoles, setIsHideRestrictedRoles] = useState(true);
   const [SelectSkillsData, setSelectSkillsData] = useState([]);
+  const [mustHaveSkills, setMustHaveSkills] = useState([]);
   const [isHideLocation, setIsHideLLocation] = useState(true);
   const [isSpecificLanguareRequired, setIsSpecificLanguareRequired] =
     useState(true);
@@ -666,6 +667,9 @@ const CreateJobs = ({ show, handleClose }) => {
           ?.join(",");
 
         formdata.append("skill_name", skillID);
+      }else if (key === "must_have_skills" && mustHaveSkills.length > 0) {
+        let skillID = mustHaveSkills?.map((item) => item?.uid) // Extract skill_name values
+        formdata.append("must_have_skills", JSON.stringify(skillID));
       } else if ((key === "selected_behaviour" || key === "important_behaviour") && hasSelectedAndImportant) {
         let selectedBehaviourUids = [];
         let importantBehaviourUids = [];
@@ -1113,7 +1117,7 @@ const CreateJobs = ({ show, handleClose }) => {
                   ref={fileInputRef}
                   accept="image/*,application/pdf"
                   onChange={handleFileUpload}
-                  style={{ display: "none" }}
+                  style={{ display: "none" }}//
                 />
 
                 <div>
@@ -1131,24 +1135,27 @@ const CreateJobs = ({ show, handleClose }) => {
                   </p>
                 </div>
               </div>
+
+              <div className="img_progress">
+                {uploadProgress > 0 && (
+                  <>
+                    <span className="pclose">
+                      <i className="fas fa-times" onClick={removeFileValue}></i>
+                    </span>
+                    <div className="progress-bar" style={{ height: '10px', width: '500px', backgroundColor: 'white' }}>
+                      <div
+                        className="progress"
+                        style={{
+                          width: `${uploadProgress}%`,
+                          backgroundColor: "blue",
+                        }}
+                      ></div>
+                    </div>
+                    <span>{uploadProgress}%</span>
+                  </>
+                )}
+              </div>
             </div>
-            {uploadProgress > 0 && (
-              <>
-                <span>
-                  <i className="fas fa-times" onClick={removeFileValue}></i>
-                </span>
-                <div className="progress-bar" style={{ height: '10px', width: '500px', backgroundColor: 'white' }}>
-                  <div
-                    className="progress"
-                    style={{
-                      width: `${uploadProgress}%`,
-                      backgroundColor: "blue",
-                    }}
-                  ></div>
-                </div>
-                <span>{uploadProgress}%</span>
-              </>
-            )}
             {descriptionError && (
               <div className="error">{descriptionError}</div>
             )}
@@ -1290,6 +1297,8 @@ const CreateJobs = ({ show, handleClose }) => {
           setBehaviours={setBehaviours}
           updateFormData={updateFormData}
           setUpdateFormData={setUpdateFormData}
+          mustHaveSkills={mustHaveSkills}
+          setMustHaveSkills={setMustHaveSkills}
         />
       )}
     </Offcanvas>
