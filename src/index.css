@@ -11,3 +11,7 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.owl-theme .owl-dots .owl-dot.active span {
+  background: #869791;
+  width: 40px;
+}

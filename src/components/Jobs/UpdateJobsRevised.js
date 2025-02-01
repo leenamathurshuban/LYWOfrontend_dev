@@ -537,7 +537,7 @@ const UpdateJobsRevised = ({
     const handleQuestionTypeChange = (index, value) => {
         const updatedComponents = [...components];
         updatedComponents[index].quiz_type =
-            value === "single" ? "MCQ Single" : "MCQ Multiple";
+            value === "single" ? "MCQ" : "MCQ-M";
         setComponents(updatedComponents);
         setQuestionType(value);
     };
@@ -1023,14 +1023,32 @@ const UpdateJobsRevised = ({
             return (<img src={simpleFlag} className="flag_icon" />)
         }
     }
-    console.log(behaviours)
-    console.log('==========>update======>', updateFormData)
+    const handleLightClass = () => {
+        if (importantFlag.salary && openStep[0] === '1') {
+          return "active";
+        } else if (importantFlag.education && openStep[0] === '2') {
+          return "active";
+        } else if (importantFlag.experience && openStep[0] === '3') {
+          return "active";
+        } else if (importantFlag.targethiredate && openStep[0] === '4') {
+          return "active";
+        } else if (importantFlag.language && openStep[0] === '5') {
+          return "active";
+        } else if (importantFlag.geography && openStep[0] === '6') {
+          return "active";
+        } else {
+          return "";
+        }
+      }
+    // console.log(behaviours)
+    // console.log('==========>update======>', updateFormData)
     // console.log('add skill box', addSkillGroup)
     // console.log("customValue,addSubSkill", skillGroupData, SelectSkillsData)
     // console.log(skillGroupData, components)
-    console.log('======>selecting skills', SelectSkillsData)
+    // console.log('======>selecting skills', SelectSkillsData)
     // console.log(openStep,importantFlag)
-    console.log('important', mustHaveSkills)
+    console.log('must have', mustHaveSkills)
+    console.log(components)
     return (
         <>
             <Modal
@@ -2635,7 +2653,7 @@ const UpdateJobsRevised = ({
                                                     <li>
                                                         <Link href={''}><i className="fa fa-undo"></i></Link>
                                                     </li>
-                                                    <li>
+                                                    <li className={handleLightClass()}>
                                                         <Link href={''} onClick={() => removeImportantFlag(openStep?.[0])}>
                                                             <img src={simpleFlag} className="flag_icon" />
                                                         </Link>
