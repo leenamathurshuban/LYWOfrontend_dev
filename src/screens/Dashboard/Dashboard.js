@@ -5,6 +5,7 @@ import {
   Card,
   Col,
   Container,
+  Modal,
   Row
 } from "react-bootstrap";
 import FileUploader from "../../components/FileUploader";
@@ -17,6 +18,14 @@ import { logoMaker, removeToken } from "../../helpers/helper";
 import { liwotextlogo } from "../../images/assest";
 import { GetcompanyDetailsApi } from "../../services/provider";
 import { setCompanyProfileDetails } from "../../Slice/Login/LoginSlice";
+import logoIcon from "../../images/logo_icon.png";
+import pink_brb from "../../images/icons/pink_brb.svg";
+import choice_brb from "../../images/icons/choice_brb.svg";
+import stack2_brb from "../../images/icons/stack 2_brb.svg";
+import option_brb from "../../images/icons/option_brb.svg";
+import infogray from "../../images/icons/info_gray.svg";
+import globgray from "../../images/icons/glob_gray.svg";
+import QuizSlider from "../../components/QuizSlider";
 
 const Dashboard = () => {
   const [show, setShow] = useState(false);
@@ -124,7 +133,7 @@ const Dashboard = () => {
                     </svg>
                   </span>
                   <Card.Title>Start by creating your first job</Card.Title>
-                  <Button variant="primary">Create Job</Button>
+                  <Button variant="primary"  onClick={handleShow}>Create Job</Button>
                 </Card.Body>
               </Card>
             </Col>
@@ -161,6 +170,100 @@ const Dashboard = () => {
       </div>
 
       <CompanyEditProfile show={show} handleClose={handleClose} />
+      {/* <Modal 
+        show={show} 
+        onHide={handleClose}
+        animation={false}
+        size="lg"
+        backdrop={false}
+        className="beharlasmnt_mdl"
+        >
+        <Modal.Header closeButton>
+          <img src={logoIcon} className="me-4" />
+          <Modal.Title>Behavioural Assessment</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Container>
+            <Row>
+              <Col md={12} className="bg-white rounded p-3"><h5>Behavioural Assessment for Sr. Developer - Python</h5></Col>
+            </Row>
+            <Row className="mt-3">
+              <Col md={12} className="bg-white rounded p-5 shadow-md border">
+                  <Row>
+                    <Col md={3}>
+                      <div className="brb_cards">
+                          <img src={stack2_brb}/>
+                          <h6>28 Sets</h6>
+                      </div>
+                    </Col>
+                    <Col md={3}>
+                      <div className="brb_cards">
+                          <img src={option_brb}/>
+                          <h6>4 Options</h6>
+                      </div>
+                    </Col>
+                    <Col md={3}>
+                      <div className="brb_cards">
+                          <img src={choice_brb}/>
+                          <h6>Pick one "Most Like” you</h6>
+                      </div>
+                    </Col>
+                    <Col md={3}>
+                      <div className="brb_cards">
+                          <img src={pink_brb}/>
+                          <h6>Pick one "Least Like” you</h6>
+                      </div>
+                    </Col>
+                  </Row>
+              </Col>
+            </Row>
+            <Row className="mt-3 mb-5">
+              <Col md={12} className="bg-white rounded p-3 keypoints">
+                  <h6>Key Points to Note</h6>
+                  <ul>
+                    <li> The test contains 28 questions.</li>
+                    <li> For each question, you will be given 4 options.</li>
+                    <li> Please select one word that best describes you and one word that least describes you in each set.</li>
+                    <li> We recommend completing the behavioral test in one sitting.</li>
+                    <li> Do not overthink your decisions.</li>
+                    <li> There are no right or wrong choices.</li>
+                  </ul>
+              </Col>
+            </Row>
+          </Container>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={handleClose}>
+            Start
+          </Button>
+        </Modal.Footer>
+      </Modal> */}
+      <Modal 
+        show={show} 
+        onHide={handleClose}
+        animation={false}
+        size="lg"
+        backdrop={false}
+        className="beharquiz_mdl"
+        >
+        <Modal.Header closeButton>
+          <img src={logoIcon} className="me-4" />
+          <Modal.Title>Behavioural Assessment</Modal.Title>
+          <div className="score_panel">
+              <span className="att_count">Attempted <strong>00 / 28</strong></span>
+              <button type="button" className="outline_scorebtn me-3"><img src={infogray}/>Instructions</button>
+              <button type="button" className="outline_scorebtn me-3"><img src={globgray}/>Instructions</button>
+          </div>
+        </Modal.Header>
+        <Modal.Body>
+            <Row className="bg-white rounded px-6 py-5">
+              <QuizSlider/>
+              <Col md={12} className="text-center mt-4">
+                <p className="mostlike">Pick one <strong>"Most Like”</strong> you and one <strong>"Least Like”</strong> you</p>
+              </Col>
+            </Row>
+        </Modal.Body>
+      </Modal>
     </>
   );
 };
