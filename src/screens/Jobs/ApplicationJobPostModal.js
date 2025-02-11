@@ -1,28 +1,578 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  Accordion,
+  Alert,
+  Badge,
   Button,
-  Card,
   Col,
+  Container,
   Form,
   Modal,
-  Nav,
   Row,
-  Tab,
-  Container,
 } from "react-bootstrap";
+import { useDropzone } from "react-dropzone";
+import imgpTrash from "../../images/icons/trash-01.svg";
 import logoIcon from "../../images/logo_icon.png";
+import {
+  ApplicationDeatilsApi,
+  ApplicationFormDetailsApi,
+  ApplicationJobApi,
+  EducationQualificationApi,
+  WorkExperienceApi,
+} from "../../services/provider";
 
-const ApplicationJobPostModal = ({ show, handleClose }) => {
-  const [selectedDate, setSelectedDate] = useState("");
-  const [isCurrentlyWorking, setIsCurrentlyWorking] = useState("");
-  const [isYes, setIsYes] = useState(false);
+const ApplicationJobPostModal = ({
+  show,
+  handleClose,
+  jobPostData,
+  updateButtonText,
+  registeredEmailId
+}) => {
+  const [isYes, setIsYes] = useState({
+    CurrentlyWorkingToggle: false,
+    NoticeBuyOutToggle: false,
+  });
+  const [ResumeFile, setResumeFile] = useState(null);
+  const [error, setError] = useState(null);
+  const [showInput, setShowInput] = useState(false);
+  const [ApplicantProfileId, setApplicantProfileId] = useState("");
+  const [selectedSpokenLanguageUids, setSelectedSpokenLanguageUids] = useState(
+    []
+  );
+  const [selectedWrittenLanguageUids, setSelectedWrittenLanguageUids] =
+    useState([]);
 
-  const handleDateChange = (e) => {
-    setSelectedDate(e.target.value);
+  const [EducationRows, SetEducationRows] = useState([
+    {
+      level: "",
+      areaOfEducation: "",
+      gradYear: "",
+      university: "",
+      grade: "",
+    },
+  ]);
+
+  const [WorkExpreienceRow, setWorkExpreienceRow] = useState([
+    {
+      TotalWorkExperience: "",
+      WorkRole: "",
+      WorkFrom: "",
+      WorkTo: "",
+      WorkComapny: "",
+      WorkIndustry: "",
+      WorkNote: "",
+    },
+  ]);
+
+  const [profileformData, setProfileFormData] = useState({
+    name: "",
+    email: "",
+    confirmEmail: "",
+    phone: "",
+    Qualification: "",
+    AvailableBy: "",
+    NoticePeriod: "",
+    ExpectedSalary: "",
+    TotalWorkExperience: "",
+    CurrentLocation: "",
+    relocationChoice: "",
+    requiredCompanyAssist: "",
+  });
+
+  const [errors, setErrors] = useState({
+    name: "",
+    email: "",
+    confirmEmail: "",
+    phone: "",
+    Qualification: "",
+    ResumeFile: null,
+    AvailableBy: "",
+    CurrentlyWorkingToggle: "",
+    NoticePeriod: "",
+    ExpectedSalary: "",
+    TotalWorkExperience: "",
+    CurrentLocation: "",
+    relocationChoice: "",
+    requiredCompanyAssist: "",
+    selectedSkills: "",
+  });
+
+  const [isValid, setIsValid] = useState(false);
+  const [isAllFormDetailsValid, setisAllFormDetailsValid] = useState(false);
+  const [touchedFields, setTouchedFields] = useState({
+    name: false,
+    email: false,
+    confirmEmail: false,
+    phone: false,
+  });
+  const [selectedSkills, setSelectedSkills] = useState([]);
+  const [showModal, setShowModal] = useState({
+    showSaveAsDraft: false,
+    showSaveModal: false,
+  });
+  // const [showSaveModal, setshowSaveModal] = useState(false);
+
+  const handleCloseModals = () => {
+    setShowModal({
+      showSaveAsDraft: false,
+      showSaveModal: false,
+    });
   };
-  const handleSwitchChange = () => {
-    setIsYes((prevState) => !prevState);
+
+  const handleShowModal = (modalName) => {
+    setShowModal((prevState) => {
+      const newState = {
+        showSaveAsDraft: false,
+        showSaveModal: false,
+      };
+
+      // Set the modal that needs to be shown to true
+      if (modalName === "SaveAsDraft") {
+        newState.showSaveAsDraft = true;
+      } else if (modalName === "Save") {
+        newState.showSaveModal = true;
+      }
+
+      return newState;
+    });
+  };
+
+
+
+  // const handleSaveCloseModal = () => setshowSaveModal(false);
+
+  // Handle skill selection
+  const handleSkillSelect = (skill) => {
+    // Check if the skill is already selected
+    if (selectedSkills.includes(skill.uid)) {
+      // Remove skill if already selected
+      setSelectedSkills(
+        selectedSkills.filter((selectedSkill) => selectedSkill !== skill.uid)
+      );
+    } else {
+      // Add skill if not selected
+      if (selectedSkills.length < 8) {
+        setSelectedSkills([...selectedSkills, skill.uid]);
+      } else {
+        alert("You can only select upto 8 skills.");
+      }
+    }
+  };
+
+  // This function checks if all fields are valid
+  const validateForProfileDetails = () => {
+    const newErrors = {};
+    let formIsValid = true;
+
+    if (!profileformData.name) {
+      formIsValid = false;
+      newErrors.name = "Name is required";
+    }
+
+    if (!profileformData.email) {
+      formIsValid = false;
+      newErrors.email = "Email is required";
+    }
+
+    if (!profileformData.confirmEmail) {
+      formIsValid = false;
+      newErrors.confirmEmail =
+        "Your application and progress are linked to this email. Please ensure it is entered correctly.";
+    } else if (profileformData.email !== profileformData.confirmEmail) {
+      formIsValid = false;
+      newErrors.confirmEmail =
+        "The email addresses do not match. Please check both fields and try again";
+    }
+
+    const phonePattern = /^[0-9]{10}$/;
+    if (!profileformData.phone) {
+      formIsValid = false;
+      newErrors.phone = "Phone number is required";
+    } else if (!phonePattern.test(profileformData.phone)) {
+      formIsValid = false;
+      newErrors.phone = "Phone number must be 10 digits";
+    }
+
+    setErrors(newErrors);
+    setIsValid(formIsValid);
+    return formIsValid;
+  };
+
+  const validateFormForAllDetails = () => {
+    const newErrors = {};
+    let formIsValid = true;
+
+    if (!ResumeFile) {
+      newErrors.ResumeFile = "ResumeFile Is required";
+      formIsValid = false; // Mark as invalid if there's an error
+    }
+    if (!profileformData?.AvailableBy) {
+      newErrors.AvailableBy = "Availabile By required";
+      formIsValid = false;
+    }
+    if (!profileformData?.NoticePeriod) {
+      newErrors.NoticePeriod = "Notice Period is required";
+      formIsValid = false;
+    }
+    if (!profileformData?.ExpectedSalary) {
+      newErrors.ExpectedSalary = "Expected Salary is required";
+      formIsValid = false;
+    }
+    if (!profileformData?.CurrentLocation) {
+      newErrors.CurrentLocation = "CurrentLocation is required";
+      formIsValid = false;
+    }
+    if (!profileformData?.relocationChoice) {
+      newErrors.relocationChoice = "Willing to relocate is required";
+      formIsValid = false;
+    }
+    if (!profileformData?.requiredCompanyAssist) {
+      newErrors.requiredCompanyAssist =
+        "Require company assistance is required";
+      formIsValid = false;
+    }
+    if (selectedSkills.length === 0) {
+      newErrors.selectedSkills = "Skill is required";
+      formIsValid = false;
+    }
+
+    setErrors(newErrors);
+    setisAllFormDetailsValid(formIsValid);
+
+    return formIsValid; 
+  };
+
+
+
+  const handleProfileDetailsChange = (e) => {
+    const { name, value } = e.target;
+    setProfileFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleFocus = (e) => {
+    const { name } = e.target;
+    setTouchedFields((prevTouched) => ({ ...prevTouched, [name]: true }));
+  };
+
+  const handleBlur = (e) => {
+    const { name } = e.target;
+    setTouchedFields((prevTouched) => ({ ...prevTouched, [name]: true }));
+    validateForProfileDetails();
+  };
+
+  const ApplicationDetailsGetApi = async () => {
+    try {
+      const response = await ApplicationDeatilsApi();
+      // console.log("Api data----------->>>>", response?.data?.response);
+      // if (response.status === 200) {
+      //   console.log("Api data----------->>>>", response.data);
+      // }
+    } catch (error) {
+      console.log("Error occurred:", error);
+    }
+  };
+
+  const handleProfileDetailsApi = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("email", profileformData?.email);
+      formData.append("user_name", profileformData?.name);
+      formData.append("user_phone_number", profileformData?.phone);
+      formData.append("job_uid", jobPostData?.uid);
+      const response = await ApplicationJobApi(formData);
+
+      if (response.status === 200) {
+        // console.log("Applicatant response------>>>>>>>>",response.data.response.uid)
+        setApplicantProfileId(response?.data?.response?.uid);
+        alert("Form Saved Successfully");
+      } else {
+        console.error("Failed to save form: ", response.data);
+        alert("There was an issue saving the form.");
+      }
+    } catch (error) {
+      // console.error(
+      //   "user Error occurred:-----",
+      //   error?.response?.data?.response?.user[0] ===
+      //     "Applicant Profile Already Created."
+      // );
+      console.log("ERROR:", error);
+    }
+  };
+
+  const handleFormDetailsApi = async () => {
+    const dataToSend = selectedSkills.length === 0 ? [] : selectedSkills;
+
+    try {
+      const formdata = new FormData();
+      formdata.append("resume", ResumeFile);
+      formdata.append("availble_by", profileformData?.AvailableBy);
+      formdata.append("currently_working", isYes?.CurrentlyWorkingToggle);
+      formdata.append("notice_period", profileformData?.NoticePeriod);
+      formdata.append("notice_buyout_available", isYes?.NoticeBuyOutToggle);
+      formdata.append("applicant_status", "Draft");
+      formdata.append("expected_salary", profileformData?.ExpectedSalary);
+      formdata.append(
+        "spoken_language",
+        JSON.stringify(selectedSpokenLanguageUids)
+      );
+      formdata.append(
+        "written_reading_language",
+        JSON.stringify(selectedWrittenLanguageUids)
+      );
+      formdata.append("current_location", profileformData?.CurrentLocation);
+      formdata.append(
+        "willing_to_relocate_to",
+        profileformData?.relocationChoice
+      );
+      formdata.append(
+        "require_company_assistance_for_relocation",
+        profileformData.requiredCompanyAssist
+      );
+      formdata.append("job_uid", jobPostData?.uid);
+
+      formdata.append("skills", JSON.stringify(dataToSend));
+
+      const response = await ApplicationFormDetailsApi(
+        formdata,
+        ApplicantProfileId
+      );
+
+      if (response.status === 200) {
+        handleClose();
+        updateButtonText("View");
+        registeredEmailId(profileformData?.email)
+        alert("Form Saved Successfully");
+      } else {
+        console.error("Failed to save form: ", response.data);
+        alert("There was an issue saving the form.");
+      }
+    } catch (error) {
+      console.error("Error occurred:", error);
+    }
+  };
+
+  const handleSaveAsDraft = () => {
+    if (!ApplicantProfileId) {
+      alert("Please fill Profile Details");
+      return;
+    }
+  };
+
+  const handleSubmit = () => {
+    //console.log("isValid----->>>>",isValid)
+    if (!ApplicantProfileId) {
+      alert("Please fill Profile Details");
+      return;
+    }
+
+    if (!isAllFormDetailsValid) {
+      // Only validate if the form isn't valid
+      if (!validateFormForAllDetails()) {
+        return;
+      }
+    }
+
+    if (isAllFormDetailsValid) {
+      handleShowModal("Save");
+    }
+  };
+
+  const handleButtonClick = () => setShowInput(!showInput);
+
+  const EducationAddRow = () => {
+    SetEducationRows([
+      ...EducationRows,
+      {
+        level: "",
+        areaOfEducation: "",
+        gradYear: "",
+        university: "",
+        grade: "",
+      },
+    ]);
+  };
+
+  const EducationdeleteRow = (index) => {
+    const newRows = EducationRows.filter((_, i) => i !== index);
+    SetEducationRows(newRows);
+  };
+
+  const handleEducationQualificationChange = (index, e) => {
+    const { name, value } = e.target;
+    const newRows = [...EducationRows];
+    newRows[index][name] = value;
+    SetEducationRows(newRows);
+  };
+
+  const saveQualificationData = async (row) => {
+    try {
+      if (!ApplicantProfileId) {
+        alert("Please fill Profile Details");
+        return;
+      }
+      const formdata = new FormData();
+      formdata.append("applicant_profile", ApplicantProfileId);
+      formdata.append("level", row.level);
+      formdata.append("applicant_area_of_education", row.areaOfEducation);
+      formdata.append("grad_year", row.gradYear);
+      formdata.append("university", row.university);
+      formdata.append("grade", row.grade);
+      const response = await EducationQualificationApi(formdata);
+
+      if (response.status === 200) {
+        alert("Education Saved Successfully");
+      } else {
+        console.error("Failed to save form: ", response.data);
+        alert("There was an issue saving the form.");
+      }
+    } catch (error) {
+      console.error("Error occurred:", error);
+    }
+  };
+
+  const saveWorkExperienceData = async (row) => {
+    try {
+      if (!ApplicantProfileId) {
+        alert("Please fill Profile Details");
+        return;
+      }
+      const formdata = new FormData();
+      formdata.append("work_applicant_profile", ApplicantProfileId);
+      formdata.append("total_work_experience", row.TotalWorkExperience);
+      formdata.append("role", row.WorkRole);
+      formdata.append("work_from", row.WorkFrom);
+      formdata.append("work_to", row.WorkTo);
+      formdata.append("work_company", row.WorkComapny);
+      formdata.append("work_industry", row.WorkIndustry);
+      formdata.append("note", row.WorkNote);
+
+      const response = await WorkExperienceApi(formdata);
+
+      if (response.status === 200) {
+        console.log("Data added of work experience");
+      } else {
+        console.error("Failed to save form: ", response.data);
+        alert("There was an issue saving the form.");
+      }
+    } catch (error) {
+      console.error("Error occurred:", error);
+      alert("Please fill all field data");
+    }
+  };
+
+  const WorkExpreienceAddRow = () => {
+    setWorkExpreienceRow((prevState) => [
+      ...prevState,
+      {
+        TotalWorkExperience: "",
+        WorkRole: "",
+        WorkFrom: "",
+        WorkTo: "",
+        WorkComapny: "",
+        WorkIndustry: "",
+        WorkNote: "",
+      },
+    ]);
+  };
+
+  const WorkExperienceDeleteRow = (index) => {
+    const deleteRow = WorkExpreienceRow.filter((_, i) => i !== index);
+    setWorkExpreienceRow(deleteRow);
+  };
+
+  const handleWorkExpeienceChange = (index, e) => {
+    const { name, value } = e.target;
+
+    const newWorkRow = [...WorkExpreienceRow];
+
+    newWorkRow[index][name] = value;
+    setWorkExpreienceRow(newWorkRow);
+  };
+
+  const handleSwitchChange = (toggleName) => {
+    setIsYes((prevState) => ({
+      ...prevState,
+      [toggleName]: !prevState[toggleName],
+    }));
+  };
+
+  const onDrop = (acceptedFiles) => {
+    const selectedFile = acceptedFiles[0];
+    if (selectedFile) {
+      const isValidType = [
+        "application/pdf",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      ].includes(selectedFile.type);
+      const isValidSize = selectedFile.size <= 2 * 1024 * 1024;
+
+      if (isValidType && isValidSize) {
+        setResumeFile(selectedFile);
+        setError(null);
+      } else {
+        if (!isValidType) {
+          setError("Please upload a valid PDF or DOC file.");
+        } else {
+          setError("File size should be less than 2MB.");
+        }
+      }
+    }
+  };
+
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    accept: ".pdf",
+    multiple: false,
+  });
+
+  const handleDeleteImage = () => {
+    setResumeFile(null);
+  };
+
+  useEffect(() => {
+    if (profileformData) {
+      validateForProfileDetails();
+    }
+    if (isValid) {
+      handleProfileDetailsApi();
+    }
+  }, [jobPostData, profileformData, isValid]);
+
+  const groupedSkills = jobPostData?.skills?.reduce((acc, skill) => {
+    const groupName = skill?.skill_group?.skill_group_name;
+    if (!acc[groupName]) {
+      acc[groupName] = [];
+    }
+    acc[groupName].push(skill);
+    return acc;
+  }, {});
+
+  const checkAllFieldsFilled = (rows) => {
+    return rows.some((row) =>
+      Object.values(row).every((fieldValue) => fieldValue !== "")
+    );
+  };
+
+  const isAllEducationFieldsFilled = checkAllFieldsFilled(EducationRows);
+  const isAllWorkExperienceFieldsFilled =
+    checkAllFieldsFilled(WorkExpreienceRow);
+
+  const handleSpokenLanguageClick = (uid) => {
+    if (selectedSpokenLanguageUids.includes(uid)) {
+      setSelectedSpokenLanguageUids(
+        selectedSpokenLanguageUids.filter((item) => item !== uid)
+      );
+    } else {
+      setSelectedSpokenLanguageUids([...selectedSpokenLanguageUids, uid]);
+    }
+  };
+  const handleWrittenLanguageClick = (uid) => {
+    if (selectedWrittenLanguageUids.includes(uid)) {
+      setSelectedWrittenLanguageUids(
+        selectedWrittenLanguageUids.filter((item) => item !== uid)
+      );
+    } else {
+      setSelectedWrittenLanguageUids([...selectedWrittenLanguageUids, uid]);
+    }
   };
 
   return (
@@ -37,83 +587,99 @@ const ApplicationJobPostModal = ({ show, handleClose }) => {
       <Modal.Header closeButton className="p-2">
         <img src={logoIcon} className="me-2" />
         <div>
-          <h5>Job Application for Sr. Developer - Python</h5>
-          <p>Mumbai, Technology, Full-Time, Remote</p>
+          <h5>{jobPostData?.detailed_description}</h5>
+          <p>
+            {jobPostData?.job_company?.company_name},{" "}
+            {jobPostData?.job_company?.location}, {jobPostData?.job_type}
+            {""},{jobPostData?.workplace_type}
+          </p>
         </div>
       </Modal.Header>
       <Modal.Body>
         <Container fluid>
-          <Row>
+          <Row className="justify-content-center">
             {/* Left Column */}
-            <Col md={2}>
-              <div className="custom-card">
-                <h6>Profile</h6>
-                <ul className="checklist">
-                  <li className="active">
-                    <a href="#item_salary">
-                      Basic Details{" "}
-                      <i class="fa fa-check" aria-hidden="true"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#item_edu">
-                      Resume <i class="fa fa-check" aria-hidden="true"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#item_Exp">
-                      Availability{" "}
-                      <i class="fa fa-check" aria-hidden="true"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#item_Target">
-                      Expected Salary{" "}
-                      <i class="fa fa-check" aria-hidden="true"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#item_lang">
-                      Education <i class="fa fa-check" aria-hidden="true"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#item_Geog">
-                      Experience <i class="fa fa-check" aria-hidden="true"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#item_Geog">
-                      Language <i class="fa fa-check" aria-hidden="true"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#item_Geog">
-                      Experience <i class="fa fa-check" aria-hidden="true"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#item_Geog">
-                      Geography <i class="fa fa-check" aria-hidden="true"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#item_Geog">
-                      Skills <i class="fa fa-check" aria-hidden="true"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#item_Geog">
-                      Custom Questions{" "}
-                      <i class="fa fa-check" aria-hidden="true"></i>
-                    </a>
-                  </li>
-                </ul>
-              </div>
+            <Col md={3} lg={2} className="jobpre_leftpanel px-2">
+              <h6>Profile</h6>
+              <ul className="checklist">
+                <li
+                  className={`${
+                    profileformData?.name &&
+                    profileformData?.email &&
+                    profileformData?.phone &&
+                    "active"
+                  }`}
+                >
+                  <a href="#item_salary">
+                    Basic Details <i class="fa fa-check" aria-hidden="true"></i>
+                  </a>
+                </li>
+
+                <li className={`${ResumeFile && "active"}`}>
+                  <a href="#item_edu">
+                    Resume <i class="fa fa-check" aria-hidden="true"></i>
+                  </a>
+                </li>
+                <li
+                  className={`${
+                    profileformData?.AvailableBy &&
+                    isYes?.CurrentlyWorkingToggle &&
+                    profileformData?.NoticePeriod &&
+                    isYes?.NoticeBuyOutToggle &&
+                    "active"
+                  }`}
+                >
+                  <a href="#item_Exp">
+                    Availability <i class="fa fa-check" aria-hidden="true"></i>
+                  </a>
+                </li>
+                <li
+                  className={`${profileformData?.ExpectedSalary && "active"}`}
+                >
+                  <a href="#item_Target">
+                    Expected Salary{" "}
+                    <i class="fa fa-check" aria-hidden="true"></i>
+                  </a>
+                </li>
+                <li className={`${isAllEducationFieldsFilled && "active"}`}>
+                  <a href="#item_lang">
+                    Education <i class="fa fa-check" aria-hidden="true"></i>
+                  </a>
+                </li>
+                <li
+                  className={`${isAllWorkExperienceFieldsFilled && "active"}`}
+                >
+                  <a href="#item_Geog">
+                    Experience <i class="fa fa-check" aria-hidden="true"></i>
+                  </a>
+                </li>
+                <li>
+                  <a href="#item_Geog">
+                    Language <i class="fa fa-check" aria-hidden="true"></i>
+                  </a>
+                </li>
+
+                <li>
+                  <a href="#item_Geog">
+                    Geography <i class="fa fa-check" aria-hidden="true"></i>
+                  </a>
+                </li>
+                <li className={`${selectedSkills.length > 0 && "active"}`}>
+                  <a href="#item_Geog">
+                    Skills <i class="fa fa-check" aria-hidden="true"></i>
+                  </a>
+                </li>
+                <li>
+                  <a href="#item_Geog">
+                    Custom Questions{" "}
+                    <i class="fa fa-check" aria-hidden="true"></i>
+                  </a>
+                </li>
+              </ul>
             </Col>
 
             {/* Center Column */}
-            <Col md={8}>
+            <Col md={7} lg={8} className="jobMain_panel">
               <div className="custom-card">
                 <h6>Basic Details</h6>
 
@@ -128,7 +694,16 @@ const ApplicationJobPostModal = ({ show, handleClose }) => {
                       placeholder="Enter full name"
                       size="sm"
                       style={{ width: "350px" }}
+                      name="name"
+                      value={profileformData.name}
+                      onChange={handleProfileDetailsChange}
+                      onFocus={handleFocus}
+                      onBlur={handleBlur}
+                      isInvalid={touchedFields.name && !!errors.name}
                     />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.name}
+                    </Form.Control.Feedback>
                   </Col>
                 </Row>
                 <Row className="mb-3 mt-2">
@@ -138,11 +713,20 @@ const ApplicationJobPostModal = ({ show, handleClose }) => {
 
                   <Col>
                     <Form.Control
-                      type="text"
+                      type="email"
                       placeholder="email@mail.com"
                       size="sm"
                       style={{ width: "350px" }}
+                      name="email"
+                      value={profileformData.email}
+                      onChange={handleProfileDetailsChange}
+                      onFocus={handleFocus}
+                      onBlur={handleBlur}
+                      isInvalid={touchedFields.email && !!errors.email}
                     />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.email}
+                    </Form.Control.Feedback>
                   </Col>
                 </Row>
 
@@ -153,15 +737,22 @@ const ApplicationJobPostModal = ({ show, handleClose }) => {
 
                   <Col>
                     <Form.Control
-                      type="text"
+                      type="email"
                       placeholder="email@mail.com"
                       size="sm"
                       style={{ width: "350px" }}
+                      name="confirmEmail"
+                      value={profileformData.confirmEmail}
+                      onChange={handleProfileDetailsChange}
+                      onFocus={handleFocus}
+                      onBlur={handleBlur}
+                      isInvalid={
+                        touchedFields.confirmEmail && !!errors.confirmEmail
+                      }
                     />
-                    <p>
-                      Your application and progress are linked to this email.
-                      <p>Please ensure it is entered correctly.</p>
-                    </p>
+                    <Form.Control.Feedback type="invalid">
+                      {errors.confirmEmail}
+                    </Form.Control.Feedback>
                   </Col>
                 </Row>
 
@@ -176,7 +767,16 @@ const ApplicationJobPostModal = ({ show, handleClose }) => {
                       placeholder="9876543210"
                       size="sm"
                       style={{ width: "350px" }}
+                      name="phone"
+                      value={profileformData.phone}
+                      onChange={handleProfileDetailsChange}
+                      onFocus={handleFocus}
+                      onBlur={handleBlur}
+                      isInvalid={touchedFields.phone && !!errors.phone}
                     />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.phone}
+                    </Form.Control.Feedback>
                   </Col>
                 </Row>
               </div>
@@ -190,235 +790,546 @@ const ApplicationJobPostModal = ({ show, handleClose }) => {
                   </Col>
 
                   <Col>
-                    <Form.Control
-                      type="text"
-                      placeholder="Enter full name"
-                      size="sm"
-                      style={{ width: "350px" }}
-                    />
+                    {!ResumeFile && (
+                      <div
+                        className="cmp_uploder file-upload-box"
+                        {...getRootProps()}
+                      >
+                        <div className="upload-content">
+                          <input {...getInputProps()} />
+                          <i className="fas fa-cloud-upload-alt upload-icon"></i>
+                          <h5>
+                            <strong className="text-primary">
+                              Click to upload
+                            </strong>{" "}
+                            or Drag & Drop
+                          </h5>
+                          <small className="text-muted mb-0">
+                            PDF or Doc. Should be less than 2 MB
+                          </small>
+                        </div>
+                      </div>
+                    )}
+                    {!ResumeFile && (
+                      <p className="error">{errors.ResumeFile}</p>
+                    )}
+
+                    {error && (
+                      <Alert variant="danger" className="mt-2">
+                        {error}
+                      </Alert>
+                    )}
+
+                    {/* Display Selected File Details and Upload Button */}
+                    {ResumeFile && (
+                      <>
+                        <div className="selected_logo">
+                          <p>{ResumeFile?.name}</p>
+
+                          <div className="d-flex">
+                            <Button
+                              variant="link"
+                              className=" me-2"
+                              onClick={handleDeleteImage}
+                            >
+                              <img src={imgpTrash} />
+                            </Button>
+                          </div>
+                        </div>
+                        <small className="text-muted mb-0">
+                          PDF or Doc. Should be less than 2 MB
+                        </small>
+                      </>
+                    )}
                   </Col>
                 </Row>
               </div>
 
               <div className="custom-card">
                 <h6>Availability</h6>
-
-                {/* Currently Working Row with Switch */}
-                {/* <Row className="mb-3 d-flex align-items-center">
-                  {" "}
-                 
-                  <Col xs="auto">
-                    <Form.Label>Currently Working?</Form.Label>
+                <Row className="mb-3 mt-2">
+                  <Col md={2}>
+                    <Form.Label>Available by</Form.Label>
                   </Col>
+
                   <Col>
-                    
-                    <Form.Check
-                      type="switch"
-                      id="currentlyWorkingSwitch"
-                      label={isCurrentlyWorking ? "Yes" : "No"} 
-                      checked={isCurrentlyWorking}
-                      onChange={handleSwitchChange}
+                    <Form.Control
+                      name="AvailableBy"
+                      type="date"
+                      placeholder="DD/MM/YYYY"
+                      style={{ width: "350px" }}
+                      value={profileformData?.AvailableBy}
+                      onChange={handleProfileDetailsChange}
+                      isInvalid={!!errors.AvailableBy}
                     />
                   </Col>
-                </Row> */}
+                  <Form.Control.Feedback type="invalid">
+                    {errors.AvailableBy}
+                  </Form.Control.Feedback>
+                </Row>
 
-<Row className="align-items-center">
-            {/* Left Label for "No" */}
-            <Col xs="auto">
-              <Form.Label style={{ color: isYes ? 'grey' : 'black' }}>
-                {!isYes ? 'No' : 'No'}
-              </Form.Label>
-            </Col>
+                <Row className="mb-3 mt-2">
+                  <Col md={2}>
+                    <Form.Label>Currently Working?</Form.Label>
+                  </Col>
 
-            {/* The Switch Button */}
-            <Col xs="auto">
-              <Form.Check
-                type="switch"
-                id="custom-switch"
-                checked={isYes}
-                onChange={handleSwitchChange}
-              />
-            </Col>
+                  <Col>
+                    <Row className="align-items-center">
+                      {/* Left Label for "No" */}
+                      <Col xs="auto">
+                        <Form.Label
+                          style={{
+                            color: isYes?.CurrentlyWorkingToggle
+                              ? "grey"
+                              : "black",
+                          }}
+                        >
+                          {!isYes?.CurrentlyWorkingToggle ? "No" : "No"}
+                        </Form.Label>
+                      </Col>
 
-            {/* Right Label for "Yes" */}
-            <Col xs="auto">
-              <Form.Label style={{ color: isYes ? 'black' : 'grey' }}>
-                {isYes ? 'Yes' : 'Yes'}
-              </Form.Label>
-            </Col>
-          </Row>
+                      <Col xs="auto">
+                        <Form.Check
+                          type="switch"
+                          id="custom-switch"
+                          checked={isYes?.CurrentlyWorkingToggle}
+                          onChange={() =>
+                            handleSwitchChange("CurrentlyWorkingToggle")
+                          }
+                          // required
+                          // isInvalid={!isYes?.CurrentlyWorkingToggle}
+                        />
+                      </Col>
+
+                      <Col xs="auto">
+                        <Form.Label
+                          style={{
+                            color: isYes?.CurrentlyWorkingToggle
+                              ? "black"
+                              : "grey",
+                          }}
+                        >
+                          {isYes?.CurrentlyWorkingToggle ? "Yes" : "Yes"}
+                        </Form.Label>
+                      </Col>
+                    </Row>
+                    {/* <Form.Control.Feedback type="invalid">
+                      {errors?.CurrentlyWorkingToggle}
+                    </Form.Control.Feedback> */}
+                  </Col>
+                </Row>
+
+                <Row className="mb-3 mt-2">
+                  <Col md={2}>
+                    <Form.Label>Notice Period</Form.Label>
+                  </Col>
+
+                  <Col>
+                    <Form.Control
+                      type="text"
+                      placeholder="2 weeks"
+                      size="sm"
+                      style={{ width: "350px" }}
+                      name="NoticePeriod"
+                      value={profileformData?.NoticePeriod}
+                      onChange={handleProfileDetailsChange}
+                      isInvalid={!!errors.NoticePeriod}
+                    />
+                  </Col>
+                  <Form.Control.Feedback type="invalid">
+                    {errors.NoticePeriod}
+                  </Form.Control.Feedback>
+                </Row>
+
+                <Row className="mb-3 mt-2">
+                  <Col md={2}>
+                    <Form.Label>Notice Buyout Available</Form.Label>
+                  </Col>
+
+                  <Col>
+                    <Row className="align-items-center">
+                      <Col xs="auto">
+                        <Form.Label
+                          style={{
+                            color: isYes?.NoticeBuyOutToggle ? "grey" : "black",
+                          }}
+                        >
+                          {!isYes?.NoticeBuyOutToggle ? "No" : "No"}
+                        </Form.Label>
+                      </Col>
+
+                      <Col xs="auto">
+                        <Form.Check
+                          type="switch"
+                          id="custom-switch"
+                          checked={isYes?.NoticeBuyOutToggle}
+                          onChange={() =>
+                            handleSwitchChange("NoticeBuyOutToggle")
+                          }
+                        />
+                      </Col>
+
+                      <Col xs="auto">
+                        <Form.Label
+                          style={{
+                            color: isYes?.NoticeBuyOutToggle ? "black" : "grey",
+                          }}
+                        >
+                          {isYes?.NoticeBuyOutToggle ? "Yes" : "Yes"}
+                        </Form.Label>
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
               </div>
 
               <div className="custom-card">
                 <h6>Salary</h6>
                 <Row className="mb-3 d-flex align-items-center">
                   {" "}
-                  {/* Flexbox to align items */}
                   <Col xs="auto">
                     <Form.Label>Expected Salary</Form.Label>
                   </Col>
                   <Col>
-                    <Form.Select aria-label="Default select example">
+                    <Form.Select
+                      aria-label="Default select example"
+                      name="ExpectedSalary"
+                      value={profileformData?.ExpectedSalary}
+                      onChange={handleProfileDetailsChange}
+                      isInvalid={!!errors.ExpectedSalary}
+                      required
+                    >
                       <option>Expected Salary</option>
-                      <option value="1">One</option>
-                      <option value="2">Two</option>
-                      <option value="3">Three</option>
+                      <option value="15K">₹5 LPA - ₹ 10 LPA</option>
+                      <option value="20K">₹15 LPA - ₹ 20 LPA</option>
+                      <option value="30K">₹25 LPA - ₹ 30 LPA</option>
                     </Form.Select>
+                    <Form.Control.Feedback type="invalid" className="error">
+                      {errors.ExpectedSalary}
+                    </Form.Control.Feedback>
                   </Col>
                 </Row>
               </div>
 
               <div className="custom-card">
                 <h6>Educational Qualification</h6>
-                <Row className="mb-3 d-flex align-items-center border-top">
-                  <Col md={2}>
-                    <h6>Level</h6>
-                    <Form.Select aria-label="Default select example">
-                      <option>Expected Salary</option>
-                      <option value="1">One</option>
-                      <option value="2">Two</option>
-                      <option value="3">Three</option>
-                    </Form.Select>
-                  </Col>
-                  <Col md={3}>
-                    <h6>Area of Education</h6>
-                    <Form.Control
-                      type="text"
-                      placeholder="9876543210"
-                      size="sm"
-                      style={{ width: "150px" }}
-                    />
-                  </Col>
-                  <Col md={2}>
-                    <h6>Grad. Year</h6>
-                    <Form.Control
-                      type="text"
-                      placeholder="9876543210"
-                      size="sm"
-                      style={{ width: "150px" }}
-                    />
-                  </Col>
-                  <Col md={3} className="p-4">
-                    <h6> University</h6>
-                    <Form.Control
-                      type="text"
-                      placeholder="9876543210"
-                      size="sm"
-                      style={{ width: "150px" }}
-                    />
-                  </Col>
-                  <Col md={2}>
-                    <h6> Grade</h6>
-                    <Form.Select aria-label="Default select example">
-                      <option>Expected Salary</option>
-                      <option value="1">One</option>
-                      <option value="2">Two</option>
-                      <option value="3">Three</option>
-                    </Form.Select>
-                  </Col>
-                </Row>
+                {EducationRows.map((row, index) => (
+                  <Row
+                    className="mb-3 d-flex align-items-center border-top"
+                    key={index}
+                  >
+                    <Col md={2}>
+                      <h6>Level</h6>
+                      <Form.Select
+                        name="level"
+                        value={row.level}
+                        onChange={(e) =>
+                          handleEducationQualificationChange(index, e)
+                        }
+                      >
+                        <option>Level</option>
+
+                        <option value="High school">High school</option>
+                        <option value="Bachelors Degree">
+                          Bachelors Degree
+                        </option>
+                        <option value="Master Degree">Master Degree</option>
+                        <option value="Diploma ">Diploma </option>
+                        <option value="PG Diploma">PG Diploma</option>
+                        <option value="PhD">PhD</option>
+                        <option value="Post Doctorate">Post Doctorate</option>
+                      </Form.Select>
+                    </Col>
+                    <Col md={3}>
+                      <h6>Area of Education</h6>
+                      <Form.Control
+                        name="areaOfEducation"
+                        type="text"
+                        placeholder="9876543210"
+                        size="sm"
+                        value={row.areaOfEducation}
+                        onChange={(e) =>
+                          handleEducationQualificationChange(index, e)
+                        }
+                      />
+                    </Col>
+                    <Col md={2}>
+                      <h6>Grad. Year</h6>
+                      <Form.Control
+                        name="gradYear"
+                        type="date"
+                        value={row.gradYear}
+                        onChange={(e) =>
+                          handleEducationQualificationChange(index, e)
+                        }
+                      />
+                    </Col>
+                    <Col md={2} className="p-4">
+                      <h6>University</h6>
+                      <Form.Control
+                        name="university"
+                        type="text"
+                        placeholder="University"
+                        size="sm"
+                        value={row.university}
+                        onChange={(e) =>
+                          handleEducationQualificationChange(index, e)
+                        }
+                      />
+                    </Col>
+                    <Col md={2}>
+                      <h6>Grade</h6>
+                      <Form.Select
+                        name="grade"
+                        value={row.grade}
+                        onChange={(e) =>
+                          handleEducationQualificationChange(index, e)
+                        }
+                      >
+                        <option>GPA</option>
+                        <option value="1">A</option>
+                        <option value="2">B</option>
+                        <option value="3">C</option>
+                      </Form.Select>
+                    </Col>
+                    <Col md={1}>
+                      <img
+                        src={imgpTrash}
+                        alt="Delete"
+                        style={{ width: "20px", height: "20px" }}
+                        onClick={() => EducationdeleteRow(index)}
+                      />
+
+                      <Button
+                        variant="link"
+                        className="p-0"
+                        onClick={() => saveQualificationData(row)}
+                      >
+                        Save
+                      </Button>
+                    </Col>
+                  </Row>
+                ))}
+                <Button onClick={EducationAddRow}>+ Add</Button>
               </div>
 
               <div className="custom-card">
                 <h6>Work Experience</h6>
 
-                <Row>
-                  <Col xs="auto" className="text-center">
-                    <Form.Label>Total Work Experience</Form.Label>
-                  </Col>
+                {WorkExpreienceRow.map((row, index) => (
+                  <div key={index}>
+                    <Row>
+                      <Col xs="auto" className="text-center">
+                        <Form.Label>Total Work Experience</Form.Label>
+                      </Col>
 
-                  <Col>
-                    <Form.Control
-                      type="text"
-                      placeholder=""
-                      size="sm"
-                      style={{ width: "350px" }}
-                    />
-                  </Col>
-                </Row>
-                <Row className="mb-3 d-flex align-items-center border-top mt-2">
-                  <Col md={2}>
-                    <h6>Role</h6>
+                      <Col>
+                        <Form.Control
+                          type="text"
+                          placeholder=""
+                          size="sm"
+                          style={{ width: "350px" }}
+                          value={row?.TotalWorkExperience}
+                          name="TotalWorkExperience"
+                          onChange={(e) => handleWorkExpeienceChange(index, e)}
+                        />
+                      </Col>
+                    </Row>
 
-                    <Form.Control
-                      type="text"
-                      placeholder="9876543210"
-                      size="sm"
-                      style={{ width: "150px" }}
-                    />
-                  </Col>
-                  <Col md={3}>
-                    <h6>Area of Education</h6>
-                    <Form.Control
-                      type="text"
-                      placeholder="9876543210"
-                      size="sm"
-                      style={{ width: "150px" }}
-                    />
-                  </Col>
-                  <Col md={2}>
-                    <h6>Grad. Year</h6>
-                    <Form.Control
-                      type="text"
-                      placeholder="9876543210"
-                      size="sm"
-                      style={{ width: "150px" }}
-                    />
-                  </Col>
-                  <Col md={3} className="p-4">
-                    <h6> University</h6>
-                    <Form.Control
-                      type="text"
-                      placeholder="9876543210"
-                      size="sm"
-                      style={{ width: "150px" }}
-                    />
-                  </Col>
-                  <Col md={2}>
-                    <h6> Grade</h6>
-                    <Form.Select aria-label="Default select example">
-                      <option>Expected Salary</option>
-                      <option value="1">One</option>
-                      <option value="2">Two</option>
-                      <option value="3">Three</option>
-                    </Form.Select>
-                  </Col>
-                </Row>
+                    <Row className="mb-3 d-flex align-items-center border-top mt-2">
+                      <Col md={2}>
+                        <h6>Role</h6>
+                        <Form.Control
+                          type="text"
+                          placeholder="9876543210"
+                          size="sm"
+                          style={{ width: "150px" }}
+                          value={row?.WorkRole}
+                          name="WorkRole"
+                          onChange={(e) => handleWorkExpeienceChange(index, e)}
+                        />
+                      </Col>
+                      <Col md={2}>
+                        <h6>From</h6>
+                        <Form.Control
+                          placeholder="June 2019"
+                          size="sm"
+                          style={{ width: "150px" }}
+                          type="date"
+                          value={row?.WorkFrom}
+                          name="WorkFrom"
+                          onChange={(e) => handleWorkExpeienceChange(index, e)}
+                        />
+                      </Col>
+                      <Col md={2}>
+                        <h6>To</h6>
+                        <Form.Control
+                          type="date"
+                          placeholder="May 2022"
+                          size="sm"
+                          style={{ width: "150px" }}
+                          value={row?.WorkTo}
+                          name="WorkTo"
+                          onChange={(e) => handleWorkExpeienceChange(index, e)}
+                        />
+                      </Col>
+                      <Col md={3} className="p-4">
+                        <h6> Company</h6>
+                        <Form.Control
+                          type="text"
+                          placeholder="9876543210"
+                          size="sm"
+                          style={{ width: "150px" }}
+                          value={row?.WorkComapny}
+                          name="WorkComapny"
+                          onChange={(e) => handleWorkExpeienceChange(index, e)}
+                        />
+                      </Col>
+                      <Col md={2} className="p-4">
+                        <h6> Industry</h6>
+                        <Form.Control
+                          type="text"
+                          placeholder="9876543210"
+                          size="sm"
+                          style={{ width: "150px" }}
+                          name="WorkIndustry"
+                          value={row?.WorkIndustry}
+                          onChange={(e) => handleWorkExpeienceChange(index, e)}
+                        />
+                      </Col>
+                      {showInput && (
+                        <div style={{ marginTop: "10px" }}>
+                          <Form>
+                            <Form.Group controlId="noteInput">
+                              <Form.Label>Note</Form.Label>
+                              <Form.Control
+                                as="textarea"
+                                rows={3}
+                                value={row?.WorkNote}
+                                name="WorkNote"
+                                onChange={(e) =>
+                                  handleWorkExpeienceChange(index, e)
+                                }
+                                placeholder="Write your note here..."
+                              />
+                            </Form.Group>
+                          </Form>
+                        </div>
+                      )}
+                      <Col md={1} className="p-4">
+                        <Button
+                          variant="link"
+                          className="p-0"
+                          onClick={handleButtonClick}
+                        >
+                          Note
+                        </Button>
+
+                        <Button
+                          variant="link"
+                          className="p-0"
+                          onClick={() => saveWorkExperienceData(row)}
+                        >
+                          Save
+                        </Button>
+                      </Col>
+
+                      <Col md={1}>
+                        <img
+                          src={imgpTrash}
+                          alt="Delete"
+                          style={{ width: "20px", height: "20px" }}
+                          onClick={() => WorkExperienceDeleteRow(index)}
+                        />
+                      </Col>
+                    </Row>
+                  </div>
+                ))}
+
+                <Button onClick={WorkExpreienceAddRow}>+ Add</Button>
               </div>
 
               <div className="custom-card">
                 <h6>Language</h6>
                 <p>Pick as many as possible</p>
-                <Row>
-                  <Col xs="auto" className="text-center">
-                    <Form.Label>Spoken Language</Form.Label>
-                  </Col>
-
-                  <Col>
-                    <Form.Control
-                      as="textarea"
-                      type="text"
-                      placeholder=""
-                      size="sm"
-                      style={{ width: "650px", height: "120px" }}
-                    />
-                  </Col>
-                </Row>
 
                 <Row>
-                  <Col xs="auto" className="text-center">
-                    <Form.Label>Written & Reading Language</Form.Label>
-                  </Col>
-
-                  <Col>
-                    <Form.Control
-                      as="textarea"
-                      type="text"
-                      placeholder=""
-                      size="sm"
-                      style={{ width: "650px", height: "120px" }}
-                    />
-                  </Col>
+                  <Form.Group
+                    className="mb-3 col-md-6"
+                    controlId="exampleForm.ControlTextarea1"
+                  >
+                    <Form.Label className="sm-label">
+                      Spoken Language
+                    </Form.Label>
+                    <div className="tagarea p-2">
+                      {jobPostData?.spoken_language?.map((item, index) => (
+                        <Badge
+                          key={index}
+                          bg={
+                            selectedSpokenLanguageUids.includes(item.uid)
+                              ? "primary"
+                              : "white"
+                          }
+                          className="me-2 mb-2 tag-white"
+                          onClick={() => handleSpokenLanguageClick(item.uid)}
+                          style={{
+                            cursor: "pointer",
+                            backgroundColor:
+                              selectedSpokenLanguageUids.includes(item.uid)
+                                ? "#007bff"
+                                : "transparent",
+                            color: selectedSpokenLanguageUids.includes(item.uid)
+                              ? "#fff"
+                              : "#007bff",
+                          }}
+                        >
+                          {item?.language_name}
+                        </Badge>
+                      ))}
+                    </div>
+                    <span className="required_text">
+                      Select all spoken languages
+                    </span>
+                  </Form.Group>
+                  <Form.Group
+                    className="mb-3 col-md-6"
+                    controlId="exampleForm.ControlTextarea1"
+                  >
+                    <Form.Label className="sm-label">
+                      Written and Reading Language
+                    </Form.Label>
+                    <div className="tagarea p-2">
+                      {jobPostData?.read_write_language?.map((item, index) => (
+                        <Badge
+                          key={index}
+                          bg={
+                            selectedWrittenLanguageUids.includes(item.uid)
+                              ? "primary"
+                              : "white"
+                          }
+                          className="me-2 mb-2 tag-white"
+                          onClick={() => handleWrittenLanguageClick(item.uid)}
+                          style={{
+                            cursor: "pointer",
+                            backgroundColor:
+                              selectedWrittenLanguageUids.includes(item.uid)
+                                ? "#007bff"
+                                : "transparent",
+                            color: selectedWrittenLanguageUids.includes(
+                              item.uid
+                            )
+                              ? "#fff"
+                              : "#007bff",
+                          }}
+                        >
+                          {item?.language_name}
+                        </Badge>
+                      ))}
+                    </div>
+                    <span className="required_text">
+                      Select all written and reading languages
+                    </span>
+                  </Form.Group>
                 </Row>
               </div>
 
@@ -436,8 +1347,16 @@ const ApplicationJobPostModal = ({ show, handleClose }) => {
                       placeholder="Current Location"
                       size="sm"
                       style={{ width: "350px" }}
+                      name="CurrentLocation"
+                      value={profileformData?.CurrentLocation}
+                      onChange={handleProfileDetailsChange}
+                      isInvalid={!!errors.CurrentLocation}
                     />
                   </Col>
+
+                  <Form.Control.Feedback type="invalid">
+                    {errors.CurrentLocation}
+                  </Form.Control.Feedback>
                 </Row>
 
                 <Row className="mb-3">
@@ -449,18 +1368,31 @@ const ApplicationJobPostModal = ({ show, handleClose }) => {
                       <Form.Check
                         type="radio"
                         label="Yes"
-                        name="formHorizontalRadios"
-                        id="formHorizontalRadios1"
+                        name="relocationChoice"
+                        id="relocationChoice1"
                         className="mr-3"
+                        value="True" // Set value for the radio button
+                        checked={profileformData.relocationChoice === "True"} // Check if this option is selected
+                        onChange={handleProfileDetailsChange} // Update state on change
+                        //required
+                        // isInvalid={!!errors.relocationChoice}
                       />
                       <Form.Check
                         type="radio"
                         label="No"
-                        name="formHorizontalRadios"
-                        id="formHorizontalRadios2"
+                        name="relocationChoice"
+                        id="relocationChoice2"
                         className="ml-3"
+                        value="False" // Set value for the radio button
+                        checked={profileformData.relocationChoice === "False"} // Check if this option is selected
+                        onChange={handleProfileDetailsChange} // Update state on change
+                        //required
+                        // isInvalid={!!errors.relocationChoice}
                       />
                     </div>
+                    {errors.relocationChoice && (
+                      <p className="error">{errors.relocationChoice}</p>
+                    )}
                   </Col>
                 </Row>
 
@@ -475,73 +1407,31 @@ const ApplicationJobPostModal = ({ show, handleClose }) => {
                       <Form.Check
                         type="radio"
                         label="Yes"
-                        name="formHorizontalRadios"
-                        id="formHorizontalRadios1"
+                        name="requiredCompanyAssist"
+                        id="requiredCompanyAssist1"
                         className="mr-3"
+                        value="True" // Set value for the radio button
+                        checked={
+                          profileformData.requiredCompanyAssist === "True"
+                        } // Check if this option is selected
+                        onChange={handleProfileDetailsChange}
                       />
                       <Form.Check
                         type="radio"
                         label="No"
-                        name="formHorizontalRadios"
-                        id="formHorizontalRadios2"
+                        name="requiredCompanyAssist"
+                        id="requiredCompanyAssist2"
                         className="ml-3"
+                        value="False" // Set value for the radio button
+                        checked={
+                          profileformData.requiredCompanyAssist === "False"
+                        }
+                        onChange={handleProfileDetailsChange}
                       />
                     </div>
-                  </Col>
-                </Row>
-
-                <Row className="mb-3 d-flex align-items-center border-top mt-2">
-                  <Col md={2}>
-                    <h6>Role</h6>
-
-                    <Form.Control
-                      type="text"
-                      placeholder="9876543210"
-                      size="sm"
-                      style={{ width: "150px" }}
-                    />
-                  </Col>
-                  <Col md={3}>
-                    <h6>Area of Education</h6>
-                    <Form.Control
-                      type="text"
-                      placeholder="9876543210"
-                      size="sm"
-                      style={{ width: "150px" }}
-                    />
-                  </Col>
-                  <Col md={2}>
-                    <h6>Grad. Year</h6>
-                    <Form.Control
-                      type="text"
-                      placeholder="9876543210"
-                      size="sm"
-                      style={{ width: "150px" }}
-                    />
-                  </Col>
-                  <Col md={3} className="p-4">
-                    <h6> University</h6>
-                    <Form.Control
-                      type="text"
-                      placeholder="9876543210"
-                      size="sm"
-                      style={{ width: "150px" }}
-                    />
-                  </Col>
-                  <Col md={2}>
-                    <h6> Grade</h6>
-                    <Form.Select aria-label="Default select example">
-                      <option>Expected Salary</option>
-                      <option value="1">One</option>
-                      <option value="2">Two</option>
-                      <option value="3">Three</option>
-                    </Form.Select>
-
-                    <Form.Group as={Row} className="mb-3">
-                      <Form.Label as="legend" column sm={2}>
-                        Radios
-                      </Form.Label>
-                    </Form.Group>
+                    {errors.requiredCompanyAssist && (
+                      <p className="error">{errors.requiredCompanyAssist}</p>
+                    )}
                   </Col>
                 </Row>
               </div>
@@ -549,108 +1439,226 @@ const ApplicationJobPostModal = ({ show, handleClose }) => {
               <div className="custom-card">
                 <h6>Skills</h6>
                 <p>Please select 8 skills</p>
-                <Row>
-                  <Col md={4}>
-                    <h6>Productivity Tools</h6>
-                  </Col>
-                  <Col md={8}>
-                    <p>Microsoft Excel</p>
-                  </Col>
-                </Row>
 
-                <Row>
-                  <Col md={4}>
-                    <h6>Software Languages</h6>
-                  </Col>
-                  <Col md={8}>
-                    <p>Microsoft Excel</p>
-                  </Col>
-                </Row>
+                {Object.keys(groupedSkills).map((groupName, index) => (
+                  <div key={index}>
+                    <strong>{groupName}</strong>
+                    <div>
+                      {groupedSkills[groupName].map((skill, idx) => (
+                        <span
+                          key={idx}
+                          className={`skill-tag mb-2 mr-2 ${
+                            selectedSkills.includes(skill.uid) ? "selected" : ""
+                          }`}
+                          onClick={() => handleSkillSelect(skill)}
+                          style={{
+                            padding: "5px 15px",
+                            border: "1px solid #007bff",
+                            borderRadius: "20px",
+                            cursor: "pointer",
+                            backgroundColor: selectedSkills.includes(skill.uid)
+                              ? "#007bff"
+                              : "transparent",
+                            color: selectedSkills.includes(skill.uid)
+                              ? "#fff"
+                              : "#007bff",
+                          }}
+                        >
+                          {skill?.skill_name}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+                {errors?.selectedSkills && (
+                  <p className="error">{errors?.selectedSkills}</p>
+                )}
               </div>
 
               <div className="custom-card">
-                <h6>Additional Question from Company</h6>
-                <p>
-                  Please complete the questions below and complete your Job
-                  Application. These are specific questions that the company
-                  would like to ask you as a part of the Application process
-                </p>
-                <h6>
-                  {" "}
-                  Which area of cricket do you think needs the greatest
-                  development in senior cricket players?
-                </h6>
-                <Form.Check
-                  type="checkbox"
-                  id="custom-checkbox"
-                  label="Self Confidence"
-                  //checked={true}
-                />
-                <Form.Check
-                  type="checkbox"
-                  id="custom-checkbox"
-                  label="Openness to Learn"
-                  //checked={true}
-                />
-                <Form.Check
-                  type="checkbox"
-                  id="custom-checkbox"
-                  label="Leadership Skillss"
-                  //checked={true}
-                />
-                <Form.Check
-                  type="checkbox"
-                  id="custom-checkbox"
-                  label="Fitness and Energy"
-                  //checked={true}
-                />
-                <h6>
-                  {" "}
-                  Do you think that IPL has impacted the skills of the players
-                  to play 50 over cricket negatively ?
-                </h6>
-                <Form.Check
-                  type="radio"
-                  label="Yes"
-                  name="formHorizontalRadios"
-                  id="formHorizontalRadios1"
-                  className="mr-3"
-                />
-                <Form.Check
-                  type="radio"
-                  label="No"
-                  name="formHorizontalRadios"
-                  id="formHorizontalRadios2"
-                  className="ml-3"
-                />
+                {jobPostData?.question_job.map((item) => (
+                  <div key={item.id}>
+                    <h6>{item?.question_title}</h6>
+
+                    {item?.quiz_type === "MCQ" &&
+                      item?.question_option?.part1?.map((option, index) => (
+                        <Form.Check
+                          key={index}
+                          type="radio"
+                          label={option}
+                          name={`formHorizontalRadios-${item.id}`} // Unique name for each question group
+                          id={`formHorizontalRadios-${item.id}-${index}`}
+                          className="mr-3"
+                        />
+                      ))}
+
+                    {/* fot text */}
+                    {item?.quiz_type === "Text" && (
+                      <Form.Control
+                        type="text"
+                        placeholder="Enter your answer"
+                        className="mb-3"
+                      />
+                    )}
+                    {/* for checkbox */}
+
+                    {item?.quiz_type === "Checkbox" &&
+                      item?.question_option?.part1?.map((option, index) => (
+                        <Form.Check
+                          key={index}
+                          type="checkbox"
+                          label={option}
+                          name={`formCheckbox-${item.id}`}
+                          id={`formCheckbox-${item.id}-${index}`}
+                          className="mr-3"
+                        />
+                      ))}
+                  </div>
+                ))}
               </div>
             </Col>
-
-            <Col md={2}>
+            {/* Right Column */}
+            <Col md={3} lg={2} className="jobpre_Rightpanel">
               <div className="custom-card">
-                <h6>Sandeep Kattamuri</h6>
-                <small>Sandeep@lywo.in</small>
-                <small>9125487630</small>
-                <p>MyResume.pdf</p>
-                <p>Availability</p>
-                <small className="text-danger">Not defined</small>
-                <p>Expected Salary</p>
-                <p>Educational Qualification</p>
-                <p>Work Experience </p>
-                <p>Language</p>
-                <p>Geography</p>
-                <p>Skills</p>
-                <p>Additional Questions from Company</p>
+                <h6>{profileformData?.name}</h6>
+                <p>{profileformData?.email}</p>
+                <p>{profileformData?.phone}</p>
+                <p>{ResumeFile?.name}</p>
+                <p>
+                  <strong>Availability</strong>
+                </p>
+                {profileformData?.AvailableBy ? (
+                  <p>{profileformData?.AvailableBy}</p>
+                ) : (
+                  <p className="error" style={{ color: "red" }}>
+                    Not defined
+                  </p>
+                )}
+                <p>{isYes?.CurrentlyWorkingToggle}</p>
+                <p>{profileformData?.NoticePeriod}</p>
+                <p>{isYes?.NoticeBuyOutToggle}</p>
+                <p>
+                  <strong>Salary</strong>
+                </p>
+                {profileformData?.ExpectedSalary ? (
+                  <p>{profileformData?.ExpectedSalary}</p>
+                ) : (
+                  <p className="error" style={{ color: "red" }}>
+                    Not defined
+                  </p>
+                )}
+                <p>
+                  <strong>Educational Qualification</strong>
+                </p>
+                {EducationRows.map((row, index) => (
+                  <div key={index}>
+                    <p>{row.level}</p>
+                    <p>{row.areaOfEducation}</p>
+                    <p>{row.gradYear}</p>
+                    <p>{row.university}</p>
+                    <p>{row.grade}</p>
+                  </div>
+                ))}
+                {EducationRows.length === 0 && (
+                  <p className="error" style={{ color: "red" }}>
+                    Not defined
+                  </p>
+                )}
+                <p>
+                  <strong>Work Experience : </strong>
+                </p>
+                {WorkExpreienceRow.map((row, index) => (
+                  <div key={index}>
+                    <p>{row.TotalWorkExperience}</p>
+                    <p>{row.WorkRole}</p>
+                    <p>{row.WorkFrom}</p>
+                    <p>{row.WorkTo}</p>
+                    <p>{row.WorkComapny}</p>
+                    <p>{row.WorkIndustry}</p>
+                    <p>{row.WorkNote}</p>
+                  </div>
+                ))}
+                <p>
+                  <strong>Language</strong>
+                </p>
+                {jobPostData?.spoken_language?.map((item) => (
+                  <p>{item.language_name}</p>
+                ))}
+
+                <p>
+                  <strong>Geography</strong>
+                </p>
+                <p>{profileformData?.CurrentLocation}</p>
               </div>
             </Col>
           </Row>
+
+          <Button
+            variant="light"
+            style={{ marginLeft: 150 }}
+            onClick={() => handleShowModal("SaveAsDraft")}
+          >
+            Save as Draft
+          </Button>
+          <Button variant="primary" onClick={() => handleSubmit()}>
+            {/* onClick={() => handleFormDetailsApi()}> */}
+            Submit
+          </Button>
         </Container>
+
+        <div>
+          <Modal show={showModal.showSaveAsDraft} onHide={handleCloseModals}>
+            <Modal.Header closeButton>
+              <Modal.Title>
+                Are you sure you want to exit without submitting?
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              Your details will be saved as a draft, and you can log in with{" "}
+              {profileformData?.email} later to finish your application.
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="light" onClick={handleCloseModals}>
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+
+                //onClick={() => handleFormDetailsApi()}
+              >
+                Save
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        </div>
+
+        <div>
+          <Modal show={showModal.showSaveModal} onHide={handleCloseModals}>
+            <Modal.Header closeButton>
+              <Modal.Title>
+                Your application has been successfully submitted.
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              You can view your progress and complete the next steps by logging
+              into LYWO with {profileformData?.email}.
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="light" onClick={handleCloseModals}>
+                Return to Job
+              </Button>
+              <Button variant="primary" onClick={() => handleFormDetailsApi()}>
+                Proceed to Behavioral Test
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        </div>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="light" onClick={handleClose}>
+        {/* <Button variant="light" onClick={handleClose}>
           Save as Draft
         </Button>
-        <Button variant="primary">Submit</Button>
+        <Button variant="primary">Submit</Button> */}
       </Modal.Footer>
     </Modal>
   );

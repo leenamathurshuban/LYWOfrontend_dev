@@ -19,37 +19,56 @@ import HomeIcon from "../../images/icons/HomeIcon.png";
 import UserIcon from "../../images/icons/UserIcon.png";
 import Logo from "../../images/logo_icon.png";
 import Share from "../../images/ShareIcon.png";
-import { getPostJobIdApi } from "../../services/provider";
+import { ApplicationDeatilsApi, getPostJobIdApi } from "../../services/provider";
 import ApplicationJobPostModal from "./ApplicationJobPostModal";
 import AboutLywoModal from "../../components/CustomModals/AboutLywoModal";
+import Chat from "../../images/ChatButton.png";
+import ChatModal from "../../components/CustomModals/ChatModal";
+import { removeToken } from "../../helpers/helper";
+import { useNavigate } from "react-router-dom";
 
 const JobPosts = () => {
   const { id } = useParams();
-  const [jobPostData, setJobPostData] = useState({});
+  const [jobPostData, setJobPostData] = useState(null);
   const [jobPostErrorMsg, setJobPostErrorMsg] = useState("");
 
   const [modalOpen, setModalOpen] = useState({
     showFirstModal: false,
     showSecondModal: false,
+    showChatModal: false,
+    showProfileViewDetailsModal: false,
   });
   const [emailInput, setEmailInput] = useState("");
   const [emailList, setEmailList] = useState([]);
   const [showMore, setShowMore] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [link, setLink] = useState("https://example.com");
+  const [link, setLink] = useState(jobPostData?.job_link);
   const [copied, setCopied] = useState(false);
+  const [buttonText, setButtonText] = useState("Apply Now");
+  const [registeredEmailId,setRegisteredEmailId] = useState("")
 
   const inputRef = useRef(null);
   const containerRef = useRef(null);
 
-  const handleClose = () => setModalOpen(false);
-  const handleShow = () => setModalOpen(true);
+  
+  const navigate = useNavigate();
+
+  const updateButtonText = (newText) => {
+    setButtonText(newText);
+  };
+
+  const handleEmailId = (StoreEmail) =>{
+    setRegisteredEmailId(StoreEmail)
+
+  }
 
   const handleShowModal = (modalName) => {
     setModalOpen((prevState) => {
       const newState = {
         showFirstModal: false,
         showSecondModal: false,
+        showChatModal: false,
+        showProfileViewDetailsModal: false,
       };
 
       // Set the modal that needs to be shown to true
@@ -57,6 +76,10 @@ const JobPosts = () => {
         newState.showFirstModal = true;
       } else if (modalName === "second") {
         newState.showSecondModal = true;
+      } else if (modalName === "chatModal") {
+        newState.showChatModal = true;
+      } else if (modalName === "showProfileViewDetailsModal") {
+        newState.showProfileViewDetailsModal = true;
       }
 
       return newState;
@@ -68,6 +91,8 @@ const JobPosts = () => {
     setModalOpen({
       showFirstModal: false,
       showSecondModal: false,
+      showChatModal: false,
+      showProfileViewDetailsModal: false,
     });
   };
 
@@ -75,43 +100,43 @@ const JobPosts = () => {
     try {
       const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/${id}`;
       // const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/NDFhZGM5ZWQyZg/`;
+      // const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/ZTEwZmFlZmFiYw/`;
+      // const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/Zjg3YmExYzlmMA/`;
       // const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/ODE2YWNmZjgwZg/`;
       const data = await getPostJobIdApi(url);
-     
-      setJobPostData(data?.data?.response)
-    
-    } catch (error) {
-      
+      console.log("api datatt----->>>>>>", data?.data?.response);
 
+      setJobPostData(data?.data?.response);
+      setLink(data?.data?.response?.job_link);
+    } catch (error) {
       if (error.response) {
- 
-        
-      
         if (error.response.status === 400) {
           const message = error.response.data.message;
-          setJobPostErrorMsg(message)
-          
+          setJobPostErrorMsg(message);
         }
-      } else if (error.request) {
-        
-        console.error('No response received:', error.request);
-      } else {
-        // Any other error
-        console.error('Error Message:', error.message);
+      }
+      if (
+        error?.response?.status === 401 ||
+        error?.response?.data?.detail?.includes(
+          "Given token not valid for any token type"
+        )
+      ) {
+        //console.log("Token expired, redirecting to login");
+        removeToken();
+        navigate("/loginwithpassword");
       }
     }
   };
 
   useEffect(() => {
-    console.log("urlID----->>>>", id);
+    // console.log("urlID----->>>>", id);
 
     GetJobPostWithId();
   }, [id]);
 
-  //  useEffect(() => {
+  // useEffect(() => {
   //   GetJobPostWithId();
   // }, []);
-
 
   const jobDetailsList = [
     {
@@ -137,12 +162,12 @@ const JobPosts = () => {
     {
       tittle: "Key Skills ",
       // value: jobPostData?.skills[0]?.skill_name,
-      value: "skilll"
+      value: "skilll",
     },
     {
       tittle: "Education ",
       // value: jobPostData?.area_of_education[0],
-      value: "Masters"
+      value: "Masters",
     },
     {
       tittle: "Focus Area",
@@ -242,6 +267,35 @@ const JobPosts = () => {
     </Tooltip>
   );
 
+  // console.log("link-222222222------>>>>>>>",jobPostData?.job_link)
+
+  const handleProfileButton = (Text) => {
+    if (Text === "View") {
+      handleViewDetailsAPi()
+      //handleShowModal("showProfileViewDetailsModal")
+    }
+    if (Text === "Apply Now") {
+      console.log("registeredEmailId--->>>>>",registeredEmailId)
+      handleShowModal("first");
+      // handleShowModal("showProfileViewDetailsModal");
+    }
+  };
+
+
+  const handleViewDetailsAPi = async () => {
+    try {
+      const response = await ApplicationDeatilsApi();
+      console.log("Api data----------->>>>", response?.data?.response);
+      if (response.status === 200) {
+        console.log("Api data----------->>>>", response.data);
+      }
+    } catch (error) {
+      console.log("Error occurred:", error);
+    }
+  };
+
+  
+
   return (
     <Container fluid>
       <Row className="shadow-xs border-1 p-2 bg-grey">
@@ -267,11 +321,21 @@ const JobPosts = () => {
             />
             <Col>
               <h5>{jobPostData?.job_title}</h5>
-              <p>{jobPostData?.job_company?.company_name}, {jobPostData?.job_company?.location}</p>
+              <p>
+                {jobPostData?.job_company?.company_name},{" "}
+                {jobPostData?.job_company?.location}, {jobPostData?.job_type}
+                {""},{jobPostData?.workplace_type}
+              </p>
               <div className="d-flex flex-wrap">
                 <p>{jobPostData?.job_location?.location_name}</p>
-                <p>{jobPostData?.currency} {jobPostData?.min_salary} - {jobPostData?.max_salary}{jobPostData?.salary_type}</p>
-                <p>{jobPostData?.min_exp} - {jobPostData?.max_exp} years</p>
+                <p>
+                  {jobPostData?.currency} {jobPostData?.min_salary} -{" "}
+                  {jobPostData?.max_salary}
+                  {jobPostData?.salary_type}
+                </p>
+                <p>
+                  {jobPostData?.min_exp} - {jobPostData?.max_exp} years
+                </p>
                 <p>{jobPostData?.job_company?.number_of_employees}</p>
               </div>
             </Col>
@@ -295,11 +359,13 @@ const JobPosts = () => {
                   style={{ width: "60px", height: "40px" }}
                 />
                 <div className="d-flex gap-2 mb-2">
-                  <Button variant="light" disabled={jobPostErrorMsg}>Not for Me</Button>
+                  <Button variant="light" disabled={jobPostErrorMsg}>
+                    Not for Me
+                  </Button>
                   <Button
                     variant="primary"
                     onClick={() => handleShowModal("first")}
-                    disabled={jobPostErrorMsg}
+                    disabled={jobPostErrorMsg || buttonText === "View"}
                   >
                     Apply Now
                   </Button>
@@ -356,7 +422,7 @@ const JobPosts = () => {
             </Col>
           </Row>
         </Col>
-        <Col md={2} className="bg-white">
+        <Col md={2} className="bg-white" style={{ position: "relative" }}>
           <div className="d-flex justify-content-center mt-4">
             <Button
               variant="outline-dark"
@@ -368,17 +434,47 @@ const JobPosts = () => {
           <h6>Your Progress</h6>
           <div style={{ border: "1px solid #000", padding: 12 }}>
             <p>Profile Details</p>
-            <Button variant="primary" size="lg" disabled={jobPostErrorMsg}>
-              Apply Now
+            {buttonText == "View" && <p>Completed</p>}
+            <Button
+              variant="primary"
+              size="lg"
+              disabled={jobPostErrorMsg}
+              onClick={() => handleProfileButton(buttonText)}
+            >
+              {buttonText}
             </Button>
+          </div>
+          <div>
+            <div
+              style={{
+                position: "absolute",
+                bottom: "20px",
+                right: "20px",
+              }}
+            >
+              <img src={Chat} onClick={() => handleShowModal("chatModal")} />
+            </div>
           </div>
         </Col>
       </Row>
-      <ApplicationJobPostModal
-        show={modalOpen.showFirstModal}
+
+      {jobPostData ? (
+        <ApplicationJobPostModal
+          show={modalOpen.showFirstModal}
+          handleClose={handleCloseModals}
+          jobPostData={jobPostData}
+          updateButtonText={updateButtonText}
+          registeredEmailId={handleEmailId}
+        />
+      ) : (
+        <p>Loading...</p>
+      )}
+
+      <ChatModal
+        show={modalOpen.showChatModal}
         handleClose={handleCloseModals}
       />
-      {/* <button Click={() => handleShowModal("second")}>Show About LYWO Process</button> */}
+
       <AboutLywoModal
         show={modalOpen.showSecondModal}
         handleClose={handleCloseModals}
@@ -568,6 +664,36 @@ const JobPosts = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      <div>
+        <Modal
+          show={modalOpen.showProfileViewDetailsModal}
+          handleClose={handleCloseModals}
+          animation={false}
+          size="lg"
+          backdrop={false}
+          className="cmprofile_mdl quizDev_model"
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Profile Details</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Sandeep@lywo.in</Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant="light"
+              // onClick={handleCloseModals}
+            >
+              Return to Job
+            </Button>
+            <Button
+              variant="primary"
+              // onClick={() => handleFormDetailsApi()}
+            >
+              Proceed to Behavioral Test
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </div>
     </Container>
   );
 };
