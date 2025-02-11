@@ -193,9 +193,23 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
     skills: "",
     must_have_skills: "",
     job_status: "",
+    is_salary_imp: false,
+    is_education_imp: false,
+    is_experience_imp: false,
+    is_targate_hire_date_imp: false,
+    is_language_imp: false,
+    is_geography_imp: false,
     important_behaviour: "",
     selected_behaviour: "",
   });
+  const [importantFlag, setImportantFlag] = useState({
+    salary: false,
+    education: false,
+    experience: false,
+    targethiredate: false,
+    language: false,
+    geography: false,
+  })
   // const [updateFormData, setUpdateFormData] = useState({})
   const [isUpdated, setIsUpdated] = useState(false);
   //Editor states
@@ -687,7 +701,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
       else if (key === "skills" && SelectSkillsData.length > 0) {
         let skillID = SelectSkillsData?.map((item) => item?.uid) // Extract skill_name values
         formdata.append("skills", JSON.stringify(skillID));
-      }else if (key === "must_have_skills" && mustHaveSkills.length > 0) {
+      } else if (key === "must_have_skills" && mustHaveSkills.length > 0) {
         let skillID = mustHaveSkills?.map((item) => item?.uid) // Extract skill_name values
         formdata.append("must_have_skills", JSON.stringify(skillID));
       } else if ((key === "selected_behaviour" || key === "important_behaviour") && hasSelectedAndImportant) {
@@ -752,6 +766,24 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
         } else if (isHideLocation) {
           formdata.append(key, "True");
         }
+      } else if (key === "is_salary_imp" && importantFlag.salary) {
+        formdata.append('is_salary_imp', importantFlag.salary)
+
+      } else if (key === "is_education_imp" && importantFlag.education) {
+        formdata.append('is_education_imp', importantFlag.education)
+
+      } else if (key === "is_experience_imp" && importantFlag.experience) {
+        formdata.append('is_experience_imp', importantFlag.experience)
+
+      } else if (key === "is_targate_hire_date_imp" && importantFlag.targethiredate) {
+        formdata.append('is_targate_hire_date_imp', importantFlag.targethiredate)
+
+      } else if (key === "is_language_imp" && importantFlag.language) {
+        formdata.append('is_language_imp', importantFlag.language)
+
+      } else if (key === "is_geography_imp" && importantFlag.geography) {
+        formdata.append('is_geography_imp', importantFlag.geography)
+
       } else if (updateFormData[key] !== "") {
         formdata.append(key, updateFormData[key]);
       }
@@ -1322,6 +1354,8 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
           setUpdateFormData={setUpdateFormData}
           mustHaveSkills={mustHaveSkills}
           setMustHaveSkills={setMustHaveSkills}
+          importantFlag={importantFlag}
+          setImportantFlag={setImportantFlag}
         />
       )}
     </Offcanvas>

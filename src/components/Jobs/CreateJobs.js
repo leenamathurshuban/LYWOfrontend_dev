@@ -194,6 +194,14 @@ const CreateJobs = ({ show, handleClose }) => {
     important_behaviour: "",
     selected_behaviour: "",
   });
+  const [importantFlag, setImportantFlag] = useState({
+    salary: false,
+    education: false,
+    experience: false,
+    targethiredate: false,
+    language: false,
+    geography: false,
+  })
   const [isUpdated, setIsUpdated] = useState(false);
   //Editor states
   const [fileUrl, setFileUrl] = useState(null);
@@ -731,6 +739,24 @@ const CreateJobs = ({ show, handleClose }) => {
         } else if (isHideLocation) {
           formdata.append(key, "True");
         }
+      }else if (key === "is_salary_imp" && importantFlag.salary) {
+        formdata.append('is_salary_imp', importantFlag.salary)
+
+      } else if (key === "is_education_imp" && importantFlag.education) {
+        formdata.append('is_education_imp', importantFlag.education)
+
+      } else if (key === "is_experience_imp" && importantFlag.experience) {
+        formdata.append('is_experience_imp', importantFlag.experience)
+
+      } else if (key === "is_targate_hire_date_imp" && importantFlag.targethiredate) {
+        formdata.append('is_targate_hire_date_imp', importantFlag.targethiredate)
+
+      } else if (key === "is_language_imp" && importantFlag.language) {
+        formdata.append('is_language_imp', importantFlag.language)
+
+      } else if (key === "is_geography_imp" && importantFlag.geography) {
+        formdata.append('is_geography_imp', importantFlag.geography)
+
       } else if (updateFormData[key] !== "") {
         formdata.append(key, updateFormData[key]);
       }
@@ -1299,6 +1325,8 @@ const CreateJobs = ({ show, handleClose }) => {
           setUpdateFormData={setUpdateFormData}
           mustHaveSkills={mustHaveSkills}
           setMustHaveSkills={setMustHaveSkills}
+          importantFlag={importantFlag}
+          setImportantFlag={setImportantFlag}
         />
       )}
     </Offcanvas>

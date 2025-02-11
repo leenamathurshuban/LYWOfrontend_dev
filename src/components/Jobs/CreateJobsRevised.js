@@ -88,7 +88,9 @@ const CreateJobsRevised = ({
   updateFormData,
   setUpdateFormData,
   mustHaveSkills,
-  setMustHaveSkills
+  setMustHaveSkills,
+  importantFlag,
+  setImportantFlag
 }) => {
   const [createRevisedJobData, setCreateRevisedJobData] = useState(null);
   const [components, setComponents] = useState([]);
@@ -116,14 +118,14 @@ const CreateJobsRevised = ({
   const [showHelpChoose, setShowHelpChoose] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState([])
   const [openStep, setOpenStep] = useState([])
-  const [importantFlag, setImportantFlag] = useState({
-    salary: false,
-    education: false,
-    experience: false,
-    targethiredate: false,
-    language: false,
-    geography: false,
-  })
+  // const [importantFlag, setImportantFlag] = useState({
+  //   salary: false,
+  //   education: false,
+  //   experience: false,
+  //   targethiredate: false,
+  //   language: false,
+  //   geography: false,
+  // })
   //<------------------help me choose------------------------>
   const [isIndex, setIsIndex] = useState([1]);
   const [selectedItem, setSelectedItem] = useState([]);

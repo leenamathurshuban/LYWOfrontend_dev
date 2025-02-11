@@ -88,7 +88,9 @@ const UpdateJobsRevised = ({
     updateFormData,
     setUpdateFormData,
     mustHaveSkills,
-    setMustHaveSkills
+    setMustHaveSkills,
+    importantFlag,
+    setImportantFlag
 }) => {
     const [createRevisedJobData, setCreateRevisedJobData] = useState(null);
     const [components, setComponents] = useState([]);
@@ -117,14 +119,14 @@ const UpdateJobsRevised = ({
     const [showHelpChoose, setShowHelpChoose] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState([])
     const [openStep, setOpenStep] = useState([])
-    const [importantFlag, setImportantFlag] = useState({
-        salary: false,
-        education: false,
-        experience: false,
-        targethiredate: false,
-        language: false,
-        geography: false,
-    })
+    // const [importantFlag, setImportantFlag] = useState({
+    //     salary: false,
+    //     education: false,
+    //     experience: false,
+    //     targethiredate: false,
+    //     language: false,
+    //     geography: false,
+    // })
     //<------------------help me choose------------------------>
     const [isIndex, setIsIndex] = useState([1]);
     const [selectedItem, setSelectedItem] = useState([]);
@@ -285,6 +287,14 @@ const UpdateJobsRevised = ({
             setSelectSkillsData(response?.data?.response?.skills)
             setMustHaveSkills(response?.data?.response?.must_have_skills)
             setSkillGroupDataExist(response?.data?.response?.skills)
+            setImportantFlag({
+                salary: response?.data?.response?.is_salary_imp,
+                education: response?.data?.response?.is_education_imp,
+                experience: response?.data?.response?.is_experience_imp,
+                targethiredate: response?.data?.response?.is_targate_hire_date_imp,
+                language: response?.data?.response?.is_language_imp,
+                geography: response?.data?.response?.is_geography_imp,
+            })
             // setSkillGroupsData(response?.data?.response?.skills)
             const formated = response?.data?.response?.skills.reduce((acc, item) => {
                 const { skill_group } = item;
@@ -1025,30 +1035,30 @@ const UpdateJobsRevised = ({
     }
     const handleLightClass = () => {
         if (importantFlag.salary && openStep[0] === '1') {
-          return "active";
+            return "active";
         } else if (importantFlag.education && openStep[0] === '2') {
-          return "active";
+            return "active";
         } else if (importantFlag.experience && openStep[0] === '3') {
-          return "active";
+            return "active";
         } else if (importantFlag.targethiredate && openStep[0] === '4') {
-          return "active";
+            return "active";
         } else if (importantFlag.language && openStep[0] === '5') {
-          return "active";
+            return "active";
         } else if (importantFlag.geography && openStep[0] === '6') {
-          return "active";
+            return "active";
         } else {
-          return "";
+            return "";
         }
-      }
+    }
     // console.log(behaviours)
     // console.log('==========>update======>', updateFormData)
     // console.log('add skill box', addSkillGroup)
     // console.log("customValue,addSubSkill", skillGroupData, SelectSkillsData)
     // console.log(skillGroupData, components)
     // console.log('======>selecting skills', SelectSkillsData)
-    // console.log(openStep,importantFlag)
-    console.log('must have', mustHaveSkills)
-    console.log(components)
+    console.log("openStep", importantFlag)
+    // console.log('must have', mustHaveSkills)
+    // console.log(components)
     return (
         <>
             <Modal
