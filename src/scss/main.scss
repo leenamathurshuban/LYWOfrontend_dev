@@ -3544,6 +3544,14 @@ select.h-36.form-select {
   border: solid 4px #6172F3;
   box-shadow: 0px 0px 80px 8px #6071F133 inset;
   background-color: #EEF4FF;
+  &:hover{
+    .btn-down{
+      display: block;
+    }
+    .btn-up{
+      width: 45%;
+    }
+  }
   .quiz-btns {
     opacity: 1;
   }
@@ -3566,6 +3574,14 @@ select.h-36.form-select {
   border: solid 4px #FEC84B;
   box-shadow: 0px 0px 80px 8px #DC680333 inset;
   background-color: #FFFAEB;
+  &:hover{
+    .btn-up{
+      display: block;
+    }
+    .btn-down{
+      width: 45%;
+    }
+  }
   .quiz-btns {
     opacity: 1;
   }

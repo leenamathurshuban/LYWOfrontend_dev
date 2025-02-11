@@ -7,6 +7,9 @@ import JobsList from "../screens/Jobs/JobList";
 import JobPosts from "../screens/Jobs/JobPosts";
 import JobSummary from "../screens/Jobs/JobSummary";
 import HelpChoose from "../screens/HelpmeChoose/HelpChoose";
+import ApplicationJobPostModal from "../screens/Jobs/ApplicationJobPostModal";
+import BehaviouralAst from "../screens/BehaviourAss/BehaviouralAst";
+import BehaviourAssReport from "../screens/BehaviourAss/BehaviourAssReport";
 
 
 export const router = createBrowserRouter([
@@ -68,9 +71,14 @@ export const router = createBrowserRouter([
     element: <ProtectedRoute element={<JobsList />} allowAuthenticated={false} />,  // Only allow authenticated users here
   },
   {
-    // path: "/JobPosts/:id",
-    path: "/JobPosts",
+    path: "/JobPosts/:id",
+    // path: "/JobPosts",
     element: <ProtectedRoute element={<JobPosts />} allowAuthenticated={false} />,  // Only allow authenticated users here
+  },
+  {
+   
+    path: "/ApplicationJobPostModal",
+    element: <ProtectedRoute element={<ApplicationJobPostModal />} allowAuthenticated={false} />,  // Only allow authenticated users here
   },
   {
     path: "/jobSummary/:id",
@@ -79,6 +87,14 @@ export const router = createBrowserRouter([
   {
     path: "/helpmechoose",
     element: <ProtectedRoute element={<HelpChoose />} allowAuthenticated={false} />,  // Only allow authenticated users here
+  },
+  {
+    path: "/Behavioural-Assessment",
+    element: <ProtectedRoute element={<BehaviouralAst />} allowAuthenticated={false} />,  // Only allow authenticated users here
+  },
+  {
+    path: "/Behaviour-Assessment-Report",
+    element: <ProtectedRoute element={<BehaviourAssReport />} allowAuthenticated={false} />,  // Only allow authenticated users here
   },
   {
     path: "*",

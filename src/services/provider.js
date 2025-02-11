@@ -1,4 +1,4 @@
-import { AuthUrl ,CompanyUrl, UsersUrl,JobsUrl, SkillsUrl} from "./apiUrl";
+import { AuthUrl ,CompanyUrl, UsersUrl,JobsUrl, SkillsUrl, BehaviourUrl} from "./apiUrl";
 import client from "./axiosInstance";
 
 
@@ -198,10 +198,23 @@ export const UpdateMultipleJobApi=(data)=>{
 
 
 export const getQualificationListApi = (url) =>{
-
   const getJobDetails = client.getWithToken(url)
-
   return getJobDetails
-
+}
+export const getQuizQuestionListAPi=()=>{
+  const getQuizList = client.getWithToken(`${BehaviourUrl.getQuizList}?page=1&limit=28&search=`)
+  return getQuizList
+}
+export const postQuizQuestionApi=(data)=>{
+  const resultApi = client.postWithToken(`${BehaviourUrl.postQuizQuestion}`,data)
+  return resultApi
+}
+export const getApplicantBehaviourDetailApi=(id)=>{
+  const getQuizList = client.getWithToken(`${BehaviourUrl.getApplicantBehaviourDetail}${id}`)
+  return getQuizList
+}
+export const updateApplicantBehaviourApi=(id,data)=>{
+  const resultApi = client.putForUpload(`${BehaviourUrl.updateApplicantBehaviour}${id}/`,data)
+  return resultApi
 }
 

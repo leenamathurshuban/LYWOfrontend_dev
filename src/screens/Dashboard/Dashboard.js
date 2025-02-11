@@ -238,7 +238,7 @@ const Dashboard = () => {
           </Button>
         </Modal.Footer>
       </Modal> */}
-      <Modal 
+      {/* <Modal 
         show={show} 
         onHide={handleClose}
         animation={false}
@@ -263,7 +263,7 @@ const Dashboard = () => {
               </Col>
             </Row>
         </Modal.Body>
-      </Modal>
+      </Modal> */}
     </>
   );
 };
