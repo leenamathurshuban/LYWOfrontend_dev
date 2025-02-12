@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import OwlCarousel from 'react-owl-carousel';
 import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel/dist/assets/owl.theme.default.css';
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import cakeIQ from "../../src/images/icons/quiz/cake-IQ.svg";
 import coffieIQ from "../../src/images/icons/quiz/coffie-IQ.svg";
 import iceIQ from "../../src/images/icons/quiz/ice-crime-IQ.svg";
 import teaIQ from "../../src/images/icons/quiz/tea-IQ.svg";
-
+import handDrawicon from "../../src/images/icons/quiz/Hand-drawn-arrow-down.svg";
 import enthuIQ from "../../src/images/icons/quiz/enthu.svg";
 import satisfiedIQ from "../../src/images/icons/quiz/satisfied.svg";
 import diplomaticIQ from "../../src/images/icons/quiz/diplomatic.svg";
@@ -272,25 +275,16 @@ const imageMap = {
 
 const QuizQuestionSlider = ({ quizMostLeastLike, setQuizMostLeastLike, language }) => {
     const options = {
-        loop: true,
-        margin: 10,
-        items: 1,
-        nav: true,
         dots: true,
-        animateOut: 'slideOutUp',
-        animateIn: 'slideInUp'
-        // loop: true,
-        // margin: 30,
-        // nav: true,
-        // dots: true,
-        // autoplay: false,
-        // autoplayTimeout: 3000,
-        // autoplayHoverPause: true,
-        // responsive: {
-        //   0: { items: 1 },
-        //   600: { items: 2 },
-        //   1000: { items: 4 }
-        // }
+        infinite: true,
+        speed: 2000,
+        slidesToShow: 1,
+        // centerMode: true,
+        // centerPadding: "20px",
+        arrows: false,
+        vertical: true,
+        verticalSwiping: true,
+        focusOnSelect: true
     };
 
     console.log(language)
@@ -361,36 +355,38 @@ const QuizQuestionSlider = ({ quizMostLeastLike, setQuizMostLeastLike, language 
     console.log(quizMostLeastLike)
 
     return (
-        <OwlCarousel key={JSON.stringify(quizMostLeastLike)} className="owl-theme" {...options}>
-            {quizMostLeastLike?.map((row, rowIndex) => (
-                <div key={row?.id} className="item">
-                    <Row>
-                        {row.behaviour_options.map((option, index) => (
-                            <Col md={3}>
-                                <div key={option}
-                                    className={`quiz_card ${row.most === option?.option_name ? "info-select" : ""} ${row.least === option?.option_name ? "info-warring" : ""} `}
-                                >
-                                    <span className="quiz_icon"><img src={imageMap[option?.option_name]} /></span>
-                                    <h4>
-                                        {language === 'hindi' ? HindiQuizOption[option?.option_name] : language === 'gujrati' ? GujratiQuizOption[option?.option_name] :
-                                            language === 'kannada' ? KannadaQuizOption[option?.option_name] : language === 'tamil' ? TamilQuizOption[option?.option_name] :
-                                                language === 'telugu' ? TeluguQuizOption[option?.option_name] : option?.option_name}
-                                    </h4>
-                                    <div className="quiz-btns">
-                                        <button type="button" className="btn-up" onClick={() => {
-                                            handleClikcquiz(rowIndex, option, "most")
-                                        }}><i className={`fa ${row.most === option?.option_name ? 'fa-times' : 'fa-arrow-up'}`}></i></button>
-                                        <button type="button" className="btn-down" onClick={() => {
-                                            handleClikcquiz(rowIndex, option, "least")
-                                        }}><i className={`fa ${row.least === option?.option_name ? 'fa-times' : 'fa-arrow-down'} `}></i></button>
+        <div className="qzslider"><span className='handraw'><img src={handDrawicon} />Hover over the cards below to begin.</span>
+            <Slider key={JSON.stringify(quizMostLeastLike)} {...options}>
+                {quizMostLeastLike?.map((row, rowIndex) => (
+                    <div key={row?.id} className="item">
+                        <Row>
+                            {row.behaviour_options.map((option, index) => (
+                                <Col md={3}>
+                                    <div key={option}
+                                        className={`quiz_card ${row.most === option?.option_name ? "info-select" : ""} ${row.least === option?.option_name ? "info-warring" : ""} `}
+                                    >
+                                        <span className="quiz_icon"><img src={imageMap[option?.option_name]} /></span>
+                                        <h4>
+                                            {language === 'hindi' ? HindiQuizOption[option?.option_name] : language === 'gujrati' ? GujratiQuizOption[option?.option_name] :
+                                                language === 'kannada' ? KannadaQuizOption[option?.option_name] : language === 'tamil' ? TamilQuizOption[option?.option_name] :
+                                                    language === 'telugu' ? TeluguQuizOption[option?.option_name] : option?.option_name}
+                                        </h4>
+                                        <div className="quiz-btns">
+                                            <button type="button" className="btn-up" onClick={() => {
+                                                handleClikcquiz(rowIndex, option, "most")
+                                            }}><i className={`fa ${row.most === option?.option_name ? 'fa-times' : 'fa-arrow-up'}`}></i></button>
+                                            <button type="button" className="btn-down" onClick={() => {
+                                                handleClikcquiz(rowIndex, option, "least")
+                                            }}><i className={`fa ${row.least === option?.option_name ? 'fa-times' : 'fa-arrow-down'} `}></i></button>
+                                        </div>
                                     </div>
-                                </div>
-                            </Col>
-                        ))}
-                    </Row>
-                </div>
-            ))}
-        </OwlCarousel>
+                                </Col>
+                            ))}
+                        </Row>
+                    </div>
+                ))}
+            </Slider>
+        </div>
     );
 };
 

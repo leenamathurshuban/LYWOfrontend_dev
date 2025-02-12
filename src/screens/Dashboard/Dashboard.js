@@ -25,6 +25,8 @@ import stack2_brb from "../../images/icons/stack 2_brb.svg";
 import option_brb from "../../images/icons/option_brb.svg";
 import infogray from "../../images/icons/info_gray.svg";
 import globgray from "../../images/icons/glob_gray.svg";
+import leaderLarge from "../../images/icons/Leader-icon.svg";
+import InfluencerLarge from "../../images/icons/Influencer-icon.svg";
 import QuizSlider from "../../components/QuizSlider";
 
 const Dashboard = () => {
@@ -169,75 +171,49 @@ const Dashboard = () => {
         </Container>
       </div>
 
-      <CompanyEditProfile show={show} handleClose={handleClose} />
-      {/* <Modal 
+      {/* <CompanyEditProfile show={show} handleClose={handleClose} /> */}
+      <Modal 
         show={show} 
         onHide={handleClose}
         animation={false}
         size="lg"
         backdrop={false}
-        className="beharlasmnt_mdl"
+        className="bsreport_mdl"
         >
         <Modal.Header closeButton>
           <img src={logoIcon} className="me-4" />
-          <Modal.Title>Behavioural Assessment</Modal.Title>
+          <Modal.Title>Behavioral Assessment Report</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Container>
-            <Row>
-              <Col md={12} className="bg-white rounded p-3"><h5>Behavioural Assessment for Sr. Developer - Python</h5></Col>
-            </Row>
-            <Row className="mt-3">
-              <Col md={12} className="bg-white rounded p-5 shadow-md border">
-                  <Row>
-                    <Col md={3}>
-                      <div className="brb_cards">
-                          <img src={stack2_brb}/>
-                          <h6>28 Sets</h6>
-                      </div>
-                    </Col>
-                    <Col md={3}>
-                      <div className="brb_cards">
-                          <img src={option_brb}/>
-                          <h6>4 Options</h6>
-                      </div>
-                    </Col>
-                    <Col md={3}>
-                      <div className="brb_cards">
-                          <img src={choice_brb}/>
-                          <h6>Pick one "Most Like” you</h6>
-                      </div>
-                    </Col>
-                    <Col md={3}>
-                      <div className="brb_cards">
-                          <img src={pink_brb}/>
-                          <h6>Pick one "Least Like” you</h6>
-                      </div>
-                    </Col>
-                  </Row>
-              </Col>
-            </Row>
-            <Row className="mt-3 mb-5">
-              <Col md={12} className="bg-white rounded p-3 keypoints">
-                  <h6>Key Points to Note</h6>
-                  <ul>
-                    <li> The test contains 28 questions.</li>
-                    <li> For each question, you will be given 4 options.</li>
-                    <li> Please select one word that best describes you and one word that least describes you in each set.</li>
-                    <li> We recommend completing the behavioral test in one sitting.</li>
-                    <li> Do not overthink your decisions.</li>
-                    <li> There are no right or wrong choices.</li>
-                  </ul>
-              </Col>
-            </Row>
-          </Container>
+            <div className="bg-white p-5 rounded text-center">
+                <h5 className="mb-3">You have completed your assessment.</h5>
+                <p className="disc-text"> You have completed the LYWO behavioral test, which is based on the classic DISC personality theory and assessment. This test helps us understand your natural tendencies, allowing us to tailor job roles and subsequent assessments to complement your traits. The test broadly categorizes all candidates into personality groups.</p>
+                <Row className="mt-5 justify-content-center">
+                  <Col md={4}>
+                    <div className="gray-card">
+                      <h6> Your Dominant Personality</h6>
+                      <p> The dominant personality signifies the traits and behaviors that the you most closely associate with and are easily observable.</p>
+                      <img className="mt-35" src={leaderLarge}/>
+                      <h2>Leader</h2>
+                    </div>
+                  </Col>
+                  <Col md={4}>
+                    <div className="gray-card">
+                      <h6>  Your Secondary Personality</h6>
+                      <p>  The secondary personality is less visible and only shown in certain situations or to certain people. This could be aspects of ourselves that we keep more private or that only come out in specific contexts </p>
+                      <img src={InfluencerLarge}/>
+                      <h2>Influencer</h2>
+                    </div>
+                  </Col>
+                </Row>
+            </div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="primary" onClick={handleClose}>
-            Start
+            Re-take Test
           </Button>
         </Modal.Footer>
-      </Modal> */}
+      </Modal>
       {/* <Modal 
         show={show} 
         onHide={handleClose}

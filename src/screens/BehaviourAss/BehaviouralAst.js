@@ -51,7 +51,7 @@ const BehaviouralAst = () => {
     const [attemptQuiz, setAttemptQuiz] = useState([])
     const [attemptLeastQuiz, setAttemptLeastQuiz] = useState([])
     const [complete, setComplete] = useState(false)
-    const [language,setLanguage] = useState('english')
+    const [language,setLanguage] = useState('eng')
     const allSelectionsMade = mostLeastLike.every(row => row.most !== "" && row.least !== "");
     const handleClose = () => {
         if (!quizMostLeastLike.length) {
@@ -242,13 +242,12 @@ const BehaviouralAst = () => {
                     <div className="score_panel">
                         <span className="att_count">Attempted <strong>{runCounter()} / 28</strong></span>
                         <button type="button" className="outline_scorebtn me-3"><img src={infogray} />Instructions</button>
-                        <button type="button" className="outline_scorebtn me-3"><img src={globgray} />
+                        <button type="button" className="outline_scorebtn me-3 setlanguage"><img src={globgray} />
                             <Form.Select
                                 name="currency"
                                 aria-label="Default select example"
                                 className="sm-fselect"
                                 onChange={(e)=>{setLanguage(e?.target?.value);getQuizQuestion()}}
-                                value={language}
                             >
                                 <option selected value="english">English</option>
                                 <option selected value="hindi">Hindi</option>
@@ -261,7 +260,7 @@ const BehaviouralAst = () => {
                     </div>
                 </Modal.Header>
                 <Modal.Body>
-                    <Row className="bg-white rounded px-6 py-5">
+                    <Row>
                         {!quizMostLeastLike?.length && !attemptQuiz.length ? (
                             <QuizSlider
                                 mostLeastLike={mostLeastLike}
