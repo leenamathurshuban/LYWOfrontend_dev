@@ -19,7 +19,10 @@ import HomeIcon from "../../images/icons/HomeIcon.png";
 import UserIcon from "../../images/icons/UserIcon.png";
 import Logo from "../../images/logo_icon.png";
 import Share from "../../images/ShareIcon.png";
-import { ApplicationDeatilsApi, getPostJobIdApi } from "../../services/provider";
+import {
+  ApplicationDeatilsApi,
+  getPostJobIdApi,
+} from "../../services/provider";
 import ApplicationJobPostModal from "./ApplicationJobPostModal";
 import AboutLywoModal from "../../components/CustomModals/AboutLywoModal";
 import Chat from "../../images/ChatButton.png";
@@ -45,22 +48,21 @@ const JobPosts = () => {
   const [link, setLink] = useState(jobPostData?.job_link);
   const [copied, setCopied] = useState(false);
   const [buttonText, setButtonText] = useState("Apply Now");
-  const [registeredEmailId,setRegisteredEmailId] = useState("")
+  const [registerdUserLoginDetails, setRegisterdUserLoginDetails] = useState(null);
 
   const inputRef = useRef(null);
   const containerRef = useRef(null);
 
-  
   const navigate = useNavigate();
 
   const updateButtonText = (newText) => {
     setButtonText(newText);
   };
 
-  const handleEmailId = (StoreEmail) =>{
-    setRegisteredEmailId(StoreEmail)
-
-  }
+  const handleEmailId = (StoreData) => {
+    console.log("stroreddd data---->>>",StoreData)
+    setRegisterdUserLoginDetails(StoreData);
+  };
 
   const handleShowModal = (modalName) => {
     setModalOpen((prevState) => {
@@ -104,7 +106,7 @@ const JobPosts = () => {
       // const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/Zjg3YmExYzlmMA/`;
       // const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/ODE2YWNmZjgwZg/`;
       const data = await getPostJobIdApi(url);
-      console.log("api datatt----->>>>>>", data?.data?.response);
+      //console.log("api datatt----->>>>>>", data?.data?.response);
 
       setJobPostData(data?.data?.response);
       setLink(data?.data?.response?.job_link);
@@ -271,16 +273,15 @@ const JobPosts = () => {
 
   const handleProfileButton = (Text) => {
     if (Text === "View") {
-      handleViewDetailsAPi()
+      handleViewDetailsAPi();
       //handleShowModal("showProfileViewDetailsModal")
     }
     if (Text === "Apply Now") {
-      console.log("registeredEmailId--->>>>>",registeredEmailId)
+      
       handleShowModal("first");
       // handleShowModal("showProfileViewDetailsModal");
     }
   };
-
 
   const handleViewDetailsAPi = async () => {
     try {
@@ -293,8 +294,6 @@ const JobPosts = () => {
       console.log("Error occurred:", error);
     }
   };
-
-  
 
   return (
     <Container fluid>
@@ -444,6 +443,7 @@ const JobPosts = () => {
               {buttonText}
             </Button>
           </div>
+
           <div>
             <div
               style={{
@@ -464,7 +464,7 @@ const JobPosts = () => {
           handleClose={handleCloseModals}
           jobPostData={jobPostData}
           updateButtonText={updateButtonText}
-          registeredEmailId={handleEmailId}
+          registerdUserLoginDetails={handleEmailId}
         />
       ) : (
         <p>Loading...</p>

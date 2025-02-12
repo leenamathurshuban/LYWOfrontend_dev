@@ -25,7 +25,7 @@ const ApplicationJobPostModal = ({
   handleClose,
   jobPostData,
   updateButtonText,
-  registeredEmailId
+  registerdUserLoginDetails,
 }) => {
   const [isYes, setIsYes] = useState({
     CurrentlyWorkingToggle: false,
@@ -34,7 +34,7 @@ const ApplicationJobPostModal = ({
   const [ResumeFile, setResumeFile] = useState(null);
   const [error, setError] = useState(null);
   const [showInput, setShowInput] = useState(false);
-  const [ApplicantProfileId, setApplicantProfileId] = useState("");
+  const [ApplicantProfileData, setApplicantProfileData] = useState(null);
   const [selectedSpokenLanguageUids, setSelectedSpokenLanguageUids] = useState(
     []
   );
@@ -136,8 +136,6 @@ const ApplicationJobPostModal = ({
     });
   };
 
-
-
   // const handleSaveCloseModal = () => setshowSaveModal(false);
 
   // Handle skill selection
@@ -238,10 +236,8 @@ const ApplicationJobPostModal = ({
     setErrors(newErrors);
     setisAllFormDetailsValid(formIsValid);
 
-    return formIsValid; 
+    return formIsValid;
   };
-
-
 
   const handleProfileDetailsChange = (e) => {
     const { name, value } = e.target;
@@ -281,9 +277,9 @@ const ApplicationJobPostModal = ({
       const response = await ApplicationJobApi(formData);
 
       if (response.status === 200) {
-        // console.log("Applicatant response------>>>>>>>>",response.data.response.uid)
-        setApplicantProfileId(response?.data?.response?.uid);
-        alert("Form Saved Successfully");
+       // console.log("Applicatant response------>>>>>>>>",response.data?.applcant?.uid)
+       setApplicantProfileData(response.data);
+        //alert("Form Saved Successfully");
       } else {
         console.error("Failed to save form: ", response.data);
         alert("There was an issue saving the form.");
@@ -333,14 +329,17 @@ const ApplicationJobPostModal = ({
 
       const response = await ApplicationFormDetailsApi(
         formdata,
-        ApplicantProfileId
+        ApplicantProfileData?.applcant?.uid
       );
 
       if (response.status === 200) {
         handleClose();
         updateButtonText("View");
-        registeredEmailId(profileformData?.email)
-        alert("Form Saved Successfully");
+
+        // registeredEmailId(profileformData?.email);
+       // alert("Form Saved Successfully");
+       registerdUserLoginDetails(ApplicantProfileData)
+       // behaviour wala navigate hoga
       } else {
         console.error("Failed to save form: ", response.data);
         alert("There was an issue saving the form.");
@@ -351,7 +350,7 @@ const ApplicationJobPostModal = ({
   };
 
   const handleSaveAsDraft = () => {
-    if (!ApplicantProfileId) {
+    if (!ApplicantProfileData?.applcant?.uid) {
       alert("Please fill Profile Details");
       return;
     }
@@ -359,7 +358,7 @@ const ApplicationJobPostModal = ({
 
   const handleSubmit = () => {
     //console.log("isValid----->>>>",isValid)
-    if (!ApplicantProfileId) {
+    if (!ApplicantProfileData?.applcant?.uid) {
       alert("Please fill Profile Details");
       return;
     }
@@ -405,12 +404,12 @@ const ApplicationJobPostModal = ({
 
   const saveQualificationData = async (row) => {
     try {
-      if (!ApplicantProfileId) {
+      if (!ApplicantProfileData?.applcant?.uid) {
         alert("Please fill Profile Details");
         return;
       }
       const formdata = new FormData();
-      formdata.append("applicant_profile", ApplicantProfileId);
+      formdata.append("applicant_profile", ApplicantProfileData?.applcant?.uid);
       formdata.append("level", row.level);
       formdata.append("applicant_area_of_education", row.areaOfEducation);
       formdata.append("grad_year", row.gradYear);
@@ -431,12 +430,12 @@ const ApplicationJobPostModal = ({
 
   const saveWorkExperienceData = async (row) => {
     try {
-      if (!ApplicantProfileId) {
+      if (!ApplicantProfileData?.applcant?.uid) {
         alert("Please fill Profile Details");
         return;
       }
       const formdata = new FormData();
-      formdata.append("work_applicant_profile", ApplicantProfileId);
+      formdata.append("work_applicant_profile", ApplicantProfileData?.applcant?.uid);
       formdata.append("total_work_experience", row.TotalWorkExperience);
       formdata.append("role", row.WorkRole);
       formdata.append("work_from", row.WorkFrom);
@@ -574,6 +573,8 @@ const ApplicationJobPostModal = ({
       setSelectedWrittenLanguageUids([...selectedWrittenLanguageUids, uid]);
     }
   };
+
+  
 
   return (
     <Modal
@@ -1647,7 +1648,9 @@ const ApplicationJobPostModal = ({
               <Button variant="light" onClick={handleCloseModals}>
                 Return to Job
               </Button>
-              <Button variant="primary" onClick={() => handleFormDetailsApi()}>
+              <Button variant="primary" 
+               onClick={() => handleFormDetailsApi()}
+               >
                 Proceed to Behavioral Test
               </Button>
             </Modal.Footer>
@@ -1655,10 +1658,7 @@ const ApplicationJobPostModal = ({
         </div>
       </Modal.Body>
       <Modal.Footer>
-        {/* <Button variant="light" onClick={handleClose}>
-          Save as Draft
-        </Button>
-        <Button variant="primary">Submit</Button> */}
+       
       </Modal.Footer>
     </Modal>
   );
