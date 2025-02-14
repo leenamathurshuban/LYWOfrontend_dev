@@ -382,6 +382,9 @@ const QuizQuestionSlider = ({ quizMostLeastLike, setQuizMostLeastLike, language 
                                     </div>
                                 </Col>
                             ))}
+                            <Col md={12} className="text-center mt-4">
+                                <p className="mostlike">Pick one <strong>"Most Like”</strong> you and one <strong>"Least Like”</strong> you</p>
+                            </Col>
                         </Row>
                     </div>
                 ))}

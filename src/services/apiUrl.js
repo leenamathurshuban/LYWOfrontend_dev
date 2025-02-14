@@ -43,3 +43,12 @@ export const BehaviourUrl = {
   updateApplicantBehaviour:"assets-api/update-applicant-behaviour-api/"
 }
 
+
+export const ApplicationJobPostUrl = {
+  languageList : "assets-api/laguage-list-api/?page=6&limit=10",
+  JobApplication : "assets-api/applicant-post-api/",
+  JobGetDetails : "assets-api/applicant-detail-api/jan12@gmail.com/",
+  EducationQualification : "assets-api/applicant-qualification-post-api/",
+  WorkExperience:"assets-api/applicant-work-experience-post-api/",
+  ApplicationFormDetails : "assets-api/applicant-update-api/"
+}

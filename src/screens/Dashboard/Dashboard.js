@@ -172,7 +172,7 @@ const Dashboard = () => {
       </div>
 
       {/* <CompanyEditProfile show={show} handleClose={handleClose} /> */}
-      <Modal 
+      {/* <Modal 
         show={show} 
         onHide={handleClose}
         animation={false}
@@ -213,7 +213,7 @@ const Dashboard = () => {
             Re-take Test
           </Button>
         </Modal.Footer>
-      </Modal>
+      </Modal> */}
       {/* <Modal 
         show={show} 
         onHide={handleClose}

@@ -10,6 +10,7 @@ import HelpChoose from "../screens/HelpmeChoose/HelpChoose";
 import ApplicationJobPostModal from "../screens/Jobs/ApplicationJobPostModal";
 import BehaviouralAst from "../screens/BehaviourAss/BehaviouralAst";
 import BehaviourAssReport from "../screens/BehaviourAss/BehaviourAssReport";
+import Protected from "./protected";
 
 
 export const router = createBrowserRouter([
@@ -71,8 +72,8 @@ export const router = createBrowserRouter([
     element: <ProtectedRoute element={<JobsList />} allowAuthenticated={false} />,  // Only allow authenticated users here
   },
   {
-    path: "/JobPosts/:id",
-    // path: "/JobPosts",
+    // path: "/JobPosts/:id",
+    path: "/JobPosts",
     element: <ProtectedRoute element={<JobPosts />} allowAuthenticated={false} />,  // Only allow authenticated users here
   },
   {
@@ -90,7 +91,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/Behavioural-Assessment",
-    element: <ProtectedRoute element={<BehaviouralAst />} allowAuthenticated={false} />,  // Only allow authenticated users here
+    element: <Protected element={<BehaviouralAst />} allowAuthenticated={false} />,  // Only allow authenticated users here
   },
   {
     path: "/Behaviour-Assessment-Report",
