@@ -21,6 +21,7 @@ import {
 } from "../../services/provider";
 import axios from "axios";
 import { compose } from "@reduxjs/toolkit";
+import { useNavigate } from "react-router-dom";
 
 const ApplicationJobPostModal = ({
   show,
@@ -349,13 +350,12 @@ const ApplicationJobPostModal = ({
   };
 
   const handleFormDetailsApi = async () => {
-    const dataToSend = selectedSkills.length === 0 ? [] : selectedSkills;
-    const applicantProfileData = JSON.parse(
-      localStorage.getItem("applicantProfileData")
-    );
-    const accessToken = applicantProfileData?.user_login?.access;
-
     try {
+      const dataToSend = selectedSkills.length === 0 ? [] : selectedSkills;
+      const applicantProfileData = JSON.parse(
+        localStorage.getItem("applicantProfileData")
+      );
+      const accessToken = applicantProfileData?.user_login?.access;
       const headers = {
         Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM5NTkzNzE5LCJpYXQiOjE3Mzk1MDczMTksImp0aSI6ImYwYjlhZWUxYTYzOTRmZGM4NTBjYjg3NzY4ZDg5OWFmIiwidXNlcl9pZCI6MjA1LCJuYW1lIjoiYXBuYSIsImVtYWlsIjoiYXBuYTEyM0BnbWFpbC5jb20ifQ.Flrz1iVkpCWbwhx3zb2heMCJqQ9EwLaO0E0eNzOmGZc`,
       };
@@ -399,11 +399,17 @@ const ApplicationJobPostModal = ({
         if (handleShowModal("SaveAsDraft")) {
           updateButtonText("Continue");
         }
-        if(handleShowModal("Save")){
+        if (handleShowModal("Save")) {
           updateButtonText("View");
         }
-       
+
         handleClose();
+        // localStorage.setItem('applicantToken', ApplicantProfileData?.user_login?.access)
+        // localStorage.setItem('applicantData',JSON.stringify(ApplicantProfileData?.applcant))
+        sessionStorage.setItem('applicantToken', ApplicantProfileData?.user_login?.access)
+        sessionStorage.setItem('applicantData', JSON.stringify(ApplicantProfileData?.applcant))
+        // behaviour wala navigate hoga
+        navigate('/Behavioural-Assessment')
 
         // registeredEmailId(profileformData?.email);
         // alert("Form Saved Successfully");
@@ -414,14 +420,22 @@ const ApplicationJobPostModal = ({
         // );
 
         // behaviour wala navigate hoga
-      } else {
-        console.error("Failed to save form: ", response.data);
-        alert("There was an issue saving the form.");
+        // const response = await ApplicationFormDetailsApi(
+        //   formdata,
+        //   ApplicantProfileData?.applcant?.uid
+        // );
+
+
       }
     } catch (error) {
-      console.error("Error occurred:", error);
+      console.log(error)
+
     }
-  };
+  }
+
+
+
+
 
   const handleSubmit = () => {
     if (!storedApplicantId) {
@@ -474,7 +488,6 @@ const ApplicationJobPostModal = ({
     const newRows = [...EducationRows];
     newRows[index][name] = value;
     SetEducationRows(newRows);
-
   };
 
   const saveQualificationData = async (row) => {
@@ -685,22 +698,22 @@ const ApplicationJobPostModal = ({
       }));
 
       setStoredApplicantId(storedData?.uid);
- 
-    const spokenUids = Array.from(new Set(storedData?.spoken_language.map((item) => item?.uid)));
-    const writtenUids = Array.from(new Set(storedData?.written_reading_language.map((item) => item?.uid)));
 
-    setSelectedSpokenLanguageUids((prevState) => [
-      ...prevState,
-      ...spokenUids.filter((uid) => !prevState.includes(uid)),
-    ]);
+      const spokenUids = Array.from(new Set(storedData?.spoken_language.map((item) => item?.uid)));
+      const writtenUids = Array.from(new Set(storedData?.written_reading_language.map((item) => item?.uid)));
 
-    setSelectedWrittenLanguageUids((prevState) => [
-      ...prevState,
-      ...writtenUids.filter((uid) => !prevState.includes(uid)),
-    ]);
+      setSelectedSpokenLanguageUids((prevState) => [
+        ...prevState,
+        ...spokenUids.filter((uid) => !prevState.includes(uid)),
+      ]);
+
+      setSelectedWrittenLanguageUids((prevState) => [
+        ...prevState,
+        ...writtenUids.filter((uid) => !prevState.includes(uid)),
+      ]);
 
 
- 
+
 
 
       const skillsUids =
@@ -709,40 +722,40 @@ const ApplicationJobPostModal = ({
         );
       setSelectedSkills((prevState) => [...prevState, ...skillsUids]);
 
-    
 
 
-    const resumeFileUrl = storedData?.resume || null;
-    setResumeFile(resumeFileUrl); 
-   
-    const resumeFileName = resumeFileUrl ? resumeFileUrl.split('/').pop() : '';
 
-   
-    
-    setResumeFileName(resumeFileName); 
+      const resumeFileUrl = storedData?.resume || null;
+      setResumeFile(resumeFileUrl);
+
+      const resumeFileName = resumeFileUrl ? resumeFileUrl.split('/').pop() : '';
+
+
+
+      setResumeFileName(resumeFileName);
 
     }
 
-      
-      const educationData = storedData?.qualification_applicantprofile || [];
-      if (Array.isArray(educationData)) {
-        SetEducationRows((prevState) => [
-          ...prevState,
-          ...educationData.map((item) => ({
-            level: item?.level || "",
-            areaOfEducation: item?.applicant_area_of_education || "",
-            gradYear: item?.grad_year || "",
-            university: item?.university || "",
-            grade: item?.grade || "",
-          })),
-        ]);
-      }
-    
-    
-    
+
+    const educationData = storedData?.qualification_applicantprofile || [];
+    if (Array.isArray(educationData)) {
+      SetEducationRows((prevState) => [
+        ...prevState,
+        ...educationData.map((item) => ({
+          level: item?.level || "",
+          areaOfEducation: item?.applicant_area_of_education || "",
+          gradYear: item?.grad_year || "",
+          university: item?.university || "",
+          grade: item?.grade || "",
+        })),
+      ]);
+    }
+
+
+
   }, []);
 
-  
+
 
 
   return (
@@ -773,12 +786,11 @@ const ApplicationJobPostModal = ({
               <h6>Profile</h6>
               <ul className="checklist">
                 <li
-                  className={`${
-                    profileformData?.name &&
+                  className={`${profileformData?.name &&
                     profileformData?.email &&
                     profileformData?.phone &&
                     "active"
-                  }`}
+                    }`}
                 >
                   <a href="#item_salary">
                     Basic Details <i class="fa fa-check" aria-hidden="true"></i>
@@ -791,13 +803,12 @@ const ApplicationJobPostModal = ({
                   </a>
                 </li>
                 <li
-                  className={`${
-                    profileformData?.AvailableBy &&
+                  className={`${profileformData?.AvailableBy &&
                     isYes?.CurrentlyWorkingToggle &&
                     profileformData?.NoticePeriod &&
                     isYes?.NoticeBuyOutToggle &&
                     "active"
-                  }`}
+                    }`}
                 >
                   <a href="#item_Exp">
                     Availability <i class="fa fa-check" aria-hidden="true"></i>
@@ -1066,8 +1077,8 @@ const ApplicationJobPostModal = ({
                           onChange={() =>
                             handleSwitchChange("CurrentlyWorkingToggle")
                           }
-                          // required
-                          // isInvalid={!isYes?.CurrentlyWorkingToggle}
+                        // required
+                        // isInvalid={!isYes?.CurrentlyWorkingToggle}
                         />
                       </Col>
 
@@ -1260,12 +1271,12 @@ const ApplicationJobPostModal = ({
                         }
                       />
                       <Form.Select
-                       
+
                         value={"GPA"}
-                       
+
                       >
                         <option>GPA</option>
-                        
+
                       </Form.Select>
                     </Col>
                     <Col md={1}>
@@ -1617,9 +1628,8 @@ const ApplicationJobPostModal = ({
                       {groupedSkills[groupName].map((skill, idx) => (
                         <span
                           key={idx}
-                          className={`skill-tag mb-2 mr-2 ${
-                            selectedSkills.includes(skill.uid) ? "selected" : ""
-                          }`}
+                          className={`skill-tag mb-2 mr-2 ${selectedSkills.includes(skill.uid) ? "selected" : ""
+                            }`}
                           onClick={() => handleSkillSelect(skill)}
                           style={{
                             padding: "5px 15px",

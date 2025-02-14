@@ -214,7 +214,7 @@ const Dashboard = () => {
             Re-take Test
           </Button>
         </Modal.Footer>
-      </Modal>
+      </Modal> */}
       {/* <Modal 
         show={show} 
         onHide={handleClose}

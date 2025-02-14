@@ -102,7 +102,7 @@ const JobPosts = () => {
 
   const GetJobPostWithId = async () => {
     try {
-      const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/${id}`;
+      // const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/${id}`;
       // const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/NDFhZGM5ZWQyZg/`;
       // const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/ZTEwZmFlZmFiYw/`;
       // const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/Zjg3YmExYzlmMA/`;

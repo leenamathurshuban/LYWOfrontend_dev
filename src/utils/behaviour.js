@@ -86,7 +86,7 @@ export const BehaviourResponse = [
 ]
 
 export const HindiQuizOption = {
-  "Enthusiastic": "उत्साही",
+  "Enthusiasm": "उत्साही",
   "Daring": "साहसी",
   "Diplomatic": "व्यवहार-कुशल",
   "Satisfied": "संतुष्ट",
@@ -111,7 +111,7 @@ export const HindiQuizOption = {
   "Humble": "विनम्र",
   "Original": "मौलिक",
   "Expressive": "भावनापूर्ण",
-  "Conscientious/Meticulous": "सतर्क",
+  "Meticulous": "सतर्क",
   "Dominant": "प्रभावशाली",
   "Responsive": "प्रतिक्रियाशील",
   "Poised": "संतुलित",
@@ -201,7 +201,7 @@ export const HindiQuizOption = {
 };
 
 export const GujratiQuizOption = {
-  "Enthusiastic": "ઉત્સાહી",
+  "Enthusiasm": "ઉત્સાહી",
   "Daring": "હિંમતવાન",
   "Diplomatic": "કૂટનીતિક",
   "Satisfied": "સંતુષ્ટ",
@@ -226,7 +226,7 @@ export const GujratiQuizOption = {
   "Humble": "નમ્ર",
   "Original": "મૌલિક",
   "Expressive": "અભિવ્યક્ત",
-  "Conscientious/Meticulous": "ચોકસાઈપૂર્ણ",
+  "Meticulous": "ચોકસાઈપૂર્ણ",
   "Dominant": "પ્રબળ",
   "Responsive": "પ્રતિભાવશીલ",
   "Poised": "સંયમી",
@@ -312,7 +312,7 @@ export const GujratiQuizOption = {
 }
 
 export const KannadaQuizOption = {
-  "Enthusiastic": "ಉತ್ಸಾಹಿ",
+  "Enthusiasm": "ಉತ್ಸಾಹಿ",
   "Daring": "ಧೈರ್ಯವಂತ",
   "Diplomatic": "ರಾಜತಾಂತ್ರಿಕ",
   "Satisfied": "ತೃಪ್ತ",
@@ -337,7 +337,7 @@ export const KannadaQuizOption = {
   "Humble": "ವಿನೀತ",
   "Original": "ಮೂಲ",
   "Expressive": "ಅಭಿವ್ಯಕ್ತಿಶೀಲ",
-  "Conscientious/Meticulous": "ಸೂಕ್ಷ್ಮ",
+  "Meticulous": "ಸೂಕ್ಷ್ಮ",
   "Dominant": "ಪ್ರಭಾವಶಾಲಿ",
   "Responsive": "ಪ್ರತಿಸ್ಪಂದಕ",
   "Poised": "ಸಮಚಿತ್ತದವ",
@@ -427,7 +427,7 @@ export const KannadaQuizOption = {
 }
 
 export const TamilQuizOption = {
-  "Enthusiastic": "ஆர்வமிக்க",
+  "Enthusiasm": "ஆர்வமிக்க",
   "Daring": "துணிவுள்ள",
   "Diplomatic": "ராஜதந்திரமான",
   "Satisfied": "திருப்தியுடன்",
@@ -452,7 +452,7 @@ export const TamilQuizOption = {
   "Humble": "பணிவன்புடன்",
   "Original": "அசல்",
   "Expressive": "உணர்ச்சியை வெளிப்படுத்தக்கூடிய",
-  "Conscientious/Meticulous": "நுணுக்கமான கவனத்துடன்",
+  "Meticulous": "நுணுக்கமான கவனத்துடன்",
   "Dominant": "ஆதிக்கத்துடன்",
   "Responsive": "பதிலளிக்கக்கூடிய",
   "Poised": "கம்பீரமாக",
@@ -542,7 +542,7 @@ export const TamilQuizOption = {
 }
 
 export const TeluguQuizOption = {
-  "Enthusiastic": "ఉత్సుకత గలవాడు",
+  "Enthusiasm": "ఉత్సుకత గలవాడు",
   "Daring": "సాహసవంతుడు",
   "Diplomatic": "కూటనీతిజ్ఞ",
   "Satisfied": "తృప్తి కలిగిన వాడు",

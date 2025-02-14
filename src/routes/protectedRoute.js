@@ -6,6 +6,7 @@ const isAuthenticated = () => {
   // Check if token exists in localStorage (this can be modified for your own use case)
   return localStorage.getItem('authToken') !== null;
 };
+console.log(JSON.parse(localStorage.getItem('applicantData')))
 
 const ProtectedRoute = ({ element, redirectTo, allowAuthenticated }) => {
   // If the route should allow only authenticated users and the user is not authenticated, redirect to the login

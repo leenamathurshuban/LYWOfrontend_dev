@@ -35,12 +35,18 @@ import popSucess from "../../images/popSuc.png";
 import QuizSlider from "../../components/QuizSlider";
 import { getApplicantBehaviourDetailApi, getQuizQuestionListAPi, postQuizQuestionApi, updateApplicantBehaviourApi } from '../../services/provider';
 import QuizQuestionSlider from '../../components/QuizQuestionSlider';
+import { useNavigate } from 'react-router-dom';
 
 const BehaviouralAst = () => {
     const [show, setShow] = useState(false);
     const [popupShow, setPopupShow] = useState(false);
     const handleClosePop = () => setPopupShow(false);
     const handleShow = () => setShow(true);
+    const navigate = useNavigate();
+    // let applicantId = JSON.parse(localStorage.getItem('applicantData'))
+    // let behavioralId = JSON.parse(localStorage.getItem('applicantBehaviour'))
+    let applicantId = JSON.parse(sessionStorage.getItem('applicantData'))
+    let behavioralId = JSON.parse(sessionStorage.getItem('applicantBehaviour'))
 
     const [mostLeastLike, setMostLeastLike] = useState([
         { id: 1, most: "", least: "", options: [{ name: "Ice Cream", img: iceIQ }, { name: "Tea", img: teaIQ }, { name: "Cake", img: cakeIQ }, { name: "Coffee", img: coffieIQ }] },
@@ -51,7 +57,7 @@ const BehaviouralAst = () => {
     const [attemptQuiz, setAttemptQuiz] = useState([])
     const [attemptLeastQuiz, setAttemptLeastQuiz] = useState([])
     const [complete, setComplete] = useState(false)
-    const [language,setLanguage] = useState('eng')
+    const [language,setLanguage] = useState('english')
     const allSelectionsMade = mostLeastLike.every(row => row.most !== "" && row.least !== "");
     const handleClose = () => {
         if (!quizMostLeastLike.length) {
@@ -62,7 +68,7 @@ const BehaviouralAst = () => {
     }
     const getApplicantBehaviourDetail = async (id) => {
         try {
-            const response = await getApplicantBehaviourDetailApi('bb880926-1730-4413-9bc8-cf48e6996eae');
+            const response = await getApplicantBehaviourDetailApi(behavioralId?.uid);
             if (response?.data?.success) {
                 setAttemptQuiz(response?.data?.response?.most_like?.map((cv) => cv.uid))
                 setAttemptLeastQuiz(response?.data?.response?.least_like?.map((cv) => cv.uid))
@@ -117,7 +123,7 @@ const BehaviouralAst = () => {
             try {
                 const formData = new FormData();
                 if (!attemptQuiz.length) {
-                    formData.append('applicant', '88a6bcd6-d7cd-4207-8bfa-7bb70f0117aa');
+                    formData.append('applicant', applicantId?.uid);
                     formData.append('most_like', JSON.stringify(quizMostLeastLike.flatMap(row => row.mostList)));
                     formData.append('least_like', JSON.stringify(quizMostLeastLike.flatMap(row => row.leastList)));
                     formData.append('behaviour_status', 'Draft');
@@ -125,6 +131,9 @@ const BehaviouralAst = () => {
                     if (response?.data?.success) {
                         setPopupShow(false)
                         setComplete(true)
+                        // localStorage.setItem('applicantBehaviour',JSON.stringify(response?.data?.response))  
+                        sessionStorage.setItem('applicantBehaviour',JSON.stringify(response?.data?.response))   
+                        navigate('/JobPosts')                   
                     }
                 } else {
                     let mostLike = quizMostLeastLike.flatMap(row => row.mostList);
@@ -132,10 +141,13 @@ const BehaviouralAst = () => {
                     formData.append('most_like', JSON.stringify([...attemptQuiz, ...mostLike]));
                     formData.append('least_like', JSON.stringify([...attemptLeastQuiz, ...leastLike]));
                     formData.append('behaviour_status', 'Draft');
-                    const response = await updateApplicantBehaviourApi('bb880926-1730-4413-9bc8-cf48e6996eae', formData);
+                    const response = await updateApplicantBehaviourApi('785d98b7-4e1f-4097-a98c-305b23dd50d3', formData);
                     if (response?.data?.success) {
                         setPopupShow(false)
                         setComplete(true)
+                        // localStorage.setItem('applicantBehaviour',JSON.stringify(response?.data?.response))
+                        sessionStorage.setItem('applicantBehaviour',JSON.stringify(response?.data?.response))
+                        navigate('/JobPosts')
                     }
                 }
             } catch (error) {
@@ -247,6 +259,7 @@ const BehaviouralAst = () => {
                                 name="currency"
                                 aria-label="Default select example"
                                 className="sm-fselect"
+                                value={language}
                                 onChange={(e)=>{setLanguage(e?.target?.value);getQuizQuestion()}}
                             >
                                 <option selected value="english">English</option>
@@ -272,10 +285,7 @@ const BehaviouralAst = () => {
                                 setQuizMostLeastLike={setQuizMostLeastLike}
                                 language={language}
                             />
-                        )}
-                        <Col md={12} className="text-center mt-4">
-                            <p className="mostlike">Pick one <strong>"Most Like”</strong> you and one <strong>"Least Like”</strong> you</p>
-                        </Col>
+                        )}                        
                     </Row>
                     {quizMostLeastLike.flatMap(row => row.mostList).length === 3 && quizMostLeastLike.flatMap(row => row.leastList).length === 3 && (
                         <Row className="bg-white rounded px-6 py-5">
