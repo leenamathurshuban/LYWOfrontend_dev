@@ -171,8 +171,9 @@ const Dashboard = () => {
         </Container>
       </div>
 
-      {/* <CompanyEditProfile show={show} handleClose={handleClose} /> */}
-      <Modal 
+      <CompanyEditProfile show={show} handleClose={handleClose} />
+      
+      {/* <Modal 
         show={show} 
         onHide={handleClose}
         animation={false}

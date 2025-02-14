@@ -48,7 +48,9 @@ const JobPosts = () => {
   const [link, setLink] = useState(jobPostData?.job_link);
   const [copied, setCopied] = useState(false);
   const [buttonText, setButtonText] = useState("Apply Now");
-  const [registerdUserLoginDetails, setRegisterdUserLoginDetails] = useState(null);
+  const [registerdUserLoginDetails, setRegisterdUserLoginDetails] =
+    useState(null);
+  const [viewDetailData, setViewDetailData] = useState(null);
 
   const inputRef = useRef(null);
   const containerRef = useRef(null);
@@ -60,7 +62,7 @@ const JobPosts = () => {
   };
 
   const handleEmailId = (StoreData) => {
-    console.log("stroreddd data---->>>",StoreData)
+    //console.log("stroreddd data---->>>", StoreData);
     setRegisterdUserLoginDetails(StoreData);
   };
 
@@ -272,28 +274,55 @@ const JobPosts = () => {
   // console.log("link-222222222------>>>>>>>",jobPostData?.job_link)
 
   const handleProfileButton = (Text) => {
+    console.log("Button Text------->>>>>>>", Text);
+    const applicantProfileData = JSON.parse(
+      localStorage.getItem("applicantProfileData")
+    );
+    const EmailId = applicantProfileData?.user_login?.email;
     if (Text === "View") {
-      handleViewDetailsAPi();
-      //handleShowModal("showProfileViewDetailsModal")
+      handleViewDetailsAPi(EmailId);
     }
-    if (Text === "Apply Now") {
-      
+    if (Text === "Continue") {
       handleShowModal("first");
       // handleShowModal("showProfileViewDetailsModal");
     }
+    if(Text === "Apply Now"){
+      handleShowModal("first");
+    }
   };
 
-  const handleViewDetailsAPi = async () => {
+  const handleViewDetailsAPi = async (EmailId) => {
     try {
-      const response = await ApplicationDeatilsApi();
-      console.log("Api data----------->>>>", response?.data?.response);
+      const response = await ApplicationDeatilsApi(EmailId);
+
       if (response.status === 200) {
-        console.log("Api data----------->>>>", response.data);
+        // console.log("Api data--checkkkkk--------->>>>", response.data);
+        setViewDetailData(response?.data?.response)
+        localStorage.setItem(
+          "applicantProfileAllSavedData",
+          JSON.stringify(response?.data?.response)
+        );
+        handleShowModal("showProfileViewDetailsModal");
       }
     } catch (error) {
       console.log("Error occurred:", error);
     }
   };
+
+  useEffect(() => {
+    // const savedData = localStorage.getItem("applicantProfileAllSavedData");
+    
+    // if (savedData) {
+    //   setViewDetailData(JSON.parse(savedData));
+    // }
+
+    // const applicantProfileData = JSON.parse(
+    //   localStorage.getItem("applicantProfileData")
+    // );
+    // if(applicantProfileData){
+
+    // }
+  }, []);
 
   return (
     <Container fluid>
@@ -433,7 +462,7 @@ const JobPosts = () => {
           <h6>Your Progress</h6>
           <div style={{ border: "1px solid #000", padding: 12 }}>
             <p>Profile Details</p>
-            {buttonText == "View" && <p>Completed</p>}
+            {buttonText == "View" && <p>Completed</p> || buttonText == "Continue" && <p>Pending</p>}
             <Button
               variant="primary"
               size="lg"
@@ -465,6 +494,7 @@ const JobPosts = () => {
           jobPostData={jobPostData}
           updateButtonText={updateButtonText}
           registerdUserLoginDetails={handleEmailId}
+          //viewDetailData={viewDetailData}
         />
       ) : (
         <p>Loading...</p>
@@ -665,35 +695,65 @@ const JobPosts = () => {
         </Modal.Footer>
       </Modal>
 
-      <div>
-        <Modal
-          show={modalOpen.showProfileViewDetailsModal}
-          handleClose={handleCloseModals}
-          animation={false}
-          size="lg"
-          backdrop={false}
-          className="cmprofile_mdl quizDev_model"
-        >
-          <Modal.Header closeButton>
-            <Modal.Title>Profile Details</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>Sandeep@lywo.in</Modal.Body>
-          <Modal.Footer>
-            <Button
-              variant="light"
-              // onClick={handleCloseModals}
-            >
-              Return to Job
-            </Button>
-            <Button
-              variant="primary"
-              // onClick={() => handleFormDetailsApi()}
-            >
-              Proceed to Behavioral Test
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      </div>
+      <Modal
+        show={modalOpen.showProfileViewDetailsModal}
+        handleClose={()=>handleCloseModals()}
+        animation={false}
+        size="lg"
+        backdrop={false}
+        className="cmprofile_mdl quizDev_model"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Profile Details</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {viewDetailData && (
+            <>
+              <Row>
+                <Col md={10}>
+                  <h6>{viewDetailData?.user?.username}</h6>
+                  <h5>{viewDetailData?.user?.email}</h5>
+                  <p>{viewDetailData?.user?.phone_number}</p>
+                </Col>
+
+                <Col md={2}>{viewDetailData?.resume}</Col>
+              </Row>
+
+              <Row style={{ borderBottom: "1px solid #ddd", padding: "10px" }}>
+                <Col md={6}>Availability</Col>
+                <Col md={6}>{viewDetailData?.availble_by}</Col>
+                <Col md={6}>Notice Period</Col>
+                <Col md={6}>{viewDetailData?.notice_period}</Col>
+                <Col md={6}>Expected Salary</Col>
+                <Col md={6}>{viewDetailData?.expected_salary}</Col>
+                <Col md={6}>Education</Col>
+                <Col md={6}>Master in Computer Science Engineering</Col>
+                <Col md={6}>Experience</Col>
+                <Col md={6}>
+                  June 2022 - May2024 Software Developer, IT, Company Name
+                </Col>
+                <Col md={6}>Language </Col>
+                <Col md={6}>Hindi, English, Telugu</Col>
+                <Col md={6}>Current Location</Col>
+                <Col md={6}>{viewDetailData?.current_location}</Col>
+                <Col md={6}>Skills</Col>
+                {viewDetailData?.applicant_profile_job?.[0]?.job_applicant_skill.map((item)=>console.log("i----->>>>",item))}
+                <Col md={6}>
+                  Microsoft Office, PowerPoint, Java, C#, Leadership, Database
+                  Management, Product Development, Mongo DB, .Net,
+                </Col>
+                <Col md={6}>Additional Questions from Company</Col>
+                <Col md={6}>Can join Immediately</Col>
+              </Row>
+            </>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={handleCloseModals}>
+            Return to Job
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };

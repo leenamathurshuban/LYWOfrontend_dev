@@ -4,6 +4,9 @@ export const storeToken = (token) => {
 
 export const removeToken = () => {
    localStorage.removeItem('authToken');
+   localStorage.removeItem('applicantProfileAllSavedData');
+   localStorage.removeItem('applicantProfileData');
+   
 };
 
 export const logoMaker = (companyName) =>{

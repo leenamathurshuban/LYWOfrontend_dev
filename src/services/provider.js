@@ -221,12 +221,12 @@ export const updateApplicantBehaviourApi=(id,data)=>{
 }
 
 export const ApplicationJobApi = (data) =>{
-  const ApplicationJob = client.postWithToken(`${ApplicationJobPostUrl.JobApplication}`,data)
+  const ApplicationJob = client.postWithoutToken(`${ApplicationJobPostUrl.JobApplication}`,data)
   return ApplicationJob
 }
 
-export const ApplicationDeatilsApi = () =>{
-  const ApplicationJob = client.getWithToken(`${ApplicationJobPostUrl.JobGetDetails}`)
+export const ApplicationDeatilsApi = (EmailId) =>{
+  const ApplicationJob = client.getWithToken(`${ApplicationJobPostUrl.JobGetDetails}${EmailId}/`)
   return ApplicationJob
 }
 
