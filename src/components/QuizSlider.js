@@ -2,35 +2,34 @@ import React, { useState } from 'react';
 import OwlCarousel from 'react-owl-carousel';
 import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel/dist/assets/owl.theme.default.css';
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import cakeIQ from "../../src/images/icons/quiz/cake-IQ.svg";
 import coffieIQ from "../../src/images/icons/quiz/coffie-IQ.svg";
 import iceIQ from "../../src/images/icons/quiz/ice-crime-IQ.svg";
 import teaIQ from "../../src/images/icons/quiz/tea-IQ.svg";
+import handDrawicon from "../../src/images/icons/quiz/Hand-drawn-arrow-down.svg";
+import handDrawmlike from "../../src/images/icons/quiz/Hand-drawn-mostlike.svg";
+import handDrawlelike from "../../src/images/icons/quiz/Hand-drawn-leastlike.svg";
+import handDrawmlikeactive from "../../src/images/icons/quiz/Hand-drawn-mlike-active.svg";
+import handDrawlelikeactive from "../../src/images/icons/quiz/Hand-drawn-arrow-lealike-active.svg";
 import {
     Col,
     Row
 } from "react-bootstrap";
 const QuizSlider = ({ mostLeastLike, setMostLeastLike }) => {
     const options = {
-        loop: true,
-        margin: 10,
-        items: 1,
-        nav: true,
         dots: true,
-        animateOut: 'slideOutUp',
-        animateIn: 'slideInUp'
-        // loop: true,
-        // margin: 30,
-        // nav: true,
-        // dots: true,
-        // autoplay: false,
-        // autoplayTimeout: 3000,
-        // autoplayHoverPause: true,
-        // responsive: {
-        //   0: { items: 1 },
-        //   600: { items: 2 },
-        //   1000: { items: 4 }
-        // }
+        infinite: true,
+        speed: 2000,
+        slidesToShow: 1,
+        // centerMode: true,
+        // centerPadding: "20px",
+        arrows: false,
+        vertical: true,
+        verticalSwiping: true,
+        focusOnSelect: true
     };
     // const [mostLeastLike, setMostLeastLike] = useState([
     //     { id: 1, most: "", least: "", options: ["Ice Cream", "Tea", "Cake", "Coffee"] },
@@ -67,10 +66,11 @@ const QuizSlider = ({ mostLeastLike, setMostLeastLike }) => {
             });
             return [...newState]; // Ensure a new reference for React to detect changes
         });
-    };    
+    };
 
     return (
-        <OwlCarousel key={JSON.stringify(mostLeastLike)} className="owl-theme" {...options}>
+        <div className="qzslider"><span className='handraw'><img src={handDrawicon}/>Hover over the cards below to begin.</span>
+        <Slider key={JSON.stringify(mostLeastLike)} {...options}>
             {mostLeastLike.map((row, rowIndex) => (
                 <div key={row.id} className="item">
                     <Row>
@@ -87,10 +87,29 @@ const QuizSlider = ({ mostLeastLike, setMostLeastLike }) => {
                                         <button type="button" className="btn-down" onClick={() => {
                                             handleClick(rowIndex, option?.name, "least")
                                         }}><i className={`fa ${row.least === option?.name ? 'fa-times' : 'fa-arrow-down'} `}></i></button>
+                                        <div className='mlike-sugg'>
+                                            <img src={handDrawmlike}/>
+                                            <span>Click to pick “Most Like”</span>
+                                        </div>
+                                        <div className='lelike-sugg'>
+                                            <img src={handDrawlelike}/>
+                                            <span>Click to pick “Least Like”</span>
+                                        </div>
+                                        <div className='mlike-sugg_active'>
+                                            <img src={handDrawmlikeactive}/>
+                                            <span>Click to remove the selection</span>
+                                        </div>
+                                        <div className='lelike-sugg_active'>
+                                            <img src={handDrawlelikeactive}/>
+                                            <span>Click to remove the selection</span>
+                                        </div>
                                     </div>
                                 </div>
                             </Col>
                         ))}
+                        <Col md={12} className="text-center mt-4">
+                            <p className="mostlike">Pick one <strong>"Most Like”</strong> you and one <strong>"Least Like”</strong> you</p>
+                        </Col>
                     </Row>
                 </div>
             ))}
@@ -205,7 +224,8 @@ const QuizSlider = ({ mostLeastLike, setMostLeastLike }) => {
                 </Col>
             </Row>
         </div> */}
-        </OwlCarousel>
+        </Slider>
+        </div>
     );
 };
 

@@ -43,10 +43,10 @@ const BehaviouralAst = () => {
     const handleClosePop = () => setPopupShow(false);
     const handleShow = () => setShow(true);
     const navigate = useNavigate();
-    // let applicantId = JSON.parse(localStorage.getItem('applicantData'))
-    // let behavioralId = JSON.parse(localStorage.getItem('applicantBehaviour'))
-    let applicantId = JSON.parse(sessionStorage.getItem('applicantData'))
-    let behavioralId = JSON.parse(sessionStorage.getItem('applicantBehaviour'))
+    let applicantId = JSON.parse(localStorage.getItem('applicantData'))
+    let behavioralId = JSON.parse(localStorage.getItem('applicantBehaviour'))
+    // let applicantId = JSON.parse(sessionStorage.getItem('applicantData'))
+    // let behavioralId = JSON.parse(sessionStorage.getItem('applicantBehaviour'))
 
     const [mostLeastLike, setMostLeastLike] = useState([
         { id: 1, most: "", least: "", options: [{ name: "Ice Cream", img: iceIQ }, { name: "Tea", img: teaIQ }, { name: "Cake", img: cakeIQ }, { name: "Coffee", img: coffieIQ }] },
@@ -113,7 +113,15 @@ const BehaviouralAst = () => {
         } else {
             handleSubmit()
         }
-
+    }
+    function runCounter() {
+        if (quizMostLeastLike.flatMap(row => row.mostList).length === quizMostLeastLike.flatMap(row => row.leastList).length) {
+            return quizMostLeastLike.flatMap(row => row.mostList).length + attemptQuiz.length;
+        } else if (quizMostLeastLike.flatMap(row => row.mostList).length > quizMostLeastLike.flatMap(row => row.leastList).length) {
+            return (quizMostLeastLike.flatMap(row => row.mostList).length + attemptQuiz.length) - 1
+        } else if (quizMostLeastLike.flatMap(row => row.mostList).length < quizMostLeastLike.flatMap(row => row.leastList).length) {
+            return (quizMostLeastLike.flatMap(row => row.leastList).length + attemptLeastQuiz.length) - 1
+        }
     }
     const handleSubmit = async () => {
         if (!quizMostLeastLike.length) {
@@ -131,8 +139,10 @@ const BehaviouralAst = () => {
                     if (response?.data?.success) {
                         setPopupShow(false)
                         setComplete(true)
-                        // localStorage.setItem('applicantBehaviour',JSON.stringify(response?.data?.response))  
-                        sessionStorage.setItem('applicantBehaviour',JSON.stringify(response?.data?.response))   
+                        localStorage.setItem('applicantBehaviour',JSON.stringify(response?.data?.response))  
+                        // sessionStorage.setItem('applicantBehaviour',JSON.stringify(response?.data?.response))   
+                        localStorage.setItem("AttemptStatus",runCounter())
+                        // sessionStorage.setItem("AttemptStatus",runCounter())
                         navigate('/JobPosts')                   
                     }
                 } else {
@@ -145,8 +155,10 @@ const BehaviouralAst = () => {
                     if (response?.data?.success) {
                         setPopupShow(false)
                         setComplete(true)
-                        // localStorage.setItem('applicantBehaviour',JSON.stringify(response?.data?.response))
-                        sessionStorage.setItem('applicantBehaviour',JSON.stringify(response?.data?.response))
+                        localStorage.setItem('applicantBehaviour',JSON.stringify(response?.data?.response))
+                        // sessionStorage.setItem('applicantBehaviour',JSON.stringify(response?.data?.response))
+                        localStorage.setItem("AttemptStatus",runCounter())
+                        // sessionStorage.setItem("AttemptStatus",runCounter())
                         navigate('/JobPosts')
                     }
                 }
@@ -155,15 +167,7 @@ const BehaviouralAst = () => {
             }
         }
     }
-    function runCounter() {
-        if (quizMostLeastLike.flatMap(row => row.mostList).length === quizMostLeastLike.flatMap(row => row.leastList).length) {
-            return quizMostLeastLike.flatMap(row => row.mostList).length + attemptQuiz.length;
-        } else if (quizMostLeastLike.flatMap(row => row.mostList).length > quizMostLeastLike.flatMap(row => row.leastList).length) {
-            return (quizMostLeastLike.flatMap(row => row.mostList).length + attemptQuiz.length) - 1
-        } else if (quizMostLeastLike.flatMap(row => row.mostList).length < quizMostLeastLike.flatMap(row => row.leastList).length) {
-            return (quizMostLeastLike.flatMap(row => row.leastList).length + attemptLeastQuiz.length) - 1
-        }
-    }
+    
     console.log('----------------->', quizMostLeastLike.filter(row =>
         !row?.behaviour_options?.some(obj => attemptQuiz?.includes(obj.uid))
     ))
@@ -204,13 +208,13 @@ const BehaviouralAst = () => {
                                         </div>
                                     </Col>
                                     <Col md={3}>
-                                        <div className="brb_cards">
+                                        <div className="brb_cards most_like">
                                             <img src={choice_brb} />
                                             <h6>Pick one "Most Like” you</h6>
                                         </div>
                                     </Col>
                                     <Col md={3}>
-                                        <div className="brb_cards">
+                                        <div className="brb_cards least_like">
                                             <img src={pink_brb} />
                                             <h6>Pick one "Least Like” you</h6>
                                         </div>
@@ -220,14 +224,11 @@ const BehaviouralAst = () => {
                         </Row>
                         <Row className="mt-3 mb-5">
                             <Col md={12} className="bg-white rounded p-3 keypoints">
-                                <h6>Key Points to Note</h6>
+                                <h6>Recommendations </h6>
                                 <ul>
-                                    <li> The test contains 28 questions.</li>
-                                    <li> For each question, you will be given 4 options.</li>
-                                    <li> Please select one word that best describes you and one word that least describes you in each set.</li>
-                                    <li> We recommend completing the behavioral test in one sitting.</li>
                                     <li> Do not overthink your decisions.</li>
                                     <li> There are no right or wrong choices.</li>
+                                    <li> Complete the behavioral test in one sitting.</li>
                                 </ul>
                             </Col>
                         </Row>

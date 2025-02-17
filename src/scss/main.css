@@ -3434,12 +3434,21 @@ select.h-36.form-select {
   border-radius: 48px;
   padding: 50px 30px;
   text-align: center;
-  border: solid 4px #fff;
+  border: solid 2px #fff;
 }
 .beharlasmnt_mdl .brb_cards:hover {
+  border: solid 2px #A4BCFD;
+}
+.beharlasmnt_mdl .brb_cards.most_like:hover {
   border: solid 4px #6172F3;
   box-shadow: 0px 0px 80px 8px rgba(96, 113, 241, 0.2) inset;
   background-color: #EEF4FF;
+}
+.beharlasmnt_mdl .brb_cards.least_like:hover {
+  border: solid 4px #FEC84B;
+  box-shadow: 0px 0px 80px 8px rgba(220, 104, 3, 0.2) inset;
+  box-shadow: 0px 12px 16px -4px rgba(16, 24, 40, 0.0784313725);
+  background-color: #FFFAEB;
 }
 .beharlasmnt_mdl .brb_cards h6 {
   font-size: 20px;
@@ -3623,6 +3632,12 @@ select.h-36.form-select {
 .quiz_card.info-select:hover .btn-up {
   width: 45%;
 }
+.quiz_card.info-select:hover .mlike-sugg_active {
+  display: block;
+}
+.quiz_card.info-select .mlike-sugg, .quiz_card.info-select .lelike-sugg {
+  display: none;
+}
 .quiz_card.info-select .quiz-btns {
   opacity: 1;
 }
@@ -3650,6 +3665,12 @@ select.h-36.form-select {
 }
 .quiz_card.info-warring:hover .btn-down {
   width: 45%;
+}
+.quiz_card.info-warring:hover .lelike-sugg_active {
+  display: block;
+}
+.quiz_card.info-warring .mlike-sugg, .quiz_card.info-warring .lelike-sugg {
+  display: none;
 }
 .quiz_card.info-warring .quiz-btns {
   opacity: 1;
@@ -3692,7 +3713,7 @@ select.h-36.form-select {
   box-shadow: 0px 0px 0px 4px #F2F4F7;
   box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.0509803922);
   border-radius: 8px;
-  padding: 48px 80px;
+  padding: 60px 80px 50px 80px;
   background-color: #fff;
 }
 .qzslider .slick-dots {
@@ -3766,4 +3787,81 @@ select.h-36.form-select {
 
 .mt-35 {
   margin-top: 35px;
+}
+
+.mlike-sugg {
+  position: absolute;
+  bottom: -158px;
+  left: 10px;
+}
+.mlike-sugg img {
+  max-height: 95px;
+}
+.mlike-sugg span {
+  color: #6172F3;
+  font-size: 12px;
+  position: relative;
+  top: -48px;
+  left: -40px;
+  font-weight: 500;
+}
+
+.lelike-sugg {
+  position: absolute;
+  bottom: -142px;
+  right: -40px;
+}
+.lelike-sugg img {
+  max-height: 80px;
+}
+.lelike-sugg span {
+  color: #6172F3;
+  font-size: 12px;
+  position: relative;
+  top: -60px;
+  left: 75px;
+  font-weight: 500;
+}
+
+.mlike-sugg_active {
+  position: absolute;
+  bottom: -152px;
+  left: 30px;
+  display: none;
+}
+.mlike-sugg_active img {
+  max-height: 88px;
+}
+.mlike-sugg_active span {
+  color: #6172F3;
+  font-size: 12px;
+  position: relative;
+  top: -42px;
+  left: -65px;
+  font-weight: 500;
+}
+
+.lelike-sugg_active {
+  position: absolute;
+  bottom: -155px;
+  right: -28px;
+  display: none;
+}
+.lelike-sugg_active img {
+  max-height: 90px;
+}
+.lelike-sugg_active span {
+  color: #6172F3;
+  font-size: 12px;
+  position: relative;
+  top: -50px;
+  left: -55px;
+  font-weight: 500;
+}
+
+.beharquiz_mdl .modal-footer {
+  justify-content: center;
+}
+.beharquiz_mdl .modal-footer .btn {
+  font-size: 14px;
 }/*# sourceMappingURL=main.css.map */

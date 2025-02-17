@@ -19,6 +19,8 @@ import {
   EducationQualificationApi,
   WorkExperienceApi,
 } from "../../services/provider";
+import axios from "axios";
+import { compose } from "@reduxjs/toolkit";
 import { useNavigate } from "react-router-dom";
 
 const ApplicationJobPostModal = ({
@@ -27,18 +29,21 @@ const ApplicationJobPostModal = ({
   jobPostData,
   updateButtonText,
   registerdUserLoginDetails,
+  viewDetailData,
 }) => {
   const [isYes, setIsYes] = useState({
     CurrentlyWorkingToggle: false,
     NoticeBuyOutToggle: false,
   });
   const [ResumeFile, setResumeFile] = useState(null);
+  const [ResumeFileName, setResumeFileName] = useState("");
   const [error, setError] = useState(null);
   const [showInput, setShowInput] = useState(false);
   const [ApplicantProfileData, setApplicantProfileData] = useState(null);
   const [selectedSpokenLanguageUids, setSelectedSpokenLanguageUids] = useState(
     []
   );
+  const navigate = useNavigate()
   const [selectedWrittenLanguageUids, setSelectedWrittenLanguageUids] =
     useState([]);
 
@@ -75,8 +80,8 @@ const ApplicationJobPostModal = ({
     ExpectedSalary: "",
     TotalWorkExperience: "",
     CurrentLocation: "",
-    relocationChoice: "",
-    requiredCompanyAssist: "",
+    relocationChoice: false,
+    requiredCompanyAssist: false,
   });
 
   const [errors, setErrors] = useState({
@@ -110,8 +115,10 @@ const ApplicationJobPostModal = ({
     showSaveAsDraft: false,
     showSaveModal: false,
   });
+
+  const [storedApplicantId, setStoredApplicantId] = useState("");
   // const [showSaveModal, setshowSaveModal] = useState(false);
-  const navigate = useNavigate()
+
   const handleCloseModals = () => {
     setShowModal({
       showSaveAsDraft: false,
@@ -224,11 +231,11 @@ const ApplicationJobPostModal = ({
       newErrors.relocationChoice = "Willing to relocate is required";
       formIsValid = false;
     }
-    if (!profileformData?.requiredCompanyAssist) {
-      newErrors.requiredCompanyAssist =
-        "Require company assistance is required";
-      formIsValid = false;
-    }
+    // if (!profileformData?.requiredCompanyAssist) {
+    //   newErrors.requiredCompanyAssist =
+    //     "Require company assistance is required";
+    //   formIsValid = false;
+    // }
     if (selectedSkills.length === 0) {
       newErrors.selectedSkills = "Skill is required";
       formIsValid = false;
@@ -244,6 +251,45 @@ const ApplicationJobPostModal = ({
     const { name, value } = e.target;
     setProfileFormData((prevData) => ({ ...prevData, [name]: value }));
   };
+
+  const handleSwitchChange = (toggleName) => {
+    setIsYes((prevState) => ({
+      ...prevState,
+      [toggleName]: !prevState[toggleName],
+    }));
+  };
+
+  // const handleSwitchChange = (toggleName) => {
+  //   setIsYes((prevState) => {
+  //     const updatedState = {
+  //       ...prevState,
+  //       [toggleName]: !prevState[toggleName],
+  //     };
+
+  //     const storedData = JSON.parse(localStorage.getItem("applicantProfileAllSavedData")) || {};
+  //     const updatedStoredData = {
+  //       ...storedData,
+  //       currently_working: updatedState.CurrentlyWorkingToggle,
+  //       notice_buyout_available: updatedState.NoticeBuyOutToggle,
+  //     };
+
+  //     localStorage.setItem("applicantProfileAllSavedData", JSON.stringify(updatedStoredData));
+
+  //     return updatedState;
+  //   });
+  // };
+
+  // const handleProfileDetailsChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setProfileFormData((prevData) => {
+  //     const updatedData = { ...prevData, [name]: value };
+
+  //     // Update localStorage whenever the data changes
+  //     localStorage.setItem("applicantProfileData", JSON.stringify(updatedData));
+
+  //     return updatedData;
+  //   });
+  // };
 
   const handleFocus = (e) => {
     const { name } = e.target;
@@ -280,6 +326,15 @@ const ApplicationJobPostModal = ({
       if (response.status === 200) {
         // console.log("Applicatant response------>>>>>>>>",response.data?.applcant?.uid)
         setApplicantProfileData(response.data);
+        setStoredApplicantId(response.data?.applcant?.uid)
+        // localStorage.setItem(
+        //   "UserLoginProfileDetailsData",
+        //   JSON.stringify(response.data)
+        // );
+        localStorage.setItem(
+          "applicantProfileData",
+          JSON.stringify(response.data)
+        );
         //alert("Form Saved Successfully");
       } else {
         console.error("Failed to save form: ", response.data);
@@ -296,9 +351,16 @@ const ApplicationJobPostModal = ({
   };
 
   const handleFormDetailsApi = async () => {
-    const dataToSend = selectedSkills.length === 0 ? [] : selectedSkills;
-
     try {
+      const dataToSend = selectedSkills.length === 0 ? [] : selectedSkills;
+      const applicantProfileData = JSON.parse(
+        localStorage.getItem("applicantProfileData")
+      );
+      const accessToken = applicantProfileData?.user_login?.access;
+      const headers = {
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM5NTkzNzE5LCJpYXQiOjE3Mzk1MDczMTksImp0aSI6ImYwYjlhZWUxYTYzOTRmZGM4NTBjYjg3NzY4ZDg5OWFmIiwidXNlcl9pZCI6MjA1LCJuYW1lIjoiYXBuYSIsImVtYWlsIjoiYXBuYTEyM0BnbWFpbC5jb20ifQ.Flrz1iVkpCWbwhx3zb2heMCJqQ9EwLaO0E0eNzOmGZc`,
+      };
+
       const formdata = new FormData();
       formdata.append("resume", ResumeFile);
       formdata.append("availble_by", profileformData?.AvailableBy);
@@ -328,43 +390,56 @@ const ApplicationJobPostModal = ({
 
       formdata.append("skills", JSON.stringify(dataToSend));
 
-      const response = await ApplicationFormDetailsApi(
+      const response = await axios.put(
+        `https://bittrend.shubansoftware.com/assets-api/applicant-update-api/${storedApplicantId}/`,
         formdata,
-        ApplicantProfileData?.applcant?.uid
+        { headers: headers }
       );
 
       if (response.status === 200) {
+        if (handleShowModal("SaveAsDraft")) {
+          updateButtonText("Continue");
+        }
+        if (handleShowModal("Save")) {
+          updateButtonText("View");
+        }
+        localStorage.setItem('applicantToken', ApplicantProfileData?.user_login?.access)
+        localStorage.setItem('applicantData',JSON.stringify(ApplicantProfileData?.applcant))
+        // sessionStorage.setItem('applicantToken', ApplicantProfileData?.user_login?.access)
+        // sessionStorage.setItem('applicantData', JSON.stringify(ApplicantProfileData?.applcant))
+        // behaviour wala navigate hoga
+        navigate('/Behavioural-Assessment')
         handleClose();
-        updateButtonText("View");
+        
 
         // registeredEmailId(profileformData?.email);
         // alert("Form Saved Successfully");
-        registerdUserLoginDetails(ApplicantProfileData)
-        // localStorage.setItem('applicantToken', ApplicantProfileData?.user_login?.access)
-        // localStorage.setItem('applicantData',JSON.stringify(ApplicantProfileData?.applcant))
-        sessionStorage.setItem('applicantToken',ApplicantProfileData?.user_login?.access)
-        sessionStorage.setItem('applicantData',JSON.stringify(ApplicantProfileData?.applcant))
+        // registerdUserLoginDetails(ApplicantProfileData);
+        // localStorage.setItem(
+        //   "applicantProfileData",
+        //   JSON.stringify(ApplicantProfileData)
+        // );
+
         // behaviour wala navigate hoga
-        navigate('/Behavioural-Assessment')
-      } else {
-        console.error("Failed to save form: ", response.data);
-        alert("There was an issue saving the form.");
+        // const response = await ApplicationFormDetailsApi(
+        //   formdata,
+        //   ApplicantProfileData?.applcant?.uid
+        // );
+
+
       }
     } catch (error) {
-      console.error("Error occurred:", error);
-    }
-  };
+      console.log(error)
 
-  const handleSaveAsDraft = () => {
-    if (!ApplicantProfileData?.applcant?.uid) {
-      alert("Please fill Profile Details");
-      return;
     }
-  };
+  }
+
+
+
+
 
   const handleSubmit = () => {
-    //console.log("isValid----->>>>",isValid)
-    if (!ApplicantProfileData?.applcant?.uid) {
+    if (!storedApplicantId) {
       alert("Please fill Profile Details");
       return;
     }
@@ -379,6 +454,14 @@ const ApplicationJobPostModal = ({
     if (isAllFormDetailsValid) {
       handleShowModal("Save");
     }
+  };
+
+  const handleSaveAsDraft = () => {
+    if (!storedApplicantId) {
+      alert("Please fill Profile Details");
+      return;
+    }
+    handleShowModal("SaveAsDraft");
   };
 
   const handleButtonClick = () => setShowInput(!showInput);
@@ -410,12 +493,12 @@ const ApplicationJobPostModal = ({
 
   const saveQualificationData = async (row) => {
     try {
-      if (!ApplicantProfileData?.applcant?.uid) {
+      if (!storedApplicantId) {
         alert("Please fill Profile Details");
         return;
       }
       const formdata = new FormData();
-      formdata.append("applicant_profile", ApplicantProfileData?.applcant?.uid);
+      formdata.append("applicant_profile", storedApplicantId);
       formdata.append("level", row.level);
       formdata.append("applicant_area_of_education", row.areaOfEducation);
       formdata.append("grad_year", row.gradYear);
@@ -436,12 +519,15 @@ const ApplicationJobPostModal = ({
 
   const saveWorkExperienceData = async (row) => {
     try {
-      if (!ApplicantProfileData?.applcant?.uid) {
+      if (!storedApplicantId) {
         alert("Please fill Profile Details");
         return;
       }
       const formdata = new FormData();
-      formdata.append("work_applicant_profile", ApplicantProfileData?.applcant?.uid);
+      formdata.append(
+        "work_applicant_profile",
+        storedApplicantId
+      );
       formdata.append("total_work_experience", row.TotalWorkExperience);
       formdata.append("role", row.WorkRole);
       formdata.append("work_from", row.WorkFrom);
@@ -493,13 +579,6 @@ const ApplicationJobPostModal = ({
     setWorkExpreienceRow(newWorkRow);
   };
 
-  const handleSwitchChange = (toggleName) => {
-    setIsYes((prevState) => ({
-      ...prevState,
-      [toggleName]: !prevState[toggleName],
-    }));
-  };
-
   const onDrop = (acceptedFiles) => {
     const selectedFile = acceptedFiles[0];
     if (selectedFile) {
@@ -532,15 +611,6 @@ const ApplicationJobPostModal = ({
   const handleDeleteImage = () => {
     setResumeFile(null);
   };
-
-  useEffect(() => {
-    if (profileformData) {
-      validateForProfileDetails();
-    }
-    if (isValid) {
-      handleProfileDetailsApi();
-    }
-  }, [jobPostData, profileformData, isValid]);
 
   const groupedSkills = jobPostData?.skills?.reduce((acc, skill) => {
     const groupName = skill?.skill_group?.skill_group_name;
@@ -579,6 +649,113 @@ const ApplicationJobPostModal = ({
       setSelectedWrittenLanguageUids([...selectedWrittenLanguageUids, uid]);
     }
   };
+
+  // useEffect(() => {
+  //   const applicantProfileAllSavedData = JSON.parse(
+  //     localStorage.getItem("applicantProfileAllSavedData")
+  //   )
+  //   setGetStoredFormData(applicantProfileAllSavedData)
+
+  // }, []);
+
+  useEffect(() => {
+    if (profileformData) {
+      validateForProfileDetails();
+    }
+    if (isValid) {
+      handleProfileDetailsApi();
+    }
+  }, [jobPostData, profileformData, isValid]);
+
+  useEffect(() => {
+    const storedData = JSON.parse(
+      localStorage.getItem("applicantProfileAllSavedData")
+    );
+
+    if (storedData) {
+      // console.log(
+      //   "stored -resumm---->>>>,",
+      //   storedData?.resume
+      // );
+      setProfileFormData((prevState) => ({
+        ...prevState,
+        name: storedData?.user?.username || "",
+        email: storedData?.user?.email || "",
+        confirmEmail: storedData?.user?.email || "",
+        phone: storedData?.user?.phone_number || "",
+        AvailableBy: storedData?.availble_by || "",
+        NoticePeriod: storedData?.notice_period || "",
+        ExpectedSalary: storedData?.expected_salary || "",
+        CurrentLocation: storedData?.current_location || "",
+        relocationChoice: storedData?.willing_to_relocate_to || false,
+        requiredCompanyAssist:
+          storedData?.require_company_assistance_for_relocation || false,
+      }));
+
+      setIsYes((prevState) => ({
+        ...prevState,
+        CurrentlyWorkingToggle: storedData?.currently_working || false,
+        NoticeBuyOutToggle: storedData?.notice_buyout_available || false,
+      }));
+
+      setStoredApplicantId(storedData?.uid);
+
+      const spokenUids = Array.from(new Set(storedData?.spoken_language.map((item) => item?.uid)));
+      const writtenUids = Array.from(new Set(storedData?.written_reading_language.map((item) => item?.uid)));
+
+      setSelectedSpokenLanguageUids((prevState) => [
+        ...prevState,
+        ...spokenUids.filter((uid) => !prevState.includes(uid)),
+      ]);
+
+      setSelectedWrittenLanguageUids((prevState) => [
+        ...prevState,
+        ...writtenUids.filter((uid) => !prevState.includes(uid)),
+      ]);
+
+
+
+
+
+      const skillsUids =
+        storedData?.applicant_profile_job[0]?.job_applicant_skill.map(
+          (item) => item?.uid
+        );
+      setSelectedSkills((prevState) => [...prevState, ...skillsUids]);
+
+
+
+
+      const resumeFileUrl = storedData?.resume || null;
+      setResumeFile(resumeFileUrl);
+
+      const resumeFileName = resumeFileUrl ? resumeFileUrl.split('/').pop() : '';
+
+
+
+      setResumeFileName(resumeFileName);
+
+    }
+
+
+    const educationData = storedData?.qualification_applicantprofile || [];
+    if (Array.isArray(educationData)) {
+      SetEducationRows((prevState) => [
+        ...prevState,
+        ...educationData.map((item) => ({
+          level: item?.level || "",
+          areaOfEducation: item?.applicant_area_of_education || "",
+          gradYear: item?.grad_year || "",
+          university: item?.university || "",
+          grade: item?.grade || "",
+        })),
+      ]);
+    }
+
+
+
+  }, []);
+
 
 
 
@@ -829,7 +1006,7 @@ const ApplicationJobPostModal = ({
                     {ResumeFile && (
                       <>
                         <div className="selected_logo">
-                          <p>{ResumeFile?.name}</p>
+                          <p>{ResumeFile?.name || ResumeFileName}</p>
 
                           <div className="d-flex">
                             <Button
@@ -1084,17 +1261,23 @@ const ApplicationJobPostModal = ({
                     </Col>
                     <Col md={2}>
                       <h6>Grade</h6>
-                      <Form.Select
+                      <Form.Control
                         name="grade"
+                        type="text"
+                        placeholder="grade"
+                        size="sm"
                         value={row.grade}
                         onChange={(e) =>
                           handleEducationQualificationChange(index, e)
                         }
+                      />
+                      <Form.Select
+
+                        value={"GPA"}
+
                       >
                         <option>GPA</option>
-                        <option value="1">A</option>
-                        <option value="2">B</option>
-                        <option value="3">C</option>
+
                       </Form.Select>
                     </Col>
                     <Col md={1}>
@@ -1376,11 +1559,9 @@ const ApplicationJobPostModal = ({
                         name="relocationChoice"
                         id="relocationChoice1"
                         className="mr-3"
-                        value="True" // Set value for the radio button
-                        checked={profileformData.relocationChoice === "True"} // Check if this option is selected
-                        onChange={handleProfileDetailsChange} // Update state on change
-                      //required
-                      // isInvalid={!!errors.relocationChoice}
+                        value="true"
+                        checked={profileformData.relocationChoice == true}
+                        onChange={handleProfileDetailsChange}
                       />
                       <Form.Check
                         type="radio"
@@ -1388,11 +1569,9 @@ const ApplicationJobPostModal = ({
                         name="relocationChoice"
                         id="relocationChoice2"
                         className="ml-3"
-                        value="False" // Set value for the radio button
-                        checked={profileformData.relocationChoice === "False"} // Check if this option is selected
-                        onChange={handleProfileDetailsChange} // Update state on change
-                      //required
-                      // isInvalid={!!errors.relocationChoice}
+                        value="false"
+                        checked={profileformData.relocationChoice == false}
+                        onChange={handleProfileDetailsChange}
                       />
                     </div>
                     {errors.relocationChoice && (
@@ -1415,10 +1594,8 @@ const ApplicationJobPostModal = ({
                         name="requiredCompanyAssist"
                         id="requiredCompanyAssist1"
                         className="mr-3"
-                        value="True" // Set value for the radio button
-                        checked={
-                          profileformData.requiredCompanyAssist === "True"
-                        } // Check if this option is selected
+                        value="true" // Set value for the radio button
+                        checked={profileformData.requiredCompanyAssist == true} // Check if this option is selected
                         onChange={handleProfileDetailsChange}
                       />
                       <Form.Check
@@ -1427,9 +1604,9 @@ const ApplicationJobPostModal = ({
                         name="requiredCompanyAssist"
                         id="requiredCompanyAssist2"
                         className="ml-3"
-                        value="False" // Set value for the radio button
+                        value="false" // Set value for the radio button
                         checked={
-                          profileformData.requiredCompanyAssist === "False"
+                          profileformData.requiredCompanyAssist == false
                         }
                         onChange={handleProfileDetailsChange}
                       />
@@ -1600,7 +1777,7 @@ const ApplicationJobPostModal = ({
           <Button
             variant="light"
             style={{ marginLeft: 150 }}
-            onClick={() => handleShowModal("SaveAsDraft")}
+            onClick={() => handleSaveAsDraft()}
           >
             Save as Draft
           </Button>
@@ -1625,11 +1802,7 @@ const ApplicationJobPostModal = ({
               <Button variant="light" onClick={handleCloseModals}>
                 Cancel
               </Button>
-              <Button
-                variant="primary"
-
-              //onClick={() => handleFormDetailsApi()}
-              >
+              <Button variant="primary" onClick={() => handleFormDetailsApi()}>
                 Save
               </Button>
             </Modal.Footer>
@@ -1648,21 +1821,16 @@ const ApplicationJobPostModal = ({
               into LYWO with {profileformData?.email}.
             </Modal.Body>
             <Modal.Footer>
-              <Button variant="light" onClick={handleCloseModals}>
+              <Button variant="light" onClick={() => handleFormDetailsApi()}>
+                {/* onClick={handleCloseModals}> */}
                 Return to Job
               </Button>
-              <Button variant="primary"
-                onClick={() => handleFormDetailsApi()}
-              >
-                Proceed to Behavioral Test
-              </Button>
+              <Button variant="primary">Proceed to Behavioral Test</Button>
             </Modal.Footer>
           </Modal>
         </div>
       </Modal.Body>
-      <Modal.Footer>
-
-      </Modal.Footer>
+      <Modal.Footer></Modal.Footer>
     </Modal>
   );
 };
