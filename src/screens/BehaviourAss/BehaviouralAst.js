@@ -151,7 +151,7 @@ const BehaviouralAst = () => {
                     formData.append('most_like', JSON.stringify([...attemptQuiz, ...mostLike]));
                     formData.append('least_like', JSON.stringify([...attemptLeastQuiz, ...leastLike]));
                     formData.append('behaviour_status', 'Draft');
-                    const response = await updateApplicantBehaviourApi('785d98b7-4e1f-4097-a98c-305b23dd50d3', formData);
+                    const response = await updateApplicantBehaviourApi(behavioralId?.uid, formData);
                     if (response?.data?.success) {
                         setPopupShow(false)
                         setComplete(true)
