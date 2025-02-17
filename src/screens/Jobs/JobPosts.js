@@ -491,7 +491,7 @@ const JobPosts = () => {
                 }
               }}
             >
-              {Number(localStorage.getItem('AttemptStatus')) < 28 && 'Continue'}
+              {Number(localStorage.getItem('AttemptStatus')) > 0 && Number(localStorage.getItem('AttemptStatus')) < 28 && 'Continue'}
               {Number(localStorage.getItem('AttemptStatus')) === 28 && 'View'}
               {Number(localStorage.getItem('AttemptStatus')) === 0 && 'Start'}
             </Button>

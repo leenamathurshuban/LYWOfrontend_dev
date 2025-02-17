@@ -25,6 +25,8 @@ const Header = () => {
     removeToken();
     localStorage.removeItem('applicantToken');
     localStorage.removeItem('applicantData');
+    localStorage.removeItem('applicantBehaviour')
+    localStorage.setItem('AttemptStatus',0)
     // sessionStorage.removeItem('applicantToken');
     // sessionStorage.removeItem('applicantData');
     navigate("/emailverify");
