@@ -1,5 +1,13 @@
 import { createBrowserRouter } from "react-router-dom";
-import { Login, Dashboard, SetPassword, EmailPasswordVerifyContainer, EmailVerify, NotFound,OtpVerifyContainer } from "../screens/";
+import {
+  Login,
+  Dashboard,
+  SetPassword,
+  EmailPasswordVerifyContainer,
+  EmailVerify,
+  NotFound,
+  OtpVerifyContainer,
+} from "../screens/";
 import ProtectedRoute from "./protectedRoute"; // Import the ProtectedRoute component
 import Evalation from "../screens/Evaluation/Evaluation";
 import Jobs from "../screens/Jobs/Jobs";
@@ -12,15 +20,26 @@ import BehaviouralAst from "../screens/BehaviourAss/BehaviouralAst";
 import BehaviourAssReport from "../screens/BehaviourAss/BehaviourAssReport";
 import Protected from "./protected";
 
+import Publicroute from "../screens/PublicRoutes/Publicroute";
 
 export const router = createBrowserRouter([
+  // {
+  //   path: "/publicroute",
+  //   element: <Publicroute />
+  // },
+
+  {
+    path: "/JobPosts/:id",
+    element: <JobPosts />,
+  },
+
   {
     path: "/emailverify",
     element: (
       <ProtectedRoute
         element={<EmailVerify />}
-        allowAuthenticated={true}  // Prevent authenticated users from accessing this route
-        redirectTo="/"  // Redirect to the protected route if authenticated
+        allowAuthenticated={true} // Prevent authenticated users from accessing this route
+        redirectTo="/" // Redirect to the protected route if authenticated
       />
     ),
   },
@@ -29,8 +48,8 @@ export const router = createBrowserRouter([
     element: (
       <ProtectedRoute
         element={<OtpVerifyContainer />}
-        allowAuthenticated={true}  // Prevent authenticated users from accessing this route
-        redirectTo="/"  // Redirect to the protected route if authenticated
+        allowAuthenticated={true} // Prevent authenticated users from accessing this route
+        redirectTo="/" // Redirect to the protected route if authenticated
       />
     ),
   },
@@ -39,8 +58,8 @@ export const router = createBrowserRouter([
     element: (
       <ProtectedRoute
         element={<SetPassword />}
-        allowAuthenticated={true}  // Prevent authenticated users from accessing this route
-        redirectTo="/"  // Redirect to the protected route if authenticated
+        allowAuthenticated={true} // Prevent authenticated users from accessing this route
+        redirectTo="/" // Redirect to the protected route if authenticated
       />
     ),
   },
@@ -49,45 +68,61 @@ export const router = createBrowserRouter([
     element: (
       <ProtectedRoute
         element={<EmailPasswordVerifyContainer />}
-        allowAuthenticated={true}  // Prevent authenticated users from accessing this route
-        redirectTo="/"  // Redirect to the protected route if authenticated
+        allowAuthenticated={true} // Prevent authenticated users from accessing this route
+        redirectTo="/" // Redirect to the protected route if authenticated
       />
     ),
   },
   {
     path: "/",
-    element: <ProtectedRoute element={<Dashboard />} allowAuthenticated={false} />,  // Only allow authenticated users here
+    element: (
+      <ProtectedRoute element={<Dashboard />} allowAuthenticated={false} />
+    ),
   },
   {
     path: "/evaluation",
-    element: <ProtectedRoute element={<Evalation />} allowAuthenticated={false} />,  // Only allow authenticated users here
+    element: (
+      <ProtectedRoute element={<Evalation />} allowAuthenticated={false} />
+    ),
   },
   ,
   {
     path: "/jobs",
-    element: <ProtectedRoute element={<Jobs />} allowAuthenticated={false} />,  // Only allow authenticated users here
+    element: <ProtectedRoute element={<Jobs />} allowAuthenticated={false} />,
   },
   {
     path: "/jobslist",
-    element: <ProtectedRoute element={<JobsList />} allowAuthenticated={false} />,  // Only allow authenticated users here
+    element: (
+      <ProtectedRoute element={<JobsList />} allowAuthenticated={false} />
+    ),
   },
-  {
-    // path: "/JobPosts/:id",
-    path: "/JobPosts",
-    element: <ProtectedRoute element={<JobPosts />} allowAuthenticated={false} />,  // Only allow authenticated users here
-  },
+ 
+  // {
+  //   path: "/JobPosts/:id",
+  //   path: "/JobPosts",
+  //   element: <ProtectedRoute element={<JobPosts />} allowAuthenticated={false} />,  // Only allow authenticated users here
+  // },
   {
    
     path: "/ApplicationJobPostModal",
-    element: <ProtectedRoute element={<ApplicationJobPostModal />} allowAuthenticated={false} />,  // Only allow authenticated users here
+    element: (
+      <ProtectedRoute
+        element={<ApplicationJobPostModal />}
+        allowAuthenticated={false}
+      />
+    ),
   },
   {
     path: "/jobSummary/:id",
-    element: <ProtectedRoute element={<JobSummary />} allowAuthenticated={false} />,  // Only allow authenticated users here
+    element: (
+      <ProtectedRoute element={<JobSummary />} allowAuthenticated={false} />
+    ),
   },
   {
     path: "/helpmechoose",
-    element: <ProtectedRoute element={<HelpChoose />} allowAuthenticated={false} />,  // Only allow authenticated users here
+    element: (
+      <ProtectedRoute element={<HelpChoose />} allowAuthenticated={false} />
+    ),
   },
   {
     path: "/Behavioural-Assessment",
@@ -95,7 +130,12 @@ export const router = createBrowserRouter([
   },
   {
     path: "/Behaviour-Assessment-Report",
-    element: <ProtectedRoute element={<BehaviourAssReport />} allowAuthenticated={false} />,  // Only allow authenticated users here
+    element: (
+      <ProtectedRoute
+        element={<BehaviourAssReport />}
+        allowAuthenticated={false}
+      />
+    ),
   },
   {
     path: "*",
