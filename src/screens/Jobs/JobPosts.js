@@ -502,6 +502,30 @@ const JobPosts = () => {
             </Button>
           </div>
 
+          <div style={{ border: "1px solid #000", padding: 12 }}>
+            <p>Behavioural Assessment</p>
+            <p>
+              {Number(localStorage.getItem('AttemptStatus')) < 28 && 'Pending'}
+              {Number(localStorage.getItem('AttemptStatus')) === 28 && 'Completed'}
+            </p>
+            <Button
+              variant="primary"
+              size="lg"
+              // disabled={buttonText == "View"?false:true}
+              onClick={() => {
+                if (Number(localStorage.getItem('AttemptStatus')) < 28 || Number(localStorage.getItem('AttemptStatus')) === 0) {
+                  navigate('/Behavioural-Assessment')
+                }else if(Number(localStorage.getItem('AttemptStatus')) === 28){
+                  navigate('/Behaviour-Assessment-Report')
+                }
+              }}
+            >
+              {Number(localStorage.getItem('AttemptStatus')) > 0 && Number(localStorage.getItem('AttemptStatus')) < 28 && 'Continue'}
+              {Number(localStorage.getItem('AttemptStatus')) === 28 && 'View'}
+              {Number(localStorage.getItem('AttemptStatus')) === 0 && 'Start'}
+            </Button>
+          </div>
+
           <div>
             <div
               style={{
@@ -523,6 +547,7 @@ const JobPosts = () => {
           jobPostData={jobPostData}
           updateButtonText={updateButtonText}
           registerdUserLoginDetails={handleEmailId}
+        //viewDetailData={viewDetailData}
         />
       ) : (
         <p>Loading...</p>
@@ -711,7 +736,7 @@ const JobPosts = () => {
           </Button>
           <Button
             variant="primary"
-            // onClick={handleCloseModals}
+          // onClick={handleCloseModals}
           >
             Share
           </Button>

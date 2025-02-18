@@ -43,6 +43,7 @@ const ApplicationJobPostModal = ({
   const [selectedSpokenLanguageUids, setSelectedSpokenLanguageUids] = useState(
     []
   );
+  const navigate = useNavigate()
   const [selectedWrittenLanguageUids, setSelectedWrittenLanguageUids] =
     useState([]);
 
@@ -235,6 +236,39 @@ const ApplicationJobPostModal = ({
       [toggleName]: !prevState[toggleName],
     }));
   };
+  
+
+  // const handleSwitchChange = (toggleName) => {
+  //   setIsYes((prevState) => {
+  //     const updatedState = {
+  //       ...prevState,
+  //       [toggleName]: !prevState[toggleName],
+  //     };
+
+  //     const storedData = JSON.parse(localStorage.getItem("applicantProfileAllSavedData")) || {};
+  //     const updatedStoredData = {
+  //       ...storedData,
+  //       currently_working: updatedState.CurrentlyWorkingToggle,
+  //       notice_buyout_available: updatedState.NoticeBuyOutToggle,
+  //     };
+
+  //     localStorage.setItem("applicantProfileAllSavedData", JSON.stringify(updatedStoredData));
+
+  //     return updatedState;
+  //   });
+  // };
+
+  // const handleProfileDetailsChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setProfileFormData((prevData) => {
+  //     const updatedData = { ...prevData, [name]: value };
+
+  //     // Update localStorage whenever the data changes
+  //     localStorage.setItem("applicantProfileData", JSON.stringify(updatedData));
+
+  //     return updatedData;
+  //   });
+  // };
 
   const handleFocus = (e) => {
     const { name } = e.target;
@@ -332,6 +366,12 @@ const ApplicationJobPostModal = ({
           handleCloseModals();
           handleClose();
         }
+        localStorage.setItem('applicantToken', ApplicantProfileData?.user_login?.access)
+        localStorage.setItem('applicantData',JSON.stringify(ApplicantProfileData?.applcant))
+        // sessionStorage.setItem('applicantToken', ApplicantProfileData?.user_login?.access)
+        // sessionStorage.setItem('applicantData', JSON.stringify(ApplicantProfileData?.applcant))
+        // behaviour wala navigate hoga
+        navigate('/Behavioural-Assessment')
 
         // behaviour wala navigate hoga
         // const response = await ApplicationFormDetailsApi(
@@ -367,6 +407,8 @@ const ApplicationJobPostModal = ({
     }
     handleShowModal("SaveAsDraft");
   };
+
+  
 
   const handleButtonClick = () => setShowInput(!showInput);
 

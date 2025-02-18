@@ -355,7 +355,8 @@ const QuizQuestionSlider = ({ quizMostLeastLike, setQuizMostLeastLike, language 
     console.log(quizMostLeastLike)
 
     return (
-        <div className="qzslider"><span className='handraw'><img src={handDrawicon} />Hover over the cards below to begin.</span>
+        <div className="qzslider">
+        {/* <span className='handraw'><img src={handDrawicon} />Hover over the cards below to begin.</span> */}
             <Slider key={JSON.stringify(quizMostLeastLike)} {...options}>
                 {quizMostLeastLike?.map((row, rowIndex) => (
                     <div key={row?.id} className="item">

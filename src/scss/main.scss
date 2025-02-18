@@ -3381,11 +3381,20 @@ select.h-36.form-select {
     border-radius: 48px;
     padding: 50px 30px;
     text-align: center;
-    border: solid 4px #fff;
+    border: solid 2px #fff;
     &:hover{
+      border: solid 2px #A4BCFD;
+    }
+    &.most_like:hover {
       border: solid 4px #6172F3;
       box-shadow: 0px 0px 80px 8px rgba(96, 113, 241, 0.2) inset;
       background-color: #EEF4FF;
+    }
+    &.least_like:hover {
+      border: solid 4px #FEC84B;
+      box-shadow: 0px 0px 80px 8px #DC680333 inset;
+      box-shadow: 0px 12px 16px -4px #10182814;
+      background-color: #FFFAEB;
     }
     h6 {
       font-size: 20px;
@@ -3577,6 +3586,12 @@ select.h-36.form-select {
     .btn-up{
       width: 45%;
     }
+    .mlike-sugg_active {
+      display: block;
+    }
+  }
+  .mlike-sugg,.lelike-sugg{
+    display: none;
   }
   .quiz-btns {
     opacity: 1;
@@ -3607,6 +3622,12 @@ select.h-36.form-select {
     .btn-down{
       width: 45%;
     }
+    .lelike-sugg_active {
+      display: block;
+    }
+  }
+  .mlike-sugg,.lelike-sugg{
+    display: none;
   }
   .quiz-btns {
     opacity: 1;
@@ -3649,7 +3670,7 @@ select.h-36.form-select {
     box-shadow: 0px 0px 0px 4px #F2F4F7;
     box-shadow: 0px 1px 2px 0px #1018280D;
     border-radius: 8px;
-    padding: 48px 80px;
+    padding: 60px 80px 50px 80px;
     background-color: #fff;
     // margin: 15px;
   }

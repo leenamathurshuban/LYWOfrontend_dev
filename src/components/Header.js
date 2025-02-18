@@ -23,10 +23,12 @@ const Header = () => {
   const handleLogout = async () => {
     logoutApi();
     removeToken();
-    // localStorage.removeItem('applicantToken');
-    // localStorage.removeItem('applicantData');
-    sessionStorage.removeItem('applicantToken');
-    sessionStorage.removeItem('applicantData');
+    localStorage.removeItem('applicantToken');
+    localStorage.removeItem('applicantData');
+    localStorage.removeItem('applicantBehaviour')
+    localStorage.setItem('AttemptStatus',0)
+    // sessionStorage.removeItem('applicantToken');
+    // sessionStorage.removeItem('applicantData');
     navigate("/emailverify");
   };
 
