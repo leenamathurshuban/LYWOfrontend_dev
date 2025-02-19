@@ -2464,18 +2464,19 @@ const CreateJobsRevised = ({
                         </Col>))}
                       </Row>
                     </div>
-                    <div class="d-flex justify-content-center align-items-center col-md-12 mt-3">
-                      <button
-                        onClick={handleCreateForm}
-                        type="button"
-                        // disabled={createRevisedJobData?.calculation_job.length > 0}
-                        class="btn-md btn btn-primary"
-                      >
-                        Post
-                      </button>
-                    </div>
+
                   </Accordion.Body>
                 </Accordion.Item>
+                <div class="d-flex justify-content-center align-items-center col-md-12 mt-3">
+                  <button
+                    onClick={handleCreateForm}
+                    type="button"
+                    // disabled={createRevisedJobData?.calculation_job.length > 0}
+                    class="btn-md btn btn-primary"
+                  >
+                    Post
+                  </button>
+                </div>
               </Accordion>
               {openStep.length > 0 && (
                 <motion.div
