@@ -146,7 +146,7 @@ const Dashboard = () => {
                   <Card.Title>Complete Company Profile</Card.Title>
                   <Button
                     variant="primary"
-                    onClick={() => GetCompanyDetails(uid)}
+                    onClick={() => GetCompanyDetails(userInfo?.default_company?.uid)}
                   >
                     Start
                   </Button>

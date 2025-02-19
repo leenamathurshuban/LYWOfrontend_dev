@@ -3747,77 +3747,167 @@ select.h-36.form-select {
 .mt-35 {
   margin-top: 35px;
 }
-.mlike-sugg {
-  position: absolute;
-  bottom: -158px;
-  left: 10px;
-  img {
-    max-height: 95px;
-  }
-  span {
-    color: #6172F3;
-    font-size: 12px;
-    position: relative;
-    top: -48px;
-    left: -40px;
-    font-weight: 500;
-  }
+/**===========Applicat Flow===============**/
+.page_header {
+    box-shadow: 0px 1px 2px 0px #1018280F;
+    box-shadow: 0px 1px 3px 0px #1018281A;  
+    padding: 24px 20px;
+    background-color: #fff;
+    z-index: 999;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    .pagetitle{
+      color: #101828;
+      font-weight: 600;
+      font-size: 18px;
+      position: relative;
+      text-transform: capitalize;
+      strong {
+        font-weight: 700;
+      }
+    }
 }
-.lelike-sugg {
-  position: absolute;
-  bottom: -142px;
-  right: -40px;
-  img {
-    max-height: 80px;
-  }
-  span {
-    color: #6172F3;
-    font-size: 12px;
-    position: relative;
-    top: -60px;
-    left: 75px;
-    font-weight: 500;
-  }
+.page_body.appcaint {
+  padding-top: 80px;
 }
-.mlike-sugg_active {
-  position: absolute;
-  bottom: -152px;
-  left: 30px;
-  display: none;
-  img {
-    max-height: 88px;
-  }
-  span {
-    color: #6172F3;
-    font-size: 12px;
-    position: relative;
-    top: -42px;
-    left: -65px;
-    font-weight: 500;
-  }
-}
-.lelike-sugg_active {
-  position: absolute;
-  bottom: -155px;
-  right: -28px;
-  display: none;
-  img {
-    max-height: 90px;
-  }
-  span {
-    color: #6172F3;
-    font-size: 12px;
-    position: relative;
-    top: -50px;
-    left: -55px;
-    font-weight: 500;
-  } 
-}
-.beharquiz_mdl  {
-  .modal-footer {
-    justify-content: center;
-    .btn {
-      font-size: 14px;
+.appcaint_head {
+  padding: 15px;
+  .app_leftinfo {
+    h5 {
+      font-size: 22px;
+      color: #101828;
+      line-height: 24px;
+      margin: 0 0 5px 0;
+      text-transform: capitalize;
+    }
+    p {
+      font-size: 13px;
+      color: #344054;
+      margin: 0;
+      line-height: 20px;
+      font-weight: 400;
     }
   }
+  .app_rightinfo  {
+    justify-content: right;
+    display: flex;
+    .btn {
+      font-size: 12px;
+    }
+  }
+}
+.appcaint  {
+  .card {
+    background-color: #fff;
+    box-shadow: 0px 1px 2px 0px #0A0D120D;
+    border: 1px solid #F2F4F7;
+    border-radius: 12px;
+    height: 100%;
+    .card-title {
+      font-size: 16px;
+      color: #344054;
+      font-weight: 600;
+    }
+    .card-text {
+      font-family: Inter;
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 18px;
+      letter-spacing: 0%;
+      color: #344054;
+    }
+  }
+  .jobdetails {
+    .list {
+      margin: 0;
+      padding: 0;
+      li{
+        display: flex;
+        justify-content: space-between;
+        list-style: none;
+        margin-bottom: 8px;
+       p{
+        font-size: 12px;
+        line-height: 18px;
+        color: #344054;
+       }
+      }
+    }
+  }
+}
+.app_rightsdbr {
+  box-shadow: 0px 1px 2px 0px #1018280D;
+  padding: 15px;
+  .btn-outline-dark {
+    font-size: 13px;
+    width: 100%;
+  }
+  h6 {
+    font-size: 14px;
+    text-align: center;
+    margin: 25px 0 10px 0;
+  }
+  .progress_box {
+    background-color: #F9FAFB;
+    border: solid 1px #EAECF0;
+    padding: 14px;
+    border-radius: 8px;
+    h5 {
+      color: #D0D5DD;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      .bg_circle {
+        width: 24px;
+        height: 24px;
+        background-color: #F2F4F7;
+        border-radius: 50%;
+        margin-right: 5px;
+        display: inline-block;
+      }
+    }
+    .btn-primary {
+      width: 100%;
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+  }
+}
+.btn-link {
+  border: none;
+  padding: 5px 8px;
+  background-color: transparent;
+}
+.btn-outline-dark {
+  border-color: #D0D5DD;
+  color: #344054;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 12px;
+}
+.jobMain_panel  {
+  .custom-card {
+    background-color: #fff;
+    border-color: #EAECF0;
+    box-shadow: 0px 1px 2px 0px #1018280D;
+    padding: 15px 22px;
+    border-radius: 16px;
+    margin-bottom: 10px;
+    h6 {
+      margin-bottom: 10px;
+    }
+    .form-control-sm  {
+      font-size: 12px;
+      min-height: 34px;
+    }
+    .form-label {
+      font-size: 12px;
+    }
+  }
+}
+.invalid-feedback {
+  font-size: 12px;
 }

@@ -166,7 +166,7 @@ export const getJobDetailsApi = (url) => {
 };
 
 export const getPostJobIdApi = (url) => {
-  const getJobPostId = client.getWithToken(url);
+  const getJobPostId = client.getwithoutToken(url);
   return getJobPostId;
 };
 

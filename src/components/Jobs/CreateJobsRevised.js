@@ -480,7 +480,7 @@ const CreateJobsRevised = ({
   // Function to add a new question component
   const handleAddComponent = () => {
     const newQuestion = {
-      job_question: "989fc873-0c8a-494f-9e01-977aa0bec036", // pass job uid
+      job_question: createJobUid, // pass job uid
       question_title: "",
       quiz_type: "MCQ",
       question_option: {

@@ -287,6 +287,7 @@ const UpdateJobsRevised = ({
             setSelectSkillsData(response?.data?.response?.skills)
             setMustHaveSkills(response?.data?.response?.must_have_skills)
             setSkillGroupDataExist(response?.data?.response?.skills)
+            setComponents(response?.data?.response?.question_job)
             setImportantFlag({
                 salary: response?.data?.response?.is_salary_imp,
                 education: response?.data?.response?.is_education_imp,
@@ -562,7 +563,7 @@ const UpdateJobsRevised = ({
     // Function to add a new question component
     const handleAddComponent = () => {
         const newQuestion = {
-            job_question: "989fc873-0c8a-494f-9e01-977aa0bec036", // pass job uid
+            job_question: createJobUid, // pass job uid
             question_title: "",
             quiz_type: "MCQ",
             question_option: {
@@ -2634,7 +2635,7 @@ const UpdateJobsRevised = ({
                                                 </Col>))}
                                             </Row>
                                         </div>
-                                        <div class="d-flex justify-content-center align-items-center col-md-12 mt-3">
+                                        {/* <div class="d-flex justify-content-center align-items-center col-md-12 mt-3">
                                             <button
                                                 onClick={handleCreateForm}
                                                 type="button"
@@ -2643,9 +2644,19 @@ const UpdateJobsRevised = ({
                                             >
                                                 Review And Post
                                             </button>
-                                        </div>
+                                        </div> */}
                                     </Accordion.Body>
                                 </Accordion.Item>
+                                <div class="d-flex justify-content-center align-items-center col-md-12 mt-3">
+                                    <button
+                                        onClick={handleCreateForm}
+                                        type="button"
+                                        // disabled={createRevisedJobData?.calculation_job.length > 0}
+                                        class="btn-md btn btn-primary"
+                                    >
+                                        Review And Post
+                                    </button>
+                                </div>
                             </Accordion>
                             {openStep.length > 0 && (
                                 <motion.div

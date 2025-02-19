@@ -13,12 +13,13 @@ import {
 } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import Doc from "../../images/DocumentIcon.png";
-import Download from "../../images/DownloadIcon.png";
+import Download from "../../images/icons/download-12x12.svg";
 import Global from "../../images/Global.png";
 import HomeIcon from "../../images/icons/HomeIcon.png";
 import UserIcon from "../../images/icons/UserIcon.png";
 import Logo from "../../images/logo_icon.png";
-import Share from "../../images/ShareIcon.png";
+import Share from "../../images/icons/share-07.svg";
+import InfoCircle from "../../images/icons/info-circle16x16.svg";
 import {
   ApplicationDeatilsApi,
   getPostJobIdApi,
@@ -29,6 +30,9 @@ import Chat from "../../images/ChatButton.png";
 import ChatModal from "../../components/CustomModals/ChatModal";
 import { removeToken } from "../../helpers/helper";
 import { useNavigate } from "react-router-dom";
+import Logout from "../../images/icons/Logout.png";
+
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 
 const JobPosts = () => {
   const { id } = useParams();
@@ -62,7 +66,6 @@ const JobPosts = () => {
   };
 
   const handleEmailId = (StoreData) => {
-    //console.log("stroreddd data---->>>", StoreData);
     setRegisterdUserLoginDetails(StoreData);
   };
 
@@ -125,7 +128,6 @@ const JobPosts = () => {
           "Given token not valid for any token type"
         )
       ) {
-        //console.log("Token expired, redirecting to login");
         removeToken();
         navigate("/loginwithpassword");
       }
@@ -133,14 +135,8 @@ const JobPosts = () => {
   };
 
   useEffect(() => {
-    // console.log("urlID----->>>>", id);
-
     GetJobPostWithId();
   }, [id]);
-
-  // useEffect(() => {
-  //   GetJobPostWithId();
-  // }, []);
 
   const jobDetailsList = [
     {
@@ -271,83 +267,77 @@ const JobPosts = () => {
     </Tooltip>
   );
 
-  // console.log("link-222222222------>>>>>>>",jobPostData?.job_link)
-
-  const handleProfileButton = (Text) => {
-    console.log("Button Text------->>>>>>>", Text);
-    const applicantProfileData = JSON.parse(
-      localStorage.getItem("applicantProfileData")
-    );
-    const EmailId = applicantProfileData?.user_login?.email;
-    if (Text === "View") {
-      handleViewDetailsAPi(EmailId);
-    }
-    if (Text === "Continue") {
-      handleShowModal("first");
-      // handleShowModal("showProfileViewDetailsModal");
-    }
-    if (Text === "Apply Now") {
-      handleShowModal("first");
-    }
-  };
-
   const handleViewDetailsAPi = async (EmailId) => {
     try {
       const response = await ApplicationDeatilsApi(EmailId);
 
       if (response.status === 200) {
-        // console.log("Api data--checkkkkk--------->>>>", response.data);
-        setViewDetailData(response?.data?.response)
+        setViewDetailData(response?.data?.response);
         localStorage.setItem(
           "applicantProfileAllSavedData",
           JSON.stringify(response?.data?.response)
         );
-        handleShowModal("showProfileViewDetailsModal");
       }
     } catch (error) {
       console.log("Error occurred:", error);
     }
   };
 
+  const handleBtns = (buttonText) => {
+    const userEmail = registerdUserLoginDetails?.user_login?.email;
+
+    if (buttonText === "Apply Now") {
+      handleShowModal("first");
+    } else if (buttonText === "Continue Btn") {
+      handleShowModal("first");
+      handleViewDetailsAPi(userEmail);
+    } else if (buttonText === "View Form Btn") {
+      handleShowModal("showProfileViewDetailsModal");
+      if (userEmail) {
+        handleViewDetailsAPi(userEmail);
+      }
+    }
+  };
+
   useEffect(() => {
-    // const savedData = localStorage.getItem("applicantProfileAllSavedData");
-
-    // if (savedData) {
-    //   setViewDetailData(JSON.parse(savedData));
-    // }
-
     const applicantProfileData = JSON.parse(
       localStorage.getItem("applicantProfileData")
     );
-    // if(applicantProfileData){
-
-    // }
+    if (applicantProfileData) {
+      setRegisterdUserLoginDetails(applicantProfileData);
+    }
   }, []);
 
   return (
-    <Container fluid>
-      <Row className="shadow-xs border-1 p-2 bg-grey">
+    <Container fluid className="applicat_flow">
+      <Row className="page_header">
         <Col className="d-flex align-items-center">
           <img src={Logo} alt="Logo Icon" />
-          <h6 className="my-3 pagetitle">
+          <h6 className="mx-3 pagetitle">
             Job Application <strong>{jobPostData?.job_title}</strong>
           </h6>
         </Col>
         <Col className="d-flex justify-content-md-end">
-          <img src={HomeIcon} alt="Home Icon" />
-          <img src={UserIcon} alt="User Icon" />
+          {buttonText === "Apply Now" && <img src={Logout} alt="Logout Icon" />}
+
+          {buttonText === "Continue Btn" && (
+            <img src={HomeIcon} alt="Home Icon" />
+          )}
+          {buttonText === "View Form Btn" && (
+            <img src={UserIcon} alt="User Icon" />
+          )}
         </Col>
       </Row>
 
-      <Row>
+      <Row className="page_body appcaint">
         <Col md={10} className="bg-grey">
-          <Row>
+          <Row className="appcaint_head">
             <img
               src={Global}
               alt="Global"
-              style={{ width: "60px", height: "40px" }}
+              style={{ width: "32px", height: "32px", padding: "0" }}
             />
-            <Col>
+            <Col className="app_leftinfo">
               <h5>{jobPostData?.job_title}</h5>
               <p>
                 {jobPostData?.job_company?.company_name},{" "}
@@ -367,35 +357,43 @@ const JobPosts = () => {
                 <p>{jobPostData?.job_company?.number_of_employees}</p>
               </div>
             </Col>
-            <Col>
-              <div className="d-flex flex-wrap">
-                <img
+            <Col className="app_rightinfo">
+              <div className="d-flex flex-wrap align-items-center">
+                {/* <img
                   src={Share}
                   alt="Global"
                   style={{ width: "60px", height: "40px" }}
-                  // onClick={() => handleShowModal("second")}
                   onClick={toggleModal}
-                />
-                <img
+                /> */}
+                <button
+                  type="button"
+                  className="btn-link"
+                  onClick={toggleModal}
+                >
+                  <img src={Share} alt="Global" />
+                </button>
+                {/* <img
                   src={Download}
                   alt="Global"
                   style={{ width: "60px", height: "40px" }}
-                />
-                <img
-                  src={Doc}
-                  alt="Global"
-                  style={{ width: "60px", height: "40px" }}
-                />
-                <div className="d-flex gap-2 mb-2">
+                /> */}
+
+                <button type="button" className="btn-link">
+                  <img src={Download} alt="Global" />
+                </button>
+                <button type="button" className="btn-link">
+                  <i className="far fa-file"></i>
+                </button>
+                <div className="d-flex gap-3 ms-3">
                   <Button variant="light" disabled={jobPostErrorMsg}>
                     Not for Me
                   </Button>
                   <Button
                     variant="primary"
-                    onClick={() => handleShowModal("first")}
+                    onClick={() => handleBtns(buttonText)}
                     disabled={jobPostErrorMsg || buttonText === "View"}
                   >
-                    Apply Now
+                    {buttonText}
                   </Button>
                 </div>
                 {jobPostErrorMsg && <p className="error">{jobPostErrorMsg}</p>}
@@ -416,58 +414,89 @@ const JobPosts = () => {
             </Col>
 
             <Col md={4}>
-              <div className="card">
+              <div className="card jobdetails">
                 <div className="card-body">
                   <h5 className="card-title">Job Details</h5>
                   {jobDetailsList.map((item) => {
                     return (
-                      <div className="d-flex justify-content-between">
-                        <p className="mb-0">{item.tittle}</p>
-                        <p className="mb-0">{item.value}</p>{" "}
-                      </div>
+                      <ul className="list">
+                        <li>
+                          <p className="mb-0">{item.tittle}</p>
+                          <p className="mb-0 text-end">{item.value}</p>{" "}
+                        </li>
+                      </ul>
                     );
                   })}
                 </div>
               </div>
             </Col>
-            <Col className="mt-3">
+            <Col className="mt-3 mb-3">
               <div className="card">
                 <div className="card-body">
                   <h5 className="card-title">About the Company</h5>
-                  <p>
-                    Nunc elementum mi augue, nec pretium massa eleifend quis.
-                    Etiam mollis velit id sapien facilisis, eget feugiat felis
-                    maximus. Donec interdum tortor quis lorem sollicitudin, sed
-                    molestie dui rhoncus. Ut condimentum rutrum neque sit amet
-                    dictum. Duis commodo quam et dui malesuada mollis. Maecenas
-                    tristique, sapien id consectetur fermentum, diam velit
-                    vulputate ante, at imperdiet nisl risus id lorem. Integer
-                    semper mi nec sollicitudin pulvinar. Integer finibus feugiat
-                    odio quis accumsan.
-                  </p>
+                
+
+                  <Row className="appcaint_head">
+                    <img
+                      src={Global}
+                      alt="Global"
+                      style={{ width: "32px", height: "32px", padding: "0" }}
+                    />
+                    <Col className="app_leftinfo">
+                      <h6>{jobPostData?.job_company?.company_name} </h6>
+                      <p>
+                        {jobPostData?.job_company?.location},{" "}
+                        {jobPostData?.job_type}
+                        {""},{jobPostData?.workplace_type}
+                      </p>
+                      <div className="d-flex flex-wrap">
+                        <p>{jobPostData?.job_location?.location_name}</p>
+                        <p>
+                          {jobPostData?.currency} {jobPostData?.min_salary} -{" "}
+                          {jobPostData?.max_salary}
+                          {jobPostData?.salary_type}
+                        </p>
+                        <p>
+                          {jobPostData?.min_exp} - {jobPostData?.max_exp} years
+                        </p>
+                        <p>{jobPostData?.job_company?.number_of_employees}</p>
+                      </div>
+                      <p className="card-text">
+                        {jobPostData?.detailed_description}
+                      </p>
+                    </Col>
+                  </Row>
                 </div>
               </div>
             </Col>
           </Row>
         </Col>
-        <Col md={2} className="bg-white" style={{ position: "relative" }}>
-          <div className="d-flex justify-content-center mt-4">
+        <Col
+          md={2}
+          className="bg-white app_rightsdbr"
+          style={{ position: "relative" }}
+        >
+          <div className="d-flex justify-content-center mt-1">
             <Button
               variant="outline-dark"
               onClick={() => handleShowModal("second")}
             >
+              <img src={InfoCircle} className="me-1" />
               About our Process
             </Button>
           </div>
           <h6>Your Progress</h6>
-          <div style={{ border: "1px solid #000", padding: 12 }}>
-            <p>Profile Details</p>
-            {buttonText == "View" && <p>Completed</p> || buttonText == "Continue" && <p>Pending</p>}
+          <div className="progress_box">
+            <h5>
+              <span className="bg_circle"></span>Profile Details
+            </h5>
+            {(buttonText == "View Form Btn" && <p>Completed</p>) ||
+              (buttonText == "Continue Btn" && <p>Pending</p>)}
             <Button
               variant="primary"
               size="lg"
               disabled={jobPostErrorMsg}
-              onClick={() => handleProfileButton(buttonText)}
+              onClick={() => handleBtns(buttonText)}
             >
               {buttonText}
             </Button>
@@ -557,7 +586,6 @@ const JobPosts = () => {
                       alignItems: "center",
                     }}
                   >
-                    {/* Show first 2 emails */}
                     {emailList.slice(0, 2).map((email, index) => (
                       <div
                         key={index}
@@ -589,7 +617,6 @@ const JobPosts = () => {
                       </div>
                     ))}
 
-                    {/* Show +{n} more button if there are more than 2 emails */}
                     {emailList.length > 2 && !showMore && (
                       <Button
                         variant="link"
@@ -605,7 +632,6 @@ const JobPosts = () => {
                       </Button>
                     )}
 
-                    {/* Show additional emails if showMore is true */}
                     {showMore &&
                       emailList.slice(2).map((email, index) => (
                         <div
@@ -638,7 +664,6 @@ const JobPosts = () => {
                         </div>
                       ))}
 
-                    {/* Show 'Show Less' button if emails are expanded */}
                     {emailList.length > 2 && showMore && (
                       <Button
                         variant="link"
@@ -654,7 +679,6 @@ const JobPosts = () => {
                       </Button>
                     )}
 
-                    {/* Input field */}
                     <Form.Control
                       type="text"
                       value={emailInput}
@@ -718,66 +742,71 @@ const JobPosts = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+      <div>
+        <Modal
+          show={modalOpen.showProfileViewDetailsModal}
+          handleClose={() => handleCloseModals()}
+          animation={false}
+          size="lg"
+          backdrop={false}
+          className="cmprofile_mdl quizDev_model"
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Profile Details</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {viewDetailData && (
+              <>
+                <Row>
+                  <Col md={10}>
+                    <h6>{viewDetailData?.user?.username}</h6>
+                    <h5>{viewDetailData?.user?.email}</h5>
+                    <p>{viewDetailData?.user?.phone_number}</p>
+                  </Col>
 
-      <Modal
-        show={modalOpen.showProfileViewDetailsModal}
-        handleClose={() => handleCloseModals()}
-        animation={false}
-        size="lg"
-        backdrop={false}
-        className="cmprofile_mdl quizDev_model"
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Profile Details</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {viewDetailData && (
-            <>
-              <Row>
-                <Col md={10}>
-                  <h6>{viewDetailData?.user?.username}</h6>
-                  <h5>{viewDetailData?.user?.email}</h5>
-                  <p>{viewDetailData?.user?.phone_number}</p>
-                </Col>
+                  <Col md={2}>{viewDetailData?.resume}</Col>
+                </Row>
 
-                <Col md={2}>{viewDetailData?.resume}</Col>
-              </Row>
-
-              <Row style={{ borderBottom: "1px solid #ddd", padding: "10px" }}>
-                <Col md={6}>Availability</Col>
-                <Col md={6}>{viewDetailData?.availble_by}</Col>
-                <Col md={6}>Notice Period</Col>
-                <Col md={6}>{viewDetailData?.notice_period}</Col>
-                <Col md={6}>Expected Salary</Col>
-                <Col md={6}>{viewDetailData?.expected_salary}</Col>
-                <Col md={6}>Education</Col>
-                <Col md={6}>Master in Computer Science Engineering</Col>
-                <Col md={6}>Experience</Col>
-                <Col md={6}>
-                  June 2022 - May2024 Software Developer, IT, Company Name
-                </Col>
-                <Col md={6}>Language </Col>
-                <Col md={6}>Hindi, English, Telugu</Col>
-                <Col md={6}>Current Location</Col>
-                <Col md={6}>{viewDetailData?.current_location}</Col>
-                <Col md={6}>Skills</Col>
-                {viewDetailData?.applicant_profile_job?.[0]?.job_applicant_skill.map((item) => console.log("i----->>>>", item))}
-                <Col md={6}>
-                  Microsoft Office, PowerPoint, Java, C#, Leadership, Database
-                  Management, Product Development, Mongo DB, .Net,
-                </Col>
-                <Col md={6}>Additional Questions from Company</Col>
-                <Col md={6}>Can join Immediately</Col>
-              </Row>
-            </>
-          )}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="primary" onClick={handleCloseModals}>
-            Return to Job
-          </Button>
-        </Modal.Footer>
-      </Modal>
+                <Row
+                  style={{ borderBottom: "1px solid #ddd", padding: "10px" }}
+                >
+                  <Col md={6}>Availability</Col>
+                  <Col md={6}>{viewDetailData?.availble_by}</Col>
+                  <Col md={6}>Notice Period</Col>
+                  <Col md={6}>{viewDetailData?.notice_period}</Col>
+                  <Col md={6}>Expected Salary</Col>
+                  <Col md={6}>{viewDetailData?.expected_salary}</Col>
+                  <Col md={6}>Education</Col>
+                  <Col md={6}>Master in Computer Science Engineering</Col>
+                  <Col md={6}>Experience</Col>
+                  <Col md={6}>
+                    June 2022 - May2024 Software Developer, IT, Company Name
+                  </Col>
+                  <Col md={6}>Language </Col>
+                  <Col md={6}>Hindi, English, Telugu</Col>
+                  <Col md={6}>Current Location</Col>
+                  <Col md={6}>{viewDetailData?.current_location}</Col>
+                  <Col md={6}>Skills</Col>
+                  {viewDetailData?.applicant_profile_job?.[0]?.job_applicant_skill.map(
+                    (item) => console.log("i----->>>>", item)
+                  )}
+                  <Col md={6}>
+                    Microsoft Office, PowerPoint, Java, C#, Leadership, Database
+                    Management, Product Development, Mongo DB, .Net,
+                  </Col>
+                  <Col md={6}>Additional Questions from Company</Col>
+                  <Col md={6}>Can join Immediately</Col>
+                </Row>
+              </>
+            )}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="primary" onClick={handleCloseModals}>
+              Return to Job
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </div>
     </Container>
   );
 };

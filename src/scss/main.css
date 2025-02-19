@@ -3789,79 +3789,167 @@ select.h-36.form-select {
   margin-top: 35px;
 }
 
-.mlike-sugg {
-  position: absolute;
-  bottom: -158px;
-  left: 10px;
+/**===========Applicat Flow===============**/
+.page_header {
+  box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.0588235294);
+  box-shadow: 0px 1px 3px 0px rgba(16, 24, 40, 0.1019607843);
+  padding: 24px 20px;
+  background-color: #fff;
+  z-index: 999;
+  position: fixed;
+  width: 100%;
+  top: 0;
 }
-.mlike-sugg img {
-  max-height: 95px;
-}
-.mlike-sugg span {
-  color: #6172F3;
-  font-size: 12px;
+.page_header .pagetitle {
+  color: #101828;
+  font-weight: 600;
+  font-size: 18px;
   position: relative;
-  top: -48px;
-  left: -40px;
-  font-weight: 500;
+  text-transform: capitalize;
+}
+.page_header .pagetitle strong {
+  font-weight: 700;
 }
 
-.lelike-sugg {
-  position: absolute;
-  bottom: -142px;
-  right: -40px;
-}
-.lelike-sugg img {
-  max-height: 80px;
-}
-.lelike-sugg span {
-  color: #6172F3;
-  font-size: 12px;
-  position: relative;
-  top: -60px;
-  left: 75px;
-  font-weight: 500;
+.page_body.appcaint {
+  padding-top: 80px;
 }
 
-.mlike-sugg_active {
-  position: absolute;
-  bottom: -152px;
-  left: 30px;
-  display: none;
+.appcaint_head {
+  padding: 15px;
 }
-.mlike-sugg_active img {
-  max-height: 88px;
+.appcaint_head .app_leftinfo h5 {
+  font-size: 22px;
+  color: #101828;
+  line-height: 24px;
+  margin: 0 0 5px 0;
+  text-transform: capitalize;
 }
-.mlike-sugg_active span {
-  color: #6172F3;
+.appcaint_head .app_leftinfo p {
+  font-size: 13px;
+  color: #344054;
+  margin: 0;
+  line-height: 20px;
+  font-weight: 400;
+}
+.appcaint_head .app_rightinfo {
+  justify-content: right;
+  display: flex;
+}
+.appcaint_head .app_rightinfo .btn {
   font-size: 12px;
-  position: relative;
-  top: -42px;
-  left: -65px;
-  font-weight: 500;
 }
 
-.lelike-sugg_active {
-  position: absolute;
-  bottom: -155px;
-  right: -28px;
-  display: none;
+.appcaint .card {
+  background-color: #fff;
+  box-shadow: 0px 1px 2px 0px rgba(10, 13, 18, 0.0509803922);
+  border: 1px solid #F2F4F7;
+  border-radius: 12px;
+  height: 100%;
 }
-.lelike-sugg_active img {
-  max-height: 90px;
+.appcaint .card .card-title {
+  font-size: 16px;
+  color: #344054;
+  font-weight: 600;
 }
-.lelike-sugg_active span {
-  color: #6172F3;
+.appcaint .card .card-text {
+  font-family: Inter;
+  font-weight: 400;
   font-size: 12px;
-  position: relative;
-  top: -50px;
-  left: -55px;
-  font-weight: 500;
+  line-height: 18px;
+  letter-spacing: 0%;
+  color: #344054;
+}
+.appcaint .jobdetails .list {
+  margin: 0;
+  padding: 0;
+}
+.appcaint .jobdetails .list li {
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+  margin-bottom: 8px;
+}
+.appcaint .jobdetails .list li p {
+  font-size: 12px;
+  line-height: 18px;
+  color: #344054;
 }
 
-.beharquiz_mdl .modal-footer {
-  justify-content: center;
+.app_rightsdbr {
+  box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.0509803922);
+  padding: 15px;
 }
-.beharquiz_mdl .modal-footer .btn {
+.app_rightsdbr .btn-outline-dark {
+  font-size: 13px;
+  width: 100%;
+}
+.app_rightsdbr h6 {
   font-size: 14px;
+  text-align: center;
+  margin: 25px 0 10px 0;
+}
+.app_rightsdbr .progress_box {
+  background-color: #F9FAFB;
+  border: solid 1px #EAECF0;
+  padding: 14px;
+  border-radius: 8px;
+}
+.app_rightsdbr .progress_box h5 {
+  color: #D0D5DD;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.app_rightsdbr .progress_box h5 .bg_circle {
+  width: 24px;
+  height: 24px;
+  background-color: #F2F4F7;
+  border-radius: 50%;
+  margin-right: 5px;
+  display: inline-block;
+}
+.app_rightsdbr .progress_box .btn-primary {
+  width: 100%;
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+.btn-link {
+  border: none;
+  padding: 5px 8px;
+  background-color: transparent;
+}
+
+.btn-outline-dark {
+  border-color: #D0D5DD;
+  color: #344054;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 12px;
+}
+
+.jobMain_panel .custom-card {
+  background-color: #fff;
+  border-color: #EAECF0;
+  box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.0509803922);
+  padding: 15px 22px;
+  border-radius: 16px;
+  margin-bottom: 10px;
+}
+.jobMain_panel .custom-card h6 {
+  margin-bottom: 10px;
+}
+.jobMain_panel .custom-card .form-control-sm {
+  font-size: 12px;
+  min-height: 34px;
+}
+.jobMain_panel .custom-card .form-label {
+  font-size: 12px;
+}
+
+.invalid-feedback {
+  font-size: 12px;
 }/*# sourceMappingURL=main.css.map */

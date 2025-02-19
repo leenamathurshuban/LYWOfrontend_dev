@@ -80,8 +80,8 @@ const ApplicationJobPostModal = ({
     ExpectedSalary: "",
     TotalWorkExperience: "",
     CurrentLocation: "",
-    relocationChoice: false,
-    requiredCompanyAssist: false,
+    relocationChoice: null,
+    requiredCompanyAssist: null,
   });
 
   const [errors, setErrors] = useState({
@@ -117,7 +117,6 @@ const ApplicationJobPostModal = ({
   });
 
   const [storedApplicantId, setStoredApplicantId] = useState("");
-  // const [showSaveModal, setshowSaveModal] = useState(false);
 
   const handleCloseModals = () => {
     setShowModal({
@@ -144,18 +143,12 @@ const ApplicationJobPostModal = ({
     });
   };
 
-  // const handleSaveCloseModal = () => setshowSaveModal(false);
-
-  // Handle skill selection
   const handleSkillSelect = (skill) => {
-    // Check if the skill is already selected
     if (selectedSkills.includes(skill.uid)) {
-      // Remove skill if already selected
       setSelectedSkills(
         selectedSkills.filter((selectedSkill) => selectedSkill !== skill.uid)
       );
     } else {
-      // Add skill if not selected
       if (selectedSkills.length < 8) {
         setSelectedSkills([...selectedSkills, skill.uid]);
       } else {
@@ -164,7 +157,6 @@ const ApplicationJobPostModal = ({
     }
   };
 
-  // This function checks if all fields are valid
   const validateForProfileDetails = () => {
     const newErrors = {};
     let formIsValid = true;
@@ -203,53 +195,39 @@ const ApplicationJobPostModal = ({
     return formIsValid;
   };
 
-  const validateFormForAllDetails = () => {
-    const newErrors = {};
-    let formIsValid = true;
+  const isEducationFormValid = EducationRows.every((row) =>
+    Object.values(row).every((field) => field !== "")
+  );
 
-    if (!ResumeFile) {
-      newErrors.ResumeFile = "ResumeFile Is required";
-      formIsValid = false; // Mark as invalid if there's an error
-    }
-    if (!profileformData?.AvailableBy) {
-      newErrors.AvailableBy = "Availabile By required";
-      formIsValid = false;
-    }
-    if (!profileformData?.NoticePeriod) {
-      newErrors.NoticePeriod = "Notice Period is required";
-      formIsValid = false;
-    }
-    if (!profileformData?.ExpectedSalary) {
-      newErrors.ExpectedSalary = "Expected Salary is required";
-      formIsValid = false;
-    }
-    if (!profileformData?.CurrentLocation) {
-      newErrors.CurrentLocation = "CurrentLocation is required";
-      formIsValid = false;
-    }
-    if (!profileformData?.relocationChoice) {
-      newErrors.relocationChoice = "Willing to relocate is required";
-      formIsValid = false;
-    }
-    // if (!profileformData?.requiredCompanyAssist) {
-    //   newErrors.requiredCompanyAssist =
-    //     "Require company assistance is required";
-    //   formIsValid = false;
-    // }
-    if (selectedSkills.length === 0) {
-      newErrors.selectedSkills = "Skill is required";
-      formIsValid = false;
-    }
+  const isWorkExperienceFormValid = WorkExpreienceRow.every((row) =>
+    Object.values(row).every((field) => field !== "")
+  );
 
-    setErrors(newErrors);
-    setisAllFormDetailsValid(formIsValid);
-
-    return formIsValid;
-  };
+  const validationEnable =
+    isWorkExperienceFormValid &&
+    isEducationFormValid &&
+    selectedWrittenLanguageUids.length !== 0 &&
+    selectedSpokenLanguageUids.length !== 0 &&
+    profileformData?.CurrentLocation &&
+    selectedSkills.length !== 0 &&
+    profileformData?.CurrentLocation &&
+    ResumeFile &&
+    profileformData?.AvailableBy &&
+    profileformData?.NoticePeriod &&
+    profileformData?.ExpectedSalary;
 
   const handleProfileDetailsChange = (e) => {
-    const { name, value } = e.target;
-    setProfileFormData((prevData) => ({ ...prevData, [name]: value }));
+    const { name, value, type, checked } = e.target;
+
+    setProfileFormData((prevData) => ({
+      ...prevData,
+      [name]:
+        type === "radio"
+          ? value === "true"
+          : type === "checkbox" || type === "switch"
+          ? checked
+          : value,
+    }));
   };
 
   const handleSwitchChange = (toggleName) => {
@@ -258,6 +236,7 @@ const ApplicationJobPostModal = ({
       [toggleName]: !prevState[toggleName],
     }));
   };
+  
 
   // const handleSwitchChange = (toggleName) => {
   //   setIsYes((prevState) => {
@@ -302,18 +281,6 @@ const ApplicationJobPostModal = ({
     validateForProfileDetails();
   };
 
-  const ApplicationDetailsGetApi = async () => {
-    try {
-      const response = await ApplicationDeatilsApi();
-      // console.log("Api data----------->>>>", response?.data?.response);
-      // if (response.status === 200) {
-      //   console.log("Api data----------->>>>", response.data);
-      // }
-    } catch (error) {
-      console.log("Error occurred:", error);
-    }
-  };
-
   const handleProfileDetailsApi = async () => {
     try {
       const formData = new FormData();
@@ -324,28 +291,18 @@ const ApplicationJobPostModal = ({
       const response = await ApplicationJobApi(formData);
 
       if (response.status === 200) {
-        // console.log("Applicatant response------>>>>>>>>",response.data?.applcant?.uid)
         setApplicantProfileData(response.data);
-        setStoredApplicantId(response.data?.applcant?.uid)
-        // localStorage.setItem(
-        //   "UserLoginProfileDetailsData",
-        //   JSON.stringify(response.data)
-        // );
+        setStoredApplicantId(response.data?.applcant?.uid);
+
         localStorage.setItem(
           "applicantProfileData",
           JSON.stringify(response.data)
         );
-        //alert("Form Saved Successfully");
+        updateButtonText("Continue Btn");
       } else {
         console.error("Failed to save form: ", response.data);
-        alert("There was an issue saving the form.");
       }
     } catch (error) {
-      // console.error(
-      //   "user Error occurred:-----",
-      //   error?.response?.data?.response?.user[0] ===
-      //     "Applicant Profile Already Created."
-      // );
       console.log("ERROR:", error);
     }
   };
@@ -358,7 +315,7 @@ const ApplicationJobPostModal = ({
       );
       const accessToken = applicantProfileData?.user_login?.access;
       const headers = {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM5NTkzNzE5LCJpYXQiOjE3Mzk1MDczMTksImp0aSI6ImYwYjlhZWUxYTYzOTRmZGM4NTBjYjg3NzY4ZDg5OWFmIiwidXNlcl9pZCI6MjA1LCJuYW1lIjoiYXBuYSIsImVtYWlsIjoiYXBuYTEyM0BnbWFpbC5jb20ifQ.Flrz1iVkpCWbwhx3zb2heMCJqQ9EwLaO0E0eNzOmGZc`,
+        Authorization: `Bearer ${accessToken}`,
       };
 
       const formdata = new FormData();
@@ -367,7 +324,10 @@ const ApplicationJobPostModal = ({
       formdata.append("currently_working", isYes?.CurrentlyWorkingToggle);
       formdata.append("notice_period", profileformData?.NoticePeriod);
       formdata.append("notice_buyout_available", isYes?.NoticeBuyOutToggle);
-      formdata.append("applicant_status", "Draft");
+      formdata.append(
+        "applicant_status",
+        validationEnable ? "Completed" : "Draft"
+      );
       formdata.append("expected_salary", profileformData?.ExpectedSalary);
       formdata.append(
         "spoken_language",
@@ -389,7 +349,7 @@ const ApplicationJobPostModal = ({
       formdata.append("job_uid", jobPostData?.uid);
 
       formdata.append("skills", JSON.stringify(dataToSend));
-
+      formdata.append("question_answer_array", "[{\"answer_uid\":\"\",\"question_uid\":\"0b41c730-fedd-4bfa-9a08-3d3aaa291dc5\",\"selected_answer\":[\"Yes\"]}]");
       const response = await axios.put(
         `https://bittrend.shubansoftware.com/assets-api/applicant-update-api/${storedApplicantId}/`,
         formdata,
@@ -397,11 +357,14 @@ const ApplicationJobPostModal = ({
       );
 
       if (response.status === 200) {
-        if (handleShowModal("SaveAsDraft")) {
-          updateButtonText("Continue");
-        }
-        if (handleShowModal("Save")) {
-          updateButtonText("View");
+        if (response?.data?.response.applicant_status === "Draft") {
+          updateButtonText("Continue Btn");
+          handleCloseModals();
+          handleClose();
+        } else if (response?.data?.response.applicant_status === "Completed") {
+          updateButtonText("View Form Btn");
+          handleCloseModals();
+          handleClose();
         }
         localStorage.setItem('applicantToken', ApplicantProfileData?.user_login?.access)
         localStorage.setItem('applicantData',JSON.stringify(ApplicantProfileData?.applcant))
@@ -409,16 +372,6 @@ const ApplicationJobPostModal = ({
         // sessionStorage.setItem('applicantData', JSON.stringify(ApplicantProfileData?.applcant))
         // behaviour wala navigate hoga
         navigate('/Behavioural-Assessment')
-        handleClose();
-        
-
-        // registeredEmailId(profileformData?.email);
-        // alert("Form Saved Successfully");
-        // registerdUserLoginDetails(ApplicantProfileData);
-        // localStorage.setItem(
-        //   "applicantProfileData",
-        //   JSON.stringify(ApplicantProfileData)
-        // );
 
         // behaviour wala navigate hoga
         // const response = await ApplicationFormDetailsApi(
@@ -444,16 +397,7 @@ const ApplicationJobPostModal = ({
       return;
     }
 
-    if (!isAllFormDetailsValid) {
-      // Only validate if the form isn't valid
-      if (!validateFormForAllDetails()) {
-        return;
-      }
-    }
-
-    if (isAllFormDetailsValid) {
-      handleShowModal("Save");
-    }
+    handleShowModal("Save");
   };
 
   const handleSaveAsDraft = () => {
@@ -463,6 +407,8 @@ const ApplicationJobPostModal = ({
     }
     handleShowModal("SaveAsDraft");
   };
+
+  
 
   const handleButtonClick = () => setShowInput(!showInput);
 
@@ -507,7 +453,7 @@ const ApplicationJobPostModal = ({
       const response = await EducationQualificationApi(formdata);
 
       if (response.status === 200) {
-        alert("Education Saved Successfully");
+        console.log("Education Saved Successfully");
       } else {
         console.error("Failed to save form: ", response.data);
         alert("There was an issue saving the form.");
@@ -524,10 +470,7 @@ const ApplicationJobPostModal = ({
         return;
       }
       const formdata = new FormData();
-      formdata.append(
-        "work_applicant_profile",
-        storedApplicantId
-      );
+      formdata.append("work_applicant_profile", storedApplicantId);
       formdata.append("total_work_experience", row.TotalWorkExperience);
       formdata.append("role", row.WorkRole);
       formdata.append("work_from", row.WorkFrom);
@@ -650,14 +593,6 @@ const ApplicationJobPostModal = ({
     }
   };
 
-  // useEffect(() => {
-  //   const applicantProfileAllSavedData = JSON.parse(
-  //     localStorage.getItem("applicantProfileAllSavedData")
-  //   )
-  //   setGetStoredFormData(applicantProfileAllSavedData)
-
-  // }, []);
-
   useEffect(() => {
     if (profileformData) {
       validateForProfileDetails();
@@ -673,10 +608,6 @@ const ApplicationJobPostModal = ({
     );
 
     if (storedData) {
-      // console.log(
-      //   "stored -resumm---->>>>,",
-      //   storedData?.resume
-      // );
       setProfileFormData((prevState) => ({
         ...prevState,
         name: storedData?.user?.username || "",
@@ -700,8 +631,12 @@ const ApplicationJobPostModal = ({
 
       setStoredApplicantId(storedData?.uid);
 
-      const spokenUids = Array.from(new Set(storedData?.spoken_language.map((item) => item?.uid)));
-      const writtenUids = Array.from(new Set(storedData?.written_reading_language.map((item) => item?.uid)));
+      const spokenUids = Array.from(
+        new Set(storedData?.spoken_language.map((item) => item?.uid))
+      );
+      const writtenUids = Array.from(
+        new Set(storedData?.written_reading_language.map((item) => item?.uid))
+      );
 
       setSelectedSpokenLanguageUids((prevState) => [
         ...prevState,
@@ -713,30 +648,21 @@ const ApplicationJobPostModal = ({
         ...writtenUids.filter((uid) => !prevState.includes(uid)),
       ]);
 
-
-
-
-
       const skillsUids =
         storedData?.applicant_profile_job[0]?.job_applicant_skill.map(
           (item) => item?.uid
         );
       setSelectedSkills((prevState) => [...prevState, ...skillsUids]);
 
-
-
-
       const resumeFileUrl = storedData?.resume || null;
       setResumeFile(resumeFileUrl);
 
-      const resumeFileName = resumeFileUrl ? resumeFileUrl.split('/').pop() : '';
-
-
+      const resumeFileName = resumeFileUrl
+        ? resumeFileUrl.split("/").pop()
+        : "";
 
       setResumeFileName(resumeFileName);
-
     }
-
 
     const educationData = storedData?.qualification_applicantprofile || [];
     if (Array.isArray(educationData)) {
@@ -751,13 +677,7 @@ const ApplicationJobPostModal = ({
         })),
       ]);
     }
-
-
-
   }, []);
-
-
-
 
   return (
     <Modal
@@ -835,13 +755,13 @@ const ApplicationJobPostModal = ({
                     Experience <i class="fa fa-check" aria-hidden="true"></i>
                   </a>
                 </li>
-                <li>
+                <li className={`${selectedSpokenLanguageUids.length && selectedWrittenLanguageUids.length && "active"}`}>
                   <a href="#item_Geog">
                     Language <i class="fa fa-check" aria-hidden="true"></i>
                   </a>
                 </li>
 
-                <li>
+                <li className={`${profileformData?.CurrentLocation && "active"}`}>
                   <a href="#item_Geog">
                     Geography <i class="fa fa-check" aria-hidden="true"></i>
                   </a>
@@ -1078,8 +998,6 @@ const ApplicationJobPostModal = ({
                           onChange={() =>
                             handleSwitchChange("CurrentlyWorkingToggle")
                           }
-                        // required
-                        // isInvalid={!isYes?.CurrentlyWorkingToggle}
                         />
                       </Col>
 
@@ -1095,9 +1013,6 @@ const ApplicationJobPostModal = ({
                         </Form.Label>
                       </Col>
                     </Row>
-                    {/* <Form.Control.Feedback type="invalid">
-                      {errors?.CurrentlyWorkingToggle}
-                    </Form.Control.Feedback> */}
                   </Col>
                 </Row>
 
@@ -1271,13 +1186,8 @@ const ApplicationJobPostModal = ({
                           handleEducationQualificationChange(index, e)
                         }
                       />
-                      <Form.Select
-
-                        value={"GPA"}
-
-                      >
+                      <Form.Select value={"GPA"}>
                         <option>GPA</option>
-
                       </Form.Select>
                     </Col>
                     <Col md={1}>
@@ -1574,6 +1484,7 @@ const ApplicationJobPostModal = ({
                         onChange={handleProfileDetailsChange}
                       />
                     </div>
+
                     {errors.relocationChoice && (
                       <p className="error">{errors.relocationChoice}</p>
                     )}
@@ -1594,8 +1505,8 @@ const ApplicationJobPostModal = ({
                         name="requiredCompanyAssist"
                         id="requiredCompanyAssist1"
                         className="mr-3"
-                        value="true" // Set value for the radio button
-                        checked={profileformData.requiredCompanyAssist == true} // Check if this option is selected
+                        value="true"
+                        checked={profileformData.requiredCompanyAssist == true}
                         onChange={handleProfileDetailsChange}
                       />
                       <Form.Check
@@ -1604,10 +1515,8 @@ const ApplicationJobPostModal = ({
                         name="requiredCompanyAssist"
                         id="requiredCompanyAssist2"
                         className="ml-3"
-                        value="false" // Set value for the radio button
-                        checked={
-                          profileformData.requiredCompanyAssist == false
-                        }
+                        value="false"
+                        checked={profileformData.requiredCompanyAssist == false}
                         onChange={handleProfileDetailsChange}
                       />
                     </div>
@@ -1657,6 +1566,7 @@ const ApplicationJobPostModal = ({
               </div>
 
               <div className="custom-card">
+                <h6>Additional Question from Company</h6>
                 {jobPostData?.question_job.map((item) => (
                   <div key={item.id}>
                     <h6>{item?.question_title}</h6>
@@ -1667,13 +1577,12 @@ const ApplicationJobPostModal = ({
                           key={index}
                           type="radio"
                           label={option}
-                          name={`formHorizontalRadios-${item.id}`} // Unique name for each question group
+                          name={`formHorizontalRadios-${item.id}`}
                           id={`formHorizontalRadios-${item.id}-${index}`}
                           className="mr-3"
                         />
                       ))}
 
-                    {/* fot text */}
                     {item?.quiz_type === "Text" && (
                       <Form.Control
                         type="text"
@@ -1681,7 +1590,6 @@ const ApplicationJobPostModal = ({
                         className="mb-3"
                       />
                     )}
-                    {/* for checkbox */}
 
                     {item?.quiz_type === "Checkbox" &&
                       item?.question_option?.part1?.map((option, index) => (
@@ -1781,8 +1689,11 @@ const ApplicationJobPostModal = ({
           >
             Save as Draft
           </Button>
-          <Button variant="primary" onClick={() => handleSubmit()}>
-            {/* onClick={() => handleFormDetailsApi()}> */}
+          <Button
+            disabled={!validationEnable}
+            variant="primary"
+            onClick={() => handleSubmit()}
+          >
             Submit
           </Button>
         </Container>
@@ -1822,7 +1733,6 @@ const ApplicationJobPostModal = ({
             </Modal.Body>
             <Modal.Footer>
               <Button variant="light" onClick={() => handleFormDetailsApi()}>
-                {/* onClick={handleCloseModals}> */}
                 Return to Job
               </Button>
               <Button variant="primary">Proceed to Behavioral Test</Button>

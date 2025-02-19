@@ -10,7 +10,8 @@ const Protected = ({ element, redirectTo, allowAuthenticated }) => {
     return <Navigate to={redirectTo} />;
   }
   if (!allowAuthenticated && !isApplicant()) {
-    return <Navigate to="/jobposts" />;
+    // return <Navigate to="/JobPosts/:id" />;
+    return <Navigate to="/JobPosts" />;
   }
   return element;
 };
