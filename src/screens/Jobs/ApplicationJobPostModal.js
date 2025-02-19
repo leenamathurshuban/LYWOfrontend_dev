@@ -103,6 +103,7 @@ const ApplicationJobPostModal = ({
   });
 
   const [isValid, setIsValid] = useState(false);
+  const [selectedAnswers, setSelectedAnswers] = useState({});
   const [isAllFormDetailsValid, setisAllFormDetailsValid] = useState(false);
   const [touchedFields, setTouchedFields] = useState({
     name: false,
@@ -237,39 +238,6 @@ const ApplicationJobPostModal = ({
     }));
   };
   
-
-  // const handleSwitchChange = (toggleName) => {
-  //   setIsYes((prevState) => {
-  //     const updatedState = {
-  //       ...prevState,
-  //       [toggleName]: !prevState[toggleName],
-  //     };
-
-  //     const storedData = JSON.parse(localStorage.getItem("applicantProfileAllSavedData")) || {};
-  //     const updatedStoredData = {
-  //       ...storedData,
-  //       currently_working: updatedState.CurrentlyWorkingToggle,
-  //       notice_buyout_available: updatedState.NoticeBuyOutToggle,
-  //     };
-
-  //     localStorage.setItem("applicantProfileAllSavedData", JSON.stringify(updatedStoredData));
-
-  //     return updatedState;
-  //   });
-  // };
-
-  // const handleProfileDetailsChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setProfileFormData((prevData) => {
-  //     const updatedData = { ...prevData, [name]: value };
-
-  //     // Update localStorage whenever the data changes
-  //     localStorage.setItem("applicantProfileData", JSON.stringify(updatedData));
-
-  //     return updatedData;
-  //   });
-  // };
-
   const handleFocus = (e) => {
     const { name } = e.target;
     setTouchedFields((prevTouched) => ({ ...prevTouched, [name]: true }));
@@ -308,6 +276,8 @@ const ApplicationJobPostModal = ({
   };
 
   const handleFormDetailsApi = async () => {
+    const questionAnswerArray = generateQuestionAnswerArray();
+
     try {
       const dataToSend = selectedSkills.length === 0 ? [] : selectedSkills;
       const applicantProfileData = JSON.parse(
@@ -349,7 +319,7 @@ const ApplicationJobPostModal = ({
       formdata.append("job_uid", jobPostData?.uid);
 
       formdata.append("skills", JSON.stringify(dataToSend));
-      formdata.append("question_answer_array", "[{\"answer_uid\":\"\",\"question_uid\":\"0b41c730-fedd-4bfa-9a08-3d3aaa291dc5\",\"selected_answer\":[\"Yes\"]}]");
+      formdata.append("question_answer_array", JSON.stringify(questionAnswerArray));
       const response = await axios.put(
         `https://bittrend.shubansoftware.com/assets-api/applicant-update-api/${storedApplicantId}/`,
         formdata,
@@ -365,14 +335,13 @@ const ApplicationJobPostModal = ({
           updateButtonText("View Form Btn");
           handleCloseModals();
           handleClose();
-        }
-        localStorage.setItem('applicantToken', ApplicantProfileData?.user_login?.access)
-        localStorage.setItem('applicantData',JSON.stringify(ApplicantProfileData?.applcant))
-        // sessionStorage.setItem('applicantToken', ApplicantProfileData?.user_login?.access)
-        // sessionStorage.setItem('applicantData', JSON.stringify(ApplicantProfileData?.applcant))
-        // behaviour wala navigate hoga
-        navigate('/Behavioural-Assessment')
+        //   localStorage.setItem('applicantToken', ApplicantProfileData?.user_login?.access)
+        //   localStorage.setItem('applicantData',JSON.stringify(ApplicantProfileData?.applcant))
 
+        // navigate('/Behavioural-Assessment')
+
+        }
+        
         // behaviour wala navigate hoga
         // const response = await ApplicationFormDetailsApi(
         //   formdata,
@@ -593,6 +562,25 @@ const ApplicationJobPostModal = ({
     }
   };
 
+  // question answer 
+  const handleAnswerChange = (questionUid, answer) => {
+    setSelectedAnswers((prevState) => ({
+      ...prevState,
+      [questionUid]: answer,
+    }));
+  };
+  const generateQuestionAnswerArray = () => {
+    return jobPostData?.question_job.map((item) => ({
+      answer_uid: "", // Add logic to populate this if needed
+      question_uid: item?.uid,
+      selected_answer: selectedAnswers[item?.uid]
+        ? Array.isArray(selectedAnswers[item?.uid])
+          ? selectedAnswers[item?.uid]
+          : [selectedAnswers[item?.uid]]
+        : [],
+    }));
+  };
+
   useEffect(() => {
     if (profileformData) {
       validateForProfileDetails();
@@ -691,10 +679,11 @@ const ApplicationJobPostModal = ({
       <Modal.Header closeButton className="p-2">
         <img src={logoIcon} className="me-2" />
         <div>
-          <h5>{jobPostData?.detailed_description}</h5>
+          {/* <h5>{jobPostData?.detailed_description}</h5> */}
           <p>
             {jobPostData?.job_company?.company_name},{" "}
-            {jobPostData?.job_company?.location}, {jobPostData?.job_type}
+            {/* {jobPostData?.job_company?.location},  */}
+            {jobPostData?.job_type}
             {""},{jobPostData?.workplace_type}
           </p>
         </div>
@@ -1580,6 +1569,7 @@ const ApplicationJobPostModal = ({
                           name={`formHorizontalRadios-${item.id}`}
                           id={`formHorizontalRadios-${item.id}-${index}`}
                           className="mr-3"
+                          onChange={() => handleAnswerChange(item?.uid, option)}
                         />
                       ))}
 

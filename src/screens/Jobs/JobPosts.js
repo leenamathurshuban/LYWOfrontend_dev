@@ -111,9 +111,9 @@ const JobPosts = () => {
       // const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/Zjg3YmExYzlmMA/`;
       // const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/ODE2YWNmZjgwZg/`;
       const data = await getPostJobIdApi(url);
-      //console.log("api datatt----->>>>>>", data?.data?.response);
+      // console.log("api datatt----->>>>>>", JSON.stringify(data?.response));
 
-      setJobPostData(data?.data?.response);
+      setJobPostData(data?.response);
       setLink(data?.data?.response?.job_link);
     } catch (error) {
       if (error.response) {
@@ -133,10 +133,6 @@ const JobPosts = () => {
       }
     }
   };
-
-  useEffect(() => {
-    GetJobPostWithId();
-  }, [id]);
 
   const jobDetailsList = [
     {
@@ -211,26 +207,6 @@ const JobPosts = () => {
     setEmailInput(e.target.value);
   };
 
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(e.target) &&
-        emailInput
-      ) {
-        addEmailOnBlur();
-      }
-    };
-
-    if (showModal) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [emailInput, showModal]);
-
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && emailInput) {
       addEmailOnBlur();
@@ -244,10 +220,6 @@ const JobPosts = () => {
   const toggleModal = () => {
     setShowModal((prev) => !prev);
   };
-
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, [showModal]);
 
   const handleCopyClick = () => {
     navigator.clipboard
@@ -299,270 +271,8 @@ const JobPosts = () => {
     }
   };
 
-  useEffect(() => {
-    const applicantProfileData = JSON.parse(
-      localStorage.getItem("applicantProfileData")
-    );
-    if (applicantProfileData) {
-      setRegisterdUserLoginDetails(applicantProfileData);
-    }
-  }, []);
-
-  return (
-    <Container fluid className="applicat_flow">
-      <Row className="page_header">
-        <Col className="d-flex align-items-center">
-          <img src={Logo} alt="Logo Icon" />
-          <h6 className="mx-3 pagetitle">
-            Job Application <strong>{jobPostData?.job_title}</strong>
-          </h6>
-        </Col>
-        <Col className="d-flex justify-content-md-end">
-          {buttonText === "Apply Now" && <img src={Logout} alt="Logout Icon" />}
-
-          {buttonText === "Continue Btn" && (
-            <img src={HomeIcon} alt="Home Icon" />
-          )}
-          {buttonText === "View Form Btn" && (
-            <img src={UserIcon} alt="User Icon" />
-          )}
-        </Col>
-      </Row>
-
-      <Row className="page_body appcaint">
-        <Col md={10} className="bg-grey">
-          <Row className="appcaint_head">
-            <img
-              src={Global}
-              alt="Global"
-              style={{ width: "32px", height: "32px", padding: "0" }}
-            />
-            <Col className="app_leftinfo">
-              <h5>{jobPostData?.job_title}</h5>
-              <p>
-                {jobPostData?.job_company?.company_name},{" "}
-                {jobPostData?.job_company?.location}, {jobPostData?.job_type}
-                {""},{jobPostData?.workplace_type}
-              </p>
-              <div className="d-flex flex-wrap">
-                <p>{jobPostData?.job_location?.location_name}</p>
-                <p>
-                  {jobPostData?.currency} {jobPostData?.min_salary} -{" "}
-                  {jobPostData?.max_salary}
-                  {jobPostData?.salary_type}
-                </p>
-                <p>
-                  {jobPostData?.min_exp} - {jobPostData?.max_exp} years
-                </p>
-                <p>{jobPostData?.job_company?.number_of_employees}</p>
-              </div>
-            </Col>
-            <Col className="app_rightinfo">
-              <div className="d-flex flex-wrap align-items-center">
-                {/* <img
-                  src={Share}
-                  alt="Global"
-                  style={{ width: "60px", height: "40px" }}
-                  onClick={toggleModal}
-                /> */}
-                <button
-                  type="button"
-                  className="btn-link"
-                  onClick={toggleModal}
-                >
-                  <img src={Share} alt="Global" />
-                </button>
-                {/* <img
-                  src={Download}
-                  alt="Global"
-                  style={{ width: "60px", height: "40px" }}
-                /> */}
-
-                <button type="button" className="btn-link">
-                  <img src={Download} alt="Global" />
-                </button>
-                <button type="button" className="btn-link">
-                  <i className="far fa-file"></i>
-                </button>
-                <div className="d-flex gap-3 ms-3">
-                  <Button variant="light" disabled={jobPostErrorMsg}>
-                    Not for Me
-                  </Button>
-                  <Button
-                    variant="primary"
-                    onClick={() => handleBtns(buttonText)}
-                    disabled={jobPostErrorMsg || buttonText === "View"}
-                  >
-                    {buttonText}
-                  </Button>
-                </div>
-                {jobPostErrorMsg && <p className="error">{jobPostErrorMsg}</p>}
-              </div>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col md={8}>
-              <div className="card">
-                <div className="card-body">
-                  <h5 className="card-title">Job Description</h5>
-                  <p className="card-text">
-                    {jobPostData?.detailed_description}
-                  </p>
-                </div>
-              </div>
-            </Col>
-
-            <Col md={4}>
-              <div className="card jobdetails">
-                <div className="card-body">
-                  <h5 className="card-title">Job Details</h5>
-                  {jobDetailsList.map((item) => {
-                    return (
-                      <ul className="list">
-                        <li>
-                          <p className="mb-0">{item.tittle}</p>
-                          <p className="mb-0 text-end">{item.value}</p>{" "}
-                        </li>
-                      </ul>
-                    );
-                  })}
-                </div>
-              </div>
-            </Col>
-            <Col className="mt-3 mb-3">
-              <div className="card">
-                <div className="card-body">
-                  <h5 className="card-title">About the Company</h5>
-                
-
-                  <Row className="appcaint_head">
-                    <img
-                      src={Global}
-                      alt="Global"
-                      style={{ width: "32px", height: "32px", padding: "0" }}
-                    />
-                    <Col className="app_leftinfo">
-                      <h6>{jobPostData?.job_company?.company_name} </h6>
-                      <p>
-                        {jobPostData?.job_company?.location},{" "}
-                        {jobPostData?.job_type}
-                        {""},{jobPostData?.workplace_type}
-                      </p>
-                      <div className="d-flex flex-wrap">
-                        <p>{jobPostData?.job_location?.location_name}</p>
-                        <p>
-                          {jobPostData?.currency} {jobPostData?.min_salary} -{" "}
-                          {jobPostData?.max_salary}
-                          {jobPostData?.salary_type}
-                        </p>
-                        <p>
-                          {jobPostData?.min_exp} - {jobPostData?.max_exp} years
-                        </p>
-                        <p>{jobPostData?.job_company?.number_of_employees}</p>
-                      </div>
-                      <p className="card-text">
-                        {jobPostData?.detailed_description}
-                      </p>
-                    </Col>
-                  </Row>
-                </div>
-              </div>
-            </Col>
-          </Row>
-        </Col>
-        <Col
-          md={2}
-          className="bg-white app_rightsdbr"
-          style={{ position: "relative" }}
-        >
-          <div className="d-flex justify-content-center mt-1">
-            <Button
-              variant="outline-dark"
-              onClick={() => handleShowModal("second")}
-            >
-              <img src={InfoCircle} className="me-1" />
-              About our Process
-            </Button>
-          </div>
-          <h6>Your Progress</h6>
-          <div className="progress_box">
-            <h5>
-              <span className="bg_circle"></span>Profile Details
-            </h5>
-            {(buttonText == "View Form Btn" && <p>Completed</p>) ||
-              (buttonText == "Continue Btn" && <p>Pending</p>)}
-            <Button
-              variant="primary"
-              size="lg"
-              disabled={jobPostErrorMsg}
-              onClick={() => handleBtns(buttonText)}
-            >
-              {buttonText}
-            </Button>
-          </div>
-
-          <div style={{ border: "1px solid #000", padding: 12 }}>
-            <p>Behavioural Assessment</p>
-            <p>
-              {Number(localStorage.getItem('AttemptStatus')) < 28 && 'Pending'}
-              {Number(localStorage.getItem('AttemptStatus')) === 28 && 'Completed'}
-            </p>
-            <Button
-              variant="primary"
-              size="lg"
-              // disabled={buttonText == "View"?false:true}
-              onClick={() => {
-                if (Number(localStorage.getItem('AttemptStatus')) < 28 || Number(localStorage.getItem('AttemptStatus')) === 0) {
-                  navigate('/Behavioural-Assessment')
-                }else if(Number(localStorage.getItem('AttemptStatus')) === 28){
-                  navigate('/Behaviour-Assessment-Report')
-                }
-              }}
-            >
-              {Number(localStorage.getItem('AttemptStatus')) > 0 && Number(localStorage.getItem('AttemptStatus')) < 28 && 'Continue'}
-              {Number(localStorage.getItem('AttemptStatus')) === 28 && 'View'}
-              {Number(localStorage.getItem('AttemptStatus')) === 0 && 'Start'}
-            </Button>
-          </div>
-
-          <div>
-            <div
-              style={{
-                position: "absolute",
-                bottom: "20px",
-                right: "20px",
-              }}
-            >
-              <img src={Chat} onClick={() => handleShowModal("chatModal")} />
-            </div>
-          </div>
-        </Col>
-      </Row>
-
-      {jobPostData ? (
-        <ApplicationJobPostModal
-          show={modalOpen.showFirstModal}
-          handleClose={handleCloseModals}
-          jobPostData={jobPostData}
-          updateButtonText={updateButtonText}
-          registerdUserLoginDetails={handleEmailId}
-        //viewDetailData={viewDetailData}
-        />
-      ) : (
-        <p>Loading...</p>
-      )}
-
-      <ChatModal
-        show={modalOpen.showChatModal}
-        handleClose={handleCloseModals}
-      />
-
-      <AboutLywoModal
-        show={modalOpen.showSecondModal}
-        handleClose={handleCloseModals}
-      />
-
+  const handleShareModal = () => {
+    return (
       <Modal show={showModal} onHide={toggleModal}>
         <Modal.Header closeButton>
           <Modal.Title>
@@ -736,12 +446,17 @@ const JobPosts = () => {
           </Button>
           <Button
             variant="primary"
-          // onClick={handleCloseModals}
+            // onClick={handleCloseModals}
           >
             Share
           </Button>
         </Modal.Footer>
       </Modal>
+    );
+  };
+
+  const ViewProfileFormDetailsModal = () => {
+    return (
       <div>
         <Modal
           show={modalOpen.showProfileViewDetailsModal}
@@ -785,11 +500,11 @@ const JobPosts = () => {
                   <Col md={6}>Language </Col>
                   <Col md={6}>Hindi, English, Telugu</Col>
                   <Col md={6}>Current Location</Col>
-                  <Col md={6}>{viewDetailData?.current_location}</Col>
+                  {/* <Col md={6}>{viewDetailData?.current_location}</Col> */}
                   <Col md={6}>Skills</Col>
-                  {viewDetailData?.applicant_profile_job?.[0]?.job_applicant_skill.map(
-                    (item) => console.log("i----->>>>", item)
-                  )}
+                  {/* {viewDetailData?.applicant_profile_job?.[0]?.job_applicant_skill.map(
+                  (item) => console.log("i----->>>>", item)
+                )} */}
                   <Col md={6}>
                     Microsoft Office, PowerPoint, Java, C#, Leadership, Database
                     Management, Product Development, Mongo DB, .Net,
@@ -807,6 +522,308 @@ const JobPosts = () => {
           </Modal.Footer>
         </Modal>
       </div>
+    );
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target) &&
+        emailInput
+      ) {
+        addEmailOnBlur();
+      }
+    };
+
+    if (showModal) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [emailInput, showModal]);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [showModal]);
+
+  useEffect(() => {
+    const applicantProfileData = JSON.parse(
+      localStorage.getItem("applicantProfileData")
+    );
+    if (applicantProfileData) {
+      setRegisterdUserLoginDetails(applicantProfileData);
+    }
+  }, []);
+
+  useEffect(() => {
+    GetJobPostWithId();
+  }, [id]);
+
+  // console.log("viewDetailData----->>>>>",viewDetailData)
+
+  return (
+    <Container fluid className="applicat_flow">
+      <Row className="page_header">
+        <Col className="d-flex align-items-center">
+          <img src={Logo} alt="Logo Icon" />
+          <h6 className="mx-3 pagetitle">
+            Job Application <strong>{jobPostData?.job_title}</strong>
+          </h6>
+        </Col>
+        <Col className="d-flex justify-content-md-end">
+          {buttonText === "Apply Now" && <img src={Logout} alt="Logout Icon" />}
+
+          {buttonText === "Continue Btn" && (
+            <img src={HomeIcon} alt="Home Icon" />
+          )}
+          {buttonText === "View Form Btn" && (
+            <img src={UserIcon} alt="User Icon" />
+          )}
+        </Col>
+      </Row>
+
+      <Row className="page_body appcaint">
+        <Col md={10} className="bg-grey">
+          <Row className="appcaint_head">
+            <img
+              src={
+                jobPostData?.job_company?.logo
+                  ? `https://bittrend.shubansoftware.com${jobPostData?.job_company?.logo}`
+                  : Global
+              }
+              alt="Global"
+              style={{ width: "32px", height: "32px", padding: "0" }}
+            />
+            <Col className="app_leftinfo">
+              <h5>{jobPostData?.job_title}</h5>
+              <p>
+                {jobPostData?.job_company?.company_name},{" "}
+                {/* {jobPostData?.job_company?.location}, */}
+                {jobPostData?.job_type}
+                {""},{jobPostData?.workplace_type}
+              </p>
+              <div className="d-flex flex-wrap">
+                {/* <p>{jobPostData?.job_location?.location_name || ""}</p> */}
+                <p>
+                  {jobPostData?.currency} {jobPostData?.min_salary} -{" "}
+                  {jobPostData?.max_salary}
+                  {jobPostData?.salary_type}
+                </p>
+                <p>
+                  {jobPostData?.min_exp} - {jobPostData?.max_exp} years
+                </p>
+                <p>{jobPostData?.job_company?.number_of_employees}</p>
+              </div>
+            </Col>
+            <Col className="app_rightinfo">
+              <div className="d-flex flex-wrap align-items-center">
+                <button
+                  type="button"
+                  className="btn-link"
+                  onClick={toggleModal}
+                >
+                  <img src={Share} alt="Global" />
+                </button>
+
+                <button type="button" className="btn-link">
+                  <img src={Download} alt="Global" />
+                </button>
+                <button type="button" className="btn-link">
+                  <i className="far fa-file"></i>
+                </button>
+                <div className="d-flex gap-3 ms-3">
+                  <Button variant="light" disabled={jobPostErrorMsg}>
+                    Not for Me
+                  </Button>
+                  <Button
+                    variant="primary"
+                    onClick={() => handleBtns(buttonText)}
+                    disabled={jobPostErrorMsg || buttonText === "View"}
+                  >
+                    {buttonText}
+                  </Button>
+                </div>
+                {jobPostErrorMsg && <p className="error">{jobPostErrorMsg}</p>}
+              </div>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col md={8}>
+              <div className="card">
+                <div className="card-body">
+                  <h5 className="card-title">Job Description</h5>
+                  <p className="card-text">
+                    {jobPostData?.detailed_description}
+                  </p>
+                </div>
+              </div>
+            </Col>
+
+            <Col md={4}>
+              <div className="card jobdetails">
+                <div className="card-body">
+                  <h5 className="card-title">Job Details</h5>
+                  {jobDetailsList.map((item) => {
+                    return (
+                      <ul className="list">
+                        <li>
+                          <p className="mb-0">{item.tittle}</p>
+                          <p className="mb-0 text-end">{item.value}</p>{" "}
+                        </li>
+                      </ul>
+                    );
+                  })}
+                </div>
+              </div>
+            </Col>
+            <Col className="mt-3 mb-3">
+              <div className="card">
+                <div className="card-body">
+                  <h5 className="card-title">About the Company</h5>
+
+                  <Row className="appcaint_head">
+                    <img
+                      src={
+                        jobPostData?.job_company?.logo
+                          ? `https://bittrend.shubansoftware.com${jobPostData?.job_company?.logo}`
+                          : Global
+                      }
+                      alt="Global"
+                      style={{ width: "32px", height: "32px", padding: "0" }}
+                    />
+                    <Col className="app_leftinfo">
+                      <h6>{jobPostData?.job_company?.company_name || ""} </h6>
+                      <p>
+                        {/* {jobPostData?.job_company?.location},{" "} */}
+                        {jobPostData?.job_type}
+                        {""},{jobPostData?.workplace_type}
+                      </p>
+                      <div className="d-flex flex-wrap">
+                        {/* <p>{jobPostData?.job_location?.location_name || ""}</p> */}
+                        <p>
+                          {jobPostData?.currency} {jobPostData?.min_salary} -{" "}
+                          {jobPostData?.max_salary}
+                          {jobPostData?.salary_type}
+                        </p>
+                        <p>
+                          {jobPostData?.min_exp} - {jobPostData?.max_exp} years
+                        </p>
+                        <p>{jobPostData?.job_company?.number_of_employees}</p>
+                      </div>
+                      <p className="card-text">
+                        {jobPostData?.detailed_description}
+                      </p>
+                    </Col>
+                  </Row>
+                </div>
+              </div>
+            </Col>
+          </Row>
+        </Col>
+
+        <Col
+          md={2}
+          className="bg-white app_rightsdbr"
+          style={{ position: "relative" }}
+        >
+          <div className="d-flex justify-content-center mt-1">
+            <Button
+              variant="outline-dark"
+              onClick={() => handleShowModal("second")}
+            >
+              <img src={InfoCircle} className="me-1" />
+              About our Process
+            </Button>
+          </div>
+          <h6>Your Progress</h6>
+          <div className="progress_box">
+            <h5>
+              <span className="bg_circle"></span>Profile Details
+            </h5>
+            {(buttonText == "View Form Btn" && <p>Completed</p>) ||
+              (buttonText == "Continue Btn" && <p>Pending</p>)}
+            <Button
+              variant="primary"
+              size="lg"
+              disabled={jobPostErrorMsg}
+              onClick={() => handleBtns(buttonText)}
+            >
+              {buttonText}
+            </Button>
+          </div>
+
+          <div style={{ border: "1px solid #000", padding: 12 }}>
+            <p>Behavioural Assessment</p>
+            <p>
+              {Number(localStorage.getItem("AttemptStatus")) < 28 && "Pending"}
+              {Number(localStorage.getItem("AttemptStatus")) === 28 &&
+                "Completed"}
+            </p>
+            <Button
+              variant="primary"
+              size="lg"
+              onClick={() => {
+                if (
+                  Number(localStorage.getItem("AttemptStatus")) < 28 ||
+                  Number(localStorage.getItem("AttemptStatus")) === 0
+                ) {
+                  navigate("/Behavioural-Assessment");
+                } else if (
+                  Number(localStorage.getItem("AttemptStatus")) === 28
+                ) {
+                  navigate("/Behaviour-Assessment-Report");
+                }
+              }}
+            >
+              {Number(localStorage.getItem("AttemptStatus")) > 0 &&
+                Number(localStorage.getItem("AttemptStatus")) < 28 &&
+                "Continue"}
+              {Number(localStorage.getItem("AttemptStatus")) === 28 && "View"}
+              {Number(localStorage.getItem("AttemptStatus")) === 0 && "Start"}
+            </Button>
+          </div>
+
+          <div>
+            <div
+              style={{
+                position: "absolute",
+                bottom: "20px",
+                right: "20px",
+              }}
+            >
+              <img src={Chat} onClick={() => handleShowModal("chatModal")} />
+            </div>
+          </div>
+        </Col>
+      </Row>
+
+      {jobPostData ? (
+        <ApplicationJobPostModal
+          show={modalOpen.showFirstModal}
+          handleClose={handleCloseModals}
+          jobPostData={jobPostData}
+          updateButtonText={updateButtonText}
+          registerdUserLoginDetails={handleEmailId}
+        />
+      ) : (
+        <p>Loading...</p>
+      )}
+
+      <ChatModal
+        show={modalOpen.showChatModal}
+        handleClose={handleCloseModals}
+      />
+
+      <AboutLywoModal
+        show={modalOpen.showSecondModal}
+        handleClose={handleCloseModals}
+      />
+      {handleShareModal()}
+      {ViewProfileFormDetailsModal()}
     </Container>
   );
 };
