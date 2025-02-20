@@ -34,6 +34,7 @@ const ApplicationJobPostModal = ({
   const [isYes, setIsYes] = useState({
     CurrentlyWorkingToggle: false,
     NoticeBuyOutToggle: false,
+    willingToTeavelJob: false
   });
   const [ResumeFile, setResumeFile] = useState(null);
   const [ResumeFileName, setResumeFileName] = useState("");
@@ -294,6 +295,7 @@ const ApplicationJobPostModal = ({
       formdata.append("currently_working", isYes?.CurrentlyWorkingToggle);
       formdata.append("notice_period", profileformData?.NoticePeriod);
       formdata.append("notice_buyout_available", isYes?.NoticeBuyOutToggle);
+      formdata.append("willing_to_travel_for_job", isYes?.willingToTeavelJob);
       formdata.append(
         "applicant_status",
         validationEnable ? "Completed" : "Draft"
@@ -1062,6 +1064,47 @@ const ApplicationJobPostModal = ({
                           }}
                         >
                           {isYes?.NoticeBuyOutToggle ? "Yes" : "Yes"}
+                        </Form.Label>
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
+
+                <Row className="mb-3 mt-2">
+                  <Col md={2}>
+                    <Form.Label>Willing to Travel for Job?</Form.Label>
+                  </Col>
+
+                  <Col>
+                    <Row className="align-items-center">
+                      <Col xs="auto">
+                        <Form.Label
+                          style={{
+                            color: isYes?.willingToTeavelJob ? "grey" : "black",
+                          }}
+                        >
+                          {!isYes?.willingToTeavelJob ? "No" : "No"}
+                        </Form.Label>
+                      </Col>
+
+                      <Col xs="auto">
+                        <Form.Check
+                          type="switch"
+                          id="custom-switch"
+                          checked={isYes?.willingToTeavelJob}
+                          onChange={() =>
+                            handleSwitchChange("willingToTeavelJob")
+                          }
+                        />
+                      </Col>
+
+                      <Col xs="auto">
+                        <Form.Label
+                          style={{
+                            color: isYes?.willingToTeavelJob ? "black" : "grey",
+                          }}
+                        >
+                          {isYes?.willingToTeavelJob ? "Yes" : "Yes"}
                         </Form.Label>
                       </Col>
                     </Row>
