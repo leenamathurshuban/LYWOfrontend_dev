@@ -3871,9 +3871,21 @@ select.h-36.form-select {
   margin-bottom: 8px;
 }
 .appcaint .jobdetails .list li p {
-  font-size: 12px;
+  font-size: 13px;
   line-height: 18px;
   color: #344054;
+  font-weight: 500;
+}
+.appcaint .jobdetails .list li p.title {
+  letter-spacing: 4%;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  min-width: 130px;
+  font-size: 12px;
+}
+.appcaint .jobdetails .list li p img {
+  margin-right: 5px;
 }
 
 .app_rightsdbr {
@@ -3894,6 +3906,17 @@ select.h-36.form-select {
   border: solid 1px #EAECF0;
   padding: 14px;
   border-radius: 8px;
+  margin-bottom: 32px;
+  position: relative;
+}
+.app_rightsdbr .progress_box::after {
+  content: "";
+  background-color: #EAECF0;
+  height: 32px;
+  width: 2px;
+  position: absolute;
+  bottom: -32px;
+  left: 50%;
 }
 .app_rightsdbr .progress_box h5 {
   color: #D0D5DD;
@@ -3904,11 +3927,11 @@ select.h-36.form-select {
   margin-bottom: 8px;
 }
 .app_rightsdbr .progress_box h5 .bg_circle {
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   background-color: #F2F4F7;
   border-radius: 50%;
-  margin-right: 5px;
+  margin-right: 4px;
   display: inline-block;
 }
 .app_rightsdbr .progress_box .btn-primary {
@@ -3952,4 +3975,82 @@ select.h-36.form-select {
 
 .invalid-feedback {
   font-size: 12px;
+}
+
+.mx-w350 {
+  max-width: 350px;
+}
+
+.jobpost_view .jobMain_panel {
+  width: 70%;
+  margin-right: 16%;
+}
+.jobpost_view .form_table {
+  width: 100%;
+}
+.jobpost_view .form_table thead tr td {
+  font-family: Inter;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 18px;
+  color: #475467;
+  border-bottom: solid 1px #EAECF0;
+  padding: 8px;
+}
+.jobpost_view .form_table tbody td {
+  padding: 8px 10px;
+}
+.jobpost_view .form_table .form-select, .jobpost_view .form_table .form-control {
+  font-size: 12px;
+  min-height: 34px;
+}
+.jobpost_view .font-sm.btn {
+  font-weight: 600;
+}
+.jobpost_view label.form-check-label {
+  font-size: 13px;
+}
+.jobpost_view .skill-tag {
+  padding: 4px 10px;
+  border-radius: 16px;
+  border-width: 1px;
+  mix-blend-mode: Multiply;
+  font-family: Inter;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  text-align: center;
+  border: solid 1px #EAECF0;
+  margin: 4px 4px 4px 0;
+  display: inline-block;
+  cursor: pointer;
+}
+.jobpost_view .skill-tag.selected {
+  border-color: #6172F3;
+  background-color: #F5F8FF;
+  color: #1D2939;
+}
+.jobpost_view .modal-footer {
+  position: fixed;
+  bottom: 0;
+  background-color: white;
+  width: 100%;
+  justify-content: center;
+  border-color: #EAECF0;
+  padding: 10px;
+}
+.jobpost_view .modal-footer .btn {
+  font-size: 13px;
+  margin: 0 8px;
+}
+
+.btn-transpant {
+  background-color: transparent;
+  border: none;
+}
+
+.strong-label {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: capitalize;
 }/*# sourceMappingURL=main.css.map */

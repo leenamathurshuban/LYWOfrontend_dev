@@ -20,17 +20,12 @@ import BehaviouralAst from "../screens/BehaviourAss/BehaviouralAst";
 import BehaviourAssReport from "../screens/BehaviourAss/BehaviourAssReport";
 import Protected from "./protected";
 
-import Publicroute from "../screens/PublicRoutes/Publicroute";
 
 export const router = createBrowserRouter([
-  // {
-  //   path: "/publicroute",
-  //   element: <Publicroute />
-  // },
-
+ 
   {
-    // path: "/JobPosts",
-    path: "/JobPosts/:id",
+    path: "/JobPosts",
+    // path: "/JobPosts/:id",
     element: <JobPosts />
   },
 
@@ -39,8 +34,8 @@ export const router = createBrowserRouter([
     element: (
       <ProtectedRoute
         element={<EmailVerify />}
-        allowAuthenticated={true} // Prevent authenticated users from accessing this route
-        redirectTo="/" // Redirect to the protected route if authenticated
+        allowAuthenticated={true} 
+        redirectTo="/" 
       />
     ),
   },
@@ -49,8 +44,8 @@ export const router = createBrowserRouter([
     element: (
       <ProtectedRoute
         element={<OtpVerifyContainer />}
-        allowAuthenticated={true} // Prevent authenticated users from accessing this route
-        redirectTo="/" // Redirect to the protected route if authenticated
+        allowAuthenticated={true} 
+        redirectTo="/"
       />
     ),
   },
@@ -59,8 +54,8 @@ export const router = createBrowserRouter([
     element: (
       <ProtectedRoute
         element={<SetPassword />}
-        allowAuthenticated={true} // Prevent authenticated users from accessing this route
-        redirectTo="/" // Redirect to the protected route if authenticated
+        allowAuthenticated={true} 
+        redirectTo="/"
       />
     ),
   },
@@ -69,8 +64,8 @@ export const router = createBrowserRouter([
     element: (
       <ProtectedRoute
         element={<EmailPasswordVerifyContainer />}
-        allowAuthenticated={true} // Prevent authenticated users from accessing this route
-        redirectTo="/" // Redirect to the protected route if authenticated
+        allowAuthenticated={true} 
+        redirectTo="/"
       />
     ),
   },

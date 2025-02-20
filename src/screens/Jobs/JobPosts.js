@@ -9,6 +9,7 @@ import {
   Modal,
   OverlayTrigger,
   Row,
+  Spinner,
   Tooltip,
 } from "react-bootstrap";
 import { useParams } from "react-router-dom";
@@ -31,7 +32,18 @@ import ChatModal from "../../components/CustomModals/ChatModal";
 import { removeToken } from "../../helpers/helper";
 import { useNavigate } from "react-router-dom";
 import Logout from "../../images/icons/Logout.png";
-
+import jobRoal from "../../images/icons/job-role.svg";
+import jobLike from "../../images/icons/job-like.svg";
+import jobExp from "../../images/icons/job-expe.svg";
+import jobDivision from "../../images/icons/job-division.svg";
+import jobDepart from "../../images/icons/job-depart.svg";
+import jobSkills from "../../images/icons/job-skills.svg";
+import jobEducation from "../../images/icons/job-education.svg";
+import jobArea from "../../images/icons/job-area.svg";
+import jobType from "../../images/icons/job-type.svg";
+import jobWorktype from "../../images/icons/job-worktype.svg";
+import InfoTravel from "../../images/icons/job-travel.svg";
+import InfoLanguage from "../../images/icons/job-language.svg";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 
 const JobPosts = () => {
@@ -55,6 +67,7 @@ const JobPosts = () => {
   const [registerdUserLoginDetails, setRegisterdUserLoginDetails] =
     useState(null);
   const [viewDetailData, setViewDetailData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const inputRef = useRef(null);
   const containerRef = useRef(null);
@@ -104,19 +117,21 @@ const JobPosts = () => {
   };
 
   const GetJobPostWithId = async () => {
+    setIsLoading(true);
     try {
-      const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/${id}`;
+      // const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/${id}`;
       // const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/NDFhZGM5ZWQyZg/`;
       // const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/ZTEwZmFlZmFiYw/`;
-      // const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/Zjg3YmExYzlmMA/`;
+      const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/Zjg3YmExYzlmMA/`;
       // const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/ODE2YWNmZjgwZg/`;
       const data = await getPostJobIdApi(url);
       // console.log("api datatt----->>>>>>", JSON.stringify(data?.response));
-
+      setIsLoading(false);
       setJobPostData(data?.response);
       setLink(data?.data?.response?.job_link);
     } catch (error) {
       if (error.response) {
+        setIsLoading(false);
         if (error.response.status === 400) {
           const message = error.response.data.message;
           setJobPostErrorMsg(message);
@@ -260,10 +275,10 @@ const JobPosts = () => {
 
     if (buttonText === "Apply Now") {
       handleShowModal("first");
-    } else if (buttonText === "Continue Btn") {
+    } else if (buttonText === "Continue") {
       handleShowModal("first");
       handleViewDetailsAPi(userEmail);
-    } else if (buttonText === "View Form Btn") {
+    } else if (buttonText === "View") {
       handleShowModal("showProfileViewDetailsModal");
       if (userEmail) {
         handleViewDetailsAPi(userEmail);
@@ -566,6 +581,11 @@ const JobPosts = () => {
 
   return (
     <Container fluid className="applicat_flow">
+      {isLoading && (
+        <div className="loader-overlay">
+          <Spinner animation="border" role="status" className="ml-3" />
+        </div>
+      )}
       <Row className="page_header">
         <Col className="d-flex align-items-center">
           <img src={Logo} alt="Logo Icon" />
@@ -576,12 +596,8 @@ const JobPosts = () => {
         <Col className="d-flex justify-content-md-end">
           {buttonText === "Apply Now" && <img src={Logout} alt="Logout Icon" />}
 
-          {buttonText === "Continue Btn" && (
-            <img src={HomeIcon} alt="Home Icon" />
-          )}
-          {buttonText === "View Form Btn" && (
-            <img src={UserIcon} alt="User Icon" />
-          )}
+          {buttonText === "Continue" && <img src={HomeIcon} alt="Home Icon" />}
+          {buttonText === "View" && <img src={UserIcon} alt="User Icon" />}
         </Col>
       </Row>
 
@@ -671,7 +687,10 @@ const JobPosts = () => {
                     return (
                       <ul className="list">
                         <li>
-                          <p className="mb-0">{item.tittle}</p>
+                          <p className="mb-0 title">
+                            <img src={jobRoal} />
+                            {item.tittle}
+                          </p>
                           <p className="mb-0 text-end">{item.value}</p>{" "}
                         </li>
                       </ul>
@@ -744,8 +763,8 @@ const JobPosts = () => {
             <h5>
               <span className="bg_circle"></span>Profile Details
             </h5>
-            {(buttonText == "View Form Btn" && <p>Completed</p>) ||
-              (buttonText == "Continue Btn" && <p>Pending</p>)}
+            {(buttonText == "View" && <p>Completed</p>) ||
+              (buttonText == "Continue" && <p>Pending</p>)}
             <Button
               variant="primary"
               size="lg"
@@ -755,9 +774,10 @@ const JobPosts = () => {
               {buttonText}
             </Button>
           </div>
-
-          <div style={{ border: "1px solid #000", padding: 12 }}>
-            <p>Behavioural Assessment</p>
+          <div className="progress_box">
+            <h5>
+              <span className="bg_circle"></span>Behavioural Assessment
+            </h5>
             <p>
               {Number(localStorage.getItem("AttemptStatus")) < 28 && "Pending"}
               {Number(localStorage.getItem("AttemptStatus")) === 28 &&
