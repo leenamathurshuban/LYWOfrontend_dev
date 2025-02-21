@@ -24,8 +24,8 @@ import Protected from "./protected";
 export const router = createBrowserRouter([
  
   {
-    path: "/JobPosts",
-    // path: "/JobPosts/:id",
+    // path: "/JobPosts",
+    path: "/JobPosts/:id",
     element: <JobPosts />
   },
 
