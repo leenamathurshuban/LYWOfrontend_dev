@@ -2313,7 +2313,7 @@ select.h-36.form-select {
   padding: 18px;
   position: fixed;
   right: 0;
-  height: 100vh;
+  height: 0vh;
   width: 18%;
 }
 .jobpre_Rightpanel h5 {
@@ -3826,11 +3826,41 @@ select.h-36.form-select {
   text-transform: capitalize;
 }
 .appcaint_head .app_leftinfo p {
-  font-size: 13px;
+  font-size: 14px;
   color: #344054;
-  margin: 0;
+  margin: 0 0 5px 0;
   line-height: 20px;
   font-weight: 400;
+}
+.appcaint_head .app_leftinfo .localist {
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+.appcaint_head .app_leftinfo .localist li {
+  margin-right: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #344054;
+  list-style: none;
+  position: relative;
+}
+.appcaint_head .app_leftinfo .localist li::after {
+  content: "";
+  width: 4px;
+  height: 4px;
+  background-color: #D9D9D9;
+  border-radius: 50%;
+  position: absolute;
+  top: 7px;
+  left: -10px;
+}
+.appcaint_head .app_leftinfo .localist li:first-child::after {
+  content: inherit;
+}
+.appcaint_head .app_leftinfo .localist li img {
+  margin-right: 5px;
+  vertical-align: text-top;
 }
 .appcaint_head .app_rightinfo {
   justify-content: right;
@@ -3838,6 +3868,10 @@ select.h-36.form-select {
 }
 .appcaint_head .app_rightinfo .btn {
   font-size: 12px;
+}
+
+.about_comp .localist li {
+  font-weight: 400 !important;
 }
 
 .appcaint .card {

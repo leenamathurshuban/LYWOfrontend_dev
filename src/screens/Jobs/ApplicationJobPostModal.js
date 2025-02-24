@@ -1811,7 +1811,6 @@
 
 // export default ApplicationJobPostModal;
 
-
 //dinesh sir code 20 feb
 
 import React, { useEffect, useState } from "react";
@@ -1850,7 +1849,7 @@ const ApplicationJobPostModal = ({
   const [isYes, setIsYes] = useState({
     CurrentlyWorkingToggle: false,
     NoticeBuyOutToggle: false,
-    willingToTeavelJob: false
+    willingToTeavelJob: false,
   });
   const [ResumeFile, setResumeFile] = useState(null);
   const [ResumeFileName, setResumeFileName] = useState("");
@@ -1860,7 +1859,7 @@ const ApplicationJobPostModal = ({
   const [selectedSpokenLanguageUids, setSelectedSpokenLanguageUids] = useState(
     []
   );
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [selectedWrittenLanguageUids, setSelectedWrittenLanguageUids] =
     useState([]);
 
@@ -1871,6 +1870,7 @@ const ApplicationJobPostModal = ({
       gradYear: "",
       university: "",
       grade: "",
+      saved: false,
     },
   ]);
 
@@ -1883,6 +1883,7 @@ const ApplicationJobPostModal = ({
       WorkComapny: "",
       WorkIndustry: "",
       WorkNote: "",
+      savedWorkExp: false,
     },
   ]);
 
@@ -1960,6 +1961,14 @@ const ApplicationJobPostModal = ({
       return newState;
     });
   };
+  const groupedSkills = jobPostData?.skills?.reduce((acc, skill) => {
+    const groupName = skill?.skill_group?.skill_group_name;
+    if (!acc[groupName]) {
+      acc[groupName] = [];
+    }
+    acc[groupName].push(skill);
+    return acc;
+  }, {});
 
   const handleSkillSelect = (skill) => {
     if (selectedSkills.includes(skill.uid)) {
@@ -1974,6 +1983,26 @@ const ApplicationJobPostModal = ({
       }
     }
   };
+
+  const getSelectedSkillsNames = () => {
+    const selectedSkillNames = [];
+
+    selectedSkills.forEach((uid) => {
+      Object.keys(groupedSkills).forEach((groupName) => {
+        const skill = groupedSkills[groupName].find(
+          (skill) => skill.uid === uid
+        );
+        if (skill) {
+          selectedSkillNames.push(skill.skill_name);
+        }
+      });
+    });
+
+    return selectedSkillNames;
+  };
+
+  const selectedSkillsNames = getSelectedSkillsNames();
+  console.log("Selected Skill Names: ", selectedSkillsNames);
 
   const validateForProfileDetails = () => {
     const newErrors = {};
@@ -2054,7 +2083,7 @@ const ApplicationJobPostModal = ({
       [toggleName]: !prevState[toggleName],
     }));
   };
-  
+
   const handleFocus = (e) => {
     const { name } = e.target;
     setTouchedFields((prevTouched) => ({ ...prevTouched, [name]: true }));
@@ -2137,7 +2166,10 @@ const ApplicationJobPostModal = ({
       formdata.append("job_uid", jobPostData?.uid);
 
       formdata.append("skills", JSON.stringify(dataToSend));
-      formdata.append("question_answer_array", JSON.stringify(questionAnswerArray));
+      formdata.append(
+        "question_answer_array",
+        JSON.stringify(questionAnswerArray)
+      );
       const response = await axios.put(
         `https://bittrend.shubansoftware.com/assets-api/applicant-update-api/${storedApplicantId}/`,
         formdata,
@@ -2153,30 +2185,22 @@ const ApplicationJobPostModal = ({
           updateButtonText("View Form Btn");
           handleCloseModals();
           handleClose();
-        //   localStorage.setItem('applicantToken', ApplicantProfileData?.user_login?.access)
-        //   localStorage.setItem('applicantData',JSON.stringify(ApplicantProfileData?.applcant))
+          //   localStorage.setItem('applicantToken', ApplicantProfileData?.user_login?.access)
+          //   localStorage.setItem('applicantData',JSON.stringify(ApplicantProfileData?.applcant))
 
-        // navigate('/Behavioural-Assessment')
-
+          // navigate('/Behavioural-Assessment')
         }
-        
+
         // behaviour wala navigate hoga
         // const response = await ApplicationFormDetailsApi(
         //   formdata,
         //   ApplicantProfileData?.applcant?.uid
         // );
-
-
       }
     } catch (error) {
-      console.log(error)
-
+      console.log(error);
     }
-  }
-
-
-
-
+  };
 
   const handleSubmit = () => {
     if (!storedApplicantId) {
@@ -2194,8 +2218,6 @@ const ApplicationJobPostModal = ({
     }
     handleShowModal("SaveAsDraft");
   };
-
-  
 
   const handleButtonClick = () => setShowInput(!showInput);
 
@@ -2224,7 +2246,7 @@ const ApplicationJobPostModal = ({
     SetEducationRows(newRows);
   };
 
-  const saveQualificationData = async (row) => {
+  const saveQualificationData = async (row, index) => {
     try {
       if (!storedApplicantId) {
         alert("Please fill Profile Details");
@@ -2240,7 +2262,9 @@ const ApplicationJobPostModal = ({
       const response = await EducationQualificationApi(formdata);
 
       if (response.status === 200) {
-        console.log("Education Saved Successfully");
+        const newRows = [...EducationRows];
+        newRows[index].saved = true;
+        SetEducationRows(newRows);
       } else {
         console.error("Failed to save form: ", response.data);
         alert("There was an issue saving the form.");
@@ -2250,7 +2274,7 @@ const ApplicationJobPostModal = ({
     }
   };
 
-  const saveWorkExperienceData = async (row) => {
+  const saveWorkExperienceData = async (row, index) => {
     try {
       if (!storedApplicantId) {
         alert("Please fill Profile Details");
@@ -2270,6 +2294,9 @@ const ApplicationJobPostModal = ({
 
       if (response.status === 200) {
         console.log("Data added of work experience");
+        const newRows = [...WorkExpreienceRow];
+        newRows[index].savedWorkExp = true;
+        setWorkExpreienceRow(newRows);
       } else {
         console.error("Failed to save form: ", response.data);
         alert("There was an issue saving the form.");
@@ -2302,11 +2329,24 @@ const ApplicationJobPostModal = ({
 
   const handleWorkExpeienceChange = (index, e) => {
     const { name, value } = e.target;
-
     const newWorkRow = [...WorkExpreienceRow];
-
     newWorkRow[index][name] = value;
     setWorkExpreienceRow(newWorkRow);
+  };
+  const calculateWorkExperience = (fromDate, toDate) => {
+    const from = new Date(fromDate);
+    const to = new Date(toDate);
+
+    // Calculate the difference in years
+    const years = to.getFullYear() - from.getFullYear();
+    let months = to.getMonth() - from.getMonth();
+
+    // If months are negative, adjust the years and months
+    if (months < 0) {
+      months += 12; // Add 12 months to handle the negative value
+    }
+
+    return `${years} years, ${months} months`; // You can format it as needed
   };
 
   const onDrop = (acceptedFiles) => {
@@ -2342,15 +2382,6 @@ const ApplicationJobPostModal = ({
     setResumeFile(null);
   };
 
-  const groupedSkills = jobPostData?.skills?.reduce((acc, skill) => {
-    const groupName = skill?.skill_group?.skill_group_name;
-    if (!acc[groupName]) {
-      acc[groupName] = [];
-    }
-    acc[groupName].push(skill);
-    return acc;
-  }, {});
-
   const checkAllFieldsFilled = (rows) => {
     return rows.some((row) =>
       Object.values(row).every((fieldValue) => fieldValue !== "")
@@ -2370,6 +2401,24 @@ const ApplicationJobPostModal = ({
       setSelectedSpokenLanguageUids([...selectedSpokenLanguageUids, uid]);
     }
   };
+  const getSelectedSpokenLanguageNames = () => {
+    const selectedLanguageNames = [];
+
+    selectedSpokenLanguageUids.forEach((uid) => {
+      const language = jobPostData?.spoken_language?.find(
+        (lang) => lang.uid === uid
+      );
+      if (language) {
+        selectedLanguageNames.push(language.language_name);
+      }
+    });
+
+    return selectedLanguageNames;
+  };
+
+  const selectedSpokenLanguageNames = getSelectedSpokenLanguageNames();
+  console.log("Selected Language Names: ", selectedSpokenLanguageNames);
+
   const handleWrittenLanguageClick = (uid) => {
     if (selectedWrittenLanguageUids.includes(uid)) {
       setSelectedWrittenLanguageUids(
@@ -2380,7 +2429,25 @@ const ApplicationJobPostModal = ({
     }
   };
 
-  // question answer 
+  const getSelectedWrittenLanguageNames = () => {
+    const selectedLanguageNames = [];
+
+    selectedWrittenLanguageUids.forEach((uid) => {
+      const language = jobPostData?.read_write_language?.find(
+        (lang) => lang.uid === uid
+      );
+      if (language) {
+        selectedLanguageNames.push(language.language_name);
+      }
+    });
+
+    return selectedLanguageNames;
+  };
+
+  const getSelectedWrittenLanguageName = getSelectedWrittenLanguageNames();
+  console.log("Selected spokennnn Names: ", getSelectedWrittenLanguageName);
+
+  // question answer
   const handleAnswerChange = (questionUid, answer) => {
     setSelectedAnswers((prevState) => ({
       ...prevState,
@@ -2496,14 +2563,14 @@ const ApplicationJobPostModal = ({
     >
       <Modal.Header closeButton>
         <img src={logoIcon} className="me-4" />
-        <div className="modal-title h4">
-          {/* <h5>{jobPostData?.detailed_description}</h5> */}
-          
-            {jobPostData?.job_company?.company_name},{" "}
-            {/* {jobPostData?.job_company?.location},  */}
-            <span className="subtitle"> {jobPostData?.job_type}
-            {""},{jobPostData?.workplace_type}
-          </span>
+        <div>
+          <h6 className="mx-3 pagetitle">
+            Job Application <strong>{jobPostData?.job_title}</strong>
+          </h6>
+          <p>
+            {jobPostData?.job_location?.location_name},{jobPostData?.job_type} ,{" "}
+            {jobPostData?.workplace_type}
+          </p>
         </div>
       </Modal.Header>
       <Modal.Body className="p-0 bg-lightgray">
@@ -2514,11 +2581,12 @@ const ApplicationJobPostModal = ({
               <h6>Profile</h6>
               <ul className="checklist">
                 <li
-                  className={`${profileformData?.name &&
+                  className={`${
+                    profileformData?.name &&
                     profileformData?.email &&
                     profileformData?.phone &&
                     "active"
-                    }`}
+                  }`}
                 >
                   <a href="#item_salary">
                     Basic Details <i class="fa fa-check" aria-hidden="true"></i>
@@ -2531,12 +2599,13 @@ const ApplicationJobPostModal = ({
                   </a>
                 </li>
                 <li
-                  className={`${profileformData?.AvailableBy &&
+                  className={`${
+                    profileformData?.AvailableBy &&
                     isYes?.CurrentlyWorkingToggle &&
                     profileformData?.NoticePeriod &&
                     isYes?.NoticeBuyOutToggle &&
                     "active"
-                    }`}
+                  }`}
                 >
                   <a href="#item_Exp">
                     Availability <i class="fa fa-check" aria-hidden="true"></i>
@@ -2562,13 +2631,21 @@ const ApplicationJobPostModal = ({
                     Experience <i class="fa fa-check" aria-hidden="true"></i>
                   </a>
                 </li>
-                <li className={`${selectedSpokenLanguageUids.length && selectedWrittenLanguageUids.length && "active"}`}>
+                <li
+                  className={`${
+                    selectedSpokenLanguageUids.length &&
+                    selectedWrittenLanguageUids.length &&
+                    "active"
+                  }`}
+                >
                   <a href="#item_Geog">
                     Language <i class="fa fa-check" aria-hidden="true"></i>
                   </a>
                 </li>
 
-                <li className={`${profileformData?.CurrentLocation && "active"}`}>
+                <li
+                  className={`${profileformData?.CurrentLocation && "active"}`}
+                >
                   <a href="#item_Geog">
                     Geography <i class="fa fa-check" aria-hidden="true"></i>
                   </a>
@@ -2578,7 +2655,11 @@ const ApplicationJobPostModal = ({
                     Skills <i class="fa fa-check" aria-hidden="true"></i>
                   </a>
                 </li>
-                <li  className={Object.keys(selectedAnswers).length > 0 ? "active" : ""}>
+                <li
+                  className={
+                    Object.keys(selectedAnswers).length > 0 ? "active" : ""
+                  }
+                >
                   <a href="#item_Geog">
                     Custom Questions{" "}
                     <i class="fa fa-check" aria-hidden="true"></i>
@@ -2787,7 +2868,8 @@ const ApplicationJobPostModal = ({
                     <Row className="align-items-center">
                       {/* Left Label for "No" */}
                       <Col xs="auto">
-                        <Form.Label className="mb-0"
+                        <Form.Label
+                          className="mb-0"
                           style={{
                             color: isYes?.CurrentlyWorkingToggle
                               ? "grey"
@@ -2810,7 +2892,8 @@ const ApplicationJobPostModal = ({
                       </Col>
 
                       <Col xs="auto">
-                        <Form.Label className="mb-0"
+                        <Form.Label
+                          className="mb-0"
                           style={{
                             color: isYes?.CurrentlyWorkingToggle
                               ? "black"
@@ -2854,7 +2937,8 @@ const ApplicationJobPostModal = ({
                   <Col>
                     <Row className="align-items-center">
                       <Col xs="auto">
-                        <Form.Label className="mb-0"
+                        <Form.Label
+                          className="mb-0"
                           style={{
                             color: isYes?.NoticeBuyOutToggle ? "grey" : "black",
                           }}
@@ -2875,8 +2959,9 @@ const ApplicationJobPostModal = ({
                       </Col>
 
                       <Col xs="auto">
-                        <Form.Label className="mb-0"
-                          style={{ 
+                        <Form.Label
+                          className="mb-0"
+                          style={{
                             color: isYes?.NoticeBuyOutToggle ? "black" : "grey",
                           }}
                         >
@@ -2895,7 +2980,8 @@ const ApplicationJobPostModal = ({
                   <Col>
                     <Row className="align-items-center">
                       <Col xs="auto">
-                        <Form.Label className="mb-0"
+                        <Form.Label
+                          className="mb-0"
                           style={{
                             color: isYes?.willingToTeavelJob ? "grey" : "black",
                           }}
@@ -2916,7 +3002,8 @@ const ApplicationJobPostModal = ({
                       </Col>
 
                       <Col xs="auto">
-                        <Form.Label className="mb-0"
+                        <Form.Label
+                          className="mb-0"
                           style={{
                             color: isYes?.willingToTeavelJob ? "black" : "grey",
                           }}
@@ -2937,7 +3024,8 @@ const ApplicationJobPostModal = ({
                     <Form.Label>Expected Salary</Form.Label>
                   </Col>
                   <Col>
-                    <Form.Select className="form-control-sm mx-w350"
+                    <Form.Select
+                      className="form-control-sm mx-w350"
                       aria-label="Default select example"
                       name="ExpectedSalary"
                       value={profileformData?.ExpectedSalary}
@@ -2960,10 +3048,7 @@ const ApplicationJobPostModal = ({
               <div className="custom-card">
                 <h6>Educational Qualification</h6>
                 {EducationRows.map((row, index) => (
-                  <table
-                    className="mb-2 form_table"
-                    key={index}
-                  >
+                  <table className="mb-2 form_table" key={index}>
                     <thead>
                       <tr>
                         <td>Level</td>
@@ -2983,6 +3068,7 @@ const ApplicationJobPostModal = ({
                             onChange={(e) =>
                               handleEducationQualificationChange(index, e)
                             }
+                            disabled={row.saved}
                           >
                             <option>Level</option>
 
@@ -2994,11 +3080,13 @@ const ApplicationJobPostModal = ({
                             <option value="Diploma ">Diploma </option>
                             <option value="PG Diploma">PG Diploma</option>
                             <option value="PhD">PhD</option>
-                            <option value="Post Doctorate">Post Doctorate</option>
+                            <option value="Post Doctorate">
+                              Post Doctorate
+                            </option>
                           </Form.Select>
                         </td>
                         <td>
-                            <Form.Control
+                          <Form.Control
                             name="areaOfEducation"
                             type="text"
                             placeholder="9876543210"
@@ -3007,6 +3095,7 @@ const ApplicationJobPostModal = ({
                             onChange={(e) =>
                               handleEducationQualificationChange(index, e)
                             }
+                            disabled={row.saved}
                           />
                         </td>
                         <td>
@@ -3017,10 +3106,11 @@ const ApplicationJobPostModal = ({
                             onChange={(e) =>
                               handleEducationQualificationChange(index, e)
                             }
+                            disabled={row.saved}
                           />
                         </td>
                         <td>
-                            <Form.Control
+                          <Form.Control
                             name="university"
                             type="text"
                             placeholder="University"
@@ -3029,44 +3119,56 @@ const ApplicationJobPostModal = ({
                             onChange={(e) =>
                               handleEducationQualificationChange(index, e)
                             }
+                            disabled={row.saved}
                           />
                         </td>
                         <td>
-                        <Form.Control
-                          name="grade"
-                          type="text"
-                          placeholder="grade"
-                          size="sm"
-                          value={row.grade}
-                          onChange={(e) =>
-                            handleEducationQualificationChange(index, e)
-                          }
-                        />
-                        <Form.Select value={"GPA"}>
-                          <option>GPA</option>
-                        </Form.Select>
+                          <Form.Control
+                            name="grade"
+                            type="text"
+                            placeholder="grade"
+                            size="sm"
+                            value={row.grade}
+                            onChange={(e) =>
+                              handleEducationQualificationChange(index, e)
+                            }
+                            disabled={row.saved}
+                          />
+                          <Form.Select value={"GPA"}>
+                            <option>GPA</option>
+                          </Form.Select>
                         </td>
                         <td>
-                          <button type="button" className="btn-transpant" onClick={() => EducationdeleteRow(index)}>
-                              <img
+                          <button
+                            type="button"
+                            className="btn-transpant"
+                            onClick={() => EducationdeleteRow(index)}
+                          >
+                            <img
                               src={imgpTrash}
                               alt="Delete"
                               style={{ width: "20px", height: "20px" }}
                             />
                           </button>
                         </td>
+                        <td>
+                          {!row.saved && (
+                            <Button
+                              variant="link"
+                              className="p-0"
+                              onClick={() => saveQualificationData(row, index)}
+                            >
+                              Save
+                            </Button>
+                          )}
+                        </td>
                       </tr>
                     </tbody>
                   </table>
-                //    <Button
-                //    variant="link"
-                //    className="p-0"
-                //    onClick={() => saveQualificationData(row)}
-                //  >
-                //    Save
-                //  </Button>
                 ))}
-                <Button onClick={EducationAddRow} variant="link">+ Add</Button>
+                <Button onClick={EducationAddRow} variant="link">
+                  + Add
+                </Button>
               </div>
 
               <div className="custom-card">
@@ -3088,6 +3190,7 @@ const ApplicationJobPostModal = ({
                           value={row?.TotalWorkExperience}
                           name="TotalWorkExperience"
                           onChange={(e) => handleWorkExpeienceChange(index, e)}
+                          disabled={row.savedWorkExp}
                         />
                       </Col>
                     </Row>
@@ -3095,9 +3198,7 @@ const ApplicationJobPostModal = ({
                     <table className="mb-2 form_table">
                       <thead>
                         <tr>
-                          <td>
-                            Role
-                          </td>
+                          <td>Role</td>
                           <td>From</td>
                           <td>To</td>
                           <td>Company</td>
@@ -3110,65 +3211,123 @@ const ApplicationJobPostModal = ({
                         <tr>
                           <td>
                             <Form.Control
-                            type="text"
-                            placeholder="9876543210"
-                            size="sm"
-                            style={{ width: "150px" }}
-                            value={row?.WorkRole}
-                            name="WorkRole"
-                            onChange={(e) => handleWorkExpeienceChange(index, e)}
-                          />
+                              type="text"
+                              placeholder="9876543210"
+                              size="sm"
+                              style={{ width: "150px" }}
+                              value={row?.WorkRole}
+                              name="WorkRole"
+                              onChange={(e) =>
+                                handleWorkExpeienceChange(index, e)
+                              }
+                              disabled={row.savedWorkExp}
+                            />
                           </td>
                           <td>
-                              <Form.Control
+                            <Form.Control
                               placeholder="June 2019"
                               size="sm"
                               style={{ width: "150px" }}
                               type="date"
                               value={row?.WorkFrom}
                               name="WorkFrom"
-                              onChange={(e) => handleWorkExpeienceChange(index, e)}
+                              onChange={(e) =>
+                                handleWorkExpeienceChange(index, e)
+                              }
+                              disabled={row.savedWorkExp}
                             />
                           </td>
                           <td>
                             <Form.Control
-                            type="date"
-                            placeholder="May 2022"
-                            size="sm"
-                            style={{ width: "150px" }}
-                            value={row?.WorkTo}
-                            name="WorkTo"
-                            onChange={(e) => handleWorkExpeienceChange(index, e)}
-                          />
+                              type="date"
+                              placeholder="May 2022"
+                              size="sm"
+                              style={{ width: "150px" }}
+                              value={row?.WorkTo}
+                              name="WorkTo"
+                              onChange={(e) =>
+                                handleWorkExpeienceChange(index, e)
+                              }
+                              disabled={row.savedWorkExp}
+                            />
                           </td>
                           <td>
                             <Form.Control
-                            type="text"
-                            placeholder="9876543210"
-                            size="sm"
-                            style={{ width: "150px" }}
-                            value={row?.WorkComapny}
-                            name="WorkComapny"
-                            onChange={(e) => handleWorkExpeienceChange(index, e)}
-                          />
+                              type="text"
+                              placeholder="9876543210"
+                              size="sm"
+                              style={{ width: "150px" }}
+                              value={row?.WorkComapny}
+                              name="WorkComapny"
+                              onChange={(e) =>
+                                handleWorkExpeienceChange(index, e)
+                              }
+                              disabled={row.savedWorkExp}
+                            />
                           </td>
                           <td>
-                              <Form.Control
+                            <Form.Control
                               type="text"
                               placeholder="9876543210"
                               size="sm"
                               style={{ width: "150px" }}
                               name="WorkIndustry"
                               value={row?.WorkIndustry}
-                              onChange={(e) => handleWorkExpeienceChange(index, e)}
+                              onChange={(e) =>
+                                handleWorkExpeienceChange(index, e)
+                              }
+                              disabled={row.savedWorkExp}
                             />
                           </td>
+
                           <td>
-                            {showInput && (
+                            {!row.savedWorkExp && (
+                              <Button
+                                variant="link"
+                                className="p-1 font-sm"
+                                onClick={handleButtonClick}
+                              >
+                                <i className="far fa-file me-1"></i>
+                                Note
+                              </Button>
+                            )}
+
+                            <td>
+                              {!row.savedWorkExp && (
+                                <Button
+                                  variant="link"
+                                  className="p-0"
+                                  onClick={() =>
+                                    saveWorkExperienceData(row, index)
+                                  }
+                                >
+                                  Save
+                                </Button>
+                              )}
+                            </td>
+
+                            <Button
+                              variant="link"
+                              className="p-0"
+                              onClick={() => WorkExperienceDeleteRow(index)}
+                            >
+                              <img
+                                src={imgpTrash}
+                                alt="Delete"
+                                style={{ width: "20px", height: "20px" }}
+                              />
+                            </Button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colSpan={7}>
+                            {!row.savedWorkExp && showInput && (
                               <div style={{ marginTop: "10px" }}>
                                 <Form>
                                   <Form.Group controlId="noteInput">
-                                    <Form.Label>Note</Form.Label>
+                                    <Form.Label>
+                                      About your experience
+                                    </Form.Label>
                                     <Form.Control
                                       as="textarea"
                                       rows={3}
@@ -3183,36 +3342,10 @@ const ApplicationJobPostModal = ({
                                 </Form>
                               </div>
                             )}
-                          </td>
-                          <td>
-                          <Button
-                          variant="link"
-                          className="p-1 font-sm"
-                          onClick={handleButtonClick}
-                        >
-                          <i className="far fa-file me-1"></i>
-                          Note
-                        </Button>
 
-                        <Button
-                          variant="link"
-                          className="p-1 font-sm"
-                          onClick={() => saveWorkExperienceData(row)}
-                        >
-                          Save
-                        </Button>
-                        <Button
-                          variant="link"
-                          className="p-0"
-                          onClick={() => WorkExperienceDeleteRow(index)}
-                        >
-                          <img
-                          src={imgpTrash}
-                          alt="Delete"
-                          style={{ width: "20px", height: "20px" }}
-                          
-                        />
-                        </Button>
+                            {row.savedWorkExp && row?.WorkNote && (
+                              <p style={{ marginTop: "5px" }}>{row.WorkNote}</p>
+                            )}
                           </td>
                         </tr>
                       </tbody>
@@ -3220,52 +3353,53 @@ const ApplicationJobPostModal = ({
                   </div>
                 ))}
 
-                <Button variant="link" onClick={WorkExpreienceAddRow}>+ Add</Button>
+                <Button variant="link" onClick={WorkExpreienceAddRow}>
+                  + Add
+                </Button>
               </div>
 
               <div className="custom-card">
                 <h6 className="mb-0">Language</h6>
                 <p className="font-sm">Pick as many as possible</p>
 
-                  <Form.Group
-                    className="mb-3 row"
-                    controlId="exampleForm.ControlTextarea1"
-                  >
-                    <Form.Label className="sm-label col-md-3">
-                      Spoken Language
-                    </Form.Label>
-                     <div className="col-md-9">
-                      <div className="tagarea p-2">
-                        {jobPostData?.spoken_language?.map((item, index) => (
-                          <Badge
-                            key={index}
-                            bg={
-                              selectedSpokenLanguageUids.includes(item.uid)
-                                ? "primary"
-                                : "white"
-                            }
-                            className="me-2 mb-2 tag-white"
-                            onClick={() => handleSpokenLanguageClick(item.uid)}
-                            
-                          >
-                            {item?.language_name}
-                          </Badge>
-                        ))}
-                      </div>
-                     
+                <Form.Group
+                  className="mb-3 row"
+                  controlId="exampleForm.ControlTextarea1"
+                >
+                  <Form.Label className="sm-label col-md-3">
+                    Spoken Language
+                  </Form.Label>
+                  <div className="col-md-9">
+                    <div className="tagarea p-2">
+                      {jobPostData?.spoken_language?.map((item, index) => (
+                        <Badge
+                          key={index}
+                          bg={
+                            selectedSpokenLanguageUids.includes(item.uid)
+                              ? "primary"
+                              : "white"
+                          }
+                          className="me-2 mb-2 tag-white"
+                          onClick={() => handleSpokenLanguageClick(item.uid)}
+                        >
+                          {item?.language_name}
+                        </Badge>
+                      ))}
+                    </div>
+
                     <span className="required_text">
                       Select all spoken languages
                     </span>
-                    </div>
-                  </Form.Group>
-                  <Form.Group
-                    className="mb-3 row"
-                    controlId="exampleForm.ControlTextarea1"
-                  >
-                    <Form.Label className="sm-label col-md-3">
-                      Written and Reading Language
-                    </Form.Label>
-                    <div className="col-md-9">
+                  </div>
+                </Form.Group>
+                <Form.Group
+                  className="mb-3 row"
+                  controlId="exampleForm.ControlTextarea1"
+                >
+                  <Form.Label className="sm-label col-md-3">
+                    Written and Reading Language
+                  </Form.Label>
+                  <div className="col-md-9">
                     <div className="tagarea p-2">
                       {jobPostData?.read_write_language?.map((item, index) => (
                         <Badge
@@ -3285,9 +3419,8 @@ const ApplicationJobPostModal = ({
                     <span className="required_text">
                       Select all written and reading languages
                     </span>
-                    </div>
-                  </Form.Group>
-                
+                  </div>
+                </Form.Group>
               </div>
 
               <div className="custom-card">
@@ -3392,13 +3525,16 @@ const ApplicationJobPostModal = ({
 
                 {Object.keys(groupedSkills).map((groupName, index) => (
                   <div key={index} className="row mb-3">
-                    <strong className="col-md-3 strong-label">{groupName}</strong>
+                    <strong className="col-md-3 strong-label">
+                      {groupName}
+                    </strong>
                     <div className="col-md-9">
                       {groupedSkills[groupName].map((skill, idx) => (
                         <span
                           key={idx}
-                          className={`skill-tag mb-2 mr-2 ${selectedSkills.includes(skill.uid) ? "selected" : ""
-                            }`}
+                          className={`skill-tag mb-2 mr-2 ${
+                            selectedSkills.includes(skill.uid) ? "selected" : ""
+                          }`}
                           onClick={() => handleSkillSelect(skill)}
                         >
                           {skill?.skill_name}
@@ -3431,7 +3567,7 @@ const ApplicationJobPostModal = ({
                         />
                       ))}
 
-                    {item?.quiz_type === "Text" && (
+                    {/* {item?.quiz_type === "Text" && (
                       <Form.Control
                         type="text"
                         placeholder="Enter your answer"
@@ -3449,88 +3585,231 @@ const ApplicationJobPostModal = ({
                           id={`formCheckbox-${item.id}-${index}`}
                           className="mr-3"
                         />
-                      ))}
+                      ))} */}
                   </div>
                 ))}
               </div>
+             
             </Col>
             {/* Right Column */}
             <Col md={3} lg={2} className="jobpre_Rightpanel">
-              <div className="custom-card">
-                <h6>{profileformData?.name}</h6>
-                <p>{profileformData?.email}</p>
-                <p>{profileformData?.phone}</p>
-                <p>{ResumeFile?.name}</p>
-                <p>
-                  <strong>Availability</strong>
-                </p>
-                {profileformData?.AvailableBy ? (
-                  <p>{profileformData?.AvailableBy}</p>
-                ) : (
-                  <p className="error" style={{ color: "red" }}>
-                    Not defined
+            <div className="custom-card">
+                <div className="custom-card">
+                  <h6>{profileformData?.name}</h6>
+                  <p>{profileformData?.email}</p>
+                  <p>{profileformData?.phone}</p>
+                  <p>{ResumeFile?.name}</p>
+                  <p>
+                    <strong>Availability</strong>
                   </p>
-                )}
-                <p>{isYes?.CurrentlyWorkingToggle}</p>
-                <p>{profileformData?.NoticePeriod}</p>
-                <p>{isYes?.NoticeBuyOutToggle}</p>
-                <p>
-                  <strong>Salary</strong>
-                </p>
-                {profileformData?.ExpectedSalary ? (
-                  <p>{profileformData?.ExpectedSalary}</p>
-                ) : (
-                  <p className="error" style={{ color: "red" }}>
-                    Not defined
-                  </p>
-                )}
-                <p>
-                  <strong>Educational Qualification</strong>
-                </p>
-                {EducationRows.map((row, index) => (
-                  <div key={index}>
-                    <p>{row.level}</p>
-                    <p>{row.areaOfEducation}</p>
-                    <p>{row.gradYear}</p>
-                    <p>{row.university}</p>
-                    <p>{row.grade}</p>
-                  </div>
-                ))}
-                {EducationRows.length === 0 && (
-                  <p className="error" style={{ color: "red" }}>
-                    Not defined
-                  </p>
-                )}
-                <p>
-                  <strong>Work Experience : </strong>
-                </p>
-                {WorkExpreienceRow.map((row, index) => (
-                  <div key={index}>
-                    <p>{row.TotalWorkExperience}</p>
-                    <p>{row.WorkRole}</p>
-                    <p>{row.WorkFrom}</p>
-                    <p>{row.WorkTo}</p>
-                    <p>{row.WorkComapny}</p>
-                    <p>{row.WorkIndustry}</p>
-                    <p>{row.WorkNote}</p>
-                  </div>
-                ))}
-                <p>
-                  <strong>Language</strong>
-                </p>
-                {jobPostData?.spoken_language?.map((item) => (
-                  <p>{item.language_name}</p>
-                ))}
+                  {profileformData?.AvailableBy &&
+                  profileformData?.NoticePeriod ? (
+                    <>
+                      <p>Can join {profileformData?.AvailableBy}</p>
+                      <p>
+                        Currently Working{" "}
+                        {isYes?.CurrentlyWorkingToggle ? "Yes" : "No"}
+                      </p>
+                      <p>
+                        Notice period {profileformData?.NoticePeriod} notice
+                        period
+                      </p>
+                      <p>
+                        Buyout option available{" "}
+                        {isYes?.NoticeBuyOutToggle ? "Yes" : "No"}
+                      </p>
+                      <p>
+                        Willing to travel for job{" "}
+                        {isYes?.willingToTeavelJob ? "Yes" : "No"}
+                      </p>
+                    </>
+                  ) : (
+                    <p className="error" style={{ color: "red" }}>
+                      Not defined
+                    </p>
+                  )}
 
-                <p>
-                  <strong>Geography</strong>
-                </p>
-                <p>{profileformData?.CurrentLocation}</p>
+                  {profileformData?.ExpectedSalary ? (
+                    <strong>
+                      <p>{profileformData?.ExpectedSalary} Per Annum</p>
+                    </strong>
+                  ) : (
+                    <p>
+                      <strong>Expected Salary</strong>
+                      <p className="error" style={{ color: "red" }}>
+                        Not defined
+                      </p>
+                    </p>
+                  )}
+                  <p>
+                    <strong>Educational Qualification</strong>
+                  </p>
+                  {isAllEducationFieldsFilled &&
+                    EducationRows.map((row, index) => (
+                      <div key={index}>
+                        <p>
+                          {row.level} in {row.areaOfEducation}{" "}
+                        </p>
+                      </div>
+                    ))}
+                  {EducationRows.length < 0 && (
+                    <p className="error" style={{ color: "red" }}>
+                      Not defined
+                    </p>
+                  )}
+                  {!isAllEducationFieldsFilled && (
+                    <p className="error"> Not defined</p>
+                  )}
+
+                  <p>
+                    <strong>Work Experience</strong>
+                  </p>
+
+                  {isAllWorkExperienceFieldsFilled &&
+                    WorkExpreienceRow.map((row, index) => (
+                      <div key={index}>
+                        <strong>
+                          {" "}
+                          <p>{row.TotalWorkExperience} Experience </p>
+                        </strong>
+                        <p>{row.WorkRole}</p>
+                        <p>{row.WorkFrom}</p>
+                        <p>{row.WorkTo}</p>
+                        <p>{row.WorkComapny}</p>
+                        <p>{row.WorkIndustry}</p>
+                        <p>{row.WorkNote}</p>
+
+                        <p>
+                          Work Experience Duration{" "}
+                          {
+                            calculateWorkExperience(
+                              row.WorkFrom,
+                              row.WorkTo
+                            ).split(" ")[0]
+                          }{" "}
+                          years
+                        </p>
+                      </div>
+                    ))}
+
+                  {!isAllWorkExperienceFieldsFilled && (
+                    <p className="error"> Not defined</p>
+                  )}
+
+                 
+
+                  <p>
+                    <strong>Language</strong>
+                  </p>
+
+                  <div>
+                    {selectedSpokenLanguageNames.length > 0 ||
+                    getSelectedWrittenLanguageName.length > 0 ? (
+                      <>
+                       
+                        {selectedSpokenLanguageNames.length > 0 && (
+                          <div>
+                            {selectedSpokenLanguageNames.map(
+                              (skillName, index) => (
+                                <span key={index}>
+                                  {skillName}
+                                  {index <
+                                    selectedSpokenLanguageNames.length - 1 &&
+                                    ", "}
+                                </span>
+                              )
+                            )}
+                          </div>
+                        )}
+
+                        
+                        {getSelectedWrittenLanguageName.length > 0 && (
+                          <div>
+                            {getSelectedWrittenLanguageName.map(
+                              (skillName, index) => (
+                                <span key={index}>
+                                  {skillName}
+                                  {index <
+                                    getSelectedWrittenLanguageName.length - 1 &&
+                                    ", "}
+                                </span>
+                              )
+                            )}
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <p className="error" style={{ color: "red" }}>
+                        Not defined
+                      </p>
+                    )}
+                  </div>
+
+                  <p>
+                    <strong>Geography</strong>
+                  </p>
+
+                  {!profileformData?.CurrentLocation ||
+                  profileformData.relocationChoice === null ||
+                  profileformData.requiredCompanyAssist === null ? (
+                    <p className="error" style={{ color: "red" }}>
+                      Not defined
+                    </p>
+                  ) : (
+                    <>
+                      <p>
+                        Current Location {profileformData?.CurrentLocation}
+                      </p>
+                      <p>
+                        Willing to relocate{" "}
+                        {profileformData.relocationChoice === true
+                          ? "Yes"
+                          : "No"}
+                      </p>
+                      <p>
+                        Require company assistance for relocation{" "}
+                        {profileformData.requiredCompanyAssist === true
+                          ? "Yes"
+                          : "No"}
+                      </p>
+                    </>
+                  )}
+
+                  <p>
+                    <strong>Skills</strong>
+                  </p>
+                  <div>
+                    {selectedSkillsNames.length > 0 ? (
+                      selectedSkillsNames.map((skillName, index) => (
+                        <span key={index}>
+                          {skillName}
+                          {index < selectedSkillsNames.length - 1 && ", "}{" "}
+                          
+                        </span>
+                      ))
+                    ) : (
+                      <p className="error" style={{ color: "red" }}>
+                        Not defined
+                      </p>
+                    )}
+                  </div>
+
+                  <p>
+                    <strong>Additional Questions from Company</strong>
+                  </p>
+                  {jobPostData?.question_job.map((item) => (
+                    <div key={item.id} className="mb-3">
+                      <h6 className="strong-label">{item?.question_title}</h6>
+                      <strong></strong>{" "}
+                      {selectedAnswers[item?.uid] || (
+                        <p className="error">Not defined</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
             </Col>
           </Row>
-
-          
         </Container>
 
         <div>
@@ -3576,20 +3855,20 @@ const ApplicationJobPostModal = ({
         </div>
       </Modal.Body>
       <Modal.Footer>
-      <Button
-            variant="light"
-            style={{ marginLeft: 150 }}
-            onClick={() => handleSaveAsDraft()}
-          >
-            Save as Draft
-          </Button>
-          <Button
-            disabled={!validationEnable}
-            variant="primary"
-            onClick={() => handleSubmit()}
-          >
-            Submit
-          </Button>
+        <Button
+          variant="light"
+          style={{ marginLeft: 150 }}
+          onClick={() => handleSaveAsDraft()}
+        >
+          Save as Draft
+        </Button>
+        <Button
+          disabled={!validationEnable}
+          variant="primary"
+          onClick={() => handleSubmit()}
+        >
+          Submit
+        </Button>
       </Modal.Footer>
     </Modal>
   );

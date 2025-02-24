@@ -45,6 +45,12 @@ import jobWorktype from "../../images/icons/job-worktype.svg";
 import InfoTravel from "../../images/icons/job-travel.svg";
 import InfoLanguage from "../../images/icons/job-language.svg";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import InrRuppe from "../../images/icons/currency-rupee-16x.svg";
+import GlobSmall from "../../images/icons/glob-10x.svg";
+import LinkdeenR from "../../images/icons/linkdeen-16x.svg";
+import MarkerPIn from "../../images/icons/marker-pin-16.svg";
+import ExperinecB from "../../images/icons/briefcase-0116x.svg";
+import User16x from "../../images/icons/user-plus-0116x.svg";
 
 const JobPosts = () => {
   const { id } = useParams();
@@ -577,8 +583,6 @@ const JobPosts = () => {
     GetJobPostWithId();
   }, [id]);
 
-  // console.log("viewDetailData----->>>>>",viewDetailData)
-
   return (
     <Container fluid className="applicat_flow">
       {isLoading && (
@@ -616,23 +620,28 @@ const JobPosts = () => {
             <Col className="app_leftinfo">
               <h5>{jobPostData?.job_title}</h5>
               <p>
-                {jobPostData?.job_company?.company_name},{" "}
-                {/* {jobPostData?.job_company?.location}, */}
-                {jobPostData?.job_type}
-                {""},{jobPostData?.workplace_type}
+                <strong>{jobPostData?.job_company?.company_name},</strong>
+                {jobPostData?.job_company?.location?.location_name}
               </p>
-              <div className="d-flex flex-wrap">
-                {/* <p>{jobPostData?.job_location?.location_name || ""}</p> */}
-                <p>
-                  {jobPostData?.currency} {jobPostData?.min_salary} -{" "}
-                  {jobPostData?.max_salary}
-                  {jobPostData?.salary_type}
-                </p>
-                <p>
+              <ul className="localist">
+                <li>
+                  <img src={MarkerPIn} alt="" />
+                  {jobPostData?.job_location?.location_name}
+                </li>
+                <li>
+                  <img src={InrRuppe} alt="" />
+                  {jobPostData?.min_salary}-{jobPostData?.max_salary}{" "}
+                  {jobPostData?.currency} {jobPostData?.salary_type}
+                </li>
+                <li>
+                  <img src={ExperinecB} alt="" />
                   {jobPostData?.min_exp} - {jobPostData?.max_exp} years
-                </p>
-                <p>{jobPostData?.job_company?.number_of_employees}</p>
-              </div>
+                </li>
+                <li>
+                  <img src={User16x} alt="" />
+                  {jobPostData?.number_of_positions} Positions
+                </li>
+              </ul>
             </Col>
             <Col className="app_rightinfo">
               <div className="d-flex flex-wrap align-items-center">
@@ -715,24 +724,26 @@ const JobPosts = () => {
                       style={{ width: "32px", height: "32px", padding: "0" }}
                     />
                     <Col className="app_leftinfo">
-                      <h6>{jobPostData?.job_company?.company_name || ""} </h6>
                       <p>
-                        {/* {jobPostData?.job_company?.location},{" "} */}
-                        {jobPostData?.job_type}
-                        {""},{jobPostData?.workplace_type}
+                        <strong>
+                          {jobPostData?.job_company?.company_name},
+                        </strong>
+                        {jobPostData?.job_company?.location?.location_name}
                       </p>
-                      <div className="d-flex flex-wrap">
-                        {/* <p>{jobPostData?.job_location?.location_name || ""}</p> */}
-                        <p>
-                          {jobPostData?.currency} {jobPostData?.min_salary} -{" "}
-                          {jobPostData?.max_salary}
-                          {jobPostData?.salary_type}
-                        </p>
-                        <p>
-                          {jobPostData?.min_exp} - {jobPostData?.max_exp} years
-                        </p>
-                        <p>{jobPostData?.job_company?.number_of_employees}</p>
-                      </div>
+                      <ul className="localist mt-1">
+                        <li>
+                          <img src={GlobSmall} />
+                          {jobPostData?.job_company?.website_url}
+                        </li>
+                        <li>
+                          {jobPostData?.job_company?.industry?.industry_name}
+                        </li>
+                        <li>{jobPostData?.job_company?.company_type}</li>
+                        <li>
+                          Over {jobPostData?.job_company?.number_of_employees}
+                        </li>
+                      </ul>
+
                       <p className="card-text">
                         {jobPostData?.detailed_description}
                       </p>
