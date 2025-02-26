@@ -144,7 +144,7 @@ const BehaviouralAst = () => {
                         localStorage.setItem("AttemptStatus",runCounter())
                         // sessionStorage.setItem("AttemptStatus",runCounter())
                         // navigate('/JobPosts')     
-                        navigate('/JobPosts/:id')              
+                        navigate('/JobPosts')              
                     }
                 } else {
                     let mostLike = quizMostLeastLike.flatMap(row => row.mostList);
@@ -161,7 +161,7 @@ const BehaviouralAst = () => {
                         localStorage.setItem("AttemptStatus",runCounter())
                         // sessionStorage.setItem("AttemptStatus",runCounter())
                         // navigate('/JobPosts')
-                        navigate('/JobPosts/:id')
+                        navigate('/JobPosts')
                     }
                 }
             } catch (error) {

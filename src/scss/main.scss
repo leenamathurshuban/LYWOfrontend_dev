@@ -48,6 +48,9 @@ a {
     inset-inline-start: 1.5rem;
   }
 }
+.font-weight500 {
+  font-weight: 800;
+}
 .authinfo_slider {
   padding: 0 38px;
   h2 {
@@ -3782,11 +3785,43 @@ select.h-36.form-select {
       text-transform: capitalize;
     }
     p {
-      font-size: 13px;
+      font-size: 14px;
       color: #344054;
-      margin: 0;
+      margin: 0 0 5px 0;
       line-height: 20px;
       font-weight: 400;
+    }
+    .localist {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      li {
+        margin-right: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #344054;
+        list-style: none;
+        position: relative;
+        &::after {
+          content: "";
+          width: 4px;
+          height: 4px;
+          background-color: #D9D9D9;
+          border-radius: 50%;
+          position: absolute;
+          top: 7px;
+          left: -10px;
+        }
+        &:first-child{
+          &::after{
+            content: inherit;
+          }
+        }
+        img {
+          margin-right: 5px;
+          vertical-align: text-top;
+        }
+      }
     }
   }
   .app_rightinfo  {
@@ -3795,6 +3830,11 @@ select.h-36.form-select {
     .btn {
       font-size: 12px;
     }
+  }
+}
+.about_comp  {
+  .localist li {
+    font-weight: 400 !important;
   }
 }
 .appcaint  {
@@ -3828,9 +3868,21 @@ select.h-36.form-select {
         list-style: none;
         margin-bottom: 8px;
        p{
-        font-size: 12px;
+        font-size: 13px;
         line-height: 18px;
         color: #344054;
+        font-weight: 500;
+        &.title {
+          letter-spacing: 4%;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          min-width: 130px;
+          font-size: 12px;
+        }
+        img {
+          margin-right: 5px;
+        }
        }
       }
     }
@@ -3853,6 +3905,17 @@ select.h-36.form-select {
     border: solid 1px #EAECF0;
     padding: 14px;
     border-radius: 8px;
+    margin-bottom: 32px;
+    position: relative;
+    &::after{
+      content: '';
+      background-color: #EAECF0;
+      height: 32px;
+      width: 2px;
+      position: absolute;
+      bottom: -32px;
+      left: 50%;  
+    }
     h5 {
       color: #D0D5DD;
       font-size: 14px;
@@ -3861,11 +3924,11 @@ select.h-36.form-select {
       align-items: center;
       margin-bottom: 8px;
       .bg_circle {
-        width: 24px;
-        height: 24px;
+        width: 22px;
+        height: 22px;
         background-color: #F2F4F7;
         border-radius: 50%;
-        margin-right: 5px;
+        margin-right: 4px;
         display: inline-block;
       }
     }
@@ -3910,4 +3973,140 @@ select.h-36.form-select {
 }
 .invalid-feedback {
   font-size: 12px;
+}
+.mx-w350{
+  max-width: 350px;
+}
+.jobpost_view {
+  .jobMain_panel {
+    width: 70%;
+    margin-right: 16%;
+  }
+  .form_table {
+    width: 100%;
+    thead {
+      tr {
+        td {
+          font-family: Inter;
+          font-weight: 600;
+          font-size: 12px;
+          line-height: 18px;
+          color: #475467;
+          border-bottom: solid 1px #EAECF0;
+          padding: 10px;
+          &:first-child{
+            padding-left: 0;
+          }
+        }
+      }
+    }
+    tbody {
+      td {
+        padding:8px 10px 5px 10px;
+        &:first-child{
+          padding-left: 0;
+        }
+      }
+    }
+    .form-select,.form-control {
+      font-size: 12px;
+      min-height: 34px;
+    }
+  }
+  .font-sm.btn {
+    font-weight: 600;
+  }
+  label.form-check-label {
+    font-size: 13px;
+}
+.skill-tag {
+  padding: 4px 10px;
+  border-radius: 16px;
+  border-width: 1px;
+  mix-blend-mode: Multiply;
+  font-family: Inter;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  text-align: center;
+  border: solid 1px #EAECF0;
+  margin: 4px 4px 4px 0;
+  display: inline-block;
+  cursor: pointer;
+  &.selected {
+    border-color: #6172F3;
+    background-color: #F5F8FF;
+    color: #1D2939;
+  }
+}
+.modal-footer {
+  position: fixed;
+  bottom: 0;
+  background-color: #ffff;
+  width: 100%;
+  justify-content: center;
+  border-color: #EAECF0;
+  padding: 10px;
+  .btn {
+    font-size: 13px;
+    margin: 0 8px;
+  }
+}
+.jobpre_Rightpanel p{
+  margin-bottom: 4px;
+}
+.jobpre_Rightpanel h6 {
+  font-size: 12px;
+  line-height: 12px;
+}
+.ct_scrollbar {
+  max-height: 65vh;
+}
+.lang_list {
+  span {
+    font-size: 12px;
+    color: #667085;
+    line-height: 18px;
+    text-transform: capitalize;
+  }
+}
+.tagarea  {
+  .tag-white {
+    cursor: pointer;
+    &.bg-primary {
+      border-color: #6172F3 !important;
+      background-color: #F5F8FF !important;
+      color: #1D2939;
+    }
+  }
+}
+.selected_logo {
+  border-radius: 8px;
+  max-height: 38px;
+}
+}
+.btn-transpant {
+  background-color: transparent;
+  border: none;
+}
+.strong-label {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.form-check-input:checked {
+  background-color: #3538cd;
+  border-color: #3538cd;
+}
+.mix-inputs {
+  display: flex;
+  .form-control{
+    border-radius: 8px 0 0 8px;
+    border-right: 0;
+    max-width: 60px;
+  }
+  .form-select {
+    border-radius: 0 8px 8px 0;
+    margin-left: -1px;
+  }
 }
