@@ -177,10 +177,10 @@ const JobPosts = () => {
   const GetJobPostWithId = async () => {
     setIsLoading(true);
     try {
-      const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/${id}`;
+      // const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/${id}`;
       // const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/NDFhZGM5ZWQyZg/`;
       // const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/ZTEwZmFlZmFiYw/`;
-      // const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/Zjg3YmExYzlmMA/`;
+      const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/Zjg3YmExYzlmMA/`;
       // const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-by-encoded-uid/ODE2YWNmZjgwZg/`;
       const data = await getPostJobIdApi(url);
       // console.log("api datatt----->>>>>>", JSON.stringify(data?.response));
@@ -387,10 +387,10 @@ const JobPosts = () => {
     const userEmail = registerdUserLoginDetails?.user_login?.email;
     if (buttonText === "Apply Now") {
       handleShowModal("first");
-    } else if (buttonText === "Continue") {
+    } else if (buttonText === "Continue Btn") {
       handleShowModal("first");
       handleViewDetailsAPi(userEmail);
-    } else if (buttonText === "View") {
+    } else if (buttonText === "View Form Btn") {
       handleShowModal("showProfileViewDetailsModal");
       if (userEmail) {
         handleViewDetailsAPi(userEmail);
@@ -579,7 +579,7 @@ const JobPosts = () => {
           </Button>
           <Button
             variant="primary"
-            // onClick={handleCloseModals}
+          // onClick={handleCloseModals}
           >
             Share
           </Button>

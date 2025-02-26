@@ -2584,12 +2584,11 @@ const ApplicationJobPostModal = ({
               <h6>Profile</h6>
               <ul className="checklist">
                 <li
-                  className={`${
-                    profileformData?.name &&
+                  className={`${profileformData?.name &&
                     profileformData?.email &&
                     profileformData?.phone &&
                     "active"
-                  }`}
+                    }`}
                 >
                   <a href="#item_salary">
                     Basic Details <i class="fa fa-check" aria-hidden="true"></i>
@@ -2602,13 +2601,12 @@ const ApplicationJobPostModal = ({
                   </a>
                 </li>
                 <li
-                  className={`${
-                    profileformData?.AvailableBy &&
+                  className={`${profileformData?.AvailableBy &&
                     isYes?.CurrentlyWorkingToggle &&
                     profileformData?.NoticePeriod &&
                     isYes?.NoticeBuyOutToggle &&
                     "active"
-                  }`}
+                    }`}
                 >
                   <a href="#item_Exp">
                     Availability <i class="fa fa-check" aria-hidden="true"></i>
@@ -3539,9 +3537,8 @@ const ApplicationJobPostModal = ({
                       {groupedSkills[groupName].map((skill, idx) => (
                         <span
                           key={idx}
-                          className={`skill-tag mb-2 mr-2 ${
-                            selectedSkills.includes(skill.uid) ? "selected" : ""
-                          }`}
+                          className={`skill-tag mb-2 mr-2 ${selectedSkills.includes(skill.uid) ? "selected" : ""
+                            }`}
                           onClick={() => handleSkillSelect(skill)}
                         >
                           {skill?.skill_name}
@@ -3596,7 +3593,6 @@ const ApplicationJobPostModal = ({
                   </div>
                 ))}
               </div>
-             
             </Col>
             {/* Right Column */}
             <Col md={3} lg={2} className="jobpre_Rightpanel">
