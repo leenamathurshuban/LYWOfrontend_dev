@@ -377,6 +377,11 @@ const JobPosts = () => {
             })),
           ]);
         }
+        if(response?.data?.response?.applicant_status === 'Draft'){
+          setButtonText('Continue Btn')
+        } else if (response?.data?.response?.applicant_status === 'Completed') {
+          setButtonText('View Form Btn')
+        }
       }
     } catch (error) {
       console.log("Error occurred:", error);
