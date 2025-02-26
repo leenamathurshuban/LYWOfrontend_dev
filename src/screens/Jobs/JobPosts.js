@@ -377,7 +377,7 @@ const JobPosts = () => {
             })),
           ]);
         }
-        if(response?.data?.response?.applicant_status === 'Draft'){
+        if (response?.data?.response?.applicant_status === 'Draft') {
           setButtonText('Continue Btn')
         } else if (response?.data?.response?.applicant_status === 'Completed') {
           setButtonText('View Form Btn')
@@ -705,7 +705,7 @@ const JobPosts = () => {
   useEffect(() => {
     GetJobPostWithId();
   }, [id]);
-console.log('dauuuuuuuu++++++>',buttonText)
+  console.log('dauuuuuuuu++++++>', buttonText)
   return (
     <Container fluid className="applicat_flow">
       {isLoading && (
@@ -920,6 +920,7 @@ console.log('dauuuuuuuu++++++>',buttonText)
             <Button
               variant="primary"
               size="lg"
+              disabled={buttonText !== "View Form Btn"}
               onClick={() => {
                 if (
                   Number(localStorage.getItem("AttemptStatus")) < 28 ||
