@@ -48,6 +48,9 @@ a {
     inset-inline-start: 1.5rem;
   }
 }
+.font-weight500 {
+  font-weight: 800;
+}
 .authinfo_slider {
   padding: 0 38px;
   h2 {
@@ -3990,13 +3993,19 @@ select.h-36.form-select {
           line-height: 18px;
           color: #475467;
           border-bottom: solid 1px #EAECF0;
-          padding: 8px;
+          padding: 10px;
+          &:first-child{
+            padding-left: 0;
+          }
         }
       }
     }
     tbody {
       td {
-        padding:8px 10px;
+        padding:8px 10px 5px 10px;
+        &:first-child{
+          padding-left: 0;
+        }
       }
     }
     .form-select,.form-control {
@@ -4043,6 +4052,38 @@ select.h-36.form-select {
     margin: 0 8px;
   }
 }
+.jobpre_Rightpanel p{
+  margin-bottom: 4px;
+}
+.jobpre_Rightpanel h6 {
+  font-size: 12px;
+  line-height: 12px;
+}
+.ct_scrollbar {
+  max-height: 65vh;
+}
+.lang_list {
+  span {
+    font-size: 12px;
+    color: #667085;
+    line-height: 18px;
+    text-transform: capitalize;
+  }
+}
+.tagarea  {
+  .tag-white {
+    cursor: pointer;
+    &.bg-primary {
+      border-color: #6172F3 !important;
+      background-color: #F5F8FF !important;
+      color: #1D2939;
+    }
+  }
+}
+.selected_logo {
+  border-radius: 8px;
+  max-height: 38px;
+}
 }
 .btn-transpant {
   background-color: transparent;
@@ -4052,4 +4093,20 @@ select.h-36.form-select {
   font-size: 13px;
   font-weight: 600;
   text-transform: capitalize;
+}
+.form-check-input:checked {
+  background-color: #3538cd;
+  border-color: #3538cd;
+}
+.mix-inputs {
+  display: flex;
+  .form-control{
+    border-radius: 8px 0 0 8px;
+    border-right: 0;
+    max-width: 60px;
+  }
+  .form-select {
+    border-radius: 0 8px 8px 0;
+    margin-left: -1px;
+  }
 }

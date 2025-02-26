@@ -12,7 +12,7 @@ import {
   Spinner,
   Tooltip,
 } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import Doc from "../../images/DocumentIcon.png";
 import Download from "../../images/icons/download-12x12.svg";
 import Global from "../../images/Global.png";
@@ -54,6 +54,14 @@ import User16x from "../../images/icons/user-plus-0116x.svg";
 
 const JobPosts = () => {
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
+  const paramemail = searchParams.get("email");
+  const paramtoken = searchParams.get("token");
+  useEffect(() => {
+    if (!localStorage.getItem('authToken')) {
+      localStorage.setItem('authToken', paramtoken)
+    }
+  }, [])
   const [jobPostData, setJobPostData] = useState(null);
   const [jobPostErrorMsg, setJobPostErrorMsg] = useState("");
 
@@ -74,6 +82,39 @@ const JobPosts = () => {
     useState(null);
   const [viewDetailData, setViewDetailData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [profileformData, setProfileFormData] = useState({
+    name: "",
+    email: "",
+    confirmEmail: "",
+    phone: "",
+    Qualification: "",
+    AvailableBy: "",
+    NoticePeriod: "",
+    ExpectedSalary: "",
+    TotalWorkExperience: "",
+    CurrentLocation: "",
+    relocationChoice: null,
+    requiredCompanyAssist: null,
+  });
+  const [isYes, setIsYes] = useState({
+    CurrentlyWorkingToggle: false,
+    NoticeBuyOutToggle: false,
+    willingToTeavelJob: false,
+  });
+  const [storedApplicantId, setStoredApplicantId] = useState("");
+  const [selectedSpokenLanguageUids, setSelectedSpokenLanguageUids] = useState([]);
+  const [selectedWrittenLanguageUids, setSelectedWrittenLanguageUids] = useState([]);
+  const [selectedSkills, setSelectedSkills] = useState([]);
+  const [ResumeFile, setResumeFile] = useState(null);
+  const [ResumeFileName, setResumeFileName] = useState("");
+  const [EducationRows, SetEducationRows] = useState([{
+    level: "",
+    areaOfEducation: "",
+    gradYear: "",
+    university: "",
+    grade: "",
+    saved: false,
+  },]);
 
   const inputRef = useRef(null);
   const containerRef = useRef(null);
@@ -89,27 +130,38 @@ const JobPosts = () => {
   };
 
   const handleShowModal = (modalName) => {
-    setModalOpen((prevState) => {
-      const newState = {
-        showFirstModal: false,
+    if (modalName === "first") {
+      setModalOpen({
+        showFirstModal: true,
         showSecondModal: false,
         showChatModal: false,
         showProfileViewDetailsModal: false,
-      };
+      })
+    } else if (modalName === "second") {
+      setModalOpen({
+        showFirstModal: false,
+        showSecondModal: true,
+        showChatModal: false,
+        showProfileViewDetailsModal: false,
+      })
+    } else if (modalName === "chatModal") {
+      setModalOpen({
+        showFirstModal: false,
+        showSecondModal: false,
+        showChatModal: true,
+        showProfileViewDetailsModal: false,
+      })
+    } else if (modalName === "showProfileViewDetailsModal") {
+      setModalOpen({
+        showFirstModal: false,
+        showSecondModal: false,
+        showChatModal: false,
+        showProfileViewDetailsModal: true,
+      })
+    }
 
-      // Set the modal that needs to be shown to true
-      if (modalName === "first") {
-        newState.showFirstModal = true;
-      } else if (modalName === "second") {
-        newState.showSecondModal = true;
-      } else if (modalName === "chatModal") {
-        newState.showChatModal = true;
-      } else if (modalName === "showProfileViewDetailsModal") {
-        newState.showProfileViewDetailsModal = true;
-      }
-
-      return newState;
-    });
+    //   return newState;
+    // });
   };
 
   // Function to close all modals
@@ -270,6 +322,61 @@ const JobPosts = () => {
           "applicantProfileAllSavedData",
           JSON.stringify(response?.data?.response)
         );
+        setProfileFormData((prevState) => ({
+          ...prevState,
+          name: response?.data?.response?.user?.username || "",
+          email: response?.data?.response?.user?.email || "",
+          confirmEmail: response?.data?.response?.user?.email || "",
+          phone: response?.data?.response?.user?.phone_number || "",
+          AvailableBy: response?.data?.response?.availble_by || "",
+          NoticePeriod: response?.data?.response?.notice_period || "",
+          ExpectedSalary: response?.data?.response?.expected_salary || "",
+          CurrentLocation: response?.data?.response?.current_location || "",
+          relocationChoice: response?.data?.response?.willing_to_relocate_to || false,
+          requiredCompanyAssist:
+            response?.data?.response?.require_company_assistance_for_relocation || false,
+        }));
+        setIsYes((prevState) => ({
+          ...prevState,
+          CurrentlyWorkingToggle: response?.data?.response?.currently_working || false,
+          NoticeBuyOutToggle: response?.data?.response?.notice_buyout_available || false,
+        }));
+        setStoredApplicantId(response?.data?.response?.uid);
+        const spokenUids = Array.from(
+          new Set(response?.data?.response?.spoken_language.map((item) => item?.uid))
+        );
+        const writtenUids = Array.from(
+          new Set(response?.data?.response?.written_reading_language.map((item) => item?.uid))
+        );
+        setSelectedSpokenLanguageUids((prevState) => [
+          ...prevState,
+          ...spokenUids.filter((uid) => !prevState.includes(uid)),
+        ]);
+        setSelectedWrittenLanguageUids((prevState) => [
+          ...prevState,
+          ...writtenUids.filter((uid) => !prevState.includes(uid)),
+        ]);
+
+        const skillsUids = response?.data?.response?.applicant_profile_job[0]?.job_applicant_skill.map((item) => item?.uid);
+        setSelectedSkills((prevState) => [...prevState, ...skillsUids]);
+        const resumeFileUrl = response?.data?.response?.resume || null;
+        setResumeFile(resumeFileUrl);
+        const resumeFileName = resumeFileUrl ? resumeFileUrl.split("/").pop() : "";
+        setResumeFileName(resumeFileName);
+
+        const educationData = response?.data?.response?.qualification_applicantprofile || [];
+        if (Array.isArray(educationData)) {
+          SetEducationRows((prevState) => [
+            ...prevState,
+            ...educationData.map((item) => ({
+              level: item?.level || "",
+              areaOfEducation: item?.applicant_area_of_education || "",
+              gradYear: item?.grad_year || "",
+              university: item?.university || "",
+              grade: item?.grade || "",
+            })),
+          ]);
+        }
       }
     } catch (error) {
       console.log("Error occurred:", error);
@@ -278,7 +385,6 @@ const JobPosts = () => {
 
   const handleBtns = (buttonText) => {
     const userEmail = registerdUserLoginDetails?.user_login?.email;
-
     if (buttonText === "Apply Now") {
       handleShowModal("first");
     } else if (buttonText === "Continue") {
@@ -291,7 +397,13 @@ const JobPosts = () => {
       }
     }
   };
-
+  useEffect(() => {
+    if (paramemail) {
+      handleShowModal("first");
+      handleViewDetailsAPi(paramemail);
+    }
+  }, [paramemail])
+  console.log("buttonText", buttonText)
   const handleShareModal = () => {
     return (
       <Modal show={showModal} onHide={toggleModal}>
@@ -574,15 +686,21 @@ const JobPosts = () => {
     const applicantProfileData = JSON.parse(
       localStorage.getItem("applicantProfileData")
     );
+    const applicantApplyData = JSON.parse(localStorage.getItem("applicantData"))
     if (applicantProfileData) {
       setRegisterdUserLoginDetails(applicantProfileData);
+    }
+    if (applicantApplyData?.applicant_status === 'Draft') {
+      setButtonText('Continue Btn')
+    } else if (applicantApplyData?.applicant_status === 'Completed') {
+      setButtonText('View Form Btn')
     }
   }, []);
 
   useEffect(() => {
     GetJobPostWithId();
   }, [id]);
-
+console.log('dauuuuuuuu++++++>',buttonText)
   return (
     <Container fluid className="applicat_flow">
       {isLoading && (
@@ -601,7 +719,7 @@ const JobPosts = () => {
           {buttonText === "Apply Now" && <img src={Logout} alt="Logout Icon" />}
 
           {buttonText === "Continue" && <img src={HomeIcon} alt="Home Icon" />}
-          {buttonText === "View" && <img src={UserIcon} alt="User Icon" />}
+          {buttonText === "View Form Btn" && <img src={UserIcon} alt="User Icon" />}
         </Col>
       </Row>
 
@@ -668,7 +786,7 @@ const JobPosts = () => {
                     onClick={() => handleBtns(buttonText)}
                     disabled={jobPostErrorMsg || buttonText === "View"}
                   >
-                    {buttonText}
+                    {buttonText === "View Form Btn" ? "View" : buttonText === "Continue Btn" ? "Continue" : buttonText}
                   </Button>
                 </div>
                 {jobPostErrorMsg && <p className="error">{jobPostErrorMsg}</p>}
@@ -775,14 +893,14 @@ const JobPosts = () => {
               <span className="bg_circle"></span>Profile Details
             </h5>
             {(buttonText == "View" && <p>Completed</p>) ||
-              (buttonText == "Continue" && <p>Pending</p>)}
+              (buttonText == "Continue Btn" && <p>Pending</p>)}
             <Button
               variant="primary"
               size="lg"
               disabled={jobPostErrorMsg}
               onClick={() => handleBtns(buttonText)}
             >
-              {buttonText}
+              {buttonText === "View Form Btn" ? "View" : buttonText === "Continue Btn" ? "Continue" : buttonText}
             </Button>
           </div>
           <div className="progress_box">
@@ -839,6 +957,24 @@ const JobPosts = () => {
           jobPostData={jobPostData}
           updateButtonText={updateButtonText}
           registerdUserLoginDetails={handleEmailId}
+          profileformData={profileformData}
+          setProfileFormData={setProfileFormData}
+          isYes={isYes}
+          setIsYes={setIsYes}
+          storedApplicantId={storedApplicantId}
+          setStoredApplicantId={setStoredApplicantId}
+          selectedSpokenLanguageUids={selectedSpokenLanguageUids}
+          setSelectedSpokenLanguageUids={setSelectedSpokenLanguageUids}
+          selectedWrittenLanguageUids={selectedWrittenLanguageUids}
+          setSelectedWrittenLanguageUids={setSelectedWrittenLanguageUids}
+          selectedSkills={selectedSkills}
+          setSelectedSkills={setSelectedSkills}
+          ResumeFile={ResumeFile}
+          setResumeFile={setResumeFile}
+          ResumeFileName={ResumeFileName}
+          setResumeFileName={setResumeFileName}
+          EducationRows={EducationRows}
+          SetEducationRows={SetEducationRows}
         />
       ) : (
         <p>Loading...</p>
