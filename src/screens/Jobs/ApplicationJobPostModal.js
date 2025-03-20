@@ -2652,12 +2652,12 @@ const ApplicationJobPostModal = ({
   }, []);
 
   useEffect(() => {
-    if (selectedGroupUid.length) {
+    if (selectedGroupUid.length && storedApplicantId && localStorage.getItem('applicantToken')) {
       selectedGroupUid.map((id) => {
         getSkillGroupDetails(id)
       })
     }
-  }, [selectedGroupUid])
+  }, [selectedGroupUid,storedApplicantId])
   console.log(dynamicArray)
   console.log('Fixed', skillGroupData.sort((a, b) => a.id - b.id))
   console.log(groupedSkills)
