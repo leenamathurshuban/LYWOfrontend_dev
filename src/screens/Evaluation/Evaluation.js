@@ -799,6 +799,9 @@ const Evalation = () => {
                                               <span className="crossd_ans">
                                                 {correctCapital}
                                               </span>
+                                              <span className="crossd_ans">
+                                                {item?.questions_answer?.part1?.[index]}
+                                              </span>
                                             </div>
                                           </li>
                                         );

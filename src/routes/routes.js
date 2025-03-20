@@ -19,13 +19,16 @@ import ApplicationJobPostModal from "../screens/Jobs/ApplicationJobPostModal";
 import BehaviouralAst from "../screens/BehaviourAss/BehaviouralAst";
 import BehaviourAssReport from "../screens/BehaviourAss/BehaviourAssReport";
 import Protected from "./protected";
+import JobReview from "../screens/JobReview/JobReview";
+import JobReviewTest from "../screens/JobReview/JobReviewfirst";
+import QuizMainComponent from "../screens/Jobs/QuizMainComponent";
 
 
 export const router = createBrowserRouter([
  
   {
-    // path: "/JobPosts",
-    path: "/JobPosts/:id",
+    path: "/JobPosts",
+    // path: "/JobPosts/:id",
     element: <JobPosts />
   },
 
@@ -92,12 +95,24 @@ export const router = createBrowserRouter([
       <ProtectedRoute element={<JobsList />} allowAuthenticated={false} />
     ),
   },
+  {
+    path: "/JobReview/:id",
+    element: (
+      <ProtectedRoute element={<JobReview />} allowAuthenticated={false} />
+    ),
+  },
+  {
+    path: "/JobReview",
+    element: (
+      <ProtectedRoute element={<JobReviewTest />} allowAuthenticated={false} />
+    ),
+  },
  
-  // {
-  //   path: "/JobPosts/:id",
-  //   // path: "/JobPosts",
-  //   element: <ProtectedRoute element={<JobPosts />} allowAuthenticated={false} />,  // Only allow authenticated users here
-  // },
+  {
+    path: "/JobPosts/:id",
+    // path: "/JobPosts",
+    element: <ProtectedRoute element={<JobPosts />} allowAuthenticated={false} />,  // Only allow authenticated users here
+  },
   {
    
     path: "/ApplicationJobPostModal",
@@ -122,7 +137,11 @@ export const router = createBrowserRouter([
   },
   {
     path: "/Behavioural-Assessment",
-    element: <Protected element={<BehaviouralAst />} allowAuthenticated={false} />,  // Only allow authenticated users here
+    element: <ProtectedRoute element={<BehaviouralAst />} allowAuthenticated={false} />,  // Only allow authenticated users here
+  },
+  {
+    path: "/evaluation-quiz",
+    element: <ProtectedRoute element={<QuizMainComponent />} allowAuthenticated={false} />,  // Only allow authenticated users here
   },
   {
     path: "/Behaviour-Assessment-Report",

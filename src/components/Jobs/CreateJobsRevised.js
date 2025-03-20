@@ -118,6 +118,8 @@ const CreateJobsRevised = ({
   const [showHelpChoose, setShowHelpChoose] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState([])
   const [openStep, setOpenStep] = useState([])
+  const [skillError, setSkillError] = useState("")
+  const [dynamicArray, setDynamicArray] = useState([]);
   // const [importantFlag, setImportantFlag] = useState({
   //   salary: false,
   //   education: false,
@@ -479,18 +481,22 @@ const CreateJobsRevised = ({
 
   // Function to add a new question component
   const handleAddComponent = () => {
-    const newQuestion = {
-      job_question: createJobUid, // pass job uid
-      question_title: "",
-      quiz_type: "MCQ",
-      question_option: {
-        part1: [""], // Start with an empty array for new questions
-      },
-      questions_answer: [],
-      is_mandatory: "True", // pass True or False value
-    };
+    if (components.length < 5) {
+      const newQuestion = {
+        job_question: createJobUid, // pass job uid
+        question_title: "",
+        quiz_type: "MCQ",
+        question_option: {
+          part1: [""], // Start with an empty array for new questions
+        },
+        questions_answer: [],
+        is_mandatory: "True", // pass True or False value
+      };
 
-    setComponents([...components, newQuestion]);
+      setComponents([...components, newQuestion]);
+    } else {
+      alert('You can add only five Custom Question')
+    }
   };
 
   const handleDeleteOption = (questionIndex, optionIndex) => {
@@ -544,6 +550,7 @@ const CreateJobsRevised = ({
       uid: "",
       updated_at: "",
     };
+    setSkillError("")
     setAddSubSkill((prev) => [...prev, CreateCustomLabel]);
   };
 
@@ -555,39 +562,47 @@ const CreateJobsRevised = ({
   };
 
   const handleDeleteGroup = (index) => {
+    setSkillError("")
     setAddSkillGroup((prev) => prev.filter((_, i) => i !== index));
+    setAddSubSkill([])
   };
   const hadleDeleteCurrentSkill = (index) => {
+    setSkillError("")
     setAddSubSkill((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleSaveSkillGroup = async () => {
     setSkillGroupsData(null);
-    const formdata = new FormData();
-    formdata.append("skill_group_name", customValue);
-    let skillName = SelectSkillsData?.map((item) => item?.skill_name) // Extract skill_name values
-      ?.filter((skill) => skill !== "") // Filter out empty strings
-      ?.join(",");
-    formdata.append("skill_name", skillName);
-    try {
-      const response = await addSkillGroupPost(formdata);
-      if (response.data.status == 200) {
-        setCustomValue("");
-        setAddSubSkill([]);
-        setAddSkillGroup([]);
-        setSkillGroupsData(response.data.response);
-      }
-    } catch (error) {
-      console.log("error=-------", error);
-      if (
-        error?.response?.status === 401 ||
-        error?.response?.data?.detail?.includes(
-          "Given token not valid for any token type"
-        )
-      ) {
-        //console.log("Token expired, redirecting to login");
-        removeToken();
-        navigate("/loginwithpassword");
+    if (addSubSkill.length < 5 || addSubSkill.length > 12) {
+      setSkillError("There cannot be more than 12 Skills within a Skill Group and There have to be a minimum of 5 Skills within a Skill Group");
+    } else {
+      const formdata = new FormData();
+      formdata.append("skill_group_name", customValue);
+      let skillName = SelectSkillsData?.map((item) => item?.skill_name) // Extract skill_name values
+        ?.filter((skill) => skill !== "") // Filter out empty strings
+        ?.join(",");
+      formdata.append("skill_name", skillName);
+      try {
+        const response = await addSkillGroupPost(formdata);
+        if (response.data.status == 200) {
+          setCustomValue("");
+          setAddSubSkill([]);
+          setAddSkillGroup([]);
+          // setSkillGroupsData(response.data.response);
+          getSkillGroupDetails(response?.data?.response?.uid);
+        }
+      } catch (error) {
+        console.log("error=-------", error);
+        if (
+          error?.response?.status === 401 ||
+          error?.response?.data?.detail?.includes(
+            "Given token not valid for any token type"
+          )
+        ) {
+          //console.log("Token expired, redirecting to login");
+          removeToken();
+          navigate("/loginwithpassword");
+        }
       }
     }
   };
@@ -666,19 +681,41 @@ const CreateJobsRevised = ({
       }
     }
   };
-
-  const handleSelectedSkill = (benefititem) => {
+  const getTotalValues = (array) => {
+    return array.reduce((total, arr) => total + arr.length, 0);
+  };
+  const handleSelectedSkill = (benefititem, index) => {
     // setSelectSkillsData((prevState) =>
     //   prevState.includes(benefititem)
     //     ? prevState.filter((item2) => item2 !== benefititem)
     //     : [...prevState, benefititem]
     // );
-    setSelectSkillsData((prevState) =>
-      !prevState.includes(benefititem) && prevState.length < 12
-        ? [...prevState, benefititem]
-        : prevState.filter((item2) => item2 !== benefititem)
-    );
+    setDynamicArray((prevArray) => {
+      const totalValues = getTotalValues(prevArray);
+      return prevArray.map((arr, i) => {
+        if (i === index && arr.length < 8 && totalValues < 12 && !arr.includes(benefititem)) {
+          return [...arr, benefititem];
+        } else if (i === index && arr.includes(benefititem)) {
+          return arr.filter((item2) => item2 !== benefititem);
+        }
+        //validation on skills
+        else if (i === index && totalValues < 12 && !arr.includes(benefititem)) {
+          setSkillError(" A maximum of 70% or (N-3) which ever is lower can be selected from any Skill Group")
+        } else if (totalValues === 12) {
+          setSkillError("There cannot be more than 12 Skills within a Skill Group and There have to be a minimum of 5 Skills within a Skill Group")
+        }//end validation
+        return arr;
+      });
+    });
+    // setSelectSkillsData((prevState) =>
+    //   !prevState.includes(benefititem) && prevState.length < 12
+    //     ? [...prevState, benefititem]
+    //     : prevState.filter((item2) => item2 !== benefititem)
+    // );
   };
+  useEffect(() => {
+    setSelectSkillsData(dynamicArray.flat())
+  }, [dynamicArray])
 
   const countSelectedItems = () => {
     const selectedCount = behaviours.filter((item) => item.isSelected).length;
@@ -951,6 +988,10 @@ const CreateJobsRevised = ({
       return "";
     }
   }
+  useEffect(() => {
+    const length = skillGroupData.length
+    setDynamicArray(Array.from({ length }, () => []));
+  }, [skillGroupData.length]);
   // console.log(activeBehaviour)
   // const updatedArray = behaviours.map((item)=>({
   //   ...item,
@@ -1983,7 +2024,7 @@ const CreateJobsRevised = ({
                             skillGroupData.group_skill.map((skill, index) => (
                               <span
                                 onClick={(e) => {
-                                  handleSelectedSkill(skill);
+                                  handleSelectedSkill(skill, index);
                                 }}
                                 className={`stag_item ${SelectSkillsData.includes(skill) ? "active" : ""
                                   }`}
@@ -1999,7 +2040,7 @@ const CreateJobsRevised = ({
                           {addSubSkill.map((item, index) => (
                             <span
                               onClick={(e) => {
-                                handleSelectedSkill(item);
+                                handleSelectedSkill(item, index);
                               }}
                               className={`stag_item ${SelectSkillsData.includes(item) ? "active" : ""
                                 }`}
@@ -2067,10 +2108,15 @@ const CreateJobsRevised = ({
                             </button>
                           </div>
                         </div>
-                        {addSkillGroup && addSkillGroup[0] && (
+                        {/* {addSkillGroup && addSkillGroup[0] && (
                           <p className="mt-1">
                             Add at least 6 individual skills within this skill
                             Group
+                          </p>
+                        )} */}
+                        {skillError && (
+                          <p className="text-danger mt-1">
+                            {skillError}
                           </p>
                         )}
 
@@ -2078,7 +2124,7 @@ const CreateJobsRevised = ({
                           {addSubSkill.map((item, index) => (
                             <span
                               onClick={(e) => {
-                                handleSelectedSkill(item);
+                                handleSelectedSkill(item, index);
                               }}
                               className={`stag_item ${SelectSkillsData.includes(item) ? "active" : ""
                                 }`}

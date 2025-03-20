@@ -1832,11 +1832,13 @@ import {
   ApplicationFormDetailsApi,
   ApplicationJobApi,
   EducationQualificationApi,
+  getSkillGroupDetailsApi,
   WorkExperienceApi,
 } from "../../services/provider";
 import axios from "axios";
 import { compose } from "@reduxjs/toolkit";
 import { useNavigate } from "react-router-dom";
+import { removeToken } from "../../helpers/helper";
 
 const ApplicationJobPostModal = ({
   show,
@@ -1861,6 +1863,10 @@ const ApplicationJobPostModal = ({
   const [error, setError] = useState(null);
   const [showInput, setShowInput] = useState(false);
   const [ApplicantProfileData, setApplicantProfileData] = useState(null);
+  const [dynamicArray, setDynamicArray] = useState([]);
+  const [skillError, setSkillError] = useState("A minimum of 1 to be selected from each Skill Group")
+  const [selectedGroupUid, setSelectedGroupUid] = useState([]);
+  const [skillGroupData, setSkillGroupsData] = useState([]);
   // const [selectedSpokenLanguageUids, setSelectedSpokenLanguageUids] = useState(
   //   []
   // );
@@ -1964,6 +1970,9 @@ const ApplicationJobPostModal = ({
   };
   const groupedSkills = jobPostData?.skills?.reduce((acc, skill) => {
     const groupName = skill?.skill_group?.skill_group_name;
+    if (!selectedGroupUid.includes(skill?.skill_group?.uid)) {
+      setSelectedGroupUid([...selectedGroupUid, skill?.skill_group?.uid])
+    }
     if (!acc[groupName]) {
       acc[groupName] = [];
     }
@@ -1971,19 +1980,64 @@ const ApplicationJobPostModal = ({
     return acc;
   }, {});
 
-  const handleSkillSelect = (skill) => {
-    if (selectedSkills.includes(skill.uid)) {
-      setSelectedSkills(
-        selectedSkills.filter((selectedSkill) => selectedSkill !== skill.uid)
-      );
-    } else {
-      if (selectedSkills.length < 8) {
-        setSelectedSkills([...selectedSkills, skill.uid]);
-      } else {
-        alert("You can only select upto 8 skills.");
-      }
-    }
+  const getTotalValues = (array) => {
+    return array.reduce((total, arr) => total + arr.length, 0);
   };
+  const handleSkillSelect = (skill, index, groupname) => {
+    setSkillError("")
+    const array = groupedSkills[groupname].length + 1;
+    setDynamicArray((prevArray) => {
+      const totalValues = getTotalValues(prevArray);
+      return prevArray.map((arr, i) => {
+        if (i === index && arr.length < array && !arr.includes(skill)) {
+          return [...arr, skill];
+        } else if (i === index && arr.includes(skill)) {
+          if (arr.length === 1) { setSkillError("A minimum of 1 to be selected from each Skill Group") }
+          return arr.filter((item2) => item2 !== skill);
+        }
+        //validation
+        else if (i === index && !arr.includes(skill)) {
+          setSkillError("A Maximum of [N+1] or can be Selected in any Skill Group where N = the number selected by the Recruiter in that Skill Group")
+        } else if (Object.keys(groupedSkills).map((groupName) => groupedSkills[groupName]).flat().length === 8) {
+          setSkillError("maximum of [N+1] [N+1] be selected from all Skill Group")
+        }
+        return arr;
+      });
+    });
+    // setDynamicArray((prevArray) => {
+    //   const totalValues = getTotalValues(prevArray);
+    //   return prevArray.map((arr, i) => {
+    //     if (i === index && arr.length < 8 && totalValues < 12 && !arr.includes(skill)) {
+    //       return [...arr, skill];
+    //     } else if (i === index && arr.includes(skill)) {
+    //       return arr.filter((item2) => item2 !== skill);
+    //     }
+    //     //validation on skills
+    //     else if (i === index && totalValues < 12 && !arr.includes(skill)) {
+    //       setSkillError(" A maximum of 70% or (N-3) which ever is lower can be selected from any Skill Group")
+    //     } else if (totalValues === 12) {
+    //       setSkillError("There cannot be more than 12 Skills within a Skill Group and There have to be a minimum of 5 Skills within a Skill Group")
+    //     }//end validation
+    //     return arr;
+    //   });
+    // });
+
+    // if (selectedSkills.includes(skill.uid)) {
+    //   setSelectedSkills(
+    //     selectedSkills.filter((selectedSkill) => selectedSkill !== skill.uid)
+    //   );
+    // } else {
+    //   if (selectedSkills.length < 8) {
+    //     setSelectedSkills([...selectedSkills, skill.uid]);
+    //   } else {
+    //     alert("You can only select upto 8 skills.");
+    //   }
+    // }
+  };
+  useEffect(() => {
+    setSelectedSkills(dynamicArray.flat()?.map((val) => val?.uid))
+  }, [dynamicArray])
+  console.log('AAAAAAAAAAAAAAAAAAAAAAA', selectedSkills)
 
   const getSelectedSkillsNames = () => {
     const selectedSkillNames = [];
@@ -2471,6 +2525,42 @@ const ApplicationJobPostModal = ({
     }));
   };
 
+  const getSkillGroupDetails = async (id) => {
+    // setSkillGroupsData(null);
+    const url = `https://bittrend.shubansoftware.com/assets-api/skill-group-detail-api/${id}/`;
+    try {
+      const response = await getSkillGroupDetailsApi(url);
+      if (response) {
+        // setShowSkillList(false);
+        setSkillGroupsData((prevItem) => {
+          const itemExists = prevItem.some((item) => item.uid === response.data.response.uid);
+          if (itemExists) {
+            return prevItem.map((item) =>
+              item.uid === response.data.response.uid ? { ...item, group_skill: response.data.response.group_skill } : item
+            );
+          } else {
+            return [...prevItem, response.data.response].sort((a,b)=>a.id-b.id);
+          }
+        })
+        // setSelectedIndex([])
+        // setSkillGroupsData([...skillGroupData, response.data.response]);
+        // setskillngroupList([]);
+      }
+    } catch (error) {
+      console.log("error response----->>>>>>", error);
+      if (
+        error?.response?.status === 401 ||
+        error?.response?.data?.detail?.includes(
+          "Given token not valid for any token type"
+        )
+      ) {
+        //console.log("Token expired, redirecting to login");
+        removeToken();
+        navigate("/loginwithpassword");
+      }
+    }
+  };
+
   useEffect(() => {
     if (profileformData) {
       validateForProfileDetails();
@@ -2556,7 +2646,21 @@ const ApplicationJobPostModal = ({
       ]);
     }
   }, []);
+  useEffect(() => {
+    const length = Object.keys(groupedSkills).length
+    setDynamicArray(Array.from({ length }, () => []));
+  }, []);
 
+  useEffect(() => {
+    if (selectedGroupUid.length) {
+      selectedGroupUid.map((id) => {
+        getSkillGroupDetails(id)
+      })
+    }
+  }, [selectedGroupUid])
+  console.log(dynamicArray)
+  console.log('Fixed', skillGroupData.sort((a, b) => a.id - b.id))
+  console.log(groupedSkills)
   return (
     <Modal
       show={show}
@@ -3034,9 +3138,25 @@ const ApplicationJobPostModal = ({
                       required
                     >
                       <option>Expected Salary</option>
-                      <option value="15K">₹5 LPA - ₹ 10 LPA</option>
+                      {/* <option value="15K">₹5 LPA - ₹ 10 LPA</option>
                       <option value="20K">₹15 LPA - ₹ 20 LPA</option>
-                      <option value="30K">₹25 LPA - ₹ 30 LPA</option>
+                      <option value="30K">₹25 LPA - ₹ 30 LPA</option> */}
+                      <option value="Below 3 Lacs per Annum">Below 3 Lacs per Annum</option>
+                      <option value="3-5 Lacs per Annum">3 - 5 Lacs per Annum</option>
+                      <option value="5-7 Lacs per Annum">5 - 7 Lacs per Annum</option>
+                      <option value="7-10 Lacs per Annum">7 - 10 Lacs per Annum</option>
+                      <option value="10-12 Lacs per Annum">10 - 12 Lacs per Annum</option>
+                      <option value="12-15 Lacs per Annum">12 - 15 Lacs per Annum</option>
+                      <option value="15-20 Lacs per Annum">15 - 20 Lacs per Annum</option>
+                      <option value="20-25 Lacs per Annum">20 - 25 Lacs per Annum</option>
+                      <option value="25-30 Lacs per Annum">25 - 30 Lacs per Annum</option>
+                      <option value="30-35 Lacs per Annum">30 - 35 Lacs per Annum</option>
+                      <option value="35-40 Lacs per Annum">35 - 40 Lacs per Annum</option>
+                      <option value="40-45 Lacs per Annum">40 - 45 Lacs per Annum</option>
+                      <option value="45-50 Lacs per Annum">45 - 50 Lacs per Annum</option>
+                      <option value="50-55 Lacs per Annum">50 - 55 Lacs per Annum</option>
+                      <option value="55-60 Lacs per Annum">55 - 60 Lacs per Annum</option>
+                      <option value="Above 60 Lacs per Annum">Above 60 Lacs per Annum</option>
                     </Form.Select>
                     <Form.Control.Feedback type="invalid" className="error">
                       {errors.ExpectedSalary}
@@ -3185,7 +3305,7 @@ const ApplicationJobPostModal = ({
                       </Col>
 
                       <Col>
-                        <Form.Control
+                        {/* <Form.Control
                           type="text"
                           placeholder=""
                           size="sm"
@@ -3194,7 +3314,31 @@ const ApplicationJobPostModal = ({
                           name="TotalWorkExperience"
                           onChange={(e) => handleWorkExpeienceChange(index, e)}
                           disabled={row.savedWorkExp}
-                        />
+                        /> */}
+                        <Form.Select
+                          className="form-control-sm mx-w350"
+                          aria-label="Default select example"
+                          name="TotalWorkExperience"
+                          value={row?.TotalWorkExperience}
+                          onChange={(e) => handleWorkExpeienceChange(index, e)}
+                          isInvalid={!!errors.TotalWorkExperience}
+                          required
+                          disabled={row.savedWorkExp}
+                        >
+                          <option>Work Experience</option>
+                          <option value="Less than 1 Year">Less than 1 Year</option>
+                          <option value="1-2 Years">1 - 2 Years</option>
+                          <option value="2-4 Years">2 - 4 Years</option>
+                          <option value="4-6 Years">4 - 6 Years</option>
+                          <option value="6-9 Years">6 - 9 Years</option>
+                          <option value="9-12 Years">9 - 12 Years</option>
+                          <option value="12-15 Years">12 - 15 Years</option>
+                          <option value="15-20 Years">15 - 20 Years</option>
+                          <option value="20-25 Years">20 - 25 Years</option>
+                          <option value="25-30 Years">25 - 30 Years</option>
+                          <option value="30-40 Years">30 - 40 Years</option>
+                          <option value="Above 40 Years">Above 40 Years</option>
+                        </Form.Select>
                       </Col>
                     </Row>
 
@@ -3526,9 +3670,9 @@ const ApplicationJobPostModal = ({
 
               <div className="custom-card">
                 <h6>Skills</h6>
-                <p className="font-sm">Please select 8 skills</p>
+                {skillError && (<p className="text-danger font-sm">{skillError}</p>)}
 
-                {Object.keys(groupedSkills).map((groupName, index) => (
+                {/* {Object.keys(groupedSkills).map((groupName, index) => (
                   <div key={index} className="row mb-3">
                     <strong className="col-md-3 strong-label">
                       {groupName}
@@ -3539,7 +3683,26 @@ const ApplicationJobPostModal = ({
                           key={idx}
                           className={`skill-tag mb-2 mr-2 ${selectedSkills.includes(skill.uid) ? "selected" : ""
                             }`}
-                          onClick={() => handleSkillSelect(skill)}
+                          onClick={() => handleSkillSelect(skill, index, groupedSkills[groupName])}
+                        >
+                          {skill?.skill_name}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))} */}
+                {skillGroupData.map((groupName, index) => (
+                  <div key={index} className="row mb-3">
+                    <strong className="col-md-3 strong-label">
+                      {groupName?.skill_group_name}
+                    </strong>
+                    <div className="col-md-9">
+                      {groupName?.group_skill.map((skill, idx) => (
+                        <span
+                          key={idx}
+                          className={`skill-tag mb-2 mr-2 ${selectedSkills.includes(skill.uid) ? "selected" : ""
+                            }`}
+                          onClick={() => handleSkillSelect(skill, index, groupName?.skill_group_name)}
                         >
                           {skill?.skill_name}
                         </span>

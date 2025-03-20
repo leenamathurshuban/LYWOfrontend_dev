@@ -246,3 +246,9 @@ export const ApplicationFormDetailsApi = (data,Id) =>{
   const ApplicationJob = client.putWithUpload(url,data)
   return ApplicationJob
 }
+
+//evalution quiz api
+export const PostQuizDataApi=(data)=>{
+  const quizData = client.postWithToken(`${BehaviourUrl.PostQuizQuestionAnswer}`,data);
+  return quizData
+}

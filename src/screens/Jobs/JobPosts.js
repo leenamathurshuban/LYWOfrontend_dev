@@ -377,6 +377,7 @@ const JobPosts = () => {
             })),
           ]);
         }
+
         if (response?.data?.response?.applicant_status === 'Draft') {
           setButtonText('Continue Btn')
         } else if (response?.data?.response?.applicant_status === 'Completed') {
@@ -939,6 +940,44 @@ const JobPosts = () => {
                 "Continue"}
               {Number(localStorage.getItem("AttemptStatus")) === 28 && "View"}
               {Number(localStorage.getItem("AttemptStatus")) === 0 && "Start"}
+            </Button>
+          </div>
+
+          <div className="progress_box">
+            <h5>
+              <span className="bg_circle"></span>ICC Cricket Rules Quiz
+            </h5>
+            <p>
+              Pending
+            </p>
+            <Button
+              variant="primary"
+              size="lg"
+              disabled={localStorage.getItem("AttemptStatus") === 28 && true}
+              onClick={() => {  
+                navigate("/evaluation-quiz")              
+              }}
+            >
+              Start
+            </Button>
+          </div>
+
+          <div className="progress_box">
+            <h5>
+              <span className="bg_circle"></span>Technical Assignment
+            </h5>
+            <p>
+              Pending
+            </p>
+            <Button
+              variant="primary"
+              size="lg"
+              disabled
+              // onClick={() => {
+        
+              // }}
+            >
+              Start
             </Button>
           </div>
 

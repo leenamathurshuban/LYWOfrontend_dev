@@ -40,7 +40,8 @@ export const BehaviourUrl = {
   getQuizList:"assets-api/behaviour-question-list-api/",
   postQuizQuestion:"assets-api/applicant-behaviour-post-api/",
   getApplicantBehaviourDetail:"assets-api/applicant-behaviour-detail-api/",
-  updateApplicantBehaviour:"assets-api/update-applicant-behaviour-api/"
+  updateApplicantBehaviour:"assets-api/update-applicant-behaviour-api/",
+  PostQuizQuestionAnswer:"assets-api/user-answer-post-api/"
 }
 
 

@@ -524,7 +524,7 @@ const JobsList = () => {
                             onChange={() => handleMultiple(item)}
                             checked={activeIds.includes(item.uid) || closeIds.includes(item.uid)}
                           />
-                          <span className="font-weight-600">
+                          <span className="font-weight-600" onClick={() => navigate(`/JobReview/${item?.uid}`)} style={{cursor:"pointer"}}>
                             {item.job_title}
                           </span>
                         </td>

@@ -33,7 +33,7 @@ import globgray from "../../images/icons/glob_gray.svg";
 import rocket from "../../images/rocket.png";
 import popSucess from "../../images/popSuc.png";
 import QuizSlider from "../../components/QuizSlider";
-import { getApplicantBehaviourDetailApi, getQuizQuestionListAPi, postQuizQuestionApi, updateApplicantBehaviourApi } from '../../services/provider';
+import { ApplicationDeatilsApi, ApplicationFormDetailsApi, getApplicantBehaviourDetailApi, getQuizQuestionListAPi, postQuizQuestionApi, updateApplicantBehaviourApi } from '../../services/provider';
 import QuizQuestionSlider from '../../components/QuizQuestionSlider';
 import { useNavigate } from 'react-router-dom';
 
@@ -43,7 +43,8 @@ const BehaviouralAst = () => {
     const handleClosePop = () => setPopupShow(false);
     const handleShow = () => setShow(true);
     const navigate = useNavigate();
-    let applicantId = JSON.parse(localStorage.getItem('applicantData'))
+    // let applicantId = JSON.parse(localStorage.getItem('applicantData'))
+    let applicantId = JSON.parse(localStorage.getItem("applicantProfileData"))
     let behavioralId = JSON.parse(localStorage.getItem('applicantBehaviour'))
     // let applicantId = JSON.parse(sessionStorage.getItem('applicantData'))
     // let behavioralId = JSON.parse(sessionStorage.getItem('applicantBehaviour'))
@@ -68,7 +69,8 @@ const BehaviouralAst = () => {
     }
     const getApplicantBehaviourDetail = async (id) => {
         try {
-            const response = await getApplicantBehaviourDetailApi(behavioralId?.uid);
+            // const response = await getApplicantBehaviourDetailApi(behavioralId?.uid);
+            const response = await ApplicationDeatilsApi(applicantId.applcant.user)
             if (response?.data?.success) {
                 setAttemptQuiz(response?.data?.response?.most_like?.map((cv) => cv.uid))
                 setAttemptLeastQuiz(response?.data?.response?.least_like?.map((cv) => cv.uid))
@@ -131,11 +133,12 @@ const BehaviouralAst = () => {
             try {
                 const formData = new FormData();
                 if (!attemptQuiz.length) {
-                    formData.append('applicant', applicantId?.uid);
+                    // formData.append('applicant', applicantId?.uid);
                     formData.append('most_like', JSON.stringify(quizMostLeastLike.flatMap(row => row.mostList)));
                     formData.append('least_like', JSON.stringify(quizMostLeastLike.flatMap(row => row.leastList)));
                     formData.append('behaviour_status', 'Draft');
-                    const response = await postQuizQuestionApi(formData);
+                    // debugger
+                    const response = await ApplicationFormDetailsApi(formData,applicantId.applcant.uid)
                     if (response?.data?.success) {
                         setPopupShow(false)
                         setComplete(true)
@@ -152,7 +155,8 @@ const BehaviouralAst = () => {
                     formData.append('most_like', JSON.stringify([...attemptQuiz, ...mostLike]));
                     formData.append('least_like', JSON.stringify([...attemptLeastQuiz, ...leastLike]));
                     formData.append('behaviour_status', 'Draft');
-                    const response = await updateApplicantBehaviourApi(behavioralId?.uid, formData);
+                    // const response = await updateApplicantBehaviourApi(behavioralId?.uid, formData);
+                    const response = await ApplicationFormDetailsApi(formData,behavioralId?.uid);
                     if (response?.data?.success) {
                         setPopupShow(false)
                         setComplete(true)
