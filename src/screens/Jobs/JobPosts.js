@@ -953,7 +953,7 @@ const JobPosts = () => {
             <Button
               variant="primary"
               size="lg"
-              disabled={localStorage.getItem("AttemptStatus") === 28 && true}
+              disabled={localStorage.getItem("AttemptStatus") < 28? true:false}
               onClick={() => {  
                 navigate("/evaluation-quiz")              
               }}
