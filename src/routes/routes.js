@@ -137,7 +137,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/Behavioural-Assessment",
-    element: <ProtectedRoute element={<BehaviouralAst />} allowAuthenticated={false} />,  // Only allow authenticated users here
+    element: <Protected element={<BehaviouralAst />} allowAuthenticated={false} />,  // Only allow authenticated users here
   },
   {
     path: "/evaluation-quiz",
