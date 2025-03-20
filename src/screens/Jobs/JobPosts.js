@@ -701,7 +701,7 @@ const JobPosts = () => {
     } else if (applicantApplyData?.applicant_status === 'Completed') {
       setButtonText('View Form Btn')
     }
-  }, []);
+  }, [localStorage.getItem("applicantData")]);
 
   useEffect(() => {
     GetJobPostWithId();
