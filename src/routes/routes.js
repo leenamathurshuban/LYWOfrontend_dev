@@ -27,8 +27,8 @@ import QuizMainComponent from "../screens/Jobs/QuizMainComponent";
 export const router = createBrowserRouter([
  
   {
-    path: "/JobPosts",
-    // path: "/JobPosts/:id",
+    // path: "/JobPosts",
+    path: "/JobPosts/:id",
     element: <JobPosts />
   },
 
@@ -108,11 +108,11 @@ export const router = createBrowserRouter([
     ),
   },
  
-  {
-    path: "/JobPosts/:id",
-    // path: "/JobPosts",
-    element: <ProtectedRoute element={<JobPosts />} allowAuthenticated={false} />,  // Only allow authenticated users here
-  },
+  // {
+  //   path: "/JobPosts/:id",
+  //   // path: "/JobPosts",
+  //   element: <ProtectedRoute element={<JobPosts />} allowAuthenticated={false} />,  // Only allow authenticated users here
+  // },
   {
    
     path: "/ApplicationJobPostModal",
@@ -141,12 +141,12 @@ export const router = createBrowserRouter([
   },
   {
     path: "/evaluation-quiz",
-    element: <ProtectedRoute element={<QuizMainComponent />} allowAuthenticated={false} />,  // Only allow authenticated users here
+    element: <Protected element={<QuizMainComponent />} allowAuthenticated={false} />,  // Only allow authenticated users here
   },
   {
     path: "/Behaviour-Assessment-Report",
     element: (
-      <ProtectedRoute
+      <Protected
         element={<BehaviourAssReport />}
         allowAuthenticated={false}
       />

@@ -2163,7 +2163,7 @@ const ApplicationJobPostModal = ({
         setApplicantProfileData(response.data);
         setStoredApplicantId(response.data?.applcant?.uid);
         localStorage.setItem('applicantToken', response?.data?.user_login?.access)
-
+        // localStorage.setItem('authToken',response?.data?.user_login?.access)
         localStorage.setItem(
           "applicantProfileData",
           JSON.stringify(response.data)
@@ -2556,7 +2556,7 @@ const ApplicationJobPostModal = ({
       ) {
         //console.log("Token expired, redirecting to login");
         removeToken();
-        navigate("/loginwithpassword");
+        // navigate("/loginwithpassword");
       }
     }
   };
