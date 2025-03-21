@@ -5,6 +5,7 @@ import leaderLarge from "../../images/icons/Leader-icon.svg";
 import InfluencerLarge from "../../images/icons/Influencer-icon.svg";
 import LeaderIcn from "../../images/icons/Leader-icon.svg";
 import { ApplicationDeatilsApi } from '../../services/provider';
+const title = ['Your Dominant Personality', 'Your Secondary Personality']
 const content = ['The dominant personality signifies the traits and behaviors that the you most closely associate with and are easily observable.',
   'The secondary personality is less visible and only shown in certain situations or to certain people. This could be aspects of ourselves that we keep more private or that only come out in specific contexts'
 ]
@@ -95,14 +96,14 @@ const behaviourResponse = [
   },
 ]
 
-const BehaviourAssReport = () => {
+const BehaviourAssReport = ({ behaviourReportModel, setBehaviourReportModel }) => {
   const applcant = JSON.parse(localStorage.getItem("applicantProfileData"))
   const [selectedpersonality, setSelectedpersonality] = useState({
     modal_name: "",
     modal_data: {}
   })
   const [applicantPersonality, setApplicantPersonality] = useState();
-  const handleClose = () => { };
+  const handleClose = () => { setBehaviourReportModel(false) };
   const personality = {
     behaviours_name: "Influencer",
     behaviour_type_name: "(I/DSC) High Influence",
@@ -123,7 +124,7 @@ const BehaviourAssReport = () => {
   };
   const applicantDetailAPI = async () => {
     try {
-      const res = await ApplicationDeatilsApi(applcant?.applcant?.user || "alefiya@gmail.com")
+      const res = await ApplicationDeatilsApi(applcant?.applcant?.user)
       if (res?.data?.success) {
         const personalityKeys = Object.values(res.data.response.applicant_personality_data);
         const updatedBehaviourResponse = behaviourResponse.map(item => ({
@@ -146,7 +147,7 @@ const BehaviourAssReport = () => {
   return (
     <>
       <Modal
-        show={true}
+        show={behaviourReportModel}
         onHide={handleClose}
         animation={false}
         size="lg"
@@ -162,10 +163,10 @@ const BehaviourAssReport = () => {
             <h5 className="mb-3">You have completed your assessment.</h5>
             <p className="disc-text"> You have completed the LYWO behavioral test, which is based on the classic DISC personality theory and assessment. This test helps us understand your natural tendencies, allowing us to tailor job roles and subsequent assessments to complement your traits. The test broadly categorizes all candidates into personality groups.</p>
             <Row className="mt-5 justify-content-center">
-              {Array.isArray(applicantPersonality) && applicantPersonality.map((item,index) => (
+              {Array.isArray(applicantPersonality) && applicantPersonality.map((item, index) => (
                 <Col md={4}>
                   <div className="gray-card" onClick={() => handleCardClick(item)}>
-                    <h6> Your Dominant Personality</h6>
+                    <h6>{title[index]}</h6>
                     <p>{content[index]} </p>
                     {/* <p>{item?.behaviour_desctiption}</p> */}
                     <img className="mt-35" src={leaderLarge} />

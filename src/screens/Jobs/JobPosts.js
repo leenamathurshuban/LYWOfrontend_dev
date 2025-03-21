@@ -51,6 +51,8 @@ import LinkdeenR from "../../images/icons/linkdeen-16x.svg";
 import MarkerPIn from "../../images/icons/marker-pin-16.svg";
 import ExperinecB from "../../images/icons/briefcase-0116x.svg";
 import User16x from "../../images/icons/user-plus-0116x.svg";
+import BehaviourAssReport from "../BehaviourAss/BehaviourAssReport";
+import BehaviouralAst from "../BehaviourAss/BehaviouralAst";
 
 const JobPosts = () => {
   const { id } = useParams();
@@ -64,6 +66,8 @@ const JobPosts = () => {
   }, [])
   const [jobPostData, setJobPostData] = useState(null);
   const [jobPostErrorMsg, setJobPostErrorMsg] = useState("");
+  const [behaviourAssModel,setBehaviourAssModel] = useState(false);
+  const [behaviourReportModel,setBehaviourReportModel] = useState(false);
 
   const [modalOpen, setModalOpen] = useState({
     showFirstModal: false,
@@ -600,7 +604,7 @@ const JobPosts = () => {
       <div>
         <Modal
           show={modalOpen.showProfileViewDetailsModal}
-          handleClose={() => handleCloseModals()}
+          onHide={handleCloseModals}
           animation={false}
           size="lg"
           backdrop={false}
@@ -928,11 +932,13 @@ const JobPosts = () => {
                   Number(localStorage.getItem("AttemptStatus")) < 28 ||
                   Number(localStorage.getItem("AttemptStatus")) === 0
                 ) {
-                  navigate("/Behavioural-Assessment");
+                  // navigate("/Behavioural-Assessment");
+                  setBehaviourAssModel(true)
                 } else if (
                   Number(localStorage.getItem("AttemptStatus")) === 28
                 ) {
-                  navigate("/Behaviour-Assessment-Report");
+                  // navigate("/Behaviour-Assessment-Report");
+                  setBehaviourReportModel(true)
                 }
               }}
             >
@@ -1041,6 +1047,8 @@ const JobPosts = () => {
       />
       {handleShareModal()}
       {ViewProfileFormDetailsModal()}
+      <BehaviouralAst behaviourAssModel={behaviourAssModel} setBehaviourAssModel={setBehaviourAssModel} />
+      <BehaviourAssReport behaviourReportModel={behaviourReportModel} setBehaviourReportModel={setBehaviourReportModel} />
     </Container>
   );
 };

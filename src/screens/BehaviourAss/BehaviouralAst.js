@@ -37,7 +37,7 @@ import { ApplicationDeatilsApi, ApplicationFormDetailsApi, getApplicantBehaviour
 import QuizQuestionSlider from '../../components/QuizQuestionSlider';
 import { useNavigate } from 'react-router-dom';
 
-const BehaviouralAst = () => {
+const BehaviouralAst = ({behaviourAssModel,setBehaviourAssModel}) => {
     const [show, setShow] = useState(false);
     const [popupShow, setPopupShow] = useState(false);
     const handleClosePop = () => setPopupShow(false);
@@ -191,7 +191,7 @@ const BehaviouralAst = () => {
     return (
         <>
             <Modal
-                show={true}
+                show={behaviourAssModel}
                 onHide={handleClose}
                 animation={false}
                 size="lg"
