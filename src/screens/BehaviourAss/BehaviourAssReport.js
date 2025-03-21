@@ -5,6 +5,9 @@ import leaderLarge from "../../images/icons/Leader-icon.svg";
 import InfluencerLarge from "../../images/icons/Influencer-icon.svg";
 import LeaderIcn from "../../images/icons/Leader-icon.svg";
 import { ApplicationDeatilsApi } from '../../services/provider';
+const content = ['The dominant personality signifies the traits and behaviors that the you most closely associate with and are easily observable.',
+  'The secondary personality is less visible and only shown in certain situations or to certain people. This could be aspects of ourselves that we keep more private or that only come out in specific contexts'
+]
 const behaviourResponse = [
   {
     behaviours_name: "Pioneer",
@@ -159,12 +162,12 @@ const BehaviourAssReport = () => {
             <h5 className="mb-3">You have completed your assessment.</h5>
             <p className="disc-text"> You have completed the LYWO behavioral test, which is based on the classic DISC personality theory and assessment. This test helps us understand your natural tendencies, allowing us to tailor job roles and subsequent assessments to complement your traits. The test broadly categorizes all candidates into personality groups.</p>
             <Row className="mt-5 justify-content-center">
-              {Array.isArray(applicantPersonality) && applicantPersonality.map((item) => (
+              {Array.isArray(applicantPersonality) && applicantPersonality.map((item,index) => (
                 <Col md={4}>
                   <div className="gray-card" onClick={() => handleCardClick(item)}>
                     <h6> Your Dominant Personality</h6>
-                    {/* <p> The dominant personality signifies the traits and behaviors that the you most closely associate with and are easily observable.</p> */}
-                    <p>{item?.behaviour_desctiption}</p>
+                    <p>{content[index]} </p>
+                    {/* <p>{item?.behaviour_desctiption}</p> */}
                     <img className="mt-35" src={leaderLarge} />
                     <h2>{item?.behaviours_name}</h2>
                   </div>

@@ -30,6 +30,7 @@ import mcqIcon from "../../images/icons/mcq_icon.png";
 import quizIcon from "../../images/icons/quiz_icon.svg";
 import logoIcon from "../../images/logo_icon.png";
 import {
+  ApplicationDeatilsApi,
   EvalationAssestDetails,
   EvalationAssestList,
   PostQuizDataApi,
@@ -46,12 +47,14 @@ import videoRecoder from "../../images/icons/video-recorder.svg";
 import CollapsedButton from "../../images/icons/CollapsedButton.svg";
 import NotAllowed from "../../images/icons/NotAllowed.svg";
 
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { removeToken } from "../../helpers/helper";
 import TestInstruction from "./TestInstruction";
 import DragDrop from "../../images/icons/dragdrop-bullet.svg";
 
 const QuizMainComponent = (item) => {
+  const { id } = useParams();
+  const location = useLocation();
   const [show, setShow] = useState(true);
   const [showQuiz, setShowQuiz] = useState(false);
   const handleInstructionShow = () => setShow(true);
@@ -85,6 +88,7 @@ const QuizMainComponent = (item) => {
   const [SerachList, setSerachList] = useState("");
   const [activeKeys, setActiveKeys] = useState(["0-0"]);
   const [selectedSection, setSelectedSection] = useState("");
+  const [selectedSectionAnswer,setSelectedSectionAnswer] = useState([])
 
   const revaluationsListAPI = async (SerachQuestion) => {
     setIsLoading(true);
@@ -165,8 +169,8 @@ const QuizMainComponent = (item) => {
     }
   };
   useEffect(() => {
-    quizModal("bd6b74c2-9fc4-4ba8-a9e4-5ba51aaf9e1c")
-  }, [])
+    quizModal(id)
+  }, [id])
 
   const getPosition = (answer) => {
     const cleanAnswer = answer.replace(/['"]/g, " ").trim();
@@ -324,20 +328,36 @@ const QuizMainComponent = (item) => {
     try {
       const isSingleArray = QuizData[getKeyIndex]?.some(Array.isArray) ? QuizData[getKeyIndex]?.flat() : QuizData[getKeyIndex]
       const formData = new FormData();
-      formData.append("job", "4727845a-d9db-406f-8192-b8350d92afe9")
+      formData.append("job", location?.state)
       formData.append("applicant", applcant?.applcant?.uid)
       formData.append("question", questionId)
       formData.append("selected_answer", JSON.stringify(isSingleArray))
       const res = await PostQuizDataApi(formData)
       if (res.data.success) {
+        applicantDetailAPI()
       }
     } catch (error) {
       console.log(error)
     }
   }
+  const applicantDetailAPI = async () => {
+    try {
+      const res = await ApplicationDeatilsApi(applcant?.applcant?.user)
+      if (res?.data?.success) {
+       setSelectedSectionAnswer(res?.data?.response?.asset_data)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  useEffect(() => {
+    applicantDetailAPI();
+  }, [])
   console.log(QuizData, EvaluationListDetails)
   console.log(markReview)
   console.log(QuizData[getKeyIndex], applcant)
+  // console.log(EvaluationListDetails)
+  console.log('selected_answer=============>',selectedSectionAnswer)
   return (
     <>
       <TestInstruction showinstruction={show} handleInstructionClose={handleInstructionClose} handleStartQuiz={handleStartQuiz} EvaluationListDetails={EvaluationListDetails} />
@@ -556,7 +576,7 @@ const QuizMainComponent = (item) => {
                                               answer.replace(/'/g, "") ===
                                               option
                                           );
-
+                                          console.log(selectedSectionAnswer)
                                         return (
                                           <li key={index}>
                                             <Form.Check

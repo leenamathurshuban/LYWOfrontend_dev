@@ -410,6 +410,7 @@ const JobPosts = () => {
     }
   }, [paramemail])
   console.log("buttonText", buttonText)
+  console.log(jobPostData?.asset_job)
   const handleShareModal = () => {
     return (
       <Modal show={showModal} onHide={toggleModal}>
@@ -942,25 +943,29 @@ const JobPosts = () => {
               {Number(localStorage.getItem("AttemptStatus")) === 0 && "Start"}
             </Button>
           </div>
+          {jobPostData?.asset_job?.map((Val) => (
+            <div className="progress_box">
+              <h5>
+                <span className="bg_circle"></span>
+                {/* ICC Cricket Rules Quiz */}
+                {Val?.asset_title}
+              </h5>
+              <p>
+                Pending
+              </p>
+              <Button
+                variant="primary"
+                size="lg"
+                disabled={localStorage.getItem("AttemptStatus") < 28 ? true : false}
+                onClick={() => {
+                  navigate(`/evaluation-quiz/${Val?.uid}`,{state:jobPostData?.uid})
+                }}
+              >
+                Start
+              </Button>
+            </div>
+          ))}
 
-          <div className="progress_box">
-            <h5>
-              <span className="bg_circle"></span>ICC Cricket Rules Quiz
-            </h5>
-            <p>
-              Pending
-            </p>
-            <Button
-              variant="primary"
-              size="lg"
-              disabled={localStorage.getItem("AttemptStatus") < 28? true:false}
-              onClick={() => {  
-                navigate("/evaluation-quiz")              
-              }}
-            >
-              Start
-            </Button>
-          </div>
 
           <div className="progress_box">
             <h5>
@@ -973,9 +978,9 @@ const JobPosts = () => {
               variant="primary"
               size="lg"
               disabled
-              // onClick={() => {
-        
-              // }}
+            // onClick={() => {
+
+            // }}
             >
               Start
             </Button>

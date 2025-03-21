@@ -136,7 +136,11 @@ const BehaviouralAst = () => {
                     // formData.append('applicant', applicantId?.uid);
                     formData.append('most_like', JSON.stringify(quizMostLeastLike.flatMap(row => row.mostList)));
                     formData.append('least_like', JSON.stringify(quizMostLeastLike.flatMap(row => row.leastList)));
-                    formData.append('behaviour_status', 'Draft');
+                    if(runCounter()<28){
+                        formData.append('behaviour_status', 'Draft');
+                    }else if(runCounter()===28){
+                        formData.append('behaviour_status', 'Completed');
+                    }                    
                     // debugger
                     const response = await ApplicationFormDetailsApi(formData,applicantId.applcant.uid)
                     if (response?.data?.success) {
@@ -154,7 +158,11 @@ const BehaviouralAst = () => {
                     let leastLike = quizMostLeastLike.flatMap(row => row.leastList)
                     formData.append('most_like', JSON.stringify([...attemptQuiz, ...mostLike]));
                     formData.append('least_like', JSON.stringify([...attemptLeastQuiz, ...leastLike]));
-                    formData.append('behaviour_status', 'Draft');
+                    if(runCounter()<28){
+                        formData.append('behaviour_status', 'Draft');
+                    }else if(runCounter()===28){
+                        formData.append('behaviour_status', 'Completed');
+                    }
                     // const response = await updateApplicantBehaviourApi(behavioralId?.uid, formData);
                     const response = await ApplicationFormDetailsApi(formData,behavioralId?.uid);
                     if (response?.data?.success) {
@@ -179,6 +187,7 @@ const BehaviouralAst = () => {
     ))
     console.log(quizMostLeastLike.flatMap(row => row.mostList).length)
     console.log(attemptQuiz.length, attemptLeastQuiz.length)
+    console.log(runCounter())
     return (
         <>
             <Modal

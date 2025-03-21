@@ -140,7 +140,7 @@ export const router = createBrowserRouter([
     element: <Protected element={<BehaviouralAst />} allowAuthenticated={false} />,  // Only allow authenticated users here
   },
   {
-    path: "/evaluation-quiz",
+    path: "/evaluation-quiz/:id",
     element: <Protected element={<QuizMainComponent />} allowAuthenticated={false} />,  // Only allow authenticated users here
   },
   {
