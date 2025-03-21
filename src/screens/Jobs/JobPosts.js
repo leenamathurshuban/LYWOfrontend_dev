@@ -1031,6 +1031,7 @@ const JobPosts = () => {
           setResumeFileName={setResumeFileName}
           EducationRows={EducationRows}
           SetEducationRows={SetEducationRows}
+          setBehaviourAssModel={setBehaviourAssModel}
         />
       ) : (
         <p>Loading...</p>

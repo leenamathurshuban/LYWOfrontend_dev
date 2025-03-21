@@ -1851,7 +1851,7 @@ const ApplicationJobPostModal = ({
   storedApplicantId, setStoredApplicantId, selectedSpokenLanguageUids, setSelectedSpokenLanguageUids,
   selectedWrittenLanguageUids, setSelectedWrittenLanguageUids, selectedSkills, setSelectedSkills,
   ResumeFile, setResumeFile, ResumeFileName, setResumeFileName,
-  EducationRows, SetEducationRows
+  EducationRows, SetEducationRows,setBehaviourAssModel
 }) => {
   // const [isYes, setIsYes] = useState({
   //   CurrentlyWorkingToggle: false,
@@ -2248,7 +2248,8 @@ const ApplicationJobPostModal = ({
           handleCloseModals();
           handleClose();
           if (flag === 'test') {
-            navigate('/Behavioural-Assessment')
+            // navigate('/Behavioural-Assessment')
+            setBehaviourAssModel(true)
           }
           // localStorage.setItem('applicantToken', ApplicantProfileData?.user_login?.access)
           // localStorage.setItem('applicantData', JSON.stringify(response?.data?.response))         
