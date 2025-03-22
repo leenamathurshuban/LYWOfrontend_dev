@@ -149,9 +149,8 @@ const BehaviouralAst = ({behaviourAssModel,setBehaviourAssModel}) => {
                         localStorage.setItem('applicantBehaviour',JSON.stringify(response?.data?.response))  
                         // sessionStorage.setItem('applicantBehaviour',JSON.stringify(response?.data?.response))   
                         localStorage.setItem("AttemptStatus",runCounter())
-                        // sessionStorage.setItem("AttemptStatus",runCounter())
-                        // navigate('/JobPosts')     
-                        navigate(-1)              
+                        // sessionStorage.setItem("AttemptStatus",runCounter())                         
+                        window.location.reload();           
                     }
                 } else {
                     let mostLike = quizMostLeastLike.flatMap(row => row.mostList);
@@ -171,9 +170,8 @@ const BehaviouralAst = ({behaviourAssModel,setBehaviourAssModel}) => {
                         localStorage.setItem('applicantBehaviour',JSON.stringify(response?.data?.response))
                         // sessionStorage.setItem('applicantBehaviour',JSON.stringify(response?.data?.response))
                         localStorage.setItem("AttemptStatus",runCounter())
-                        // sessionStorage.setItem("AttemptStatus",runCounter())
-                        // navigate('/JobPosts')
-                        navigate(-1)
+                        // sessionStorage.setItem("AttemptStatus",runCounter())                        
+                        window.location.reload();
                     }
                 }
             } catch (error) {
