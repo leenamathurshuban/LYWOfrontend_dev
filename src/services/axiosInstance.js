@@ -1,6 +1,7 @@
 import axios from "axios";
 export const getToken = () => {
-  return localStorage.getItem('authToken');  // Adjust as per your implementation
+  // return localStorage.getItem('applicantToken') || localStorage.getItem('authToken');  // Adjust as per your implementation
+  return localStorage.getItem('authToken');
 };
 
 

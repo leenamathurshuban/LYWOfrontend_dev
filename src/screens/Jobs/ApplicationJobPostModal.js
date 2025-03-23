@@ -2162,7 +2162,7 @@ const ApplicationJobPostModal = ({
       if (response.status === 200) {
         setApplicantProfileData(response.data);
         setStoredApplicantId(response.data?.applcant?.uid);
-        localStorage.setItem('applicantToken', response?.data?.user_login?.access)
+        localStorage.setItem('authToken', response?.data?.user_login?.access)
         // localStorage.setItem('authToken',response?.data?.user_login?.access)
         localStorage.setItem(
           "applicantProfileData",
@@ -2653,7 +2653,7 @@ const ApplicationJobPostModal = ({
   }, []);
 
   useEffect(() => {
-    if (selectedGroupUid.length && storedApplicantId && localStorage.getItem('applicantToken')) {
+    if (selectedGroupUid.length && storedApplicantId && localStorage.getItem('authToken')) {
       selectedGroupUid.map((id) => {
         getSkillGroupDetails(id)
       })

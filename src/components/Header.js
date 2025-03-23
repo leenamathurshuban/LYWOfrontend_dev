@@ -23,7 +23,7 @@ const Header = () => {
   const handleLogout = async () => {
     logoutApi();
     removeToken();
-    localStorage.removeItem('applicantToken');
+    // localStorage.removeItem('applicantToken');
     localStorage.removeItem('applicantData');
     localStorage.removeItem('applicantBehaviour')
     localStorage.setItem('AttemptStatus',0)

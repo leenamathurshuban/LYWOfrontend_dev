@@ -2,7 +2,7 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 
 const isApplicant = () => {
-  return localStorage.getItem('applicantToken') !== null;
+  return localStorage.getItem('authToken') !== null;
   // return sessionStorage.getItem('applicantToken') !== null;
 };
 const Protected = ({ element, redirectTo, allowAuthenticated }) => {
