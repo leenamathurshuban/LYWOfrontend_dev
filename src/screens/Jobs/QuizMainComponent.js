@@ -88,7 +88,7 @@ const QuizMainComponent = (item) => {
   const [SerachList, setSerachList] = useState("");
   const [activeKeys, setActiveKeys] = useState(["0-0"]);
   const [selectedSection, setSelectedSection] = useState("");
-  const [selectedSectionAnswer,setSelectedSectionAnswer] = useState([])
+  // const [selectedSectionAnswer, setSelectedSectionAnswer] = useState([])
 
   const revaluationsListAPI = async (SerachQuestion) => {
     setIsLoading(true);
@@ -282,6 +282,9 @@ const QuizMainComponent = (item) => {
     setQuizData((prev) => {
       const key = `${sectionIndex}-${itemIndex}`;
       const currentSelections = prev[key] || [];
+      if (currentSelections.length) {
+        setQuestionId(questionId)
+      }
       return {
         ...prev,
         [key]: currentSelections.includes(e.target.value)
@@ -289,7 +292,7 @@ const QuizMainComponent = (item) => {
           : [...currentSelections, e.target.value]
       };
     });
-    setQuestionId(questionId)
+    // setQuestionId(questionId)
     setGetKeyIndex(`${sectionIndex}-${itemIndex}`)
   }
   const handleQuizSingleData = (sectionIndex, itemIndex, e, questionId) => {
@@ -338,13 +341,22 @@ const QuizMainComponent = (item) => {
       }
     } catch (error) {
       console.log(error)
+      alert(error?.response?.data?.response?.error[0])
     }
   }
   const applicantDetailAPI = async () => {
     try {
       const res = await ApplicationDeatilsApi(applcant?.applcant?.user)
       if (res?.data?.success) {
-       setSelectedSectionAnswer(res?.data?.response?.asset_data)
+        // setSelectedSectionAnswer(res?.data?.response?.asset_data)
+        res?.data?.response?.asset_data[0].section_asset.sort((a, b) => a.id - b.id).map((item, quesIndex) =>
+          item.question_section.map((Val, sectionIndex) => {
+            setQuizData((prev) => ({
+              ...prev,
+              [`${quesIndex}-${sectionIndex}`]: Val.user_answer_question[0]?.selected_answer
+            }));
+          })
+        )
       }
     } catch (error) {
       console.log(error)
@@ -353,11 +365,12 @@ const QuizMainComponent = (item) => {
   useEffect(() => {
     applicantDetailAPI();
   }, [])
-  console.log(QuizData, EvaluationListDetails)
-  console.log(markReview)
-  console.log(QuizData[getKeyIndex], applcant)
+  // console.log(QuizData, EvaluationListDetails)
+  // console.log(markReview)
+  // console.log(QuizData[getKeyIndex], applcant)
   // console.log(EvaluationListDetails)
-  console.log('selected_answer=============>',selectedSectionAnswer)
+  console.log(QuizData)
+  // console.log('selected_answer=============>', selectedSectionAnswer)
   return (
     <>
       <TestInstruction showinstruction={show} handleInstructionClose={handleInstructionClose} handleStartQuiz={handleStartQuiz} EvaluationListDetails={EvaluationListDetails} />
@@ -559,7 +572,7 @@ const QuizMainComponent = (item) => {
                                 <span className="que_points">
                                   {item.question_points} points
                                   <img src={mcqIcon} />
-                                  <strong onClick={() => handleMarkandReview(quesIndex, sectionIndex)} className={`${markReview[`${sectionIndex}-${quesIndex}`]?.length ? 'active' : ''} ms-2 bookmark`}>
+                                  <strong onClick={() => handleMarkandReview(quesIndex, sectionIndex)} className={`${markReview[`${quesIndex}-${sectionIndex}`]?.length ? 'active' : ''} ms-2 bookmark`}>
                                     <i class="fa fa-bookmark" aria-hidden="true"></i>
                                   </strong>
                                 </span>
@@ -576,7 +589,6 @@ const QuizMainComponent = (item) => {
                                               answer.replace(/'/g, "") ===
                                               option
                                           );
-                                          console.log(selectedSectionAnswer)
                                         return (
                                           <li key={index}>
                                             <Form.Check
@@ -584,6 +596,7 @@ const QuizMainComponent = (item) => {
                                               id={`custom-radio${index + 1}`}
                                               label={option}
                                               // checked={isChecked}
+                                              checked={QuizData[`${quesIndex}-${sectionIndex}`]?.some((v)=>v==option)}
                                               value={option}
                                               onChange={(e) => handleQuizData(quesIndex, sectionIndex, e, item?.uid)}
                                             />
@@ -613,6 +626,7 @@ const QuizMainComponent = (item) => {
                                               label={option}
                                               name="radioGroup"
                                               // checked={isChecked}
+                                              checked={QuizData[`${quesIndex}-${sectionIndex}`]?.some((v)=>v==option)}
                                               value={option}
                                               onChange={(e) => handleQuizSingleData(quesIndex, sectionIndex, e, item?.uid)}
                                             />

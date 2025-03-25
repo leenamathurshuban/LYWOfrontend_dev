@@ -7,6 +7,7 @@ import {
     Container,
     Form,
     Modal,
+    Offcanvas,
     Row
 } from "react-bootstrap";
 import cakeIQ from "../../images/icons/quiz/cake-IQ.svg";
@@ -32,13 +33,16 @@ import infogray from "../../images/icons/info_gray.svg";
 import globgray from "../../images/icons/glob_gray.svg";
 import rocket from "../../images/rocket.png";
 import popSucess from "../../images/popSuc.png";
+import SuggNormal from "../../images/icons/sugg_normal.svg";
+import SuggLealike from "../../images/icons/sugg_lealike.svg";
 import QuizSlider from "../../components/QuizSlider";
 import { ApplicationDeatilsApi, ApplicationFormDetailsApi, getApplicantBehaviourDetailApi, getQuizQuestionListAPi, postQuizQuestionApi, updateApplicantBehaviourApi } from '../../services/provider';
 import QuizQuestionSlider from '../../components/QuizQuestionSlider';
 import { useNavigate } from 'react-router-dom';
 
-const BehaviouralAst = ({behaviourAssModel,setBehaviourAssModel}) => {
+const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel }) => {
     const [show, setShow] = useState(false);
+    const [showInstruction,setShowInstruction] = useState(false)
     const [popupShow, setPopupShow] = useState(false);
     const handleClosePop = () => setPopupShow(false);
     const handleShow = () => setShow(true);
@@ -58,7 +62,7 @@ const BehaviouralAst = ({behaviourAssModel,setBehaviourAssModel}) => {
     const [attemptQuiz, setAttemptQuiz] = useState([])
     const [attemptLeastQuiz, setAttemptLeastQuiz] = useState([])
     const [complete, setComplete] = useState(false)
-    const [language,setLanguage] = useState('english')
+    const [language, setLanguage] = useState('english')
     const allSelectionsMade = mostLeastLike.every(row => row.most !== "" && row.least !== "");
     const handleClose = () => {
         if (!quizMostLeastLike.length) {
@@ -66,6 +70,7 @@ const BehaviouralAst = ({behaviourAssModel,setBehaviourAssModel}) => {
         } else {
             setPopupShow(true)
         }
+        setBehaviourAssModel(false)
     }
     const getApplicantBehaviourDetail = async (id) => {
         try {
@@ -136,42 +141,46 @@ const BehaviouralAst = ({behaviourAssModel,setBehaviourAssModel}) => {
                     // formData.append('applicant', applicantId?.uid);
                     formData.append('most_like', JSON.stringify(quizMostLeastLike.flatMap(row => row.mostList)));
                     formData.append('least_like', JSON.stringify(quizMostLeastLike.flatMap(row => row.leastList)));
-                    if(runCounter()<28){
+                    if (runCounter() < 28) {
                         formData.append('behaviour_status', 'Draft');
-                    }else if(runCounter()===28){
+                    } else if (runCounter() === 28) {
                         formData.append('behaviour_status', 'Completed');
-                    }                    
+                    }
                     // debugger
-                    const response = await ApplicationFormDetailsApi(formData,applicantId.applcant.uid)
+                    const response = await ApplicationFormDetailsApi(formData, applicantId.applcant.uid)
                     if (response?.data?.success) {
                         setPopupShow(false)
                         setComplete(true)
-                        localStorage.setItem('applicantBehaviour',JSON.stringify(response?.data?.response))  
+                        localStorage.setItem('applicantBehaviour', JSON.stringify(response?.data?.response))
                         // sessionStorage.setItem('applicantBehaviour',JSON.stringify(response?.data?.response))   
-                        localStorage.setItem("AttemptStatus",runCounter())
+                        localStorage.setItem("AttemptStatus", runCounter())
                         // sessionStorage.setItem("AttemptStatus",runCounter())                         
-                        window.location.reload();           
+                        setTimeout(()=>{
+                            window.location.reload();
+                        },1000)
                     }
                 } else {
                     let mostLike = quizMostLeastLike.flatMap(row => row.mostList);
                     let leastLike = quizMostLeastLike.flatMap(row => row.leastList)
                     formData.append('most_like', JSON.stringify([...attemptQuiz, ...mostLike]));
                     formData.append('least_like', JSON.stringify([...attemptLeastQuiz, ...leastLike]));
-                    if(runCounter()<28){
+                    if (runCounter() < 28) {
                         formData.append('behaviour_status', 'Draft');
-                    }else if(runCounter()===28){
+                    } else if (runCounter() === 28) {
                         formData.append('behaviour_status', 'Completed');
                     }
                     // const response = await updateApplicantBehaviourApi(behavioralId?.uid, formData);
-                    const response = await ApplicationFormDetailsApi(formData,behavioralId?.uid);
+                    const response = await ApplicationFormDetailsApi(formData, behavioralId?.uid);
                     if (response?.data?.success) {
                         setPopupShow(false)
                         setComplete(true)
-                        localStorage.setItem('applicantBehaviour',JSON.stringify(response?.data?.response))
+                        localStorage.setItem('applicantBehaviour', JSON.stringify(response?.data?.response))
                         // sessionStorage.setItem('applicantBehaviour',JSON.stringify(response?.data?.response))
-                        localStorage.setItem("AttemptStatus",runCounter())
-                        // sessionStorage.setItem("AttemptStatus",runCounter())                        
-                        window.location.reload();
+                        localStorage.setItem("AttemptStatus", runCounter())
+                        // sessionStorage.setItem("AttemptStatus",runCounter())  
+                        setTimeout(()=>{
+                            window.location.reload();
+                        },1000)                       
                     }
                 }
             } catch (error) {
@@ -179,13 +188,14 @@ const BehaviouralAst = ({behaviourAssModel,setBehaviourAssModel}) => {
             }
         }
     }
-    
+
     console.log('----------------->', quizMostLeastLike.filter(row =>
         !row?.behaviour_options?.some(obj => attemptQuiz?.includes(obj.uid))
     ))
     console.log(quizMostLeastLike.flatMap(row => row.mostList).length)
     console.log(attemptQuiz.length, attemptLeastQuiz.length)
     console.log(runCounter())
+    console.log(showInstruction)
     return (
         <>
             <Modal
@@ -267,14 +277,14 @@ const BehaviouralAst = ({behaviourAssModel,setBehaviourAssModel}) => {
                     <Modal.Title>Behavioural Assessment</Modal.Title>
                     <div className="score_panel">
                         <span className="att_count">Attempted <strong>{runCounter()} / 28</strong></span>
-                        <button type="button" className="outline_scorebtn me-3"><img src={infogray} />Instructions</button>
+                        <button type="button" onClick={()=>setShowInstruction(true)} className="outline_scorebtn me-3"><img src={infogray} />Instructions</button>
                         <button type="button" className="outline_scorebtn me-3 setlanguage"><img src={globgray} />
                             <Form.Select
                                 name="currency"
                                 aria-label="Default select example"
                                 className="sm-fselect"
                                 value={language}
-                                onChange={(e)=>{setLanguage(e?.target?.value);getQuizQuestion()}}
+                                onChange={(e) => { setLanguage(e?.target?.value); getQuizQuestion() }}
                             >
                                 <option selected value="english">English</option>
                                 <option selected value="hindi">Hindi</option>
@@ -298,29 +308,34 @@ const BehaviouralAst = ({behaviourAssModel,setBehaviourAssModel}) => {
                                 quizMostLeastLike={quizMostLeastLike}
                                 setQuizMostLeastLike={setQuizMostLeastLike}
                                 language={language}
+                                counter={runCounter()}
                             />
-                        )}                        
+                        )}
                     </Row>
                     {quizMostLeastLike.flatMap(row => row.mostList).length === 3 && quizMostLeastLike.flatMap(row => row.leastList).length === 3 && (
-                        <Row className="bg-white rounded px-6 py-5">
-                            <img src={closeBtn} width={30} height={30} />
-                            <h6>Great Start!</h6>
-                            <span>Take a deep breath and continue.</span>
-                        </Row>
+                        <div className="toster great">
+                            <img src={closeBtn} className='closebtn' />
+                            <div className='d-flex align-items-center'>
+                                <h6>Great Start!</h6>
+                                <span>Take a deep breath and continue.</span>
+                            </div>
+                        </div>
                     )}
                     {quizMostLeastLike.flatMap(row => row.mostList).length === 10 && quizMostLeastLike.flatMap(row => row.leastList).length === 10 && (
-                        <Row className="bg-white rounded px-6 py-5">
-                            <img src={closeBtn} width={30} height={30} />
-                            <h6>On the Right Track!</h6>
-                            <span>Don't overthink your choices.</span>
-                        </Row>
+                        <div className="toster">
+                            <img src={closeBtn} className='closebtn' />
+                            <div className='d-flex align-items-center'>
+                                <h6>On the Right Track!</h6>
+                                <span>Don't overthink your choices.</span>
+                            </div>
+                        </div>
                     )}
                     {quizMostLeastLike.flatMap(row => row.mostList).length === 20 && quizMostLeastLike.flatMap(row => row.leastList).length === 20 && (
-                        <Row className="bg-white rounded px-6 py-5">
-                            <img src={closeBtn} width={30} height={30} />
-                            <h6>Almost There</h6>
+                        <div className="toster">
+                            <img src={closeBtn} className='closebtn' />
+                            <h6>Almost There</h6><br/>
                             <span>Just a few more choices to go!</span>
-                        </Row>
+                        </div>
                     )}
 
                 </Modal.Body>
@@ -388,6 +403,106 @@ const BehaviouralAst = ({behaviourAssModel,setBehaviourAssModel}) => {
                     </Button>
                 </Modal.Footer>
             </Modal>
+            <Offcanvas 
+                show={showInstruction} 
+                onHide={handleClose}
+                backdrop={false}
+                placement="end"
+                className="instructions_dwr lg-drawer shadow-md border-0" 
+            >
+                <Offcanvas.Header closeButton>
+                    <Offcanvas.Title>Important Instructions</Offcanvas.Title>
+                </Offcanvas.Header>
+                <Offcanvas.Body>
+                    <Row className='mt-3'>
+                        <Col md={4}>
+                            <div className="ints_card normal">
+                                <span className="itns_icon">
+                                    <img src={iceIQ}/>
+                                </span>
+                                <h4>Ice Cream</h4>
+                                <div className='mlike-sugg'>
+                                    <img src={SuggNormal}/>
+                                    <span>Hover over the cards below to begin.</span>
+                                </div>
+                            </div>
+                        </Col>
+                        <Col md={4}>
+                            <div className="ints_card hover">
+                                <span className="itns_icon">
+                                    <img src={iceIQ}/>
+                                </span>
+                                <h4>Ice Cream</h4>
+                                <div className='quiz-btns'>
+                                    <button type="button" class="btn-up"><i class="fa fa-arrow-up"></i></button>
+                                    <button type="button" class="btn-down"><i class="fa fa-arrow-down "></i></button>
+                                    <div className='mlike-sugg'>
+                                        <img src={SuggNormal}/>
+                                        <span>Click to pick “Most Like”</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </Col>
+                        <Col md={4}>
+                            <div className="ints_card hover lelike">
+                                <span className="itns_icon">
+                                    <img src={iceIQ}/>
+                                </span>
+                                <h4>Ice Cream</h4>
+                                <div className='quiz-btns'>
+                                    <button type="button" class="btn-up"><i class="fa fa-arrow-up"></i></button>
+                                    <button type="button" class="btn-down"><i class="fa fa-arrow-down "></i></button>
+                                    <div className='mlike-sugg'>
+                                        <span>Click to pick “Least Like”</span>
+                                        <img src={SuggLealike}/>
+                                    </div>
+                                </div>
+                            </div>
+                        </Col>
+                        <Col md={4} className='mt-6'>
+                            <div className="ints_card hover lelike_select">
+                                <span className="itns_icon">
+                                    <img src={iceIQ}/>
+                                </span>
+                                <h4>Ice Cream</h4>
+                                <div className='quiz-btns'>
+                                    <button type="button" class="btn-up"><i class="fa fa-arrow-up"></i></button>
+                                    <button type="button" class="btn-down"><i class="fa fa-times"></i></button>
+                                    <div className='mlike-sugg'>
+                                        <span>Click to remove the selection</span>
+                                        <img src={SuggLealike}/>
+                                    </div>
+                                </div>
+                            </div>
+                        </Col>
+                        <Col md={4} className='mt-6'>
+                            <div className="ints_card hover mlike_select">
+                                <span className="itns_icon">
+                                    <img src={iceIQ}/>
+                                </span>
+                                <h4>Ice Cream</h4>
+                                <div className='quiz-btns'>
+                                    <button type="button" class="btn-up"><i class="fa fa-times"></i></button>
+                                    <button type="button" class="btn-down"><i class="fa fa-arrow-down "></i></button>
+                                    <div className='mlike-sugg'> 
+                                        <img src={SuggNormal}/>
+                                        <span>Click to remove the selection</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </Col>
+                    </Row>
+                    <h6 style={{marginTop:'5rem'}}>Recommendations </h6>
+                    <ul>
+                        <li>The test contains 28 questions.</li>
+                        <li>Do not overthink your decisions.</li>
+                        <li>There are no right or wrong choices.</li>
+                        <li>Complete the behavioral test in one sitting.</li>
+                        <li>For each question, you will be given 4 options.</li>
+                        <li>Select one most like you and one least like you.</li>
+                    </ul>
+                </Offcanvas.Body>
+            </Offcanvas>
         </>
     )
 }

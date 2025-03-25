@@ -3800,31 +3800,44 @@ select.h-36.form-select {
   background-color: #fff;
 }
 .qzslider .slick-dots {
-  right: -35px;
+  right: -50px;
   width: 35px;
   top: 0;
-  top: 15%;
-  max-height: 288px;
-  overflow: hidden;
+  top: 0;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  height: 480px;
+  bottom: auto;
 }
 .qzslider .slick-dots li button:before {
   content: inherit;
 }
 .qzslider .slick-dots li button:after {
-  content: "";
-  background-color: #D0D5DD;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  display: inline-block;
+  content: inherit;
 }
 .qzslider .slick-dots li.slick-active button:after {
   height: 40px;
   border-radius: 8px;
   background-color: #98A2B3;
 }
+.qzslider .slick-dots li {
+  position: relative;
+  display: block;
+  width: 8px;
+  height: 8px;
+  margin: 0 0 5px 0;
+  padding: 0;
+}
 .qzslider .slick-dots li button {
   padding: 0;
+  width: 8px;
+  height: 8px;
+  background-color: #ddd;
+  border-radius: 50%;
+}
+.qzslider .slick-dots li button.quiz-completed {
+  background-color: #75E0A7;
 }
 
 .bsreport_mdl .modal-body {
@@ -4098,7 +4111,7 @@ select.h-36.form-select {
 .app_rightsdbr .progress_box {
   background-color: #F9FAFB;
   border: solid 1px #EAECF0;
-  padding: 14px;
+  padding: 10px;
   border-radius: 8px;
   margin-bottom: 32px;
   position: relative;
@@ -4132,6 +4145,48 @@ select.h-36.form-select {
   width: 100%;
   font-size: 12px;
   margin-bottom: 5px;
+}
+.app_rightsdbr .progress_box p {
+  font-family: Inter;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+  letter-spacing: 0%;
+  color: #667085;
+}
+.app_rightsdbr .progress_box.complate_status {
+  border-color: #17B26A;
+  background-color: #F6FEF9;
+}
+.app_rightsdbr .progress_box.complate_status::after {
+  content: "";
+  background-color: #17B26A;
+}
+.app_rightsdbr .progress_box.complate_status h5 {
+  color: #079455;
+}
+.app_rightsdbr .progress_box.complate_status p {
+  color: #667085;
+}
+.app_rightsdbr .progress_box.complate_status .btn {
+  width: auto;
+  background-color: #fff !important;
+  border-color: #D0D5DD;
+  color: #344054;
+  margin-left: auto;
+  display: block;
+}
+.app_rightsdbr .progress_box.pending_status {
+  border-color: #6172F3;
+  background-color: #fff;
+}
+.app_rightsdbr .progress_box.pending_status h5 {
+  color: #344054;
+}
+.app_rightsdbr .progress_box.pending_status .btn {
+  width: auto;
+  margin-left: auto;
+  display: block;
 }
 
 .btn-link {
@@ -5075,4 +5130,156 @@ select.select-transpant:hover, select.select-transpant:focus, select.select-tran
 }
 .bookmark.active {
   color: #444CE7;
+}
+
+.instructions_dwr {
+  z-index: 9999;
+}
+.instructions_dwr .ints_card {
+  background-color: #fff;
+  box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.0588235294);
+  box-shadow: 0px 1px 3px 0px rgba(16, 24, 40, 0.1019607843);
+  border-radius: 48px;
+  text-align: center;
+  padding: 55px 40px;
+  position: relative;
+  border: solid 2px #fff;
+}
+.instructions_dwr .ints_card .itns_icon img {
+  max-height: 100px;
+  margin: auto;
+}
+.instructions_dwr .ints_card h4 {
+  font-size: 18px;
+  margin-top: 15px;
+}
+.instructions_dwr .ints_card .mlike-sugg {
+  bottom: -45px;
+  display: flex;
+  align-items: end;
+}
+.instructions_dwr .ints_card .mlike-sugg span {
+  left: 0;
+  top: 0;
+  text-align: left;
+}
+.instructions_dwr .ints_card .quiz-btns {
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  opacity: 0;
+  left: 0;
+  padding: 5px 30px;
+  transition: opacity 0.3s ease-in-out, bottom 0.3s ease-in-out;
+}
+.instructions_dwr .ints_card .quiz-btns .btn-up {
+  background-color: #8098F9;
+  border-radius: 80px;
+  padding: 12px 10px;
+  color: #2D3282;
+  border: none;
+  width: 45%;
+  font-size: 20px;
+}
+.instructions_dwr .ints_card .quiz-btns .btn-down {
+  background-color: #FEC84B;
+  border-radius: 80px;
+  padding: 12px 10px;
+  color: #2D3282;
+  border: none;
+  width: 45%;
+  font-size: 20px;
+}
+.instructions_dwr .ints_card.hover {
+  border: solid 2px #A4BCFD;
+}
+.instructions_dwr .ints_card.hover img {
+  transform: translateY(-40px);
+}
+.instructions_dwr .ints_card.hover h4 {
+  font-size: 16px;
+  transform: translateY(-40px);
+}
+.instructions_dwr .ints_card.hover .quiz-btns {
+  opacity: 1;
+}
+.instructions_dwr .ints_card.hover .mlike-sugg {
+  bottom: -105px;
+  left: 45px;
+}
+.instructions_dwr .ints_card.hover .mlike-sugg span {
+  top: -35px;
+}
+.instructions_dwr .ints_card.lelike .mlike-sugg {
+  bottom: -90px;
+  left: 40px;
+}
+.instructions_dwr .ints_card.lelike .mlike-sugg span {
+  max-width: 45px;
+}
+.instructions_dwr .ints_card.mlike_select {
+  border: solid 4px #6172F3;
+  box-shadow: 0px 0px 80px 8px rgba(96, 113, 241, 0.2) inset;
+  background-color: #EEF4FF;
+}
+.instructions_dwr .ints_card.lelike_select {
+  border: solid 4px #FEC84B;
+  box-shadow: 0px 0px 80px 8px rgba(220, 104, 3, 0.2) inset;
+  background-color: #FFFAEB;
+}
+.instructions_dwr .ints_card.lelike_select .mlike-sugg {
+  bottom: -90px;
+  left: 0px;
+  right: 45px;
+}
+.instructions_dwr ul {
+  padding-left: 15px;
+  margin-top: 10px;
+}
+.instructions_dwr ul li {
+  font-family: Inter;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 20px;
+  letter-spacing: 0%;
+  color: #344054;
+}
+.instructions_dwr .mt-6 {
+  margin-top: 6rem;
+}
+
+.toster {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 14px 15px;
+  border-width: 1px 1px 1px 5px;
+  border-style: solid;
+  border-color: #17B26A;
+  max-width: 525px;
+  margin: auto;
+  margin-top: 2.5rem;
+  position: relative;
+}
+.toster .closebtn {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  cursor: pointer;
+  width: 35px;
+  height: 35px;
+}
+.toster h6 {
+  font-size: 24px;
+  color: #1D2939;
+  font-weight: 700;
+}
+.toster span {
+  font-size: 18px;
+  color: #344054;
+  font-weight: 400;
+}
+.toster .d-flex h6 {
+  margin-right: 5px;
 }/*# sourceMappingURL=main.css.map */

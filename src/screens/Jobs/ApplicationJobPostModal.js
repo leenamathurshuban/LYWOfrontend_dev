@@ -1851,7 +1851,7 @@ const ApplicationJobPostModal = ({
   storedApplicantId, setStoredApplicantId, selectedSpokenLanguageUids, setSelectedSpokenLanguageUids,
   selectedWrittenLanguageUids, setSelectedWrittenLanguageUids, selectedSkills, setSelectedSkills,
   ResumeFile, setResumeFile, ResumeFileName, setResumeFileName,
-  EducationRows, SetEducationRows,setBehaviourAssModel
+  EducationRows, SetEducationRows, setBehaviourAssModel
 }) => {
   // const [isYes, setIsYes] = useState({
   //   CurrentlyWorkingToggle: false,
@@ -2540,7 +2540,7 @@ const ApplicationJobPostModal = ({
               item.uid === response.data.response.uid ? { ...item, group_skill: response.data.response.group_skill } : item
             );
           } else {
-            return [...prevItem, response.data.response].sort((a,b)=>a.id-b.id);
+            return [...prevItem, response.data.response].sort((a, b) => a.id - b.id);
           }
         })
         // setSelectedIndex([])
@@ -2658,7 +2658,7 @@ const ApplicationJobPostModal = ({
         getSkillGroupDetails(id)
       })
     }
-  }, [selectedGroupUid,storedApplicantId])
+  }, [selectedGroupUid, storedApplicantId])
   console.log(dynamicArray)
   console.log('Fixed', skillGroupData.sort((a, b) => a.id - b.id))
   console.log(groupedSkills)
@@ -3194,7 +3194,7 @@ const ApplicationJobPostModal = ({
                           >
                             <option>Level</option>
 
-                            <option value="High school">High school</option>
+                            {/* <option value="High school">High school</option>
                             <option value="Bachelors Degree">
                               Bachelors Degree
                             </option>
@@ -3204,7 +3204,16 @@ const ApplicationJobPostModal = ({
                             <option value="PhD">PhD</option>
                             <option value="Post Doctorate">
                               Post Doctorate
-                            </option>
+                            </option> */}
+                            <option value="Below Secondary Education">Below Secondary Education</option>
+                            <option value="Upper Secondary (Intermediate, High School, Grade 12)">Upper Secondary (Intermediate, High School, Grade 12)</option>
+                            <option value="Certification  / Vocational / Technical Training">Certification  / Vocational / Technical Training</option>
+                            <option value="Diploma / Associate Degree">Diploma / Associate Degree</option>
+                            <option value="Bachelor's Degree">Bachelor's Degree</option>
+                            <option value="Master's Degree">Master's Degree</option>
+                            <option value="Professional Degree (e.g., MD, JD)">Professional Degree (e.g., MD, JD)</option>
+                            <option value="Doctoral Degree (Ph.D., Ed.D.)">Doctoral Degree (Ph.D., Ed.D.)</option>
+                            <option value="Postdoctoral Research">Postdoctoral Research</option>
                           </Form.Select>
                         </td>
                         <td>

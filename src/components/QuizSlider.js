@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import OwlCarousel from 'react-owl-carousel';
 import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel/dist/assets/owl.theme.default.css';
@@ -19,17 +19,33 @@ import {
     Row
 } from "react-bootstrap";
 const QuizSlider = ({ mostLeastLike, setMostLeastLike }) => {
+    const sliderRef = useRef(null);
+    const [currentSlide, setCurrentSlide] = useState(0);
     const options = {
         dots: true,
-        infinite: true,
-        speed: 2000,
+        infinite: false,
+        speed: 700,
         slidesToShow: 1,
         // centerMode: true,
         // centerPadding: "20px",
         arrows: false,
         vertical: true,
         verticalSwiping: true,
-        focusOnSelect: true
+        focusOnSelect: true,
+        afterChange: (index) => setCurrentSlide(index),
+        appendDots: dots => (
+            <ul className="slick-dots">
+                {dots.map((dot, index) => (
+                    <li key={index} className={`${index && 'slick-active'}`}>
+                        <button
+                            className={`h-3 w-3 rounded-full mx-1 ${
+                                mostLeastLike[index]?.most && mostLeastLike[index]?.least  ? "quiz-completed" : "bg-gray-400"
+                            }`}
+                        ></button>
+                    </li>
+                ))}
+            </ul>
+        )
     };
     // const [mostLeastLike, setMostLeastLike] = useState([
     //     { id: 1, most: "", least: "", options: ["Ice Cream", "Tea", "Cake", "Coffee"] },
@@ -60,6 +76,13 @@ const QuizSlider = ({ mostLeastLike, setMostLeastLike }) => {
                         }
                         newRow.least = row.least === option ? "" : option; // Toggle least
                     }
+                    if(newRow.most && newRow.least){
+                        setTimeout(() => {
+                            if (currentSlide < mostLeastLike.length - 1) {
+                                sliderRef.current.slickNext();
+                            }                            
+                        }, 1000);
+                    }
                     return newRow;
                 }
                 return row;
@@ -70,7 +93,7 @@ const QuizSlider = ({ mostLeastLike, setMostLeastLike }) => {
 
     return (
         <div className="qzslider"><span className='handraw'><img src={handDrawicon}/>Hover over the cards below to begin.</span>
-        <Slider key={JSON.stringify(mostLeastLike)} {...options}>
+        <Slider ref={sliderRef} {...options}>
             {mostLeastLike.map((row, rowIndex) => (
                 <div key={row.id} className="item">
                     <Row>
