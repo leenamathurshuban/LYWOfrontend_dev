@@ -56,7 +56,7 @@ import BehaviouralAst from "../BehaviourAss/BehaviouralAst";
 import checkRight from "../../images/icons/check_green.svg";
 import checkpending from "../../images/icons/pending_status.svg";
 
-const jobDetailPng = [jobRoal,jobLike,jobExp,jobDivision,jobDepart,jobSkills,jobEducation,jobArea,jobType,jobWorktype,InfoTravel,InfoLanguage]
+const jobDetailPng = [jobRoal, jobLike, jobExp, jobDivision, jobDepart, jobSkills, jobEducation, jobArea, jobType, jobWorktype, InfoTravel, InfoLanguage]
 
 const JobPosts = () => {
   const { id } = useParams();
@@ -70,8 +70,8 @@ const JobPosts = () => {
   }, [])
   const [jobPostData, setJobPostData] = useState(null);
   const [jobPostErrorMsg, setJobPostErrorMsg] = useState("");
-  const [behaviourAssModel,setBehaviourAssModel] = useState(false);
-  const [behaviourReportModel,setBehaviourReportModel] = useState(false);
+  const [behaviourAssModel, setBehaviourAssModel] = useState(false);
+  const [behaviourReportModel, setBehaviourReportModel] = useState(false);
 
   const [modalOpen, setModalOpen] = useState({
     showFirstModal: false,
@@ -825,7 +825,7 @@ const JobPosts = () => {
               <div className="card jobdetails">
                 <div className="card-body">
                   <h5 className="card-title">Job Details</h5>
-                  {jobDetailsList.map((item,index) => {
+                  {jobDetailsList.map((item, index) => {
                     return (
                       <ul className="list">
                         <li>
@@ -903,9 +903,9 @@ const JobPosts = () => {
             </Button>
           </div>
           <h6>Your Progress</h6>
-          <div className={`${buttonText==="View Form Btn"?'complate_status':buttonText==="Continue Btn"?'pending_status':''} progress_box`} >
+          <div className={`${buttonText === "View Form Btn" ? 'complate_status' : buttonText === "Continue Btn" ? 'pending_status' : ''} progress_box`} >
             <h5>
-              {buttonText==="View Form Btn"?<img src={checkRight} className="me-2" />:buttonText==="Continue Btn"?<img src={checkpending} className="me-2" />:(<span className="bg_circle"></span>)}
+              {buttonText === "View Form Btn" ? <img src={checkRight} className="me-2" /> : buttonText === "Continue Btn" ? <img src={checkpending} className="me-2" /> : (<span className="bg_circle"></span>)}
               Profile Details
             </h5>
             {(buttonText == "View Form Btn" && <p>Completed</p>) ||
@@ -913,19 +913,19 @@ const JobPosts = () => {
             <Button
               variant="primary"
               size="lg"
-              disabled={jobPostErrorMsg}              
+              disabled={jobPostErrorMsg}
               onClick={() => handleBtns(buttonText)}
             >
               {buttonText === "View Form Btn" ? "View" : buttonText === "Continue Btn" ? "Continue" : buttonText}
             </Button>
           </div>
-          <div className={`${Number(localStorage.getItem("AttemptStatus")) === 28?'complate_status':Number(localStorage.getItem("AttemptStatus")) > 1?'pending_status':''} progress_box`}>
+          <div className={`${Number(localStorage.getItem("AttemptStatus")) === 28 ? 'complate_status' : Number(localStorage.getItem("AttemptStatus")) > 1 ? 'pending_status' : ''} progress_box`}>
             <h5>
-            {Number(localStorage.getItem("AttemptStatus")) === 28?<img src={checkRight} className="me-2" />:Number(localStorage.getItem("AttemptStatus")) >1?<img src={checkpending} className="me-2" />:(<span className="bg_circle"></span>)}
+              {Number(localStorage.getItem("AttemptStatus")) === 28 ? <img src={checkRight} className="me-2" /> : Number(localStorage.getItem("AttemptStatus")) > 1 ? <img src={checkpending} className="me-2" /> : (<span className="bg_circle"></span>)}
               Behavioural Assessment
             </h5>
             <p>
-              {Number(localStorage.getItem("AttemptStatus")) < 28 && "Pending"}
+              {Number(localStorage.getItem("AttemptStatus")) > 1 && "Pending"}
               {Number(localStorage.getItem("AttemptStatus")) === 28 &&
                 "Completed"}
             </p>
@@ -957,9 +957,9 @@ const JobPosts = () => {
             </Button>
           </div>
           {jobPostData?.asset_job?.map((Val) => (
-            <div className={`${localStorage.getItem("AttemptStatus") == 28?'pending_status':''} progress_box`}>
+            <div className={`${localStorage.getItem("AttemptStatus") == 28 ? 'pending_status' : ''} progress_box`}>
               <h5>
-                {localStorage.getItem("AttemptStatus") == 28?<img src={checkpending} className="me-2" />:<span className="bg_circle"></span>}                
+                {localStorage.getItem("AttemptStatus") == 28 ? <img src={checkpending} className="me-2" /> : <span className="bg_circle"></span>}
                 {/* ICC Cricket Rules Quiz */}
                 {Val?.asset_title}
               </h5>
@@ -971,7 +971,7 @@ const JobPosts = () => {
                 size="lg"
                 disabled={localStorage.getItem("AttemptStatus") == 28 ? false : true}
                 onClick={() => {
-                  navigate(`/evaluation-quiz/${Val?.uid}`,{state:jobPostData?.uid})
+                  navigate(`/evaluation-quiz/${Val?.uid}`, { state: jobPostData?.uid })
                 }}
               >
                 Start
