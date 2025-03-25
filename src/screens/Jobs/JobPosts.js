@@ -123,6 +123,19 @@ const JobPosts = () => {
     grade: "",
     saved: false,
   },]);
+  const [WorkExpreienceRow, setWorkExpreienceRow] = useState([
+    {
+      TotalWorkExperience: "",
+      WorkRole: "",
+      WorkFrom: "",
+      WorkTo: "",
+      WorkComapny: "",
+      WorkIndustry: "",
+      WorkNote: "",
+      savedWorkExp: false,
+    },
+  ]);
+  const [isExistApplicantError,setIsExistApplicantError] = useState('');
 
   const inputRef = useRef(null);
   const containerRef = useRef(null);
@@ -371,19 +384,41 @@ const JobPosts = () => {
         setResumeFile(resumeFileUrl);
         const resumeFileName = resumeFileUrl ? resumeFileUrl.split("/").pop() : "";
         setResumeFileName(resumeFileName);
-
         const educationData = response?.data?.response?.qualification_applicantprofile || [];
+        const workExpData = response?.data?.response?.work_applicant || []
         if (Array.isArray(educationData)) {
-          SetEducationRows((prevState) => [
-            ...prevState,
-            ...educationData.map((item) => ({
-              level: item?.level || "",
-              areaOfEducation: item?.applicant_area_of_education || "",
-              gradYear: item?.grad_year || "",
-              university: item?.university || "",
-              grade: item?.grade || "",
-            })),
-          ]);
+          // SetEducationRows((prevState) => [
+          //   // ...prevState,
+          //   ...educationData.map((item) => ({
+          //     level: item?.level || "",
+          //     areaOfEducation: item?.applicant_area_of_education || "",
+          //     gradYear: item?.grad_year || "",
+          //     university: item?.university || "",
+          //     grade: item?.grade || "",
+          //   })),
+          // ]);
+          const newArry = educationData.map((item) => ({
+            level: item?.level || "",
+            areaOfEducation: item?.applicant_area_of_education || "",
+            gradYear: item?.grad_year || "",
+            university: item?.university || "",
+            grade: item?.grade || "",
+            saved:true
+          }))
+          SetEducationRows(newArry)
+        }
+        if(Array.isArray(workExpData)){
+          const newArray = workExpData.map((item)=>({
+            TotalWorkExperience:item?.total_work_experience,
+            WorkRole:item?.role,
+            WorkFrom:item?.work_from,
+            WorkTo:item?.work_to,
+            WorkComapny:item?.work_company,
+            WorkIndustry:item?.work_industry,
+            WorkNote:item?.note,
+            savedWorkExp:true
+          }))
+          setWorkExpreienceRow(newArray)
         }
 
         if (response?.data?.response?.applicant_status === 'Draft') {
@@ -416,7 +451,7 @@ const JobPosts = () => {
       handleShowModal("first");
       handleViewDetailsAPi(paramemail);
     }
-  }, [paramemail])
+  }, [paramemail])  
   console.log("buttonText", buttonText)
   console.log(jobPostData?.asset_job)
   const handleShareModal = () => {
@@ -1039,6 +1074,8 @@ const JobPosts = () => {
           EducationRows={EducationRows}
           SetEducationRows={SetEducationRows}
           setBehaviourAssModel={setBehaviourAssModel}
+          WorkExpreienceRow={WorkExpreienceRow} setWorkExpreienceRow={setWorkExpreienceRow}
+          isExistApplicantError={isExistApplicantError} setIsExistApplicantError={setIsExistApplicantError}
         />
       ) : (
         <p>Loading...</p>

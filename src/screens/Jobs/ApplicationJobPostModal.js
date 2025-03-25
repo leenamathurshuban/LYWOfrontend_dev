@@ -1851,7 +1851,8 @@ const ApplicationJobPostModal = ({
   storedApplicantId, setStoredApplicantId, selectedSpokenLanguageUids, setSelectedSpokenLanguageUids,
   selectedWrittenLanguageUids, setSelectedWrittenLanguageUids, selectedSkills, setSelectedSkills,
   ResumeFile, setResumeFile, ResumeFileName, setResumeFileName,
-  EducationRows, SetEducationRows, setBehaviourAssModel
+  EducationRows, SetEducationRows, setBehaviourAssModel,WorkExpreienceRow, setWorkExpreienceRow,
+  isExistApplicantError,setIsExistApplicantError
 }) => {
   // const [isYes, setIsYes] = useState({
   //   CurrentlyWorkingToggle: false,
@@ -1885,18 +1886,18 @@ const ApplicationJobPostModal = ({
   //   },
   // ]);
 
-  const [WorkExpreienceRow, setWorkExpreienceRow] = useState([
-    {
-      TotalWorkExperience: "",
-      WorkRole: "",
-      WorkFrom: "",
-      WorkTo: "",
-      WorkComapny: "",
-      WorkIndustry: "",
-      WorkNote: "",
-      savedWorkExp: false,
-    },
-  ]);
+  // const [WorkExpreienceRow, setWorkExpreienceRow] = useState([
+  //   {
+  //     TotalWorkExperience: "",
+  //     WorkRole: "",
+  //     WorkFrom: "",
+  //     WorkTo: "",
+  //     WorkComapny: "",
+  //     WorkIndustry: "",
+  //     WorkNote: "",
+  //     savedWorkExp: false,
+  //   },
+  // ]);
 
   // const [profileformData, setProfileFormData] = useState({
   //   name: "",
@@ -1957,14 +1958,22 @@ const ApplicationJobPostModal = ({
 
   const handleShowModal = (modalName) => {
     if (modalName === "SaveAsDraft") {
+      // setShowModal({
+      //   showSaveAsDraft: true,
+      //   showSaveModal: false
+      // })
       setShowModal({
-        showSaveAsDraft: true,
-        showSaveModal: false
+        ...showModal,
+        ["showSaveAsDraft"]:true
       })
     } else if (modalName === "Save") {
+      // setShowModal({
+      //   showSaveAsDraft: false,
+      //   showSaveModal: true
+      // })
       setShowModal({
-        showSaveAsDraft: false,
-        showSaveModal: true
+        ...showModal,
+        ["showSaveModal"]:true
       })
     }
   };
@@ -2174,6 +2183,7 @@ const ApplicationJobPostModal = ({
       }
     } catch (error) {
       console.log("ERROR:", error);
+      setIsExistApplicantError(error?.response?.data?.response?.user[0])
     }
   };
 
@@ -2563,13 +2573,23 @@ const ApplicationJobPostModal = ({
   };
 
   useEffect(() => {
-    if (profileformData) {
-      validateForProfileDetails();
-    }
+    // if (profileformData) {
+    //   validateForProfileDetails();
+    // }
     if (isValid) {
       handleProfileDetailsApi();
     }
   }, [jobPostData, profileformData, isValid]);
+  useEffect(()=>{
+      if(isExistApplicantError){
+        // setTimeout(()=>{
+          alert(isExistApplicantError)
+          setTimeout(()=>{
+            window.location.reload();
+          },500)
+        // },500)
+      }
+    },[isExistApplicantError])
 
   useEffect(() => {
     const storedData = JSON.parse(
@@ -2662,6 +2682,7 @@ const ApplicationJobPostModal = ({
   console.log(dynamicArray)
   console.log('Fixed', skillGroupData.sort((a, b) => a.id - b.id))
   console.log(groupedSkills)
+  console.log(EducationRows)
   return (
     <Modal
       show={show}
@@ -3220,7 +3241,7 @@ const ApplicationJobPostModal = ({
                           <Form.Control
                             name="areaOfEducation"
                             type="text"
-                            placeholder="9876543210"
+                            placeholder="Area of Education"
                             size="sm"
                             value={row.areaOfEducation}
                             onChange={(e) =>
@@ -3369,7 +3390,7 @@ const ApplicationJobPostModal = ({
                           <td>
                             <Form.Control
                               type="text"
-                              placeholder="9876543210"
+                              placeholder="Role"
                               size="sm"
                               style={{ width: "150px" }}
                               value={row?.WorkRole}
@@ -3411,7 +3432,7 @@ const ApplicationJobPostModal = ({
                           <td>
                             <Form.Control
                               type="text"
-                              placeholder="9876543210"
+                              placeholder="Company"
                               size="sm"
                               style={{ width: "150px" }}
                               value={row?.WorkComapny}
@@ -3425,7 +3446,7 @@ const ApplicationJobPostModal = ({
                           <td>
                             <Form.Control
                               type="text"
-                              placeholder="9876543210"
+                              placeholder="Industry"
                               size="sm"
                               style={{ width: "150px" }}
                               name="WorkIndustry"
@@ -4029,6 +4050,7 @@ const ApplicationJobPostModal = ({
         <Button
           variant="light"
           style={{ marginLeft: 150 }}
+          disabled={validationEnable?true:false}
           onClick={() => handleSaveAsDraft()}
         >
           Save as Draft
