@@ -919,7 +919,7 @@ const JobPosts = () => {
               {buttonText === "View Form Btn" ? "View" : buttonText === "Continue Btn" ? "Continue" : buttonText}
             </Button>
           </div>
-          <div className={`${Number(localStorage.getItem("AttemptStatus")) === 28?'complate_status':Number(localStorage.getItem("AttemptStatus")) <= 27?'pending_status':''} progress_box`}>
+          <div className={`${Number(localStorage.getItem("AttemptStatus")) === 28?'complate_status':Number(localStorage.getItem("AttemptStatus")) > 1?'pending_status':''} progress_box`}>
             <h5>
             {Number(localStorage.getItem("AttemptStatus")) === 28?<img src={checkRight} className="me-2" />:Number(localStorage.getItem("AttemptStatus")) <28?<img src={checkpending} className="me-2" />:(<span className="bg_circle"></span>)}
               Behavioural Assessment
