@@ -921,7 +921,7 @@ const JobPosts = () => {
           </div>
           <div className={`${Number(localStorage.getItem("AttemptStatus")) === 28?'complate_status':Number(localStorage.getItem("AttemptStatus")) > 1?'pending_status':''} progress_box`}>
             <h5>
-            {Number(localStorage.getItem("AttemptStatus")) === 28?<img src={checkRight} className="me-2" />:Number(localStorage.getItem("AttemptStatus")) <28?<img src={checkpending} className="me-2" />:(<span className="bg_circle"></span>)}
+            {Number(localStorage.getItem("AttemptStatus")) === 28?<img src={checkRight} className="me-2" />:Number(localStorage.getItem("AttemptStatus")) >1?<img src={checkpending} className="me-2" />:(<span className="bg_circle"></span>)}
               Behavioural Assessment
             </h5>
             <p>
