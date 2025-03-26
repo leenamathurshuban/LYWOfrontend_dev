@@ -48,7 +48,7 @@ import NotAllowed from "../../images/icons/NotAllowed.svg";
 import { useNavigate } from "react-router-dom";
 import { removeToken } from "../../helpers/helper";
 
-const TestInstruction = ({ showinstruction, handleInstructionClose, handleStartQuiz, EvaluationListDetails }) => {
+const TestInstruction = ({ showinstruction, handleInstructionClose, handleStartQuiz, EvaluationListDetails,jobData }) => {
     return (
         <>
             {/* <Modal
@@ -188,13 +188,13 @@ const TestInstruction = ({ showinstruction, handleInstructionClose, handleStartQ
             >
                 <Modal.Header closeButton>
                     <img src={logoIcon} className="me-4" />
-                    <Modal.Title>Quiz for Sr. Developer - Python</Modal.Title>
+                    <Modal.Title>Quiz for {jobData?.job_title}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Container>
                         <Row className="mt-3">
                             <Col md={12} className="bg-white rounded p-5 shadow-md">
-                                <h5>Quiz for Sr. Developer - Python</h5>
+                                <h5>Quiz for {jobData?.job_title}</h5>
                                 <p className="text-xs-ragular mt-3">
                                     (Add the description of the test from the creator of test) This
                                     assessment is designed to evaluate [brief description of what the

@@ -1851,8 +1851,8 @@ const ApplicationJobPostModal = ({
   storedApplicantId, setStoredApplicantId, selectedSpokenLanguageUids, setSelectedSpokenLanguageUids,
   selectedWrittenLanguageUids, setSelectedWrittenLanguageUids, selectedSkills, setSelectedSkills,
   ResumeFile, setResumeFile, ResumeFileName, setResumeFileName,
-  EducationRows, SetEducationRows, setBehaviourAssModel,WorkExpreienceRow, setWorkExpreienceRow,
-  isExistApplicantError,setIsExistApplicantError
+  EducationRows, SetEducationRows, setBehaviourAssModel, WorkExpreienceRow, setWorkExpreienceRow,
+  isExistApplicantError, setIsExistApplicantError
 }) => {
   // const [isYes, setIsYes] = useState({
   //   CurrentlyWorkingToggle: false,
@@ -1872,6 +1872,24 @@ const ApplicationJobPostModal = ({
   //   []
   // );
   const navigate = useNavigate();
+  const isBinaryFile = (file) => {
+    // List of common binary MIME types
+    const binaryMimeTypes = [
+      "application/pdf",
+      "application/octet-stream", // Generic binary file
+      "image/png",
+      "image/jpeg",
+      "image/gif",
+      "application/zip",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // DOCX
+      "application/vnd.ms-excel",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // XLSX
+      "application/x-executable", // EXE
+    ];
+  
+    return binaryMimeTypes.includes(file.type);
+  };
   // const [selectedWrittenLanguageUids, setSelectedWrittenLanguageUids] =
   //   useState([]);
 
@@ -1964,7 +1982,7 @@ const ApplicationJobPostModal = ({
       // })
       setShowModal({
         ...showModal,
-        ["showSaveAsDraft"]:true
+        ["showSaveAsDraft"]: true
       })
     } else if (modalName === "Save") {
       // setShowModal({
@@ -1973,7 +1991,7 @@ const ApplicationJobPostModal = ({
       // })
       setShowModal({
         ...showModal,
-        ["showSaveModal"]:true
+        ["showSaveModal"]: true
       })
     }
   };
@@ -2204,7 +2222,7 @@ const ApplicationJobPostModal = ({
       };
 
       const formdata = new FormData();
-      if (ResumeFile) {
+      if (ResumeFile && isBinaryFile(ResumeFile)) {
         formdata.append("resume", ResumeFile);
       }
       formdata.append("availble_by", profileformData?.AvailableBy);
@@ -2291,7 +2309,7 @@ const ApplicationJobPostModal = ({
     // }
     handleShowModal("SaveAsDraft");
   };
-
+  console.log(showModal.showSaveAsDraft)
   const handleButtonClick = () => setShowInput(!showInput);
 
   const EducationAddRow = () => {
@@ -2583,21 +2601,21 @@ const ApplicationJobPostModal = ({
   //     handleProfileDetailsApi();
   //   }
   // }, [jobPostData, profileformData, isValid]);
-  useEffect(()=>{
-    if(isValid){
+  useEffect(() => {
+    if (isValid) {
       handleProfileDetailsApi();
     }
-  },[isValid])
-  useEffect(()=>{
-      if(isExistApplicantError){
-        // setTimeout(()=>{
-          alert(isExistApplicantError)
-          setTimeout(()=>{
-            window.location.reload();
-          },500)
-        // },500)
-      }
-    },[isExistApplicantError])
+  }, [isValid])
+  useEffect(() => {
+    if (isExistApplicantError) {
+      // setTimeout(()=>{
+      alert(isExistApplicantError)
+      setTimeout(() => {
+        window.location.reload();
+      }, 500)
+      // },500)
+    }
+  }, [isExistApplicantError])
 
   useEffect(() => {
     const storedData = JSON.parse(
@@ -2691,7 +2709,7 @@ const ApplicationJobPostModal = ({
   console.log('Fixed', skillGroupData.sort((a, b) => a.id - b.id))
   console.log(groupedSkills)
   console.log(EducationRows)
-  console.log('checkvalid====>',isValid)
+  console.log('checkvalid====>', isValid)
   return (
     <Modal
       show={show}
@@ -4014,7 +4032,7 @@ const ApplicationJobPostModal = ({
         </Container>
 
         <div>
-          <Modal show={showModal.showSaveAsDraft} onHide={handleCloseModals}>
+          <Modal show={showModal.showSaveAsDraft} onHide={handleCloseModals} className="zindex9999">
             <Modal.Header closeButton>
               <Modal.Title>
                 Are you sure you want to exit without submitting?
@@ -4036,7 +4054,7 @@ const ApplicationJobPostModal = ({
         </div>
 
         <div>
-          <Modal show={showModal.showSaveModal} onHide={handleCloseModals}>
+          <Modal show={showModal.showSaveModal} onHide={handleCloseModals} className="zindex9999">
             <Modal.Header closeButton>
               <Modal.Title>
                 Your application has been successfully submitted.
@@ -4059,7 +4077,7 @@ const ApplicationJobPostModal = ({
         <Button
           variant="light"
           style={{ marginLeft: 150 }}
-          disabled={validationEnable?true:false}
+          disabled={validationEnable ? true : false}
           onClick={() => handleSaveAsDraft()}
         >
           Save as Draft

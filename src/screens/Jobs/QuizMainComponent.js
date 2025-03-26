@@ -28,6 +28,7 @@ import fileIcon from "../../images/icons/file_icon.svg";
 import listQuestions from "../../images/icons/list-question.svg";
 import mcqIcon from "../../images/icons/mcq_icon.png";
 import quizIcon from "../../images/icons/quiz_icon.svg";
+import clock from "../../images/icons/clock.svg";
 import logoIcon from "../../images/logo_icon.png";
 import {
   ApplicationDeatilsApi,
@@ -54,7 +55,7 @@ import DragDrop from "../../images/icons/dragdrop-bullet.svg";
 
 const QuizMainComponent = (item) => {
   const { id } = useParams();
-  const location = useLocation();
+  const jobData = useLocation();
   const [show, setShow] = useState(true);
   const [showQuiz, setShowQuiz] = useState(false);
   const handleInstructionShow = () => setShow(true);
@@ -88,6 +89,7 @@ const QuizMainComponent = (item) => {
   const [SerachList, setSerachList] = useState("");
   const [activeKeys, setActiveKeys] = useState(["0-0"]);
   const [selectedSection, setSelectedSection] = useState("");
+  const [timeLeft, setTimeLeft] = useState(1800);
   // const [selectedSectionAnswer, setSelectedSectionAnswer] = useState([])
 
   const revaluationsListAPI = async (SerachQuestion) => {
@@ -331,7 +333,7 @@ const QuizMainComponent = (item) => {
     try {
       const isSingleArray = QuizData[getKeyIndex]?.some(Array.isArray) ? QuizData[getKeyIndex]?.flat() : QuizData[getKeyIndex]
       const formData = new FormData();
-      formData.append("job", location?.state)
+      formData.append("job", jobData?.state?.uid)
       formData.append("applicant", applcant?.applcant?.uid)
       formData.append("question", questionId)
       formData.append("selected_answer", JSON.stringify(isSingleArray))
@@ -365,15 +367,38 @@ const QuizMainComponent = (item) => {
   useEffect(() => {
     applicantDetailAPI();
   }, [])
+
+  const onTimeUp = () => {
+    setShowQuiz(false)
+  };
+
+  useEffect(() => {
+    if (timeLeft <= 0) {
+      onTimeUp();
+      return;
+    }
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [timeLeft, onTimeUp]);
+
+  // Convert seconds to MM:SS format
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
+  };  
   // console.log(QuizData, EvaluationListDetails)
   // console.log(markReview)
   // console.log(QuizData[getKeyIndex], applcant)
   // console.log(EvaluationListDetails)
-  console.log(QuizData)
+  // console.log(QuizData)
   // console.log('selected_answer=============>', selectedSectionAnswer)
   return (
     <>
-      <TestInstruction showinstruction={show} handleInstructionClose={handleInstructionClose} handleStartQuiz={handleStartQuiz} EvaluationListDetails={EvaluationListDetails} />
+      <TestInstruction showinstruction={show} handleInstructionClose={handleInstructionClose}
+        handleStartQuiz={handleStartQuiz} EvaluationListDetails={EvaluationListDetails} jobData={jobData?.state} />
       <Modal
         show={showQuiz}
         onHide={handleClose}
@@ -385,6 +410,7 @@ const QuizMainComponent = (item) => {
           <Col md={4}>
             <Modal.Title>
               <img src={logoIcon} className="me-4" />
+              Quiz for {jobData?.state?.job_title}
               {item.asset_title}
             </Modal.Title>
           </Col>
@@ -398,7 +424,13 @@ const QuizMainComponent = (item) => {
               now={100}
             />
           </Col>
-          <Col md={4} className="score_panel">
+          <Col md={4} className="d-flex align-items-center">
+            <img src={clock} />
+            <p className="m-0 font-13">
+              <span className="font-weight-600 me-2">{formatTime(timeLeft)}</span>
+            </p>           
+          </Col>
+          {/* <Col md={4} className="score_panel">
             <ul>
               <li>
                 <span className="outline_scorebtn">
@@ -442,7 +474,7 @@ const QuizMainComponent = (item) => {
                 </Button>
               </li>
             </ul>
-          </Col>
+          </Col> */}
         </Modal.Header>
         <Modal.Body className="p-0">
           <Tab.Container id="left-tabs-example" defaultActiveKey="first">
@@ -565,13 +597,13 @@ const QuizMainComponent = (item) => {
                                 }
                               >
                                 <span
-                                  className={item.is_mandatory && "question"}
+                                // className={item.is_mandatory && "question"}
                                 >
                                   {item.question_title}
                                 </span>{" "}
                                 <span className="que_points">
-                                  {item.question_points} points
-                                  <img src={mcqIcon} />
+                                  {/* {item.question_points} points */}
+                                  {/* <img src={mcqIcon} /> */}
                                   <strong onClick={() => handleMarkandReview(quesIndex, sectionIndex)} className={`${markReview[`${quesIndex}-${sectionIndex}`]?.length ? 'active' : ''} ms-2 bookmark`}>
                                     <i class="fa fa-bookmark" aria-hidden="true"></i>
                                   </strong>
@@ -596,7 +628,7 @@ const QuizMainComponent = (item) => {
                                               id={`custom-radio${index + 1}`}
                                               label={option}
                                               // checked={isChecked}
-                                              checked={QuizData[`${quesIndex}-${sectionIndex}`]?.some((v)=>v==option)}
+                                              checked={QuizData[`${quesIndex}-${sectionIndex}`]?.some((v) => v == option)}
                                               value={option}
                                               onChange={(e) => handleQuizData(quesIndex, sectionIndex, e, item?.uid)}
                                             />
@@ -626,7 +658,7 @@ const QuizMainComponent = (item) => {
                                               label={option}
                                               name="radioGroup"
                                               // checked={isChecked}
-                                              checked={QuizData[`${quesIndex}-${sectionIndex}`]?.some((v)=>v==option)}
+                                              checked={QuizData[`${quesIndex}-${sectionIndex}`]?.some((v) => v == option)}
                                               value={option}
                                               onChange={(e) => handleQuizSingleData(quesIndex, sectionIndex, e, item?.uid)}
                                             />

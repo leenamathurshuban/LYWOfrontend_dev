@@ -954,13 +954,13 @@ const JobPosts = () => {
               {buttonText === "View Form Btn" ? "View" : buttonText === "Continue Btn" ? "Continue" : buttonText}
             </Button>
           </div>
-          <div className={`${Number(localStorage.getItem("AttemptStatus")) === 28 ? 'complate_status' : Number(localStorage.getItem("AttemptStatus")) > 1 ? 'pending_status' : ''} progress_box`}>
+          <div className={`${Number(localStorage.getItem("AttemptStatus")) === 28 ? 'complate_status' : buttonText === "View Form Btn" ? 'pending_status' : ''} progress_box`}>
             <h5>
-              {Number(localStorage.getItem("AttemptStatus")) === 28 ? <img src={checkRight} className="me-2" /> : Number(localStorage.getItem("AttemptStatus")) > 1 ? <img src={checkpending} className="me-2" /> : (<span className="bg_circle"></span>)}
+              {Number(localStorage.getItem("AttemptStatus")) === 28 ? <img src={checkRight} className="me-2" /> : buttonText === "View Form Btn" ? <img src={checkpending} className="me-2" /> : (<span className="bg_circle"></span>)}
               Behavioural Assessment
             </h5>
             <p>
-              {Number(localStorage.getItem("AttemptStatus")) > 1 && "Pending"}
+              {Number(localStorage.getItem("AttemptStatus")) < 28 && "Pending"}
               {Number(localStorage.getItem("AttemptStatus")) === 28 &&
                 "Completed"}
             </p>
@@ -1006,7 +1006,7 @@ const JobPosts = () => {
                 size="lg"
                 disabled={localStorage.getItem("AttemptStatus") == 28 ? false : true}
                 onClick={() => {
-                  navigate(`/evaluation-quiz/${Val?.uid}`, { state: jobPostData?.uid })
+                  navigate(`/evaluation-quiz/${Val?.uid}`, { state: jobPostData })
                 }}
               >
                 Start
@@ -1092,7 +1092,7 @@ const JobPosts = () => {
       />
       {handleShareModal()}
       {ViewProfileFormDetailsModal()}
-      <BehaviouralAst behaviourAssModel={behaviourAssModel} setBehaviourAssModel={setBehaviourAssModel} />
+      <BehaviouralAst behaviourAssModel={behaviourAssModel} setBehaviourAssModel={setBehaviourAssModel} jobPostData={jobPostData} />
       <BehaviourAssReport behaviourReportModel={behaviourReportModel} setBehaviourReportModel={setBehaviourReportModel} />
     </Container>
   );

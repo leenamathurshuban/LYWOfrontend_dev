@@ -2650,7 +2650,7 @@ const UpdateJobsRevised = ({
                                                         // className={`assmntbox ${activeBehaviour.includes(item.uid) && 'active'}`}
                                                         >
                                                             <div className="assmntbox-head">
-                                                                <h6 onClick={() => handleBoxClick(index)}>
+                                                                <h6 onClick={() => handleBoxClick(index)} style={{cursor:'pointer'}}>
                                                                     {item.heading}
                                                                 </h6>
                                                                 <i

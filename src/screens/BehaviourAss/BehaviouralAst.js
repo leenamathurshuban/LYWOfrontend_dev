@@ -40,7 +40,7 @@ import { ApplicationDeatilsApi, ApplicationFormDetailsApi, getApplicantBehaviour
 import QuizQuestionSlider from '../../components/QuizQuestionSlider';
 import { useNavigate } from 'react-router-dom';
 
-const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel }) => {
+const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel,jobPostData }) => {
     const [show, setShow] = useState(false);
     const [showInstruction,setShowInstruction] = useState(false)
     const [popupShow, setPopupShow] = useState(false);
@@ -213,7 +213,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel }) => {
                 <Modal.Body>
                     <Container>
                         <Row>
-                            <Col md={12} className="bg-white rounded p-3"><h5>Behavioural Assessment for Sr. Developer - Python</h5></Col>
+                            <Col md={12} className="bg-white rounded p-3"><h5>Behavioural Assessment for {jobPostData?.job_title}</h5></Col>
                         </Row>
                         <Row className="mt-3">
                             <Col md={12} className="bg-white rounded p-5 shadow-md border">
@@ -399,7 +399,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel }) => {
                         {quizMostLeastLike.length > 0 && (quizMostLeastLike.length > quizMostLeastLike.flatMap(row => row.mostList).length) &&
                             (quizMostLeastLike.length > quizMostLeastLike.flatMap(row => row.leastList).length) && 'Save and Exit'}
                         {complete && (quizMostLeastLike.length === quizMostLeastLike.flatMap(row => row.mostList).length) &&
-                            (quizMostLeastLike.length === quizMostLeastLike.flatMap(row => row.leastList).length) && 'Proceed to Quiz for Sr. Developer - Python'}
+                            (quizMostLeastLike.length === quizMostLeastLike.flatMap(row => row.leastList).length) && `Proceed to Quiz for ${jobPostData.job_title}`}
                     </Button>
                 </Modal.Footer>
             </Modal>
