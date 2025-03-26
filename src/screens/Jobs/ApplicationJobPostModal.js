@@ -2178,12 +2178,15 @@ const ApplicationJobPostModal = ({
           JSON.stringify(response.data)
         );
         updateButtonText("Continue Btn");
+        setIsValid(false);
       } else {
         console.error("Failed to save form: ", response.data);
+        setIsValid(false);
       }
     } catch (error) {
       console.log("ERROR:", error);
       setIsExistApplicantError(error?.response?.data?.response?.user[0])
+      setIsValid(false);
     }
   };
 
@@ -2572,14 +2575,19 @@ const ApplicationJobPostModal = ({
     }
   };
 
-  useEffect(() => {
-    // if (profileformData) {
-    //   validateForProfileDetails();
-    // }
-    if (isValid) {
+  // useEffect(() => {
+  //   // if (profileformData) {
+  //   //   validateForProfileDetails();
+  //   // }
+  //   if (isValid) {
+  //     handleProfileDetailsApi();
+  //   }
+  // }, [jobPostData, profileformData, isValid]);
+  useEffect(()=>{
+    if(isValid){
       handleProfileDetailsApi();
     }
-  }, [jobPostData, profileformData, isValid]);
+  },[isValid])
   useEffect(()=>{
       if(isExistApplicantError){
         // setTimeout(()=>{
@@ -2683,6 +2691,7 @@ const ApplicationJobPostModal = ({
   console.log('Fixed', skillGroupData.sort((a, b) => a.id - b.id))
   console.log(groupedSkills)
   console.log(EducationRows)
+  console.log('checkvalid====>',isValid)
   return (
     <Modal
       show={show}
