@@ -637,7 +637,7 @@ const Evalation = () => {
                             </p>
 
                             <ul className="qs_numlist">
-                              {item?.question_section?.map(
+                              {Array.isArray(item?.question_section) && item?.question_section?.map(
                                 (quesItem, quesIndex) => (
                                   <li
                                     key={quesItem.id}
@@ -706,7 +706,7 @@ const Evalation = () => {
                           activeKey={activeKeys?.map(String)}
                           // activeKey={activeKeys.map(item => item.toString())}
                         >
-                          {item?.question_section?.map((item, sectionIndex) => (
+                          {Array.isArray(item?.question_section) && item?.question_section?.map((item, sectionIndex) => (
                             <Accordion.Item
                               id={`accordion-item-${item.id}`}
                               eventKey={`${sectionIndex}-${quesIndex}`}
@@ -730,7 +730,7 @@ const Evalation = () => {
                               <Accordion.Body>
                                 {item.quiz_type === "MCQ-Multi" && (
                                   <ul className="que_options">
-                                    {item?.question_option?.part1?.map(
+                                    {Array.isArray(item?.question_option?.part1) && item.question_option.part1?.map(
                                       (option, index) => {
                                         const isChecked =
                                           item.questions_answer.some(
@@ -756,10 +756,10 @@ const Evalation = () => {
 
                                 {item.quiz_type === "MCQ" && (
                                   <ul className="que_options">
-                                    {item?.question_option.part1?.map(
+                                    {Array.isArray(item?.question_option?.part1) && item?.question_option.part1?.map(
                                       (option, index) => {
                                         const isChecked =
-                                          item?.questions_answer?.some(
+                                          item.questions_answer.some(
                                             (answer) =>
                                               answer.replace(/'/g, "") ===
                                               option
@@ -782,7 +782,7 @@ const Evalation = () => {
 
                                 {item.quiz_type === "Match" && (
                                   <ol className="qus_crossed">
-                                    {item?.question_option.part1?.map(
+                                    {Array.isArray(item?.question_option?.part1) && item?.question_option.part1?.map(
                                       (data, index) => {
                                         const correctCapital =
                                           item?.questions_answer[index]
