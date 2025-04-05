@@ -35,10 +35,11 @@ import {
 } from "../../services/provider";
 import sectionIcon from "../../images/icons/stack-1-dark.svg";
 import questionIcon from "../../images/icons/dotpoints-02-dark.svg";
-import mandatoryIcon from "../../images/icons/No_Mandatory.svg";
-import AiIcon from "../../images/icons/artificial-intelligence1.svg";
+import mandatoryIcon from "../../images/icons/mandatory_icon.svg";
+import timerIcon from "../../images/icons/timer-default-dark.svg";
 import saveProssIcon from "../../images/icons/no-save-ret-dark.svg";
 import ngtscoringIcon from "../../images/icons/no-dark.svg";
+import AIIcons from "../../images/icons/artificial-intelligence1.svg"
 import belltedArrow from "../../images/icons/bullt_arrow.svg";
 import attachmentPin from "../../images/icons/attachment_pin.svg";
 import videoRecoder from "../../images/icons/video-recorder.svg";
@@ -48,7 +49,7 @@ import NotAllowed from "../../images/icons/NotAllowed.svg";
 import { useNavigate } from "react-router-dom";
 import { removeToken } from "../../helpers/helper";
 
-const TestInstruction = ({ showinstruction, handleInstructionClose, handleStartQuiz, EvaluationListDetails,jobData }) => {
+const InstructionAssignment = ({ showinstruction, handleInstructionClose, handleStartQuiz, EvaluationListDetails,jobData }) => {
     return (
         <>
             {/* <Modal
@@ -184,17 +185,17 @@ const TestInstruction = ({ showinstruction, handleInstructionClose, handleStartQ
                 animation={false}
                 size="lg"
                 backdrop={false}
-                className="beharlasmnt_mdl"
+                className="beharlasmnt_mdl dddddd"
             >
                 <Modal.Header closeButton>
                     <img src={logoIcon} className="me-4" />
-                    <Modal.Title>Quiz for {jobData?.job_title}</Modal.Title>
+                    <Modal.Title>Assignment for {jobData?.job_title}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Container className="max-w-1120">
+                    <Container>
                         <Row className="mt-3">
-                            <Col md={12} className="bg-white rounded p-32 shadow-md">
-                                <h5>Quiz for {jobData?.job_title}</h5>
+                            <Col md={12} className="bg-white rounded p-5 shadow-md">
+                                <h5>Assignment for {jobData?.job_title}</h5>
                                 <p className="text-xs-ragular mt-3">
                                     (Add the description of the test from the creator of test) This
                                     assessment is designed to evaluate [brief description of what the
@@ -204,11 +205,11 @@ const TestInstruction = ({ showinstruction, handleInstructionClose, handleStartQ
                                 </p>
                                 {EvaluationListDetails.map((item) => (
                                     <Row>
-                                        <Col md={12} className="mb-4">
+                                        <Col md={12} className="mb-3">
                                             <h6>Important Instructions:</h6>
                                         </Col>
                                         <Col md={2} className="quiz_infocrd">
-                                            <span className="infocrd_icon"><img src={AiIcon} /></span>
+                                            <span className="infocrd_icon"><img src={AIIcons} /></span>
                                             <h6>AI not Allowed</h6>
                                         </Col>
                                         <Col md={2} className="quiz_infocrd">
@@ -223,10 +224,14 @@ const TestInstruction = ({ showinstruction, handleInstructionClose, handleStartQ
                                             <span className="infocrd_icon"><img src={mandatoryIcon} /></span>
                                             <h6>No Mandatory</h6>
                                         </Col>
+                                        {/* <Col md={2} className="quiz_infocrd">
+                                            <span className="infocrd_icon"><img src={timerIcon} /></span>
+                                            <h6>50 Mins.</h6>
+                                        </Col>
                                         <Col md={2} className="quiz_infocrd">
                                             <span className="infocrd_icon"><img src={ngtscoringIcon} /></span>
                                             <h6> Negative Scoring</h6>
-                                        </Col>
+                                        </Col> */}
                                         <Col md={2} className="quiz_infocrd">
                                             <span className="infocrd_icon"><img src={saveProssIcon} /></span>
                                             <h6> No Save and Return</h6>
@@ -237,13 +242,9 @@ const TestInstruction = ({ showinstruction, handleInstructionClose, handleStartQ
                                     <Col md={12} className="keypoints">
                                         <h6>Key Points to Note </h6>
                                         <ul>
-                                            <li>Use the navigation panel on the left to move between sections and questions.
-                                            </li>
-                                            <li>Mark questions for review to revisit before final submission.
-                                            </li>
-                                            <li>Ensure a stable internet connection throughout the test.
-                                            </li>
-                                            <li>If technical issues arise, contact support immediately. </li>
+                                            <li>Use the navigation panel on the left to move between sections and questions.</li>
+                                            <li>Mark questions for review to revisit before final submission.</li>
+                                            <li>Ensure a stable internet connection throughout the test.</li>                                            
                                         </ul>
                                     </Col>
                                 </Row>
@@ -254,7 +255,7 @@ const TestInstruction = ({ showinstruction, handleInstructionClose, handleStartQ
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="primary" onClick={handleStartQuiz} >
-                        Start the Quiz
+                        Start the Assignment
                     </Button>
                 </Modal.Footer>
             </Modal>
@@ -262,4 +263,4 @@ const TestInstruction = ({ showinstruction, handleInstructionClose, handleStartQ
     );
 };
 
-export default TestInstruction
+export default InstructionAssignment

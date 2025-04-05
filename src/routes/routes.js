@@ -22,6 +22,7 @@ import Protected from "./protected";
 import JobReview from "../screens/JobReview/JobReview";
 import JobReviewTest from "../screens/JobReview/JobReviewfirst";
 import QuizMainComponent from "../screens/Jobs/QuizMainComponent";
+import AssignmentComponent from "../screens/Jobs/AssignmentComponent";
 
 
 export const router = createBrowserRouter([
@@ -142,6 +143,10 @@ export const router = createBrowserRouter([
   {
     path: "/evaluation-quiz/:id",
     element: <Protected element={<QuizMainComponent />} allowAuthenticated={false} />,  // Only allow authenticated users here
+  },
+  {
+    path: "/assigntment-test/:id",
+    element: <Protected element={<AssignmentComponent />} allowAuthenticated={false} />,  // Only allow authenticated users here
   },
   // {
   //   path: "/Behaviour-Assessment-Report",

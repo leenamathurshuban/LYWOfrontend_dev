@@ -44,7 +44,14 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel,jobPostData })
     const [show, setShow] = useState(false);
     const [showInstruction,setShowInstruction] = useState(false)
     const [popupShow, setPopupShow] = useState(false);
-    const handleClosePop = () => setPopupShow(false);
+    const handleClosePop = () => {
+        if(complete && runCounter()==28){
+            handleSubmit();
+            setPopupShow(false)
+        }else{
+            setPopupShow(false);
+        }    
+    }
     const handleShow = () => setShow(true);
     const navigate = useNavigate();
     // let applicantId = JSON.parse(localStorage.getItem('applicantData'))
@@ -118,7 +125,9 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel,jobPostData })
                 { id: 3, most: "", least: "", options: [{ name: "Movie", img: movieIQ }, { name: "Book", img: bookIQ }, { name: "Travel", img: travelIQ }, { name: "Party", img: partyIQ }] }
             ])
         } else {
-            handleSubmit()
+            // handleSubmit()
+            setComplete(true)
+            setPopupShow(true)
         }
     }
     function runCounter() {
@@ -150,7 +159,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel,jobPostData })
                     const response = await ApplicationFormDetailsApi(formData, applicantId.applcant.uid)
                     if (response?.data?.success) {
                         setPopupShow(false)
-                        setComplete(true)
+                        // setComplete(true)
                         localStorage.setItem('applicantBehaviour', JSON.stringify(response?.data?.response))
                         // sessionStorage.setItem('applicantBehaviour',JSON.stringify(response?.data?.response))   
                         localStorage.setItem("AttemptStatus", runCounter())
@@ -173,7 +182,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel,jobPostData })
                     const response = await ApplicationFormDetailsApi(formData, behavioralId?.uid);
                     if (response?.data?.success) {
                         setPopupShow(false)
-                        setComplete(true)
+                        // setComplete(true)
                         localStorage.setItem('applicantBehaviour', JSON.stringify(response?.data?.response))
                         // sessionStorage.setItem('applicantBehaviour',JSON.stringify(response?.data?.response))
                         localStorage.setItem("AttemptStatus", runCounter())

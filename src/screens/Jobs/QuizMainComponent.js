@@ -32,6 +32,7 @@ import clock from "../../images/icons/clock.svg";
 import logoIcon from "../../images/logo_icon.png";
 import {
   ApplicationDeatilsApi,
+  ApplicationFormDetailsApi,
   EvalationAssestDetails,
   EvalationAssestList,
   PostQuizDataApi,
@@ -47,6 +48,7 @@ import attachmentPin from "../../images/icons/attachment_pin.svg";
 import videoRecoder from "../../images/icons/video-recorder.svg";
 import CollapsedButton from "../../images/icons/CollapsedButton.svg";
 import NotAllowed from "../../images/icons/NotAllowed.svg";
+import matchIcon from "../../images/icons/match-icon.svg";
 
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { removeToken } from "../../helpers/helper";
@@ -80,7 +82,9 @@ const QuizMainComponent = (item) => {
   const [QuizData, setQuizData] = useState({});
   const [markReview, setMarkReview] = useState({});
   const [questionId, setQuestionId] = useState()
-  const [getKeyIndex, setGetKeyIndex] = useState()
+  const [getKeyIndex, setGetKeyIndex] = useState();
+  const [assestStatus, setAssetStatus] = useState({});
+  const [answerUids, setAnswerUids] = useState({})
 
   //List state
   const [activeTab, setActiveTab] = useState("viewAll");
@@ -270,7 +274,6 @@ const QuizMainComponent = (item) => {
   };
 
   const handleQuizData = (sectionIndex, itemIndex, e, questionId) => {
-    // debugger
     // setQuizData((prev) => {
     //   const existingItems = prev[sectionIndex] || [];
     //   if (existingItems.includes(itemIndex)) {
@@ -284,14 +287,22 @@ const QuizMainComponent = (item) => {
     setQuizData((prev) => {
       const key = `${sectionIndex}-${itemIndex}`;
       const currentSelections = prev[key] || [];
-      if (currentSelections.length) {
+      if (!currentSelections.includes(e.target.value) && currentSelections.length < 2) {
         setQuestionId(questionId)
+      } else if (currentSelections.includes(e.target.value)) {
+        setQuestionId('')
       }
+      // return {
+      //   ...prev,
+      //   [key]: currentSelections.includes(e.target.value)
+      //     ? currentSelections.filter((item) => item !== e.target.value)
+      //     : [...currentSelections, e.target.value]
+      // };
       return {
         ...prev,
-        [key]: currentSelections.includes(e.target.value)
-          ? currentSelections.filter((item) => item !== e.target.value)
-          : [...currentSelections, e.target.value]
+        [key]: !currentSelections.includes(e.target.value) && currentSelections.length < 2
+          ? [...currentSelections, e.target.value]
+          : currentSelections.filter((item) => item !== e.target.value)
       };
     });
     // setQuestionId(questionId)
@@ -339,26 +350,70 @@ const QuizMainComponent = (item) => {
       formData.append("selected_answer", JSON.stringify(isSingleArray))
       const res = await PostQuizDataApi(formData)
       if (res.data.success) {
-        applicantDetailAPI()
+        // applicantDetailAPI()
       }
     } catch (error) {
       console.log(error)
-      alert(error?.response?.data?.response?.error[0])
+      // const res = await ApplicationFormDetailsApi()      
+      if (error?.response?.data?.response?.error[0]) {
+        try {
+          const isSingleArray = QuizData[getKeyIndex]?.some(Array.isArray) ? QuizData[getKeyIndex]?.flat() : QuizData[getKeyIndex]
+          const formData = new FormData();
+          const fillUpdate = [{ answer_uid: answerUids[getKeyIndex], question_uid: questionId, selected_answer: isSingleArray }]
+          formData.append('job_uid', jobData?.state?.uid)
+          formData.append('question_answer_array', JSON.stringify(fillUpdate))
+          const res = await ApplicationFormDetailsApi(formData, applcant?.applcant?.uid)
+          if (res?.data?.success) {
+            // applicantDetailAPI()
+          }
+        } catch (error) {
+          console.log(error)
+        }
+
+      }
+      // alert(error?.response?.data?.response?.error[0])
     }
   }
   const applicantDetailAPI = async () => {
     try {
       const res = await ApplicationDeatilsApi(applcant?.applcant?.user)
+      // debugger
       if (res?.data?.success) {
         // setSelectedSectionAnswer(res?.data?.response?.asset_data)
-        res?.data?.response?.asset_data[0].section_asset.sort((a, b) => a.id - b.id).map((item, quesIndex) =>
-          item.question_section.map((Val, sectionIndex) => {
-            setQuizData((prev) => ({
-              ...prev,
-              [`${quesIndex}-${sectionIndex}`]: Val.user_answer_question[0]?.selected_answer
-            }));
-          })
-        )
+        // res?.data?.response?.asset_data[0].section_asset.sort((a, b) => a.id - b.id).map((item, quesIndex) =>
+        //   item.question_section.map((Val, sectionIndex) => {
+        //     setQuizData((prev) => ({
+        //       ...prev,
+        //       [`${quesIndex}-${sectionIndex}`]: Val.user_answer_question[0]?.selected_answer
+        //     }));
+        //     setAnswerUids((prev)=>({
+        //       ...prev,
+        //       [`${quesIndex}-${sectionIndex}`]: Val.user_answer_question[0]?.uid              
+        //     }))
+        //   })
+        // )
+        res.data.response.asset_data.map((Val) => {
+          if (Val?.asset_title === "Technical round for EHS Manager") {
+            Val?.section_asset.sort((a, b) => a.id - b.id).map((item, quesIndex) =>
+              item.question_section.map((Val, sectionIndex) => {
+                setQuizData((prev) => ({
+                  ...prev,
+                  [`${item?.id}-${Val?.id}`]: Val.user_answer_question[0]?.selected_answer
+                }));
+                setAnswerUids((prev) => ({
+                  ...prev,
+                  [`${item?.id}-${Val?.id}`]: Val.user_answer_question[0]?.uid
+                }))
+              })
+            )
+            setAssetStatus(res?.data?.response?.asset_data[0]?.assets_applicant_asset_completion[0])
+            localStorage.setItem("assestQuiz", res?.data?.response?.asset_data[0]?.assets_applicant_asset_completion[0]?.asset_completion_status)
+            if (res?.data?.response?.asset_data[0]?.assets_applicant_asset_completion[0]?.asset_completion_status == 'Completed') {
+              setShow(false)
+            }
+          }
+        })
+
       }
     } catch (error) {
       console.log(error)
@@ -388,13 +443,16 @@ const QuizMainComponent = (item) => {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
-  };  
-  // console.log(QuizData, EvaluationListDetails)
+  };
+  console.log(QuizData, EvaluationListDetails)
   // console.log(markReview)
   // console.log(QuizData[getKeyIndex], applcant)
   // console.log(EvaluationListDetails)
   // console.log(QuizData)
   // console.log('selected_answer=============>', selectedSectionAnswer)
+  // console.log(assestStatus)
+  // console.log(jobData)
+  // console.log(answerUids[getKeyIndex])
   return (
     <>
       <TestInstruction showinstruction={show} handleInstructionClose={handleInstructionClose}
@@ -414,21 +472,21 @@ const QuizMainComponent = (item) => {
               {item.asset_title}
             </Modal.Title>
           </Col>
-          <Col md={4} className="d-flex align-items-center">
-            <p className="m-0 font-13">
-              <span className="font-weight-600 me-2">100%</span>completed
+          <Col md={8} className="d-flex align-items-center justify-content-end quiz_headright">
+            <div className="quiz_progress">
+              <p className="m-0 font-13">
+                <span className="font-weight-600 me-2">100%</span>completed
+              </p>
+              <ProgressBar
+                className="ms-3"
+                style={{ width: "80px", height: "8px" }}
+                now={100}
+              />
+            </div>
+            <p className="timer">
+              <img src={clock} />
+              <span className="timercout">{formatTime(timeLeft)}</span>
             </p>
-            <ProgressBar
-              className="ms-3"
-              style={{ width: "215px", height: "8px" }}
-              now={100}
-            />
-          </Col>
-          <Col md={4} className="d-flex align-items-center">
-            <img src={clock} />
-            <p className="m-0 font-13">
-              <span className="font-weight-600 me-2">{formatTime(timeLeft)}</span>
-            </p>           
           </Col>
           {/* <Col md={4} className="score_panel">
             <ul>
@@ -531,8 +589,8 @@ const QuizMainComponent = (item) => {
                                       )
                                     }
                                   >
-                                    <span className={handleAnsweredQuizActive(sectionIndex, quesIndex)}>
-                                      {markReview[`${sectionIndex}-${quesIndex}`]?.length ? (<span className="dot"></span>) : ''}
+                                    <span className={handleAnsweredQuizActive(item?.id, quesItem?.id)}>
+                                      {markReview[`${item?.id}-${quesItem?.id}`]?.length ? (<span className="dot"></span>) : ''}
                                       {/* <span className="dot"></span> */}
                                       {quesIndex + 1}
                                     </span>
@@ -550,7 +608,7 @@ const QuizMainComponent = (item) => {
               <Col md={6} lg={8} className="queMain_panel">
                 <div className="que_mainsection">
                   {EvaluationListDetails[0]?.section_asset?.sort((a, b) => a.id - b.id)?.map(
-                    (item, quesIndex) => (
+                    (Val, quesIndex) => (
                       <div
                         // id="qes_section01"
                         className="qes_section01 mb-4"
@@ -563,17 +621,17 @@ const QuizMainComponent = (item) => {
                           }
                         >
                           <div className="d-flex justify-content-between mb-2">
-                            <h6> {item.section_title}</h6>
+                            <h6> {Val.section_title}</h6>
                             {/* <h6>{quesIndex + 1} {item.section_title}</h6> */}
 
                             <span>
                               Questions
                               <strong className="font-weight-600 ms-1">
-                                {item.total_number_of_question}
+                                {Val.total_number_of_question}
                               </strong>
                             </span>
                           </div>
-                          <p className="text-sm">{item.section_description}</p>
+                          <p className="text-sm">{Val.section_description}</p>
                           {/* <strong className="qus_number">1{item.id}</strong> */}
                           <strong className="qus_number">
                             {quesIndex + 1}
@@ -585,7 +643,7 @@ const QuizMainComponent = (item) => {
                           activeKey={activeKeys.map(String)}
                         // activeKey={activeKeys.map(item => item.toString())}
                         >
-                          {item.question_section.map((item, sectionIndex) => (
+                          {Val.question_section.map((item, sectionIndex) => (
                             <Accordion.Item
                               id={`accordion-item-${item.id}`}
                               eventKey={`${sectionIndex}-${quesIndex}`}
@@ -604,7 +662,7 @@ const QuizMainComponent = (item) => {
                                 <span className="que_points">
                                   {/* {item.question_points} points */}
                                   {/* <img src={mcqIcon} /> */}
-                                  <strong onClick={() => handleMarkandReview(quesIndex, sectionIndex)} className={`${markReview[`${quesIndex}-${sectionIndex}`]?.length ? 'active' : ''} ms-2 bookmark`}>
+                                  <strong onClick={() => handleMarkandReview(Val?.id, item?.id)} className={`${markReview[`${Val?.id}-${item?.id}`]?.length ? 'active' : ''} ms-2 bookmark`}>
                                     <i class="fa fa-bookmark" aria-hidden="true"></i>
                                   </strong>
                                 </span>
@@ -628,9 +686,9 @@ const QuizMainComponent = (item) => {
                                               id={`custom-radio${index + 1}`}
                                               label={option}
                                               // checked={isChecked}
-                                              checked={QuizData[`${quesIndex}-${sectionIndex}`]?.some((v) => v == option)}
+                                              checked={QuizData[`${Val?.id}-${item?.id}`]?.some((v) => v == option)}
                                               value={option}
-                                              onChange={(e) => handleQuizData(quesIndex, sectionIndex, e, item?.uid)}
+                                              onChange={(e) => handleQuizData(Val?.id, item?.id, e, item?.uid)}
                                             />
                                           </li>
                                         );
@@ -658,9 +716,9 @@ const QuizMainComponent = (item) => {
                                               label={option}
                                               name="radioGroup"
                                               // checked={isChecked}
-                                              checked={QuizData[`${quesIndex}-${sectionIndex}`]?.some((v) => v == option)}
+                                              checked={QuizData[`${Val?.id}-${item?.id}`]?.some((v) => v == option)}
                                               value={option}
-                                              onChange={(e) => handleQuizSingleData(quesIndex, sectionIndex, e, item?.uid)}
+                                              onChange={(e) => handleQuizSingleData(Val?.id, item?.id, e, item?.uid)}
                                             />
                                           </li>
                                         );
@@ -703,7 +761,7 @@ const QuizMainComponent = (item) => {
                                       </Col>
                                       <Col>
                                         <ul className="qus_crossed" style={{ listStyle: "none" }}>
-                                          {QuizData[`${quesIndex}-${sectionIndex}`]?.flat()?.length ? QuizData[`${quesIndex}-${sectionIndex}`]?.flat()?.map(
+                                          {QuizData[`${Val?.id}-${item?.id}`]?.flat()?.length ? QuizData[`${Val?.id}-${item?.id}`]?.flat()?.map(
                                             (data, index) => {
                                               const correctCapital =
                                                 item?.questions_answer[index]
@@ -713,12 +771,13 @@ const QuizMainComponent = (item) => {
                                               return (
                                                 <li key={index}>
                                                   <div className="crossd_answarp">
+                                                    <img src={matchIcon} />
                                                     <span className="crossd_ans"
                                                       //  onClick={() => handleQuizData(quesIndex, item, index)}
                                                       draggable
                                                       onDragStart={() => handleDragStart(index)}
                                                       onDragOver={handleDragOver}
-                                                      onDrop={() => handleDrop(quesIndex, sectionIndex, index, QuizData[`${quesIndex}-${sectionIndex}`]?.flat(), item?.uid)}
+                                                      onDrop={() => handleDrop(Val?.id, item?.id, index, QuizData[`${Val?.id}-${item?.id}`]?.flat(), item?.uid)}
                                                     >
                                                       {String.fromCharCode(65 + index)}. {data}
                                                     </span>
@@ -745,7 +804,7 @@ const QuizMainComponent = (item) => {
                                                         draggable
                                                         onDragStart={() => handleDragStart(index)}
                                                         onDragOver={handleDragOver}
-                                                        onDrop={() => handleDrop(quesIndex, sectionIndex, index, item?.question_option.part1, item?.uid)}
+                                                        onDrop={() => handleDrop(Val?.id, item?.id, index, item?.question_option.part1, item?.uid)}
                                                       >
                                                         {String.fromCharCode(65 + index)}. {data}
                                                       </span>
@@ -778,7 +837,7 @@ const QuizMainComponent = (item) => {
                                         </li>
                                       )
                                     )} */}
-                                    {QuizData[`${quesIndex}-${sectionIndex}`]?.flat()?.length ? QuizData[`${quesIndex}-${sectionIndex}`]?.flat()?.map(
+                                    {QuizData[`${Val?.id}-${item?.id}`]?.flat()?.length ? QuizData[`${Val?.id}-${item?.id}`]?.flat()?.map(
                                       (data, index) => {
                                         const correctCapital =
                                           item?.questions_answer[index]
@@ -794,7 +853,7 @@ const QuizMainComponent = (item) => {
                                                 <img src={DragDrop} className="dragicon" alt="" draggable
                                                   onDragStart={() => handleDragStart(index)}
                                                   onDragOver={handleDragOver}
-                                                  onDrop={() => handleDrop(quesIndex, sectionIndex, index, QuizData[`${quesIndex}-${sectionIndex}`]?.flat(), item?.uid)}
+                                                  onDrop={() => handleDrop(Val?.id, item?.id, index, QuizData[`${Val?.id}-${item?.id}`]?.flat(), item?.uid)}
                                                 />
                                                 {data}
                                               </span>
@@ -822,7 +881,7 @@ const QuizMainComponent = (item) => {
                                                   <img src={DragDrop} className="dragicon" alt="" draggable
                                                     onDragStart={() => handleDragStart(index)}
                                                     onDragOver={handleDragOver}
-                                                    onDrop={() => handleDrop(quesIndex, sectionIndex, index, item?.question_option.part1, item?.uid)}
+                                                    onDrop={() => handleDrop(Val?.id, item?.id, index, item?.question_option.part1, item?.uid)}
                                                   />
                                                   {/* {String.fromCharCode(65 + index)}. */}
                                                   {data}
@@ -1004,17 +1063,17 @@ const QuizMainComponent = (item) => {
                                     onClick={() =>
                                       handleListItemClick(
                                         // `${sectionIndex}-${quesIndex}`
-                                        `${quesIndex}-${sectionIndex}`
+                                        `${item?.id}-${quesItem?.id}`
                                       )
                                     }
                                   >
-                                    <span className={handleAnsweredQuizActive(sectionIndex, quesIndex)}>
+                                    <span className={handleAnsweredQuizActive(item?.id, quesItem?.id)}>
                                       {" "}
                                       {quesIndex + 1}
-                                      {markReview[`${sectionIndex}-${quesIndex}`]?.length ? (<span className="dot"></span>) : ''}
+                                      {markReview[`${item?.id}-${quesItem?.id}`]?.length ? (<span className="dot"></span>) : ''}
                                     </span>
 
-                                    {QuizData[`${sectionIndex}-${quesIndex}`]?.length ? 'Answered Question' : "Pending Question"}
+                                    {QuizData[`${item?.id}-${quesItem?.id}`]?.length ? 'Answered Question' : "Pending Question"}
                                   </li>
                                 )
                               )}
@@ -1029,6 +1088,38 @@ const QuizMainComponent = (item) => {
             </Row>
           </Tab.Container>
         </Modal.Body>
+        <Modal.Footer className="quiz-modelfooter">
+          <Button variant="primary" onClick={handleClose}>
+            Submit
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      {/* <------------Complete Quiz--------------------------------- */}
+      <Modal
+        show={assestStatus?.asset_completion_status === 'Completed' ? true : false}
+        onHide={handleClose}
+        animation={false}
+        size="lg"
+        backdrop={false}
+        className="bsreport_mdl"
+      >
+        <Modal.Header closeButton>
+          <img src={logoIcon} className="me-4" />
+          <Modal.Title>Quiz for {jobData?.state?.job_title}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="bg-white p-5 rounded text-center">
+            <h5 className="mb-3">You have submitted the evaluation on {assestStatus?.asset_completion_date}.</h5>
+            <p className="disc-text">Thank you for your time and efforts. The Quiz for {jobData?.state?.job_title} will be used to evaluate your readiness for the job position. The next round of recruitment process will open for you based on your performance.</p>
+            <Row className="mt-5 justify-content-center">
+            </Row>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={handleClose}>
+            Return to Job
+          </Button>
+        </Modal.Footer>
       </Modal>
     </>
   )

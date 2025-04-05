@@ -23,6 +23,7 @@ import Share from "../../images/icons/share-07.svg";
 import InfoCircle from "../../images/icons/info-circle16x16.svg";
 import {
   ApplicationDeatilsApi,
+  EvalationAssestDetails,
   getPostJobIdApi,
 } from "../../services/provider";
 import ApplicationJobPostModal from "./ApplicationJobPostModal";
@@ -55,6 +56,7 @@ import BehaviourAssReport from "../BehaviourAss/BehaviourAssReport";
 import BehaviouralAst from "../BehaviourAss/BehaviouralAst";
 import checkRight from "../../images/icons/check_green.svg";
 import checkpending from "../../images/icons/pending_status.svg";
+import AssignmentComponent from "./AssignmentComponent";
 
 const jobDetailPng = [jobRoal, jobLike, jobExp, jobDivision, jobDepart, jobSkills, jobEducation, jobArea, jobType, jobWorktype, InfoTravel, InfoLanguage]
 
@@ -135,7 +137,7 @@ const JobPosts = () => {
       savedWorkExp: false,
     },
   ]);
-  const [isExistApplicantError,setIsExistApplicantError] = useState('');
+  const [isExistApplicantError, setIsExistApplicantError] = useState('');
 
   const inputRef = useRef(null);
   const containerRef = useRef(null);
@@ -403,20 +405,20 @@ const JobPosts = () => {
             gradYear: item?.grad_year || "",
             university: item?.university || "",
             grade: item?.grade || "",
-            saved:true
+            saved: true
           }))
           SetEducationRows(newArry)
         }
-        if(Array.isArray(workExpData)){
-          const newArray = workExpData.map((item)=>({
-            TotalWorkExperience:item?.total_work_experience,
-            WorkRole:item?.role,
-            WorkFrom:item?.work_from,
-            WorkTo:item?.work_to,
-            WorkComapny:item?.work_company,
-            WorkIndustry:item?.work_industry,
-            WorkNote:item?.note,
-            savedWorkExp:true
+        if (Array.isArray(workExpData)) {
+          const newArray = workExpData.map((item) => ({
+            TotalWorkExperience: item?.total_work_experience,
+            WorkRole: item?.role,
+            WorkFrom: item?.work_from,
+            WorkTo: item?.work_to,
+            WorkComapny: item?.work_company,
+            WorkIndustry: item?.work_industry,
+            WorkNote: item?.note,
+            savedWorkExp: true
           }))
           setWorkExpreienceRow(newArray)
         }
@@ -451,7 +453,7 @@ const JobPosts = () => {
       handleShowModal("first");
       handleViewDetailsAPi(paramemail);
     }
-  }, [paramemail])  
+  }, [paramemail])
   console.log("buttonText", buttonText)
   console.log(jobPostData?.asset_job)
   const handleShareModal = () => {
@@ -647,7 +649,7 @@ const JobPosts = () => {
           animation={false}
           size="lg"
           backdrop={false}
-          className="cmprofile_mdl quizDev_model"
+          className="aplcnt_view quizDev_model"
         >
           <Modal.Header closeButton>
             <Modal.Title>Profile Details</Modal.Title>
@@ -655,45 +657,54 @@ const JobPosts = () => {
           <Modal.Body>
             {viewDetailData && (
               <>
-                <Row>
-                  <Col md={10}>
-                    <h6>{viewDetailData?.user?.username}</h6>
-                    <h5>{viewDetailData?.user?.email}</h5>
-                    <p>{viewDetailData?.user?.phone_number}</p>
+                <Row className="justify-content-center">
+                  <Col md={8}>
+                    <Row>
+                      <Col md={12} className="d-flex justify-content-between">
+                        <div className="aplcnt_info">
+                          <h5>{viewDetailData?.user?.username}</h5>
+                          <ul>
+                            <li><i class="far fa-envelope me-2" aria-hidden="true"></i>{viewDetailData?.user?.email}</li>
+                            <li>
+                              <i class="fa fa-phone me-2" aria-hidden="true"></i>
+                              {viewDetailData?.user?.phone_number}
+                            </li>
+                          </ul>
+                        </div>
+                        <div className="aplcnt_cv"><i class="fa fa-paperclip" aria-hidden="true"></i> {viewDetailData?.resume}</div>
+                      </Col>
+                    </Row>
+                    <div className="aplcnt_details">
+                      <ul>
+                        <li><span>Availability</span> <strong>{viewDetailData?.availble_by}</strong></li>
+                        <li><span>Notice Period</span> <strong>{viewDetailData?.notice_period}</strong></li>
+                        <li><span>Expected Salary</span> <strong>{viewDetailData?.expected_salary}</strong></li>
+                        <li><span>Education</span> <strong>Master in Computer Science Engineering</strong></li>
+                        <li><span>Experience</span> <strong>June 2022 - May2024 Software Developer, IT, Company Name</strong></li>
+                        <li><span>Language</span> <strong>Hindi, English, Telugu</strong></li>
+                        <li><span>Current Location</span> <strong>{viewDetailData?.current_location}</strong></li>
+                        <li><span>Skills</span> <strong>{viewDetailData?.applicant_profile_job?.[0]?.job_applicant_skill.map(
+                          (item) => console.log("i----->>>>", item)
+                        )}</strong></li>
+                      </ul>
+                      <div className="addti_qus">
+                        <span>Additional Questions from Company</span>
+                        <div className="quswarp">
+                          <h6>Which area of cricket do you think needs the greatest development in senior cricket players?</h6>
+                          <ul>
+                            <li><i className="dot"></i>Openness to Learn</li>
+                            <li><i className="dot"></i>Fitness and Energy</li>
+                          </ul>
+                        </div>
+                        <div className="quswarp">
+                          <h6>Do you think that IPL has impacted the skills of the players to play 50 over cricket negatively ?</h6>
+                          <ul>
+                            <li><i className="dot"></i>No</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
                   </Col>
-
-                  <Col md={2}>{viewDetailData?.resume}</Col>
-                </Row>
-
-                <Row
-                  style={{ borderBottom: "1px solid #ddd", padding: "10px" }}
-                >
-                  <Col md={6}>Availability</Col>
-                  <Col md={6}>{viewDetailData?.availble_by}</Col>
-                  <Col md={6}>Notice Period</Col>
-                  <Col md={6}>{viewDetailData?.notice_period}</Col>
-                  <Col md={6}>Expected Salary</Col>
-                  <Col md={6}>{viewDetailData?.expected_salary}</Col>
-                  <Col md={6}>Education</Col>
-                  <Col md={6}>Master in Computer Science Engineering</Col>
-                  <Col md={6}>Experience</Col>
-                  <Col md={6}>
-                    June 2022 - May2024 Software Developer, IT, Company Name
-                  </Col>
-                  <Col md={6}>Language </Col>
-                  <Col md={6}>Hindi, English, Telugu</Col>
-                  <Col md={6}>Current Location</Col>
-                  {/* <Col md={6}>{viewDetailData?.current_location}</Col> */}
-                  <Col md={6}>Skills</Col>
-                  {/* {viewDetailData?.applicant_profile_job?.[0]?.job_applicant_skill.map(
-                  (item) => console.log("i----->>>>", item)
-                )} */}
-                  <Col md={6}>
-                    Microsoft Office, PowerPoint, Java, C#, Leadership, Database
-                    Management, Product Development, Mongo DB, .Net,
-                  </Col>
-                  <Col md={6}>Additional Questions from Company</Col>
-                  <Col md={6}>Can join Immediately</Col>
                 </Row>
               </>
             )}
@@ -750,6 +761,44 @@ const JobPosts = () => {
   useEffect(() => {
     GetJobPostWithId();
   }, [id]);
+
+  // const quizModal = async (uId) => {
+  //   // console.log("uid--------",uId)
+  //   // handleShow();
+  //   setIsLoading(true);
+  //   // const url = `https://bittrend.shubansoftware.com/assets-api/assets-list-by-company-api/b6cadaab-69bc-4707-8656-2e8573e17547/?search=${SerachQuestion}&page=1&limit=10`;
+  //   const url = `assets-api/assets-detail-api/${uId}/`;
+  //   try {
+  //     const response = await EvalationAssestDetails(url);
+  //     setIsLoading(false);
+  //     //  console.log("assest detailssss api------",response.data.response)
+  //     setEvaluationListDetails(response.data.response);
+  //     response?.data?.response[0]?.section_asset?.sort((a, b) => a.id - b.id).map((item, quesIndex) =>
+  //       item.question_section.map((Val, sectionIndex) => {
+  //         setErrorMessage((prev) => ({
+  //           ...prev,
+  //           [`${item?.id}-${Val?.id}-type`]: Val?.assignment_type
+  //         }));
+  //       })
+  //     )
+  //   } catch (error) {
+  //     setIsLoading(false);
+  //     console.error("Error fetching company user list:", error);
+  //     if (
+  //       error?.response?.status === 401 ||
+  //       error?.response?.data?.detail?.includes(
+  //         "Given token not valid for any token type"
+  //       )
+  //     ) {
+  //       console.log("Token expired, redirecting to login");
+  //       removeToken();
+  //       // navigate("/loginwithpassword");
+  //     }
+  //   }
+  // };
+  // useEffect(() => {
+  //   quizModal(assignmentId)
+  // }, [assignmentId])
   console.log('dauuuuuuuu++++++>', buttonText)
   return (
     <Container fluid className="applicat_flow">
@@ -991,15 +1040,16 @@ const JobPosts = () => {
               {Number(localStorage.getItem("AttemptStatus")) === 0 && "Start"}
             </Button>
           </div>
-          {jobPostData?.asset_job?.map((Val) => (
-            <div className={`${localStorage.getItem("AttemptStatus") == 28 ? 'pending_status' : ''} progress_box`}>
+          {/* {jobPostData?.asset_job?.map((Val) => (
+            <div className={`${localStorage.getItem("assestQuiz") === 'Completed' ? 'complate_status' :localStorage.getItem("assestQuiz") == 'Draft'? 'pending_status':''} progress_box`}>
               <h5>
-                {localStorage.getItem("AttemptStatus") == 28 ? <img src={checkpending} className="me-2" /> : <span className="bg_circle"></span>}
-                {/* ICC Cricket Rules Quiz */}
+                {localStorage.getItem("assestQuiz") == 'Completed' ? <img src={checkRight} className="me-2" /> : localStorage.getItem("assestQuiz") == 'Draft' ? <img src={checkpending} className="me-2" /> : (<span className="bg_circle"></span>)}
+                
                 {Val?.asset_title}
               </h5>
               <p>
-                Pending
+                {localStorage.getItem("assestQuiz") == 'Completed'?'Completed':localStorage.getItem("assestQuiz") == 'Draft'?'Pending':'Pending'}
+                
               </p>
               <Button
                 variant="primary"
@@ -1009,30 +1059,66 @@ const JobPosts = () => {
                   navigate(`/evaluation-quiz/${Val?.uid}`, { state: jobPostData })
                 }}
               >
-                Start
+              {localStorage.getItem("assestQuiz") == 'Completed'?"View":localStorage.getItem("assestQuiz") == 'Draft'?"Continue":"Start"}
+                
               </Button>
             </div>
-          ))}
+          ))}           */}
+          {jobPostData?.asset_job?.map((Val) => {
+            if (Val?.asset_title === 'Technical round for EHS Manager') {
+              return (
+                <div className={`${localStorage.getItem("assestQuiz") === 'Completed' ? 'complate_status' : localStorage.getItem("assestQuiz") == 'Draft' ? 'pending_status' : ''} progress_box`}>
+                  <h5>
+                    {localStorage.getItem("assestQuiz") == 'Completed' ? <img src={checkRight} className="me-2" /> : localStorage.getItem("assestQuiz") == 'Draft' ? <img src={checkpending} className="me-2" /> : (<span className="bg_circle"></span>)}
 
+                    {Val?.asset_title}
+                  </h5>
+                  <p>
+                    {localStorage.getItem("assestQuiz") == 'Completed' ? 'Completed' : localStorage.getItem("assestQuiz") == 'Draft' ? 'Pending' : 'Pending'}
 
-          <div className="progress_box">
-            <h5>
-              <span className="bg_circle"></span>Technical Assignment
-            </h5>
-            <p>
-              Pending
-            </p>
-            <Button
-              variant="primary"
-              size="lg"
-              disabled
-            // onClick={() => {
+                  </p>
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    disabled={localStorage.getItem("AttemptStatus") == 28 ? false : true}
+                    onClick={() => {
+                      navigate(`/evaluation-quiz/${Val?.uid}`, { state: jobPostData })
+                    }}
+                  >
+                    {localStorage.getItem("assestQuiz") == 'Completed' ? "View" : localStorage.getItem("assestQuiz") == 'Draft' ? "Continue" : "Start"}
 
-            // }}
-            >
-              Start
-            </Button>
-          </div>
+                  </Button>
+                </div>
+              )
+            } else if (Val?.asset_title === 'Pre-interview round for creative director') {
+              return (
+                <div className={`${localStorage.getItem("preAssestQuiz") === 'Completed' ? 'complate_status' : localStorage.getItem("preAssestQuiz") == 'Draft' ? 'pending_status' : ''} progress_box`}>
+                  <h5>
+                    {localStorage.getItem("preAssestQuiz") == 'Completed' ? <img src={checkRight} className="me-2" /> : localStorage.getItem("preAssestQuiz") == 'Draft' ? <img src={checkpending} className="me-2" /> : (<span className="bg_circle"></span>)}
+
+                    {Val?.asset_title}
+                  </h5>
+                  <p>
+                    {localStorage.getItem("preAssestQuiz") == 'Completed' ? 'Completed' : localStorage.getItem("preAssestQuiz") == 'Draft' ? 'Pending' : 'Pending'}
+
+                  </p>
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    disabled={localStorage.getItem("assestQuiz") !== 'Completed' ? true : false}
+                    onClick={() => {
+                      // setShowAssignmentInstruction(true);
+                      // setAssignmentId(Val?.uid)
+                      navigate(`/assigntment-test/${Val?.uid}`, { state: jobPostData })
+                    }}
+                  >
+                    {localStorage.getItem("preAssestQuiz") == 'Completed' ? "View" : localStorage.getItem("preAssestQuiz") == 'Draft' ? "Continue" : "Start"}
+
+                  </Button>
+                </div>
+              )
+            }
+          })}
 
           <div>
             <div
@@ -1094,6 +1180,11 @@ const JobPosts = () => {
       {ViewProfileFormDetailsModal()}
       <BehaviouralAst behaviourAssModel={behaviourAssModel} setBehaviourAssModel={setBehaviourAssModel} jobPostData={jobPostData} />
       <BehaviourAssReport behaviourReportModel={behaviourReportModel} setBehaviourReportModel={setBehaviourReportModel} />
+      {/* <AssignmentComponent
+        showAssignmentInstruction={showAssignmentInstruction} setShowAssignmentInstruction={setShowAssignmentInstruction}
+        jobdetail={jobPostData}
+        EvaluationListDetails={EvaluationListDetails} setEvaluationListDetails={setEvaluationListDetails}
+        errorMessage={errorMessage} setErrorMessage={setErrorMessage} /> */}
     </Container>
   );
 };
