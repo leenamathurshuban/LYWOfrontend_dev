@@ -812,7 +812,7 @@ const Evalation = () => {
 
                                 {item.quiz_type === "Arrange" && (
                                   <ul className="qus_numbered">
-                                    {item.questions_answer.map(
+                                    {Array.isArray(item?.questions_answer) && item.questions_answer.map(
                                       (answer, index) => (
                                         <li key={index}>
                                           <div className="crossd_answarp">
