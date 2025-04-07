@@ -2709,7 +2709,7 @@ const ApplicationJobPostModal = ({
   console.log('Fixed', skillGroupData.sort((a, b) => a.id - b.id))
   console.log(groupedSkills)
   console.log(EducationRows)
-  console.log('checkvalid====>', isValid)
+  // console.log('checkvalid====>', isValid)
   return (
     <Modal
       show={show}
