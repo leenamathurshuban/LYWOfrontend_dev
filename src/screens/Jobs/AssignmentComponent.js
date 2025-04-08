@@ -617,15 +617,8 @@ const AssignmentComponent = (item) => {
     //     const secs = seconds % 60;
     //     return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
     // };
-    // console.log(QuizData, EvaluationListDetails)
-    // console.log(markReview)
-    // console.log(QuizData[getKeyIndex], applcant)
-    // console.log(EvaluationListDetails)
-    // console.log(QuizData)
-    // console.log('selected_answer=============>', selectedSectionAnswer)
     console.log(EvaluationListDetails)
     console.log(QuizData)
-    // console.log(fileName)
     return (
         <>
             <InstructionAssignment showinstruction={show} handleInstructionClose={handleInstructionClose}
