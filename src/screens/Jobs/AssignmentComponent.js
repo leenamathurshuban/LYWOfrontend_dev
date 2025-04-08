@@ -624,7 +624,7 @@ const AssignmentComponent = (item) => {
     // console.log(QuizData)
     // console.log('selected_answer=============>', selectedSectionAnswer)
     console.log(EvaluationListDetails)
-    console.log(QuizData)
+    // console.log(QuizData)
     // console.log(fileName)
     return (
         <>
