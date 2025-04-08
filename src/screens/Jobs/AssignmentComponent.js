@@ -100,6 +100,9 @@ const AssignmentComponent = (item) => {
             "application/vnd.ms-excel",
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // XLSX
             "application/x-executable", // EXE
+            "audio/mp3",
+            "video/mp4",
+            "video/webm"
         ];
 
         return binaryMimeTypes.includes(file.type);
@@ -353,7 +356,7 @@ const AssignmentComponent = (item) => {
         const file = e.target.files[0];
         setFileName((prev) => ({
             ...prev,
-            [`${sectionIndex}-${itemIndex}`]: file.name
+            [`${sectionIndex}-${itemIndex}`]: file?.name?file?.name:""
         }));
         if (file && file.type.startsWith("video/")) {
             setQuizData((prev) => ({
@@ -517,9 +520,7 @@ const AssignmentComponent = (item) => {
             const res = await PostQuizDataApi(formData)
             if (res.data.success) {
                 setIsLoading(false)
-                if(errorMessage[`${getKeyIndex}-type`] === 'Text-Mandatory-Attachment-Optional'){
-                    applicantDetailAPI()
-                }                
+                applicantDetailAPI()
             }
         } catch (error) {
             // console.log(error)
@@ -546,6 +547,7 @@ const AssignmentComponent = (item) => {
                     const res = await ApplicationFormDetailsApi(formData, applcant?.applcant?.uid)
                     if (res?.data?.success) {
                         setIsLoading(false)
+                        // applicantDetailAPI()
                     }
                 } catch (error) {
                     console.log(error)

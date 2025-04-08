@@ -25,7 +25,7 @@ import ExpandButton from "../../images/icons/expand-03-primery.svg";
 import ArrowBack from "../../images/icons/arrowBack.svg";
 import ArrowNext from "../../images/icons/arrowNext.svg";
 import { useParams } from "react-router-dom";
-import { getJobDetailsApi } from "../../services/provider";
+import { getJobAssignmentReview, getJobDetailsApi } from "../../services/provider";
 import Evaluations from "./Evaluations";
 import Ratting from "../../components/Ratting";
 import CodeBlock from "../../components/CodeBlock";
@@ -71,6 +71,7 @@ tracker.show_tasks()
     const { id } = useParams();
     const [assetJob, setAssetJob] = useState([]);
     const [localAssetJob, setLocalAssetJob] = useState([]);
+    const [assignmentReviewList,setAssignmentReviewList] = useState([]);
 
     const getJobDetails = async (id) => {
         const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-api/${id}/`;
@@ -84,10 +85,21 @@ tracker.show_tasks()
         } catch (error) {
         }
     }
+    const getJobAssignmentReviewAPI=async(id)=>{
+        try {
+            const response = await getJobAssignmentReview(id)
+            if(response?.data?.success){
+                setAssignmentReviewList(response?.data?.response?.asset_job)
+            }
+        } catch (error) {
+            console.log(error);            
+        }
+    }
     useEffect(() => {
         getJobDetails(id)
+        getJobAssignmentReviewAPI(id)
     }, [id])
-
+    console.log(assignmentReviewList)
     return (
         <>
             <Sidebar />

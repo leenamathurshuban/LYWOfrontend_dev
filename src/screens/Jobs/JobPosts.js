@@ -105,6 +105,7 @@ const JobPosts = () => {
     CurrentLocation: "",
     relocationChoice: null,
     requiredCompanyAssist: null,
+    willing_to_travel_for_job:''
   });
   const [isYes, setIsYes] = useState({
     CurrentlyWorkingToggle: false,
@@ -124,6 +125,7 @@ const JobPosts = () => {
     university: "",
     grade: "",
     saved: false,
+    gpa:""
   },]);
   const [WorkExpreienceRow, setWorkExpreienceRow] = useState([
     {
@@ -356,6 +358,7 @@ const JobPosts = () => {
           ExpectedSalary: response?.data?.response?.expected_salary || "",
           CurrentLocation: response?.data?.response?.current_location || "",
           relocationChoice: response?.data?.response?.willing_to_relocate_to || false,
+          willing_to_travel_for_job:response?.data?.response?.willing_to_travel_for_job,
           requiredCompanyAssist:
             response?.data?.response?.require_company_assistance_for_relocation || false,
         }));
@@ -757,6 +760,21 @@ const JobPosts = () => {
       setButtonText('View Form Btn')
     }
   }, [localStorage.getItem("applicantData")]);
+
+  // useEffect(() => {
+  //   const applicantProfileData = JSON.parse(
+  //     localStorage.getItem("applicantProfileData")
+  //   );
+  //   const applicantApplyData = JSON.parse(localStorage.getItem("applicantData"))
+  //   if (applicantProfileData) {
+  //     setRegisterdUserLoginDetails(applicantProfileData);
+  //   }
+  //   if (applicantApplyData?.applicant_status === 'Draft' || applicantProfileData.applcant.applicant_status === 'Draft') {
+  //     setButtonText('Continue Btn')
+  //   } else if (applicantApplyData?.applicant_status === 'Completed') {
+  //     setButtonText('View Form Btn')
+  //   }
+  // }, [localStorage.getItem("applicantData"),localStorage.getItem("applicantProfileData")]);
 
   useEffect(() => {
     GetJobPostWithId();

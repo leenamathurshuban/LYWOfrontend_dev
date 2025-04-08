@@ -252,3 +252,7 @@ export const PostQuizDataApi=(data)=>{
   const quizData = client.postWithToken(`${BehaviourUrl.PostQuizQuestionAnswer}`,data);
   return quizData
 }
+export const getJobAssignmentReview=(id)=>{
+  const getJobReview = client.getWithToken(`${JobsUrl.getJobAssignmentQuestionReview}${id}`)
+  return getJobReview
+}

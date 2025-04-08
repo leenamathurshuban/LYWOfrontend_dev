@@ -384,7 +384,7 @@ const UpdateJobsRevised = ({
     const getQualificationListByCourse = async (inputVal) => {
         let url;
         if (inputVal != "") {
-            url = `https://bittrend.shubansoftware.com/assets-api/education-qualification-list-by-course-api/${minEdu}/?page=1&limit=10&search=${inputVal}`;
+            url = `https://bittrend.shubansoftware.com/assets-api/education-qualification-list-by-course-api/${minEdu}?page=1&limit=10&search=${inputVal}`;
         }
 
         try {

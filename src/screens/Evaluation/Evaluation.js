@@ -291,8 +291,8 @@ const Evalation = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {EvaluationListFilterData?.length > 0 ? (
-                    EvaluationListFilterData?.slice(0, loadeMoreCount)?.map(
+                  {EvaluationListFilterData.length > 0 ? (
+                    EvaluationListFilterData.slice(0, loadeMoreCount).map(
                       (item) => (
                         <tr>
                           <td
@@ -414,7 +414,7 @@ const Evalation = () => {
             etc: skills selected in the formation of the test] as part of the
             recruitment assessment procedure.
           </p>
-          {EvaluationListDetails?.map((item) => (
+          {EvaluationListDetails.map((item) => (
             <Row>
               <Col md={4}>
                 <div className="inst_iconbox">
@@ -610,7 +610,7 @@ const Evalation = () => {
                     value={selectedSection}
                   >
                     <option>Show All</option>
-                    {EvaluationListDetails[0]?.section_asset?.map((item) => (
+                    {EvaluationListDetails[0].section_asset.map((item) => (
                       <option key={item.id} value={item.id}>
                         {item.section_title}
                       </option>
@@ -623,7 +623,7 @@ const Evalation = () => {
                     //href="#qes_section02"
                     // eventKey="second"
                     >
-                      {EvaluationListDetails[0]?.section_asset?.map(
+                      {EvaluationListDetails[0].section_asset.map(
                         (item, sectionIndex) => (
                           <>
                             <h5>{item.section_title}</h5>
@@ -637,7 +637,7 @@ const Evalation = () => {
                             </p>
 
                             <ul className="qs_numlist">
-                              {Array.isArray(item?.question_section) && item?.question_section?.map(
+                              {item.question_section.map(
                                 (quesItem, quesIndex) => (
                                   <li
                                     key={quesItem.id}
@@ -670,7 +670,7 @@ const Evalation = () => {
               </Col>
               <Col md={6} lg={8} className="queMain_panel">
                 <div className="que_mainsection">
-                  {EvaluationListDetails[0]?.section_asset?.map(
+                  {EvaluationListDetails[0].section_asset.map(
                     (item, quesIndex) => (
                       <div
                         // id="qes_section01"
@@ -703,10 +703,10 @@ const Evalation = () => {
                         <Accordion
                           className="quetions_list mt-4"
                           // activeKey={activeKeys}
-                          activeKey={activeKeys?.map(String)}
+                          activeKey={activeKeys.map(String)}
                           // activeKey={activeKeys.map(item => item.toString())}
                         >
-                          {Array.isArray(item?.question_section) && item?.question_section?.map((item, sectionIndex) => (
+                          {item.question_section.map((item, sectionIndex) => (
                             <Accordion.Item
                               id={`accordion-item-${item.id}`}
                               eventKey={`${sectionIndex}-${quesIndex}`}
@@ -730,7 +730,7 @@ const Evalation = () => {
                               <Accordion.Body>
                                 {item.quiz_type === "MCQ-Multi" && (
                                   <ul className="que_options">
-                                    {Array.isArray(item?.question_option?.part1) && item.question_option.part1?.map(
+                                    {item.question_option.part1?.map(
                                       (option, index) => {
                                         const isChecked =
                                           item.questions_answer.some(
@@ -756,7 +756,7 @@ const Evalation = () => {
 
                                 {item.quiz_type === "MCQ" && (
                                   <ul className="que_options">
-                                    {Array.isArray(item?.question_option?.part1) && item?.question_option.part1?.map(
+                                    {item.question_option.part1?.map(
                                       (option, index) => {
                                         const isChecked =
                                           item.questions_answer.some(
@@ -782,7 +782,7 @@ const Evalation = () => {
 
                                 {item.quiz_type === "Match" && (
                                   <ol className="qus_crossed">
-                                    {Array.isArray(item?.question_option?.part1) && item?.question_option.part1?.map(
+                                    {item?.question_option.part1?.map(
                                       (data, index) => {
                                         const correctCapital =
                                           item?.questions_answer[index]
@@ -812,7 +812,7 @@ const Evalation = () => {
 
                                 {item.quiz_type === "Arrange" && (
                                   <ul className="qus_numbered">
-                                    {Array.isArray(item?.questions_answer) && item?.questions_answer?.map(
+                                    {item.questions_answer.map(
                                       (answer, index) => (
                                         <li key={index}>
                                           <div className="crossd_answarp">
@@ -1002,7 +1002,7 @@ const Evalation = () => {
         {EvaluationTable()}
       </div>
 
-      {EvaluationListDetails?.map((item) => QuizModal(item))}
+      {EvaluationListDetails.map((item) => QuizModal(item))}
       {TestInstructionModal()}
     </>
   );

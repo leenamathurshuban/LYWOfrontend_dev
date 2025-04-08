@@ -29,7 +29,8 @@ export const JobsUrl = {
   UpdateJobForm : "assets-api/update-job-api/",
   createJobQuestion : "assets-api/create-job-question-api/",
   cloneJobGet:"assets-api/clone-job-api/",
-  UpdateMultipleJobApi:"assets-api/update-multiple-job-api/"
+  UpdateMultipleJobApi:"assets-api/update-multiple-job-api/",
+  getJobAssignmentQuestionReview:"assets-api/get-job-assignment-question-review/",
 }
 
 export const SkillsUrl = {

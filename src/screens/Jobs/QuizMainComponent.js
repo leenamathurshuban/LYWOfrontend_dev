@@ -350,7 +350,7 @@ const QuizMainComponent = (item) => {
       formData.append("selected_answer", JSON.stringify(isSingleArray))
       const res = await PostQuizDataApi(formData)
       if (res.data.success) {
-        // applicantDetailAPI()
+        applicantDetailAPI()
       }
     } catch (error) {
       console.log(error)

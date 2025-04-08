@@ -5642,4 +5642,35 @@ select.select-transpant:hover, select.select-transpant:focus, select.select-tran
 .media_box .video_controls .btn-danger svg {
   width: 24px;
   height: 24px;
+}
+
+.dropdown_ctm {
+  border: none;
+  display: block;
+  padding: 0;
+  position: relative;
+  width: 300px !important;
+}
+
+.dropdown_cti {
+  border: none;
+  display: block;
+  padding: 0;
+  position: relative;
+  width: 230px !important;
+}
+
+.droplist {
+  overflow-y: scroll;
+  position: absolute;
+  top: 100%;
+  background-color: #fff;
+  border: solid 1px #ddd;
+  border-top: 0;
+  max-width: 100%;
+  z-index: 999999999;
+  border-radius: 15px;
+  box-shadow: 0 4px 5px rgba(0, 0, 0, 0.12);
+  overflow-x: hidden;
+  padding: 10px 5px;
 }/*# sourceMappingURL=main.css.map */

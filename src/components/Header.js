@@ -27,6 +27,8 @@ const Header = () => {
     localStorage.removeItem('applicantData');
     localStorage.removeItem('applicantBehaviour')
     localStorage.setItem('AttemptStatus',0)
+    localStorage.removeItem('assestQuiz')
+    localStorage.removeItem('preAssestQuiz')
     // sessionStorage.removeItem('applicantToken');
     // sessionStorage.removeItem('applicantData');
     navigate("/emailverify");
