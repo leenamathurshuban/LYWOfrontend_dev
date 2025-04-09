@@ -296,6 +296,7 @@ const QuizQuestionSlider = ({ quizMostLeastLike, setQuizMostLeastLike, language,
                             className={`h-3 w-3 rounded-full mx-1 ${
                                 quizMostLeastLike[index]?.most && quizMostLeastLike[index]?.least  ? "quiz-completed" : "bg-gray-400"
                             }`}
+                            onClick={() => sliderRef.current.slickGoTo(index)}
                         ></button>
                     </li>
                 ))}

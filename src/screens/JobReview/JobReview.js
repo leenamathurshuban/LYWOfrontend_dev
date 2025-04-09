@@ -71,7 +71,10 @@ tracker.show_tasks()
     const { id } = useParams();
     const [assetJob, setAssetJob] = useState([]);
     const [localAssetJob, setLocalAssetJob] = useState([]);
-    const [assignmentReviewList,setAssignmentReviewList] = useState([]);
+    const [assignmentReviewList, setAssignmentReviewList] = useState([]);
+    const [jobTest, setJobTest] = useState([]);
+    const [sectionWiseData, setSectionWiseData] = useState([]);
+
 
     const getJobDetails = async (id) => {
         const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-api/${id}/`;
@@ -85,21 +88,37 @@ tracker.show_tasks()
         } catch (error) {
         }
     }
-    const getJobAssignmentReviewAPI=async(id)=>{
+    const getJobAssignmentReviewAPI = async (id) => {
         try {
             const response = await getJobAssignmentReview(id)
-            if(response?.data?.success){
+            if (response?.data?.success) {
                 setAssignmentReviewList(response?.data?.response?.asset_job)
             }
         } catch (error) {
-            console.log(error);            
+            console.log(error);
         }
     }
     useEffect(() => {
         getJobDetails(id)
         getJobAssignmentReviewAPI(id)
     }, [id])
+    const handleTestJob = (e) => {
+        const { value } = e.target;
+        const filterData = assignmentReviewList.filter((item) => item?.uid === value);
+        setJobTest(filterData)
+    }
+    const handleSectionWise = (e) => {
+        const { value } = e.target;
+        assignmentReviewList.map((Val) => {
+            const filterData = Val?.section_asset?.filter((item) => item.uid === value);
+            setSectionWiseData(filterData)
+        })
+    }
+    const handleSectionQuestionbyuser=(obj)=>{
+        debugger
+    }
     console.log(assignmentReviewList)
+    console.log('section', sectionWiseData)
     return (
         <>
             <Sidebar />
@@ -951,11 +970,14 @@ tracker.show_tasks()
                                         <Card.Header>
                                             <Row>
                                                 <Col md={6}>
-                                                    <Form.Select className="select-md-transpant">
-                                                        <option>Assignment 1 </option>
+                                                    <Form.Select className="select-md-transpant" onChange={handleTestJob}>
+                                                        {assignmentReviewList.map((Val) => (
+                                                            <option value={Val?.uid} >{Val?.asset_title}</option>
+                                                        ))}
+                                                        {/* <option>Assignment 1 </option>
                                                         <option value="1">One</option>
                                                         <option value="2">Two</option>
-                                                        <option value="3">Three</option>
+                                                        <option value="3">Three</option> */}
                                                     </Form.Select>
                                                 </Col>
                                                 <Col md={6} className="d-flex review_count justify-content-end align-items-center">
@@ -966,29 +988,36 @@ tracker.show_tasks()
                                         </Card.Header>
                                         <Card.Body>
                                             <Row>
-                                                <Col md={2} className="queslsit_panel pe-0">
-                                                    <Form.Select className="qs_dropdown">
-                                                        <option>Section 1</option>
-                                                        <option value="1">One</option>
+                                                {assignmentReviewList.map((item, index) => (
+                                                    <Col md={2} className="queslsit_panel pe-0">
+                                                        <Form.Select className="qs_dropdown" onChange={handleSectionWise}>
+                                                            {item?.section_asset.map((cVal) => (
+                                                                <option value={cVal?.uid}>{cVal?.section_title}</option>
+                                                            ))}
+
+                                                            {/* <option value="1">One</option>
                                                         <option value="2">Two</option>
-                                                        <option value="3">Three</option>
-                                                    </Form.Select>
-                                                    <ul className="queslsit">
-                                                        <li>
-                                                            <span>Q. 1</span>
-                                                            <div className="ratting_warp">
-                                                                <div className="ratting">
-                                                                    <span className="avg-text">Avg.</span>
-                                                                    <span className="rt-item active"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item active"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item active"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item"><i className="fa fa-star"></i></span>
-                                                                </div>
-                                                                <p>50 Pending</p>
-                                                            </div>
-                                                        </li>
-                                                        <li>
+                                                        <option value="3">Three</option> */}
+                                                        </Form.Select>
+                                                        <ul className="queslsit">
+                                                            {sectionWiseData[0]?.question_section?.map((QuesItem, quesIndex) => (
+                                                                <li onClick={()=>handleSectionQuestionbyuser(QuesItem)}>
+                                                                    <span>Q. {quesIndex + 1}</span>
+                                                                    <div className="ratting_warp">
+                                                                        <div className="ratting">
+                                                                            <span className="avg-text">Avg.</span>
+                                                                            <span className="rt-item active"><i className="fa fa-star"></i></span>
+                                                                            <span className="rt-item active"><i className="fa fa-star"></i></span>
+                                                                            <span className="rt-item active"><i className="fa fa-star"></i></span>
+                                                                            <span className="rt-item"><i className="fa fa-star"></i></span>
+                                                                            <span className="rt-item"><i className="fa fa-star"></i></span>
+                                                                        </div>
+                                                                        <p>50 Pending</p>
+                                                                    </div>
+                                                                </li>
+                                                            ))}
+
+                                                            {/* <li>
                                                             <span>Q. 2</span>
                                                             <div className="ratting_warp">
                                                                 <div className="ratting">
@@ -1099,12 +1128,14 @@ tracker.show_tasks()
                                                                 </div>
                                                                 <p>50 Pending</p>
                                                             </div>
-                                                        </li>
-                                                        <li className="justify-content-center">
-                                                            <button type="button" className="btn-transpant"><img src={ArrowDownDark} /></button>
-                                                        </li>
-                                                    </ul>
-                                                </Col>
+                                                        </li> */}
+                                                            <li className="justify-content-center">
+                                                                <button type="button" className="btn-transpant"><img src={ArrowDownDark} /></button>
+                                                            </li>
+                                                        </ul>
+                                                    </Col>
+                                                ))}
+
                                                 <Col md={10} className="ans_panel">
                                                     <div className="que_head">
                                                         <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>

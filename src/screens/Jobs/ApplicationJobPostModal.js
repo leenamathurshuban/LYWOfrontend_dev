@@ -1846,6 +1846,8 @@ import axios from "axios";
 import { compose } from "@reduxjs/toolkit";
 import { useNavigate } from "react-router-dom";
 import { removeToken } from "../../helpers/helper";
+import DatePicker from "react-datepicker";
+import 'react-datepicker/dist/react-datepicker.css';
 
 const ApplicationJobPostModal = ({
   show,
@@ -1859,7 +1861,8 @@ const ApplicationJobPostModal = ({
   selectedWrittenLanguageUids, setSelectedWrittenLanguageUids, selectedSkills, setSelectedSkills,
   ResumeFile, setResumeFile, ResumeFileName, setResumeFileName,
   EducationRows, SetEducationRows, setBehaviourAssModel, WorkExpreienceRow, setWorkExpreienceRow,
-  isExistApplicantError, setIsExistApplicantError
+  isExistApplicantError, setIsExistApplicantError,spokenLanguageBadges, setSpokenLanguageBadges,
+  rdnwBadges, setrdnwBadges
 }) => {
   // const [isYes, setIsYes] = useState({
   //   CurrentlyWorkingToggle: false,
@@ -1977,8 +1980,8 @@ const ApplicationJobPostModal = ({
   const [aresEducationOption, setAreaEducationOption] = useState([])
   const [roleList, setRoleList] = useState([]);
   const [industriesList, setIndustriesList] = useState([]);
-  const [spokenLanguageBadges, setSpokenLanguageBadges] = useState([]);
-  const [rdnwBadges, setrdnwBadges] = useState([]);
+  // const [spokenLanguageBadges, setSpokenLanguageBadges] = useState([]);
+  // const [rdnwBadges, setrdnwBadges] = useState([]);
   // const [storedApplicantId, setStoredApplicantId] = useState("");
 
   const handleCloseModals = () => {
@@ -2403,16 +2406,16 @@ const ApplicationJobPostModal = ({
         status
       );
       formdata.append("expected_salary", profileformData?.ExpectedSalary);
-      if (selectedSpokenLanguageUids.length) {
+      if (spokenLanguageBadges.length) {
         formdata.append(
           "spoken_language",
-          JSON.stringify(selectedSpokenLanguageUids)
+          JSON.stringify(spokenLanguageBadges.map((Val)=>Val?.uid))
         );
       }
-      if (selectedWrittenLanguageUids.length) {
+      if (rdnwBadges.length) {
         formdata.append(
           "written_reading_language",
-          JSON.stringify(selectedWrittenLanguageUids)
+          JSON.stringify(rdnwBadges.map((Val)=>Val?.uid))
         );
       }
       formdata.append("current_location", profileformData?.CurrentLocation);
@@ -2504,6 +2507,11 @@ const ApplicationJobPostModal = ({
     newRows[index][name] = value;
     SetEducationRows(newRows);
   };
+  const handleGradYear = (index, dateString) => {
+    const newRows = [...EducationRows];
+    newRows[index]['gradYear'] = dateString;
+    SetEducationRows(newRows);
+  }
 
   const saveQualificationData = async (row, index) => {
     try {
@@ -2511,11 +2519,13 @@ const ApplicationJobPostModal = ({
         alert("Please fill Profile Details");
         return;
       }
+      const date = new Date(row.gradYear);
+      const grad_year = date.getFullYear(); // Extract the year
       const formdata = new FormData();
       formdata.append("applicant_profile", storedApplicantId);
       formdata.append("level", row.level);
       formdata.append("applicant_area_of_education", row.areaOfEducation);
-      formdata.append("grad_year", row.gradYear);
+      formdata.append("grad_year", grad_year);
       formdata.append("university", row.university);
       formdata.append("grade", `${row.grade} ${row.gpa}`);
       const response = await EducationQualificationApi(formdata);
@@ -2879,6 +2889,7 @@ const ApplicationJobPostModal = ({
   console.log(EducationRows)
   console.log('checkvalid====>', isValid)
   console.log('testing', profileformData)
+  console.log(spokenLanguageBadges.map((Val)=>Val?.uid))
   return (
     <Modal
       show={show}
@@ -3549,7 +3560,7 @@ const ApplicationJobPostModal = ({
 
                         </td>
                         <td>
-                          <Form.Control
+                          {/* <Form.Control
                             name="gradYear"
                             type="date"
                             value={row.gradYear}
@@ -3557,7 +3568,20 @@ const ApplicationJobPostModal = ({
                               handleEducationQualificationChange(index, e)
                             }
                             disabled={row.saved}
-                          />
+                          /> */}
+                          <Form.Group>
+                            <DatePicker
+                              name="gradYear"
+                              selected={row.gradYear}
+                              value={row.gradYear}
+                              onChange={(date) => handleGradYear(index, date)}
+                              showYearPicker
+                              dateFormat="yyyy"
+                              className="form-control"
+                              placeholderText="Select year"
+                              disabled={row.saved}
+                            />
+                          </Form.Group>
                         </td>
                         <td>
                           <Form.Control
@@ -3702,19 +3726,19 @@ const ApplicationJobPostModal = ({
                               }
                               disabled={row.savedWorkExp}
                             /> */}
-                            
-                              <Dropdown show={true} >
-                                <Dropdown.Menu className="w-100 dropdown_cti">                                 
-                                    <FormControl
-                                      autoFocus
-                                      name="WorkRole"
-                                      placeholder="Role"
-                                      size="sm"
-                                      value={row.WorkRole}
-                                      disabled={row.savedWorkExp}
-                                      onChange={(e) => handleRolelist(index, e)}
-                                    />
-                                  <div class={`${roleList.length ? 'droplist' : ''}`}>                                  
+
+                            <Dropdown show={true} >
+                              <Dropdown.Menu className="w-100 dropdown_cti">
+                                <FormControl
+                                  autoFocus
+                                  name="WorkRole"
+                                  placeholder="Role"
+                                  size="sm"
+                                  value={row.WorkRole}
+                                  disabled={row.savedWorkExp}
+                                  onChange={(e) => handleRolelist(index, e)}
+                                />
+                                <div class={`${roleList.length ? 'droplist' : ''}`}>
                                   {roleList.map((option, idx) => (
                                     <Dropdown.Item
                                       key={idx}
@@ -3725,10 +3749,10 @@ const ApplicationJobPostModal = ({
                                       {option?.is_like_name}
                                     </Dropdown.Item>
                                   ))}
-                                  </div>
-                                </Dropdown.Menu>
-                              </Dropdown>
-                            
+                                </div>
+                              </Dropdown.Menu>
+                            </Dropdown>
+
                           </td>
                           <td>
                             <Form.Control
@@ -3785,19 +3809,19 @@ const ApplicationJobPostModal = ({
                               }
                               disabled={row.savedWorkExp}
                             /> */}
-                            
-                              <Dropdown show={true} >
-                                <Dropdown.Menu className="w-100 dropdown_cti">                                  
-                                    <FormControl
-                                      autoFocus
-                                      name="WorkIndustry"
-                                      placeholder="Industry"
-                                      size="sm"
-                                      value={row.WorkIndustry}
-                                      disabled={row.savedWorkExp}
-                                      onChange={(e) => handleIndustries(index, e)}
-                                    />
-                                 <div class={`${industriesList.length ? 'droplist' : ''}`}>
+
+                            <Dropdown show={true} >
+                              <Dropdown.Menu className="w-100 dropdown_cti">
+                                <FormControl
+                                  autoFocus
+                                  name="WorkIndustry"
+                                  placeholder="Industry"
+                                  size="sm"
+                                  value={row.WorkIndustry}
+                                  disabled={row.savedWorkExp}
+                                  onChange={(e) => handleIndustries(index, e)}
+                                />
+                                <div class={`${industriesList.length ? 'droplist' : ''}`}>
                                   {industriesList.map((option, idx) => (
                                     <Dropdown.Item
                                       key={idx}
@@ -3808,10 +3832,10 @@ const ApplicationJobPostModal = ({
                                       {option?.industry_name}
                                     </Dropdown.Item>
                                   ))}
-                                  </div>
-                                </Dropdown.Menu>
-                              </Dropdown>
-                            
+                                </div>
+                              </Dropdown.Menu>
+                            </Dropdown>
+
                           </td>
 
                           <td>
@@ -3925,12 +3949,13 @@ const ApplicationJobPostModal = ({
                         <Badge
                           key={index}
                           bg={
-                            selectedSpokenLanguageUids.includes(badge.uid)
-                              ? "primary"
-                              : "white"
+                            // selectedSpokenLanguageUids.includes(badge.uid)
+                            //   ? "primary"
+                            //   : "white"
+                            "primary"
                           }
                           className="me-2 mb-2 tag-white"
-                          onClick={() => handleSpokenLanguageClick(badge.uid)}
+                          // onClick={() => handleSpokenLanguageClick(badge.uid)}
                         >
                           {badge?.language_name}
                           <button
@@ -3989,12 +4014,13 @@ const ApplicationJobPostModal = ({
                         <Badge
                           key={index}
                           bg={
-                            selectedWrittenLanguageUids.includes(badge.uid)
-                              ? "primary"
-                              : "white"
+                            // selectedWrittenLanguageUids.includes(badge.uid)
+                            //   ? "primary"
+                            //   : "white"
+                            "primary"
                           }
                           className="me-2 mb-2 tag-white"
-                          onClick={() => handleWrittenLanguageClick(badge.uid)}
+                          // onClick={() => handleWrittenLanguageClick(badge.uid)}
                         >
                           {badge?.language_name}
                           <button

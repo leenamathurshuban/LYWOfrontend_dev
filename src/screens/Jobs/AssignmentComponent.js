@@ -84,6 +84,10 @@ const AssignmentComponent = (item) => {
     }
     const handleShow = () => setShow(true);
     const [isLoading, setIsLoading] = useState(false);
+    const [isAudioLoading, setIsAudioLoading] = useState(false);
+    const [isVideoLoading, setIsVideoLoading] = useState(false);
+    const [isActiveSubmit,setIsActiveSubmit] = useState(false);
+    const [isSubmit,setIsSubmit] = useState(false);
 
     const [loadeMoreCount, setLoadeMoreCount] = useState(10);
     const isBinaryFile = (file) => {
@@ -356,7 +360,7 @@ const AssignmentComponent = (item) => {
         const file = e.target.files[0];
         setFileName((prev) => ({
             ...prev,
-            [`${sectionIndex}-${itemIndex}`]: file?.name?file?.name:""
+            [`${sectionIndex}-${itemIndex}`]: file?.name ? file?.name : ""
         }));
         if (file && file.type.startsWith("video/")) {
             setQuizData((prev) => ({
@@ -496,6 +500,7 @@ const AssignmentComponent = (item) => {
                     }
                 }
             } else if (errorMessage[`${getKeyIndex}-type`] === "Video-Record-Only") {
+                setIsVideoLoading(true)
                 if (!QuizData[getKeyIndex]) {
 
                 } else {
@@ -504,6 +509,7 @@ const AssignmentComponent = (item) => {
                     }
                 }
             } else if (errorMessage[`${getKeyIndex}-type`] === "Audio-Record Only") {
+                setIsAudioLoading(true)
                 if (!QuizData[getKeyIndex]) {
 
                 } else {
@@ -521,6 +527,10 @@ const AssignmentComponent = (item) => {
             if (res.data.success) {
                 setIsLoading(false)
                 applicantDetailAPI()
+                setIsAudioLoading(false);
+                setIsVideoLoading(false);
+                setIsActiveSubmit(false)
+                setIsSubmit(false)
             }
         } catch (error) {
             // console.log(error)
@@ -548,12 +558,20 @@ const AssignmentComponent = (item) => {
                     if (res?.data?.success) {
                         setIsLoading(false)
                         // applicantDetailAPI()
+                        setIsAudioLoading(false);
+                        setIsVideoLoading(false);
+                        setIsActiveSubmit(false)
+                        setIsSubmit(false)
                     }
                 } catch (error) {
                     console.log(error)
                 }
             }
             setIsLoading(false)
+            setIsAudioLoading(false);
+            setIsVideoLoading(false);
+            setIsActiveSubmit(false);
+            setIsSubmit(false)
         }
     }
     const isImageUrl = (url) => {
@@ -617,8 +635,15 @@ const AssignmentComponent = (item) => {
     //     const secs = seconds % 60;
     //     return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
     // };
+    // console.log(QuizData, EvaluationListDetails)
+    // console.log(markReview)
+    // console.log(QuizData[getKeyIndex], applcant)
+    // console.log(EvaluationListDetails)
+    // console.log(QuizData)
+    // console.log('selected_answer=============>', selectedSectionAnswer)
     console.log(EvaluationListDetails)
     console.log(QuizData)
+    // console.log(fileName)
     return (
         <>
             <InstructionAssignment showinstruction={show} handleInstructionClose={handleInstructionClose}
@@ -879,7 +904,7 @@ const AssignmentComponent = (item) => {
                                                                                 htmlFor={`file-upload[${quesIndex}-${sectionIndex}]`}
                                                                             >
                                                                                 <img className="cloud_icon" src={cloudUpload} />
-                                                                                <strong className="text-primery">Click to upload</strong> 
+                                                                                <strong className="text-primery">Click to upload</strong>
                                                                                 {fileName[`${Val?.id}-${item?.id}`] ? '' : QuizData[`${Val?.id}-${item?.id}-file`] ? '' : 'or drag and drop'}
                                                                             </label>
                                                                             <input
@@ -917,7 +942,7 @@ const AssignmentComponent = (item) => {
                                                                             <label
                                                                                 htmlFor={`file-upload[${quesIndex}-${sectionIndex}]`} >
                                                                                 <img className="cloud_icon" src={cloudUpload} />
-                                                                                <strong className="text-primery">Click to upload</strong> 
+                                                                                <strong className="text-primery">Click to upload</strong>
                                                                                 {fileName[`${Val?.id}-${item?.id}`] ? '' : QuizData[`${Val?.id}-${item?.id}`] ? '' : ' or drag and drop your video file'}
                                                                             </label>
                                                                             <input
@@ -939,7 +964,7 @@ const AssignmentComponent = (item) => {
                                                                                     {/* {errorMessage[`${Val?.id}-${item?.id}`]} */}
                                                                                     {/* SVG, PNG, JPG or GIF (Recommended aspect ratio: 1:1 or 2:3) */}
                                                                                     {errorMessage[`${Val?.id}-${item?.id}`] ? errorMessage[`${Val?.id}-${item?.id}`] : ''}
-                                                                                    {fileName[`${Val?.id}-${item?.id}`] ? fileName[`${Val?.id}-${item?.id}`] : QuizData[`${Val?.id}-${item?.id}`] ? QuizData[`${Val?.id}-${item?.id}`] : 'SVG, PNG, JPG or GIF (Recommended aspect ratio: 1:1 or 2:3)'}
+                                                                                    {fileName[`${Val?.id}-${item?.id}`] ? fileName[`${Val?.id}-${item?.id}`] : QuizData[`${Val?.id}-${item?.id}`] ? QuizData[`${Val?.id}-${item?.id}`] : ''}
                                                                                 </p>
                                                                             </div>
                                                                         </div>
@@ -974,12 +999,12 @@ const AssignmentComponent = (item) => {
                                                                 {item?.assignment_type === 'Audio-Record Only' && (
                                                                     <AudioRecorder sectionIndex={Val?.id} itemIndex={item?.id}
                                                                         questionId={item?.uid} type={item?.assignment_type} QuizData={QuizData} setQuizData={setQuizData}
-                                                                        setQuestionId={setQuestionId} setGetKeyIndex={setGetKeyIndex} isLoading={isLoading} />
+                                                                        setQuestionId={setQuestionId} setGetKeyIndex={setGetKeyIndex} isLoading={isAudioLoading} isActiveSubmit={isActiveSubmit} setIsActiveSubmit={setIsActiveSubmit} />
                                                                 )}
                                                                 {item?.assignment_type === 'Video-Record-Only' && (
                                                                     <VideoRecorderComponent sectionIndex={Val?.id} itemIndex={item?.id}
                                                                         questionId={item?.uid} type={item?.assignment_type} QuizData={QuizData} setQuizData={setQuizData}
-                                                                        setQuestionId={setQuestionId} setGetKeyIndex={setGetKeyIndex} isLoading={isLoading} />
+                                                                        setQuestionId={setQuestionId} setGetKeyIndex={setGetKeyIndex} isLoading={isVideoLoading} isActiveSubmit={isSubmit} setIsActiveSubmit={setIsSubmit} />
                                                                 )}
 
 

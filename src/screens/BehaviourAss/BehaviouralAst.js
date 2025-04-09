@@ -187,6 +187,13 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel,jobPostData })
                         // sessionStorage.setItem('applicantBehaviour',JSON.stringify(response?.data?.response))
                         localStorage.setItem("AttemptStatus", runCounter())
                         // sessionStorage.setItem("AttemptStatus",runCounter())  
+                        if(runCounter() === 28){
+                            jobPostData?.asset_job?.map((Val) => {
+                                if (Val?.asset_title === 'Technical round for EHS Manager') {
+                                    navigate(`/evaluation-quiz/${Val?.uid}`, { state: jobPostData })
+                                }
+                            })                            
+                        }
                         setTimeout(()=>{
                             window.location.reload();
                         },1000)                       

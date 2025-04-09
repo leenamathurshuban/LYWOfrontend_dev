@@ -3,7 +3,7 @@ import { FaMicrophone, FaPlay, FaPause, FaStop, FaUpload, FaTrash, FaVolumeUp, F
 import axios from "axios";
 import AudioLines from "../images/icons/audio_lines.svg";
 import AudioLines2 from "../images/icons/audio_lines2.svg";
-const AudioRecorder = ({ sectionIndex, itemIndex, questionId, type, QuizData, setQuizData, setQuestionId, setGetKeyIndex, isLoading }) => {
+const AudioRecorder = ({ sectionIndex, itemIndex, questionId, type, QuizData, setQuizData, setQuestionId, setGetKeyIndex, isLoading, isActiveSubmit, setIsActiveSubmit }) => {
     const [recording, setRecording] = useState(false);
     const [audioBlob, setAudioBlob] = useState(null);
     const [audioURL, setAudioURL] = useState("");
@@ -11,11 +11,13 @@ const AudioRecorder = ({ sectionIndex, itemIndex, questionId, type, QuizData, se
     const [isPaused, setIsPaused] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
     const [uploading, setUploading] = useState(false);
+    // const [isActiveSubmit,setIsActiveSubmit] = useState(false);
     const recordedChunks = useRef([]);
     const audioRef = useRef(null);
 
     const startRecording = async () => {
         try {
+            setIsActiveSubmit(true);
             setAudioURL('')
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             if (audioRef.current) {
@@ -181,9 +183,12 @@ const AudioRecorder = ({ sectionIndex, itemIndex, questionId, type, QuizData, se
                                 <button onClick={() => startRecording("audio")} className="me-3 btn btn-light">
                                     Re-Record
                                 </button>
-                                <button onClick={handleSubmit} className="btn btn-primary">
-                                    {isLoading ? 'Loading...' : 'Submit'}
-                                </button>
+                                {isActiveSubmit && (
+                                    <button onClick={handleSubmit} className="btn btn-primary">
+                                        {isLoading ? 'Loading...' : 'Submit'}
+                                    </button>
+                                )}
+
                             </div>
                         </div>
                     </>

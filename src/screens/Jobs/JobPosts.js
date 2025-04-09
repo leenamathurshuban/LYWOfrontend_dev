@@ -105,7 +105,7 @@ const JobPosts = () => {
     CurrentLocation: "",
     relocationChoice: null,
     requiredCompanyAssist: null,
-    willing_to_travel_for_job:''
+    willing_to_travel_for_job: ''
   });
   const [isYes, setIsYes] = useState({
     CurrentlyWorkingToggle: false,
@@ -125,7 +125,7 @@ const JobPosts = () => {
     university: "",
     grade: "",
     saved: false,
-    gpa:""
+    gpa: ""
   },]);
   const [WorkExpreienceRow, setWorkExpreienceRow] = useState([
     {
@@ -140,6 +140,8 @@ const JobPosts = () => {
     },
   ]);
   const [isExistApplicantError, setIsExistApplicantError] = useState('');
+  const [spokenLanguageBadges, setSpokenLanguageBadges] = useState([]);
+  const [rdnwBadges, setrdnwBadges] = useState([]);
 
   const inputRef = useRef(null);
   const containerRef = useRef(null);
@@ -358,7 +360,7 @@ const JobPosts = () => {
           ExpectedSalary: response?.data?.response?.expected_salary || "",
           CurrentLocation: response?.data?.response?.current_location || "",
           relocationChoice: response?.data?.response?.willing_to_relocate_to || false,
-          willing_to_travel_for_job:response?.data?.response?.willing_to_travel_for_job,
+          willing_to_travel_for_job: response?.data?.response?.willing_to_travel_for_job,
           requiredCompanyAssist:
             response?.data?.response?.require_company_assistance_for_relocation || false,
         }));
@@ -382,7 +384,8 @@ const JobPosts = () => {
           ...prevState,
           ...writtenUids.filter((uid) => !prevState.includes(uid)),
         ]);
-
+        setSpokenLanguageBadges(response?.data?.response?.spoken_language);
+        setrdnwBadges(response?.data?.response?.written_reading_language)
         const skillsUids = response?.data?.response?.applicant_profile_job[0]?.job_applicant_skill.map((item) => item?.uid);
         setSelectedSkills((prevState) => [...prevState, ...skillsUids]);
         const resumeFileUrl = response?.data?.response?.resume || null;
@@ -1180,6 +1183,8 @@ const JobPosts = () => {
           setBehaviourAssModel={setBehaviourAssModel}
           WorkExpreienceRow={WorkExpreienceRow} setWorkExpreienceRow={setWorkExpreienceRow}
           isExistApplicantError={isExistApplicantError} setIsExistApplicantError={setIsExistApplicantError}
+          spokenLanguageBadges={spokenLanguageBadges} setSpokenLanguageBadges={setSpokenLanguageBadges}
+          rdnwBadges={rdnwBadges} setrdnwBadges={setrdnwBadges}
         />
       ) : (
         <p>Loading...</p>

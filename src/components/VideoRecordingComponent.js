@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { FaPlay, FaPause, FaStop, FaVideo, FaUpload, FaVolumeUp, FaEllipsisH, FaVolumeMute } from "react-icons/fa";
 // import { FaVolumeUp, FaPlay, FaStop, FaPause, FaEllipsisH } from "react-icons/fa";
 
-const VideoRecorder = ({ sectionIndex, itemIndex, questionId, type, QuizData, setQuizData, setQuestionId, setGetKeyIndex, isLoading }) => {
+const VideoRecorder = ({ sectionIndex, itemIndex, questionId, type, QuizData, setQuizData, setQuestionId, setGetKeyIndex, isLoading, isActiveSubmit, setIsActiveSubmit }) => {
   const [recording, setRecording] = useState(false);
   const [videoBlob, setVideoBlob] = useState(null);
   const [videoURL, setVideoURL] = useState("");
@@ -15,6 +15,7 @@ const VideoRecorder = ({ sectionIndex, itemIndex, questionId, type, QuizData, se
 
   const startRecording = async () => {
     try {
+      setIsActiveSubmit(true);
       setVideoURL('')
       const stream = await navigator.mediaDevices.getUserMedia({
         video: true,
@@ -143,9 +144,11 @@ const VideoRecorder = ({ sectionIndex, itemIndex, questionId, type, QuizData, se
               <button onClick={startRecording} className="me-3 btn btn-light">
                 Re-Record
               </button>
-              <button onClick={handleSubmit} className="btn btn-primary">
-                {isLoading ? 'Loading...' : 'Submit'}
-              </button>
+              {isActiveSubmit && (
+                <button onClick={handleSubmit} className="btn btn-primary">
+                  {isLoading ? 'Loading...' : 'Submit'}
+                </button>
+              )}
             </div>
           </div>
         </>

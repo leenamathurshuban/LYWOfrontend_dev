@@ -245,6 +245,7 @@ const QuizMainComponent = (item) => {
   };
 
   const [draggedIndex, setDraggedIndex] = useState(null);
+  const [droppedIndex, setDroppedIndex] = useState([]);
 
   const handleDragStart = (index) => {
     setDraggedIndex(index);
@@ -271,6 +272,9 @@ const QuizMainComponent = (item) => {
     setQuestionId(questionId)
     setGetKeyIndex(`${sectionIndex}-${itemIndex}`)
     setDraggedIndex(null);
+    if (!droppedIndex.includes(index)) {
+      setDroppedIndex([...droppedIndex, index])
+    }
   };
 
   const handleQuizData = (sectionIndex, itemIndex, e, questionId) => {
@@ -453,6 +457,7 @@ const QuizMainComponent = (item) => {
   // console.log(assestStatus)
   // console.log(jobData)
   // console.log(answerUids[getKeyIndex])
+  console.log('dropped', droppedIndex)
   return (
     <>
       <TestInstruction showinstruction={show} handleInstructionClose={handleInstructionClose}
@@ -771,7 +776,8 @@ const QuizMainComponent = (item) => {
                                               return (
                                                 <li key={index}>
                                                   <div className="crossd_answarp">
-                                                    <img src={matchIcon} />
+                                                    {droppedIndex.includes(index) && droppedIndex.length <= 2 && (<img src={matchIcon} />)}
+                                                    {droppedIndex.length > 2 && (<img src={matchIcon} />)}
                                                     <span className="crossd_ans"
                                                       //  onClick={() => handleQuizData(quesIndex, item, index)}
                                                       draggable
@@ -845,15 +851,21 @@ const QuizMainComponent = (item) => {
                                             ?.replace("'", "");
 
                                         return (
-                                          <li key={index}>
+                                          <li key={index} draggable
+                                            onDragStart={() => handleDragStart(index)}
+                                            onDragOver={handleDragOver}
+                                            onDrop={() => handleDrop(Val?.id, item?.id, index, QuizData[`${Val?.id}-${item?.id}`]?.flat(), item?.uid)}
+                                            style={{ cursor: 'pointer' }}
+                                          >
                                             <div className="crossd_answarp">
                                               <span className="crossd_ans"
                                               //  onClick={() => handleQuizData(quesIndex, item, index)}                                              
                                               >
-                                                <img src={DragDrop} className="dragicon" alt="" draggable
-                                                  onDragStart={() => handleDragStart(index)}
-                                                  onDragOver={handleDragOver}
-                                                  onDrop={() => handleDrop(Val?.id, item?.id, index, QuizData[`${Val?.id}-${item?.id}`]?.flat(), item?.uid)}
+                                                <img src={DragDrop} className="dragicon" alt=""
+                                                // draggable
+                                                //   onDragStart={() => handleDragStart(index)}
+                                                //   onDragOver={handleDragOver}
+                                                //   onDrop={() => handleDrop(Val?.id, item?.id, index, QuizData[`${Val?.id}-${item?.id}`]?.flat(), item?.uid)}
                                                 />
                                                 {data}
                                               </span>
@@ -873,15 +885,20 @@ const QuizMainComponent = (item) => {
                                               ?.replace("'", "");
 
                                           return (
-                                            <li key={index}>
+                                            <li key={index} draggable
+                                              onDragStart={() => handleDragStart(index)}
+                                              onDragOver={handleDragOver}
+                                              onDrop={() => handleDrop(Val?.id, item?.id, index, item?.question_option.part1, item?.uid)}
+                                            >
                                               <div className="crossd_answarp">
                                                 <span className="crossd_ans"
                                                 //  onClick={() => handleQuizData(quesIndex, item, index)}                                                
                                                 >
-                                                  <img src={DragDrop} className="dragicon" alt="" draggable
-                                                    onDragStart={() => handleDragStart(index)}
-                                                    onDragOver={handleDragOver}
-                                                    onDrop={() => handleDrop(Val?.id, item?.id, index, item?.question_option.part1, item?.uid)}
+                                                  <img src={DragDrop} className="dragicon" alt=""
+                                                  // draggable
+                                                  // onDragStart={() => handleDragStart(index)}
+                                                  // onDragOver={handleDragOver}
+                                                  // onDrop={() => handleDrop(Val?.id, item?.id, index, item?.question_option.part1, item?.uid)}
                                                   />
                                                   {/* {String.fromCharCode(65 + index)}. */}
                                                   {data}
