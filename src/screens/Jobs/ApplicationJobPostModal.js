@@ -2673,9 +2673,9 @@ const ApplicationJobPostModal = ({
   const getSelectedSpokenLanguageNames = () => {
     const selectedLanguageNames = [];
 
-    selectedSpokenLanguageUids.forEach((uid) => {
+    spokenLanguageBadges.forEach((val) => {
       const language = jobPostData?.spoken_language?.find(
-        (lang) => lang.uid === uid
+        (lang) => lang.uid === val?.uid
       );
       if (language) {
         selectedLanguageNames.push(language.language_name);
@@ -2701,9 +2701,9 @@ const ApplicationJobPostModal = ({
   const getSelectedWrittenLanguageNames = () => {
     const selectedLanguageNames = [];
 
-    selectedWrittenLanguageUids.forEach((uid) => {
+    rdnwBadges.forEach((val) => {
       const language = jobPostData?.read_write_language?.find(
-        (lang) => lang.uid === uid
+        (lang) => lang.uid === val?.uid
       );
       if (language) {
         selectedLanguageNames.push(language.language_name);
@@ -2889,7 +2889,7 @@ const ApplicationJobPostModal = ({
   console.log(EducationRows)
   console.log('checkvalid====>', isValid)
   console.log('testing', profileformData)
-  console.log(spokenLanguageBadges.map((Val)=>Val?.uid))
+  console.log(spokenLanguageBadges,rdnwBadges)
   return (
     <Modal
       show={show}
@@ -2966,8 +2966,8 @@ const ApplicationJobPostModal = ({
                   </a>
                 </li>
                 <li
-                  className={`${selectedSpokenLanguageUids.length &&
-                    selectedWrittenLanguageUids.length &&
+                  className={`${spokenLanguageBadges.length &&
+                    rdnwBadges.length &&
                     "active"
                     }`}
                 >
