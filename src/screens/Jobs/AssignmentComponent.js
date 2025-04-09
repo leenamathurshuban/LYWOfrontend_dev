@@ -473,7 +473,7 @@ const AssignmentComponent = (item) => {
                         }
                     }
                 }
-            } else if (errorMessage[`${getKeyIndex}-type`] === "Video Upload-Only") {
+            } else if (errorMessage[`${getKeyIndex}-type`] === "Video-Upload-Only") {
                 if (!QuizData[getKeyIndex]) {
 
                 } else {
