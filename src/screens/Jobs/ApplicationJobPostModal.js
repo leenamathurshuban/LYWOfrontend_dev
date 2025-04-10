@@ -2299,8 +2299,8 @@ const ApplicationJobPostModal = ({
   const validationEnable =
     isWorkExperienceFormValid &&
     isEducationFormValid &&
-    selectedWrittenLanguageUids.length !== 0 &&
-    selectedSpokenLanguageUids.length !== 0 &&
+    rdnwBadges.length !== 0 &&
+    spokenLanguageBadges.length !== 0 &&
     profileformData?.CurrentLocation &&
     selectedSkills.length !== 0 &&
     profileformData?.CurrentLocation &&
