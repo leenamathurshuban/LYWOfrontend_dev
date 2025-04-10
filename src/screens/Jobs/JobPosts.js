@@ -12,7 +12,7 @@ import {
   Spinner,
   Tooltip,
 } from "react-bootstrap";
-import { useParams, useSearchParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import Doc from "../../images/DocumentIcon.png";
 import Download from "../../images/icons/download-12x12.svg";
 import Global from "../../images/Global.png";
@@ -677,7 +677,7 @@ const JobPosts = () => {
                             </li>
                           </ul>
                         </div>
-                        <div className="aplcnt_cv"><i class="fa fa-paperclip" aria-hidden="true"></i> {viewDetailData?.resume}</div>
+                        <div className="aplcnt_cv"><Link to={`https://bittrend.shubansoftware.com${viewDetailData?.resume}`} target="_blank" ><i class="fa fa-paperclip" aria-hidden="true"></i>{"https://bittrend.shubansoftware.com" + viewDetailData?.resume}</Link></div>
                       </Col>
                     </Row>
                     <div className="aplcnt_details">
