@@ -84,6 +84,7 @@ tracker.show_tasks()
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const { id } = useParams();
+    const [jobDetails, setJobDetails] = useState({})
     const [assetJob, setAssetJob] = useState([]);
     const [localAssetJob, setLocalAssetJob] = useState([]);
     const [assignmentReviewList, setAssignmentReviewList] = useState([]);
@@ -102,6 +103,7 @@ tracker.show_tasks()
                 if (Array.isArray(response?.data?.response?.asset_job)) {
                     setAssetJob(response?.data?.response?.asset_job)
                 }
+                setJobDetails(response?.data?.response)
             }
         } catch (error) {
         }
@@ -123,6 +125,20 @@ tracker.show_tasks()
         getJobDetails(id)
         getJobAssignmentReviewAPI(id)
     }, [id])
+    const getJobAssignmentReviewList = async (uid) => {
+        try {
+            const response = await getJobAssignmentReview(id)
+            if (response?.data?.success) {
+                setAssignmentReviewList(response?.data?.response?.asset_job)
+                setSectionWiseData(response?.data?.response?.asset_job[0]?.section_asset)
+                const result = response?.data?.response?.asset_job[0]?.section_asset[0]?.question_section?.find(val => val?.uid === uid)
+                setQuestionWiseData(result)
+                setQuestionWiseDuplicate(result)
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
     const handleTestJob = (e) => {
         const { value } = e.target;
         const filterData = assignmentReviewList.filter((item) => item?.uid === value);
@@ -154,7 +170,7 @@ tracker.show_tasks()
         };
         setQuestionWiseData(filteredData)
     }
-    const handlePending=()=>{
+    const handlePending = () => {
         const duplicate = questionWiseDuplicate;
         const originalObject = duplicate;
         const filteredData = {
@@ -163,7 +179,7 @@ tracker.show_tasks()
         };
         setQuestionWiseData(filteredData)
     }
-    const handleAllEvaiPend=()=>{
+    const handleAllEvaiPend = () => {
         setQuestionWiseData(questionWiseDuplicate)
     }
 
@@ -186,13 +202,23 @@ tracker.show_tasks()
 
     const currentItem = questionWiseData?.user_answer_question?.find(item => item.id === currentId);
     useEffect(() => {
-        // const result = questionWiseData?.user_answer_question?.map((Val)=>({[Val?.uid]:Val?.score}))
         const result = questionWiseData?.user_answer_question?.reduce((acc, item) => {
             acc[item.uid] = item?.score; // use id as key
             return acc;
         }, {})
         setRating(result ? result : {})
     }, [questionWiseData])
+
+    const handleSearchByName = (e) => {
+        const { name, value } = e.target;
+        const duplicate = questionWiseDuplicate;
+        const originalObject = duplicate;
+        const filteredData = {
+            ...originalObject,
+            user_answer_question: originalObject?.user_answer_question?.filter((val) => val?.applicant?.user?.username?.toLowerCase().includes(value.toLowerCase())),
+        };
+        setQuestionWiseData(filteredData)
+    }
     // console.log(assignmentReviewList)
     // console.log('section', sectionWiseData)
     console.log(questionWiseData)
@@ -211,7 +237,7 @@ tracker.show_tasks()
                 <Container fluid className="bg-white">
                     <Row>
                         <Col md={6} className="d-flex justify-content-between align-items-center">
-                            <h6 class="my-3 pagetitle"><i class="fa fa-suitcase text-primery me-2"></i>Java Backend Developer<img src={angleDown} className="ms-2 w-14" /></h6>
+                            <h6 class="my-3 pagetitle"><i class="fa fa-suitcase text-primery me-2"></i>{jobDetails?.job_title}<img src={angleDown} className="ms-2 w-14" /></h6>
                         </Col>
                         <Col md={6} className="d-flex justify-content-end align-items-center">
                             <button type="button" onClick={handleShow} className="icon_btnlink btn btn-primary"><img src={EvaluaBtn} className="me-1" />Evaluations</button>
@@ -1059,8 +1085,8 @@ tracker.show_tasks()
                                                     </Form.Select>
                                                 </Col>
                                                 <Col md={6} className="d-flex review_count justify-content-end align-items-center">
-                                                    <p className="font-sm font-weight-600 m-0"><img src={userDark} alt="user" /> <strong className="font-weight-700">100</strong> / 150 Completed</p>
-                                                    <ProgressBar className="ms-2" variant="primery" now={20} />
+                                                    <p className="font-sm font-weight-600 m-0"><img src={userDark} alt="user" /> <strong className="font-weight-700">{questionWiseData?.user_answer_question?.filter(item => item?.score > 0)?.length}</strong> / {questionWiseData?.user_answer_question?.length} Completed</p>
+                                                    <ProgressBar className="ms-2" variant="primery" now={questionWiseData?.user_answer_question?.filter(item => item?.score > 0)?.length} />
                                                 </Col>
                                             </Row>
                                         </Card.Header>
@@ -1244,6 +1270,7 @@ tracker.show_tasks()
                                                                         placeholder="Search"
                                                                         aria-label="Search"
                                                                         aria-describedby="basic-addon1"
+                                                                        onChange={handleSearchByName}
                                                                     />
                                                                 </InputGroup>
                                                             </Col>
@@ -1261,7 +1288,7 @@ tracker.show_tasks()
                                                                     <Card.Header className="p-0 pb-2 d-flex align-items-center justify-content-between">
                                                                         <Card.Title>{user?.applicant?.user?.username}</Card.Title>
                                                                         <div className="d-flex">
-                                                                            <Ratting rating={rating} setRating={setRating} id={user?.uid} />
+                                                                            <Ratting rating={rating} setRating={setRating} ID={user?.uid} getJobAssignmentReviewList={getJobAssignmentReviewList} questionWiseData={questionWiseData} />
                                                                             <button onClick={() => handleReviewModal(user)} type="button" className="btn-transpant ms-4">
                                                                                 <img src={ExpandButton} alt="" />
                                                                             </button>
@@ -1971,7 +1998,7 @@ tracker.show_tasks()
                     <Card className="ans_card">
                         <Card.Header className="p-0 pb-1 d-flex align-items-center justify-content-between border-0">
                             <Card.Title>{currentItem?.applicant?.user?.username}</Card.Title>
-                            <Ratting rating={rating} setRating={setRating} id={currentItem?.uid} />
+                            <Ratting rating={rating} setRating={setRating} ID={currentItem?.uid} getJobAssignmentReviewList={getJobAssignmentReviewList} questionWiseData={questionWiseData} />
                         </Card.Header>
                         <Card.Body className="px-0">
                             {/* <Card.Text>
