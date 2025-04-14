@@ -256,3 +256,7 @@ export const getJobAssignmentReview=(id)=>{
   const getJobReview = client.getWithToken(`${JobsUrl.getJobAssignmentQuestionReview}${id}`)
   return getJobReview
 }
+export const updateAassignmentTypeUserAnswerUpdateAPI=(data,id)=>{
+  const result = client.putWithUpload(`${JobsUrl.updateAssetAassignmentTypeUserAnswerUpdate}${id}/`,data);
+  return result
+}

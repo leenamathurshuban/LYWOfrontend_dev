@@ -65,7 +65,22 @@ tracker.complete_task("Finish report")
 tracker.show_tasks()
 
   `;
+
+    const getFileType = (url) => {
+        const extension = url?.split('.')?.pop()?.toLowerCase();
+
+        const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'];
+        const videoExtensions = ['mp4', 'webm', 'ogg', 'mov', 'avi'];
+        const audioExtensions = ['mp3', 'wav', 'ogg', 'm4a'];
+
+        if (imageExtensions.includes(extension)) return 'image';
+        if (videoExtensions.includes(extension)) return 'video';
+        if (audioExtensions.includes(extension)) return 'audio';
+        return 'unknown';
+    };
     const [show, setShow] = useState(false);
+    const [reviewModal, setReviewModal] = useState(false);
+    const handleReviewClose = () => setReviewModal(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const { id } = useParams();
@@ -74,7 +89,10 @@ tracker.show_tasks()
     const [assignmentReviewList, setAssignmentReviewList] = useState([]);
     const [jobTest, setJobTest] = useState([]);
     const [sectionWiseData, setSectionWiseData] = useState([]);
-
+    const [questionWiseData, setQuestionWiseData] = useState({});
+    const [questionWiseDuplicate, setQuestionWiseDuplicate] = useState({});
+    const [rating, setRating] = useState({});
+    const [currentId, setCurrentId] = useState(questionWiseData?.user_answer_question?.[0]?.id);
 
     const getJobDetails = async (id) => {
         const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-api/${id}/`;
@@ -93,6 +111,9 @@ tracker.show_tasks()
             const response = await getJobAssignmentReview(id)
             if (response?.data?.success) {
                 setAssignmentReviewList(response?.data?.response?.asset_job)
+                setSectionWiseData(response?.data?.response?.asset_job[0]?.section_asset)
+                setQuestionWiseData(response?.data?.response?.asset_job[0]?.section_asset[0]?.question_section[0])
+                setQuestionWiseDuplicate(response?.data?.response?.asset_job[0]?.section_asset[0]?.question_section[0])
             }
         } catch (error) {
             console.log(error);
@@ -112,13 +133,70 @@ tracker.show_tasks()
         assignmentReviewList.map((Val) => {
             const filterData = Val?.section_asset?.filter((item) => item.uid === value);
             setSectionWiseData(filterData)
+            setQuestionWiseData(filterData[0]?.question_section[0])
         })
     }
-    const handleSectionQuestionbyuser=(obj)=>{
-        debugger
+    const handleSectionQuestionbyuser = (obj) => {
+        setQuestionWiseData(obj)
+        setQuestionWiseDuplicate(obj)
     }
-    console.log(assignmentReviewList)
-    console.log('section', sectionWiseData)
+    const handleReviewModal = (data) => {
+        setReviewModal(true)
+        // setPopupData(data)
+        setCurrentId(data?.id)
+    }
+    const handleEvaluated = () => {
+        const duplicate = questionWiseDuplicate;
+        const originalObject = duplicate;
+        const filteredData = {
+            ...originalObject,
+            user_answer_question: originalObject?.user_answer_question?.filter(item => item.score > 0),
+        };
+        setQuestionWiseData(filteredData)
+    }
+    const handlePending=()=>{
+        const duplicate = questionWiseDuplicate;
+        const originalObject = duplicate;
+        const filteredData = {
+            ...originalObject,
+            user_answer_question: originalObject?.user_answer_question?.filter(item => item.score == 0),
+        };
+        setQuestionWiseData(filteredData)
+    }
+    const handleAllEvaiPend=()=>{
+        setQuestionWiseData(questionWiseDuplicate)
+    }
+
+
+    const getCurrentIndex = () => questionWiseData?.user_answer_question?.findIndex(item => item.id === currentId);
+
+    const goToPrevious = () => {
+        const currentIndex = getCurrentIndex();
+        if (currentIndex > 0) {
+            setCurrentId(questionWiseData?.user_answer_question[currentIndex - 1].id);
+        }
+    };
+
+    const goToNext = () => {
+        const currentIndex = getCurrentIndex();
+        if (currentIndex < questionWiseData?.user_answer_question.length - 1) {
+            setCurrentId(questionWiseData?.user_answer_question[currentIndex + 1].id);
+        }
+    };
+
+    const currentItem = questionWiseData?.user_answer_question?.find(item => item.id === currentId);
+    useEffect(() => {
+        // const result = questionWiseData?.user_answer_question?.map((Val)=>({[Val?.uid]:Val?.score}))
+        const result = questionWiseData?.user_answer_question?.reduce((acc, item) => {
+            acc[item.uid] = item?.score; // use id as key
+            return acc;
+        }, {})
+        setRating(result ? result : {})
+    }, [questionWiseData])
+    // console.log(assignmentReviewList)
+    // console.log('section', sectionWiseData)
+    console.log(questionWiseData)
+    console.log(currentItem)
     return (
         <>
             <Sidebar />
@@ -1001,7 +1079,7 @@ tracker.show_tasks()
                                                         </Form.Select>
                                                         <ul className="queslsit">
                                                             {sectionWiseData[0]?.question_section?.map((QuesItem, quesIndex) => (
-                                                                <li onClick={()=>handleSectionQuestionbyuser(QuesItem)}>
+                                                                <li onClick={() => handleSectionQuestionbyuser(QuesItem)}>
                                                                     <span>Q. {quesIndex + 1}</span>
                                                                     <div className="ratting_warp">
                                                                         <div className="ratting">
@@ -1138,7 +1216,7 @@ tracker.show_tasks()
 
                                                 <Col md={10} className="ans_panel">
                                                     <div className="que_head">
-                                                        <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                                        <p class="text-sm">{questionWiseData?.question_title}</p>
                                                         <strong className="qus_number">1</strong>
                                                     </div>
                                                     <div className="ans_body">
@@ -1171,14 +1249,47 @@ tracker.show_tasks()
                                                             </Col>
                                                             <Col md={8} className="text-end">
                                                                 <ul className="head_filterlist">
-                                                                    <li className="">Evaluated</li>
-                                                                    <li className="">Pending</li>
-                                                                    <li className="active">All</li>
+                                                                    <li className="" onClick={handleEvaluated}>Evaluated</li>
+                                                                    <li className="" onClick={handlePending}>Pending</li>
+                                                                    <li className="active" onClick={handleAllEvaiPend}>All</li>
                                                                 </ul>
                                                             </Col>
                                                         </Row>
                                                         <div className="all_anslist">
-                                                            <Card className="ans_card">
+                                                            {questionWiseData?.user_answer_question?.map((user, index) => (
+                                                                <Card className="ans_card">
+                                                                    <Card.Header className="p-0 pb-2 d-flex align-items-center justify-content-between">
+                                                                        <Card.Title>{user?.applicant?.user?.username}</Card.Title>
+                                                                        <div className="d-flex">
+                                                                            <Ratting rating={rating} setRating={setRating} id={user?.uid} />
+                                                                            <button onClick={() => handleReviewModal(user)} type="button" className="btn-transpant ms-4">
+                                                                                <img src={ExpandButton} alt="" />
+                                                                            </button>
+                                                                        </div>
+                                                                    </Card.Header>
+                                                                    <Card.Body className="px-0">
+                                                                        {user?.text && (
+                                                                            <Card.Text>{user?.text?.replace(/<[^>]*>/g, '')}</Card.Text>
+                                                                        )}
+                                                                        {getFileType(user?.attach_or_video) === "image" && (
+                                                                            <img src={`https://bittrend.shubansoftware.com${user?.attach_or_video}`} width={500} height={400} />
+                                                                        )}
+                                                                        {getFileType(user?.attach_or_video) === "audio" && (
+                                                                            <audio controls className="w-full">
+                                                                                <source src={'https://bittrend.shubansoftware.com' + user?.attach_or_video} type="audio/mp3" />
+                                                                            </audio>
+                                                                        )}
+                                                                        {getFileType(user?.attach_or_video) === "video" && (
+                                                                            <div className="video-frame">
+                                                                                <video controls width="100%" height="430" >
+                                                                                    <source src={'https://bittrend.shubansoftware.com' + user?.attach_or_video} type="video/mp4" />
+                                                                                </video>
+                                                                            </div>
+                                                                        )}
+                                                                    </Card.Body>
+                                                                </Card>
+                                                            ))}
+                                                            {/* <Card className="ans_card">
                                                                 <Card.Header className="p-0 pb-2 d-flex align-items-center justify-content-between">
                                                                     <Card.Title>Sndeep Kattamuri</Card.Title>
                                                                     <div className="d-flex">
@@ -1225,23 +1336,7 @@ tracker.show_tasks()
                                                                         Phasellus erat arcu, scelerisque vitae efficitur sed, ornare et purus. Duis vel semper ligula. Proin consectetur magna quis ullamcorper efficitur. Donec suscipit tristique leo, ac porta odio maximus quis. Mauris quis lacinia massa. Curabitur vitae leo quis lorem elementum tincidunt. Morbi et convallis nibh.
                                                                     </Card.Text>
                                                                 </Card.Body>
-                                                            </Card>
-                                                            <Card className="ans_card">
-                                                                <Card.Header className="p-0 pb-2 d-flex align-items-center justify-content-between">
-                                                                    <Card.Title>Sndeep Kattamuri</Card.Title>
-                                                                    <div className="d-flex">
-                                                                        <Ratting />
-                                                                        <button onClick={handleShow} type="button" className="btn-transpant ms-4">
-                                                                            <img src={ExpandButton} alt="" />
-                                                                        </button>
-                                                                    </div>
-                                                                </Card.Header>
-                                                                <Card.Body className="px-0">
-                                                                    <Card.Text>
-                                                                        Phasellus erat arcu, scelerisque vitae efficitur sed, ornare et purus. Duis vel semper ligula. Proin consectetur magna quis ullamcorper efficitur. Donec suscipit tristique leo, ac porta odio maximus quis. Mauris quis lacinia massa. Curabitur vitae leo quis lorem elementum tincidunt. Morbi et convallis nibh.
-                                                                    </Card.Text>
-                                                                </Card.Body>
-                                                            </Card>
+                                                            </Card> */}
                                                         </div>
                                                     </div>
                                                 </Col>
@@ -1852,9 +1947,9 @@ tracker.show_tasks()
             />
 
             {/*======Answer======*/}
-            {/* <Offcanvas
-                show={show}
-                onHide={handleClose}
+            <Offcanvas
+                show={reviewModal}
+                onHide={handleReviewClose}
                 backdrop={false}
                 placement="end"
                 className="ansexp_drawer lg-drawer shadow-md border-0"
@@ -1866,20 +1961,20 @@ tracker.show_tasks()
                 </Offcanvas.Header>
                 <Offcanvas.Body className="ansexp_warp">
                     <div className="que_head">
-                        <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                        <p class="text-sm">{questionWiseData?.question_title}</p>
                     </div>
                     <div className="d-flex justify-content-end align-items-center my-3">
                         <span className="count">100/150</span>
-                        <button className="btn-back"><img src={ArrowBack} alt="" /></button>
-                        <button className="btn-next"><img src={ArrowNext} alt="" /></button>
+                        <button className="btn-back" onClick={goToPrevious}><img src={ArrowBack} alt="" /></button>
+                        <button className="btn-next" onClick={goToNext}><img src={ArrowNext} alt="" /></button>
                     </div>
                     <Card className="ans_card">
                         <Card.Header className="p-0 pb-1 d-flex align-items-center justify-content-between border-0">
-                            <Card.Title>Sndeep Kattamuri</Card.Title>
-                            <Ratting />
+                            <Card.Title>{currentItem?.applicant?.user?.username}</Card.Title>
+                            <Ratting rating={rating} setRating={setRating} id={currentItem?.uid} />
                         </Card.Header>
                         <Card.Body className="px-0">
-                            <Card.Text>
+                            {/* <Card.Text>
                                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vulputate scelerisque mi, in iaculis ante tempor et. Aliquam fermentum, sem eu tincidunt vehicula, purus velit molestie sem, sed sodales libero elit ut massa. Maecenas egestas sit amet sem vitae ornare. Curabitur faucibus maximus neque, quis sollicitudin velit ornare vel. Donec nec mollis metus. Curabitur auctor mollis metus sit amet tristique. Nulla ut maximus ante.</p>
                                 <p>Phasellus erat arcu, scelerisque vitae efficitur sed, ornare et purus. Duis vel semper ligula. Proin consectetur magna quis ullamcorper efficitur. Donec suscipit tristique leo, ac porta odio maximus quis. Mauris quis lacinia massa. Curabitur vitae leo quis lorem elementum tincidunt. Morbi et convallis nibh.
                                 </p>
@@ -1892,11 +1987,29 @@ tracker.show_tasks()
                                 <iframe width="100%" height="430" src="https://www.youtube.com/embed/tgbNymZ7vqY">
                                 </iframe>
                             </div>
-                            <CodeBlock language="javascript" code={codeSnippet} />
+                            <CodeBlock language="javascript" code={codeSnippet} /> */}
+                            {currentItem?.text && (
+                                <Card.Text>{currentItem?.text?.replace(/<[^>]*>/g, '')}</Card.Text>
+                            )}
+                            {getFileType(currentItem?.attach_or_video) === "image" && (
+                                <img src={`https://bittrend.shubansoftware.com${currentItem?.attach_or_video}`} width={500} height={400} />
+                            )}
+                            {getFileType(currentItem?.attach_or_video) === "audio" && (
+                                <audio controls className="w-full">
+                                    <source src={'https://bittrend.shubansoftware.com' + currentItem?.attach_or_video} type="audio/mp3" />
+                                </audio>
+                            )}
+                            {getFileType(currentItem?.attach_or_video) === "video" && (
+                                <div className="video-frame">
+                                    <video controls width="100%" height="430" >
+                                        <source src={'https://bittrend.shubansoftware.com' + currentItem?.attach_or_video} type="video/mp4" />
+                                    </video>
+                                </div>
+                            )}
                         </Card.Body>
                     </Card>
                 </Offcanvas.Body>
-            </Offcanvas> */}
+            </Offcanvas>
         </>
     );
 };
