@@ -989,9 +989,9 @@ const CreateJobsRevised = ({
     }
   }
   useEffect(() => {
-    const length = skillGroupData.length
+    const length = skillGroupData?.length
     setDynamicArray(Array.from({ length }, () => []));
-  }, [skillGroupData.length]);
+  }, [skillGroupData?.length]);
   // console.log(activeBehaviour)
   // const updatedArray = behaviours.map((item)=>({
   //   ...item,

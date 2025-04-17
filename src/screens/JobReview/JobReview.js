@@ -29,6 +29,7 @@ import { getJobAssignmentReview, getJobDetailsApi } from "../../services/provide
 import Evaluations from "./Evaluations";
 import Ratting from "../../components/Ratting";
 import CodeBlock from "../../components/CodeBlock";
+import CreateGroupModal from "./NewGroupModal";
 const JobReview = () => {
     const codeSnippet = `class WorkloadTracker:
     def __init__(self):
@@ -80,8 +81,10 @@ tracker.show_tasks()
     };
     const [show, setShow] = useState(false);
     const [reviewModal, setReviewModal] = useState(false);
+    const [groupModal,setGroupModal] = useState(false);
     const handleReviewClose = () => setReviewModal(false);
     const handleClose = () => setShow(false);
+    const handleCloseGrpMdl=()=>setGroupModal(false)
     const handleShow = () => setShow(true);
     const { id } = useParams();
     const [jobDetails, setJobDetails] = useState({})
@@ -373,7 +376,7 @@ tracker.show_tasks()
                                                     <button type="button"><i class="fa fa-ellipsis-h"></i></button>
                                                 </div>
                                                 <Card.Body>
-                                                    <button type="button" onClick={handleShow} className="btn btn-link mb-3"><i className="fa fa-plus me-2"></i>Create a New Group</button>
+                                                    <button type="button" onClick={()=>setGroupModal(true)} className="btn btn-link mb-3"><i className="fa fa-plus me-2"></i>Create a New Group</button>
                                                     <div className="sts_databoxlg incopmlate">
                                                         <div className="d-flex justify-content-between">
                                                             <h6>Incomplete<span className="count">100</span></h6>
@@ -1966,6 +1969,15 @@ tracker.show_tasks()
             <Evaluations
                 show={show}
                 handleClose={handleClose}
+                assetJob={assetJob}
+                setAssetJob={setAssetJob}
+                localAssetJob={localAssetJob}
+                setLocalAssetJob={setLocalAssetJob}
+                id={id}
+            />
+            <CreateGroupModal
+                show={groupModal}
+                handleClose={handleCloseGrpMdl}
                 assetJob={assetJob}
                 setAssetJob={setAssetJob}
                 localAssetJob={localAssetJob}

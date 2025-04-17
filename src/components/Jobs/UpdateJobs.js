@@ -594,7 +594,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
 
   const handleDepartment = (e) => {
     setDepartment(e.target.value);
-    setIsDepartmentDropdown(true);
+    // setIsDepartmentDropdown(true);
   };
 
   const handleDepartmentItem = (item) => {
@@ -625,7 +625,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
       formdata.append("job_title", createFormData.jobTitle);
       formdata.append("is_like", JSON.stringify(isLikeUid));
       formdata.append("number_of_positions", createFormData.noOfPosition);
-      formdata.append("department", departmentUid);
+      formdata.append("department", department);
       formdata.append("job_location", locationUid);
       formdata.append("requires_travel", travelOption);
       formdata.append("detailed_description", descriptionWithoutTags);
@@ -1032,7 +1032,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
 
             <span className="error">{errors.department}</span>
 
-            {isDepartmentDropdown && departmentData?.length > 0 && (
+            {/* {isDepartmentDropdown && departmentData?.length > 0 && (
               <div className="ctm_dropdown ct_scrollbar">
                 <ul>
                   {departmentData?.map((item) => (
@@ -1050,7 +1050,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
               <ul>
                 <li>No data found</li>
               </ul>
-            )}
+            )} */}
           </Form.Group>
 
           <Form.Group className="col-md-6 mb-2" controlId="location">
@@ -1227,6 +1227,11 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
               <option>Job Type</option>
               <option value="Full-time">Full -Time</option>
               <option value="Part-time">Part -Time</option>
+              <option value="Contract">Contract</option>
+              <option value="Temporary">Temporary</option>
+              <option value="Volunteer">Volunteer</option>
+              <option value="Internship">Internship</option>
+              <option value="Other">Other</option>
             </Form.Select>
             <span style={{ color: "red" }}>{errors.jobType}</span>
           </Col>
@@ -1239,10 +1244,10 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
               name="workPlaceType"
             >
               <option>Workplace Type</option>
-              <option value="On-site">Work from office</option>
+              <option value="On-site">On-site</option>
               <option value="Remote">Remote</option>
               <option value="Hybrid">Hybrid</option>
-              <option value="Work-from-home">Work from Home</option>
+              {/* <option value="Work-from-home">Work from Home</option> */}
             </Form.Select>
             <span style={{ color: "red" }}>{errors.workPlaceType}</span>
           </Col>
