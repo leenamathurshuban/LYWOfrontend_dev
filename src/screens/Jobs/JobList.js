@@ -529,14 +529,14 @@ const JobsList = () => {
                           </span>
                         </td>
                         <td>{item?.job_location?.location_name}</td>
-                        <td>{item.department.department_name}</td>
-                        <td>{item.job_type}</td>
-                        <td>{item.workplace_type}</td>
-                        <td>{item.number_of_positions}</td>
+                        <td>{item?.department?.department_name}</td>
+                        <td>{item?.job_type}</td>
+                        <td>{item?.workplace_type}</td>
+                        <td>{item?.number_of_positions}</td>
                         <td>-</td>
                         <td className="avgscore">-</td>
-                        <td>{item.posted_on ? item.posted_on : '-'}</td>
-                        <td>{item.job_status}</td>
+                        <td>{item?.posted_on ? item.posted_on : '-'}</td>
+                        <td>{item?.job_status}</td>
                         <td className="action" style={{ width: "42px" }}>
                           <Dropdown className="action_dropdown">
                             <Dropdown.Toggle
