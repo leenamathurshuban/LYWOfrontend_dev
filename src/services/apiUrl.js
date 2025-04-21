@@ -31,7 +31,8 @@ export const JobsUrl = {
   cloneJobGet:"assets-api/clone-job-api/",
   UpdateMultipleJobApi:"assets-api/update-multiple-job-api/",
   getJobAssignmentQuestionReview:"assets-api/get-job-assignment-question-review/",
-  updateAssetAassignmentTypeUserAnswerUpdate:"assets-api/assignment-type-user-answer-update-api/"
+  updateAssetAassignmentTypeUserAnswerUpdate:"assets-api/assignment-type-user-answer-update-api/",
+  ScreeningParameterData: "assets-api/get-screening-parameter-data-api/"
 }
 
 export const SkillsUrl = {

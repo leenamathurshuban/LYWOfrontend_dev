@@ -248,6 +248,7 @@ import { storeToken } from "../../helpers/helper";
 import { IsEmailVerify, LogInCall, OtpVerifyApi } from "../../services/provider";
 import { setLoginuserInfor } from "../../Slice/Login/LoginSlice";
 import appbrand from '../../images/LYWO_logo.png';
+import { toast } from "react-toastify";
 
 const OtpVerifyContainer = () => {
 
@@ -315,10 +316,12 @@ const OtpVerifyContainer = () => {
   }
 
   const EmailVerifyApi = () => {
+    
     setIsLoading(true);
     const data = {email}
     IsEmailVerify(data)
       .then((response) => {
+        toast.success("Otp send Successfully")
         if (response.data.response.is_first_time_user == false && response.data.response.is_password_set == false ) {
           setInitialCount(1);
         }else if(response.data.response.is_password_set == true){
@@ -371,7 +374,7 @@ const OtpVerifyContainer = () => {
         >
           <div className="w-px-400 mx-auto">
             <h3>Welcome to LYWO</h3>
-            <p>Please enter your details.</p>
+           
             <Form noValidate validated={validated} onSubmit={handleSubmitotp}>
               <Form.Group
                 as={Col}
@@ -417,7 +420,7 @@ const OtpVerifyContainer = () => {
                   <span
                     style={{
                       color:
-                        otpErrormsg === "Incorrect OTP. Please try again."
+                        otpErrormsg === "Incorrect OTP. Please try again." || "OTP has been expired"
                           ? "red"
                           : "#079455",
                     }}
@@ -459,10 +462,18 @@ const OtpVerifyContainer = () => {
                   // cursor: otpErrormsg === "OTP verified successfully." ? 'pointer' : 'not-allowed' // Change cursor to show disabled state
                 }}
                 disabled={otpErrormsg !== "OTP verified successfully."}
-                // onClick={SetPasswordContainer}
+                
+                // onClick={(e) => {
+                //   e.preventDefault();
+                //   navigate("/set-password")
+                // }}
+
                 onClick={(e) => {
-                  e.preventDefault();
-                  navigate("/set-password")
+                  if (otpErrormsg !== "OTP verified successfully.") {
+                    e.preventDefault();
+                    return;
+                  }
+                  navigate("/set-password");
                 }}
               >
                 Set Password for future login

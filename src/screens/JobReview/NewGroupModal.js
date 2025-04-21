@@ -26,170 +26,198 @@ import faRingicon from "../../images/icons/Ring.svg";
 import threeDots from "../../images/icons/dots-vertical_icon.svg";
 import RingSucess from "../../images/icons/ring_sucess.svg";
 import DragDrop from "../../images/icons/dragdrop-bullet.svg";
-import deleteDark from "../../images/icons/trash-Dark..svg";
+import usericon from "../../images/icons/user-01-gray.svg";
 
-const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, localAssetJob, setLocalAssetJob, id }) => {
-    const [activeTab, setActiveTab] = useState("viewAll");
-    const [EvaluationList, setEvaluationList] = useState([]);
-    const [EvaluationListDetails, setEvaluationListDetails] = useState([]);
-    const [SerachList, setSerachList] = useState("");
-    const [activeKeys, setActiveKeys] = useState(["0-0"]);
-    const [selectedSection, setSelectedSection] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
-    const [loadeMoreCount, setLoadeMoreCount] = useState(10);
+const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, localAssetJob, setLocalAssetJob, id, groupState, setGroupState }) => {
     const [tabActive, setTabActive] = useState("evaluation");
-    const navigate = useNavigate();
-    const handleShow = () => { };
+    // const [groupState, setGroupState] = useState([
+    //     {
+    //         heading: 'Job Match', title: 'Select to Apply', isChecked: false, isSelected: true,
+    //         listData: [
+    //             {
+    //                 name: 'Groups',
+    //                 data: [{ value: 'Excellent', isSelected: false }, { value: 'Good', isSelected: false }, { value: 'Average', isSelected: false }, { value: 'Below Average', isSelected: false }]
+    //             },
+    //             {
+    //                 name: 'Job Match Percentage',
+    //                 data: [
+    //                     { value: '0% - 40% ', isSelected: false },
+    //                     { value: '50% - 60% ', isSelected: false },
+    //                     { value: '60% - 70% ', isSelected: false },
+    //                     { value: '70% - 80% ', isSelected: false },
+    //                     { value: '80% - 90% ', isSelected: false },
+    //                     { value: '90% - 100% ', isSelected: false }
+    //                 ]
+    //             }
+    //         ]
+    //     },
+    //     {
+    //         heading: 'Education', isChecked: false, isSelected: false,
+    //         listData: [
+    //             {
+    //                 name: 'Require Education',
+    //                 data: [{ value: 'Master', isSelected: false }, { value: 'Bachelors', isSelected: false }, { value: 'PG', isSelected: false }, { value: 'Diploma', isSelected: false }]
+    //             },
+    //             {
+    //                 name: 'Areas of Education',
+    //                 data: [
+    //                     { value: 'Mathematics', isSelected: false },
+    //                     { value: 'Science', isSelected: false },
+    //                     { value: 'Computer', isSelected: false },
+    //                     { value: 'Engineering', isSelected: false },
+    //                     { value: 'Electronic', isSelected: false },
+    //                 ]
+    //             }
+    //         ]
+    //     },
+
+    //     {
+    //         heading: 'Availability', title: 'Select to Apply', isChecked: false, isSelected: false,
+    //         listData: [
+    //             {
+    //                 name: 'Working Status',
+    //                 data: [{ value: 'Currently Working', isSelected: false }, { value: 'Currently not Working ', isSelected: false }]
+    //             },
+    //             {
+    //                 name: 'Available by',
+    //                 data: [],
+    //                 date:true
+    //             },
+    //             {
+    //                 name: 'Notice Period',
+    //                 data: [
+    //                     { value: 'Less than 30 Days', isSelected: false },
+    //                     { value: '30 - 60 Days', isSelected: false },
+    //                     { value: '60 - 90 Days   ', isSelected: false },
+    //                     { value: 'More than 90', isSelected: false },
+    //                 ]
+    //             },
+    //             {
+    //                 name: "Notice Buy out",
+    //                 data: [
+    //                     { value: 'Available', isSelected: false },
+    //                     { value: 'Not Available', isSelected: false },                        
+    //                 ]
+    //             },
+    //             {
+    //                 name: "Willing to Travel for Job",
+    //                 data: [
+    //                     { value: 'Regularly', isSelected: false },
+    //                     { value: 'Sometimes', isSelected: false },
+    //                     { value: 'Rarely', isSelected: false },
+    //                     { value: 'Not Willing to Travel', isSelected: false },                        
+    //                 ]
+    //             }
+    //         ]
+    //     },
+    //     { 
+    //         heading: 'Skills', title: 'Select to Apply', isChecked: false, isSelected: false,
+    //         listData: [
+    //             {
+    //                 name: 'Groups',
+    //                 data: [{ value: 'Excellent', isSelected: false }, { value: 'Good', isSelected: false }, { value: 'Average', isSelected: false }, { value: 'Below Average', isSelected: false }]
+    //             },
+    //             {
+    //                 name: 'Job Match Percentage',
+    //                 data: [
+    //                     { value: '0% - 40% ', isSelected: false },
+    //                     { value: '50% - 60% ', isSelected: false },
+    //                     { value: '60% - 70% ', isSelected: false },
+    //                     { value: '70% - 80% ', isSelected: false },
+    //                     { value: '80% - 90% ', isSelected: false },
+    //                     { value: '90% - 100% ', isSelected: false }
+    //                 ]
+    //             }
+    //         ]
+    //      },
+    //     { heading: 'Language', title: 'Select to Apply', isChecked: false, isSelected: false },
+    //     { heading: 'Custom Questions', title: 'Select to Apply', isChecked: false, isSelected: false },
+    //     { heading: 'Personality', title: 'Select to Apply', isChecked: false, isSelected: false },
+    //     { heading: 'Experience', title: 'Select to Apply', isChecked: false, isSelected: false },
+    //     { heading: 'Roles', title: 'Select to Apply', isChecked: false, isSelected: false },
+    //     { heading: 'Salary & Travel ', title: 'Select to Apply', isChecked: false, isSelected: false },
+    // ])
+    const [selectedGroup, setSelectedGroup] = useState(groupState?.[0])
     const handleSelect = (key) => {
         setTabActive(key);
     };
-
-    const revaluationsListAPI = async (SerachQuestion) => {
-        setIsLoading(true);
-        // const url = `https://bittrend.shubansoftware.com/assets-api/assets-list-by-company-api/b6cadaab-69bc-4707-8656-2e8573e17547/?search=${SerachQuestion}&page=1&limit=10`;
-        const url = `https://bittrend.shubansoftware.com/assets-api/assets-list-api/?page=1&limit=10&search=${SerachQuestion}`;
-        try {
-            const response = await EvalationAssestList(url);
-            setIsLoading(false);
-            setEvaluationList(response.data.response);
-        } catch (error) {
-            setIsLoading(false);
-            console.error("Error fetching company user list:", error);
-            if (
-                error?.response?.status === 401 ||
-                error?.response?.data?.detail?.includes(
-                    "Given token not valid for any token type"
-                )
-            ) {
-                removeToken();
-                navigate("/loginwithpassword");
-            }
-        }
+    const handleBoxClick = (index, obj) => {
+        setSelectedGroup(obj)
+        setGroupState((prev) =>
+            prev.map((item, i) => {
+                if (i === index) {
+                    // Allow toggling only if:
+                    // 1. The item is not already selected, and the selectedCount is less than 4.
+                    // 2. The item is already selected (to allow deselecting).
+                    if (!item.isSelected) {
+                        return { ...item, isSelected: !item.isSelected };
+                    } else if (item.isSelected) {
+                        return { ...item, isSelected: !item.isSelected };
+                    }
+                }
+                // else {
+                //     if (item.isSelected) {
+                //         return { ...item, isSelected: !item.isSelected }
+                //     }
+                // }
+                return item;
+            })
+        );
     };
-
+    const handleCheck = (index, obj) => {
+        // e.stopPropagation();
+        setSelectedGroup(obj)
+        setGroupState((prev) =>
+            prev.map((item, i) => {
+                if (i === index) {
+                    // Allow toggling only if:
+                    // 1. The item is not already selected, and the selectedCount is less than 4.
+                    // 2. The item is already selected (to allow deselecting).
+                    if (!item.isChecked) {
+                        return { ...item, isChecked: !item.isChecked };
+                    } else if (item.isChecked) {
+                        return { ...item, isChecked: !item.isChecked };
+                    }
+                }
+                return item;
+            })
+        );
+    }
+    const handleGroupItem = (selectedItem, listIndex, dataindex) => {
+        setGroupState(prev =>
+            prev.map(item => {
+                if (selectedItem.heading === item.heading) {
+                    return {
+                        ...item,
+                        listData: item.listData.map((listItem, listIdx) => {
+                            if (listIdx === listIndex) {
+                                return {
+                                    ...listItem,
+                                    data: listItem.data.map((dataItem, dataIdx) => {
+                                        if (dataIdx === dataindex) {
+                                            return {
+                                                ...dataItem,
+                                                isSelected: !dataItem.isSelected
+                                            };
+                                        }
+                                        return dataItem;
+                                    })
+                                };
+                            }
+                            return listItem;
+                        })
+                    };
+                }
+                return item;
+            })
+        );
+    }
     useEffect(() => {
-        revaluationsListAPI();
-    }, []);
-
-    useEffect(() => {
-        const debounceTimer = setTimeout(() => {
-            revaluationsListAPI(SerachList);
-        }, 500);
-
-        return () => clearTimeout(debounceTimer);
-    }, [SerachList]);
-
-    const handleTab = (tab) => {
-        setActiveTab(tab);
-    };
-
-    const EvaluationListFilterData = EvaluationList.filter((item) => {
-        if (activeTab == "viewAll") return true;
-        return item.asset_type.toLowerCase() === activeTab.toLowerCase();
-    });
-
-    const handleLoadMore = () => {
-        // setLoadeMoreCount(loadeMoreCount + 10);
-    };
-    const handleMultiple = (item) => {
-        // const isUidNotPresent = !assetJob.some((val)=>val.uid === item?.uid)
-        // if (isUidNotPresent) {
-        //     setAssetJob([...assetJob, item])
-        //     setLocalAssetJob([...localAssetJob, item])
-        // } else {
-        //     const filterArry = assetJob.filter((Val) => Val?.uid !== item?.uid);
-        //     setAssetJob(filterArry)
-        //     const filterlocal = localAssetJob.filter((Val) => Val?.uid !== item?.uid);
-        //     setLocalAssetJob(filterlocal)
-        // }
-        const isUidNotPresent = !assetJob.some((val) => val.uid === item?.uid)
-        if (isUidNotPresent) {
-            const obj = item;
-            obj.unSelect = true;
-            setAssetJob([...assetJob, obj])
-            // setLocalAssetJob([...localAssetJob, item])
-        } else {
-            const filterArry = assetJob.filter((Val) => Val?.uid !== item?.uid);
-            setAssetJob(filterArry)
-            // const filterlocal = localAssetJob.filter((Val) => Val?.uid !== item?.uid);
-            // setLocalAssetJob(filterlocal)
-        }
-    }
-
-    const handleSearch = (e) => {
-        setSerachList(e.target.value);
-    };
-    const quizModal = async (uId) => {
-        // console.log("uid--------",uId)
-        handleShow();
-        setIsLoading(true);
-        // const url = `https://bittrend.shubansoftware.com/assets-api/assets-list-by-company-api/b6cadaab-69bc-4707-8656-2e8573e17547/?search=${SerachQuestion}&page=1&limit=10`;
-        const url = `assets-api/assets-detail-api/${uId}/`;
-        try {
-            const response = await EvalationAssestDetails(url);
-            setIsLoading(false);
-            //  console.log("assest detailssss api------",response.data.response)
-            setEvaluationListDetails(response.data.response);
-        } catch (error) {
-            setIsLoading(false);
-            console.error("Error fetching company user list:", error);
-            if (
-                error?.response?.status === 401 ||
-                error?.response?.data?.detail?.includes(
-                    "Given token not valid for any token type"
-                )
-            ) {
-                console.log("Token expired, redirecting to login");
-                removeToken();
-                navigate("/loginwithpassword");
-            }
-        }
-    };
-    const [draggedIndex, setDraggedIndex] = useState(null);
-
-    const handleDragStart = (index) => {
-        setDraggedIndex(index);
-    };
-
-    const handleDragOver = (event) => {
-        event.preventDefault();
-    };
-
-    const handleDrop = (index) => {
-        if (draggedIndex === null) return;
-
-        const updatedItems = [...assetJob];
-        const draggedItem = updatedItems[draggedIndex];
-
-        // Remove the dragged item from its original position
-        updatedItems.splice(draggedIndex, 1);
-        // Insert it at the new position
-        updatedItems.splice(index, 0, draggedItem);
-
-        setAssetJob(updatedItems);
-        setDraggedIndex(null);
-    };
-
-    const handleDeleteRow = (value) => {
-        const exixtRow = assetJob.filter((CVal) => CVal.uid !== value?.uid)
-        setAssetJob(exixtRow)
-    }
-
-    const handleSubmit = async () => {
-        try {
-            const formdata = new FormData();
-            formdata.append("asset_job", JSON.stringify(assetJob.map((Val) => Val.uid)))
-            const response = await UpdateJobForm(formdata, id)
-            if (response?.data?.success) {
-                handleClose()
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
-    // console.log(assetJob, localAssetJob)
-    console.log(draggedIndex)
-    console.log(assetJob)
+        const findObj = groupState.find((val) => val.heading == selectedGroup.heading)
+        setSelectedGroup(findObj)
+    }, [groupState])
+    console.log(groupState)
+    console.log(selectedGroup)
     return (
         <Offcanvas
             show={show}
@@ -206,16 +234,6 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, localAsset
             <Offcanvas.Body className="add_evaluwarp">
                 <Tab.Container id="left-tabs-example1" activeKey={tabActive} onSelect={handleSelect}>
                     <Row>
-                        {/* <Col sm={12}>
-                            <Nav variant="pills">
-                                <Nav.Item>
-                                    <Nav.Link eventKey="evaluation">Select Evaluation</Nav.Link>
-                                </Nav.Item>
-                                <Nav.Item>
-                                    <Nav.Link eventKey="order">Set order of Evaluation</Nav.Link>
-                                </Nav.Item>
-                            </Nav>
-                        </Col> */}
                         <Col sm={12}>
                             <Tab.Content>
                                 <Tab.Pane eventKey="evaluation">
@@ -237,54 +255,119 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, localAsset
                                                 </Col>
                                             </Row>
                                         </Card.Header>
-                                        <Card.Body className="p-0 mt-3">                                            
+                                        <Card.Body className="p-0 mt-3">
                                             <div className="elv_datatable shadow-none">
-                                                <Table striped className="m-0">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Evaluation Title</th>
-                                                            <th>Type</th>
-                                                            <th>Duration</th>
-                                                            <th>Avg. Score</th>
-                                                            <th>Questions</th>
-                                                            <th>Pass Ratio</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        
-                                                    </tbody>
-                                                    <tfoot>
-                                                        <tr>
-                                                            <td colSpan={2}>
-                                                                <Button
-                                                                    className="btn-light-outline"
-                                                                >
-                                                                    Load More
-                                                                </Button>
-                                                            </td>
-                                                            <td colSpan={4} className="text-end pe-3">
-                                                                <span className="pagination_count">
-                                                                    Showing {EvaluationListFilterData.length} items
-                                                                </span>
-                                                            </td>
-                                                        </tr>
-                                                    </tfoot>
-                                                </Table>
+                                                <div>
+                                                    <p className="base-text my-3">Screening Parameters</p>
+                                                    <img src={usericon} />
+                                                    <p className="base-text my-3">150/250</p>
+                                                    <p className="base-text my-3">Clear Filters</p>
+                                                </div>
+                                                <div className="behav_assmnt">
+                                                    {groupState.map((item, index) => (
+                                                        <Col key={index} md={3}>
+                                                            <div
+                                                                className={`assmntbox ${item?.isSelected ? "active" : ""}`}
+                                                            >
+                                                                <div className="assmntbox-head">
+                                                                    <h6
+                                                                        onClick={() => handleBoxClick(index, item)}
+                                                                        style={{ cursor: 'pointer' }}>
+                                                                        {item.heading}
+                                                                    </h6>
+                                                                    <Form.Check onChange={() => handleCheck(index, item)} />
+                                                                </div>
+                                                                <div className="assmntbox-body">
+                                                                    {item.title ? (
+                                                                        <p>
+                                                                            {item.title}
+                                                                        </p>
+                                                                    ) : (
+                                                                        <>
+                                                                            <p>Minimum Education of Masters</p>
+                                                                            <p>Education in Computer +3 more</p>
+                                                                        </>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        </Col>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </Card.Body>
+                                        <Card.Body className="p-0 mt-3">
+                                            <div className="elv_datatable shadow-none">
+                                                <div className="custom-card">
+                                                    <h6>{selectedGroup?.heading}</h6>
+                                                    <p className="font-sm">Candidates with any of the following attributes will be prioritized and filtered for selection.</p>
+                                                    {selectedGroup.listData.map((item, listIndex) => (
+                                                        <div className="starttag_box">
+                                                            <div className="stagbox_head">
+                                                                <h6>{item.name}</h6>
+                                                            </div>
+                                                            <div className="stag_list mt-2">
+                                                                {item.data.map((val, dataindex) => (
+                                                                    <span
+                                                                        // className={`stag_item ${SelectSkillsData.includes(skill) ? "active" : ""
+                                                                        //     }`}
+                                                                        className={`stag_item ${val?.isSelected && 'active'}`}
+                                                                        onClick={() => handleGroupItem(selectedGroup, listIndex, dataindex)}
+                                                                    >
+                                                                        <span
+                                                                            // className={`imprt_icon ${mustHaveSkills.includes(skill) ? "text-primery" : ""} `}
+                                                                            className="imprt_icon text-primery"
+                                                                        //  onClick={() => handleMustHaveSkill(skill)}
+                                                                        >
+                                                                            <i class="fas fa-circle"></i>
+                                                                            {/* <i class={`${mustHaveSkills.includes(skill) ? "fa" : "far"}  fa-star`} aria-hidden="true"></i> */}
+                                                                        </span>
+                                                                        {val.value}
+                                                                    </span>
+                                                                ))}
+                                                                {item?.date && (
+                                                                    <Form.Control
+                                                                        name="AvailableBy"
+                                                                        type="date"
+                                                                        placeholder="DD/MM/YYYY"
+                                                                        style={{ width: "350px" }}
+                                                                        //   value={profileformData?.AvailableBy}
+                                                                        //   onChange={handleProfileDetailsChange}
+                                                                        //   isInvalid={!!errors.AvailableBy}
+                                                                        className="form-control-sm"
+                                                                    />
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    ))}
+
+                                                    {/* <p className="error"></p> */}
+                                                    {/* <p>-----------------------or-------------------</p>
+                                                    <div key={0} className="row mb-3">
+                                                        <strong className="col-md-3 strong-label">
+                                                            groupName
+                                                        </strong>
+                                                        <div className="col-md-9">
+                                                            <span
+                                                                // key={idx}
+                                                                // className={`skill-tag mb-2 mr-2 ${selectedSkills.includes(skill.uid) ? "selected" : ""
+                                                                className={`skill-tag mb-2 mr-2"
+                                                                        }`}
+                                                            // onClick={() => handleSkillSelect(skill, index, groupName?.skill_group_name)}
+                                                            >
+                                                                skill_name
+                                                            </span>
+                                                        </div>
+                                                    </div> */}
+                                                </div>
                                             </div>
                                         </Card.Body>
                                     </Card>
-                                </Tab.Pane>
-                                <Tab.Pane eventKey="order">
-                                    <p className="base-text my-3">Drag and drop to reorder assignments</p>
-                                    <Table className="m-0 evelu_order">
-                                                                                
-                                    </Table>
                                 </Tab.Pane>
                             </Tab.Content>
                         </Col>
                     </Row>
                 </Tab.Container>
-            </Offcanvas.Body>            
+            </Offcanvas.Body>
         </Offcanvas>
     )
 }

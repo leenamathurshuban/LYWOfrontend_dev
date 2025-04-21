@@ -525,7 +525,7 @@ const JobsList = () => {
                             checked={activeIds.includes(item.uid) || closeIds.includes(item.uid)}
                           />
                           <span className="font-weight-600" onClick={() => navigate(`/JobReview/${item?.uid}`)} style={{cursor:"pointer"}}>
-                            {item.job_title}
+                            {item?.job_title}
                           </span>
                         </td>
                         <td>{item?.job_location?.location_name}</td>
@@ -535,7 +535,7 @@ const JobsList = () => {
                         <td>{item?.number_of_positions}</td>
                         <td>-</td>
                         <td className="avgscore">-</td>
-                        <td>{item?.posted_on ? item.posted_on : '-'}</td>
+                        <td>{item?.posted_on ? item?.posted_on : '-'}</td>
                         <td>{item?.job_status}</td>
                         <td className="action" style={{ width: "42px" }}>
                           <Dropdown className="action_dropdown">
@@ -551,7 +551,7 @@ const JobsList = () => {
                                 <img className="me-2" src={DropD_eye} alt="" />
                                 View
                               </Dropdown.Item>
-                              {(item.job_status == 'Application-Stopped' || item.job_status == 'Draft' || item.job_status == 'Active') && (
+                              {(item?.job_status == 'Application-Stopped' || item?.job_status == 'Draft' || item?.job_status == 'Active') && (
                                 <Dropdown.Item href={""} onClick={() => {
                                   // navigate('/jobs', { state: item?.uid })
                                   // handleEditShow('createModal');

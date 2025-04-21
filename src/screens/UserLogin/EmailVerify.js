@@ -267,7 +267,7 @@ const EmailVerify = () => {
           >
             <div className="w-px-400 mx-auto">
               <h3>Welcome to LYWO</h3>
-              <p>Please enter your details.</p>
+             
               <Form noValidate validated={validated} onSubmit={handleSubmit}>
                 <Form.Group
                   as={Col}

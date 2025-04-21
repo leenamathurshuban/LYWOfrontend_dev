@@ -260,3 +260,7 @@ export const updateAassignmentTypeUserAnswerUpdateAPI=(data,id)=>{
   const result = client.putWithUpload(`${JobsUrl.updateAssetAassignmentTypeUserAnswerUpdate}${id}/`,data);
   return result
 }
+export const getScreeningParameterDataAPI=(id)=>{
+  const getResult = client.getWithToken(`${JobsUrl.ScreeningParameterData}${id}`);
+  return getResult
+}

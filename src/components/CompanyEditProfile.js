@@ -29,7 +29,9 @@ const CompanyEditProfile = ({ show, handleClose }) => {
   const companyProfileDetails = useSelector(
     (state) => state.login.CompanyProfileDetails
   );
-
+  const compantUid = companyProfileDetails?.uid
+  const userInfo = useSelector((state) => state.login.loginUserInfo);
+  const uid = userInfo?.uid;
   const [industries, setIndustries] = useState([]);
   const [selectedIndustry, setSelectedIndustry] = useState(null);
 
@@ -203,8 +205,8 @@ const CompanyEditProfile = ({ show, handleClose }) => {
   const handleShowcustomModal = () => setCustomShowModal(true);
   const handlecustomModalClose = () => setCustomShowModal(false);
 
-  const userInfo = useSelector((state) => state.login.loginUserInfo);
-  const uid = userInfo?.uid;
+  // const userInfo = useSelector((state) => state.login.loginUserInfo);
+  // const uid = userInfo?.uid;
 
   const logoname = logoMaker(companyProfileDetails?.company_name);
 
@@ -343,7 +345,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
       data.append("logo", imageFile);
 
       const response = await axios.put(
-        `https://bittrend.shubansoftware.com/account-api/update-company-api/${uid}/`,
+        `https://bittrend.shubansoftware.com/account-api/update-company-api/${compantUid}/`,
         data,
         {
           headers: {

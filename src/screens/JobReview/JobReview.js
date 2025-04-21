@@ -25,7 +25,7 @@ import ExpandButton from "../../images/icons/expand-03-primery.svg";
 import ArrowBack from "../../images/icons/arrowBack.svg";
 import ArrowNext from "../../images/icons/arrowNext.svg";
 import { useParams } from "react-router-dom";
-import { getJobAssignmentReview, getJobDetailsApi } from "../../services/provider";
+import { getJobAssignmentReview, getJobDetailsApi, getScreeningParameterDataAPI } from "../../services/provider";
 import Evaluations from "./Evaluations";
 import Ratting from "../../components/Ratting";
 import CodeBlock from "../../components/CodeBlock";
@@ -81,10 +81,10 @@ tracker.show_tasks()
     };
     const [show, setShow] = useState(false);
     const [reviewModal, setReviewModal] = useState(false);
-    const [groupModal,setGroupModal] = useState(false);
+    const [groupModal, setGroupModal] = useState(false);
     const handleReviewClose = () => setReviewModal(false);
     const handleClose = () => setShow(false);
-    const handleCloseGrpMdl=()=>setGroupModal(false)
+    const handleCloseGrpMdl = () => setGroupModal(false)
     const handleShow = () => setShow(true);
     const { id } = useParams();
     const [jobDetails, setJobDetails] = useState({})
@@ -97,20 +97,158 @@ tracker.show_tasks()
     const [questionWiseDuplicate, setQuestionWiseDuplicate] = useState({});
     const [rating, setRating] = useState({});
     const [currentId, setCurrentId] = useState(questionWiseData?.user_answer_question?.[0]?.id);
-
-    const getJobDetails = async (id) => {
-        const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-api/${id}/`;
-        try {
-            const response = await getJobDetailsApi(url);
-            if (response?.data?.success) {
-                if (Array.isArray(response?.data?.response?.asset_job)) {
-                    setAssetJob(response?.data?.response?.asset_job)
+    const [groupState, setGroupState] = useState([
+        {
+            heading: 'Job Match', title: 'Select to Apply', isChecked: false, isSelected: true,
+            listData: [
+                {
+                    name: 'Groups',
+                    data: [{ value: 'Excellent', isSelected: false }, { value: 'Good', isSelected: false }, { value: 'Average', isSelected: false }, { value: 'Below Average', isSelected: false }]
+                },
+                {
+                    name: 'Job Match Percentage',
+                    data: [
+                        { value: '0% - 40% ', isSelected: false },
+                        { value: '50% - 60% ', isSelected: false },
+                        { value: '60% - 70% ', isSelected: false },
+                        { value: '70% - 80% ', isSelected: false },
+                        { value: '80% - 90% ', isSelected: false },
+                        { value: '90% - 100% ', isSelected: false }
+                    ]
                 }
-                setJobDetails(response?.data?.response)
-            }
-        } catch (error) {
-        }
-    }
+            ]
+        },
+        // {
+        //     heading: 'Education', isChecked: false, isSelected: false,
+        //     listData: [
+        //         {
+        //             name: 'Require Education',
+        //             data: [{ value: 'Master', isSelected: false }, { value: 'Bachelors', isSelected: false }, { value: 'PG', isSelected: false }, { value: 'Diploma', isSelected: false }]
+        //         },
+        //         {
+        //             name: 'Areas of Education',
+        //             data: [
+        //                 { value: 'Mathematics', isSelected: false },
+        //                 { value: 'Science', isSelected: false },
+        //                 { value: 'Computer', isSelected: false },
+        //                 { value: 'Engineering', isSelected: false },
+        //                 { value: 'Electronic', isSelected: false },
+        //             ]
+        //         }
+        //     ]
+        // },
+
+        {
+            heading: 'Availability', title: 'Select to Apply', isChecked: false, isSelected: false,
+            listData: [
+                {
+                    name: 'Working Status',
+                    data: [{ value: 'Currently Working', isSelected: false }, { value: 'Currently not Working ', isSelected: false }]
+                },
+                {
+                    name: 'Available by',
+                    data: [],
+                    date: true
+                },
+                {
+                    name: 'Notice Period',
+                    data: [
+                        { value: 'Less than 30 Days', isSelected: false },
+                        { value: '30 - 60 Days', isSelected: false },
+                        { value: '60 - 90 Days   ', isSelected: false },
+                        { value: 'More than 90', isSelected: false },
+                    ]
+                },
+                {
+                    name: "Notice Buy out",
+                    data: [
+                        { value: 'Available', isSelected: false },
+                        { value: 'Not Available', isSelected: false },
+                    ]
+                },
+                {
+                    name: "Willing to Travel for Job",
+                    data: [
+                        { value: 'Regularly', isSelected: false },
+                        { value: 'Sometimes', isSelected: false },
+                        { value: 'Rarely', isSelected: false },
+                        { value: 'Not Willing to Travel', isSelected: false },
+                    ]
+                }
+            ]
+        },
+        // {
+        //     heading: 'Skills', title: 'Select to Apply', isChecked: false, isSelected: false,
+        //     listData: [
+        //         {
+        //             name: 'Groups',
+        //             data: [{ value: 'Excellent', isSelected: false }, { value: 'Good', isSelected: false }, { value: 'Average', isSelected: false }, { value: 'Below Average', isSelected: false }]
+        //         },
+        //         {
+        //             name: 'Job Match Percentage',
+        //             data: [
+        //                 { value: '0% - 40% ', isSelected: false },
+        //                 { value: '50% - 60% ', isSelected: false },
+        //                 { value: '60% - 70% ', isSelected: false },
+        //                 { value: '70% - 80% ', isSelected: false },
+        //                 { value: '80% - 90% ', isSelected: false },
+        //                 { value: '90% - 100% ', isSelected: false }
+        //             ]
+        //         }
+        //     ]
+        // },
+        // { heading: 'Language', title: 'Select to Apply', isChecked: false, isSelected: false },
+        {
+            heading: 'Custom Questions', title: 'Select to Apply', isChecked: false, isSelected: false,
+            listData: [
+                {
+                    name: 'Which area of cricket do you think needs the greatest development in senior cricket players?',
+                    data: [{ value: 'Option 1', isSelected: false }, { value: 'Option 2', isSelected: false }, { value: 'Option 3', isSelected: false }, { value: 'Option 4', isSelected: false }]
+                },
+                {
+                    name: 'Do you think that IPL has impacted the skills of the players to play 50 over cricket negatively ?',
+                    data: [
+                        { value: 'Option 1', isSelected: false },
+                        { value: 'Option 2', isSelected: false },
+                        { value: 'Option 3', isSelected: false },
+                        { value: 'Option 4', isSelected: false },
+                    ]
+                }
+            ]
+        },
+        {
+            heading: 'Personality', title: 'Select to Apply', isChecked: false, isSelected: false,
+            listData: [
+                {
+                    name: 'Groups',
+                    data: [{ value: 'Excellent', isSelected: false }, { value: 'Good', isSelected: false }, { value: 'Average', isSelected: false }, { value: 'Below Average', isSelected: false }]
+                },
+                {
+                    name: 'All Personalities',
+                    data: [
+                        { value: 'Leader 83%', isSelected: false },
+                        { value: 'Influencer 83%', isSelected: false },
+                        { value: 'Pioneer 83%', isSelected: false },
+                        { value: 'Achiever 83%', isSelected: false },
+                        { value: 'Perfectionist 83%', isSelected: false },
+                        { value: 'Motivator 83%', isSelected: false },
+                        { value: 'Persuador 83%', isSelected: false },
+                        { value: 'Logical Thinker 83%', isSelected: false },
+                        { value: 'Assessor 83%', isSelected: false },
+                        { value: 'Mediator 83%', isSelected: false },
+                        { value: 'Administrator 83%', isSelected: false },
+                        { value: 'Collaborator 83%', isSelected: false },
+                        { value: 'Team Player 83%', isSelected: false },
+                        { value: 'Implementor 83%', isSelected: false },
+                    ]
+                }
+            ]
+        },
+        // { heading: 'Experience', title: 'Select to Apply', isChecked: false, isSelected: false },
+        // { heading: 'Roles', title: 'Select to Apply', isChecked: false, isSelected: false },
+        // { heading: 'Salary & Travel ', title: 'Select to Apply', isChecked: false, isSelected: false },
+    ])
+
     const getJobAssignmentReviewAPI = async (id) => {
         try {
             const response = await getJobAssignmentReview(id)
@@ -124,9 +262,178 @@ tracker.show_tasks()
             console.log(error);
         }
     }
+    const formatKey = (key) => {
+        // Convert snake_case to readable format like "Area of Education"
+        return key
+            .replace(/_/g, ' ')
+            .replace(/\b\w/g, l => l.toUpperCase());
+    };
+    const getScreeningAPI = async (id) => {
+        try {
+            const response = await getScreeningParameterDataAPI(id)
+            if (response?.data?.success) {
+                response?.data?.response?.map((item, index) => {
+                    // const [mainKey, nestedObj] = Object.entries(item)[index]
+                    // let objData = {
+                    //     heading: mainKey.charAt(0).toUpperCase() + mainKey.slice(1),
+                    //     isChecked: false,
+                    //     isSelected: false,
+                    //     // listData: Object.entries(nestedObj).map(([key, values]) => ({
+                    //     //     name: formatKey(key),
+                    //     //     data: values.map((value) => ({
+                    //     //         value,
+                    //     //         isSelected: false
+                    //     //     }))
+                    //     // }))
+                    //     listData: Object.entries(sectionValue).map(([key, values]) => ({
+                    //         name: formatKey(key),
+                    //         data: values.map(value => ({
+                    //             value,
+                    //             isSelected: false
+                    //         }))
+                    //     }))
+                    // };
+                    // let objData = Object.entries(item).map(([sectionKey, sectionValue]) => ({
+                    //     heading: formatKey(sectionKey),
+                    //     isChecked: false,
+                    //     isSelected: false,
+                    //     listData: Object.entries(sectionValue).map(([key, values]) => ({
+                    //         name: formatKey(key),
+                    //         data: values.map(value => ({
+                    //             value,
+                    //             isSelected: false
+                    //         }))
+                    //     }))
+                    // }));    
+                    // debugger        
+                    const allSections = response.data.response.flatMap((item) =>
+                        Object.entries(item).map(([sectionKey, sectionValue]) => ({
+                            heading: formatKey(sectionKey),
+                            title: sectionKey!=='education'?'Select to Apply':'',
+                            isChecked: false,
+                            isSelected: false,
+                            listData: Object.entries(sectionValue).map(([key, values]) => ({
+                                name: formatKey(key),
+                                data: values.map(value => ({
+                                    value,
+                                    isSelected: false
+                                }))
+                            }))
+                        }))
+                    );
+
+                    setGroupState(prevState => {
+                        const merged = [...prevState, ...allSections];
+                        const sorted = [
+                            ...merged.filter(item => !item.uid),
+                            ...merged.filter(item => item.uid)
+                        ];
+
+                        // remove duplicates by heading
+                        const unique = sorted.filter((item, index, self) =>
+                            index === self.findIndex(t => t.heading === item.heading)
+                        );
+
+                        return unique;
+                    });
+                })
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const getJobDetails = async (id) => {
+        const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-api/${id}/`;
+        try {
+            const response = await getJobDetailsApi(url);
+            if (response?.data?.success) {
+                if (Array.isArray(response?.data?.response?.asset_job)) {
+                    setAssetJob(response?.data?.response?.asset_job)
+                    const allSections = response.data.response.asset_job.map((item) => ({
+                        heading: formatKey(item.asset_title),
+                        title: 'Select to Apply',
+                        uid: item?.uid,
+                        isChecked: false,
+                        isSelected: false,
+                        listData: [
+                            {
+                                name: 'Groups',
+                                data: [{ value: 'Excellent', isSelected: false }, { value: 'Good', isSelected: false }, { value: 'Average', isSelected: false }, { value: 'Below Average', isSelected: false }]
+                            },
+                            {
+                                name: 'Over all Score',
+                                data: [
+                                    { value: '0 - 40', isSelected: false },
+                                    { value: '40 - 50', isSelected: false },
+                                    { value: '50 - 60', isSelected: false },
+                                    { value: '60 - 70', isSelected: false },
+                                    { value: '70 - 80', isSelected: false },
+                                    { value: '80 - 90', isSelected: false },
+                                    { value: '90 - 100', isSelected: false },
+                                ]
+                            }
+                        ]
+
+                    }))
+
+                    setGroupState(prevState => {
+                        const merged = [...prevState, ...allSections];
+
+                        // remove duplicates by heading
+                        const unique = merged.filter((item, index, self) =>
+                            index === self.findIndex(t => t.heading === item.heading)
+                        );
+
+                        return unique;
+                    });
+                }
+                if (Array.isArray(response.data.response.skills)) {
+
+                    const allSections = response.data.response.skills.reduce((acc, skill) => {
+                        const groupName = skill?.skill_group?.skill_group_name;
+                        if (!acc[groupName]) {
+                            acc[groupName] = [];
+                        }
+                        acc[groupName].push(skill?.skill_name);
+                        return acc;
+                    }, {});
+                    const fullObject  = {Skills:allSections}
+
+                    const setUpdate = Object.entries(fullObject).map(([sectionKey, sectionValue]) => ({
+                        heading: formatKey(sectionKey),
+                        title: 'Select to Apply',
+                        isChecked: false,
+                        isSelected: false,
+                        listData: Object.entries(sectionValue).map(([key, values]) => ({
+                            name: formatKey(key),
+                            data: values.map(value => ({
+                                value,
+                                isSelected: false
+                            }))
+                        }))
+                    }))
+                    setGroupState(prevState => {
+                        const merged = [...prevState, ...setUpdate];
+
+                        // remove duplicates by heading
+                        const unique = merged.filter((item, index, self) =>
+                            index === self.findIndex(t => t.heading === item.heading)
+                        );
+
+                        return unique;
+                    });
+                }
+                setJobDetails(response?.data?.response)
+            }
+        } catch (error) {
+        }
+    }
+
     useEffect(() => {
-        getJobDetails(id)
+        getScreeningAPI(id)
         getJobAssignmentReviewAPI(id)
+        getJobDetails(id)
     }, [id])
     const getJobAssignmentReviewList = async (uid) => {
         try {
@@ -376,7 +683,7 @@ tracker.show_tasks()
                                                     <button type="button"><i class="fa fa-ellipsis-h"></i></button>
                                                 </div>
                                                 <Card.Body>
-                                                    <button type="button" onClick={()=>setGroupModal(true)} className="btn btn-link mb-3"><i className="fa fa-plus me-2"></i>Create a New Group</button>
+                                                    <button type="button" onClick={() => setGroupModal(true)} className="btn btn-link mb-3"><i className="fa fa-plus me-2"></i>Create a New Group</button>
                                                     <div className="sts_databoxlg incopmlate">
                                                         <div className="d-flex justify-content-between">
                                                             <h6>Incomplete<span className="count">100</span></h6>
@@ -1983,6 +2290,8 @@ tracker.show_tasks()
                 localAssetJob={localAssetJob}
                 setLocalAssetJob={setLocalAssetJob}
                 id={id}
+                groupState={groupState}
+                setGroupState={setGroupState}
             />
 
             {/*======Answer======*/}
