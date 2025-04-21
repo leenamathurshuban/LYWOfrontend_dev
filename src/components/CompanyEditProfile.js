@@ -548,7 +548,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                   />
                                 </Form.Group>
                                 {companyUpdateError?.websiteError && (
-                                  <p style={{ color: "red" }}>
+                                  <p className="error">
                                     {companyUpdateError?.websiteError}
                                   </p>
                                 )}
