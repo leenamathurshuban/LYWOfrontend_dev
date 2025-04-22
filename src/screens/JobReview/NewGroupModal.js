@@ -306,6 +306,18 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, localAsset
                                                                 <h6>{item.name}</h6>
                                                             </div>
                                                             <div className="stag_list mt-2">
+                                                                {selectedGroup?.heading === "Roles" && (
+                                                                    <Form.Control
+                                                                        name="role"
+                                                                        type="text"
+                                                                        placeholder="Search Role"
+                                                                        style={{ width: "350px" }}
+                                                                        //   value={profileformData?.AvailableBy}
+                                                                        //   onChange={handleProfileDetailsChange}
+                                                                        //   isInvalid={!!errors.AvailableBy}
+                                                                        className="form-control-sm"
+                                                                    />
+                                                                )}
                                                                 {item.data.map((val, dataindex) => (
                                                                     <span
                                                                         // className={`stag_item ${SelectSkillsData.includes(skill) ? "active" : ""
@@ -335,6 +347,21 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, localAsset
                                                                         //   isInvalid={!!errors.AvailableBy}
                                                                         className="form-control-sm"
                                                                     />
+                                                                )}
+                                                                {selectedGroup?.heading === "Salary And Travels" && (
+                                                                    <>
+                                                                        <Form.Check
+                                                                            // name="AvailableBy"
+                                                                            // type="checkbox"
+                                                                            // placeholder="DD/MM/YYYY"
+                                                                            // style={{ width: "350px" }}
+                                                                            //   value={profileformData?.AvailableBy}
+                                                                            //   onChange={handleProfileDetailsChange}
+                                                                            //   isInvalid={!!errors.AvailableBy}
+                                                                            // className="form-control-sm"
+                                                                        />
+                                                                        <p className="font-sm">Require Relocation Assistance</p>
+                                                                    </>
                                                                 )}
                                                             </div>
                                                         </div>

@@ -675,7 +675,7 @@ const CreateJobs = ({ show, handleClose }) => {
           ?.join(",");
 
         formdata.append("skill_name", skillID);
-      }else if (key === "must_have_skills" && mustHaveSkills.length > 0) {
+      } else if (key === "must_have_skills" && mustHaveSkills.length > 0) {
         let skillID = mustHaveSkills?.map((item) => item?.uid) // Extract skill_name values
         formdata.append("must_have_skills", JSON.stringify(skillID));
       } else if ((key === "selected_behaviour" || key === "important_behaviour") && hasSelectedAndImportant) {
@@ -739,7 +739,7 @@ const CreateJobs = ({ show, handleClose }) => {
         } else if (isHideLocation) {
           formdata.append(key, "True");
         }
-      }else if (key === "is_salary_imp" && importantFlag.salary) {
+      } else if (key === "is_salary_imp" && importantFlag.salary) {
         formdata.append('is_salary_imp', importantFlag.salary)
 
       } else if (key === "is_education_imp" && importantFlag.education) {
@@ -915,7 +915,7 @@ const CreateJobs = ({ show, handleClose }) => {
     <Offcanvas
       show={show}
       onHide={handleClose}
-      backdrop={false}
+      backdrop="static"
       placement="end"
       className="createjob_drawer lg-drawer shadow-md border-0"
     >
@@ -987,7 +987,7 @@ const CreateJobs = ({ show, handleClose }) => {
             />
 
             {errors.noOfPosition && (
-              <span className="error text-danger">{errors.noOfPosition}</span>
+              <span className="error">{errors.noOfPosition}</span>
             )}
           </Form.Group>
 

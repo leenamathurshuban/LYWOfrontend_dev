@@ -30,6 +30,7 @@ import Evaluations from "./Evaluations";
 import Ratting from "../../components/Ratting";
 import CodeBlock from "../../components/CodeBlock";
 import CreateGroupModal from "./NewGroupModal";
+import { BehaviourResponse } from "../../utils/behaviour";
 const JobReview = () => {
     const codeSnippet = `class WorkloadTracker:
     def __init__(self):
@@ -198,49 +199,30 @@ tracker.show_tasks()
         //     ]
         // },
         // { heading: 'Language', title: 'Select to Apply', isChecked: false, isSelected: false },
+        // {
+        //     heading: 'Custom Questions', title: 'Select to Apply', isChecked: false, isSelected: false,
+        //     listData: [
+        //         {
+        //             name: 'Which area of cricket do you think needs the greatest development in senior cricket players?',
+        //             data: [{ value: 'Option 1', isSelected: false }, { value: 'Option 2', isSelected: false }, { value: 'Option 3', isSelected: false }, { value: 'Option 4', isSelected: false }]
+        //         },
+        //         {
+        //             name: 'Do you think that IPL has impacted the skills of the players to play 50 over cricket negatively ?',
+        //             data: [
+        //                 { value: 'Option 1', isSelected: false },
+        //                 { value: 'Option 2', isSelected: false },
+        //                 { value: 'Option 3', isSelected: false },
+        //                 { value: 'Option 4', isSelected: false },
+        //             ]
+        //         }
+        //     ]
+        // },
         {
-            heading: 'Custom Questions', title: 'Select to Apply', isChecked: false, isSelected: false,
-            listData: [
-                {
-                    name: 'Which area of cricket do you think needs the greatest development in senior cricket players?',
-                    data: [{ value: 'Option 1', isSelected: false }, { value: 'Option 2', isSelected: false }, { value: 'Option 3', isSelected: false }, { value: 'Option 4', isSelected: false }]
-                },
-                {
-                    name: 'Do you think that IPL has impacted the skills of the players to play 50 over cricket negatively ?',
-                    data: [
-                        { value: 'Option 1', isSelected: false },
-                        { value: 'Option 2', isSelected: false },
-                        { value: 'Option 3', isSelected: false },
-                        { value: 'Option 4', isSelected: false },
-                    ]
-                }
-            ]
-        },
-        {
-            heading: 'Personality', title: 'Select to Apply', isChecked: false, isSelected: false,
+            heading: 'Personality', title: 'Select to Apply', isChecked: false, isSelected: false, flag: 'personality_data',
             listData: [
                 {
                     name: 'Groups',
                     data: [{ value: 'Excellent', isSelected: false }, { value: 'Good', isSelected: false }, { value: 'Average', isSelected: false }, { value: 'Below Average', isSelected: false }]
-                },
-                {
-                    name: 'All Personalities',
-                    data: [
-                        { value: 'Leader 83%', isSelected: false },
-                        { value: 'Influencer 83%', isSelected: false },
-                        { value: 'Pioneer 83%', isSelected: false },
-                        { value: 'Achiever 83%', isSelected: false },
-                        { value: 'Perfectionist 83%', isSelected: false },
-                        { value: 'Motivator 83%', isSelected: false },
-                        { value: 'Persuador 83%', isSelected: false },
-                        { value: 'Logical Thinker 83%', isSelected: false },
-                        { value: 'Assessor 83%', isSelected: false },
-                        { value: 'Mediator 83%', isSelected: false },
-                        { value: 'Administrator 83%', isSelected: false },
-                        { value: 'Collaborator 83%', isSelected: false },
-                        { value: 'Team Player 83%', isSelected: false },
-                        { value: 'Implementor 83%', isSelected: false },
-                    ]
                 }
             ]
         },
@@ -273,54 +255,85 @@ tracker.show_tasks()
             const response = await getScreeningParameterDataAPI(id)
             if (response?.data?.success) {
                 response?.data?.response?.map((item, index) => {
-                    // const [mainKey, nestedObj] = Object.entries(item)[index]
-                    // let objData = {
-                    //     heading: mainKey.charAt(0).toUpperCase() + mainKey.slice(1),
-                    //     isChecked: false,
-                    //     isSelected: false,
-                    //     // listData: Object.entries(nestedObj).map(([key, values]) => ({
-                    //     //     name: formatKey(key),
-                    //     //     data: values.map((value) => ({
-                    //     //         value,
-                    //     //         isSelected: false
-                    //     //     }))
-                    //     // }))
-                    //     listData: Object.entries(sectionValue).map(([key, values]) => ({
-                    //         name: formatKey(key),
-                    //         data: values.map(value => ({
-                    //             value,
-                    //             isSelected: false
+                    // const allSections = response.data.response.flatMap((item) =>
+                    //     Object.entries(item).map(([sectionKey, sectionValue]) => ({
+                    //         heading: formatKey(sectionKey),
+                    //         title: sectionKey !== 'education' ? 'Select to Apply' : '',
+                    //         isChecked: false,
+                    //         isSelected: false,
+                    //         listData: Object.entries(sectionValue).map(([key, values]) => ({
+                    //             name: formatKey(key),
+                    //             data: values.map(value => ({
+                    //                 value,
+                    //                 isSelected: false
+                    //             }))
                     //         }))
                     //     }))
-                    // };
-                    // let objData = Object.entries(item).map(([sectionKey, sectionValue]) => ({
-                    //     heading: formatKey(sectionKey),
-                    //     isChecked: false,
-                    //     isSelected: false,
-                    //     listData: Object.entries(sectionValue).map(([key, values]) => ({
-                    //         name: formatKey(key),
-                    //         data: values.map(value => ({
-                    //             value,
-                    //             isSelected: false
-                    //         }))
-                    //     }))
-                    // }));    
-                    // debugger        
+                    // );
                     const allSections = response.data.response.flatMap((item) =>
-                        Object.entries(item).map(([sectionKey, sectionValue]) => ({
-                            heading: formatKey(sectionKey),
-                            title: sectionKey!=='education'?'Select to Apply':'',
-                            isChecked: false,
-                            isSelected: false,
-                            listData: Object.entries(sectionValue).map(([key, values]) => ({
+                        Object.entries(item).map(([sectionKey, sectionValue]) => {
+                            const dynamicListData = Object.entries(sectionValue).map(([key, values]) => ({
                                 name: formatKey(key),
                                 data: values.map(value => ({
                                     value,
                                     isSelected: false
                                 }))
-                            }))
-                        }))
+                            }));
+
+                            // 👇 Append static data if it's the 'personality' section
+                            const staticGroupsBlock = sectionKey === 'experience'
+                                ? [{
+                                    name: 'Experience',
+                                    data: [
+                                        { value: 'Fresher', isSelected: false },
+                                        { value: 'Less than 1 Year', isSelected: false },
+                                        { value: '1 - 2 Years', isSelected: false },
+                                        { value: '2 - 4 Years', isSelected: false },
+                                        { value: '4 - 6 Years', isSelected: false },
+                                        { value: '6 - 9 Years', isSelected: false },
+                                        { value: '9 - 12 Years', isSelected: false },
+                                        { value: '12 - 15 Years', isSelected: false },
+                                        { value: '15 - 20 Years', isSelected: false },
+                                        { value: '20 - 25 Years', isSelected: false },
+                                        { value: '25 - 30 Years', isSelected: false },
+                                        { value: '30 - 40 Years', isSelected: false },
+                                        { value: 'Above 40 Years', isSelected: false },
+                                    ]
+                                }]
+                                : sectionKey === 'salary_and_travels' ?
+                                    [{
+                                        name: 'Expected Salary',
+                                        data: [
+                                            { value: 'Below ₹3 LPA', isSelected: false },
+                                            { value: '₹3 LPA - ₹5 LPA', isSelected: false },
+                                            { value: '₹5 LPA - ₹7 LPA', isSelected: false },
+                                            { value: '₹7 LPA - ₹10 LPA', isSelected: false },
+                                            { value: '₹10 LPA - ₹12 LPA', isSelected: false },
+                                            { value: '₹12 LPA - ₹15 LPA', isSelected: false },
+                                            { value: '₹15 LPA - ₹20 LPA', isSelected: false },
+                                            { value: '₹20 LPA - ₹25 LPA', isSelected: false },
+                                            { value: '₹25 LPA - ₹30 LPA', isSelected: false },
+                                            { value: '₹30 LPA - ₹35 LPA', isSelected: false },
+                                            { value: '₹35 LPA - ₹40 LPA', isSelected: false },
+                                            { value: '₹40 LPA - ₹45 LPA', isSelected: false },
+                                            { value: '₹45 LPA - ₹50 LPA', isSelected: false },
+                                            { value: '₹50 LPA - ₹55 LPA', isSelected: false },
+                                            { value: '₹55 LPA - ₹60 LPA', isSelected: false },
+                                            { value: 'Above ₹60 LPA', isSelected: false },
+                                        ]
+                                    }, { name: 'Relocation', data: [{ value: 'Willing to Relocate', isSelected: false }] }]
+                                    : [];
+
+                            return {
+                                heading: formatKey(sectionKey),
+                                title: sectionKey !== 'education' ? 'Select to Apply' : '',
+                                isChecked: false,
+                                isSelected: false,
+                                listData: [...dynamicListData, ...staticGroupsBlock]
+                            };
+                        })
                     );
+
 
                     setGroupState(prevState => {
                         const merged = [...prevState, ...allSections];
@@ -398,7 +411,7 @@ tracker.show_tasks()
                         acc[groupName].push(skill?.skill_name);
                         return acc;
                     }, {});
-                    const fullObject  = {Skills:allSections}
+                    const fullObject = { Skills: allSections }
 
                     const setUpdate = Object.entries(fullObject).map(([sectionKey, sectionValue]) => ({
                         heading: formatKey(sectionKey),
@@ -423,6 +436,60 @@ tracker.show_tasks()
 
                         return unique;
                     });
+                }
+                if (Array.isArray(response.data.response.question_job)) {
+                    const transformed = {
+                        heading: "Custom Questions",
+                        title: 'Select to Apply',
+                        isChecked: false,
+                        isSelected: false,
+                        listData: response.data.response.question_job.map(item => ({
+                            name: item.question_title,
+                            data: item.question_option.part1.map(option => ({
+                                value: option,
+                                isSelected: false
+                            }))
+                        }))
+                    }
+                    setGroupState(prevState => {
+                        const merged = [...prevState, transformed];
+                        // remove duplicates by heading
+                        const unique = merged.filter((item, index, self) =>
+                            index === self.findIndex(t => t.heading === item.heading)
+                        );
+                        return unique;
+                    });
+                }
+                if (Array.isArray(response.data.response.calculation_job)) {
+                    const key = response.data.response.calculation_job.find(obj => obj.hasOwnProperty('personality_data')) ? 'personality_data' : null;
+                    const personalityKeys = Object.keys(response.data.response.calculation_job[0].personality_data);
+                    const personalityValue = Object.values(response.data.response.calculation_job[0].personality_data);
+                    const updatedBehaviourResponse = BehaviourResponse.map(item => ({
+                        ...item,
+                        personality_percentage: response.data.response.calculation_job[0].personality_data[item.behaviour_type_name] || 0 // Default to 0 if no match
+                    }));                    
+                    const matchedBehaviours = updatedBehaviourResponse.filter(item =>
+                        personalityKeys.includes(item.behaviour_type_name)
+                    );
+                    // debugger
+                    const transformed = {
+                        name: 'All Personalities',
+                        data: matchedBehaviours.map((val,index) => ({
+                            value: `${val?.behaviours_name} ${personalityValue[index]}%`,
+                            isSelected: false
+                        }))
+                    };
+                    setGroupState(prev =>
+                        prev.map(item => {
+                            if (key === item?.flag) {
+                                return {
+                                    ...item,
+                                    listData: [...item.listData, transformed] // ← Push to listData here
+                                };
+                            }
+                            return item;
+                        })
+                    );
                 }
                 setJobDetails(response?.data?.response)
             }

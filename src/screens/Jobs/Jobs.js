@@ -4,10 +4,14 @@ import Sidebar from "../../components/Sidebar";
 import { Col, Container, Row, Card, Button, Spinner } from "react-bootstrap";
 import { JobList } from "../../services/provider";
 import JobsList from "./JobList";
+import { useSelector } from "react-redux";
 
 const Jobs = () => {
   const [jobData, setJobData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const companyProfileDetails = useSelector(
+    (state) => state.login.CompanyProfileDetails
+  );
 
   const JobListApi = async () => {
     setIsLoading(true);
@@ -75,7 +79,7 @@ const Jobs = () => {
                     />
                   </svg>
                 </span>
-                <Card.Title>Start by creating your first job</Card.Title>
+                <Card.Title>{companyProfileDetails?.company_name}</Card.Title>
                 <a className="btn btn-primary" href="/jobsList">
                   Create Job
                 </a>
