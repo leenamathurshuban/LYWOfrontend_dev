@@ -17,7 +17,7 @@ import {
     Tab,
     Table,
 } from "react-bootstrap";
-import { EvalationAssestDetails, EvalationAssestList, UpdateJobForm } from '../../services/provider';
+import { assetSapicreateJobGroupPostAPI, EvalationAssestDetails, EvalationAssestList, UpdateJobForm } from '../../services/provider';
 import { removeToken } from '../../helpers/helper';
 import { useNavigate } from 'react-router-dom';
 import fileIcon from "../../images/icons/file_icon.svg";
@@ -28,8 +28,9 @@ import RingSucess from "../../images/icons/ring_sucess.svg";
 import DragDrop from "../../images/icons/dragdrop-bullet.svg";
 import usericon from "../../images/icons/user-01-gray.svg";
 
-const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, localAssetJob, setLocalAssetJob, id, groupState, setGroupState }) => {
+const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, localAssetJob, setLocalAssetJob, id, groupState, setGroupState, groupParameterId }) => {
     const [tabActive, setTabActive] = useState("evaluation");
+    console.log("get==========uid=======>", groupParameterId)
     // const [groupState, setGroupState] = useState([
     //     {
     //         heading: 'Job Match', title: 'Select to Apply', isChecked: false, isSelected: true,
@@ -137,7 +138,8 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, localAsset
     //     { heading: 'Roles', title: 'Select to Apply', isChecked: false, isSelected: false },
     //     { heading: 'Salary & Travel ', title: 'Select to Apply', isChecked: false, isSelected: false },
     // ])
-    const [selectedGroup, setSelectedGroup] = useState(groupState?.[0])
+    const [selectedGroup, setSelectedGroup] = useState({});
+    const [payloadList, setPayloadList] = useState({})
     const handleSelect = (key) => {
         setTabActive(key);
     };
@@ -166,46 +168,97 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, localAsset
     };
     const handleCheck = (index, obj) => {
         // e.stopPropagation();
-        setSelectedGroup(obj)
-        setGroupState((prev) =>
-            prev.map((item, i) => {
-                if (i === index) {
-                    // Allow toggling only if:
-                    // 1. The item is not already selected, and the selectedCount is less than 4.
-                    // 2. The item is already selected (to allow deselecting).
-                    if (!item.isChecked) {
-                        return { ...item, isChecked: !item.isChecked };
-                    } else if (item.isChecked) {
-                        return { ...item, isChecked: !item.isChecked };
-                    }
-                }
-                return item;
-            })
-        );
+        // setSelectedGroup(obj)
+        // setGroupState((prev) =>
+        //     prev.map((item, i) => {
+        //         if (i === index) {
+        //             // Allow toggling only if:
+        //             // 1. The item is not already selected, and the selectedCount is less than 4.
+        //             // 2. The item is already selected (to allow deselecting).
+        //             if (!item.isChecked) {
+        //                 return { ...item, isChecked: !item.isChecked };
+        //             } else if (item.isChecked) {
+        //                 return { ...item, isChecked: !item.isChecked };
+        //             }
+        //         }
+        //         return item;
+        //     })
+        // );
     }
-    const handleGroupItem = (selectedItem, listIndex, dataindex) => {
+    const handleGroupItem = (selectedItem, listIndex, dataindex, selectedValue) => {
+        // setGroupState(prev =>
+        //     prev.map(item => {
+        //         if (selectedItem.heading === item.heading) {
+        //             return {
+        //                 ...item,
+        //                 listData: item.listData.map((listItem, listIdx) => {
+        //                     if (listIdx === listIndex) {
+        //                         return {
+        //                             ...listItem,
+        //                             data: listItem.data.map((dataItem, dataIdx) => {
+        //                                 if (dataIdx === dataindex) {
+        //                                     return {
+        //                                         ...dataItem,
+        //                                         isSelected: !dataItem.isSelected
+        //                                     };
+        //                                 }
+        //                                 return dataItem;
+        //                             })
+        //                         };
+        //                     }
+        //                     return listItem;
+        //                 })
+        //             };
+        //         }
+        //         return item;
+        //     })
+        // );
         setGroupState(prev =>
             prev.map(item => {
                 if (selectedItem.heading === item.heading) {
+                    // Check current selected state
+                    const isCurrentlySelected = item.listData[listIndex].data[dataindex].isSelected;
+                    const isNowSelected = !isCurrentlySelected;
+                    // Update listData
+                    const updatedListData = item.listData.map((listItem, listIdx) => {
+                        if (listIdx === listIndex) {
+                            return {
+                                ...listItem,
+                                data: listItem.data.map((dataItem, dataIdx) => {
+                                    if (dataIdx === dataindex) {
+                                        return {
+                                            ...dataItem,
+                                            isSelected: isNowSelected
+                                        };
+                                    }
+                                    return dataItem;
+                                })
+                            };
+                        }
+                        return listItem;
+                    });
+
+                    // Update selectedList in the same item
+                    let updatedSelectedList = item.selectedList || [];
+
+                    if (isNowSelected) {
+                        // Push only if not already included
+                        if (!updatedSelectedList.includes(selectedValue)) {
+                            updatedSelectedList = [...updatedSelectedList, selectedValue];
+                        } else {
+                            updatedSelectedList = updatedSelectedList.filter(val => val !== selectedValue);
+                        }
+                    } else {
+                        // Remove it if deselected
+                        updatedSelectedList = updatedSelectedList.filter(val => val !== selectedValue);
+                    }
+
                     return {
                         ...item,
-                        listData: item.listData.map((listItem, listIdx) => {
-                            if (listIdx === listIndex) {
-                                return {
-                                    ...listItem,
-                                    data: listItem.data.map((dataItem, dataIdx) => {
-                                        if (dataIdx === dataindex) {
-                                            return {
-                                                ...dataItem,
-                                                isSelected: !dataItem.isSelected
-                                            };
-                                        }
-                                        return dataItem;
-                                    })
-                                };
-                            }
-                            return listItem;
-                        })
+                        isSelected: selectedValue ? false : true,
+                        isChecked: selectedValue ? true : false,
+                        // listData: updatedListData,
+                        selectedList: updatedSelectedList
                     };
                 }
                 return item;
@@ -213,18 +266,47 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, localAsset
         );
     }
     useEffect(() => {
-        const findObj = groupState.find((val) => val.heading == selectedGroup.heading)
+        const findObj = groupState.find((val) => val?.heading == selectedGroup?.heading)
         setSelectedGroup(findObj)
     }, [groupState])
+    useEffect(() => {
+        if (selectedGroup?.heading && selectedGroup?.selectedList?.length) {
+            const formatted = selectedGroup?.selectedList?.reduce((acc, item) => {
+                const key = item.groupname.toLowerCase().replace(/ /g, '_');
+                if (!acc[key]) {
+                    acc[key] = [];
+                }
+                acc[key].push(item.value.trim());
+                return acc;
+            }, {});
+            setPayloadList({
+                ...payloadList,
+                [selectedGroup?.heading]: formatted
+            })
+        }
+    }, [selectedGroup])
+    const handleCreateGroup = async () => {
+        try {
+            const payload = {
+                job_group_parameter: groupParameterId,
+                group_name: 'test',
+                group_filter: payloadList
+            }
+            debugger
+            // const response = await assetSapicreateJobGroupPostAPI(payload)
+        } catch (error) {
+            console.log(error);
+        }
+    }
     console.log(groupState)
     console.log(selectedGroup)
     return (
         <Offcanvas
             show={show}
             onHide={handleClose}
-            backdrop={false}
+            backdrop={true}
             placement="end"
-            className="evaluations_drawer lg-drawer shadow-md border-0"
+            className="creategroup_drawer lg-drawer shadow-md border-0"
         >
             <Offcanvas.Header closeButton>
                 <Offcanvas.Title>
@@ -237,70 +319,58 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, localAsset
                         <Col sm={12}>
                             <Tab.Content>
                                 <Tab.Pane eventKey="evaluation">
-                                    <p className="base-text my-3">Group Title</p>
-                                    <Card className="border-0 evaluations_data">
-                                        <Card.Header className="px-0 pb-3">
-                                            <Row>
-                                                <Col md={10}>
-                                                    <InputGroup className="defult_serachbox">
-                                                        <Form.Control
-                                                            placeholder="Group Title"
-                                                            aria-label="Search"
-                                                            aria-describedby="basic-addon1"
-                                                        />
-                                                    </InputGroup>
-                                                    <Button variant="primary">
-                                                        Create Group
-                                                    </Button>
-                                                </Col>
-                                            </Row>
-                                        </Card.Header>
-                                        <Card.Body className="p-0 mt-3">
-                                            <div className="elv_datatable shadow-none">
-                                                <div>
-                                                    <p className="base-text my-3">Screening Parameters</p>
-                                                    <img src={usericon} />
-                                                    <p className="base-text my-3">150/250</p>
-                                                    <p className="base-text my-3">Clear Filters</p>
-                                                </div>
-                                                <div className="behav_assmnt">
-                                                    {groupState.map((item, index) => (
-                                                        <Col key={index} md={3}>
-                                                            <div
-                                                                className={`assmntbox ${item?.isSelected ? "active" : ""}`}
-                                                            >
-                                                                <div className="assmntbox-head">
-                                                                    <h6
-                                                                        onClick={() => handleBoxClick(index, item)}
-                                                                        style={{ cursor: 'pointer' }}>
-                                                                        {item.heading}
-                                                                    </h6>
-                                                                    <Form.Check onChange={() => handleCheck(index, item)} />
-                                                                </div>
-                                                                <div className="assmntbox-body">
-                                                                    {item.title ? (
-                                                                        <p>
-                                                                            {item.title}
-                                                                        </p>
-                                                                    ) : (
-                                                                        <>
-                                                                            <p>Minimum Education of Masters</p>
-                                                                            <p>Education in Computer +3 more</p>
-                                                                        </>
-                                                                    )}
-                                                                </div>
-                                                            </div>
-                                                        </Col>
-                                                    ))}
-                                                </div>
+                                    <label className="form-label">Group Title</label>
+                                    <Row>
+                                        <Col md={12} className='d-flex'>
+                                            <Form.Control
+                                                placeholder="Group Title"
+                                                aria-label="Search"
+                                                aria-describedby="basic-addon1"
+                                            />
+                                            <Button variant="primary" className='btn-sm ms-3 min-w-120' onClick={handleCreateGroup}>
+                                                Create Group
+                                            </Button>
+                                        </Col>
+                                    </Row>
+                                    <Card className="mt-4">
+                                        <Card.Header className="d-flex align-items-center justify-content-between">
+                                            <h6 className="m-0">Screening Parameters</h6>
+                                            <div className='right_count'>
+                                                <img src={usericon} />
+                                                <p className="base-text my-0 me-3 ms-1">150/250</p>
+                                                <p className="base-text text-gray-300 my-0">Clear Filters</p>
                                             </div>
-                                        </Card.Body>
-                                        <Card.Body className="p-0 mt-3">
-                                            <div className="elv_datatable shadow-none">
+                                        </Card.Header>
+                                        <Card.Body className="p-3">
+                                            <div className="behav_assmnt">
+                                                {groupState.map((item, index) => (
+                                                    <Col key={index} md={3}>
+                                                        <div
+                                                            className={`assmntbox ${item?.isSelected ? "active" : ""}`}
+                                                            onClick={() => handleBoxClick(index, item)}
+                                                            style={{ cursor: 'pointer' }}
+                                                        >
+                                                            <div className="assmntbox-head">
+                                                                <h6>{item.heading}</h6>
+                                                                <Form.Check checked={item.isChecked} onChange={() => handleCheck(index, item)} />
+                                                            </div>
+                                                            <div className="assmntbox-body">
+                                                                {item?.selectedList?.map((val) => (
+                                                                    <p>{val.value}</p>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    </Col>
+                                                ))}
+                                            </div>
+                                            <div className="educational-card">
                                                 <div className="custom-card">
-                                                    <h6>{selectedGroup?.heading}</h6>
-                                                    <p className="font-sm">Candidates with any of the following attributes will be prioritized and filtered for selection.</p>
-                                                    {selectedGroup.listData.map((item, listIndex) => (
+                                                    <div className='ctm-cardheader'>
+                                                        <h6>{selectedGroup?.heading}</h6>
+                                                        <p>{selectedGroup?.heading ? "Candidates with any of the following attributes will be prioritized and filtered for selection." : "Select filter to start."}</p>
+                                                        {selectedGroup?.heading && <Button variant="link" className='reset-btn'>Reset</Button>}
+                                                    </div>
+                                                    {selectedGroup?.listData?.map((item, listIndex) => (
                                                         <div className="starttag_box">
                                                             <div className="stagbox_head">
                                                                 <h6>{item.name}</h6>
@@ -315,15 +385,15 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, localAsset
                                                                         //   value={profileformData?.AvailableBy}
                                                                         //   onChange={handleProfileDetailsChange}
                                                                         //   isInvalid={!!errors.AvailableBy}
-                                                                        className="form-control-sm"
+                                                                        className="form-control-sm mb-3"
                                                                     />
                                                                 )}
                                                                 {item.data.map((val, dataindex) => (
                                                                     <span
                                                                         // className={`stag_item ${SelectSkillsData.includes(skill) ? "active" : ""
                                                                         //     }`}
-                                                                        className={`stag_item ${val?.isSelected && 'active'}`}
-                                                                        onClick={() => handleGroupItem(selectedGroup, listIndex, dataindex)}
+                                                                        className={`stag_item ${selectedGroup.selectedList.includes(val) && 'active'}`}
+                                                                        onClick={() => handleGroupItem(selectedGroup, listIndex, dataindex, val)}
                                                                     >
                                                                         <span
                                                                             // className={`imprt_icon ${mustHaveSkills.includes(skill) ? "text-primery" : ""} `}
@@ -348,25 +418,27 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, localAsset
                                                                         className="form-control-sm"
                                                                     />
                                                                 )}
-                                                                {selectedGroup?.heading === "Salary And Travels" && (
-                                                                    <>
-                                                                        <Form.Check
-                                                                            // name="AvailableBy"
-                                                                            // type="checkbox"
-                                                                            // placeholder="DD/MM/YYYY"
-                                                                            // style={{ width: "350px" }}
-                                                                            //   value={profileformData?.AvailableBy}
-                                                                            //   onChange={handleProfileDetailsChange}
-                                                                            //   isInvalid={!!errors.AvailableBy}
-                                                                            // className="form-control-sm"
-                                                                        />
-                                                                        <p className="font-sm">Require Relocation Assistance</p>
-                                                                    </>
-                                                                )}
                                                             </div>
                                                         </div>
                                                     ))}
+                                                    <div className='d-flex align-items-center mt-3'>
+                                                        {selectedGroup?.heading === "Salary And Travels" && (
+                                                            <>
+                                                                <Form.Check
+                                                                // name="AvailableBy"
+                                                                // type="checkbox"
+                                                                // placeholder="DD/MM/YYYY"
+                                                                // style={{ width: "350px" }}
+                                                                //   value={profileformData?.AvailableBy}
+                                                                //   onChange={handleProfileDetailsChange}
+                                                                //   isInvalid={!!errors.AvailableBy}
+                                                                // className="form-control-sm"
+                                                                />
+                                                                <label className="ms-2 text-sm">Require Relocation Assistance</label>
+                                                            </>
+                                                        )}
 
+                                                    </div>
                                                     {/* <p className="error"></p> */}
                                                     {/* <p>-----------------------or-------------------</p>
                                                     <div key={0} className="row mb-3">

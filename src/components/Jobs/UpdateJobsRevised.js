@@ -4,7 +4,9 @@ import {
     Badge,
     Button,
     Col,
+    Dropdown,
     Form,
+    FormControl,
     InputGroup,
     Modal,
     ProgressBar,
@@ -31,6 +33,8 @@ import {
     addSkill,
     addSkillGroupPost,
     getSkillList,
+    CreateJobIsLike,
+    CreateJobLocation,
 } from "../../services/provider";
 import { removeToken } from "../../helpers/helper";
 import { Link, useNavigate } from "react-router-dom";
@@ -121,6 +125,12 @@ const UpdateJobsRevised = ({
     const [openStep, setOpenStep] = useState([])
     const [skillError, setSkillError] = useState("")
     const [dynamicArray, setDynamicArray] = useState([]);
+    const [aresEducationOption, setAreaEducationOption] = useState([])
+    const [shorlistedIndustries, setShorlistedIndustries] = useState([])
+    const [restrictedRole, setRestrictedRole] = useState([]);
+    const [spokenLanguage, setSpokenLanguage] = useState([])
+    const [writtenLanguage, setWittenLanguage] = useState([])
+    const [locationList, setLocationList] = useState([])
     // const [importantFlag, setImportantFlag] = useState({
     //     salary: false,
     //     education: false,
@@ -352,20 +362,20 @@ const UpdateJobsRevised = ({
         }
     };
 
-    const handleKeyPress = async (e) => {
-        if (e.key === "Enter" && inputValue.trim()) {
-            e.preventDefault();
+    // const handleKeyPress = async (e) => {
+    //     if (e.key === "Enter" && inputValue.trim()) {
+    //         e.preventDefault();
 
-            getQualificationListByCourse(inputValue);
-        }
-    };
+    //         getQualificationListByCourse(inputValue);
+    //     }
+    // };
 
-    const handleKeyPressForIndustries = async (e) => {
-        if (e.key === "Enter" && inputValue.trim()) {
-            e.preventDefault();
-            getShortlistedIndustries(inputValue);
-        }
-    };
+    // const handleKeyPressForIndustries = async (e) => {
+    //     if (e.key === "Enter" && inputValue.trim()) {
+    //         e.preventDefault();
+    //         getShortlistedIndustries(inputValue);
+    //     }
+    // };
 
     const handleKeyPressForlanguages = async (e, from) => {
         if (e.key === "Enter" && inputValue.trim()) {
@@ -380,7 +390,61 @@ const UpdateJobsRevised = ({
             handleLocationApi(inputValue);
         }
     };
+    const handleLocationAPIList = (e) => {
+        const { name, value } = e.target
+        const url = `https://bittrend.shubansoftware.com/account-api/location-list-api/?page=1&limit=500&search=${value}`;
+        CreateJobLocation(url)
+            .then((res) => {
+                // setLocationData(res.data.response);
+                if (res.data.response.length > 0) {
+                    setLocationList(res?.data?.response)
+                    //   setLocationBadges((prevBadges) => [
+                    //     ...prevBadges,
+                    //     res?.data?.response[0],
+                    //   ]);
+                }
+            })
+            .catch((error) => {
+                if (
+                    error?.response?.status === 401 ||
+                    error?.response?.data?.detail?.includes(
+                        "Given token not valid for any token type"
+                    )
+                ) {
+                    //console.log("Token expired, redirecting to login");
+                    //   removeToken();
+                    //   navigate("/loginwithpassword");
+                }
+            });
+    };
 
+    const handleAreaOfEducation = async (e) => {
+        const { name, value } = e.target;
+        // const newRows = [...EducationRows];
+        // newRows[index]["areaOfEducation"] = value;
+        // let search = newRows[index]["areaOfEducation"]
+        // SetEducationRows(newRows);
+        let url;
+        if (value != "") {
+            url = `https://bittrend.shubansoftware.com/assets-api/education-qualification-list-by-course-api?page=1&limit=10&search=${value}`;
+        }
+
+        try {
+            const response = await getQualificationListApi(url);
+            if (response?.data?.response.length > 0) {
+                if (value) {
+                    setAreaEducationOption(response?.data?.response)
+                    // setBadges((prevBadges) => [
+                    //   ...prevBadges,
+                    //   response?.data?.response[0],
+                    // ]);
+                    // setInputValue("");
+                }
+            }
+        } catch (error) {
+            console.log("error response----->>>>>>", error);
+        }
+    };
     const getQualificationListByCourse = async (inputVal) => {
         let url;
         if (inputVal != "") {
@@ -421,16 +485,100 @@ const UpdateJobsRevised = ({
             );
 
             if (response.data.success && response.data.response.length > 0) {
-                setIndustriesBadge((prevBadges) => [
-                    ...prevBadges,
-                    response?.data?.response[0],
-                ]);
+                // setIndustriesBadge((prevBadges) => [
+                //     ...prevBadges,
+                //     response?.data?.response[0],
+                // ]);
             }
         } catch (err) {
             console.error("Error fetching data:", err);
         }
     };
+    const handlesShorlistedIndustries = async (e) => {
+        const { name, value } = e.target;
+        // if (typeof searchTerm !== "string" || searchTerm.trim() === "") {
+        //     setIndustries([]);
+        //     return;
+        // }
 
+        try {
+            const response = await axios.get(
+                "https://bittrend.shubansoftware.com/account-api/industry-list-api/",
+                {
+                    params: {
+                        page: 1,
+                        limit: 500,
+                        search: value,
+                    },
+                }
+            );
+
+            if (response.data.success && response.data.response.length > 0) {
+                setShorlistedIndustries(response?.data?.response)
+                // setIndustriesBadge((prevBadges) => [
+                //     ...prevBadges,
+                //     response?.data?.response[0],
+                // ]);
+            }
+        } catch (err) {
+            console.error("Error fetching data:", err);
+        }
+    };
+    const isLikeHandleRole = (e) => {
+        const { name, value } = e.target;
+        const url = `https://bittrend.shubansoftware.com/assets-api/islike-list-api/?search=${value}&page=1&limit=10`;
+        CreateJobIsLike(url)
+            .then((res) => {
+
+                if (res?.data?.response.length > 0) {
+                    //   setRestrictedRoleBadges((prevBadges) => [
+                    //     ...prevBadges,
+                    //     res?.data?.response[0],
+                    //   ]);
+                    setRestrictedRole(res?.data?.response)
+                }
+            })
+            .catch((error) => {
+                if (
+                    error?.response?.status === 401 ||
+                    error?.response?.data?.detail?.includes(
+                        "Given token not valid for any token type"
+                    )
+                ) {
+                    //console.log("Token expired, redirecting to login");
+                    //   removeToken();
+                    //   navigate("/loginwithpassword");
+                }
+            });
+    };
+    const handleSelectAreaEducation = (option) => {
+        setBadges((prevBadges) => [
+            ...prevBadges,
+            option,
+        ]);
+        setAreaEducationOption([])
+    }
+    const handleSelectShortlistIndustries = (option) => {
+        setIndustriesBadge((prevBadges) => [
+            ...prevBadges,
+            option,
+        ]);
+        setShorlistedIndustries([])
+    }
+    const handleSelectRestrictedRole = (option) => {
+        setRestrictedRoleBadges((prevBadges) => [
+            ...prevBadges,
+            option,
+        ]);
+        setRestrictedRole([])
+    }
+    const handleSelectLocation = (option) => {
+        setLocationBadges((prevBadges) => [
+            ...prevBadges,
+            option,
+        ]);
+        setLocationList([])
+    }
     const handleRemoveBadge = (index) => {
         setBadges((prevBadges) => prevBadges.filter((_, i) => i !== index));
     };
@@ -509,7 +657,52 @@ const UpdateJobsRevised = ({
             console.log("error response----->>>>>>", error);
         }
     };
+    const handleWaSlanguages = async (e, from) => {
+        const { name, value } = e.target;
+        let url;
+        if (value != "") {
+            url = `https://bittrend.shubansoftware.com/assets-api/laguage-list-api/?page=1&limit=10&search=${value}`;
+        }
 
+        try {
+            const response = await getQualificationListApi(url);
+            if (response?.data?.response.length > 0) {
+                if (value) {
+                    if (from === "spoken") {
+                        setSpokenLanguage(response?.data?.response)
+                        // setSpokenLanguageBadges((prevBadges) => [
+                        //     ...prevBadges,
+                        //     response?.data?.response[0],
+                        // ]);
+                    } else if (from === "rdnw") {
+                        setWittenLanguage(response?.data?.response)
+                        // setrdnwBadges((prevBadges) => [
+                        //     ...prevBadges,
+                        //     response?.data?.response[0],
+                        // ]);
+                    }
+
+                    // setInputValue("");
+                }
+            }
+        } catch (error) {
+            console.log("error response----->>>>>>", error);
+        }
+    };
+    const handleSelectSpokenLang = (option) => {
+        setSpokenLanguageBadges((prevBadges) => [
+            ...prevBadges,
+            option,
+        ]);
+        setSpokenLanguage([])
+    }
+    const handleSelectWrittenLang = (option) => {
+        setrdnwBadges((prevBadges) => [
+            ...prevBadges,
+            option,
+        ]);
+        setWittenLanguage([])
+    }
     const handleSaveCustomQuestion = async () => {
         const formData = new FormData();
 
@@ -1106,6 +1299,7 @@ const UpdateJobsRevised = ({
     // console.log("openStep", importantFlag)
     // console.log('must have', mustHaveSkills)
     console.log(components.length)
+    console.log(IndustriesBadges)
     return (
         <>
             <Modal
@@ -1438,7 +1632,7 @@ const UpdateJobsRevised = ({
                                                     require
                                                 </span>
                                             </Form.Group>
-                                            <Form.Group
+                                            {/* <Form.Group
                                                 className="mb-3"
                                                 controlId="exampleForm.ControlTextarea1"
                                             >
@@ -1471,6 +1665,57 @@ const UpdateJobsRevised = ({
                                                 <span className="required_text">
                                                     Select all relevant areas of education
                                                 </span>
+                                            </Form.Group> */}
+                                            {/* <-------------------> */}
+                                            <Form.Group
+                                                className="mb-3"
+                                                controlId="exampleForm.ControlTextarea1"
+                                            >
+                                                <Form.Label className="sm-label">
+                                                    Areas of Education
+                                                </Form.Label>
+                                                <div className="tagarea p-2 position-relative">
+                                                    {badges?.map((badge, index) => (
+                                                        <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
+                                                            {badge?.qualification_name}
+                                                            <button
+                                                                className="btn close_tag"
+                                                                style={{ cursor: "pointer" }}
+                                                                onClick={() => handleRemoveBadge(index)}
+                                                            >
+                                                                <i className="fa fa-close ms-1"></i>
+                                                            </button>
+                                                        </Badge>
+                                                    ))}
+                                                    <div className="inline-dropdown-container position-relative d-inline-block">
+                                                        <Form.Control
+                                                            type="text"
+                                                            className="inline-input"
+                                                            placeholder="Enter text"
+                                                            // value={row.areaOfEducation}
+                                                            // disabled={row.saved}
+                                                            onChange={handleAreaOfEducation}
+                                                        />
+                                                        {aresEducationOption?.length > 0 ? (
+                                                            <Dropdown show={true} >
+                                                                <Dropdown.Menu className="w-100 dropdown_ctm">
+                                                                    <div class={`${aresEducationOption.length ? 'droplist' : ''}`}>
+                                                                        {aresEducationOption.map((option, idx) => (
+                                                                            <Dropdown.Item
+                                                                                key={idx}
+                                                                                onClick={(e) =>
+                                                                                    handleSelectAreaEducation(option)
+                                                                                }
+                                                                            >
+                                                                                {option?.qualification_name}
+                                                                            </Dropdown.Item>
+                                                                        ))}
+                                                                    </div>
+                                                                </Dropdown.Menu>
+                                                            </Dropdown>
+                                                        ) : ('')}
+                                                    </div>
+                                                </div>
                                             </Form.Group>
                                         </Form>
                                         <div className="accordion_footer">
@@ -1608,7 +1853,7 @@ const UpdateJobsRevised = ({
                                                         Mention Shorlisted Industries
                                                     </Form.Label>
 
-                                                    <div className="tagarea p-2">
+                                                    {/* <div className="tagarea p-2">
                                                         {IndustriesBadges.map((badge, index) => (
                                                             <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
                                                                 {badge?.industry_name}
@@ -1632,8 +1877,49 @@ const UpdateJobsRevised = ({
                                                             }}
                                                             onKeyDown={handleKeyPressForIndustries}
                                                         />
+                                                    </div> */}
+                                                    <div className="tagarea p-2 position-relative">
+                                                        {IndustriesBadges?.map((badge, index) => (
+                                                            <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
+                                                                {badge?.industry_name}
+                                                                <button
+                                                                    className="btn close_tag"
+                                                                    style={{ cursor: "pointer" }}
+                                                                    onClick={() => handleRemoveIndustriesBadge(index)}
+                                                                >
+                                                                    <i className="fa fa-close ms-1"></i>
+                                                                </button>
+                                                            </Badge>
+                                                        ))}
+                                                        <div className="inline-dropdown-container position-relative d-inline-block">
+                                                            <Form.Control
+                                                                type="text"
+                                                                className="inline-input"
+                                                                placeholder="Enter text"
+                                                                // value={row.areaOfEducation}
+                                                                // disabled={row.saved}
+                                                                onChange={handlesShorlistedIndustries}
+                                                            />
+                                                            {shorlistedIndustries?.length > 0 ? (
+                                                                <Dropdown show={true} >
+                                                                    <Dropdown.Menu className="w-100 dropdown_ctm">
+                                                                        <div class={`${shorlistedIndustries.length ? 'droplist' : ''}`}>
+                                                                            {shorlistedIndustries.map((option, idx) => (
+                                                                                <Dropdown.Item
+                                                                                    key={idx}
+                                                                                    onClick={(e) =>
+                                                                                        handleSelectShortlistIndustries(option)
+                                                                                    }
+                                                                                >
+                                                                                    {option?.industry_name}
+                                                                                </Dropdown.Item>
+                                                                            ))}
+                                                                        </div>
+                                                                    </Dropdown.Menu>
+                                                                </Dropdown>
+                                                            ) : ('')}
+                                                        </div>
                                                     </div>
-
                                                     <span className="required_text">
                                                         Add a comprehensive list as this can significantly
                                                         impact applicant shortlisting
@@ -1650,7 +1936,7 @@ const UpdateJobsRevised = ({
                                                         Restrict Roles
                                                     </Form.Label>
 
-                                                    <div className="tagarea p-2">
+                                                    {/* <div className="tagarea p-2">
                                                         {restrictedRoleBadges.map((badge, index) => (
                                                             <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
                                                                 {badge?.is_like_name}
@@ -1690,6 +1976,48 @@ const UpdateJobsRevised = ({
                                                                 </ul>
                                                             </div>
                                                         )}
+                                                    </div> */}
+                                                    <div className="tagarea p-2 position-relative">
+                                                        {restrictedRoleBadges?.map((badge, index) => (
+                                                            <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
+                                                                {badge?.is_like_name}
+                                                                <button
+                                                                    className="btn close_tag"
+                                                                    style={{ cursor: "pointer" }}
+                                                                    onClick={() => handleRemoveRoleBadge(index)}
+                                                                >
+                                                                    <i className="fa fa-close ms-1"></i>
+                                                                </button>
+                                                            </Badge>
+                                                        ))}
+                                                        <div className="inline-dropdown-container position-relative d-inline-block">
+                                                            <Form.Control
+                                                                type="text"
+                                                                className="inline-input"
+                                                                placeholder="Enter text"
+                                                                // value={row.areaOfEducation}
+                                                                // disabled={row.saved}
+                                                                onChange={isLikeHandleRole}
+                                                            />
+                                                            {restrictedRole?.length > 0 ? (
+                                                                <Dropdown show={true} >
+                                                                    <Dropdown.Menu className="w-100 dropdown_ctm">
+                                                                        <div class={`${restrictedRole.length ? 'droplist' : ''}`}>
+                                                                            {restrictedRole.map((option, idx) => (
+                                                                                <Dropdown.Item
+                                                                                    key={idx}
+                                                                                    onClick={(e) =>
+                                                                                        handleSelectRestrictedRole(option)
+                                                                                    }
+                                                                                >
+                                                                                    {option?.is_like_name}
+                                                                                </Dropdown.Item>
+                                                                            ))}
+                                                                        </div>
+                                                                    </Dropdown.Menu>
+                                                                </Dropdown>
+                                                            ) : ('')}
+                                                        </div>
                                                     </div>
 
                                                     <span className="required_text">
@@ -1855,7 +2183,7 @@ const UpdateJobsRevised = ({
                                                     <Form.Label className="sm-label">
                                                         Spoken Language
                                                     </Form.Label>
-                                                    <div className="tagarea p-2">
+                                                    {/* <div className="tagarea p-2">
                                                         {spokenLanguageBadges.map((badge, index) => (
                                                             <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
                                                                 {badge?.language_name}
@@ -1881,6 +2209,50 @@ const UpdateJobsRevised = ({
                                                                 handleKeyPressForlanguages(e, "spoken");
                                                             }}
                                                         />
+                                                    </div> */}
+                                                    <div className="tagarea p-2 position-relative">
+                                                        {spokenLanguageBadges?.map((badge, index) => (
+                                                            <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
+                                                                {badge?.language_name}
+                                                                <button
+                                                                    className="btn close_tag"
+                                                                    style={{ cursor: "pointer" }}
+                                                                    onClick={() =>
+                                                                        handleRemoveSpokenLanguageBadge(index)
+                                                                    }
+                                                                >
+                                                                    <i className="fa fa-close ms-1"></i>
+                                                                </button>
+                                                            </Badge>
+                                                        ))}
+                                                        <div className="inline-dropdown-container position-relative d-inline-block">
+                                                            <Form.Control
+                                                                type="text"
+                                                                className="inline-input"
+                                                                placeholder="Enter text"
+                                                                // value={row.areaOfEducation}
+                                                                // disabled={row.saved}
+                                                                onChange={(e) => handleWaSlanguages(e, "spoken")}
+                                                            />
+                                                            {spokenLanguage?.length > 0 ? (
+                                                                <Dropdown show={true} >
+                                                                    <Dropdown.Menu className="w-100 dropdown_ctm">
+                                                                        <div class={`${spokenLanguage.length ? 'droplist' : ''}`}>
+                                                                            {spokenLanguage.map((option, idx) => (
+                                                                                <Dropdown.Item
+                                                                                    key={idx}
+                                                                                    onClick={(e) =>
+                                                                                        handleSelectSpokenLang(option)
+                                                                                    }
+                                                                                >
+                                                                                    {option?.language_name}
+                                                                                </Dropdown.Item>
+                                                                            ))}
+                                                                        </div>
+                                                                    </Dropdown.Menu>
+                                                                </Dropdown>
+                                                            ) : ('')}
+                                                        </div>
                                                     </div>
                                                     <span className="required_text">
                                                         Select all spoken languages
@@ -1893,7 +2265,7 @@ const UpdateJobsRevised = ({
                                                     <Form.Label className="sm-label">
                                                         Written and Reading Language
                                                     </Form.Label>
-                                                    <div className="tagarea p-2">
+                                                    {/* <div className="tagarea p-2">
                                                         {rdnwBadges.map((badge, index) => (
                                                             <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
                                                                 {badge?.language_name}
@@ -1919,6 +2291,51 @@ const UpdateJobsRevised = ({
                                                                 handleKeyPressForlanguages(e, "rdnw");
                                                             }}
                                                         />
+                                                    </div> */}
+
+                                                    <div className="tagarea p-2 position-relative">
+                                                        {rdnwBadges.map((badge, index) => (
+                                                            <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
+                                                                {badge?.language_name}
+                                                                <button
+                                                                    className="btn close_tag"
+                                                                    style={{ cursor: "pointer" }}
+                                                                    onClick={() =>
+                                                                        handleRemoveReadAndWriteLanguageBadge(index)
+                                                                    }
+                                                                >
+                                                                    <i className="fa fa-close ms-1"></i>
+                                                                </button>
+                                                            </Badge>
+                                                        ))}
+                                                        <div className="inline-dropdown-container position-relative d-inline-block">
+                                                            <Form.Control
+                                                                type="text"
+                                                                className="inline-input"
+                                                                placeholder="Enter text"
+                                                                // value={row.areaOfEducation}
+                                                                // disabled={row.saved}
+                                                                onChange={(e) => handleWaSlanguages(e, "rdnw")}
+                                                            />
+                                                            {writtenLanguage?.length > 0 ? (
+                                                                <Dropdown show={true} >
+                                                                    <Dropdown.Menu className="w-100 dropdown_ctm">
+                                                                        <div class={`${writtenLanguage.length ? 'droplist' : ''}`}>
+                                                                            {writtenLanguage.map((option, idx) => (
+                                                                                <Dropdown.Item
+                                                                                    key={idx}
+                                                                                    onClick={(e) =>
+                                                                                        handleSelectWrittenLang(option)
+                                                                                    }
+                                                                                >
+                                                                                    {option?.language_name}
+                                                                                </Dropdown.Item>
+                                                                            ))}
+                                                                        </div>
+                                                                    </Dropdown.Menu>
+                                                                </Dropdown>
+                                                            ) : ('')}
+                                                        </div>
                                                     </div>
                                                     <span className="required_text">
                                                         Select all written and reading languages
@@ -1980,7 +2397,7 @@ const UpdateJobsRevised = ({
                                                     <Form.Label className="sm-label">
                                                         Preferred States / Cities / Towns
                                                     </Form.Label>
-                                                    <div className="tagarea p-2">
+                                                    {/* <div className="tagarea p-2">
                                                         {locationBadges.map((badge, index) => (
                                                             <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
                                                                 {badge?.location_name}
@@ -2002,6 +2419,49 @@ const UpdateJobsRevised = ({
                                                             }}
                                                             onKeyDown={handleKeyPressForLocation}
                                                         />
+                                                    </div> */}
+                                                    {/* <--------workingbaba-------? */}
+                                                    <div className="tagarea p-2 position-relative">
+                                                        {locationBadges.map((badge, index) => (
+                                                            <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
+                                                                {badge?.location_name}
+                                                                <button
+                                                                    className="btn close_tag"
+                                                                    style={{ cursor: "pointer" }}
+                                                                    onClick={() => handleRemoveLocationBadge(index)}
+                                                                >
+                                                                    <i className="fa fa-close ms-1"></i>
+                                                                </button>
+                                                            </Badge>
+                                                        ))}
+                                                        <div className="inline-dropdown-container position-relative d-inline-block">
+                                                            <Form.Control
+                                                                type="text"
+                                                                className="inline-input"
+                                                                placeholder="Enter text"
+                                                                // value={row.areaOfEducation}
+                                                                // disabled={row.saved}
+                                                                onChange={handleLocationAPIList}
+                                                            />
+                                                            {locationList?.length > 0 ? (
+                                                                <Dropdown show={true} >
+                                                                    <Dropdown.Menu className="w-100 dropdown_ctm">
+                                                                        <div class={`${locationList.length ? 'droplist' : ''}`}>
+                                                                            {locationList.map((option, idx) => (
+                                                                                <Dropdown.Item
+                                                                                    key={idx}
+                                                                                    onClick={(e) =>
+                                                                                        handleSelectLocation(option)
+                                                                                    }
+                                                                                >
+                                                                                    {option?.location_name}
+                                                                                </Dropdown.Item>
+                                                                            ))}
+                                                                        </div>
+                                                                    </Dropdown.Menu>
+                                                                </Dropdown>
+                                                            ) : ('')}
+                                                        </div>
                                                     </div>
                                                     <span className="required_text">
                                                         Select all relevant locations
@@ -2650,7 +3110,7 @@ const UpdateJobsRevised = ({
                                                         // className={`assmntbox ${activeBehaviour.includes(item.uid) && 'active'}`}
                                                         >
                                                             <div className="assmntbox-head">
-                                                                <h6 onClick={() => handleBoxClick(index)} style={{cursor:'pointer'}}>
+                                                                <h6 onClick={() => handleBoxClick(index)} style={{ cursor: 'pointer' }}>
                                                                     {item.heading}
                                                                 </h6>
                                                                 <i

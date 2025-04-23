@@ -25,7 +25,7 @@ import ExpandButton from "../../images/icons/expand-03-primery.svg";
 import ArrowBack from "../../images/icons/arrowBack.svg";
 import ArrowNext from "../../images/icons/arrowNext.svg";
 import { useParams } from "react-router-dom";
-import { getJobAssignmentReview, getJobDetailsApi, getScreeningParameterDataAPI } from "../../services/provider";
+import { getJobAssignmentReview, getJobDetailsApi, getJobGroupParameterListAPI, getScreeningParameterDataAPI } from "../../services/provider";
 import Evaluations from "./Evaluations";
 import Ratting from "../../components/Ratting";
 import CodeBlock from "../../components/CodeBlock";
@@ -83,6 +83,7 @@ tracker.show_tasks()
     const [show, setShow] = useState(false);
     const [reviewModal, setReviewModal] = useState(false);
     const [groupModal, setGroupModal] = useState(false);
+    const [groupParameterId, setGroupParameterId] = useState();
     const handleReviewClose = () => setReviewModal(false);
     const handleClose = () => setShow(false);
     const handleCloseGrpMdl = () => setGroupModal(false)
@@ -98,53 +99,42 @@ tracker.show_tasks()
     const [questionWiseDuplicate, setQuestionWiseDuplicate] = useState({});
     const [rating, setRating] = useState({});
     const [currentId, setCurrentId] = useState(questionWiseData?.user_answer_question?.[0]?.id);
+    const [groupParameterList, setGroupParameterList] = useState([])
     const [groupState, setGroupState] = useState([
         {
-            heading: 'Job Match', title: 'Select to Apply', isChecked: false, isSelected: true,
+            heading: 'Job Match', isChecked: false, isSelected: false,
             listData: [
                 {
-                    name: 'Groups',
-                    data: [{ value: 'Excellent', isSelected: false }, { value: 'Good', isSelected: false }, { value: 'Average', isSelected: false }, { value: 'Below Average', isSelected: false }]
+                    name: 'Job Groups',
+                    data: [
+                        { value: 'Excellent', groupname: 'Job Groups', isSelected: false },
+                        { value: 'Good', groupname: 'Job Groups', isSelected: false },
+                        { value: 'Average', groupname: 'Job Groups', isSelected: false },
+                        { value: 'Below Average', groupname: 'Job Groups', isSelected: false }]
                 },
                 {
                     name: 'Job Match Percentage',
                     data: [
-                        { value: '0% - 40% ', isSelected: false },
-                        { value: '50% - 60% ', isSelected: false },
-                        { value: '60% - 70% ', isSelected: false },
-                        { value: '70% - 80% ', isSelected: false },
-                        { value: '80% - 90% ', isSelected: false },
-                        { value: '90% - 100% ', isSelected: false }
+                        { value: '0 - 40 ', groupname: 'Job Match Percentage', isSelected: false },
+                        { value: '50 - 60 ', groupname: 'Job Match Percentage', isSelected: false },
+                        { value: '60 - 70 ', groupname: 'Job Match Percentage', isSelected: false },
+                        { value: '70 - 80 ', groupname: 'Job Match Percentage', isSelected: false },
+                        { value: '80 - 90 ', groupname: 'Job Match Percentage', isSelected: false },
+                        { value: '90 - 100 ', groupname: 'Job Match Percentage', isSelected: false }
                     ]
                 }
-            ]
+            ],
+            selectedList: []
         },
-        // {
-        //     heading: 'Education', isChecked: false, isSelected: false,
-        //     listData: [
-        //         {
-        //             name: 'Require Education',
-        //             data: [{ value: 'Master', isSelected: false }, { value: 'Bachelors', isSelected: false }, { value: 'PG', isSelected: false }, { value: 'Diploma', isSelected: false }]
-        //         },
-        //         {
-        //             name: 'Areas of Education',
-        //             data: [
-        //                 { value: 'Mathematics', isSelected: false },
-        //                 { value: 'Science', isSelected: false },
-        //                 { value: 'Computer', isSelected: false },
-        //                 { value: 'Engineering', isSelected: false },
-        //                 { value: 'Electronic', isSelected: false },
-        //             ]
-        //         }
-        //     ]
-        // },
-
         {
-            heading: 'Availability', title: 'Select to Apply', isChecked: false, isSelected: false,
+            heading: 'Availability', isChecked: false, isSelected: false,
             listData: [
                 {
                     name: 'Working Status',
-                    data: [{ value: 'Currently Working', isSelected: false }, { value: 'Currently not Working ', isSelected: false }]
+                    data: [
+                        { value: 'Currently Working', groupname: 'Working Status', isSelected: false },
+                        { value: 'Currently not Working ', groupname: 'Working Status', isSelected: false }
+                    ]
                 },
                 {
                     name: 'Available by',
@@ -154,81 +144,46 @@ tracker.show_tasks()
                 {
                     name: 'Notice Period',
                     data: [
-                        { value: 'Less than 30 Days', isSelected: false },
-                        { value: '30 - 60 Days', isSelected: false },
-                        { value: '60 - 90 Days   ', isSelected: false },
-                        { value: 'More than 90', isSelected: false },
+                        { value: 'Less than 30 Days', groupname: 'Notice Period', isSelected: false },
+                        { value: '30 - 60 Days', groupname: 'Notice Period', isSelected: false },
+                        { value: '60 - 90 Days   ', groupname: 'Notice Period', isSelected: false },
+                        { value: 'More than 90', groupname: 'Notice Period', isSelected: false },
                     ]
                 },
                 {
                     name: "Notice Buy out",
                     data: [
-                        { value: 'Available', isSelected: false },
-                        { value: 'Not Available', isSelected: false },
+                        { value: 'Available', groupname: 'Notice Buy out', isSelected: false },
+                        { value: 'Not Available', groupname: 'Notice Buy out', isSelected: false },
                     ]
                 },
                 {
                     name: "Willing to Travel for Job",
                     data: [
-                        { value: 'Regularly', isSelected: false },
-                        { value: 'Sometimes', isSelected: false },
-                        { value: 'Rarely', isSelected: false },
-                        { value: 'Not Willing to Travel', isSelected: false },
+                        { value: 'Regularly', groupname: 'Willing to Travel for Job', isSelected: false },
+                        { value: 'Sometimes', groupname: 'Willing to Travel for Job', isSelected: false },
+                        { value: 'Rarely', groupname: 'Willing to Travel for Job', isSelected: false },
+                        { value: 'Not Willing to Travel', groupname: 'Willing to Travel for Job', isSelected: false },
                     ]
                 }
-            ]
+            ],
+            selectedList: []
         },
-        // {
-        //     heading: 'Skills', title: 'Select to Apply', isChecked: false, isSelected: false,
-        //     listData: [
-        //         {
-        //             name: 'Groups',
-        //             data: [{ value: 'Excellent', isSelected: false }, { value: 'Good', isSelected: false }, { value: 'Average', isSelected: false }, { value: 'Below Average', isSelected: false }]
-        //         },
-        //         {
-        //             name: 'Job Match Percentage',
-        //             data: [
-        //                 { value: '0% - 40% ', isSelected: false },
-        //                 { value: '50% - 60% ', isSelected: false },
-        //                 { value: '60% - 70% ', isSelected: false },
-        //                 { value: '70% - 80% ', isSelected: false },
-        //                 { value: '80% - 90% ', isSelected: false },
-        //                 { value: '90% - 100% ', isSelected: false }
-        //             ]
-        //         }
-        //     ]
-        // },
-        // { heading: 'Language', title: 'Select to Apply', isChecked: false, isSelected: false },
-        // {
-        //     heading: 'Custom Questions', title: 'Select to Apply', isChecked: false, isSelected: false,
-        //     listData: [
-        //         {
-        //             name: 'Which area of cricket do you think needs the greatest development in senior cricket players?',
-        //             data: [{ value: 'Option 1', isSelected: false }, { value: 'Option 2', isSelected: false }, { value: 'Option 3', isSelected: false }, { value: 'Option 4', isSelected: false }]
-        //         },
-        //         {
-        //             name: 'Do you think that IPL has impacted the skills of the players to play 50 over cricket negatively ?',
-        //             data: [
-        //                 { value: 'Option 1', isSelected: false },
-        //                 { value: 'Option 2', isSelected: false },
-        //                 { value: 'Option 3', isSelected: false },
-        //                 { value: 'Option 4', isSelected: false },
-        //             ]
-        //         }
-        //     ]
-        // },
+
         {
-            heading: 'Personality', title: 'Select to Apply', isChecked: false, isSelected: false, flag: 'personality_data',
+            heading: 'Personality', isChecked: false, isSelected: false, flag: 'personality_data',
             listData: [
                 {
                     name: 'Groups',
-                    data: [{ value: 'Excellent', isSelected: false }, { value: 'Good', isSelected: false }, { value: 'Average', isSelected: false }, { value: 'Below Average', isSelected: false }]
+                    data: [
+                        { value: 'Excellent',groupname: 'Groups', isSelected: false },
+                        { value: 'Good',groupname: 'Groups', isSelected: false },
+                        { value: 'Average',groupname: 'Groups', isSelected: false },
+                        { value: 'Below Average',groupname: 'Groups', isSelected: false }]
                 }
-            ]
+            ],
+            selectedList: []
         },
-        // { heading: 'Experience', title: 'Select to Apply', isChecked: false, isSelected: false },
-        // { heading: 'Roles', title: 'Select to Apply', isChecked: false, isSelected: false },
-        // { heading: 'Salary & Travel ', title: 'Select to Apply', isChecked: false, isSelected: false },
     ])
 
     const getJobAssignmentReviewAPI = async (id) => {
@@ -326,10 +281,11 @@ tracker.show_tasks()
 
                             return {
                                 heading: formatKey(sectionKey),
-                                title: sectionKey !== 'education' ? 'Select to Apply' : '',
+                                // title: sectionKey !== 'education' ? 'Select to Apply' : '',
                                 isChecked: false,
                                 isSelected: false,
-                                listData: [...dynamicListData, ...staticGroupsBlock]
+                                listData: [...dynamicListData, ...staticGroupsBlock],
+                                selectedList: []
                             };
                         })
                     );
@@ -365,7 +321,7 @@ tracker.show_tasks()
                     setAssetJob(response?.data?.response?.asset_job)
                     const allSections = response.data.response.asset_job.map((item) => ({
                         heading: formatKey(item.asset_title),
-                        title: 'Select to Apply',
+                        // title: 'Select to Apply',
                         uid: item?.uid,
                         isChecked: false,
                         isSelected: false,
@@ -386,7 +342,8 @@ tracker.show_tasks()
                                     { value: '90 - 100', isSelected: false },
                                 ]
                             }
-                        ]
+                        ],
+                        selectedList: []
 
                     }))
 
@@ -408,23 +365,26 @@ tracker.show_tasks()
                         if (!acc[groupName]) {
                             acc[groupName] = [];
                         }
-                        acc[groupName].push(skill?.skill_name);
+                        // acc[groupName].push(skill?.skill_name);
+                        acc[groupName].push(skill);
                         return acc;
                     }, {});
                     const fullObject = { Skills: allSections }
 
                     const setUpdate = Object.entries(fullObject).map(([sectionKey, sectionValue]) => ({
                         heading: formatKey(sectionKey),
-                        title: 'Select to Apply',
+                        // title: 'Select to Apply',
                         isChecked: false,
                         isSelected: false,
                         listData: Object.entries(sectionValue).map(([key, values]) => ({
                             name: formatKey(key),
-                            data: values.map(value => ({
-                                value,
+                            data: values.map(val => ({
+                                value: val.skill_name,
+                                val,
                                 isSelected: false
                             }))
-                        }))
+                        })),
+                        selectedList: []
                     }))
                     setGroupState(prevState => {
                         const merged = [...prevState, ...setUpdate];
@@ -440,16 +400,18 @@ tracker.show_tasks()
                 if (Array.isArray(response.data.response.question_job)) {
                     const transformed = {
                         heading: "Custom Questions",
-                        title: 'Select to Apply',
+                        // title: 'Select to Apply',
                         isChecked: false,
                         isSelected: false,
                         listData: response.data.response.question_job.map(item => ({
                             name: item.question_title,
                             data: item.question_option.part1.map(option => ({
                                 value: option,
+                                item,
                                 isSelected: false
                             }))
-                        }))
+                        })),
+                        selectedList: []
                     }
                     setGroupState(prevState => {
                         const merged = [...prevState, transformed];
@@ -467,14 +429,14 @@ tracker.show_tasks()
                     const updatedBehaviourResponse = BehaviourResponse.map(item => ({
                         ...item,
                         personality_percentage: response.data.response.calculation_job[0].personality_data[item.behaviour_type_name] || 0 // Default to 0 if no match
-                    }));                    
+                    }));
                     const matchedBehaviours = updatedBehaviourResponse.filter(item =>
                         personalityKeys.includes(item.behaviour_type_name)
                     );
                     // debugger
                     const transformed = {
                         name: 'All Personalities',
-                        data: matchedBehaviours.map((val,index) => ({
+                        data: matchedBehaviours.map((val, index) => ({
                             value: `${val?.behaviours_name} ${personalityValue[index]}%`,
                             isSelected: false
                         }))
@@ -496,11 +458,21 @@ tracker.show_tasks()
         } catch (error) {
         }
     }
-
+    const getJobGroupParameterList = async (id) => {
+        try {
+            const response = await getJobGroupParameterListAPI(id)
+            if (response.data.success) {
+                setGroupParameterList(response?.data?.response)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
     useEffect(() => {
         getScreeningAPI(id)
         getJobAssignmentReviewAPI(id)
         getJobDetails(id)
+        getJobGroupParameterList(id)
     }, [id])
     const getJobAssignmentReviewList = async (uid) => {
         try {
@@ -598,8 +570,9 @@ tracker.show_tasks()
     }
     // console.log(assignmentReviewList)
     // console.log('section', sectionWiseData)
-    console.log(questionWiseData)
-    console.log(currentItem)
+    // console.log(questionWiseData)
+    // console.log(currentItem)
+    console.log(groupParameterList)
     return (
         <>
             <Sidebar />
@@ -649,17 +622,49 @@ tracker.show_tasks()
                             <Tab.Content className="p-3">
                                 <Tab.Pane eventKey="first">
                                     <Row className="hori_scroll">
-                                        <Col md={2}>
-                                            <Card className="status_cardpanel">
-                                                <div className="card-header">
-                                                    <h5>Application <span className="count">250</span></h5>
-                                                    <button type="button"><i class="fa fa-ellipsis-h"></i></button>
-                                                </div>
-                                                <Card.Body>
-                                                    <div className="sts_databox incopmlate">
-                                                        <h6>Incomplete<span className="count">100</span></h6>
+                                        {groupParameterList.map((paraName, paraIndex) => (
+                                            <Col md={2}>
+                                                <Card className="status_cardpanel">
+                                                    <div className="card-header">
+                                                        <h5>{paraName?.parameter_name} <span className="count">{paraName?.parameter_applicant_count}</span></h5>
+                                                        <button type="button"><i class="fa fa-ellipsis-h"></i></button>
                                                     </div>
-                                                    <div className="sts_databox excellent">
+                                                    <Card.Body>
+                                                        {paraName?.parameter_name === "Screening" ? (
+                                                            <>
+                                                                <button type="button" onClick={() => {
+                                                                    setGroupModal(true)
+                                                                    setGroupParameterId(paraName?.uid)
+                                                                }} className="btn btn-link mb-3"><i className="fa fa-plus me-2"></i>Create a New Group</button>
+                                                                {paraName?.groups_parameter?.sort((a, b) => a.id - b.id)?.map((groupItem) => (
+                                                                    <>
+                                                                        <div className={`sts_databox ${groupItem?.group_name.toLowerCase()}`}>
+                                                                            <div className="d-flex justify-content-between">
+                                                                                <h6>{groupItem?.group_name}<span className="count">{groupItem?.group_wise_applicant_count}</span></h6>
+                                                                            </div>
+                                                                            <div className="d-flex justify-content-between align-items-end">
+                                                                                <Form>
+                                                                                    <Form.Check
+                                                                                        type="switch"
+                                                                                        id="custom-switch"
+                                                                                        label="Auto-Remind"
+                                                                                    />
+                                                                                </Form>
+                                                                                <button className="button" class="btn-transpant"><i class="fa fa-list-ul" aria-hidden="true"></i></button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </>
+                                                                ))}
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                {paraName?.groups_parameter?.sort((a, b) => a.id - b.id)?.map((groupItem) => (
+                                                                    <div className={`sts_databox ${groupItem?.group_name.toLowerCase()}`}>
+                                                                        <h6>{groupItem?.group_name}<span className="count">{groupItem?.group_wise_applicant_count}</span></h6>
+                                                                    </div>
+                                                                ))}
+                                                            </>)}
+                                                        {/* <div className="sts_databox excellent">
                                                         <h6>Excellent<span className="count">40</span></h6>
                                                     </div>
                                                     <div className="sts_databox good">
@@ -676,11 +681,12 @@ tracker.show_tasks()
                                                     </div>
                                                     <div className="sts_databox rejected">
                                                         <h6>Rejected<span className="count">20</span></h6>
-                                                    </div>
-                                                </Card.Body>
-                                            </Card>
-                                        </Col>
-                                        <Col md={2}>
+                                                    </div> */}
+                                                    </Card.Body>
+                                                </Card>
+                                            </Col>
+                                        ))}
+                                        {/* <Col md={2}>
                                             <Card className="status_cardpanel">
                                                 <div className="card-header">
                                                     <h5>Behaviour <span className="count">150</span></h5>
@@ -710,40 +716,8 @@ tracker.show_tasks()
                                                     </div>
                                                 </Card.Body>
                                             </Card>
-                                        </Col>
-                                        <Col md={2}>
-                                            <Card className="status_cardpanel">
-                                                <div className="card-header">
-                                                    <h5>Tech-Quiz1 <span className="count">100</span></h5>
-                                                    <button type="button"><i class="fa fa-ellipsis-h"></i></button>
-                                                </div>
-                                                <Card.Body>
-                                                    <div className="text-center"><button type="button" className="btn btn-link mb-3"><i className="fa fa-plus me-2"></i></button></div>
-                                                    <div className="sts_databox incopmlate">
-                                                        <h6>Incomplete<span className="count">100</span></h6>
-                                                    </div>
-                                                    <div className="sts_databox excellent">
-                                                        <h6>Excellent<span className="count">40</span></h6>
-                                                    </div>
-                                                    <div className="sts_databox good">
-                                                        <h6>Good<span className="count">45</span></h6>
-                                                    </div>
-                                                    <div className="sts_databox average">
-                                                        <h6>Average<span className="count">45</span></h6>
-                                                    </div>
-                                                    <div className="sts_databox baverage">
-                                                        <h6>Below Average<span className="count">20</span></h6>
-                                                    </div>
-                                                    <div className="sts_databox hold">
-                                                        <h6>On Hold<span className="count">20</span></h6>
-                                                    </div>
-                                                    <div className="sts_databox rejected">
-                                                        <h6>Rejected<span className="count">20</span></h6>
-                                                    </div>
-                                                </Card.Body>
-                                            </Card>
-                                        </Col>
-                                        <Col md={3}>
+                                        </Col>                                         */}
+                                        {/* <Col md={3}>
                                             <Card className="status_cardpanel screening text-center">
                                                 <div className="card-header">
                                                     <h5>Screening <span className="count">150</span></h5>
@@ -855,6 +829,38 @@ tracker.show_tasks()
                                                             </Form>
                                                             <button className="button" class="btn-transpant"><i class="fa fa-list-ul" aria-hidden="true"></i></button>
                                                         </div>
+                                                    </div>
+                                                </Card.Body>
+                                            </Card>
+                                        </Col> */}
+                                        <Col md={2}>
+                                            <Card className="status_cardpanel">
+                                                <div className="card-header">
+                                                    <h5>Tech-Quiz1 <span className="count">100</span></h5>
+                                                    <button type="button"><i class="fa fa-ellipsis-h"></i></button>
+                                                </div>
+                                                <Card.Body>
+                                                    <div className="text-center"><button type="button" className="btn btn-link mb-3"><i className="fa fa-plus me-2"></i></button></div>
+                                                    <div className="sts_databox incopmlate">
+                                                        <h6>Incomplete<span className="count">100</span></h6>
+                                                    </div>
+                                                    <div className="sts_databox excellent">
+                                                        <h6>Excellent<span className="count">40</span></h6>
+                                                    </div>
+                                                    <div className="sts_databox good">
+                                                        <h6>Good<span className="count">45</span></h6>
+                                                    </div>
+                                                    <div className="sts_databox average">
+                                                        <h6>Average<span className="count">45</span></h6>
+                                                    </div>
+                                                    <div className="sts_databox baverage">
+                                                        <h6>Below Average<span className="count">20</span></h6>
+                                                    </div>
+                                                    <div className="sts_databox hold">
+                                                        <h6>On Hold<span className="count">20</span></h6>
+                                                    </div>
+                                                    <div className="sts_databox rejected">
+                                                        <h6>Rejected<span className="count">20</span></h6>
                                                     </div>
                                                 </Card.Body>
                                             </Card>
@@ -2359,6 +2365,7 @@ tracker.show_tasks()
                 id={id}
                 groupState={groupState}
                 setGroupState={setGroupState}
+                groupParameterId={groupParameterId}
             />
 
             {/*======Answer======*/}

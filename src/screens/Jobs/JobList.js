@@ -275,7 +275,7 @@ const JobsList = () => {
               md={12}
               className="d-flex justify-content-between align-items-center"
             >
-              <h6 class="my-3 pagetitle">Create a New Job</h6>
+              <h6 class="my-3 pagetitle">Jobs</h6>
               <Button
                 variant="primary"
                 className="btn-md"
@@ -369,8 +369,8 @@ const JobsList = () => {
                   onClick={() => handleShow("MoreFilterModal")}
                 >
                   <svg
-                    width="20"
-                    height="20"
+                    width="15"
+                    height="15"
                     viewBox="0 0 20 20"
                     className="me-2"
                     fill="none"

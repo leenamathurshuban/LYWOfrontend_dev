@@ -63,7 +63,7 @@ const FilterJobs = ({
       <Offcanvas
         show={show}
         onHide={handleClose}
-        backdrop={false}
+        backdrop="static"
         placement="end"
         className="shadow-md border-0"
       >

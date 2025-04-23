@@ -32,7 +32,9 @@ export const JobsUrl = {
   UpdateMultipleJobApi:"assets-api/update-multiple-job-api/",
   getJobAssignmentQuestionReview:"assets-api/get-job-assignment-question-review/",
   updateAssetAassignmentTypeUserAnswerUpdate:"assets-api/assignment-type-user-answer-update-api/",
-  ScreeningParameterData: "assets-api/get-screening-parameter-data-api/"
+  ScreeningParameterData: "assets-api/get-screening-parameter-data-api/",
+  getJobGroupParameterList:"assets-api/get-job-group-parameter-list-api/",
+  assetSapicreateJobGroupPost:"assets-api/create-job-group-api/"
 }
 
 export const SkillsUrl = {

@@ -41,7 +41,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
   const [isHideLocation, setIsHideLLocation] = useState(true);
   const [isSpecificLanguareRequired, setIsSpecificLanguareRequired] =
     useState(true);
-  const [department, setDepartment] = useState(editData?.department?.department_name);
+  const [department, setDepartment] = useState(editData?.department);
   const [location, setLocation] = useState(editData?.job_location?.location_name);
   const [description, setDescription] = useState(editData?.detailed_description);
   const [departmentUid, setDepartmentUid] = useState(editData?.department?.uid);

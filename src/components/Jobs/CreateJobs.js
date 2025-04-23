@@ -873,8 +873,13 @@ const CreateJobs = ({ show, handleClose }) => {
   };
 
   const handleCustomeBeniftsAdd = () => {
-    const CreateCustomLabel = { Label: "" };
-    setAddCustomeBenifits((prev) => [...prev, CreateCustomLabel]);
+    if(customValue.length === 0){
+      const CreateCustomLabel = { Label: "" };
+      setAddCustomeBenifits((prev) => [...prev, CreateCustomLabel]);
+    }else{
+      alert("Please Enter value")
+    }
+    
   };
 
   const handleClearCustomInput = (index) => {
@@ -1213,7 +1218,7 @@ const CreateJobs = ({ show, handleClose }) => {
               onChange={handleFormData}
               name="workPlaceType"
             >
-              <option>Workplace Type</option>
+              {/* <option>Workplace Type</option> */}
               <option value="On-site">On-site</option>
               <option value="Remote">Remote</option>
               <option value="Hybrid">Hybrid</option>
@@ -1259,6 +1264,10 @@ const CreateJobs = ({ show, handleClose }) => {
               <Button
                 className="btn-light-gray"
                 onClick={handleCustomeBeniftsAdd}
+                disabled={
+                  addCustomeBenifits.length > 0 &&
+                  addCustomeBenifits[addCustomeBenifits.length - 1].Label.trim() === ""
+                }
               >
                 <i className="fa fa-plus text-primary me-1"></i>Add Custom
               </Button>
