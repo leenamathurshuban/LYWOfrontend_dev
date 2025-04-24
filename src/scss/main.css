@@ -5675,6 +5675,27 @@ select.select-transpant:hover, select.select-transpant:focus, select.select-tran
   padding: 10px 5px;
 }
 
+.droplistmulti {
+  overflow-y: auto;
+  position: absolute;
+  top: 100%;
+  background-color: #fff;
+  border: solid 1px #ddd;
+  border-top: 0;
+  max-width: -moz-fit-content;
+  max-width: fit-content;
+  z-index: 999999999;
+  border-radius: 15px;
+  box-shadow: 0 4px 5px rgba(0, 0, 0, 0.12);
+  overflow-x: hidden;
+  padding: 10px 5px;
+  max-height: 145px;
+}
+
+.droplistmulti a {
+  font-size: 15px;
+}
+
 .offcanvas-backdrop {
   background-color: rgba(242, 244, 247, 0.8);
   backdrop-filter: blur(1px);

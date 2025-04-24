@@ -28,8 +28,9 @@ import RingSucess from "../../images/icons/ring_sucess.svg";
 import DragDrop from "../../images/icons/dragdrop-bullet.svg";
 import usericon from "../../images/icons/user-01-gray.svg";
 
-const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, localAssetJob, setLocalAssetJob, id, groupState, setGroupState, groupParameterId }) => {
+const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, localAssetJob, setLocalAssetJob, id, groupState, setGroupState, groupParameterId,getJobGroupParameterList }) => {
     const [tabActive, setTabActive] = useState("evaluation");
+    const [groupTitle, setGroupTitle] = useState("");
     console.log("get==========uid=======>", groupParameterId)
     // const [groupState, setGroupState] = useState([
     //     {
@@ -265,6 +266,54 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, localAsset
             })
         );
     }
+    const handleAvailableByDate = (selectedItem, e) => {
+        const { name, value } = e.target
+        const newValue = { value: value, groupname:"Available by",isSelected:false}
+        setGroupState(prev =>
+            prev.map(item => {
+                if (selectedItem.heading === item.heading) {
+                    let updatedSelectedList = item.selectedList || [];
+
+                    if (!updatedSelectedList.includes(newValue)) {
+                        updatedSelectedList = [...updatedSelectedList, newValue];
+                    } else {
+                        updatedSelectedList = updatedSelectedList.filter(val => val !== newValue);
+                    }
+                    return {
+                        ...item,
+                        isSelected: newValue ? false : true,
+                        isChecked: newValue ? true : false,                        
+                        selectedList: updatedSelectedList
+                    };
+                }
+                return item;
+            })
+        );
+    }
+    const handleRequireRelacation=(selectedItem, e)=>{        
+        const { name, value,checked } = e.target
+        const newValue = { value: checked?"Yes":"No", groupname:"Require Relocation Assistance",isSelected:false}
+        setGroupState(prev =>
+            prev.map(item => {
+                if (selectedItem.heading === item.heading) {
+                    let updatedSelectedList = item.selectedList || [];
+
+                    if (!updatedSelectedList.includes(newValue)) {
+                        updatedSelectedList = [...updatedSelectedList, newValue];
+                    } else {
+                        updatedSelectedList = updatedSelectedList.filter(val => val !== newValue);
+                    }
+                    return {
+                        ...item,
+                        isSelected: newValue ? false : true,
+                        isChecked: newValue ? true : false,                        
+                        selectedList: updatedSelectedList
+                    };
+                }
+                return item;
+            })
+        );
+    }
     useEffect(() => {
         const findObj = groupState.find((val) => val?.heading == selectedGroup?.heading)
         setSelectedGroup(findObj)
@@ -276,7 +325,13 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, localAsset
                 if (!acc[key]) {
                     acc[key] = [];
                 }
-                acc[key].push(item.value.trim());
+                if (selectedGroup?.heading == 'Skills') {
+                    acc[key].push(item.val);
+                } else if (selectedGroup?.heading == 'Custom Questions') {
+                    acc[key].push(item?.item);
+                } else {
+                    acc[key].push(item.value.trim());
+                }
                 return acc;
             }, {});
             setPayloadList({
@@ -289,11 +344,18 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, localAsset
         try {
             const payload = {
                 job_group_parameter: groupParameterId,
-                group_name: 'test',
+                group_name: groupTitle,
                 group_filter: payloadList
             }
-            debugger
-            // const response = await assetSapicreateJobGroupPostAPI(payload)
+            const response = await assetSapicreateJobGroupPostAPI(payload)
+            if(response.data.success){
+                setSelectedGroup({})
+                setPayloadList({})
+                setGroupTitle('')
+                getJobGroupParameterList()
+                handleClose()
+            }
+            // debugger
         } catch (error) {
             console.log(error);
         }
@@ -326,6 +388,7 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, localAsset
                                                 placeholder="Group Title"
                                                 aria-label="Search"
                                                 aria-describedby="basic-addon1"
+                                                onChange={(e) => setGroupTitle(e.target.value)}
                                             />
                                             <Button variant="primary" className='btn-sm ms-3 min-w-120' onClick={handleCreateGroup}>
                                                 Create Group
@@ -408,13 +471,14 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, localAsset
                                                                 ))}
                                                                 {item?.date && (
                                                                     <Form.Control
-                                                                        name="AvailableBy"
+                                                                        name="available_by"
                                                                         type="date"
                                                                         placeholder="DD/MM/YYYY"
                                                                         style={{ width: "350px" }}
                                                                         //   value={profileformData?.AvailableBy}
                                                                         //   onChange={handleProfileDetailsChange}
                                                                         //   isInvalid={!!errors.AvailableBy}
+                                                                        onChange={(e) => handleAvailableByDate(selectedGroup, e)}
                                                                         className="form-control-sm"
                                                                     />
                                                                 )}
@@ -425,12 +489,12 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, localAsset
                                                         {selectedGroup?.heading === "Salary And Travels" && (
                                                             <>
                                                                 <Form.Check
-                                                                // name="AvailableBy"
+                                                                name="require_relocation_assistance"
                                                                 // type="checkbox"
                                                                 // placeholder="DD/MM/YYYY"
                                                                 // style={{ width: "350px" }}
                                                                 //   value={profileformData?.AvailableBy}
-                                                                //   onChange={handleProfileDetailsChange}
+                                                                  onChange={(e)=>handleRequireRelacation(selectedGroup, e)}
                                                                 //   isInvalid={!!errors.AvailableBy}
                                                                 // className="form-control-sm"
                                                                 />

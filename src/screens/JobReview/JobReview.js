@@ -231,6 +231,7 @@ tracker.show_tasks()
                                 name: formatKey(key),
                                 data: values.map(value => ({
                                     value,
+                                    groupname:formatKey(key),
                                     isSelected: false
                                 }))
                             }));
@@ -240,43 +241,43 @@ tracker.show_tasks()
                                 ? [{
                                     name: 'Experience',
                                     data: [
-                                        { value: 'Fresher', isSelected: false },
-                                        { value: 'Less than 1 Year', isSelected: false },
-                                        { value: '1 - 2 Years', isSelected: false },
-                                        { value: '2 - 4 Years', isSelected: false },
-                                        { value: '4 - 6 Years', isSelected: false },
-                                        { value: '6 - 9 Years', isSelected: false },
-                                        { value: '9 - 12 Years', isSelected: false },
-                                        { value: '12 - 15 Years', isSelected: false },
-                                        { value: '15 - 20 Years', isSelected: false },
-                                        { value: '20 - 25 Years', isSelected: false },
-                                        { value: '25 - 30 Years', isSelected: false },
-                                        { value: '30 - 40 Years', isSelected: false },
-                                        { value: 'Above 40 Years', isSelected: false },
+                                        { value: 'Fresher',groupname:"Experience", isSelected: false },
+                                        { value: 'Less than 1 Year',groupname:"Experience", isSelected: false },
+                                        { value: '1 - 2 Years',groupname:"Experience", isSelected: false },
+                                        { value: '2 - 4 Years',groupname:"Experience", isSelected: false },
+                                        { value: '4 - 6 Years',groupname:"Experience", isSelected: false },
+                                        { value: '6 - 9 Years',groupname:"Experience", isSelected: false },
+                                        { value: '9 - 12 Years',groupname:"Experience", isSelected: false },
+                                        { value: '12 - 15 Years',groupname:"Experience", isSelected: false },
+                                        { value: '15 - 20 Years',groupname:"Experience", isSelected: false },
+                                        { value: '20 - 25 Years',groupname:"Experience", isSelected: false },
+                                        { value: '25 - 30 Years',groupname:"Experience", isSelected: false },
+                                        { value: '30 - 40 Years',groupname:"Experience", isSelected: false },
+                                        { value: 'Above 40 Years',groupname:"Experience", isSelected: false },
                                     ]
                                 }]
                                 : sectionKey === 'salary_and_travels' ?
                                     [{
                                         name: 'Expected Salary',
                                         data: [
-                                            { value: 'Below ₹3 LPA', isSelected: false },
-                                            { value: '₹3 LPA - ₹5 LPA', isSelected: false },
-                                            { value: '₹5 LPA - ₹7 LPA', isSelected: false },
-                                            { value: '₹7 LPA - ₹10 LPA', isSelected: false },
-                                            { value: '₹10 LPA - ₹12 LPA', isSelected: false },
-                                            { value: '₹12 LPA - ₹15 LPA', isSelected: false },
-                                            { value: '₹15 LPA - ₹20 LPA', isSelected: false },
-                                            { value: '₹20 LPA - ₹25 LPA', isSelected: false },
-                                            { value: '₹25 LPA - ₹30 LPA', isSelected: false },
-                                            { value: '₹30 LPA - ₹35 LPA', isSelected: false },
-                                            { value: '₹35 LPA - ₹40 LPA', isSelected: false },
-                                            { value: '₹40 LPA - ₹45 LPA', isSelected: false },
-                                            { value: '₹45 LPA - ₹50 LPA', isSelected: false },
-                                            { value: '₹50 LPA - ₹55 LPA', isSelected: false },
-                                            { value: '₹55 LPA - ₹60 LPA', isSelected: false },
-                                            { value: 'Above ₹60 LPA', isSelected: false },
+                                            { value: 'Below ₹3 LPA',groupname:"Expected Salary", isSelected: false },
+                                            { value: '₹3 LPA - ₹5 LPA',groupname:"Expected Salary", isSelected: false },
+                                            { value: '₹5 LPA - ₹7 LPA',groupname:"Expected Salary", isSelected: false },
+                                            { value: '₹7 LPA - ₹10 LPA',groupname:"Expected Salary", isSelected: false },
+                                            { value: '₹10 LPA - ₹12 LPA',groupname:"Expected Salary", isSelected: false },
+                                            { value: '₹12 LPA - ₹15 LPA',groupname:"Expected Salary", isSelected: false },
+                                            { value: '₹15 LPA - ₹20 LPA',groupname:"Expected Salary", isSelected: false },
+                                            { value: '₹20 LPA - ₹25 LPA',groupname:"Expected Salary", isSelected: false },
+                                            { value: '₹25 LPA - ₹30 LPA',groupname:"Expected Salary", isSelected: false },
+                                            { value: '₹30 LPA - ₹35 LPA',groupname:"Expected Salary", isSelected: false },
+                                            { value: '₹35 LPA - ₹40 LPA',groupname:"Expected Salary", isSelected: false },
+                                            { value: '₹40 LPA - ₹45 LPA',groupname:"Expected Salary", isSelected: false },
+                                            { value: '₹45 LPA - ₹50 LPA',groupname:"Expected Salary", isSelected: false },
+                                            { value: '₹50 LPA - ₹55 LPA',groupname:"Expected Salary", isSelected: false },
+                                            { value: '₹55 LPA - ₹60 LPA',groupname:"Expected Salary", isSelected: false },
+                                            { value: 'Above ₹60 LPA',groupname:"Expected Salary", isSelected: false },
                                         ]
-                                    }, { name: 'Relocation', data: [{ value: 'Willing to Relocate', isSelected: false }] }]
+                                    }, { name: 'Relocation', data: [{ value: 'Willing to Relocate',groupname:'Relocation', isSelected: false }] }]
                                     : [];
 
                             return {
@@ -328,18 +329,22 @@ tracker.show_tasks()
                         listData: [
                             {
                                 name: 'Groups',
-                                data: [{ value: 'Excellent', isSelected: false }, { value: 'Good', isSelected: false }, { value: 'Average', isSelected: false }, { value: 'Below Average', isSelected: false }]
+                                data: [
+                                    { value: 'Excellent',groupname:'Groups', isSelected: false },
+                                     { value: 'Good',groupname:'Groups', isSelected: false }, 
+                                     { value: 'Average',groupname:'Groups', isSelected: false }, 
+                                     { value: 'Below Average',groupname:'Groups', isSelected: false }]
                             },
                             {
                                 name: 'Over all Score',
                                 data: [
-                                    { value: '0 - 40', isSelected: false },
-                                    { value: '40 - 50', isSelected: false },
-                                    { value: '50 - 60', isSelected: false },
-                                    { value: '60 - 70', isSelected: false },
-                                    { value: '70 - 80', isSelected: false },
-                                    { value: '80 - 90', isSelected: false },
-                                    { value: '90 - 100', isSelected: false },
+                                    { value: '0 - 40',groupname:'Over all Score', isSelected: false },
+                                    { value: '40 - 50',groupname:'Over all Score', isSelected: false },
+                                    { value: '50 - 60',groupname:'Over all Score', isSelected: false },
+                                    { value: '60 - 70',groupname:'Over all Score', isSelected: false },
+                                    { value: '70 - 80',groupname:'Over all Score', isSelected: false },
+                                    { value: '80 - 90',groupname:'Over all Score', isSelected: false },
+                                    { value: '90 - 100',groupname:'Over all Score', isSelected: false },
                                 ]
                             }
                         ],
@@ -381,6 +386,7 @@ tracker.show_tasks()
                             data: values.map(val => ({
                                 value: val.skill_name,
                                 val,
+                                groupname:formatKey(key),
                                 isSelected: false
                             }))
                         })),
@@ -408,6 +414,7 @@ tracker.show_tasks()
                             data: item.question_option.part1.map(option => ({
                                 value: option,
                                 item,
+                                groupname:item.question_title,
                                 isSelected: false
                             }))
                         })),
@@ -438,6 +445,7 @@ tracker.show_tasks()
                         name: 'All Personalities',
                         data: matchedBehaviours.map((val, index) => ({
                             value: `${val?.behaviours_name} ${personalityValue[index]}%`,
+                            groupname:'All Personalities',
                             isSelected: false
                         }))
                     };
@@ -458,7 +466,7 @@ tracker.show_tasks()
         } catch (error) {
         }
     }
-    const getJobGroupParameterList = async (id) => {
+    const getJobGroupParameterList = async () => {
         try {
             const response = await getJobGroupParameterListAPI(id)
             if (response.data.success) {
@@ -472,7 +480,7 @@ tracker.show_tasks()
         getScreeningAPI(id)
         getJobAssignmentReviewAPI(id)
         getJobDetails(id)
-        getJobGroupParameterList(id)
+        getJobGroupParameterList()
     }, [id])
     const getJobAssignmentReviewList = async (uid) => {
         try {
@@ -572,7 +580,7 @@ tracker.show_tasks()
     // console.log('section', sectionWiseData)
     // console.log(questionWiseData)
     // console.log(currentItem)
-    console.log(groupParameterList)
+    // console.log(groupParameterList)
     return (
         <>
             <Sidebar />
@@ -2366,6 +2374,7 @@ tracker.show_tasks()
                 groupState={groupState}
                 setGroupState={setGroupState}
                 groupParameterId={groupParameterId}
+                getJobGroupParameterList={getJobGroupParameterList}
             />
 
             {/*======Answer======*/}

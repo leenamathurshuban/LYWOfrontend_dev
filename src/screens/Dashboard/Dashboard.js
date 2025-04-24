@@ -135,7 +135,7 @@ const Dashboard = () => {
                     </svg>
                   </span>
                   <Card.Title>Start by creating your first job</Card.Title>
-                  <Button variant="primary"  onClick={handleShow}>Create Job</Button>
+                  <Button variant="primary"  onClick={()=>navigate('/jobs')}>Create Job</Button>
                 </Card.Body>
               </Card>
             </Col>

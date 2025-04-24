@@ -1699,7 +1699,7 @@ const UpdateJobsRevised = ({
                                                         {aresEducationOption?.length > 0 ? (
                                                             <Dropdown show={true} >
                                                                 <Dropdown.Menu className="w-100 dropdown_ctm">
-                                                                    <div class={`${aresEducationOption.length ? 'droplist' : ''}`}>
+                                                                    <div class={`${aresEducationOption.length ? 'droplistmulti' : ''}`}>
                                                                         {aresEducationOption.map((option, idx) => (
                                                                             <Dropdown.Item
                                                                                 key={idx}
@@ -1903,7 +1903,7 @@ const UpdateJobsRevised = ({
                                                             {shorlistedIndustries?.length > 0 ? (
                                                                 <Dropdown show={true} >
                                                                     <Dropdown.Menu className="w-100 dropdown_ctm">
-                                                                        <div class={`${shorlistedIndustries.length ? 'droplist' : ''}`}>
+                                                                        <div class={`${shorlistedIndustries.length ? 'droplistmulti' : ''}`}>
                                                                             {shorlistedIndustries.map((option, idx) => (
                                                                                 <Dropdown.Item
                                                                                     key={idx}
@@ -2002,7 +2002,7 @@ const UpdateJobsRevised = ({
                                                             {restrictedRole?.length > 0 ? (
                                                                 <Dropdown show={true} >
                                                                     <Dropdown.Menu className="w-100 dropdown_ctm">
-                                                                        <div class={`${restrictedRole.length ? 'droplist' : ''}`}>
+                                                                        <div class={`${restrictedRole.length ? 'droplistmulti' : ''}`}>
                                                                             {restrictedRole.map((option, idx) => (
                                                                                 <Dropdown.Item
                                                                                     key={idx}
@@ -2237,7 +2237,7 @@ const UpdateJobsRevised = ({
                                                             {spokenLanguage?.length > 0 ? (
                                                                 <Dropdown show={true} >
                                                                     <Dropdown.Menu className="w-100 dropdown_ctm">
-                                                                        <div class={`${spokenLanguage.length ? 'droplist' : ''}`}>
+                                                                        <div class={`${spokenLanguage.length ? 'droplistmulti' : ''}`}>
                                                                             {spokenLanguage.map((option, idx) => (
                                                                                 <Dropdown.Item
                                                                                     key={idx}
@@ -2320,7 +2320,7 @@ const UpdateJobsRevised = ({
                                                             {writtenLanguage?.length > 0 ? (
                                                                 <Dropdown show={true} >
                                                                     <Dropdown.Menu className="w-100 dropdown_ctm">
-                                                                        <div class={`${writtenLanguage.length ? 'droplist' : ''}`}>
+                                                                        <div class={`${writtenLanguage.length ? 'droplistmulti' : ''}`}>
                                                                             {writtenLanguage.map((option, idx) => (
                                                                                 <Dropdown.Item
                                                                                     key={idx}
@@ -2446,7 +2446,7 @@ const UpdateJobsRevised = ({
                                                             {locationList?.length > 0 ? (
                                                                 <Dropdown show={true} >
                                                                     <Dropdown.Menu className="w-100 dropdown_ctm">
-                                                                        <div class={`${locationList.length ? 'droplist' : ''}`}>
+                                                                        <div class={`${locationList.length ? 'droplistmulti' : ''}`}>
                                                                             {locationList.map((option, idx) => (
                                                                                 <Dropdown.Item
                                                                                     key={idx}

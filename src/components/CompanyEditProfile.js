@@ -385,7 +385,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
     setWebsite(url);
 
     const websiteError =
-      !url || /^https?:\/\//i.test(url) ? "" : "Invalid Website URL";
+    !url || /^(https?:\/\/|www\.)\S+$/.test(url) ? "" : "Invalid Website URL";
 
     setCompanyUpdateError((prevState) => ({
       ...prevState,

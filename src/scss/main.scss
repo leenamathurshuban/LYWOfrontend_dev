@@ -6583,6 +6583,24 @@ select.select-transpant {
   overflow-x: hidden;
   padding: 10px 5px;
 }
+.droplistmulti {
+  overflow-y: auto;
+  position: absolute;
+  top: 100%;
+  background-color: #fff;
+  border: solid 1px #ddd;
+  border-top: 0;
+  max-width: fit-content;
+  z-index: 999999999;
+  border-radius: 15px;
+  box-shadow: 0 4px 5px rgb(0 0 0 / 12%);
+  overflow-x: hidden;
+  padding: 10px 5px; 
+  max-height: 145px;
+}
+.droplistmulti a {
+  font-size: 15px;
+}
 .offcanvas-backdrop {
   background-color: rgb(242 244 247 / 80%);
   backdrop-filter: blur(1px);
