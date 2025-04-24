@@ -1837,6 +1837,7 @@ import {
   ApplicationFormDetailsApi,
   ApplicationJobApi,
   CreateJobIsLike,
+  CreateJobLocation,
   EducationQualificationApi,
   getQualificationListApi,
   getSkillGroupDetailsApi,
@@ -1861,7 +1862,7 @@ const ApplicationJobPostModal = ({
   selectedWrittenLanguageUids, setSelectedWrittenLanguageUids, selectedSkills, setSelectedSkills,
   ResumeFile, setResumeFile, ResumeFileName, setResumeFileName,
   EducationRows, SetEducationRows, setBehaviourAssModel, WorkExpreienceRow, setWorkExpreienceRow,
-  isExistApplicantError, setIsExistApplicantError,spokenLanguageBadges, setSpokenLanguageBadges,
+  isExistApplicantError, setIsExistApplicantError, spokenLanguageBadges, setSpokenLanguageBadges,
   rdnwBadges, setrdnwBadges
 }) => {
   // const [isYes, setIsYes] = useState({
@@ -1880,6 +1881,10 @@ const ApplicationJobPostModal = ({
   const [skillGroupData, setSkillGroupsData] = useState([]);
   const countryCodes = ["+91"];
   const [countryCode, setCountryCode] = useState("+91");
+  const [spokenLanguage, setSpokenLanguage] = useState([])
+  const [writtenLanguage, setWittenLanguage] = useState([])
+  const [locationList, setLocationList] = useState([])
+  // const [geographyLocaton,setGeographyLocaton] = useState("")
   // const [selectedSpokenLanguageUids, setSelectedSpokenLanguageUids] = useState(
   //   []
   // );
@@ -2184,7 +2189,7 @@ const ApplicationJobPostModal = ({
     newWorkRow[index]["WorkIndustry"] = value;
     setWorkExpreienceRow(newWorkRow);
     setIndustriesList([])
-  }
+  } 
 
   const handleKeyPressForlanguages = async (e, from) => {
     if (e.key === "Enter" && inputValue.trim()) {
@@ -2230,6 +2235,92 @@ const ApplicationJobPostModal = ({
       console.log("error response----->>>>>>", error);
     }
   };
+  const handleWaSlanguages = async (e, from) => {
+    const { name, value } = e.target;
+    let url;
+    if (value != "") {
+      url = `https://bittrend.shubansoftware.com/assets-api/laguage-list-api/?page=1&limit=10&search=${value}`;
+    }
+
+    try {
+      const response = await getQualificationListApi(url);
+      if (response?.data?.response.length > 0) {
+        if (value) {
+          if (from === "spoken") {
+            setSpokenLanguage(response?.data?.response)
+            // setSpokenLanguageBadges((prevBadges) => [
+            //     ...prevBadges,
+            //     response?.data?.response[0],
+            // ]);
+          } else if (from === "rdnw") {
+            setWittenLanguage(response?.data?.response)
+            // setrdnwBadges((prevBadges) => [
+            //     ...prevBadges,
+            //     response?.data?.response[0],
+            // ]);
+          }
+
+          // setInputValue("");
+        }
+      }
+    } catch (error) {
+      console.log("error response----->>>>>>", error);
+    }
+  };
+  const handleSelectSpokenLang = (option) => {
+    setSpokenLanguageBadges((prevBadges) => [
+      ...prevBadges,
+      option,
+    ]);
+    setSpokenLanguage([])
+  }
+  const handleSelectWrittenLang = (option) => {
+    setrdnwBadges((prevBadges) => [
+      ...prevBadges,
+      option,
+    ]);
+    setWittenLanguage([])
+  }
+
+  const handleLocationAPIList = () => {
+    // const { name, value } = e.target
+    const url = `https://bittrend.shubansoftware.com/account-api/location-list-api/?page=1&limit=500&search=${profileformData?.CurrentLocation}`;
+    CreateJobLocation(url)
+      .then((res) => {
+        // setLocationData(res.data.response);
+        if (res.data.response.length > 0) {
+          setLocationList(res?.data?.response)
+          //   setLocationBadges((prevBadges) => [
+          //     ...prevBadges,
+          //     res?.data?.response[0],
+          //   ]);
+        }
+      })
+      .catch((error) => {
+        if (
+          error?.response?.status === 401 ||
+          error?.response?.data?.detail?.includes(
+            "Given token not valid for any token type"
+          )
+        ) {
+          //console.log("Token expired, redirecting to login");
+          //   removeToken();
+          //   navigate("/loginwithpassword");
+        }
+      });
+  };
+  useEffect(()=>{
+    if(profileformData?.CurrentLocation){
+      handleLocationAPIList()      
+    }
+  },[profileformData?.CurrentLocation])
+  const handleSelectGeographyLocaton = (value) => {
+    setProfileFormData({
+      ...profileformData,
+      ["CurrentLocation"]:value
+    })
+    setLocationList([])
+  }
   const getSelectedSkillsNames = () => {
     const selectedSkillNames = [];
 
@@ -2409,13 +2500,13 @@ const ApplicationJobPostModal = ({
       if (spokenLanguageBadges.length) {
         formdata.append(
           "spoken_language",
-          JSON.stringify(spokenLanguageBadges.map((Val)=>Val?.uid))
+          JSON.stringify(spokenLanguageBadges.map((Val) => Val?.uid))
         );
       }
       if (rdnwBadges.length) {
         formdata.append(
           "written_reading_language",
-          JSON.stringify(rdnwBadges.map((Val)=>Val?.uid))
+          JSON.stringify(rdnwBadges.map((Val) => Val?.uid))
         );
       }
       formdata.append("current_location", profileformData?.CurrentLocation);
@@ -2889,7 +2980,7 @@ const ApplicationJobPostModal = ({
   console.log(EducationRows)
   console.log('checkvalid====>', isValid)
   console.log('testing', profileformData)
-  console.log(spokenLanguageBadges,rdnwBadges)
+  console.log(spokenLanguageBadges, rdnwBadges)
   return (
     <Modal
       show={show}
@@ -3930,8 +4021,8 @@ const ApplicationJobPostModal = ({
                     Spoken Language
                   </Form.Label>
                   <div className="col-md-9">
-                    <div className="tagarea p-2">
-                      {/* {jobPostData?.spoken_language?.map((item, index) => (
+                    {/* <div className="tagarea p-2"> */}
+                    {/* {jobPostData?.spoken_language?.map((item, index) => (
                         <Badge
                           key={index}
                           bg={
@@ -3944,7 +4035,7 @@ const ApplicationJobPostModal = ({
                         >
                           {item?.language_name}
                         </Badge>
-                      ))} */}
+                      ))}
                       {spokenLanguageBadges.map((badge, index) => (
                         <Badge
                           key={index}
@@ -3955,7 +4046,7 @@ const ApplicationJobPostModal = ({
                             "primary"
                           }
                           className="me-2 mb-2 tag-white"
-                          // onClick={() => handleSpokenLanguageClick(badge.uid)}
+                        // onClick={() => handleSpokenLanguageClick(badge.uid)}
                         >
                           {badge?.language_name}
                           <button
@@ -3979,7 +4070,52 @@ const ApplicationJobPostModal = ({
                         onKeyDown={(e) => {
                           handleKeyPressForlanguages(e, "spoken");
                         }}
-                      />
+                      /> */}
+                    {/* </div> */}
+
+                    <div className="tagarea p-2 position-relative">
+                      {spokenLanguageBadges?.map((badge, index) => (
+                        <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
+                          {badge?.language_name}
+                          <button
+                            className="btn close_tag"
+                            style={{ cursor: "pointer" }}
+                            onClick={() =>
+                              handleRemoveSpokenLanguageBadge(index)
+                            }
+                          >
+                            <i className="fa fa-close ms-1"></i>
+                          </button>
+                        </Badge>
+                      ))}
+                      <div className="inline-dropdown-container position-relative d-inline-block">
+                        <Form.Control
+                          type="text"
+                          className="inline-input"
+                          placeholder="Enter text"
+                          // value={row.areaOfEducation}
+                          // disabled={row.saved}
+                          onChange={(e) => handleWaSlanguages(e, "spoken")}
+                        />
+                        {spokenLanguage?.length > 0 ? (
+                          <Dropdown show={true} >
+                            <Dropdown.Menu className="w-100 dropdown_ctm">
+                              <div class={`${spokenLanguage.length ? 'droplistmulti' : ''}`}>
+                                {spokenLanguage.map((option, idx) => (
+                                  <Dropdown.Item
+                                    key={idx}
+                                    onClick={(e) =>
+                                      handleSelectSpokenLang(option)
+                                    }
+                                  >
+                                    {option?.language_name}
+                                  </Dropdown.Item>
+                                ))}
+                              </div>
+                            </Dropdown.Menu>
+                          </Dropdown>
+                        ) : ('')}
+                      </div>
                     </div>
 
                     <span className="required_text">
@@ -3995,8 +4131,8 @@ const ApplicationJobPostModal = ({
                     Written and Reading Language
                   </Form.Label>
                   <div className="col-md-9">
-                    <div className="tagarea p-2">
-                      {/* {jobPostData?.read_write_language?.map((item, index) => (
+                    {/* <div className="tagarea p-2">
+                      {jobPostData?.read_write_language?.map((item, index) => (
                         <Badge
                           key={index}
                           bg={
@@ -4009,7 +4145,7 @@ const ApplicationJobPostModal = ({
                         >
                           {item?.language_name}
                         </Badge>
-                      ))} */}
+                      ))}
                       {rdnwBadges.map((badge, index) => (
                         <Badge
                           key={index}
@@ -4020,7 +4156,7 @@ const ApplicationJobPostModal = ({
                             "primary"
                           }
                           className="me-2 mb-2 tag-white"
-                          // onClick={() => handleWrittenLanguageClick(badge.uid)}
+                        // onClick={() => handleWrittenLanguageClick(badge.uid)}
                         >
                           {badge?.language_name}
                           <button
@@ -4045,6 +4181,50 @@ const ApplicationJobPostModal = ({
                           handleKeyPressForlanguages(e, "rdnw");
                         }}
                       />
+                    </div> */}
+                    <div className="tagarea p-2 position-relative">
+                      {rdnwBadges.map((badge, index) => (
+                        <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
+                          {badge?.language_name}
+                          <button
+                            className="btn close_tag"
+                            style={{ cursor: "pointer" }}
+                            onClick={() =>
+                              handleRemoveReadAndWriteLanguageBadge(index)
+                            }
+                          >
+                            <i className="fa fa-close ms-1"></i>
+                          </button>
+                        </Badge>
+                      ))}
+                      <div className="inline-dropdown-container position-relative d-inline-block">
+                        <Form.Control
+                          type="text"
+                          className="inline-input"
+                          placeholder="Enter text"
+                          // value={row.areaOfEducation}
+                          // disabled={row.saved}
+                          onChange={(e) => handleWaSlanguages(e, "rdnw")}
+                        />
+                        {writtenLanguage?.length > 0 ? (
+                          <Dropdown show={true} >
+                            <Dropdown.Menu className="w-100 dropdown_ctm">
+                              <div class={`${writtenLanguage.length ? 'droplistmulti' : ''}`}>
+                                {writtenLanguage.map((option, idx) => (
+                                  <Dropdown.Item
+                                    key={idx}
+                                    onClick={(e) =>
+                                      handleSelectWrittenLang(option)
+                                    }
+                                  >
+                                    {option?.language_name}
+                                  </Dropdown.Item>
+                                ))}
+                              </div>
+                            </Dropdown.Menu>
+                          </Dropdown>
+                        ) : ('')}
+                      </div>
                     </div>
                     <span className="required_text">
                       Select all written and reading languages
@@ -4062,7 +4242,7 @@ const ApplicationJobPostModal = ({
                   </Col>
 
                   <Col>
-                    <Form.Control
+                    {/* <Form.Control
                       type="text"
                       placeholder="Current Location"
                       size="sm"
@@ -4071,7 +4251,32 @@ const ApplicationJobPostModal = ({
                       value={profileformData?.CurrentLocation}
                       onChange={handleProfileDetailsChange}
                       isInvalid={!!errors.CurrentLocation}
-                    />
+                    /> */}
+                    <Dropdown show={true} >
+                      <Dropdown.Menu className="w-100 dropdown_cti">
+                        <FormControl
+                          // autoFocus
+                          placeholder="Current Location"
+                          size="sm"
+                          style={{ width: "350px" }}
+                          name="CurrentLocation"
+                          value={profileformData?.CurrentLocation}                          
+                          onChange={(e)=>setProfileFormData({...profileformData,['CurrentLocation']:e.target.value})}
+                        />
+                        <div class={`${industriesList.length ? 'droplist' : ''}`}>
+                          {locationList.map((option, idx) => (
+                            <Dropdown.Item
+                              key={idx}
+                              onClick={(e) =>
+                                handleSelectGeographyLocaton(option?.location_name)
+                              }
+                            >
+                              {option?.location_name}
+                            </Dropdown.Item>
+                          ))}
+                        </div>
+                      </Dropdown.Menu>
+                    </Dropdown>
                   </Col>
 
                   <Form.Control.Feedback type="invalid">

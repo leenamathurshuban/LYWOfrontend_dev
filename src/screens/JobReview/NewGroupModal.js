@@ -146,24 +146,32 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, localAsset
     };
     const handleBoxClick = (index, obj) => {
         setSelectedGroup(obj)
+        // setGroupState((prev) =>
+        //     prev.map((item, i) => {
+        //         if (i === index) {                    
+        //             if (!item.isSelected) {
+        //                 return { ...item, isSelected: !item.isSelected };
+        //             } else if (item.isSelected) {
+        //                 return { ...item, isSelected: !item.isSelected };
+        //             }
+        //         }
+        //         // else {
+        //         //     if (item.isSelected) {
+        //         //         return { ...item, isSelected: !item.isSelected }
+        //         //     }
+        //         // }
+        //         return item;
+        //     })
+        // );
         setGroupState((prev) =>
             prev.map((item, i) => {
                 if (i === index) {
-                    // Allow toggling only if:
-                    // 1. The item is not already selected, and the selectedCount is less than 4.
-                    // 2. The item is already selected (to allow deselecting).
-                    if (!item.isSelected) {
-                        return { ...item, isSelected: !item.isSelected };
-                    } else if (item.isSelected) {
-                        return { ...item, isSelected: !item.isSelected };
-                    }
+                    // Toggle only the selected item
+                    return { ...item, isSelected: !item.isSelected };
+                } else {
+                    // All others should be unselected
+                    return { ...item, isSelected: false };
                 }
-                // else {
-                //     if (item.isSelected) {
-                //         return { ...item, isSelected: !item.isSelected }
-                //     }
-                // }
-                return item;
             })
         );
     };

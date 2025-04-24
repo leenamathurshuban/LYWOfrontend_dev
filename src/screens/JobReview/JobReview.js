@@ -841,7 +841,7 @@ tracker.show_tasks()
                                                 </Card.Body>
                                             </Card>
                                         </Col> */}
-                                        <Col md={2}>
+                                        {/* <Col md={2}>
                                             <Card className="status_cardpanel">
                                                 <div className="card-header">
                                                     <h5>Tech-Quiz1 <span className="count">100</span></h5>
@@ -904,17 +904,17 @@ tracker.show_tasks()
                                                     </div>
                                                 </Card.Body>
                                             </Card>
-                                        </Col>
+                                        </Col> */}
                                         <Col md={3}>
                                             <Card className="status_cardpanel">
                                                 <Card.Body className="text-center d-flex align-items-center justify-content-center flex-column">
-                                                    <button type="button" className="btn btn-light-primery"><i className="fa fa-plus me-2"></i>Add Evaluation</button>
+                                                    <button type="button" className="btn btn-light-primery" onClick={handleShow}><i className="fa fa-plus me-2"></i>Add Evaluation</button>
                                                     <button type="button" className="btn btn-white mt-2"><i className="fa fa-plus me-2"></i>Finalise Selection</button>
                                                 </Card.Body>
                                             </Card>
                                         </Col>
                                     </Row>
-                                    <Card className="shadow-sm border-0 evaluations_data mt-4 rounded overflow-hidden">
+                                    {/* <Card className="shadow-sm border-0 evaluations_data mt-4 rounded overflow-hidden">
                                         <Card.Header className="py-2">
                                             <Row>
                                                 <Col md={6} className="d-flex">
@@ -1457,7 +1457,7 @@ tracker.show_tasks()
                                                 </Table>
                                             </div>
                                         </Card.Body>
-                                    </Card>
+                                    </Card> */}
                                 </Tab.Pane>
                                 <Tab.Pane eventKey="second">Second tab content</Tab.Pane>
                                 <Tab.Pane eventKey="third">
