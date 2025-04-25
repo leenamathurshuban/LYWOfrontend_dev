@@ -27,120 +27,33 @@ import threeDots from "../../images/icons/dots-vertical_icon.svg";
 import RingSucess from "../../images/icons/ring_sucess.svg";
 import DragDrop from "../../images/icons/dragdrop-bullet.svg";
 import usericon from "../../images/icons/user-01-gray.svg";
+import { BehaviourResponse } from '../../utils/behaviour';
 
-const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, localAssetJob, setLocalAssetJob, id, groupState, setGroupState, groupParameterId,getJobGroupParameterList }) => {
+const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, jobDetails, localAssetJob, setLocalAssetJob, id, groupState, setGroupState, groupParameterId, getJobGroupParameterList }) => {
     const [tabActive, setTabActive] = useState("evaluation");
     const [groupTitle, setGroupTitle] = useState("");
-    console.log("get==========uid=======>", groupParameterId)
-    // const [groupState, setGroupState] = useState([
-    //     {
-    //         heading: 'Job Match', title: 'Select to Apply', isChecked: false, isSelected: true,
-    //         listData: [
-    //             {
-    //                 name: 'Groups',
-    //                 data: [{ value: 'Excellent', isSelected: false }, { value: 'Good', isSelected: false }, { value: 'Average', isSelected: false }, { value: 'Below Average', isSelected: false }]
-    //             },
-    //             {
-    //                 name: 'Job Match Percentage',
-    //                 data: [
-    //                     { value: '0% - 40% ', isSelected: false },
-    //                     { value: '50% - 60% ', isSelected: false },
-    //                     { value: '60% - 70% ', isSelected: false },
-    //                     { value: '70% - 80% ', isSelected: false },
-    //                     { value: '80% - 90% ', isSelected: false },
-    //                     { value: '90% - 100% ', isSelected: false }
-    //                 ]
-    //             }
-    //         ]
-    //     },
-    //     {
-    //         heading: 'Education', isChecked: false, isSelected: false,
-    //         listData: [
-    //             {
-    //                 name: 'Require Education',
-    //                 data: [{ value: 'Master', isSelected: false }, { value: 'Bachelors', isSelected: false }, { value: 'PG', isSelected: false }, { value: 'Diploma', isSelected: false }]
-    //             },
-    //             {
-    //                 name: 'Areas of Education',
-    //                 data: [
-    //                     { value: 'Mathematics', isSelected: false },
-    //                     { value: 'Science', isSelected: false },
-    //                     { value: 'Computer', isSelected: false },
-    //                     { value: 'Engineering', isSelected: false },
-    //                     { value: 'Electronic', isSelected: false },
-    //                 ]
-    //             }
-    //         ]
-    //     },
-
-    //     {
-    //         heading: 'Availability', title: 'Select to Apply', isChecked: false, isSelected: false,
-    //         listData: [
-    //             {
-    //                 name: 'Working Status',
-    //                 data: [{ value: 'Currently Working', isSelected: false }, { value: 'Currently not Working ', isSelected: false }]
-    //             },
-    //             {
-    //                 name: 'Available by',
-    //                 data: [],
-    //                 date:true
-    //             },
-    //             {
-    //                 name: 'Notice Period',
-    //                 data: [
-    //                     { value: 'Less than 30 Days', isSelected: false },
-    //                     { value: '30 - 60 Days', isSelected: false },
-    //                     { value: '60 - 90 Days   ', isSelected: false },
-    //                     { value: 'More than 90', isSelected: false },
-    //                 ]
-    //             },
-    //             {
-    //                 name: "Notice Buy out",
-    //                 data: [
-    //                     { value: 'Available', isSelected: false },
-    //                     { value: 'Not Available', isSelected: false },                        
-    //                 ]
-    //             },
-    //             {
-    //                 name: "Willing to Travel for Job",
-    //                 data: [
-    //                     { value: 'Regularly', isSelected: false },
-    //                     { value: 'Sometimes', isSelected: false },
-    //                     { value: 'Rarely', isSelected: false },
-    //                     { value: 'Not Willing to Travel', isSelected: false },                        
-    //                 ]
-    //             }
-    //         ]
-    //     },
-    //     { 
-    //         heading: 'Skills', title: 'Select to Apply', isChecked: false, isSelected: false,
-    //         listData: [
-    //             {
-    //                 name: 'Groups',
-    //                 data: [{ value: 'Excellent', isSelected: false }, { value: 'Good', isSelected: false }, { value: 'Average', isSelected: false }, { value: 'Below Average', isSelected: false }]
-    //             },
-    //             {
-    //                 name: 'Job Match Percentage',
-    //                 data: [
-    //                     { value: '0% - 40% ', isSelected: false },
-    //                     { value: '50% - 60% ', isSelected: false },
-    //                     { value: '60% - 70% ', isSelected: false },
-    //                     { value: '70% - 80% ', isSelected: false },
-    //                     { value: '80% - 90% ', isSelected: false },
-    //                     { value: '90% - 100% ', isSelected: false }
-    //                 ]
-    //             }
-    //         ]
-    //      },
-    //     { heading: 'Language', title: 'Select to Apply', isChecked: false, isSelected: false },
-    //     { heading: 'Custom Questions', title: 'Select to Apply', isChecked: false, isSelected: false },
-    //     { heading: 'Personality', title: 'Select to Apply', isChecked: false, isSelected: false },
-    //     { heading: 'Experience', title: 'Select to Apply', isChecked: false, isSelected: false },
-    //     { heading: 'Roles', title: 'Select to Apply', isChecked: false, isSelected: false },
-    //     { heading: 'Salary & Travel ', title: 'Select to Apply', isChecked: false, isSelected: false },
-    // ])
     const [selectedGroup, setSelectedGroup] = useState({});
-    const [payloadList, setPayloadList] = useState({})
+    const [payloadList, setPayloadList] = useState({
+        job_match: { job_groups: [], job_match_percentage: [] },
+
+        education: { required_education: [], area_of_education: [] },
+
+        availability: { working_status: "", available_by: "", notice_period: [], notice_buy_out: "", willing_to_travel_for_job: "" },
+
+        skills: [], //pass skill group object with their skills in this array
+
+        language: { read_and_write: [], speak: [] },
+
+        custom_question: [], //pass questions object with their options selected in this array
+
+        personality: { personality_groups: [], all_personalites: [] },
+
+        experience: { get_experience: [], industries: [] },
+
+        roles: [],
+
+        salary_and_travel: { expected_salary: [], current_location: "", relocation: "", require_relocation_assistance: "" }
+    })
     const handleSelect = (key) => {
         setTabActive(key);
     };
@@ -222,61 +135,115 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, localAsset
         //         return item;
         //     })
         // );
-        setGroupState(prev =>
-            prev.map(item => {
-                if (selectedItem.heading === item.heading) {
-                    // Check current selected state
-                    const isCurrentlySelected = item.listData[listIndex].data[dataindex].isSelected;
-                    const isNowSelected = !isCurrentlySelected;
-                    // Update listData
-                    const updatedListData = item.listData.map((listItem, listIdx) => {
-                        if (listIdx === listIndex) {
-                            return {
-                                ...listItem,
-                                data: listItem.data.map((dataItem, dataIdx) => {
-                                    if (dataIdx === dataindex) {
-                                        return {
-                                            ...dataItem,
-                                            isSelected: isNowSelected
-                                        };
-                                    }
-                                    return dataItem;
-                                })
-                            };
-                        }
-                        return listItem;
-                    });
+        if (selectedItem?.heading === 'Job Match' || selectedItem?.heading === 'Technical Round For EHS Manager' || selectedItem?.heading === 'Pre-Interview Round For Creative Director') {
+            setGroupState(prev =>
+                prev.map(item => {
+                    if (selectedItem.heading === item.heading) {
+                        const isCurrentlySelected = item.listData[listIndex].data[dataindex].isSelected;
+                        const isNowSelected = !isCurrentlySelected;
 
-                    // Update selectedList in the same item
-                    let updatedSelectedList = item.selectedList || [];
+                        const selectedGroupName = item.listData[listIndex].name;
 
-                    if (isNowSelected) {
-                        // Push only if not already included
-                        if (!updatedSelectedList.includes(selectedValue)) {
-                            updatedSelectedList = [...updatedSelectedList, selectedValue];
+                        const updatedListData = item.listData.map((listItem, listIdx) => {
+                            if (listItem.name === selectedGroupName) {
+                                // Update only the clicked group
+                                return {
+                                    ...listItem,
+                                    data: listItem.data.map((dataItem, dataIdx) => {
+                                        if (listIdx === listIndex && dataIdx === dataindex) {
+                                            return { ...dataItem, isSelected: isNowSelected };
+                                        }
+                                        return dataItem;
+                                    })
+                                };
+                            } else {
+                                // Deselect all from the other group
+                                return {
+                                    ...listItem,
+                                    data: listItem.data.map(dataItem => ({
+                                        ...dataItem,
+                                        isSelected: false
+                                    }))
+                                };
+                            }
+                        });
+
+                        // Collect only selected values from the current group
+                        const updatedSelectedList = updatedListData
+                            .flatMap(group => group.data)
+                            .filter(option => option.isSelected)
+                            .map(option => option);
+
+                        return {
+                            ...item,
+                            listData: updatedListData,
+                            selectedList: updatedSelectedList,
+                            isChecked: updatedSelectedList.length > 0,
+                            isSelected: updatedSelectedList.length > 0
+                        };
+                    }
+                    return item;
+                })
+            );
+
+        } else {
+            setGroupState(prev =>
+                prev.map(item => {
+                    if (selectedItem.heading === item.heading) {
+                        // Check current selected state
+                        const isCurrentlySelected = item.listData[listIndex].data[dataindex].isSelected;
+                        const isNowSelected = !isCurrentlySelected;
+                        // Update listData
+                        const updatedListData = item.listData.map((listItem, listIdx) => {
+                            if (listIdx === listIndex) {
+                                return {
+                                    ...listItem,
+                                    data: listItem.data.map((dataItem, dataIdx) => {
+                                        if (dataIdx === dataindex) {
+                                            return {
+                                                ...dataItem,
+                                                isSelected: isNowSelected
+                                            };
+                                        }
+                                        return dataItem;
+                                    })
+                                };
+                            }
+                            return listItem;
+                        });
+
+                        // Update selectedList in the same item
+                        let updatedSelectedList = item.selectedList || [];
+
+                        if (isNowSelected) {
+                            // Push only if not already included
+                            if (!updatedSelectedList.includes(selectedValue)) {
+                                updatedSelectedList = [...updatedSelectedList, selectedValue];
+                            } else {
+                                updatedSelectedList = updatedSelectedList.filter(val => val !== selectedValue);
+                            }
                         } else {
+                            // Remove it if deselected
                             updatedSelectedList = updatedSelectedList.filter(val => val !== selectedValue);
                         }
-                    } else {
-                        // Remove it if deselected
-                        updatedSelectedList = updatedSelectedList.filter(val => val !== selectedValue);
-                    }
 
-                    return {
-                        ...item,
-                        isSelected: selectedValue ? false : true,
-                        isChecked: selectedValue ? true : false,
-                        // listData: updatedListData,
-                        selectedList: updatedSelectedList
-                    };
-                }
-                return item;
-            })
-        );
+                        return {
+                            ...item,
+                            isSelected: selectedValue ? false : true,
+                            isChecked: selectedValue ? true : false,
+                            // listData: updatedListData,
+                            selectedList: updatedSelectedList
+                        };
+                    }
+                    return item;
+                })
+            );
+        }
+
     }
     const handleAvailableByDate = (selectedItem, e) => {
         const { name, value } = e.target
-        const newValue = { value: value, groupname:"Available by",isSelected:false}
+        const newValue = { value: value, groupname: "Available by", isSelected: false }
         setGroupState(prev =>
             prev.map(item => {
                 if (selectedItem.heading === item.heading) {
@@ -290,7 +257,7 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, localAsset
                     return {
                         ...item,
                         isSelected: newValue ? false : true,
-                        isChecked: newValue ? true : false,                        
+                        isChecked: newValue ? true : false,
                         selectedList: updatedSelectedList
                     };
                 }
@@ -298,9 +265,9 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, localAsset
             })
         );
     }
-    const handleRequireRelacation=(selectedItem, e)=>{        
-        const { name, value,checked } = e.target
-        const newValue = { value: checked?"Yes":"No", groupname:"Require Relocation Assistance",isSelected:false}
+    const handleRequireRelacation = (selectedItem, e) => {
+        const { name, value, checked } = e.target
+        const newValue = { value: checked ? "Yes" : "No", groupname: "Require Relocation Assistance", isSelected: false }
         setGroupState(prev =>
             prev.map(item => {
                 if (selectedItem.heading === item.heading) {
@@ -314,7 +281,7 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, localAsset
                     return {
                         ...item,
                         isSelected: newValue ? false : true,
-                        isChecked: newValue ? true : false,                        
+                        isChecked: newValue ? true : false,
                         selectedList: updatedSelectedList
                     };
                 }
@@ -342,12 +309,141 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, localAsset
                 }
                 return acc;
             }, {});
-            setPayloadList({
-                ...payloadList,
-                [selectedGroup?.heading]: formatted
-            })
+            // setPayloadList({
+            //     ...payloadList,
+            //     [selectedGroup?.heading]: formatted
+            // })
+            setPayloadList(prev => ({
+                ...prev,
+                [selectedGroup?.heading.toLowerCase().replace(/ /g, '_')]: {
+                    ...prev[selectedGroup?.heading.toLowerCase().replace(/ /g, '_')],
+                    ...formatted
+                }
+            }));
         }
     }, [selectedGroup])
+    const handleBlueDots = (item) => {
+        if (selectedGroup?.heading === "Job Match") {
+            return ('')
+        } else if (selectedGroup?.heading === "Availability") {
+            if (item?.groupname === 'Willing to Travel for Job') {
+                if (jobDetails?.requires_travel === item?.value) {
+                    return (
+                        <span className="imprt_icon text-primery"><i class="fas fa-circle"></i></span>
+                    )
+                }
+            }
+        } else if (selectedGroup?.heading === "Personality") {
+            if (item?.groupname === 'Groups') {
+                return ('')
+            } else {
+                const personalityKeys = Object.keys(jobDetails.calculation_job[0].personality_data);
+                const personalityValue = Object.values(jobDetails.calculation_job[0].personality_data);
+                const updatedBehaviourResponse = BehaviourResponse.map(item => ({
+                    ...item,
+                    personality_percentage: jobDetails.calculation_job[0].personality_data[item.behaviour_type_name] || 0 // Default to 0 if no match
+                }));
+                const matchedBehaviours = updatedBehaviourResponse.filter(item =>
+                    personalityKeys.includes(item.behaviour_type_name)
+                );
+                const newArrray = matchedBehaviours.flatMap((val, index) => (`${val?.behaviours_name} ${personalityValue[index]}%`))
+                if (newArrray.includes(item?.value)) {
+                    return (
+                        <span className="imprt_icon text-primery"><i class="fas fa-circle"></i></span>
+                    )
+                }
+            }
+        } else if (selectedGroup?.heading === "Skills") {
+            const matchArray = jobDetails?.must_have_skills?.map((val) => val?.skill_name);
+            if (matchArray.includes(item?.value)) {
+                return (
+                    <span className="imprt_icon text-primery"><i class="fa  fa-star" aria-hidden="true"></i>
+                    </span>
+                )
+            } else {
+                return (
+                    <span className="imprt_icon text-primery"><i class="fas fa-circle"></i></span>
+                )
+            }
+
+        } else if (selectedGroup?.heading === "Custom Questions") {
+            if (item?.item?.questions_answer?.includes(item?.value)) {
+                return (
+                    <span className="imprt_icon text-primery"><i class="fas fa-circle"></i></span>
+                )
+            }
+        } else if (selectedGroup?.heading === "Education") {
+            const fetchEducation = jobDetails?.area_of_education?.map((val) => val?.qualification_name)
+            if (item?.groupname === 'Area Of Education') {
+                if (fetchEducation.includes(item?.value)) {
+                    return (
+                        <span className="imprt_icon text-primery"><i class="fas fa-circle"></i></span>
+                    )
+                }
+            } else if (item?.groupname === 'Required Education') {
+                if (jobDetails?.minimum_education === item?.value) {
+                    return (
+                        <span className="imprt_icon text-primery"><i class="fas fa-circle"></i></span>
+                    )
+                }
+            }
+        } else if (selectedGroup?.heading === "Language") {
+            if (item?.groupname === 'Read And Write') {
+                const rwl = jobDetails?.read_write_language?.map((val) => val?.language_name)
+                if (rwl.includes(item?.value)) {
+                    return (
+                        <span className="imprt_icon text-primery"><i class="fas fa-circle"></i></span>
+                    )
+                }
+            } else if (item?.groupname === 'Speak') {
+                const spokenlang = jobDetails?.spoken_language?.map((val) => val?.language_name)
+                if (spokenlang.includes(item?.value)) {
+                    return (
+                        <span className="imprt_icon text-primery"><i class="fas fa-circle"></i></span>
+                    )
+                }
+            }
+        } else if (selectedGroup?.heading === "Experience") {
+            if (item?.groupname === 'Industries') {
+                const Industries = jobDetails?.shortlisted_industry?.map((val) => val?.industry_name)
+                if (Industries.includes(item?.value)) {
+                    return (
+                        <span className="imprt_icon text-primery"><i class="fas fa-circle"></i></span>
+                    )
+                }
+            }
+        } else if (selectedGroup?.heading === "Roles") {
+            if (item?.groupname === 'Role') {
+                const role = jobDetails?.restricted_roles?.map((val) => val?.is_like_name)
+                if (role.includes(item?.value)) {
+                    return (
+                        <span className="imprt_icon text-primery"><i class="fas fa-circle"></i></span>
+                    )
+                }
+            }
+        } else if (selectedGroup?.heading === "Salary And Travels") {
+            if (item?.groupname === 'Current Location') {
+                const location = jobDetails?.preferred_geography?.map((val) => val?.location_name)
+                if (location.includes(item?.value)) {
+                    return (
+                        <span className="imprt_icon text-primery"><i class="fas fa-circle"></i></span>
+                    )
+                }
+            }
+        }
+        // else {
+        //     return (
+        //         <span
+        //             // className={`imprt_icon ${mustHaveSkills.includes(skill) ? "text-primery" : ""} `}
+        //             className="imprt_icon text-primery"
+        //         //  onClick={() => handleMustHaveSkill(skill)}
+        //         >
+        //             <i class="fas fa-circle"></i>
+        //             {/* <i class={`${mustHaveSkills.includes(skill) ? "fa" : "far"}  fa-star`} aria-hidden="true"></i> */}
+        //         </span>
+        //     )
+        // }
+    }
     const handleCreateGroup = async () => {
         try {
             const payload = {
@@ -356,7 +452,7 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, localAsset
                 group_filter: payloadList
             }
             const response = await assetSapicreateJobGroupPostAPI(payload)
-            if(response.data.success){
+            if (response.data.success) {
                 setSelectedGroup({})
                 setPayloadList({})
                 setGroupTitle('')
@@ -466,17 +562,13 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, localAsset
                                                                         className={`stag_item ${selectedGroup.selectedList.includes(val) && 'active'}`}
                                                                         onClick={() => handleGroupItem(selectedGroup, listIndex, dataindex, val)}
                                                                     >
-                                                                        <span
-                                                                            // className={`imprt_icon ${mustHaveSkills.includes(skill) ? "text-primery" : ""} `}
-                                                                            className="imprt_icon text-primery"
-                                                                        //  onClick={() => handleMustHaveSkill(skill)}
-                                                                        >
-                                                                            <i class="fas fa-circle"></i>
-                                                                            {/* <i class={`${mustHaveSkills.includes(skill) ? "fa" : "far"}  fa-star`} aria-hidden="true"></i> */}
-                                                                        </span>
+                                                                        {handleBlueDots(val)}
                                                                         {val.value}
                                                                     </span>
                                                                 ))}
+                                                                {item?.name === '' && (
+                                                                    <p>-------------------or------------------</p>
+                                                                )}
                                                                 {item?.date && (
                                                                     <Form.Control
                                                                         name="available_by"
@@ -497,12 +589,12 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, localAsset
                                                         {selectedGroup?.heading === "Salary And Travels" && (
                                                             <>
                                                                 <Form.Check
-                                                                name="require_relocation_assistance"
-                                                                // type="checkbox"
-                                                                // placeholder="DD/MM/YYYY"
-                                                                // style={{ width: "350px" }}
-                                                                //   value={profileformData?.AvailableBy}
-                                                                  onChange={(e)=>handleRequireRelacation(selectedGroup, e)}
+                                                                    name="require_relocation_assistance"
+                                                                    // type="checkbox"
+                                                                    // placeholder="DD/MM/YYYY"
+                                                                    // style={{ width: "350px" }}
+                                                                    //   value={profileformData?.AvailableBy}
+                                                                    onChange={(e) => handleRequireRelacation(selectedGroup, e)}
                                                                 //   isInvalid={!!errors.AvailableBy}
                                                                 // className="form-control-sm"
                                                                 />

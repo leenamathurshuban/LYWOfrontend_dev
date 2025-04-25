@@ -112,6 +112,7 @@ tracker.show_tasks()
                         { value: 'Average', groupname: 'Job Groups', isSelected: false },
                         { value: 'Below Average', groupname: 'Job Groups', isSelected: false }]
                 },
+                {name:'',data:[]},
                 {
                     name: 'Job Match Percentage',
                     data: [
@@ -335,6 +336,7 @@ tracker.show_tasks()
                                      { value: 'Average',groupname:'Groups', isSelected: false }, 
                                      { value: 'Below Average',groupname:'Groups', isSelected: false }]
                             },
+                            {name:'',data:[]},
                             {
                                 name: 'Over all Score',
                                 data: [
@@ -2368,6 +2370,7 @@ tracker.show_tasks()
                 handleClose={handleCloseGrpMdl}
                 assetJob={assetJob}
                 setAssetJob={setAssetJob}
+                jobDetails={jobDetails}
                 localAssetJob={localAssetJob}
                 setLocalAssetJob={setLocalAssetJob}
                 id={id}

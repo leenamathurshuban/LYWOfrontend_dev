@@ -4263,7 +4263,7 @@ const ApplicationJobPostModal = ({
                           value={profileformData?.CurrentLocation}                          
                           onChange={(e)=>setProfileFormData({...profileformData,['CurrentLocation']:e.target.value})}
                         />
-                        <div class={`${industriesList.length ? 'droplist' : ''}`}>
+                        <div class={`${locationList.length ? 'droplist' : ''}`}>
                           {locationList.map((option, idx) => (
                             <Dropdown.Item
                               key={idx}
