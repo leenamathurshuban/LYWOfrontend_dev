@@ -268,6 +268,9 @@ fieldset:disabled .btn {
 .sidebar-wrapper nav.sidebar-menu ul li.active span {
   color: #6172F3;
 }
+.sidebar-wrapper nav.sidebar-menu ul li.active svg path {
+  stroke: #6172F3;
+}
 
 .main_header {
   position: fixed;
@@ -488,6 +491,10 @@ ol.breadcrumb {
   font-weight: 400;
   margin: 18px 0;
 }
+.mdt_card.card span.mdt_icon {
+  min-height: 40px;
+  display: inline-block;
+}
 .mdt_card.card span.mdt_name {
   background-color: #eef4ff;
   border: solid 1px #a4bcfd;
@@ -585,10 +592,6 @@ ol.breadcrumb {
   border-left: solid 1px #eaecf0;
 }
 
-.usermanagement_panel .bottom-fixed {
-  padding: 0 15px;
-}
-
 .modal-header {
   box-shadow: 3px 0px 6px rgba(0, 0, 0, 0.1098039216);
   border: none;
@@ -650,7 +653,7 @@ ol.breadcrumb {
   font-size: 16px;
 }
 .mdl_pagetitle .btn {
-  font-size: 13px;
+  font-size: 12px;
   padding: 8px 14px;
 }
 .mdl_pagetitle .btn svg {
@@ -861,6 +864,11 @@ label.required.form-label {
   color: #667085;
   line-height: 24px;
 }
+.cmp_details .cmp_info li strong {
+  font-size: 14px;
+  color: #344054;
+  font-weight: 600;
+}
 .cmp_details .rects-panel h5 {
   color: #475467;
   font-size: 13px;
@@ -879,6 +887,10 @@ label.required.form-label {
   box-shadow: 0 -3px 3px rgba(0, 0, 0, 0.06);
   margin-left: -15px;
   margin-right: -15px;
+  padding: 0 15px;
+}
+.rects-panel.bottom-fixed .rects_list {
+  padding: 0 12px;
 }
 .rects-panel .rects_list {
   margin: 0;
@@ -5781,4 +5793,11 @@ select.select-transpant:hover, select.select-transpant:focus, select.select-tran
 }
 .creategroup_drawer .educational-card .starttag_box .imprt_icon i {
   font-size: 6px;
+}
+
+.livechat {
+  position: fixed;
+  bottom: 5px;
+  right: 5px;
+  z-index: 9999;
 }/*# sourceMappingURL=main.css.map */

@@ -3079,7 +3079,7 @@ const UpdateJobsRevised = ({
                                                 />
                                             </svg>
                                         </div>
-                                        <button type="button" className="btn btn-lightgray me-4" onClick={() => setShowHelpChoose(true)}>
+                                        <button type="button" className="btn btn-lightgray me-4" onClick={(e) => { e.stopPropagation(); setShowHelpChoose(true) }}>
                                             <svg
                                                 className="me-1"
                                                 width="20"
@@ -3143,7 +3143,7 @@ const UpdateJobsRevised = ({
                                                         selections are made
                                                     </span>
                                                 </Col>}
-                                                {createRevisedJobData?.calculation_job.length > 0 && personalityData.length > 0 && personalityData.map((item, index) => (<Col key={index} md={3}>
+                                                {createRevisedJobData?.calculation_job.length > 0 && personalityData.length > 0 && personalityData?.sort((a, b) => b?.personality_percentage - a?.personality_percentage).map((item, index) => (<Col key={index} md={3}>
                                                     <div onClick={() => handleCardClick(item)} className="perlitymth-card">
                                                         <div className="perlitymth-head">
                                                             <span className="prtmth_icon"><img src={LeaderIcn} /></span>

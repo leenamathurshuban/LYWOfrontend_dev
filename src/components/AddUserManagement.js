@@ -69,10 +69,10 @@ const AddUserManagement = () => {
   const handleCheckboxChange = (uid) => {
     setSelectedUids((prevSelectedUids) => {
       if (prevSelectedUids.includes(uid)) {
-        
+
         return prevSelectedUids.filter((id) => id !== uid);
       } else {
-        
+
         return [...prevSelectedUids, uid];
       }
     });
@@ -321,7 +321,7 @@ const AddUserManagement = () => {
               variant="link"
               className="btn-link-muted"
               onClick={() => updateUserStatus(selectedUids, "Unlock")}
-              // disabled
+            // disabled
             >
               <svg
                 width="20"
@@ -344,7 +344,7 @@ const AddUserManagement = () => {
               variant="link"
               className="btn-link-muted"
               onClick={() => updateUserStatus(selectedUids, "Activate")}
-              // disabled
+            // disabled
             >
               <svg
                 width="20"
@@ -396,7 +396,7 @@ const AddUserManagement = () => {
               variant="link"
               className="btn-link-muted"
               onClick={() => deleteUser(selectedUids)}
-              // disabled={selectedUids.length === 0}
+            // disabled={selectedUids.length === 0}
             >
               <svg
                 width="20"
@@ -633,20 +633,22 @@ const AddUserManagement = () => {
                         </Form.Group>
                       </td>
                       <td>
-                        <Button
-                          variant="light"
-                          className="btn-sm me-2"
-                          onClick={() => handleCancel(item.id)}
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                          variant="primary"
-                          className="btn-sm"
-                          type="submit"
-                        >
-                          Invite
-                        </Button>
+                        <div className="d-flex">
+                          <Button
+                            variant="light"
+                            className="btn-sm me-2"
+                            onClick={() => handleCancel(item.id)}
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            variant="primary"
+                            className="btn-sm"
+                            type="submit"
+                          >
+                            Invite
+                          </Button>
+                        </div>
                       </td>
                       <td>
                         <Form.Check

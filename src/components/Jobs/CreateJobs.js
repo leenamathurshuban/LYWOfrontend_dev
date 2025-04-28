@@ -234,6 +234,11 @@ const CreateJobs = ({ show, handleClose }) => {
       // [modalName]: {show : true,createJobuid},
     }));
   };
+  const handleWrapperClick = () => {
+    if (quillRef.current) {
+      quillRef.current.focus(); // Focus the editor manually
+    }
+  };
   const handleJobModalClose = (modalName) => {
     setModal((prev) => ({
       ...prev,
@@ -873,13 +878,13 @@ const CreateJobs = ({ show, handleClose }) => {
   };
 
   const handleCustomeBeniftsAdd = () => {
-    if(customValue.length === 0){
+    if (customValue.length === 0) {
       const CreateCustomLabel = { Label: "" };
       setAddCustomeBenifits((prev) => [...prev, CreateCustomLabel]);
-    }else{
+    } else {
       alert("Please Enter value")
     }
-    
+
   };
 
   const handleClearCustomInput = (index) => {
@@ -912,8 +917,7 @@ const CreateJobs = ({ show, handleClose }) => {
         }
       }
     }
-  };
-
+  };  
   const isNextButtonDisable = !createFormData.jobTitle;
 
   return (
@@ -974,9 +978,7 @@ const CreateJobs = ({ show, handleClose }) => {
               </div>
             )}
             {isLikeDropdown && isLikeData.length === 0 && (
-              <ul>
-                <li>No data found</li>
-              </ul>
+              <span className="error">No data found</span>
             )}
           </Form.Group>
 
@@ -1055,9 +1057,7 @@ const CreateJobs = ({ show, handleClose }) => {
             )}
 
             {isLocationDropdown && locationData.length === 0 && (
-              <ul>
-                <li>No data found</li>
-              </ul>
+              <span className="error">No data found</span>
             )}
           </Form.Group>
           {["radio"].map((type) => (
@@ -1111,7 +1111,7 @@ const CreateJobs = ({ show, handleClose }) => {
               Job Description <span className="font-light">(Min 50 words)</span>
             </Form.Label>
 
-            <div className="texteditor_warp">
+            <div className="texteditor_warp" onClick={handleWrapperClick}>
               <ReactQuill
                 value={description}
                 onChange={handleEditorChange}

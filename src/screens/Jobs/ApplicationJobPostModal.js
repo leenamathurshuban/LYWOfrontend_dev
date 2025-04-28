@@ -2189,7 +2189,7 @@ const ApplicationJobPostModal = ({
     newWorkRow[index]["WorkIndustry"] = value;
     setWorkExpreienceRow(newWorkRow);
     setIndustriesList([])
-  } 
+  }
 
   const handleKeyPressForlanguages = async (e, from) => {
     if (e.key === "Enter" && inputValue.trim()) {
@@ -2309,15 +2309,15 @@ const ApplicationJobPostModal = ({
         }
       });
   };
-  useEffect(()=>{
-    if(profileformData?.CurrentLocation){
-      handleLocationAPIList()      
+  useEffect(() => {
+    if (profileformData?.CurrentLocation) {
+      handleLocationAPIList()
     }
-  },[profileformData?.CurrentLocation])
+  }, [profileformData?.CurrentLocation])
   const handleSelectGeographyLocaton = (value) => {
     setProfileFormData({
       ...profileformData,
-      ["CurrentLocation"]:value
+      ["CurrentLocation"]: value
     })
     setLocationList([])
   }
@@ -2633,6 +2633,16 @@ const ApplicationJobPostModal = ({
       console.error("Error occurred:", error);
     }
   };
+  useEffect(() => {
+    EducationRows?.map((row, index) => {
+      if (!row.level || !row.areaOfEducation || !row.gradYear || !row.university
+        || !row.grade || !row.gpa) {
+        
+      } else {
+        saveQualificationData(row, index)
+      }
+    })
+  }, [EducationRows])
 
   const saveWorkExperienceData = async (row, index) => {
     try {
@@ -3721,7 +3731,7 @@ const ApplicationJobPostModal = ({
                             />
                           </button>
                         </td>
-                        <td>
+                        {/* <td>
                           {!row.saved && (
                             <Button
                               variant="link"
@@ -3731,7 +3741,7 @@ const ApplicationJobPostModal = ({
                               Save
                             </Button>
                           )}
-                        </td>
+                        </td> */}
                       </tr>
                     </tbody>
                   </table>
@@ -4260,8 +4270,8 @@ const ApplicationJobPostModal = ({
                           size="sm"
                           style={{ width: "350px" }}
                           name="CurrentLocation"
-                          value={profileformData?.CurrentLocation}                          
-                          onChange={(e)=>setProfileFormData({...profileformData,['CurrentLocation']:e.target.value})}
+                          value={profileformData?.CurrentLocation}
+                          onChange={(e) => setProfileFormData({ ...profileformData, ['CurrentLocation']: e.target.value })}
                         />
                         <div class={`${locationList.length ? 'droplist' : ''}`}>
                           {locationList.map((option, idx) => (

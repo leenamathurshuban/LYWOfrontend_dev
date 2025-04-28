@@ -1141,14 +1141,8 @@ const JobPosts = () => {
             }
           })}
 
-          <div>
-            <div
-              style={{
-                position: "absolute",
-                bottom: "20px",
-                right: "20px",
-              }}
-            >
+          <div className="livechat">
+            <div className="chat_icon">
               <img src={Chat} onClick={() => handleShowModal("chatModal")} />
             </div>
           </div>

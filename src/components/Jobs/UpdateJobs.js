@@ -243,6 +243,11 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
       // [modalName]: {show : true,createJobuid},
     }));
   };
+  const handleWrapperClick = () => {
+    if (quillRef.current) {
+      quillRef.current.focus(); // Focus the editor manually
+    }
+  };
   const handleJobModalClose = (modalName) => {
     setModal((prev) => ({
       ...prev,
@@ -999,9 +1004,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
               </div>
             )}
             {isLikeDropdown && isLikeData?.length === 0 && (
-              <ul>
-                <li>No data found</li>
-              </ul>
+              <span className="error">No data found</span>
             )}
           </Form.Group>
 
@@ -1047,9 +1050,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
               </div>
             )}
             {isDepartmentDropdown && departmentData?.length === 0 && (
-              <ul>
-                <li>No data found</li>
-              </ul>
+              <span className="error">No data found</span>
             )} */}
           </Form.Group>
 
@@ -1080,9 +1081,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
             )}
 
             {isLocationDropdown && locationData.length === 0 && (
-              <ul>
-                <li>No data found</li>
-              </ul>
+              <span className="error">No data found</span>
             )}
           </Form.Group>
           {["radio"].map((type) => (
@@ -1136,7 +1135,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
               Job Description <span className="font-light">(Min 50 words)</span>
             </Form.Label>
 
-            <div className="texteditor_warp">
+            <div className="texteditor_warp" onClick={handleWrapperClick}>
               <ReactQuill
                 value={description}
                 onChange={handleEditorChange}

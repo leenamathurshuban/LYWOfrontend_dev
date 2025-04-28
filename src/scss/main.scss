@@ -290,6 +290,11 @@ fieldset:disabled .btn {
             color: #6172F3;
             ;
           }
+          svg {
+            path {
+              stroke: #6172F3;
+            }
+          }
         }
       }
     }
@@ -542,7 +547,10 @@ ol.breadcrumb {
     font-weight: 400;
     margin: 18px 0;
   }
-
+  span.mdt_icon {
+    min-height: 40px;
+    display: inline-block;
+}
   span.mdt_name {
     background-color: #eef4ff;
     border: solid 1px #a4bcfd;
@@ -652,13 +660,6 @@ ol.breadcrumb {
   background-color: #ffffff;
   border-left: solid 1px #eaecf0;
 }
-
-.usermanagement_panel {
-  .bottom-fixed {
-    padding: 0 15px;
-  }
-}
-
 .modal-header {
   box-shadow: 3px 0px 6px rgba(0, 0, 0, 0.1098039216);
   border: none;
@@ -726,7 +727,7 @@ ol.breadcrumb {
   }
 
   .btn {
-    font-size: 13px;
+    font-size: 12px;
     padding: 8px 14px;
 
     svg {
@@ -964,6 +965,11 @@ label.required.form-label {
       font-weight: 400;
       color: #667085;
       line-height: 24px;
+      strong {
+        font-size: 14px;
+        color: #344054;
+        font-weight: 600;
+      }
     }
   }
 
@@ -988,6 +994,10 @@ label.required.form-label {
     box-shadow: 0 -3px 3px rgba(0, 0, 0, 0.06);
     margin-left: -15px;
     margin-right: -15px;
+    padding: 0 15px;
+    .rects_list {
+      padding: 0 12px;
+    }
   }
 
   .rects_list {
@@ -6686,4 +6696,9 @@ select.select-transpant {
     }
   }
 }
-
+.livechat {
+  position: fixed;
+  bottom: 5px;
+  right: 5px;
+  z-index: 9999;
+}
