@@ -58,24 +58,45 @@ const HelpChoose = ({
     const handleSelectItem = (value) => {
         if (!selectedItem.includes(value) && totalItem.length < 6) {
             setSelectedItem([...selectedItem, value])
+        } else {
+            const filter = selectedItem.filter((c) => c != value)
+            setSelectedItem(filter)
+            const newArray = important.filter((Val) => Val !== value)
+            setImportant(newArray)
         }
     }
     const handleSelectItem1 = (value) => {
         if (!selectedItem1.includes(value) && totalItem.length < 6) {
             setSelectedItem1([...selectedItem1, value])
+        }else {
+            const filter = selectedItem1.filter((c) => c != value)
+            setSelectedItem1(filter)
+            const newArray = important.filter((Val) => Val !== value)
+            setImportant(newArray)
         }
     }
     const handleSelectItem2 = (value) => {
         if (!selectedItem2.includes(value) && totalItem.length < 6) {
             setSelectedItem2([...selectedItem2, value])
+        }else {
+            const filter = selectedItem2.filter((c) => c != value)
+            setSelectedItem2(filter)
+            const newArray = important.filter((Val) => Val !== value)
+            setImportant(newArray)
         }
     }
     const handleSelectItem3 = (value) => {
         if (!selectedItem3.includes(value) && totalItem.length < 6) {
             setSelectedItem3([...selectedItem3, value])
+        }else {
+            const filter = selectedItem3.filter((c) => c != value)
+            setSelectedItem3(filter)
+            const newArray = important.filter((Val) => Val !== value)
+            setImportant(newArray)
         }
     }
-    const handleImportant = (value) => {
+    const handleImportant = (e, value) => {
+        e.stopPropagation()
         if (!important.includes(value) && important.length < 2 && totalItem.includes(value)) {
             setImportant([...important, value])
         } else {
@@ -177,28 +198,28 @@ const HelpChoose = ({
                             <Row className="form-row">
                                 {selectedItem.map((item) => (
                                     <Col md={2}>
-                                        <span className="brvbox active-danger">{item} <span><i className={`${important.includes(item) ? 'fa active-danger' : 'far'} fa-star`} onClick={() => handleImportant(item)}></i>
+                                        <span className="brvbox active-danger">{item} <span><i className={`${important.includes(item) ? 'fa active-danger' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item)}></i>
                                             <img className="tag_del" src={tagClose} onClick={() => handleCloseItem(item)} />
                                         </span></span>
                                     </Col>
                                 ))}
                                 {selectedItem1.map((item) => (
                                     <Col md={2}>
-                                        <span className="brvbox active-primery">{item}<span><i className={`${important.includes(item) ? 'fa active-primery' : 'far'} fa-star`} onClick={() => handleImportant(item)}></i>
+                                        <span className="brvbox active-primery">{item}<span><i className={`${important.includes(item) ? 'fa active-primery' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item)}></i>
                                             <img className="tag_del" src={tagClose} onClick={() => handleCloseItem1(item)} />
                                         </span></span>
                                     </Col>
                                 ))}
                                 {selectedItem2.map((item) => (
                                     <Col md={2}>
-                                        <span className="brvbox active-success">{item}<span><i className={`${important.includes(item) ? 'fa active-success' : 'far'} fa-star`} onClick={() => handleImportant(item)}></i>
+                                        <span className="brvbox active-success">{item}<span><i className={`${important.includes(item) ? 'fa active-success' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item)}></i>
                                             <img className="tag_del" src={tagClose} onClick={() => handleCloseItem2(item)} />
                                         </span></span>
                                     </Col>
                                 ))}
                                 {selectedItem3.map((item) => (
                                     <Col md={2}>
-                                        <span className="brvbox active-warning">{item}<span><i className={`${important.includes(item) ? 'fa active-warning' : 'far'} fa-star`} onClick={() => handleImportant(item)}></i>
+                                        <span className="brvbox active-warning">{item}<span><i className={`${important.includes(item) ? 'fa active-warning' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item)}></i>
                                             <img className="tag_del" src={tagClose} onClick={() => handleCloseItem3(item)} />
                                         </span></span>
                                     </Col>
@@ -223,7 +244,7 @@ const HelpChoose = ({
                                 )) :
                                 IndividualEffort.map((item) => (
                                     <Col md={4}>
-                                        <span className={`${selectedItem.includes(item.key) && 'active-danger'} brvbox-lg`} onClick={() => handleSelectItem(item.key)}>{item.key}<i className={`${important.includes(item.key) ? 'fa active-danger' : 'far'} fa-star`} onClick={() => handleImportant(item.key)}></i></span>
+                                        <span className={`${selectedItem.includes(item.key) && 'active-danger'} brvbox-lg`} onClick={() => handleSelectItem(item.key)}>{item.key}<i className={`${important.includes(item.key) ? 'fa active-danger' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item.key)}></i></span>
                                     </Col>
                                 ))
                             }
@@ -246,7 +267,7 @@ const HelpChoose = ({
                                 )) :
                                 InterpersonalRelations.map((item) => (
                                     <Col md={4}>
-                                        <span className={`${selectedItem1.includes(item.key) && 'active-primery'} brvbox-lg`} onClick={() => handleSelectItem1(item.key)}>{item.key}<i className={`${important.includes(item.key) ? 'fa active-primery' : 'far'} fa-star`} onClick={() => handleImportant(item.key)}></i></span>
+                                        <span className={`${selectedItem1.includes(item.key) && 'active-primery'} brvbox-lg`} onClick={() => handleSelectItem1(item.key)}>{item.key}<i className={`${important.includes(item.key) ? 'fa active-primery' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item.key)}></i></span>
                                     </Col>
                                 ))
                             }
@@ -269,7 +290,7 @@ const HelpChoose = ({
                                 )) :
                                 Consistency.map((item) => (
                                     <Col md={4}>
-                                        <span className={`${selectedItem2.includes(item.key) && 'active-success'} brvbox-lg`} onClick={() => handleSelectItem2(item.key)}>{item.key}<i className={`${important.includes(item.key) ? 'fa active-success' : 'far'} fa-star`} onClick={() => handleImportant(item.key)}></i></span>
+                                        <span className={`${selectedItem2.includes(item.key) && 'active-success'} brvbox-lg`} onClick={() => handleSelectItem2(item.key)}>{item.key}<i className={`${important.includes(item.key) ? 'fa active-success' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item.key)}></i></span>
                                     </Col>
                                 ))
                             }
@@ -292,7 +313,7 @@ const HelpChoose = ({
                                 )) :
                                 Systematic.map((item) => (
                                     <Col md={4}>
-                                        <span className={`${selectedItem3.includes(item.key) && 'active-warning'} brvbox-lg`} onClick={() => handleSelectItem3(item.key)}>{item.key}<i className={`${important.includes(item.key) ? 'fa active-warning' : 'far'} fa-star`} onClick={() => handleImportant(item.key)}></i></span>
+                                        <span className={`${selectedItem3.includes(item.key) && 'active-warning'} brvbox-lg`} onClick={() => handleSelectItem3(item.key)}>{item.key}<i className={`${important.includes(item.key) ? 'fa active-warning' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item.key)}></i></span>
                                     </Col>
                                 ))
                             }
@@ -366,28 +387,28 @@ const HelpChoose = ({
                         <Row className="form-row">
                             {selectedItem.map((item) => (
                                 <Col md={2}>
-                                    <span className="brvbox active-danger">{item} <span><i className={`${important.includes(item) ? 'fa active-danger' : 'far'} fa-star`} onClick={() => handleImportant(item)}></i>
+                                    <span className="brvbox active-danger">{item} <span><i className={`${important.includes(item) ? 'fa active-danger' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item)}></i>
                                         <img className="tag_del" src={tagClose} onClick={() => handleCloseItem(item)} />
                                     </span></span>
                                 </Col>
                             ))}
                             {selectedItem1.map((item) => (
                                 <Col md={2}>
-                                    <span className="brvbox active-primery">{item}<span><i className={`${important.includes(item) ? 'fa active-primery' : 'far'} fa-star`} onClick={() => handleImportant(item)}></i>
+                                    <span className="brvbox active-primery">{item}<span><i className={`${important.includes(item) ? 'fa active-primery' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item)}></i>
                                         <img className="tag_del" src={tagClose} onClick={() => handleCloseItem1(item)} />
                                     </span></span>
                                 </Col>
                             ))}
                             {selectedItem2.map((item) => (
                                 <Col md={2}>
-                                    <span className="brvbox active-success">{item}<span><i className={`${important.includes(item) ? 'fa active-success' : 'far'} fa-star`} onClick={() => handleImportant(item)}></i>
+                                    <span className="brvbox active-success">{item}<span><i className={`${important.includes(item) ? 'fa active-success' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item)}></i>
                                         <img className="tag_del" src={tagClose} onClick={() => handleCloseItem2(item)} />
                                     </span></span>
                                 </Col>
                             ))}
                             {selectedItem3.map((item) => (
                                 <Col md={2}>
-                                    <span className="brvbox active-warning">{item}<span><i className={`${important.includes(item) ? 'fa active-warning' : 'far'} fa-star`} onClick={() => handleImportant(item)}></i>
+                                    <span className="brvbox active-warning">{item}<span><i className={`${important.includes(item) ? 'fa active-warning' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item)}></i>
                                         <img className="tag_del" src={tagClose} onClick={() => handleCloseItem3(item)} />
                                     </span></span>
                                 </Col>
@@ -412,7 +433,7 @@ const HelpChoose = ({
                             )) :
                             IndividualEffort.map((item) => (
                                 <Col md={4}>
-                                    <span className={`${selectedItem.includes(item.key) && 'active-danger'} brvbox-lg`} onClick={() => handleSelectItem(item.key)}>{item.key}<i className={`${important.includes(item.key) ? 'fa active-danger' : 'far'} fa-star`} onClick={() => handleImportant(item.key)}></i></span>
+                                    <span className={`${selectedItem.includes(item.key) && 'active-danger'} brvbox-lg`} onClick={() => handleSelectItem(item.key)}>{item.key}<i className={`${important.includes(item.key) ? 'fa active-danger' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item.key)}></i></span>
                                 </Col>
                             ))
                         }
@@ -435,7 +456,7 @@ const HelpChoose = ({
                             )) :
                             InterpersonalRelations.map((item) => (
                                 <Col md={4}>
-                                    <span className={`${selectedItem1.includes(item.key) && 'active-primery'} brvbox-lg`} onClick={() => handleSelectItem1(item.key)}>{item.key}<i className={`${important.includes(item.key) ? 'fa active-primery' : 'far'} fa-star`} onClick={() => handleImportant(item.key)}></i></span>
+                                    <span className={`${selectedItem1.includes(item.key) && 'active-primery'} brvbox-lg`} onClick={() => handleSelectItem1(item.key)}>{item.key}<i className={`${important.includes(item.key) ? 'fa active-primery' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item.key)}></i></span>
                                 </Col>
                             ))
                         }
@@ -458,7 +479,7 @@ const HelpChoose = ({
                             )) :
                             Consistency.map((item) => (
                                 <Col md={4}>
-                                    <span className={`${selectedItem2.includes(item.key) && 'active-success'} brvbox-lg`} onClick={() => handleSelectItem2(item.key)}>{item.key}<i className={`${important.includes(item.key) ? 'fa active-success' : 'far'} fa-star`} onClick={() => handleImportant(item.key)}></i></span>
+                                    <span className={`${selectedItem2.includes(item.key) && 'active-success'} brvbox-lg`} onClick={() => handleSelectItem2(item.key)}>{item.key}<i className={`${important.includes(item.key) ? 'fa active-success' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item.key)}></i></span>
                                 </Col>
                             ))
                         }
@@ -481,7 +502,7 @@ const HelpChoose = ({
                             )) :
                             Systematic.map((item) => (
                                 <Col md={4}>
-                                    <span className={`${selectedItem3.includes(item.key) && 'active-warning'} brvbox-lg`} onClick={() => handleSelectItem3(item.key)}>{item.key}<i className={`${important.includes(item.key) ? 'fa active-warning' : 'far'} fa-star`} onClick={() => handleImportant(item.key)}></i></span>
+                                    <span className={`${selectedItem3.includes(item.key) && 'active-warning'} brvbox-lg`} onClick={() => handleSelectItem3(item.key)}>{item.key}<i className={`${important.includes(item.key) ? 'fa active-warning' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item.key)}></i></span>
                                 </Col>
                             ))
                         }

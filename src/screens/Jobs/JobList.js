@@ -99,6 +99,15 @@ const JobsList = () => {
       ...prevModals,
       [modalName]: false,
     }));
+    setFilters({
+      job_type: "",
+      workplace_type: "",
+      job_location: "",
+      job_status: "",
+      targate_hire_date: "",
+      department: "",
+      posted_on: "",
+    })
   };
   const handleClose1 = (modalName) => {
     setEditModal((prevModals) => ({
@@ -524,7 +533,7 @@ const JobsList = () => {
                             onChange={() => handleMultiple(item)}
                             checked={activeIds.includes(item.uid) || closeIds.includes(item.uid)}
                           />
-                          <span className="font-weight-600" onClick={() => navigate(`/JobReview/${item?.uid}`)} style={{cursor:"pointer"}}>
+                          <span className="font-weight-600" onClick={() => navigate(`/JobReview/${item?.uid}`)} style={{ cursor: "pointer" }}>
                             {item?.job_title}
                           </span>
                         </td>

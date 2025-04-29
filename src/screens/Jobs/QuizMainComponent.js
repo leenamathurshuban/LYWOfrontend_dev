@@ -550,7 +550,7 @@ const QuizMainComponent = (item) => {
                     onChange={handleSelectChange}
                     value={selectedSection}
                   >
-                    <option>Show All</option>
+                    <option value="" disabled hidden>Show All</option>
                     {EvaluationListDetails[0]?.section_asset?.map((item) => (
                       <option key={item.id} value={item.id}>
                         {item.section_title}

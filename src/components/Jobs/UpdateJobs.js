@@ -1223,7 +1223,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
               onChange={handleFormData}
               name="jobType"
             >
-              <option>Job Type</option>
+              <option value="" disabled hidden>Job Type</option>
               <option value="Full-time">Full -Time</option>
               <option value="Part-time">Part -Time</option>
               <option value="Contract">Contract</option>
@@ -1242,7 +1242,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
               onChange={handleFormData}
               name="workPlaceType"
             >
-              <option>Workplace Type</option>
+              <option value="" disabled hidden>Workplace Type</option>
               <option value="On-site">On-site</option>
               <option value="Remote">Remote</option>
               <option value="Hybrid">Hybrid</option>

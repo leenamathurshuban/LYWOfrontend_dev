@@ -492,11 +492,11 @@ const CreateJobsRevised = ({
   }
   const handleSelectLocation = (option) => {
     setLocationBadges((prevBadges) => [
-        ...prevBadges,
-        option,
+      ...prevBadges,
+      option,
     ]);
     setLocationList([])
-}
+  }
   const handleRemoveBadge = (index) => {
     setBadges((prevBadges) => prevBadges.filter((_, i) => i !== index));
   };
@@ -932,7 +932,7 @@ const CreateJobsRevised = ({
           if (!item.isSelected && selectedCount < 4) {
             return { ...item, isSelected: !item.isSelected };
           } else if (item.isSelected) {
-            return { ...item, isSelected: !item.isSelected };
+            return { ...item, isSelected: !item.isSelected,markedImportant:false };
           }
         }
         return item;
@@ -1187,6 +1187,15 @@ const CreateJobsRevised = ({
     const length = skillGroupData?.length
     setDynamicArray(Array.from({ length }, () => []));
   }, [skillGroupData?.length]);
+  const handleReferesh = () => {
+    const updatedArray = behaviours.map((item) => ({
+      ...item,
+      isSelected: false,
+      markedImportant: false
+    }))
+    setBehaviours(updatedArray)
+    setPersonalityData([])
+  }
   // console.log(activeBehaviour)
   // const updatedArray = behaviours.map((item)=>({
   //   ...item,
@@ -1423,7 +1432,7 @@ const CreateJobsRevised = ({
                           value={updateFormData?.salary_type}
                           onChange={handleFormData}
                         >
-                          <option value=''>Select..</option>
+                          <option value="" disabled hidden>Select..</option>
                           <option value="Per-Month">Per Month</option>
                           <option value="Per-Annum">Per Anmum</option>
                         </Form.Select>
@@ -1494,7 +1503,7 @@ const CreateJobsRevised = ({
                             handleFormData(e);
                           }}
                         >
-                          <option>Select...</option>
+                          <option value="" disabled hidden>Select...</option>
                           {/* <option value="High school">High school</option>
                           <option value="Bachelors Degree">
                             Bachelors Degree
@@ -2927,10 +2936,11 @@ const CreateJobsRevised = ({
                             <div
                               className={`assmntbox ${item.isSelected ? "active" : ""
                                 }`}
-                            // className={`assmntbox ${activeBehaviour.includes(item.uid) && 'active'}`}
+                              // className={`assmntbox ${activeBehaviour.includes(item.uid) && 'active'}`}
+                              onClick={() => handleBoxClick(index)} style={{ cursor: 'pointer' }}
                             >
                               <div className="assmntbox-head">
-                                <h6 onClick={() => handleBoxClick(index)} style={{ cursor: 'pointer' }}>
+                                <h6>
                                   {item.heading}
                                 </h6>
                                 <i
@@ -2963,7 +2973,7 @@ const CreateJobsRevised = ({
                             selections are made
                           </span>
                         </Col>}
-                        {createRevisedJobData?.calculation_job.length > 0 && personalityData.length > 0 && personalityData?.sort((a,b)=>b?.personality_percentage-a?.personality_percentage)?.map((item, index) => (<Col key={index} md={3}>
+                        {createRevisedJobData?.calculation_job.length > 0 && personalityData.length > 0 && personalityData?.sort((a, b) => b?.personality_percentage - a?.personality_percentage)?.map((item, index) => (<Col key={index} md={3}>
                           <div onClick={() => handleCardClick(item)} className="perlitymth-card">
                             <div className="perlitymth-head">
                               <span className="prtmth_icon"><img src={LeaderIcn} /></span>
@@ -3047,10 +3057,27 @@ const CreateJobsRevised = ({
                     {openStep[0] === '11' && (
                       <>
                         <li>
-                          <Link href={''}><i className="fa fa-undo"></i></Link>
+                          <Link href={''}><i className="fa fa-undo" onClick={handleReferesh}></i></Link>
                         </li>
                         <li className="active">
-                          <Link href={''} onClick={() => setShowHelpChoose(true)}><i class="fa fa-magic" aria-hidden="true"></i></Link>
+                          <Link href={''} onClick={() => setShowHelpChoose(true)}>
+                            <svg
+                              className="me-1"
+                              width="20"
+                              height="20"
+                              viewBox="0 0 20 20"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M10.8332 11.6667L8.33321 9.16666M12.5085 2.91666V1.66666M15.7913 4.21721L16.6752 3.33332M15.7913 10.8333L16.6752 11.7172M9.17517 4.21721L8.29128 3.33332M17.0918 7.49999H18.3418M5.10935 17.3905L12.8071 9.6928C13.1371 9.36278 13.3021 9.19778 13.3639 9.0075C13.4183 8.84013 13.4183 8.65985 13.3639 8.49248C13.3021 8.3022 13.1371 8.1372 12.8071 7.80718L12.1927 7.1928C11.8627 6.86278 11.6977 6.69778 11.5074 6.63595C11.34 6.58157 11.1597 6.58157 10.9924 6.63595C10.8021 6.69778 10.6371 6.86279 10.3071 7.1928L2.60935 14.8905C2.27934 15.2205 2.11433 15.3855 2.0525 15.5758C1.99812 15.7432 1.99812 15.9235 2.0525 16.0908C2.11433 16.2811 2.27934 16.4461 2.60935 16.7761L3.22373 17.3905C3.55375 17.7205 3.71875 17.8855 3.90903 17.9474C4.0764 18.0017 4.25669 18.0017 4.42405 17.9474C4.61433 17.8855 4.77934 17.7205 5.10935 17.3905Z"
+                                stroke="#3538CD"
+                                stroke-width="1.66667"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                          </Link>
                         </li>
                       </>
                     )}

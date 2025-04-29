@@ -2637,7 +2637,7 @@ const ApplicationJobPostModal = ({
     EducationRows?.map((row, index) => {
       if (!row.level || !row.areaOfEducation || !row.gradYear || !row.university
         || !row.grade || !row.gpa) {
-        
+
       } else {
         saveQualificationData(row, index)
       }
@@ -3382,8 +3382,8 @@ const ApplicationJobPostModal = ({
                       value={profileformData?.NoticePeriod}
                       onChange={handleProfileDetailsChange}
                       isInvalid={!!errors.NoticePeriod}
-                    >
-                      <option>Notice Period</option>
+                    >                     
+                      <option value="" disabled hidden>Notice Period</option>
                       <option value='Less than 30 Days'>Less than 30 Days</option>
                       <option value='30-60 Days'>30 - 60 Days</option>
                       <option value='60-90 Days'>60 - 90 Days</option>
@@ -3541,7 +3541,7 @@ const ApplicationJobPostModal = ({
                       isInvalid={!!errors.ExpectedSalary}
                       required
                     >
-                      <option>Expected Salary</option>
+                      <option value="" disabled hidden>Expected Salary</option>
                       {/* <option value="15K">₹5 LPA - ₹ 10 LPA</option>
                       <option value="20K">₹15 LPA - ₹ 20 LPA</option>
                       <option value="30K">₹25 LPA - ₹ 30 LPA</option> */}
@@ -3595,7 +3595,7 @@ const ApplicationJobPostModal = ({
                             }
                             disabled={row.saved}
                           >
-                            <option>Level</option>
+                            <option value="" disabled hidden>Level</option>
 
                             {/* <option value="High school">High school</option>
                             <option value="Bachelors Degree">
@@ -3711,7 +3711,7 @@ const ApplicationJobPostModal = ({
                               disabled={row.saved}
                             />
                             <Form.Select name="gpa" onChange={(e) => handleEducationQualificationChange(index, e)}>
-                              <option>GPA</option>
+                              <option value="" disabled hidden>GPA</option>
                               <option value="4 Point GPA">4 Point GPA</option>
                               <option value="10 Point GPA">10 Point GPA</option>
                               <option value="GPA in %">GPA in %</option>
@@ -3782,7 +3782,7 @@ const ApplicationJobPostModal = ({
                           required
                           disabled={row.savedWorkExp}
                         >
-                          <option>Work Experience</option>
+                          <option value="" disabled hidden>Work Experience</option>
                           <option value="Fresher">Fresher</option>
                           <option value="Less than 1 Year">Less than 1 Year</option>
                           <option value="1-2 Years">1 - 2 Years</option>
