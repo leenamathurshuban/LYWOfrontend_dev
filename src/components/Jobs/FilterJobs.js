@@ -21,6 +21,7 @@ const FilterJobs = ({
   filtersList,
   filterAppliedCount,
   setFilters,
+  handleApplyFilter
 }) => {
   const [departmentData, setDepartmentData] = useState([]);
   const [locationData, setLocationData] = useState([]);
@@ -84,9 +85,9 @@ const FilterJobs = ({
                     <li>
                       <Form.Check
                         className="inline-checkbox"
-                        name="Full -Time"
+                        name="Full-time"
                         type="checkbox"
-                        checked={filtersList.job_type.includes("Full -Time")}
+                        checked={filtersList.job_type.includes("Full-time")}
                         onChange={(e) => {
                           setFilters((prevState) => ({
                             ...prevState,
@@ -106,9 +107,9 @@ const FilterJobs = ({
                     <li>
                       <Form.Check
                         className="inline-checkbox"
-                        name="Part -Time"
+                        name="Part-time"
                         type="checkbox"
-                        checked={filtersList.job_type.includes("Part -Time")}
+                        checked={filtersList.job_type.includes("Part-time")}
                         onChange={(e) => {
                           setFilters((prevState) => ({
                             ...prevState,
@@ -451,13 +452,13 @@ const FilterJobs = ({
                 <Form.Group controlId="exampleForm.ControlInput1">
                   <Form.Control
                     type="date"
-                    value={filtersList?.target_hire_date || ""}
+                    value={filtersList?.targate_hire_date || ""}
                     onChange={(e) => {
                       const selectedDate = e.target.value;
                       console.log("Selected Date:", selectedDate);
                       setFilters((prevState) => ({
                         ...prevState,
-                        target_hire_date: selectedDate,
+                        targate_hire_date: selectedDate,
                       }));
                     }}
                   />
@@ -511,7 +512,7 @@ const FilterJobs = ({
           >
             Clear All
           </Button>
-          <Button onClick={handleClose} variant="primary">
+          <Button onClick={handleApplyFilter} variant="primary">
             Apply
           </Button>
         </div>

@@ -170,7 +170,7 @@ const JobsList = () => {
 
       return () => clearTimeout(debounceTimer);
     }
-  }, [SerachList, modal.MoreFilterModal]);
+  }, [SerachList]);
 
   const handleLoadMore = () => {
     const nextData = jobData.jobs.slice(count, count + 10);
@@ -250,6 +250,28 @@ const JobsList = () => {
     if (res.data.success) {
       JobListApi(SerachList)
     }
+  }
+
+  const handleApplyFilter = () => {
+    // const filterRow = jobData.jobs?.filter((cv) => cv.job_type == filtersList.job_type && 
+    // cv.workplace_type == filtersList.workplace_type && cv.job_location.location_name=== filtersList.job_location)    
+    const filteredData = jobData.jobs?.filter(cv => {
+      const matchJobType = filtersList.job_type ? cv.job_type === filtersList.job_type : true;
+      const matchWorkplace = filtersList.workplace_type ? cv.workplace_type === filtersList.workplace_type : true;
+      const matchLocation = filtersList.job_location ? 
+        cv.job_location?.location_name?.toLowerCase().trim() === filtersList.job_location.toLowerCase().trim() : true;
+      const matchJobStatus = filtersList.job_status?cv.job_status?.toLowerCase().trim() === filtersList.job_status.toLowerCase().trim():true;      
+      const matchDepartment = filtersList.department?cv.department?.toLowerCase().trim() === filtersList.department.toLowerCase().trim():true; 
+      const matchTarget = filtersList.targate_hire_date?cv.targate_hire_date === filtersList.targate_hire_date:true;
+      const postOnMatch = filtersList.posted_on?cv.posted_on===filtersList.posted_on:true;
+
+      return matchJobType && matchWorkplace && matchLocation && matchJobStatus && matchDepartment && matchTarget && postOnMatch;
+    });
+    setJVisiblejobData(filteredData.slice(0, 10))
+    setModal((prevModals) => ({
+      ...prevModals,
+      ["MoreFilterModal"]: false,
+    }));
   }
 
   useEffect(() => {
@@ -538,7 +560,7 @@ const JobsList = () => {
                           </span>
                         </td>
                         <td>{item?.job_location?.location_name}</td>
-                        <td>{item?.department?.department_name}</td>
+                        <td>{item?.department}</td>
                         <td>{item?.job_type}</td>
                         <td>{item?.workplace_type}</td>
                         <td>{item?.number_of_positions}</td>
@@ -689,6 +711,7 @@ const JobsList = () => {
             handleClose={() => handleClose("MoreFilterModal")}
             setFilters={setFilters}
             filtersList={filtersList}
+            handleApplyFilter={handleApplyFilter}
           />
           <CreateJobs
             show={modal.createModal}

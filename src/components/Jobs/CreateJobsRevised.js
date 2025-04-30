@@ -2909,6 +2909,7 @@ const CreateJobsRevised = ({
                           stroke-linejoin="round"
                         />
                       </svg>
+                      <p>Select 6 out of the 12 available options, Identify 2 most important ones</p>
                     </div>
                     <button type="button" className="btn btn-lightgray me-4" onClick={(e) => { e.stopPropagation(); setShowHelpChoose(true) }}>
                       <svg

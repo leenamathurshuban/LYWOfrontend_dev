@@ -3316,6 +3316,7 @@ const ApplicationJobPostModal = ({
                       onChange={handleProfileDetailsChange}
                       isInvalid={!!errors.AvailableBy}
                       className="form-control-sm"
+                      min={new Date().toISOString().split("T")[0]}
                     />
                     <small className="text-muted mb-4">
                       Consider you notice period before providing this information
