@@ -95,9 +95,9 @@ const FilterJobs = ({
                                 ? `${prevState.job_type},${e.target.name}`
                                 : e.target.name
                               : prevState.job_type
-                                  .split(",")
-                                  .filter((item) => item !== e.target.name)
-                                  .join(","),
+                                .split(",")
+                                .filter((item) => item !== e.target.name)
+                                .join(","),
                           }));
                         }}
                         label="Full -Time"
@@ -117,9 +117,9 @@ const FilterJobs = ({
                                 ? `${prevState.job_type},${e.target.name}`
                                 : e.target.name
                               : prevState.job_type
-                                  .split(",")
-                                  .filter((item) => item !== e.target.name)
-                                  .join(","),
+                                .split(",")
+                                .filter((item) => item !== e.target.name)
+                                .join(","),
                           }));
                         }}
                         label="Part -Time"
@@ -150,9 +150,9 @@ const FilterJobs = ({
                                 ? `${prevState.workplace_type},${e.target.name}`
                                 : e.target.name
                               : prevState.workplace_type
-                                  .split(",")
-                                  .filter((item) => item !== e.target.name)
-                                  .join(","),
+                                .split(",")
+                                .filter((item) => item !== e.target.name)
+                                .join(","),
                           }));
                         }}
                         label="Work from office"
@@ -172,9 +172,9 @@ const FilterJobs = ({
                                 ? `${prevState.workplace_type},${e.target.name}`
                                 : e.target.name
                               : prevState.workplace_type
-                                  .split(",")
-                                  .filter((item) => item !== e.target.name)
-                                  .join(","),
+                                .split(",")
+                                .filter((item) => item !== e.target.name)
+                                .join(","),
                           }));
                         }}
                         label="Remote"
@@ -194,9 +194,9 @@ const FilterJobs = ({
                                 ? `${prevState.workplace_type},${e.target.name}`
                                 : e.target.name
                               : prevState.workplace_type
-                                  .split(",")
-                                  .filter((item) => item !== e.target.name)
-                                  .join(","),
+                                .split(",")
+                                .filter((item) => item !== e.target.name)
+                                .join(","),
                           }));
                         }}
                         label="Hybrid"
@@ -218,9 +218,9 @@ const FilterJobs = ({
                                 ? `${prevState.workplace_type},${e.target.name}`
                                 : e.target.name
                               : prevState.workplace_type
-                                  .split(",")
-                                  .filter((item) => item !== e.target.name)
-                                  .join(","),
+                                .split(",")
+                                .filter((item) => item !== e.target.name)
+                                .join(","),
                           }));
                         }}
                         label="Work from Home"
@@ -255,9 +255,9 @@ const FilterJobs = ({
                                     ? `${prevState.job_location},${e.target.name}`
                                     : e.target.name
                                   : prevState.job_location
-                                      .split(",")
-                                      .filter((item) => item !== e.target.name)
-                                      .join(","),
+                                    .split(",")
+                                    .filter((item) => item !== e.target.name)
+                                    .join(","),
                               }));
                             }}
                             label={location.location_name}
@@ -308,9 +308,9 @@ const FilterJobs = ({
                                     ? `${prevState.department},${e.target.name}`
                                     : e.target.name
                                   : prevState.department
-                                      .split(",")
-                                      .filter((item) => item !== e.target.name)
-                                      .join(","),
+                                    .split(",")
+                                    .filter((item) => item !== e.target.name)
+                                    .join(","),
                               }));
                             }}
                             label={dept.department_name}
@@ -355,9 +355,9 @@ const FilterJobs = ({
                                 ? `${prevState.job_status},${e.target.name}`
                                 : e.target.name
                               : prevState.job_status
-                                  .split(",")
-                                  .filter((item) => item !== e.target.name)
-                                  .join(","),
+                                .split(",")
+                                .filter((item) => item !== e.target.name)
+                                .join(","),
                           }));
                         }}
                         label="Active"
@@ -377,9 +377,9 @@ const FilterJobs = ({
                                 ? `${prevState.job_status},${e.target.name}`
                                 : e.target.name
                               : prevState.job_status
-                                  .split(",")
-                                  .filter((item) => item !== e.target.name)
-                                  .join(","),
+                                .split(",")
+                                .filter((item) => item !== e.target.name)
+                                .join(","),
                           }));
                         }}
                         label="Draft"
@@ -401,9 +401,9 @@ const FilterJobs = ({
                                 ? `${prevState.job_status},${e.target.name}`
                                 : e.target.name
                               : prevState.job_status
-                                  .split(",")
-                                  .filter((item) => item !== e.target.name)
-                                  .join(","),
+                                .split(",")
+                                .filter((item) => item !== e.target.name)
+                                .join(","),
                           }));
                         }}
                         label="App. Stopped"
@@ -423,9 +423,9 @@ const FilterJobs = ({
                                 ? `${prevState.job_status},${e.target.name}`
                                 : e.target.name
                               : prevState.job_status
-                                  .split(",")
-                                  .filter((item) => item !== e.target.name)
-                                  .join(","),
+                                .split(",")
+                                .filter((item) => item !== e.target.name)
+                                .join(","),
                           }));
                         }}
                         label="Closed"
@@ -519,7 +519,7 @@ const FilterJobs = ({
       <Modal
         show={viewMore.ModalOpen}
         onHide={handleViewMoreClose}
-        className="confirmation_model filter_modal"
+        className="filter_modal"
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
@@ -529,8 +529,8 @@ const FilterJobs = ({
           </div>
         </Modal.Header>
         <Modal.Body className="text-center">
-          <div>
-            <ul>
+          <div className="filter_data ct_scrollbar">
+            <ul className="filter_datalist">
               {viewMoreList &&
                 viewMoreList.length > 0 &&
                 viewMoreList.map((item, idx) => (
@@ -547,36 +547,36 @@ const FilterJobs = ({
                         viewMore.isModalFor === "Location"
                           ? item?.job_location
                           : item?.department?.includes(
-                              viewMore.isModalFor === "Location"
-                                ? item.location_name
-                                : item.department_name
-                            )
+                            viewMore.isModalFor === "Location"
+                              ? item.location_name
+                              : item.department_name
+                          )
                       }
                       onChange={(e) => {
                         setFilters((prevState) =>
                           viewMore.isModalFor === "Location"
                             ? {
-                                ...prevState,
-                                job_location: e.target.checked
-                                  ? prevState.job_location
-                                    ? `${prevState.job_location},${e.target.name}`
-                                    : e.target.name
-                                  : prevState.job_location
-                                      .split(",")
-                                      .filter((item) => item !== e.target.name)
-                                      .join(","),
-                              }
+                              ...prevState,
+                              job_location: e.target.checked
+                                ? prevState.job_location
+                                  ? `${prevState.job_location},${e.target.name}`
+                                  : e.target.name
+                                : prevState.job_location
+                                  .split(",")
+                                  .filter((item) => item !== e.target.name)
+                                  .join(","),
+                            }
                             : {
-                                ...prevState,
-                                department: e.target.checked
-                                  ? prevState.department
-                                    ? `${prevState.department},${e.target.name}`
-                                    : e.target.name
-                                  : prevState.department
-                                      .split(",")
-                                      .filter((item) => item !== e.target.name)
-                                      .join(","),
-                              }
+                              ...prevState,
+                              department: e.target.checked
+                                ? prevState.department
+                                  ? `${prevState.department},${e.target.name}`
+                                  : e.target.name
+                                : prevState.department
+                                  .split(",")
+                                  .filter((item) => item !== e.target.name)
+                                  .join(","),
+                            }
                         );
                       }}
                       label={
@@ -590,7 +590,10 @@ const FilterJobs = ({
             </ul>
           </div>
         </Modal.Body>
-        <Modal.Footer></Modal.Footer>
+        <Modal.Footer>
+          <Button variant="light" className="me-3" onClick={handleClose}>Cancel</Button>
+          <Button variant="primary">Apply</Button>
+        </Modal.Footer>
       </Modal>
     </>
   );

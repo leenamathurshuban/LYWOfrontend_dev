@@ -4,13 +4,18 @@ import behavioral02 from "../../images/behavioral_02.svg"
 import onlineSurvey01 from "../../images/online-survey_01.svg"
 import TechnicalQuestions from "../../images/Technical_Questions.svg"
 import Transparent01 from "../../images/Transparent01.svg"
+import FinalInterview from "../../images/final-rg4663.png"
+import StreamlinedEfficiency from "../../images/StreamlinedEfficiency.svg"
+import Convenience01 from "../../images/Convenience01.svg"
+import Showcase_01 from "../../images/Showcase_01.svg"
+
 
 const AboutLywoModal = ({show, handleClose}) => {
   return (
     <Offcanvas
       show={show}
       onHide={handleClose}
-      backdrop={false}
+      backdrop={true}
       placement="end"
       className="luwoprocess_drawer lg-drawer shadow-md border-0"
     >
@@ -66,7 +71,7 @@ const AboutLywoModal = ({show, handleClose}) => {
             </div>
           </li>
           <li>
-            {/* <img src={FinalInterview} /> */}
+            <img src={FinalInterview} />
             <div className="staps_text">
               <h6>Final Interview</h6>
               <p>
@@ -80,7 +85,7 @@ const AboutLywoModal = ({show, handleClose}) => {
         <Row>
           <Col md={3}>
             <div className="bnft_probox">
-              {/* <img src={StreamlinedEfficiency} /> */}
+              <img src={StreamlinedEfficiency} />
               <h6>Streamlined Efficiency</h6>
               <p>
                 Avoid lengthy back-and-forth and multiple non-decisive
@@ -90,7 +95,7 @@ const AboutLywoModal = ({show, handleClose}) => {
           </Col>
           <Col md={3}>
             <div className="bnft_probox">
-              {/* <img src={Convenience01} /> */}
+              <img src={Convenience01} />
               <h6>Convenience at Its Best</h6>
               <p>
                 Complete the process at your convenience, reducing scheduling
@@ -100,7 +105,7 @@ const AboutLywoModal = ({show, handleClose}) => {
           </Col>
           <Col md={3}>
             <div className="bnft_probox">
-              {/* <img src={Showcase_01} /> */}
+              <img src={Showcase_01} />
               <h6>Showcase Your Best Self</h6>
               <p>
                 Present your strengths in a relaxed manner, without the pressure

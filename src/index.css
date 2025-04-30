@@ -15,3 +15,9 @@ code {
   background: #869791;
   width: 40px;
 }
+input::placeholder {
+  opacity: 0.7 !important; 
+}
+input::-ms-input-placeholder { /* Edge 12-18 */
+  opacity: 0.7 !important;
+}

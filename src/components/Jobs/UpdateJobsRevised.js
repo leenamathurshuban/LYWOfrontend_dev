@@ -1186,7 +1186,8 @@ const UpdateJobsRevised = ({
             }
         }
     }, [openStep]);
-    const handleImportantFlag = (index) => {
+    const handleImportantFlag = (e,index) => {
+        e.stopPropagation();
         if (index === '1') {
             setImportantFlag({
                 ...importantFlag,
@@ -1219,7 +1220,8 @@ const UpdateJobsRevised = ({
             })
         }
     }
-    const removeImportantFlag = (index) => {
+    const removeImportantFlag = (e,index) => {
+        e.stopPropagation();
         if (index === '1') {
             setImportantFlag({
                 ...importantFlag,
@@ -1463,9 +1465,9 @@ const UpdateJobsRevised = ({
                                             />
                                         </svg> */}
                                         {importantFlag.salary ? (
-                                            <img src={flagFill} className="flag_icon" />
+                                            <img src={flagFill} className="flag_icon" onClick={(e) => removeImportantFlag(e,'1')} />
                                         ) : (
-                                            <img src={simpleFlag} className="flag_icon" />
+                                            <img src={simpleFlag} className="flag_icon" onClick={(e) => handleImportantFlag(e,'1')} />
                                         )}
                                         {!openStep.includes("1") && (
                                             <span className="acheade_right">{updateFormData?.currency} {updateFormData?.min_salary} - {updateFormData?.max_salary} {updateFormData?.salary_type}</span>
@@ -1592,9 +1594,9 @@ const UpdateJobsRevised = ({
                                             {!openStep.includes('2') && <small className="text-muted"><i>Higher Qualification Preferrable</i><i>Other Areas are Acceptable</i></small>}
                                         </span>
                                         {importantFlag.education ? (
-                                            <img src={flagFill} className="flag_icon" />
+                                            <img src={flagFill} className="flag_icon" onClick={(e) => removeImportantFlag(e,'2')} />
                                         ) : (
-                                            <img src={simpleFlag} className="flag_icon" />
+                                            <img src={simpleFlag} className="flag_icon" onClick={(e) => handleImportantFlag(e,'2')} />
                                         )}
                                         {!openStep.includes('2') && (
                                             <span className="acheade_right">{updateFormData?.minimum_education},{badges?.map((cv) => (<>{cv?.qualification_name}</>))}</span>
@@ -1769,9 +1771,9 @@ const UpdateJobsRevised = ({
                                             {!openStep.includes('3') && <small className="text-muted"><i>Restrict Industries</i><i>Define Current Role</i></small>}
                                         </span>
                                         {importantFlag.experience ? (
-                                            <img src={flagFill} className="flag_icon" />
+                                            <img src={flagFill} className="flag_icon" onClick={(e) => removeImportantFlag(e,'3')} />
                                         ) : (
-                                            <img src={simpleFlag} className="flag_icon" />
+                                            <img src={simpleFlag} className="flag_icon" onClick={(e) => handleImportantFlag(e,'3')} />
                                         )}
                                         {!openStep.includes('3') && (
                                             <span className="acheade_right">
@@ -2092,9 +2094,9 @@ const UpdateJobsRevised = ({
                                             {!openStep.includes('4') && <small className="text-muted"><i>Explore Buy-Out Option</i></small>}
                                         </span>
                                         {importantFlag.targethiredate ? (
-                                            <img src={flagFill} className="flag_icon" />
+                                            <img src={flagFill} className="flag_icon" onClick={(e) => removeImportantFlag(e,'4')} />
                                         ) : (
-                                            <img src={simpleFlag} className="flag_icon" />
+                                            <img src={simpleFlag} className="flag_icon" onClick={(e) => handleImportantFlag(e,'4')} />
                                         )}
                                         {!openStep.includes('4') && (
                                             <span className="acheade_right">
@@ -2165,9 +2167,9 @@ const UpdateJobsRevised = ({
                                     <Accordion.Header onClick={() => handleOpenStep("5")}>
                                         Language{" "}
                                         {importantFlag.language ? (
-                                            <img src={flagFill} className="flag_icon" />
+                                            <img src={flagFill} className="flag_icon" onClick={(e) => removeImportantFlag(e,'5')} />
                                         ) : (
-                                            <img src={simpleFlag} className="flag_icon" />
+                                            <img src={simpleFlag} className="flag_icon" onClick={(e) => handleImportantFlag(e,'5')} />
                                         )}
                                         {!openStep.includes('5') && (
                                             <span className="acheade_right">
@@ -2391,9 +2393,9 @@ const UpdateJobsRevised = ({
                                     <Accordion.Header onClick={() => handleOpenStep("6")}>
                                         Geography{" "}
                                         {importantFlag.geography ? (
-                                            <img src={flagFill} className="flag_icon" />
+                                            <img src={flagFill} className="flag_icon" onClick={(e) => removeImportantFlag(e,'6')} />
                                         ) : (
-                                            <img src={simpleFlag} className="flag_icon" />
+                                            <img src={simpleFlag} className="flag_icon" onClick={(e) => handleImportantFlag(e,'6')} />
                                         )}
                                     </Accordion.Header>
                                     <Accordion.Body ref={(el) => (sectionRefs.current['6'] = el)}>
@@ -3209,12 +3211,12 @@ const UpdateJobsRevised = ({
                                                         <Link href={''}><i className="fa fa-undo"></i></Link>
                                                     </li>
                                                     <li className={handleLightClass()}>
-                                                        <Link href={''} onClick={() => removeImportantFlag(openStep?.[0])}>
+                                                        <Link href={''} onClick={(e) => removeImportantFlag(e,openStep?.[0])}>
                                                             <img src={simpleFlag} className="flag_icon" />
                                                         </Link>
                                                     </li>
                                                     <li>
-                                                        <Link href={''} onClick={() => handleImportantFlag(openStep?.[0])}>
+                                                        <Link href={''} onClick={(e) => handleImportantFlag(e,openStep?.[0])}>
                                                             {handleOutline()}
                                                         </Link>
                                                     </li>

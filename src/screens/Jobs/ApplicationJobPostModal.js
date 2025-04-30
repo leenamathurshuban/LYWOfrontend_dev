@@ -1832,6 +1832,8 @@ import { useDropzone } from "react-dropzone";
 import imgpTrash from "../../images/icons/trash-01.svg";
 import logoIcon from "../../images/logo_icon.png";
 import closeBtn from "../../images/icons/closeX.svg";
+import uploadIcon from "../../images/upload_gray.svg";
+
 import {
   ApplicationDeatilsApi,
   ApplicationFormDetailsApi,
@@ -3185,7 +3187,7 @@ const ApplicationJobPostModal = ({
                     <Form.Label>Phone No.</Form.Label>
                   </Col>
 
-                  <Col>
+                  <Col className="phone-input">
                     <InputGroup className="mb-3" size="sm" style={{ maxWidth: "350px" }}>
                       <DropdownButton
                         variant="outline-secondary"
@@ -3245,17 +3247,21 @@ const ApplicationJobPostModal = ({
                       >
                         <div className="upload-content">
                           <input {...getInputProps()} />
-                          <i className="fas fa-cloud-upload-alt upload-icon"></i>
+                          <img src={uploadIcon} className="mx-2" />
+                          {/* <i className="fas fa-cloud-upload-alt upload-icon"></i> */}
                           <h5>
                             <strong className="text-primary">
                               Click to upload
                             </strong>{" "}
-                            or Drag & Drop
+                            or drag & drop
                           </h5>
-                          <small className="text-muted mb-0">
+                          {/* <small className="text-muted mb-0">
                             PDF or Doc. Should be less than 2 MB
-                          </small>
+                          </small> */}
                         </div>
+                        <small className="text-muted mb-0">
+                        PDF or Doc. Should be less than 2 MB
+                        </small>
                       </div>
                     )}
                     {!ResumeFile && (
@@ -4247,11 +4253,11 @@ const ApplicationJobPostModal = ({
                 <h6>Geography</h6>
 
                 <Row className="mb-3">
-                  <Col xs="auto" className="text-center">
+                  <Col md="3">
                     <Form.Label>Current Location</Form.Label>
                   </Col>
 
-                  <Col>
+                  <Col md={9}>
                     {/* <Form.Control
                       type="text"
                       placeholder="Current Location"
@@ -4295,10 +4301,10 @@ const ApplicationJobPostModal = ({
                 </Row>
 
                 <Row className="mb-3">
-                  <Col xs="auto" className="text-center">
+                  <Col md="3">
                     <Form.Label>Willing to relocate to {jobPostData?.job_location?.location_name}</Form.Label>
                   </Col>
-                  <Col>
+                  <Col md="9">
                     <div className="d-flex justify-content-start">
                       <Form.Check
                         type="radio"
@@ -4329,12 +4335,12 @@ const ApplicationJobPostModal = ({
                 </Row>
 
                 <Row className="mb-3">
-                  <Col xs="auto" className="text-center">
+                  <Col md="3">
                     <Form.Label>
                       Require company assistance for relocation?
                     </Form.Label>
                   </Col>
-                  <Col>
+                  <Col md="9">
                     <div className="d-flex justify-content-start">
                       <Form.Check
                         type="radio"
