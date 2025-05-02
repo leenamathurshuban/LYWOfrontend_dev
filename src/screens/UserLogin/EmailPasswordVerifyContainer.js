@@ -327,9 +327,9 @@ const EmailPasswordVerifyContainer = () => {
                 <a
                   href="#"
                   className="forgot_btn text-primery"
-                  onClick={() => navigate("/set-password")}
+                  onClick={() => navigate("/verifyOtpForPassword")}
                 >
-                  Reset password
+                  Forget password
                 </a>
               </div>
               <Button

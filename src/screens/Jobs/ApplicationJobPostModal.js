@@ -2678,6 +2678,16 @@ const ApplicationJobPostModal = ({
       alert("Please fill all field data");
     }
   };
+  useEffect(() => {
+    WorkExpreienceRow?.map((row, index) => {
+      if (!row.TotalWorkExperience || !row.WorkRole || !row.WorkFrom || !row.WorkTo
+        || !row.WorkComapny || !row.WorkIndustry || !row.WorkNote) {
+
+      } else {
+        saveWorkExperienceData(row, index)
+      }
+    })
+  }, [WorkExpreienceRow])
 
   const WorkExpreienceAddRow = () => {
     setWorkExpreienceRow((prevState) => [
@@ -3394,7 +3404,7 @@ const ApplicationJobPostModal = ({
                       <option value='Less than 30 Days'>Less than 30 Days</option>
                       <option value='30-60 Days'>30 - 60 Days</option>
                       <option value='60-90 Days'>60 - 90 Days</option>
-                      <option value='More than 90'>More than 90</option>
+                      <option value='More than 90'>More than 90 Days</option>
                     </Form.Select>
                   </Col>
                   <Form.Control.Feedback type="invalid">
@@ -3960,7 +3970,7 @@ const ApplicationJobPostModal = ({
                               )}
 
 
-                              {!row.savedWorkExp && (
+                              {/* {!row.savedWorkExp && (
                                 <Button
                                   variant="link"
                                   className="p-1 font-sm mt-1"
@@ -3970,7 +3980,7 @@ const ApplicationJobPostModal = ({
                                 >
                                   Save
                                 </Button>
-                              )}
+                              )} */}
 
 
                               <Button

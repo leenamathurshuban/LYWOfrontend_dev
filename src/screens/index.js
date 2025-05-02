@@ -5,6 +5,7 @@ import EmailPasswordVerifyContainer from "./UserLogin/EmailPasswordVerifyContain
 import EmailVerify from "./UserLogin/EmailVerify";
 import OtpVerifyContainer from "./UserLogin/OtpVerifyContainer";
 import NotFound from "./NoFound/notFound";
+import OtpVerifyForPassword from "./UserLogin/otpVerifyForPassword"
 
 export {
     Getstarted,
@@ -13,5 +14,6 @@ export {
     EmailPasswordVerifyContainer,
     OtpVerifyContainer,
     EmailVerify,
-    NotFound
+    NotFound,
+    OtpVerifyForPassword,
 }

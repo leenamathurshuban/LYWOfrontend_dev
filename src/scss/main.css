@@ -4267,7 +4267,6 @@ select.h-36.form-select {
   display: inline-block;
 }
 .app_rightsdbr .progress_box .btn-primary {
-  width: 100%;
   font-size: 12px;
   margin-bottom: 5px;
 }
@@ -5946,4 +5945,15 @@ button#input-group-dropdown-1 {
 .custom-card .form-switch .form-check-input {
   height: 1em;
   width: 1.8em;
+}
+
+.status_locked {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }/*# sourceMappingURL=main.css.map */

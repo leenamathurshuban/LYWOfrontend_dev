@@ -7,6 +7,7 @@ import {
   EmailVerify,
   NotFound,
   OtpVerifyContainer,
+  OtpVerifyForPassword,
 } from "../screens/";
 import ProtectedRoute from "./protectedRoute"; // Import the ProtectedRoute component
 import Evalation from "../screens/Evaluation/Evaluation";
@@ -157,6 +158,16 @@ export const router = createBrowserRouter([
   //     />
   //   ),
   // },
+  {
+    path: "/verifyOtpForPassword",
+    element: (
+      <ProtectedRoute
+        element={<OtpVerifyForPassword />}
+        allowAuthenticated={true} 
+        redirectTo="/"
+      />
+    ),
+  },
   {
     path: "*",
     element: <NotFound />,

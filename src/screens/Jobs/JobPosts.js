@@ -56,6 +56,7 @@ import BehaviourAssReport from "../BehaviourAss/BehaviourAssReport";
 import BehaviouralAst from "../BehaviourAss/BehaviouralAst";
 import checkRight from "../../images/icons/check_green.svg";
 import checkpending from "../../images/icons/pending_status.svg";
+import lockedIcon from "../../images/locked.svg";
 import AssignmentComponent from "./AssignmentComponent";
 
 const jobDetailPng = [jobRoal, jobLike, jobExp, jobDivision, jobDepart, jobSkills, jobEducation, jobArea, jobType, jobWorktype, InfoTravel, InfoLanguage]
@@ -1015,14 +1016,20 @@ const JobPosts = () => {
             </h5>
             {(buttonText == "View Form Btn" && <p>Completed</p>) ||
               (buttonText == "Continue Btn" && <p>Pending</p>)}
-            <Button
-              variant="primary"
-              size="lg"
-              disabled={jobPostErrorMsg}
-              onClick={() => handleBtns(buttonText)}
-            >
-              {buttonText === "View Form Btn" ? "View" : buttonText === "Continue Btn" ? "Continue" : buttonText}
-            </Button>
+            <div className="text-end">
+              <Button
+                variant="primary"
+                size=""
+                className="w-100"
+                disabled={jobPostErrorMsg}
+                onClick={() => handleBtns(buttonText)}
+              >
+                {buttonText === "View Form Btn" ? "View" : buttonText === "Continue Btn" ? "Continue" : buttonText}
+              </Button>
+            </div>
+            {/* <div className="status_locked">
+              <img src={lockedIcon} />
+            </div> */}
           </div>
           <div className={`${Number(localStorage.getItem("AttemptStatus")) === 28 ? 'complate_status' : buttonText === "View Form Btn" ? 'pending_status' : ''} progress_box`}>
             <h5>
@@ -1034,32 +1041,39 @@ const JobPosts = () => {
               {Number(localStorage.getItem("AttemptStatus")) === 28 &&
                 "Completed"}
             </p>
-            <Button
-              variant="primary"
-              size="lg"
-              disabled={buttonText !== "View Form Btn"}
-              // className={`${Number(localStorage.getItem("AttemptStatus")) < 28?'small_btn':'view_btn'}`}
-              onClick={() => {
-                if (
-                  Number(localStorage.getItem("AttemptStatus")) < 28 ||
-                  Number(localStorage.getItem("AttemptStatus")) === 0
-                ) {
-                  // navigate("/Behavioural-Assessment");
-                  setBehaviourAssModel(true)
-                } else if (
-                  Number(localStorage.getItem("AttemptStatus")) === 28
-                ) {
-                  // navigate("/Behaviour-Assessment-Report");
-                  setBehaviourReportModel(true)
-                }
-              }}
-            >
-              {Number(localStorage.getItem("AttemptStatus")) > 0 &&
-                Number(localStorage.getItem("AttemptStatus")) < 28 &&
-                "Continue"}
-              {Number(localStorage.getItem("AttemptStatus")) === 28 && "View"}
-              {Number(localStorage.getItem("AttemptStatus")) === 0 && "Start"}
-            </Button>
+            <div className="text-end">
+              <Button
+                variant="primary"
+                size="lg"
+                disabled={buttonText !== "View Form Btn"}
+                // className={`${Number(localStorage.getItem("AttemptStatus")) < 28?'small_btn':'view_btn'}`}
+                onClick={() => {
+                  if (
+                    Number(localStorage.getItem("AttemptStatus")) < 28 ||
+                    Number(localStorage.getItem("AttemptStatus")) === 0
+                  ) {
+                    // navigate("/Behavioural-Assessment");
+                    setBehaviourAssModel(true)
+                  } else if (
+                    Number(localStorage.getItem("AttemptStatus")) === 28
+                  ) {
+                    // navigate("/Behaviour-Assessment-Report");
+                    setBehaviourReportModel(true)
+                  }
+                }}
+              >
+                {Number(localStorage.getItem("AttemptStatus")) > 0 &&
+                  Number(localStorage.getItem("AttemptStatus")) < 28 &&
+                  "Continue"}
+                {Number(localStorage.getItem("AttemptStatus")) === 28 && "View"}
+                {Number(localStorage.getItem("AttemptStatus")) === 0 && "Start"}
+              </Button>
+            </div>
+            {buttonText !== "View Form Btn" && (
+              <div className="status_locked">
+                <img src={lockedIcon} />
+              </div>
+            )}
           </div>
           {/* {jobPostData?.asset_job?.map((Val) => (
             <div className={`${localStorage.getItem("assestQuiz") === 'Completed' ? 'complate_status' :localStorage.getItem("assestQuiz") == 'Draft'? 'pending_status':''} progress_box`}>
@@ -1098,17 +1112,24 @@ const JobPosts = () => {
                     {localStorage.getItem("assestQuiz") == 'Completed' ? 'Completed' : localStorage.getItem("assestQuiz") == 'Draft' ? 'Pending' : 'Pending'}
 
                   </p>
-                  <Button
-                    variant="primary"
-                    size="lg"
-                    disabled={localStorage.getItem("AttemptStatus") == 28 ? false : true}
-                    onClick={() => {
-                      navigate(`/evaluation-quiz/${Val?.uid}`, { state: jobPostData })
-                    }}
-                  >
-                    {localStorage.getItem("assestQuiz") == 'Completed' ? "View" : localStorage.getItem("assestQuiz") == 'Draft' ? "Continue" : "Start"}
+                  <div className="text-end">
+                    <Button
+                      variant="primary"
+                      size="lg"
+                      disabled={localStorage.getItem("AttemptStatus") == 28 ? false : true}
+                      onClick={() => {
+                        navigate(`/evaluation-quiz/${Val?.uid}`, { state: jobPostData })
+                      }}
+                    >
+                      {localStorage.getItem("assestQuiz") == 'Completed' ? "View" : localStorage.getItem("assestQuiz") == 'Draft' ? "Continue" : "Start"}
 
-                  </Button>
+                    </Button>
+                  </div>
+                  {localStorage.getItem("AttemptStatus") < 28 && (
+                    <div className="status_locked">
+                      <img src={lockedIcon} />
+                    </div>
+                  )}
                 </div>
               )
             } else if (Val?.asset_title === 'Pre-interview round for creative director') {
@@ -1123,19 +1144,26 @@ const JobPosts = () => {
                     {localStorage.getItem("preAssestQuiz") == 'Completed' ? 'Completed' : localStorage.getItem("preAssestQuiz") == 'Draft' ? 'Pending' : 'Pending'}
 
                   </p>
-                  <Button
-                    variant="primary"
-                    size="lg"
-                    disabled={localStorage.getItem("assestQuiz") !== 'Completed' ? true : false}
-                    onClick={() => {
-                      // setShowAssignmentInstruction(true);
-                      // setAssignmentId(Val?.uid)
-                      navigate(`/assigntment-test/${Val?.uid}`, { state: jobPostData })
-                    }}
-                  >
-                    {localStorage.getItem("preAssestQuiz") == 'Completed' ? "View" : localStorage.getItem("preAssestQuiz") == 'Draft' ? "Continue" : "Start"}
+                  <div className="text-end">
+                    <Button
+                      variant="primary"
+                      size="lg"
+                      disabled={localStorage.getItem("assestQuiz") !== 'Completed' ? true : false}
+                      onClick={() => {
+                        // setShowAssignmentInstruction(true);
+                        // setAssignmentId(Val?.uid)
+                        navigate(`/assigntment-test/${Val?.uid}`, { state: jobPostData })
+                      }}
+                    >
+                      {localStorage.getItem("preAssestQuiz") == 'Completed' ? "View" : localStorage.getItem("preAssestQuiz") == 'Draft' ? "Continue" : "Start"}
 
-                  </Button>
+                    </Button>
+                  </div>
+                  {localStorage.getItem("assestQuiz") !== 'Completed' && (
+                    <div className="status_locked">
+                      <img src={lockedIcon} />
+                    </div>
+                  )}
                 </div>
               )
             }

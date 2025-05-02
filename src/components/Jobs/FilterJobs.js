@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Accordion,
   Button,
@@ -30,6 +30,9 @@ const FilterJobs = ({
     ModalOpen: false,
   });
   const [viewMoreList, setViewMoreList] = useState([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const modalRef = useRef(null);
 
   useEffect(() => {
     if (show) {
@@ -55,8 +58,133 @@ const FilterJobs = ({
       .catch((error) => console.log("errooorrr----", error));
   };
 
+  // const handleViewMoreClose = () => {
+  //   setViewMore((prevState) => ({ ...prevState, ModalOpen: false }));
+  // };
+
+  // <----------------------------------load more on scroll----------------->
+  // const fetchViewMoreList = async (currentPage = 1) => {
+  //   const limit = 500;
+
+  //   const url =
+  //     viewMore.isModalFor === "Location"
+  //       ? `https://bittrend.shubansoftware.com/account-api/location-list-api/?page=${currentPage}&limit=${limit}`
+  //       : `https://bittrend.shubansoftware.com/assets-api/department-list-api/?page=${currentPage}&limit=${limit}`;
+
+  //   try {
+  //     const response =
+  //       viewMore.isModalFor === "Location"
+  //         ? await CreateJobLocation(url)
+  //         : await CreateJobDepartment(url);
+
+  //     const newData = response?.data?.response || [];
+
+  //     setViewMoreList((prev) => [...prev, ...newData]);
+  //     setHasMore(newData.length === limit); // If returned less than limit, no more data
+  //   } catch (err) {
+  //     console.error("Pagination error:", err);
+  //     setHasMore(false);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (viewMore.ModalOpen) {
+  //     setPage(1);
+  //     setViewMoreList([]);
+  //     setHasMore(true);
+  //     fetchViewMoreList(1);
+
+  //     const modalContent = document.querySelector(".filter_data");
+
+  //     const handleScroll = () => {
+  //       if (
+  //         modalContent.scrollTop + modalContent.clientHeight >= modalContent.scrollHeight - 10 &&
+  //         hasMore
+  //       ) {
+  //         setPage((prev) => {
+  //           const nextPage = prev + 1;
+  //           fetchViewMoreList(nextPage);
+  //           return nextPage;
+  //         });
+  //       }
+  //     };
+
+  //     modalContent.addEventListener("scroll", handleScroll);
+  //     return () => modalContent.removeEventListener("scroll", handleScroll);
+  //   }
+  // }, [viewMore.ModalOpen]);
+
+  // const handleViewMoreClose = () => {
+  //   setViewMore((prevState) => ({ ...prevState, ModalOpen: false }));
+  //   setViewMoreList([]); // Clear on close
+  // };
+  const fetchViewMoreList = async (currentPage = 1) => {
+    const limit = 500;
+
+    const url =
+      viewMore.isModalFor === "Location"
+        ? `https://bittrend.shubansoftware.com/account-api/location-list-api/?page=${currentPage}&limit=${limit}`
+        : `https://bittrend.shubansoftware.com/assets-api/department-list-api/?page=${currentPage}&limit=${limit}`;
+
+    try {
+      const response =
+        viewMore.isModalFor === "Location"
+          ? await CreateJobLocation(url)
+          : await CreateJobDepartment(url);
+
+      const newData = response?.data?.response || [];
+
+      setViewMoreList((prev) => [...prev, ...newData]);
+      setHasMore(newData.length === limit);
+
+      return true; // resolves when done
+    } catch (err) {
+      console.error("Pagination error:", err);
+      setHasMore(false);
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    if (viewMore.ModalOpen) {
+      setPage(1);
+      setViewMoreList([]);
+      setHasMore(true);
+      fetchViewMoreList(1);
+
+      const modalContent = modalRef.current;
+      let isFetching = false;
+
+      const handleScroll = () => {
+        if (
+          modalContent &&
+          !isFetching &&
+          modalContent.scrollTop + modalContent.clientHeight >= modalContent.scrollHeight - 10 &&
+          hasMore
+        ) {
+          isFetching = true;
+          const nextPage = page + 1;
+          fetchViewMoreList(nextPage).then(() => {
+            setPage(nextPage);
+            isFetching = false;
+          });
+        }
+      };
+
+      if (modalContent) {
+        modalContent.addEventListener("scroll", handleScroll);
+      }
+
+      return () => {
+        if (modalContent) {
+          modalContent.removeEventListener("scroll", handleScroll);
+        }
+      };
+    }
+  }, [viewMore.ModalOpen, viewMore.isModalFor]); // removed 'hasMore' and 'page'
   const handleViewMoreClose = () => {
     setViewMore((prevState) => ({ ...prevState, ModalOpen: false }));
+    setViewMoreList([]); // Clear on close
   };
 
   return (
@@ -88,17 +216,23 @@ const FilterJobs = ({
                         name="Full-time"
                         type="checkbox"
                         checked={filtersList.job_type.includes("Full-time")}
+                        // onChange={(e) => {
+                        //   setFilters((prevState) => ({
+                        //     ...prevState,
+                        //     job_type: e.target.checked
+                        //       ? prevState.job_type
+                        //         ? `${prevState.job_type},${e.target.name}`
+                        //         : e.target.name
+                        //       : prevState.job_type
+                        //         .split(",")
+                        //         .filter((item) => item !== e.target.name)
+                        //         .join(","),
+                        //   }));
+                        // }}
                         onChange={(e) => {
                           setFilters((prevState) => ({
                             ...prevState,
-                            job_type: e.target.checked
-                              ? prevState.job_type
-                                ? `${prevState.job_type},${e.target.name}`
-                                : e.target.name
-                              : prevState.job_type
-                                .split(",")
-                                .filter((item) => item !== e.target.name)
-                                .join(","),
+                            job_type: e.target.checked ? "Full-time" : "",
                           }));
                         }}
                         label="Full -Time"
@@ -110,17 +244,23 @@ const FilterJobs = ({
                         name="Part-time"
                         type="checkbox"
                         checked={filtersList.job_type.includes("Part-time")}
+                        // onChange={(e) => {
+                        //   setFilters((prevState) => ({
+                        //     ...prevState,
+                        //     job_type: e.target.checked
+                        //       ? prevState.job_type
+                        //         ? `${prevState.job_type},${e.target.name}`
+                        //         : e.target.name
+                        //       : prevState.job_type
+                        //         .split(",")
+                        //         .filter((item) => item !== e.target.name)
+                        //         .join(","),
+                        //   }));
+                        // }}
                         onChange={(e) => {
                           setFilters((prevState) => ({
                             ...prevState,
-                            job_type: e.target.checked
-                              ? prevState.job_type
-                                ? `${prevState.job_type},${e.target.name}`
-                                : e.target.name
-                              : prevState.job_type
-                                .split(",")
-                                .filter((item) => item !== e.target.name)
-                                .join(","),
+                            job_type: e.target.checked ? "Part-time" : "",
                           }));
                         }}
                         label="Part -Time"
@@ -138,22 +278,28 @@ const FilterJobs = ({
                     <li>
                       <Form.Check
                         className="inline-checkbox"
-                        name="Work from office"
+                        name="On-site"
                         type="checkbox"
                         checked={filtersList.workplace_type.includes(
-                          "Work from office"
+                          "On-site"
                         )}
+                        // onChange={(e) => {
+                        //   setFilters((prevState) => ({
+                        //     ...prevState,
+                        //     workplace_type: e.target.checked
+                        //       ? prevState.workplace_type
+                        //         ? `${prevState.workplace_type},${e.target.name}`
+                        //         : e.target.name
+                        //       : prevState.workplace_type
+                        //         .split(",")
+                        //         .filter((item) => item !== e.target.name)
+                        //         .join(","),
+                        //   }));
+                        // }}
                         onChange={(e) => {
                           setFilters((prevState) => ({
                             ...prevState,
-                            workplace_type: e.target.checked
-                              ? prevState.workplace_type
-                                ? `${prevState.workplace_type},${e.target.name}`
-                                : e.target.name
-                              : prevState.workplace_type
-                                .split(",")
-                                .filter((item) => item !== e.target.name)
-                                .join(","),
+                            workplace_type: e.target.checked ? "On-site" : "",
                           }));
                         }}
                         label="Work from office"
@@ -165,17 +311,23 @@ const FilterJobs = ({
                         name="Remote"
                         type="checkbox"
                         checked={filtersList.workplace_type.includes("Remote")}
+                        // onChange={(e) => {
+                        //   setFilters((prevState) => ({
+                        //     ...prevState,
+                        //     workplace_type: e.target.checked
+                        //       ? prevState.workplace_type
+                        //         ? `${prevState.workplace_type},${e.target.name}`
+                        //         : e.target.name
+                        //       : prevState.workplace_type
+                        //         .split(",")
+                        //         .filter((item) => item !== e.target.name)
+                        //         .join(","),
+                        //   }));
+                        // }}
                         onChange={(e) => {
                           setFilters((prevState) => ({
                             ...prevState,
-                            workplace_type: e.target.checked
-                              ? prevState.workplace_type
-                                ? `${prevState.workplace_type},${e.target.name}`
-                                : e.target.name
-                              : prevState.workplace_type
-                                .split(",")
-                                .filter((item) => item !== e.target.name)
-                                .join(","),
+                            workplace_type: e.target.checked ? "Remote" : "",
                           }));
                         }}
                         label="Remote"
@@ -187,23 +339,29 @@ const FilterJobs = ({
                         name="Hybrid"
                         type="checkbox"
                         checked={filtersList.workplace_type.includes("Hybrid")}
+                        // onChange={(e) => {
+                        //   setFilters((prevState) => ({
+                        //     ...prevState,
+                        //     workplace_type: e.target.checked
+                        //       ? prevState.workplace_type
+                        //         ? `${prevState.workplace_type},${e.target.name}`
+                        //         : e.target.name
+                        //       : prevState.workplace_type
+                        //         .split(",")
+                        //         .filter((item) => item !== e.target.name)
+                        //         .join(","),
+                        //   }));
+                        // }}
                         onChange={(e) => {
                           setFilters((prevState) => ({
                             ...prevState,
-                            workplace_type: e.target.checked
-                              ? prevState.workplace_type
-                                ? `${prevState.workplace_type},${e.target.name}`
-                                : e.target.name
-                              : prevState.workplace_type
-                                .split(",")
-                                .filter((item) => item !== e.target.name)
-                                .join(","),
+                            workplace_type: e.target.checked ? "Hybrid" : "",
                           }));
                         }}
                         label="Hybrid"
                       />
                     </li>
-                    <li>
+                    {/* <li>
                       <Form.Check
                         className="inline-checkbox"
                         name="Work from Home"
@@ -211,22 +369,28 @@ const FilterJobs = ({
                         checked={filtersList.workplace_type.includes(
                           "Work from Home"
                         )}
+                        // onChange={(e) => {
+                        //   setFilters((prevState) => ({
+                        //     ...prevState,
+                        //     workplace_type: e.target.checked
+                        //       ? prevState.workplace_type
+                        //         ? `${prevState.workplace_type},${e.target.name}`
+                        //         : e.target.name
+                        //       : prevState.workplace_type
+                        //         .split(",")
+                        //         .filter((item) => item !== e.target.name)
+                        //         .join(","),
+                        //   }));
+                        // }}
                         onChange={(e) => {
                           setFilters((prevState) => ({
                             ...prevState,
-                            workplace_type: e.target.checked
-                              ? prevState.workplace_type
-                                ? `${prevState.workplace_type},${e.target.name}`
-                                : e.target.name
-                              : prevState.workplace_type
-                                .split(",")
-                                .filter((item) => item !== e.target.name)
-                                .join(","),
+                            workplace_type: e.target.checked ? "Work from Home" : "",
                           }));
                         }}
                         label="Work from Home"
                       />
-                    </li>
+                    </li> */}
                   </ul>
                 </Accordion.Body>
               </Accordion.Item>
@@ -248,17 +412,23 @@ const FilterJobs = ({
                             checked={filtersList.job_location.includes(
                               location.location_name
                             )}
+                            // onChange={(e) => {
+                            //   setFilters((prevState) => ({
+                            //     ...prevState,
+                            //     job_location: e.target.checked
+                            //       ? prevState.job_location
+                            //         ? `${prevState.job_location},${e.target.name}`
+                            //         : e.target.name
+                            //       : prevState.job_location
+                            //         .split(",")
+                            //         .filter((item) => item !== e.target.name)
+                            //         .join(","),
+                            //   }));
+                            // }}
                             onChange={(e) => {
                               setFilters((prevState) => ({
                                 ...prevState,
-                                job_location: e.target.checked
-                                  ? prevState.job_location
-                                    ? `${prevState.job_location},${e.target.name}`
-                                    : e.target.name
-                                  : prevState.job_location
-                                    .split(",")
-                                    .filter((item) => item !== e.target.name)
-                                    .join(","),
+                                job_location: e.target.checked ? location.location_name : "",
                               }));
                             }}
                             label={location.location_name}
@@ -301,17 +471,23 @@ const FilterJobs = ({
                             checked={filtersList.department.includes(
                               dept.department_name
                             )}
+                            // onChange={(e) => {
+                            //   setFilters((prevState) => ({
+                            //     ...prevState,
+                            //     department: e.target.checked
+                            //       ? prevState.department
+                            //         ? `${prevState.department},${e.target.name}`
+                            //         : e.target.name
+                            //       : prevState.department
+                            //         .split(",")
+                            //         .filter((item) => item !== e.target.name)
+                            //         .join(","),
+                            //   }));
+                            // }}
                             onChange={(e) => {
                               setFilters((prevState) => ({
                                 ...prevState,
-                                department: e.target.checked
-                                  ? prevState.department
-                                    ? `${prevState.department},${e.target.name}`
-                                    : e.target.name
-                                  : prevState.department
-                                    .split(",")
-                                    .filter((item) => item !== e.target.name)
-                                    .join(","),
+                                department: e.target.checked ? dept.department_name : "",
                               }));
                             }}
                             label={dept.department_name}
@@ -348,17 +524,23 @@ const FilterJobs = ({
                         name="Active"
                         type="checkbox"
                         checked={filtersList.job_status.includes("Active")}
+                        // onChange={(e) => {
+                        //   setFilters((prevState) => ({
+                        //     ...prevState,
+                        //     job_status: e.target.checked
+                        //       ? prevState.job_status
+                        //         ? `${prevState.job_status},${e.target.name}`
+                        //         : e.target.name
+                        //       : prevState.job_status
+                        //         .split(",")
+                        //         .filter((item) => item !== e.target.name)
+                        //         .join(","),
+                        //   }));
+                        // }}
                         onChange={(e) => {
                           setFilters((prevState) => ({
                             ...prevState,
-                            job_status: e.target.checked
-                              ? prevState.job_status
-                                ? `${prevState.job_status},${e.target.name}`
-                                : e.target.name
-                              : prevState.job_status
-                                .split(",")
-                                .filter((item) => item !== e.target.name)
-                                .join(","),
+                            job_status: e.target.checked ? "Active" : "",
                           }));
                         }}
                         label="Active"
@@ -370,17 +552,23 @@ const FilterJobs = ({
                         name="Draft"
                         type="checkbox"
                         checked={filtersList.job_status.includes("Draft")}
+                        // onChange={(e) => {
+                        //   setFilters((prevState) => ({
+                        //     ...prevState,
+                        //     job_status: e.target.checked
+                        //       ? prevState.job_status
+                        //         ? `${prevState.job_status},${e.target.name}`
+                        //         : e.target.name
+                        //       : prevState.job_status
+                        //         .split(",")
+                        //         .filter((item) => item !== e.target.name)
+                        //         .join(","),
+                        //   }));
+                        // }}
                         onChange={(e) => {
                           setFilters((prevState) => ({
                             ...prevState,
-                            job_status: e.target.checked
-                              ? prevState.job_status
-                                ? `${prevState.job_status},${e.target.name}`
-                                : e.target.name
-                              : prevState.job_status
-                                .split(",")
-                                .filter((item) => item !== e.target.name)
-                                .join(","),
+                            job_status: e.target.checked ? "Draft" : "",
                           }));
                         }}
                         label="Draft"
@@ -392,22 +580,28 @@ const FilterJobs = ({
                         name="App. Stopped"
                         type="checkbox"
                         checked={filtersList.job_status.includes(
-                          "App. Stopped"
+                          "Application-Stopped"
                         )}
+                        // onChange={(e) => {
+                        //   setFilters((prevState) => ({
+                        //     ...prevState,
+                        //     job_status: e.target.checked
+                        //       ? prevState.job_status
+                        //         ? `${prevState.job_status},${e.target.name}`
+                        //         : e.target.name
+                        //       : prevState.job_status
+                        //         .split(",")
+                        //         .filter((item) => item !== e.target.name)
+                        //         .join(","),
+                        //   }));
+                        // }}
                         onChange={(e) => {
                           setFilters((prevState) => ({
                             ...prevState,
-                            job_status: e.target.checked
-                              ? prevState.job_status
-                                ? `${prevState.job_status},${e.target.name}`
-                                : e.target.name
-                              : prevState.job_status
-                                .split(",")
-                                .filter((item) => item !== e.target.name)
-                                .join(","),
+                            job_status: e.target.checked ? "Application-Stopped" : "",
                           }));
                         }}
-                        label="App. Stopped"
+                        label="Application-Stopped"
                       />
                     </li>
                     <li>
@@ -416,17 +610,23 @@ const FilterJobs = ({
                         name="Closed"
                         type="checkbox"
                         checked={filtersList.job_status.includes("Closed")}
+                        // onChange={(e) => {
+                        //   setFilters((prevState) => ({
+                        //     ...prevState,
+                        //     job_status: e.target.checked
+                        //       ? prevState.job_status
+                        //         ? `${prevState.job_status},${e.target.name}`
+                        //         : e.target.name
+                        //       : prevState.job_status
+                        //         .split(",")
+                        //         .filter((item) => item !== e.target.name)
+                        //         .join(","),
+                        //   }));
+                        // }}
                         onChange={(e) => {
                           setFilters((prevState) => ({
                             ...prevState,
-                            job_status: e.target.checked
-                              ? prevState.job_status
-                                ? `${prevState.job_status},${e.target.name}`
-                                : e.target.name
-                              : prevState.job_status
-                                .split(",")
-                                .filter((item) => item !== e.target.name)
-                                .join(","),
+                            job_status: e.target.checked ? "Closed" : "",
                           }));
                         }}
                         label="Closed"
@@ -443,9 +643,9 @@ const FilterJobs = ({
               <Col xs={4} className="pe-0">
                 <Form.Select>
                   <option value="" disabled hidden>On</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
+                  <option value="1">On</option>
+                  {/* <option value="2">Two</option>
+                  <option value="3">Three</option> */}
                 </Form.Select>
               </Col>
               <Col xs={8}>
@@ -470,9 +670,9 @@ const FilterJobs = ({
               <Col xs={4} className="pe-0">
                 <Form.Select>
                   <option value="" disabled hidden>On</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
+                  <option value="1">On</option>
+                  {/* <option value="2">Two</option>
+                  <option value="3">Three</option> */}
                 </Form.Select>
               </Col>
               <Col xs={8}>
@@ -530,7 +730,7 @@ const FilterJobs = ({
           </div>
         </Modal.Header>
         <Modal.Body className="text-center">
-          <div className="filter_data ct_scrollbar">
+          <div className="filter_data ct_scrollbar" ref={modalRef}>
             <ul className="filter_datalist">
               {viewMoreList &&
                 viewMoreList.length > 0 &&
@@ -553,31 +753,45 @@ const FilterJobs = ({
                               : item.department_name
                           )
                       }
-                      onChange={(e) => {
+                      // onChange={(e) => {
+                      //   setFilters((prevState) =>
+                      //     viewMore.isModalFor === "Location"
+                      //       ? {
+                      //         ...prevState,
+                      //         job_location: e.target.checked
+                      //           ? prevState.job_location
+                      //             ? `${prevState.job_location},${e.target.name}`
+                      //             : e.target.name
+                      //           : prevState.job_location
+                      //             .split(",")
+                      //             .filter((item) => item !== e.target.name)
+                      //             .join(","),
+                      //       }
+                      //       : {
+                      //         ...prevState,
+                      //         department: e.target.checked
+                      //           ? prevState.department
+                      //             ? `${prevState.department},${e.target.name}`
+                      //             : e.target.name
+                      //           : prevState.department
+                      //             .split(",")
+                      //             .filter((item) => item !== e.target.name)
+                      //             .join(","),
+                      //       }
+                      //   );
+                      // }}
+                      onChange={(e) => {                        
                         setFilters((prevState) =>
                           viewMore.isModalFor === "Location"
                             ? {
                               ...prevState,
                               job_location: e.target.checked
-                                ? prevState.job_location
-                                  ? `${prevState.job_location},${e.target.name}`
-                                  : e.target.name
-                                : prevState.job_location
-                                  .split(",")
-                                  .filter((item) => item !== e.target.name)
-                                  .join(","),
+                                ? item.location_name:''
                             }
                             : {
                               ...prevState,
                               department: e.target.checked
-                                ? prevState.department
-                                  ? `${prevState.department},${e.target.name}`
-                                  : e.target.name
-                                : prevState.department
-                                  .split(",")
-                                  .filter((item) => item !== e.target.name)
-                                  .join(","),
-                            }
+                                ? item.department_name:''}
                         );
                       }}
                       label={
@@ -592,8 +806,8 @@ const FilterJobs = ({
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="light" className="me-3" onClick={handleClose}>Cancel</Button>
-          <Button variant="primary">Apply</Button>
+          <Button variant="light" className="me-3" onClick={handleViewMoreClose}>Cancel</Button>
+          <Button onClick={() => { handleApplyFilter(); handleViewMoreClose() }} variant="primary">Apply</Button>
         </Modal.Footer>
       </Modal>
     </>

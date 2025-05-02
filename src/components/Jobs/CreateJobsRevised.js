@@ -130,6 +130,7 @@ const CreateJobsRevised = ({
   const [spokenLanguage, setSpokenLanguage] = useState([])
   const [writtenLanguage, setWittenLanguage] = useState([])
   const [locationList, setLocationList] = useState([])
+  const [currentStep, setCurrentStep] = useState("0"); // Controls which section is open
   // const [importantFlag, setImportantFlag] = useState({
   //   salary: false,
   //   education: false,
@@ -149,6 +150,7 @@ const CreateJobsRevised = ({
   //<------------------End of code--------------------------->
   // const [activeBehaviour,setActiveBehaviour] = useState([]);
   // const [importantBehaviour,setImportantBehaviour] = useState([]);
+  const hasSelectedAndImportant = behaviours.some((item) => (item?.isSelected || item?.markedImportant));
   const navigate = useNavigate();
   const behaviourResponse = [
     {
@@ -1198,6 +1200,59 @@ const CreateJobsRevised = ({
     setBehaviours(updatedArray)
     setPersonalityData([])
   }
+  const handledisableOrNot = () => {
+    let isError = false;
+    if (!badges?.length) {
+      isError = true;
+    } else if (!IndustriesBadges?.length) {
+      isError = true;
+    } else if (!restrictedRoleBadges?.length) {
+      isError = true;
+    } else if (!spokenLanguageBadges.length) {
+      isError = true;
+    } else if (!rdnwBadges.length) {
+      isError = true;
+    } else if (!locationBadges.length) {
+      isError = true;
+    } else if (!SelectSkillsData.length) {
+      isError = true;
+    } else if (!mustHaveSkills.length) {
+      isError = true;
+    } else if (!updateFormData.max_salary) {
+      isError = true;
+    } else if (!updateFormData.min_salary) {
+      isError = true
+    } else if (!updateFormData.minimum_education) {
+      isError = true
+    } else if (!updateFormData.min_exp) {
+      isError = true
+    } else if (!updateFormData.max_exp) {
+      isError = true
+    } else if (!updateFormData.targate_hire_date) {
+      isError = true
+    } else if (!updateFormData.minimum_education) {
+      isError = true
+    } else if (!hasSelectedAndImportant) {
+      isError = true
+    }
+    return isError;
+  }
+  const handleNext = (e) => {
+    const nextStep = (parseInt(currentStep) + 1).toString();
+    if (parseInt(currentStep) < 9) {
+      setCurrentStep(nextStep);
+      // custom question open extra      
+      if (parseInt(currentStep) == 8) {
+        setActiveKeyAdd(true);
+        setActiveKey("9");
+        handleAddComponent(e);
+      } else if (parseInt(currentStep) == 9) {
+        setActiveKeyAdd(false);
+        setActiveKey(null);
+        // handleAddComponent(e);
+      }
+    }
+  };
   // console.log(activeBehaviour)
   // const updatedArray = behaviours.map((item)=>({
   //   ...item,
@@ -1464,7 +1519,7 @@ const CreateJobsRevised = ({
                         ))}
                       </Form>
                       <button
-                        onClick={handleCreateForm}
+                        onClick={handleNext}
                         type="button"
                         class="btn btn-lightgray"
                       >
@@ -1640,7 +1695,7 @@ const CreateJobsRevised = ({
                       </Form>
                       <button
                         type="button"
-                        onClick={handleCreateForm}
+                        onClick={handleNext}
                         class="btn btn-lightgray"
                       >
                         Next
@@ -1964,7 +2019,7 @@ const CreateJobsRevised = ({
 
                       <button
                         type="button"
-                        onClick={handleCreateForm}
+                        onClick={handleNext}
                         class="btn btn-lightgray"
                       >
                         Next
@@ -2038,7 +2093,7 @@ const CreateJobsRevised = ({
                       </Form>
                       <button
                         type="button"
-                        onClick={handleCreateForm}
+                        onClick={handleNext}
                         class="btn btn-lightgray"
                       >
                         Next
@@ -2262,7 +2317,7 @@ const CreateJobsRevised = ({
                       </Form>
                       <button
                         type="button"
-                        onClick={handleCreateForm}
+                        onClick={handleNext}
                         class="btn btn-lightgray"
                       >
                         Next
@@ -2392,7 +2447,7 @@ const CreateJobsRevised = ({
                       </Form>
                       <button
                         type="button"
-                        onClick={handleCreateForm}
+                        onClick={handleNext}
                         class="btn btn-lightgray"
                       >
                         Next
@@ -2644,7 +2699,7 @@ const CreateJobsRevised = ({
                     ))}
                     <div className="accordion_footer mt-3 justify-content-end">
                       <button
-                        onClick={handleCreateForm}
+                        onClick={handleNext}
                         type="button"
                         class="btn btn-lightgray"
                       >
@@ -2861,7 +2916,7 @@ const CreateJobsRevised = ({
                           ))}
                       </div>
                       <div className="accordion_footer mt-3 justify-content-end">
-                        <button type="button" class="btn btn-lightgray">
+                        <button type="button" class="btn btn-lightgray" onClick={handleNext}>
                           Next
                         </button>
                       </div>
@@ -3000,6 +3055,7 @@ const CreateJobsRevised = ({
                     onClick={handleCreateForm}
                     type="button"
                     // disabled={createRevisedJobData?.calculation_job.length > 0}
+                    disabled={handledisableOrNot()}
                     class="btn-md btn btn-primary"
                   >
                     Post

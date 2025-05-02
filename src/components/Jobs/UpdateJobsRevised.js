@@ -131,6 +131,7 @@ const UpdateJobsRevised = ({
     const [spokenLanguage, setSpokenLanguage] = useState([])
     const [writtenLanguage, setWittenLanguage] = useState([])
     const [locationList, setLocationList] = useState([])
+    const [currentStep, setCurrentStep] = useState("0"); // Controls which section is open
     // const [importantFlag, setImportantFlag] = useState({
     //     salary: false,
     //     education: false,
@@ -150,6 +151,7 @@ const UpdateJobsRevised = ({
     //<------------------End of code--------------------------->
     // const [activeBehaviour,setActiveBehaviour] = useState([]);
     // const [importantBehaviour,setImportantBehaviour] = useState([]);
+    const hasSelectedAndImportant = behaviours.some((item) => (item?.isSelected || item?.markedImportant));
     const navigate = useNavigate();
     const behaviourResponse = [
         {
@@ -1303,6 +1305,59 @@ const UpdateJobsRevised = ({
         setBehaviours(updatedArray)
         setPersonalityData([])
     }
+    const handledisableOrNot = () => {
+        let isError = false;
+        if (!badges?.length) {
+            isError = true;
+        } else if (!IndustriesBadges?.length) {
+            isError = true;
+        } else if (!restrictedRoleBadges?.length) {
+            isError = true;
+        } else if (!spokenLanguageBadges.length) {
+            isError = true;
+        } else if (!rdnwBadges.length) {
+            isError = true;
+        } else if (!locationBadges.length) {
+            isError = true;
+        } else if (!SelectSkillsData.length) {
+            isError = true;
+        } else if (!mustHaveSkills.length) {
+            isError = true;
+        } else if (!updateFormData.max_salary) {
+            isError = true;
+        } else if (!updateFormData.min_salary) {
+            isError = true
+        } else if (!updateFormData.minimum_education) {
+            isError = true
+        } else if (!updateFormData.min_exp) {
+            isError = true
+        } else if (!updateFormData.max_exp) {
+            isError = true
+        } else if (!updateFormData.targate_hire_date) {
+            isError = true
+        } else if (!updateFormData.minimum_education) {
+            isError = true
+        } else if (!hasSelectedAndImportant) {
+            isError = true
+        }
+        return isError;
+    }
+    const handleNext = (e) => {
+        const nextStep = (parseInt(currentStep) + 1).toString();
+        if (parseInt(currentStep) < 11) {
+            setCurrentStep(nextStep);
+            // custom question open extra
+            if (parseInt(currentStep) == 8) {
+                setActiveKeyAdd(true);
+                setActiveKey("9");
+                handleAddComponent(e);
+            } else if (parseInt(currentStep) == 9) {
+                setActiveKeyAdd(false);
+                setActiveKey(null);
+                // handleAddComponent(e);
+            }
+        }
+    };
     // console.log(behaviours)
     // console.log('==========>update======>', updateFormData)
     // console.log('add skill box', addSkillGroup)
@@ -1313,6 +1368,7 @@ const UpdateJobsRevised = ({
     // console.log('must have', mustHaveSkills)
     console.log(components.length)
     console.log(IndustriesBadges)
+
     return (
         <>
             <Modal
@@ -1405,7 +1461,9 @@ const UpdateJobsRevised = ({
                             </ul>
                         </Col>
                         <Col md={7} lg={8} className="jobMain_panel">
-                            <Accordion defaultActiveKey={["0", "8", "7", "10"]}>
+                            <Accordion
+                                defaultActiveKey={["0", "8", "7", "10"]}
+                                activeKey={currentStep} onSelect={(key) => setCurrentStep(key)}>
                                 <Accordion.Item eventKey="0">
                                     <Accordion.Header onClick={() => setOpenStep([])}>Requirements</Accordion.Header>
                                     <Accordion.Body>
@@ -1581,9 +1639,10 @@ const UpdateJobsRevised = ({
                                                 ))}
                                             </Form>
                                             <button
-                                                onClick={handleCreateForm}
+                                                // onClick={handleCreateForm}
                                                 type="button"
                                                 class="btn btn-lightgray"
+                                                onClick={handleNext}
                                             >
                                                 Next
                                             </button>
@@ -1758,7 +1817,8 @@ const UpdateJobsRevised = ({
                                             </Form>
                                             <button
                                                 type="button"
-                                                onClick={handleCreateForm}
+                                                // onClick={handleCreateForm}
+                                                onClick={handleNext}
                                                 class="btn btn-lightgray"
                                             >
                                                 Next
@@ -2077,8 +2137,9 @@ const UpdateJobsRevised = ({
 
                                             <button
                                                 type="button"
-                                                onClick={handleCreateForm}
+                                                // onClick={handleCreateForm}
                                                 class="btn btn-lightgray"
+                                                onClick={handleNext}
                                             >
                                                 Next
                                             </button>
@@ -2154,8 +2215,9 @@ const UpdateJobsRevised = ({
                                             </Form>
                                             <button
                                                 type="button"
-                                                onClick={handleCreateForm}
+                                                // onClick={handleCreateForm}
                                                 class="btn btn-lightgray"
+                                                onClick={handleNext}
                                             >
                                                 Next
                                             </button>
@@ -2380,8 +2442,9 @@ const UpdateJobsRevised = ({
                                             </Form>
                                             <button
                                                 type="button"
-                                                onClick={handleCreateForm}
+                                                // onClick={handleCreateForm}
                                                 class="btn btn-lightgray"
+                                                onClick={handleNext}
                                             >
                                                 Next
                                             </button>
@@ -2513,8 +2576,9 @@ const UpdateJobsRevised = ({
                                             </Form>
                                             <button
                                                 type="button"
-                                                onClick={handleCreateForm}
+                                                // onClick={handleCreateForm}
                                                 class="btn btn-lightgray"
+                                                onClick={handleNext}
                                             >
                                                 Next
                                             </button>
@@ -2827,9 +2891,10 @@ const UpdateJobsRevised = ({
                                         ))}
                                         <div className="accordion_footer mt-3 justify-content-end">
                                             <button
-                                                onClick={handleCreateForm}
+                                                // onClick={handleCreateForm}
                                                 type="button"
                                                 class="btn btn-lightgray"
+                                                onClick={handleNext}
                                             >
                                                 Next
                                             </button>
@@ -3044,7 +3109,7 @@ const UpdateJobsRevised = ({
                                                     ))}
                                             </div>
                                             <div className="accordion_footer mt-3 justify-content-end">
-                                                <button type="button" class="btn btn-lightgray">
+                                                <button type="button" class="btn btn-lightgray" onClick={handleNext}>
                                                     Next
                                                 </button>
                                             </div>
@@ -3192,6 +3257,7 @@ const UpdateJobsRevised = ({
                                         onClick={handleCreateForm}
                                         type="button"
                                         // disabled={createRevisedJobData?.calculation_job.length > 0}
+                                        disabled={handledisableOrNot()}
                                         class="btn-md btn btn-primary"
                                     >
                                         Review And Post
