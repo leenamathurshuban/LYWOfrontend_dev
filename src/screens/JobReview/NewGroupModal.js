@@ -44,7 +44,7 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, jobDetails
 
         language: { read_and_write: [], speak: [] },
 
-        custom_question: [], //pass questions object with their options selected in this array
+        custom_questions: [], //pass questions object with their options selected in this array
 
         personality: { personality_groups: [], all_personalites: [] },
 
@@ -313,10 +313,26 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, jobDetails
             //     ...payloadList,
             //     [selectedGroup?.heading]: formatted
             // })
+            // let flattened=null;
+            // if(selectedGroup?.heading == 'Custom Questions' || selectedGroup?.heading == 'Skills'){
+            // flattened = Object.values(formatted).flat();
+            // }
+            // setPayloadList(prev => ({
+            //     ...prev,
+            //     [selectedGroup?.heading.toLowerCase().replace(/ /g, '_')]: {
+            //         ...prev[selectedGroup?.heading.toLowerCase().replace(/ /g, '_')],
+            //         ...formatted
+            //     }
+            // }));
+            const headingKey = selectedGroup.heading.toLowerCase().replace(/ /g, '_');
+
+            const isFlat = ['Custom Questions', 'Skills','Roles'].includes(selectedGroup.heading);
+            const flattened = isFlat ? Object.values(formatted).flat() : null;
+
             setPayloadList(prev => ({
                 ...prev,
-                [selectedGroup?.heading.toLowerCase().replace(/ /g, '_')]: {
-                    ...prev[selectedGroup?.heading.toLowerCase().replace(/ /g, '_')],
+                [headingKey]:isFlat?flattened: {
+                    ...prev[headingKey],
                     ...formatted
                 }
             }));

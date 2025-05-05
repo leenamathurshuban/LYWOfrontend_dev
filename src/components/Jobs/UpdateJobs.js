@@ -138,7 +138,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
     {
       heading: "Thoughtfulness",
       data: "Thinking carefully aboutthings before acting",
-      uid: "  52261636-2fab-4935-ad9c-f2a3fa9f8be4",
+      uid: "52261636-2fab-4935-ad9c-f2a3fa9f8be4",
       markedImportant: false,
       isSelected: false,
     },

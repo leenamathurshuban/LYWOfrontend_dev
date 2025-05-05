@@ -148,6 +148,28 @@ const UpdateJobsRevised = ({
     const [selectedItem3, setSelectedItem3] = useState([]);
     const [totalItem, setTotalItem] = useState([]);
     const [important, setImportant] = useState([]);
+    const [helpChooseOption, setHelpChooseOption] = useState({
+        IndividualEffort: [
+            { heading: 'Self Motivation', uid: "64d932b7-89d3-4270-b553-58b6bdc66be1", isSelected: false, markedImportant: false, data: 'Self Motivation is an ideal behaviour for a person when they are required to start things on their own and set their own goals and standards. This typically is necessary when change and improvement is needed but the direction is not very well defined.' },
+            { heading: 'Efficiency', uid: "93a2b8af-3af5-4d7f-bc39-165c8fdefd81", isSelected: false, markedImportant: false, data: 'While efficiency is essential for all roles, it should not be picked just because deadlines should be met by the hired person. Choose this when planning, optimization, and streamlining to increase or maintain productivity are the key responsibilities of the role' },
+            { heading: 'Independence', uid: "64715729-4e7a-49d3-9ffd-6ea627116b2c", isSelected: false, markedImportant: false, data: 'This behavior is essential when an individual must navigate uncertain or challenging situations  without clear guidance. It is particularly relevant in leadership or independent contributor roles, where making autonomous decisions is a regular requirement.' },
+        ],
+        InterpersonalRelations: [
+            { heading: 'Friendliness', uid: "815db2c5-bac6-4eff-a629-698eb1aa9551", isSelected: false, markedImportant: false, data: `This behaviour is crucial for promoting collaboration and teamwork, fostering a supportive and inclusive environment that thrives on strong interpersonal relationships. It's not just about being nice; it's about promoting openness through a fair and collaborative approach.` },
+            { heading: 'Self Confidence', uid: "db1aa38a-0db6-4871-88b1-085010b1c346", isSelected: false, markedImportant: false, data: 'This behaviour is recommended in roles that require individuals to trust their judgement and capabilities, enabling them to lead and inspire others with conviction and clarity. It is particularly desirable in roles where the individual is relied upon for decision-making for the entire team.' },
+            { heading: 'Enthusiasm', uid: "dc5eb856-b6b6-404a-955e-5e034424fe31", isSelected: false, markedImportant: false, data: 'Enthusiasm goes beyond being high-spirited. It is most needed when the person in this role needs to promote inquisitiveness, interest and passion in the environment around them by their own heightened interest in the work and achieving goals and outcomes.' },
+        ],
+        Consistency: [
+            { heading: 'Patience', uid: "ebc2a4a2-3e61-463a-a2cc-cec72b5894a9", isSelected: false, markedImportant: false, data: 'This behaviour is needed in the following scenarios: first, when the role requires individuals to tolerate delays and obstacles calmly on a daily basis; and second, when the role involves dealing with repetitive tasks or waiting for long-term outcomes.' },
+            { heading: 'Persistence', uid: "5be7e9c5-c0c2-45d6-8866-5381976dd92c", isSelected: false, markedImportant: false, data: 'This is a necessary behaviour for roles which need to deal with delays and difficulties regularly and require that the person actively persists in overcoming them until the goals are achieved. Giving up in the face of challenges is not an option in such roles.' },
+            { heading: 'Thoughtfulness', uid: "52261636-2fab-4935-ad9c-f2a3fa9f8be4", isSelected: false, markedImportant: false, data: 'Some roles require foresight, long term planning, impact assessment. A desired behaviour in persons who need to anticipate all contingencies, risks and benefits before making crucial decisions or recommendations and should try and avoid an unexpected outcome at all costs.' },
+        ],
+        Systematic: [
+            { heading: 'Accuracy', uid: "af0b3a0b-90ec-4df0-bd82-8b633ce993d5", isSelected: false, markedImportant: false, data: 'Requirement for working without errors should not be the reason for choosing this behaviour. This should be considered when the margin for error in judgement, or decisions is very low and where avoiding mistakes is more important than considerations of time, cost, or other factors.' },
+            { heading: 'Sensitivity', uid: "424b93e6-d4d7-4d43-af55-c40c7c809071", isSelected: false, markedImportant: false, data: 'This behaviour is key in roles where understanding and reacting to the subtle cues that are not easily apparent is required. This is not just about interpersonal skills and extends to being able to successfully navigate complex environments with a lot of inter related parts.' },
+            { heading: 'Cooperativeness', uid: "bf72d375-bd6f-498f-800c-af60189a1f77", isSelected: false, markedImportant: false, data: 'Ideal when a role demands effective collaboration across different teams. It involves actively seeking input from others, integrating diverse perspectives, resolving conflicts by finding common ground and willingness to compromise when needed for harmony and productivity.' },
+        ]
+    })
     //<------------------End of code--------------------------->
     // const [activeBehaviour,setActiveBehaviour] = useState([]);
     // const [importantBehaviour,setImportantBehaviour] = useState([]);
@@ -346,6 +368,26 @@ const UpdateJobsRevised = ({
                     isSelected: behaviour.includes(item.uid),
                     markedImportant: important.includes(item.uid)
                 }))
+
+                const step1 = helpChooseOption.IndividualEffort.map((item) => ({
+                    ...item,
+                    isSelected: behaviour.includes(item.uid),
+                    markedImportant: important.includes(item.uid)
+                }))
+                const transformed = Object.entries(helpChooseOption).reduce((acc, [categoryKey, behaviours]) => {
+                    acc[categoryKey] = Object.values(behaviours).map(values => ({
+                        heading: values.heading,
+                        uid: values.uid,
+                        isSelected: behaviour.includes(values.uid),
+                        markedImportant: important.includes(values.uid),
+                        data: values.data
+                    }));
+                    return acc;
+                }, {});
+
+                setHelpChooseOption(transformed)
+
+                // setSelectedItem(step1)                
                 setBehaviours(updatedArray)
             }
             setIsUpdated(false);
@@ -1025,7 +1067,7 @@ const UpdateJobsRevised = ({
         return { selectedCount, markedImportantCount };
     };
 
-    const handleBoxClick = (index) => {
+    const handleBoxClick = (index, value) => {
         const { selectedCount, markedImportantCount } = countSelectedItems();
 
         setBehaviours((prev) =>
@@ -1043,6 +1085,64 @@ const UpdateJobsRevised = ({
                 return item;
             })
         );
+        if (value.heading == 'Self Motivation' || value.heading == 'Efficiency' || value.heading == 'Independence') {
+            setHelpChooseOption(prev => ({
+                ...prev,
+                IndividualEffort: prev?.IndividualEffort?.map((item, i) => {
+                    if (item?.heading === value.heading) {
+                        if (!item.isSelected && selectedCount < 6) {
+                            return { ...item, isSelected: true };
+                        } else if (item.isSelected) {
+                            return { ...item, isSelected: false, markedImportant: false };
+                        }
+                    }
+                    return item;
+                })
+            }));
+        } else if (value.heading == 'Friendliness' || value.heading == 'Self Confidence' || value.heading == 'Enthusiasm') {
+            setHelpChooseOption(prev => ({
+                ...prev,
+                InterpersonalRelations: prev?.InterpersonalRelations?.map((item, i) => {
+                    if (item?.heading === value.heading) {
+                        if (!item.isSelected && selectedCount < 6) {
+                            return { ...item, isSelected: true };
+                        } else if (item.isSelected) {
+                            return { ...item, isSelected: false, markedImportant: false };
+                        }
+                    }
+                    return item;
+                })
+            }));
+        } else if (value.heading == 'Patience' || value.heading == 'Persistence' || value.heading == 'Thoughtfulness') {
+            setHelpChooseOption(prev => ({
+                ...prev,
+                Consistency: prev?.Consistency?.map((item, i) => {
+                    if (item?.heading === value.heading) {
+                        if (!item.isSelected && selectedCount < 6) {
+                            return { ...item, isSelected: true };
+                        } else if (item.isSelected) {
+                            return { ...item, isSelected: false, markedImportant: false };
+                        }
+                    }
+                    return item;
+                })
+            }));
+        } else if (value.heading == 'Accuracy' || value.heading == 'Sensitivity' || value.heading == 'Cooperativeness') {
+            setHelpChooseOption(prev => ({
+                ...prev,
+                Systematic: prev?.Systematic?.map((item, i) => {
+                    if (item?.heading === value.heading) {
+                        if (!item.isSelected && selectedCount < 6) {
+                            return { ...item, isSelected: true };
+                        } else if (item.isSelected) {
+                            return { ...item, isSelected: false, markedImportant: false };
+                        }
+                    }
+                    return item;
+                })
+            }));
+        }
+
     };
 
     const handleStarClick = (index, e) => {
@@ -3188,7 +3288,7 @@ const UpdateJobsRevised = ({
                                                             className={`assmntbox ${item.isSelected ? "active" : ""
                                                                 }`}
                                                             // className={`assmntbox ${activeBehaviour.includes(item.uid) && 'active'}`}
-                                                            onClick={() => handleBoxClick(index)} style={{ cursor: 'pointer' }}
+                                                            onClick={() => handleBoxClick(index, item)} style={{ cursor: 'pointer' }}
                                                         >
                                                             <div className="assmntbox-head">
                                                                 <h6>
@@ -3617,6 +3717,8 @@ const UpdateJobsRevised = ({
                 selectedItem3={selectedItem3} setSelectedItem3={setSelectedItem3}
                 totalItem={totalItem} setTotalItem={setTotalItem}
                 important={important} setImportant={setImportant} setIsUpdated={setIsUpdated}
+                helpChooseOption={helpChooseOption} setHelpChooseOption={setHelpChooseOption}
+                setBehaviours={setBehaviours}
             />
         </>
     );

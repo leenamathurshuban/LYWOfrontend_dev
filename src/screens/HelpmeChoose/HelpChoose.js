@@ -13,15 +13,23 @@ const HelpChoose = ({
     show, setShow, behaviours, createUid, isIndex, setIsIndex,
     selectedItem, setSelectedItem, selectedItem1, setSelectedItem1,
     selectedItem2, setSelectedItem2, selectedItem3, setSelectedItem3,
-    totalItem, setTotalItem, important, setImportant, setIsUpdated
+    totalItem, setTotalItem, important, setImportant, setIsUpdated, helpChooseOption, setHelpChooseOption,setBehaviours
 }) => {
+    console.log(helpChooseOption)
     // const [isIndex, setIsIndex] = useState([]);
     // const [selectedItem, setSelectedItem] = useState([]);
     // const [selectedItem1, setSelectedItem1] = useState([]);
     // const [selectedItem2, setSelectedItem2] = useState([]);
     // const [selectedItem3, setSelectedItem3] = useState([]);
     // const [totalItem, setTotalItem] = useState([]);
-    // const [important, setImportant] = useState([]);
+    // const [important, setImportant] = useState([]);   
+    const countSelectedItems = () => {
+        const selectedCount = behaviours.filter((item) => item.isSelected).length;
+        const markedImportantCount = behaviours.filter(
+            (item) => item.markedImportant
+        ).length;
+        return { selectedCount, markedImportantCount };
+    };
     const handleClose = () => {
         setShow(false)
         // setIsIndex([])
@@ -33,20 +41,56 @@ const HelpChoose = ({
         // setTotalItem([])
     }
     const handleCloseItem = (value) => {
-        const newArray = selectedItem.filter((Val) => Val !== value)
-        setSelectedItem(newArray)
+        // const newArray = selectedItem.filter((Val) => Val !== value)
+        // setSelectedItem(newArray)
+        setHelpChooseOption(prev => ({
+            ...prev,
+            IndividualEffort: prev?.IndividualEffort?.map((item, i) => {
+                if (item?.heading === value?.heading) {
+                    return { ...item, isSelected: false, markedImportant: false };
+                }
+                return item;
+            })
+        }));
     }
     const handleCloseItem1 = (value) => {
-        const newArray = selectedItem1.filter((Val) => Val !== value)
-        setSelectedItem1(newArray)
+        // const newArray = selectedItem1.filter((Val) => Val !== value)
+        // setSelectedItem1(newArray)
+        setHelpChooseOption(prev => ({
+            ...prev,
+            InterpersonalRelations: prev?.InterpersonalRelations?.map((item, i) => {
+                if (item?.heading === value?.heading) {
+                    return { ...item, isSelected: false, markedImportant: false };
+                }
+                return item;
+            })
+        }));
     }
     const handleCloseItem2 = (value) => {
-        const newArray = selectedItem2.filter((Val) => Val !== value)
-        setSelectedItem2(newArray)
+        // const newArray = selectedItem2.filter((Val) => Val !== value)
+        // setSelectedItem2(newArray)
+        setHelpChooseOption(prev => ({
+            ...prev,
+            Consistency: prev?.Consistency?.map((item, i) => {
+                if (item?.heading === value?.heading) {
+                    return { ...item, isSelected: false, markedImportant: false };
+                }
+                return item;
+            })
+        }));
     }
     const handleCloseItem3 = (value) => {
-        const newArray = selectedItem3.filter((Val) => Val !== value)
-        setSelectedItem3(newArray)
+        // const newArray = selectedItem3.filter((Val) => Val !== value)
+        // setSelectedItem3(newArray)
+        setHelpChooseOption(prev => ({
+            ...prev,
+            Systematic: prev?.Systematic?.map((item, i) => {
+                if (item?.heading === value?.heading) {
+                    return { ...item, isSelected: false, markedImportant: false };
+                }
+                return item;
+            })
+        }));
     }
     const handleCard = (index) => {
         if (!isIndex.includes(index)) {
@@ -56,53 +100,189 @@ const HelpChoose = ({
         }
     }
     const handleSelectItem = (value) => {
-        if (!selectedItem.includes(value) && totalItem.length < 6) {
-            setSelectedItem([...selectedItem, value])
-        } else {
-            const filter = selectedItem.filter((c) => c != value)
-            setSelectedItem(filter)
-            const newArray = important.filter((Val) => Val !== value)
-            setImportant(newArray)
-        }
+        // if (!selectedItem.includes(value) && totalItem.length < 6) {
+        //     setSelectedItem([...selectedItem, value])
+        // } else {
+        //     const filter = selectedItem.filter((c) => c != value)
+        //     setSelectedItem(filter)
+        //     const newArray = important.filter((Val) => Val !== value)
+        //     setImportant(newArray)
+        // }
+        // setHelpChooseOption((prev)=>
+        //     prev?.IndividualEffort?.map((item, i) => {
+        //         if (item?.heading === value) {
+        //             // Allow toggling only if:
+        //             // 1. The item is not already selected, and the selectedCount is less than 4.
+        //             // 2. The item is already selected (to allow deselecting).
+        //             if (!item.isSelected && totalItem.length < 6) {
+        //                 return { ...item, isSelected: !item.isSelected };
+        //             } else if (item.isSelected) {
+        //                 return { ...item, isSelected: !item.isSelected, markedImportant: false };
+        //             }
+        //         }
+        //         return item;
+        //     })
+        // )
+        const { selectedCount, markedImportantCount } = countSelectedItems();
+        setHelpChooseOption(prev => ({
+            ...prev,
+            IndividualEffort: prev?.IndividualEffort?.map((item, i) => {
+                if (item?.heading === value) {
+                    if (!item.isSelected && selectedCount < 6) {
+                        return { ...item, isSelected: true };
+                    } else if (item.isSelected) {
+                        return { ...item, isSelected: false, markedImportant: false };
+                    }
+                }
+                return item;
+            })
+        }));        
+        setBehaviours((prev) =>
+            prev.map((item, i) => {
+                if (item?.heading === value) {                    
+                    if (!item.isSelected && selectedCount < 6) {
+                        return { ...item, isSelected: !item.isSelected };
+                    } else if (item.isSelected) {
+                        return { ...item, isSelected: !item.isSelected, markedImportant: false };
+                    }
+                }
+                return item;
+            })
+        );
+
     }
     const handleSelectItem1 = (value) => {
-        if (!selectedItem1.includes(value) && totalItem.length < 6) {
-            setSelectedItem1([...selectedItem1, value])
-        }else {
-            const filter = selectedItem1.filter((c) => c != value)
-            setSelectedItem1(filter)
-            const newArray = important.filter((Val) => Val !== value)
-            setImportant(newArray)
-        }
+        // if (!selectedItem1.includes(value) && totalItem.length < 6) {
+        //     setSelectedItem1([...selectedItem1, value])
+        // }else {
+        //     const filter = selectedItem1.filter((c) => c != value)
+        //     setSelectedItem1(filter)
+        //     const newArray = important.filter((Val) => Val !== value)
+        //     setImportant(newArray)
+        // }
+        const { selectedCount, markedImportantCount } = countSelectedItems();
+        setHelpChooseOption(prev => ({
+            ...prev,
+            InterpersonalRelations: prev?.InterpersonalRelations?.map((item, i) => {
+                if (item?.heading === value) {
+                    if (!item.isSelected && selectedCount < 6) {
+                        return { ...item, isSelected: true };
+                    } else if (item.isSelected) {
+                        return { ...item, isSelected: false, markedImportant: false };
+                    }
+                }
+                return item;
+            })
+        }));
+        setBehaviours((prev) =>
+            prev.map((item, i) => {
+                if (item?.heading === value) {                    
+                    if (!item.isSelected && selectedCount < 6) {
+                        return { ...item, isSelected: !item.isSelected };
+                    } else if (item.isSelected) {
+                        return { ...item, isSelected: !item.isSelected, markedImportant: false };
+                    }
+                }
+                return item;
+            })
+        );
     }
     const handleSelectItem2 = (value) => {
-        if (!selectedItem2.includes(value) && totalItem.length < 6) {
-            setSelectedItem2([...selectedItem2, value])
-        }else {
-            const filter = selectedItem2.filter((c) => c != value)
-            setSelectedItem2(filter)
-            const newArray = important.filter((Val) => Val !== value)
-            setImportant(newArray)
-        }
+        // if (!selectedItem2.includes(value) && totalItem.length < 6) {
+        //     setSelectedItem2([...selectedItem2, value])
+        // }else {
+        //     const filter = selectedItem2.filter((c) => c != value)
+        //     setSelectedItem2(filter)
+        //     const newArray = important.filter((Val) => Val !== value)
+        //     setImportant(newArray)
+        // }
+        const { selectedCount, markedImportantCount } = countSelectedItems();
+        setHelpChooseOption(prev => ({
+            ...prev,
+            Consistency: prev?.Consistency?.map((item, i) => {
+                if (item?.heading === value) {
+                    if (!item.isSelected && selectedCount < 6) {
+                        return { ...item, isSelected: true };
+                    } else if (item.isSelected) {
+                        return { ...item, isSelected: false, markedImportant: false };
+                    }
+                }
+                return item;
+            })
+        }));
+        setBehaviours((prev) =>
+            prev.map((item, i) => {
+                if (item?.heading === value) {                    
+                    if (!item.isSelected && selectedCount < 6) {
+                        return { ...item, isSelected: !item.isSelected };
+                    } else if (item.isSelected) {
+                        return { ...item, isSelected: !item.isSelected, markedImportant: false };
+                    }
+                }
+                return item;
+            })
+        );
     }
     const handleSelectItem3 = (value) => {
-        if (!selectedItem3.includes(value) && totalItem.length < 6) {
-            setSelectedItem3([...selectedItem3, value])
-        }else {
-            const filter = selectedItem3.filter((c) => c != value)
-            setSelectedItem3(filter)
-            const newArray = important.filter((Val) => Val !== value)
-            setImportant(newArray)
-        }
+        // if (!selectedItem3.includes(value) && totalItem.length < 6) {
+        //     setSelectedItem3([...selectedItem3, value])
+        // }else {
+        //     const filter = selectedItem3.filter((c) => c != value)
+        //     setSelectedItem3(filter)
+        //     const newArray = important.filter((Val) => Val !== value)
+        //     setImportant(newArray)
+        // }
+        const { selectedCount, markedImportantCount } = countSelectedItems();
+        setHelpChooseOption(prev => ({
+            ...prev,
+            Systematic: prev?.Systematic?.map((item, i) => {
+                if (item?.heading === value) {
+                    if (!item.isSelected && selectedCount < 6) {
+                        return { ...item, isSelected: true };
+                    } else if (item.isSelected) {
+                        return { ...item, isSelected: false, markedImportant: false };
+                    }
+                }
+                return item;
+            })
+        }));
+        setBehaviours((prev) =>
+            prev.map((item, i) => {
+                if (item?.heading === value) {                    
+                    if (!item.isSelected && selectedCount < 6) {
+                        return { ...item, isSelected: !item.isSelected };
+                    } else if (item.isSelected) {
+                        return { ...item, isSelected: !item.isSelected, markedImportant: false };
+                    }
+                }
+                return item;
+            })
+        );
+
     }
     const handleImportant = (e, value) => {
         e.stopPropagation()
-        if (!important.includes(value) && important.length < 2 && totalItem.includes(value)) {
-            setImportant([...important, value])
-        } else {
-            const newArray = important.filter((Val) => Val !== value)
-            setImportant(newArray)
-        }
+        // if (!important.includes(value) && important.length < 2 && totalItem.includes(value)) {
+        //     setImportant([...important, value])
+        // } else {
+        //     const newArray = important.filter((Val) => Val !== value)
+        //     setImportant(newArray)
+        // }
+        setHelpChooseOption(prev => ({
+            ...prev,
+            Systematic: prev?.Systematic?.map((item, i) => {
+                if (item?.heading === value) {
+                    if (item?.isSelected) {
+                        if (!item.markedImportant && totalItem.length < 2) {
+                            return { ...item, markedImportant: !item.markedImportant };
+                        } else if (item.markedImportant) {
+                            return { ...item, markedImportant: !item.markedImportant };
+                        }
+                    }
+                }
+                return item;
+            })
+        }));
     }
     useEffect(() => {
         setTotalItem([...selectedItem, ...selectedItem1, ...selectedItem2, ...selectedItem3])
@@ -196,34 +376,50 @@ const HelpChoose = ({
                         <div className="brvselection mt-3">
                             <h6>Your selection will display here</h6>
                             <Row className="form-row">
-                                {selectedItem.map((item) => (
-                                    <Col md={2}>
-                                        <span className="brvbox active-danger">{item} <span><i className={`${important.includes(item) ? 'fa active-danger' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item)}></i>
-                                            <img className="tag_del" src={tagClose} onClick={() => handleCloseItem(item)} />
-                                        </span></span>
-                                    </Col>
-                                ))}
-                                {selectedItem1.map((item) => (
-                                    <Col md={2}>
-                                        <span className="brvbox active-primery">{item}<span><i className={`${important.includes(item) ? 'fa active-primery' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item)}></i>
-                                            <img className="tag_del" src={tagClose} onClick={() => handleCloseItem1(item)} />
-                                        </span></span>
-                                    </Col>
-                                ))}
-                                {selectedItem2.map((item) => (
-                                    <Col md={2}>
-                                        <span className="brvbox active-success">{item}<span><i className={`${important.includes(item) ? 'fa active-success' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item)}></i>
-                                            <img className="tag_del" src={tagClose} onClick={() => handleCloseItem2(item)} />
-                                        </span></span>
-                                    </Col>
-                                ))}
-                                {selectedItem3.map((item) => (
-                                    <Col md={2}>
-                                        <span className="brvbox active-warning">{item}<span><i className={`${important.includes(item) ? 'fa active-warning' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item)}></i>
-                                            <img className="tag_del" src={tagClose} onClick={() => handleCloseItem3(item)} />
-                                        </span></span>
-                                    </Col>
-                                ))}
+                                {helpChooseOption?.IndividualEffort?.map((item) => {
+                                    if (item?.isSelected) {
+                                        return (
+                                            <Col md={2}>
+                                                <span className="brvbox active-danger">{item?.heading} <span><i className={`${item?.markedImportant ? 'fa active-danger' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item)}></i>
+                                                    <img className="tag_del" src={tagClose} onClick={() => handleCloseItem(item)} />
+                                                </span></span>
+                                            </Col>
+                                        )
+                                    }
+                                })}
+                                {helpChooseOption?.InterpersonalRelations?.map((item) => {
+                                    if (item?.isSelected) {
+                                        return (
+                                            <Col md={2}>
+                                                <span className="brvbox active-primery">{item?.heading}<span><i className={`${item?.markedImportant ? 'fa active-primery' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item)}></i>
+                                                    <img className="tag_del" src={tagClose} onClick={() => handleCloseItem1(item)} />
+                                                </span></span>
+                                            </Col>
+                                        )
+                                    }
+                                })}
+                                {helpChooseOption?.Consistency?.map((item) => {
+                                    if (item?.isSelected) {
+                                        return (
+                                            <Col md={2}>
+                                                <span className="brvbox active-success">{item?.heading}<span><i className={`${item?.markedImportant ? 'fa active-success' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item)}></i>
+                                                    <img className="tag_del" src={tagClose} onClick={() => handleCloseItem2(item)} />
+                                                </span></span>
+                                            </Col>
+                                        )
+                                    }
+                                })}
+                                {helpChooseOption?.Systematic?.map((item) => {
+                                    if (item?.isSelected) {
+                                        return (
+                                            <Col md={2}>
+                                                <span className="brvbox active-warning">{item?.heading}<span><i className={`${item?.markedImportant ? 'fa active-warning' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item)}></i>
+                                                    <img className="tag_del" src={tagClose} onClick={() => handleCloseItem3(item)} />
+                                                </span></span>
+                                            </Col>
+                                        )
+                                    }
+                                })}
                             </Row>
                         </div>
                         <Row className="my-4 individual">
@@ -231,20 +427,20 @@ const HelpChoose = ({
                                 <h5 className="danger h5_title">Individual Effort</h5>
                             </Col>
                             {isIndex.includes(1) ?
-                                IndividualEffort.map((item, index) => (
+                                helpChooseOption?.IndividualEffort?.map((item, index) => (
                                     <Col md={4}>
-                                        <div className={`${selectedItem.includes(item.key) && 'active-danger'} syatic_box ie_box`} onClick={() => handleSelectItem(item.key)}>
+                                        <div className={`${item.isSelected && 'active-danger'} syatic_box ie_box`} onClick={() => handleSelectItem(item.heading)}>
                                             <div className="syatic_head">
-                                                <h6>{item.key}</h6>
+                                                <h6>{item.heading}</h6>
                                                 <img src={imgInd[index]} />
                                             </div>
-                                            <p>{item.des}</p>
+                                            <p>{item.data}</p>
                                         </div>
                                     </Col>
                                 )) :
-                                IndividualEffort.map((item) => (
+                                helpChooseOption?.IndividualEffort?.map((item) => (
                                     <Col md={4}>
-                                        <span className={`${selectedItem.includes(item.key) && 'active-danger'} brvbox-lg`} onClick={() => handleSelectItem(item.key)}>{item.key}<i className={`${important.includes(item.key) ? 'fa active-danger' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item.key)}></i></span>
+                                        <span className={`${item.isSelected && 'active-danger'} brvbox-lg`} onClick={() => handleSelectItem(item.heading)}>{item.heading}<i className={`${item?.markedImportant ? 'fa active-danger' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item.heading)}></i></span>
                                     </Col>
                                 ))
                             }
@@ -254,20 +450,20 @@ const HelpChoose = ({
                                 <h5 className="primery h5_title" onClick={() => handleCard(2)}>Interpersonal Relations</h5>
                             </Col>
                             {isIndex.includes(2) ?
-                                InterpersonalRelations.map((item, index) => (
+                                helpChooseOption?.InterpersonalRelations?.map((item, index) => (
                                     <Col md={4}>
-                                        <div className={`${selectedItem1.includes(item.key) && 'active-primery'} syatic_box ir_box`} onClick={() => handleSelectItem1(item.key)}>
+                                        <div className={`${item.isSelected && 'active-primery'} syatic_box ir_box`} onClick={() => handleSelectItem1(item.heading)}>
                                             <div className="syatic_head">
-                                                <h6>{item.key}</h6>
+                                                <h6>{item.heading}</h6>
                                                 <img src={imgInd[index]} />
                                             </div>
                                             <p>{item.des}</p>
                                         </div>
                                     </Col>
                                 )) :
-                                InterpersonalRelations.map((item) => (
+                                helpChooseOption?.InterpersonalRelations?.map((item) => (
                                     <Col md={4}>
-                                        <span className={`${selectedItem1.includes(item.key) && 'active-primery'} brvbox-lg`} onClick={() => handleSelectItem1(item.key)}>{item.key}<i className={`${important.includes(item.key) ? 'fa active-primery' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item.key)}></i></span>
+                                        <span className={`${item.isSelected && 'active-primery'} brvbox-lg`} onClick={() => handleSelectItem1(item.heading)}>{item.heading}<i className={`${item?.markedImportant ? 'fa active-primery' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item.heading)}></i></span>
                                     </Col>
                                 ))
                             }
@@ -277,20 +473,20 @@ const HelpChoose = ({
                                 <h5 className="success h5_title" onClick={() => handleCard(3)}>Consistency & Dependability</h5>
                             </Col>
                             {isIndex.includes(3) ?
-                                Consistency.map((item, index) => (
+                                helpChooseOption?.Consistency?.map((item, index) => (
                                     <Col md={4}>
-                                        <div className={`${selectedItem2.includes(item.key) && 'active-success'} syatic_box cd_box`} onClick={() => handleSelectItem2(item.key)}>
+                                        <div className={`${item.isSelected && 'active-success'} syatic_box cd_box`} onClick={() => handleSelectItem2(item.heading)}>
                                             <div className="syatic_head">
-                                                <h6>{item.key}</h6>
+                                                <h6>{item.heading}</h6>
                                                 <img src={imgInd[index]} />
                                             </div>
                                             <p>{item.des}</p>
                                         </div>
                                     </Col>
                                 )) :
-                                Consistency.map((item) => (
+                                helpChooseOption?.Consistency?.map((item) => (
                                     <Col md={4}>
-                                        <span className={`${selectedItem2.includes(item.key) && 'active-success'} brvbox-lg`} onClick={() => handleSelectItem2(item.key)}>{item.key}<i className={`${important.includes(item.key) ? 'fa active-success' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item.key)}></i></span>
+                                        <span className={`${item.isSelected && 'active-success'} brvbox-lg`} onClick={() => handleSelectItem2(item.heading)}>{item.heading}<i className={`${item?.markedImportant ? 'fa active-success' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item.heading)}></i></span>
                                     </Col>
                                 ))
                             }
@@ -300,20 +496,20 @@ const HelpChoose = ({
                                 <h5 className="warning h5_title" onClick={() => handleCard(4)}>Systematic and Detail Oriented</h5>
                             </Col>
                             {isIndex.includes(4) ?
-                                Systematic.map((item, index) => (
+                                helpChooseOption?.Systematic?.map((item, index) => (
                                     <Col md={4}>
-                                        <div className={`${selectedItem3.includes(item.key) && 'active-warning'} syatic_box so_box`} onClick={() => handleSelectItem3(item.key)}>
+                                        <div className={`${item.isSelected && 'active-warning'} syatic_box so_box`} onClick={() => handleSelectItem3(item.heading)}>
                                             <div className="syatic_head">
-                                                <h6>{item.key}</h6>
+                                                <h6>{item.heading}</h6>
                                                 <img src={imgInd[index]} />
                                             </div>
                                             <p>{item.des}</p>
                                         </div>
                                     </Col>
                                 )) :
-                                Systematic.map((item) => (
+                                helpChooseOption?.Systematic?.map((item) => (
                                     <Col md={4}>
-                                        <span className={`${selectedItem3.includes(item.key) && 'active-warning'} brvbox-lg`} onClick={() => handleSelectItem3(item.key)}>{item.key}<i className={`${important.includes(item.key) ? 'fa active-warning' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item.key)}></i></span>
+                                        <span className={`${item.isSelected && 'active-warning'} brvbox-lg`} onClick={() => handleSelectItem3(item.heading)}>{item.heading}<i className={`${item?.markedImportant ? 'fa active-warning' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item.heading)}></i></span>
                                     </Col>
                                 ))
                             }
@@ -328,7 +524,7 @@ const HelpChoose = ({
             </div>
 
             {/* <----------------right side drawer-------------------------------> */}
-            <Offcanvas
+            {/* <Offcanvas
                 show={show}
                 onHide={handleClose}
                 backdrop={false}
@@ -513,7 +709,7 @@ const HelpChoose = ({
                         Save
                     </Button>
                 </div>
-            </Offcanvas>
+            </Offcanvas> */}
         </>
     )
 }
