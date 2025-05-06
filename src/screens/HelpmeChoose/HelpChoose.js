@@ -268,12 +268,93 @@ const HelpChoose = ({
         //     const newArray = important.filter((Val) => Val !== value)
         //     setImportant(newArray)
         // }
-        setHelpChooseOption(prev => ({
-            ...prev,
-            Systematic: prev?.Systematic?.map((item, i) => {
-                if (item?.heading === value) {
+        // setHelpChooseOption(prev => ({
+        //     ...prev,
+        //     Systematic: prev?.Systematic?.map((item, i) => {
+        //         if (item?.heading === value) {
+        //             if (item?.isSelected) {
+        //                 if (!item.markedImportant && totalItem.length < 2) {
+        //                     return { ...item, markedImportant: !item.markedImportant };
+        //                 } else if (item.markedImportant) {
+        //                     return { ...item, markedImportant: !item.markedImportant };
+        //                 }
+        //             }
+        //         }
+        //         return item;
+        //     })
+        // }));
+        
+        const { selectedCount, markedImportantCount } = countSelectedItems();
+        if (value == 'Self Motivation' || value == 'Efficiency' || value == 'Independence') {
+            setHelpChooseOption(prev => ({
+                ...prev,
+                IndividualEffort: prev?.IndividualEffort?.map((item, i) => {
+                    if (item?.heading === value) {
+                        if (item?.isSelected) {
+                            if (!item.markedImportant && markedImportantCount < 2) {
+                                return { ...item, markedImportant: !item.markedImportant };
+                            } else if (item.markedImportant) {
+                                return { ...item, markedImportant: !item.markedImportant };
+                            }
+                        }
+                    }
+                    return item;
+                })
+            }));
+        } else if (value == 'Friendliness' || value == 'Self Confidence' || value == 'Enthusiasm') {
+            setHelpChooseOption(prev => ({
+                ...prev,
+                InterpersonalRelations: prev?.InterpersonalRelations?.map((item, i) => {
+                    if (item?.heading === value) {
+                        if (item?.isSelected) {
+                            if (!item.markedImportant && markedImportantCount < 2) {
+                                return { ...item, markedImportant: !item.markedImportant };
+                            } else if (item.markedImportant) {
+                                return { ...item, markedImportant: !item.markedImportant };
+                            }
+                        }
+                    }
+                    return item;
+                })
+            }));
+        } else if (value == 'Patience' || value == 'Persistence' || value == 'Thoughtfulness') {
+            setHelpChooseOption(prev => ({
+                ...prev,
+                Consistency: prev?.Consistency?.map((item, i) => {
+                    if (item?.heading === value) {
+                        if (item?.isSelected) {
+                            if (!item.markedImportant && markedImportantCount < 2) {
+                                return { ...item, markedImportant: !item.markedImportant };
+                            } else if (item.markedImportant) {
+                                return { ...item, markedImportant: !item.markedImportant };
+                            }
+                        }
+                    }
+                    return item;
+                })
+            }));
+        } else if (value == 'Accuracy' || value == 'Sensitivity' || value == 'Cooperativeness') {
+            setHelpChooseOption(prev => ({
+                ...prev,
+                Systematic: prev?.Systematic?.map((item, i) => {
+                    if (item?.heading === value) {
+                        if (item?.isSelected) {
+                            if (!item.markedImportant && markedImportantCount < 2) {
+                                return { ...item, markedImportant: !item.markedImportant };
+                            } else if (item.markedImportant) {
+                                return { ...item, markedImportant: !item.markedImportant };
+                            }
+                        }
+                    }
+                    return item;
+                })
+            }));
+        }
+        setBehaviours((prev) =>
+            prev.map((item, i) => {
+                if (item?.heading === value) {                    
                     if (item?.isSelected) {
-                        if (!item.markedImportant && totalItem.length < 2) {
+                        if (!item.markedImportant && markedImportantCount < 2) {
                             return { ...item, markedImportant: !item.markedImportant };
                         } else if (item.markedImportant) {
                             return { ...item, markedImportant: !item.markedImportant };
@@ -282,15 +363,26 @@ const HelpChoose = ({
                 }
                 return item;
             })
-        }));
+        );
     }
     useEffect(() => {
         setTotalItem([...selectedItem, ...selectedItem1, ...selectedItem2, ...selectedItem3])
     }, [selectedItem, selectedItem1, selectedItem2, selectedItem3])
 
     const handleSubmit = async () => {
-        const selectedBehaviourUids = behaviours.filter((val) => totalItem.includes(val.heading)).map((val) => val.uid);
-        const importantBehaviourUids = behaviours.filter((val) => important.includes(val.heading)).map((val) => val.uid);
+        // const selectedBehaviourUids = behaviours.filter((val) => totalItem.includes(val.heading)).map((val) => val.uid);
+        // const importantBehaviourUids = behaviours.filter((val) => important.includes(val.heading)).map((val) => val.uid);        
+        const transformed = Object.entries(helpChooseOption).reduce((acc, [categoryKey, behaviours]) => {
+            acc[categoryKey] = Object.values(behaviours).filter(values => values.isSelected);
+            return acc;
+        }, {});
+        const transformedStart = Object.entries(helpChooseOption).reduce((acc, [categoryKey, behaviours]) => {
+            acc[categoryKey] = Object.values(behaviours).filter(values => values.markedImportant);
+            return acc;
+        }, {});
+        const selectedBehaviourUids = Object.values(transformed).flat().map((val)=>val?.uid);
+        const importantBehaviourUids = Object.values(transformedStart).flat().map((val)=>val?.uid);
+        
         const formdata = new FormData();
         formdata.append(
             "selected_behaviour",

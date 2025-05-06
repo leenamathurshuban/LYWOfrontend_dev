@@ -944,7 +944,7 @@ const CreateJobsRevised = ({
     return { selectedCount, markedImportantCount };
   };
 
-  const handleBoxClick = (index) => {
+  const handleBoxClick = (index, value) => {
     const { selectedCount, markedImportantCount } = countSelectedItems();
 
     setBehaviours((prev) =>
@@ -962,9 +962,66 @@ const CreateJobsRevised = ({
         return item;
       })
     );
+    if (value.heading == 'Self Motivation' || value.heading == 'Efficiency' || value.heading == 'Independence') {
+      setHelpChooseOption(prev => ({
+        ...prev,
+        IndividualEffort: prev?.IndividualEffort?.map((item, i) => {
+          if (item?.heading === value.heading) {
+            if (!item.isSelected && selectedCount < 6) {
+              return { ...item, isSelected: true };
+            } else if (item.isSelected) {
+              return { ...item, isSelected: false, markedImportant: false };
+            }
+          }
+          return item;
+        })
+      }));
+    } else if (value.heading == 'Friendliness' || value.heading == 'Self Confidence' || value.heading == 'Enthusiasm') {
+      setHelpChooseOption(prev => ({
+        ...prev,
+        InterpersonalRelations: prev?.InterpersonalRelations?.map((item, i) => {
+          if (item?.heading === value.heading) {
+            if (!item.isSelected && selectedCount < 6) {
+              return { ...item, isSelected: true };
+            } else if (item.isSelected) {
+              return { ...item, isSelected: false, markedImportant: false };
+            }
+          }
+          return item;
+        })
+      }));
+    } else if (value.heading == 'Patience' || value.heading == 'Persistence' || value.heading == 'Thoughtfulness') {
+      setHelpChooseOption(prev => ({
+        ...prev,
+        Consistency: prev?.Consistency?.map((item, i) => {
+          if (item?.heading === value.heading) {
+            if (!item.isSelected && selectedCount < 6) {
+              return { ...item, isSelected: true };
+            } else if (item.isSelected) {
+              return { ...item, isSelected: false, markedImportant: false };
+            }
+          }
+          return item;
+        })
+      }));
+    } else if (value.heading == 'Accuracy' || value.heading == 'Sensitivity' || value.heading == 'Cooperativeness') {
+      setHelpChooseOption(prev => ({
+        ...prev,
+        Systematic: prev?.Systematic?.map((item, i) => {
+          if (item?.heading === value.heading) {
+            if (!item.isSelected && selectedCount < 6) {
+              return { ...item, isSelected: true };
+            } else if (item.isSelected) {
+              return { ...item, isSelected: false, markedImportant: false };
+            }
+          }
+          return item;
+        })
+      }));
+    }
   };
 
-  const handleStarClick = (index, e) => {
+  const handleStarClick = (index, e,value) => {
     e.stopPropagation(); // Prevent the box click handler from being triggered
     const { markedImportantCount } = countSelectedItems();
 
@@ -983,6 +1040,71 @@ const CreateJobsRevised = ({
         return item;
       })
     );
+    if (value == 'Self Motivation' || value == 'Efficiency' || value == 'Independence') {
+      setHelpChooseOption(prev => ({
+        ...prev,
+        IndividualEffort: prev?.IndividualEffort?.map((item, i) => {
+          if (item?.heading === value) {
+            if (item?.isSelected) {
+              if (!item.markedImportant && markedImportantCount < 2) {
+                return { ...item, markedImportant: !item.markedImportant };
+              } else if (item.markedImportant) {
+                return { ...item, markedImportant: !item.markedImportant };
+              }
+            }
+          }
+          return item;
+        })
+      }));
+    } else if (value == 'Friendliness' || value == 'Self Confidence' || value == 'Enthusiasm') {
+      setHelpChooseOption(prev => ({
+        ...prev,
+        InterpersonalRelations: prev?.InterpersonalRelations?.map((item, i) => {
+          if (item?.heading === value) {
+            if (item?.isSelected) {
+              if (!item.markedImportant && markedImportantCount < 2) {
+                return { ...item, markedImportant: !item.markedImportant };
+              } else if (item.markedImportant) {
+                return { ...item, markedImportant: !item.markedImportant };
+              }
+            }
+          }
+          return item;
+        })
+      }));
+    } else if (value == 'Patience' || value == 'Persistence' || value == 'Thoughtfulness') {
+      setHelpChooseOption(prev => ({
+        ...prev,
+        Consistency: prev?.Consistency?.map((item, i) => {
+          if (item?.heading === value) {
+            if (item?.isSelected) {
+              if (!item.markedImportant && markedImportantCount < 2) {
+                return { ...item, markedImportant: !item.markedImportant };
+              } else if (item.markedImportant) {
+                return { ...item, markedImportant: !item.markedImportant };
+              }
+            }
+          }
+          return item;
+        })
+      }));
+    } else if (value == 'Accuracy' || value == 'Sensitivity' || value == 'Cooperativeness') {
+      setHelpChooseOption(prev => ({
+        ...prev,
+        Systematic: prev?.Systematic?.map((item, i) => {
+          if (item?.heading === value) {
+            if (item?.isSelected) {
+              if (!item.markedImportant && markedImportantCount < 2) {
+                return { ...item, markedImportant: !item.markedImportant };
+              } else if (item.markedImportant) {
+                return { ...item, markedImportant: !item.markedImportant };
+              }
+            }
+          }
+          return item;
+        })
+      }));
+    }
   };
   // Handle click on Col
   const handleCardClick = (behaviour) => {
@@ -3017,7 +3139,7 @@ const CreateJobsRevised = ({
                               className={`assmntbox ${item.isSelected ? "active" : ""
                                 }`}
                               // className={`assmntbox ${activeBehaviour.includes(item.uid) && 'active'}`}
-                              onClick={() => handleBoxClick(index)} style={{ cursor: 'pointer' }}
+                              onClick={() => handleBoxClick(index, item)} style={{ cursor: 'pointer' }}
                             >
                               <div className="assmntbox-head">
                                 <h6>
@@ -3027,7 +3149,7 @@ const CreateJobsRevised = ({
                                   className={`fa-star ${item.markedImportant ? "fa important" : "far"
                                     }`}
                                   // className={`${importantBehaviour.includes(item.uid)?'fa important':'far'} fa-star`}
-                                  onClick={(e) => handleStarClick(index, e)}
+                                  onClick={(e) => handleStarClick(index, e, item?.heading)}
                                 ></i>
                               </div>
                               <div className="assmntbox-body">
@@ -3437,6 +3559,8 @@ const CreateJobsRevised = ({
         selectedItem3={selectedItem3} setSelectedItem3={setSelectedItem3}
         totalItem={totalItem} setTotalItem={setTotalItem}
         important={important} setImportant={setImportant} setIsUpdated={setIsUpdated}
+        helpChooseOption={helpChooseOption} setHelpChooseOption={setHelpChooseOption}
+        setBehaviours={setBehaviours}
       />
     </>
   );

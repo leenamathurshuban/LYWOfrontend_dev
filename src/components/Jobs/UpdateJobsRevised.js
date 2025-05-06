@@ -1145,7 +1145,7 @@ const UpdateJobsRevised = ({
 
     };
 
-    const handleStarClick = (index, e) => {
+    const handleStarClick = (index, e, value) => {
         e.stopPropagation(); // Prevent the box click handler from being triggered
         const { markedImportantCount } = countSelectedItems();
 
@@ -1166,6 +1166,71 @@ const UpdateJobsRevised = ({
                 return item;
             })
         );
+        if (value == 'Self Motivation' || value == 'Efficiency' || value == 'Independence') {
+            setHelpChooseOption(prev => ({
+                ...prev,
+                IndividualEffort: prev?.IndividualEffort?.map((item, i) => {
+                    if (item?.heading === value) {
+                        if (item?.isSelected) {
+                            if (!item.markedImportant && markedImportantCount < 2) {
+                                return { ...item, markedImportant: !item.markedImportant };
+                            } else if (item.markedImportant) {
+                                return { ...item, markedImportant: !item.markedImportant };
+                            }
+                        }
+                    }
+                    return item;
+                })
+            }));
+        } else if (value == 'Friendliness' || value == 'Self Confidence' || value == 'Enthusiasm') {
+            setHelpChooseOption(prev => ({
+                ...prev,
+                InterpersonalRelations: prev?.InterpersonalRelations?.map((item, i) => {
+                    if (item?.heading === value) {
+                        if (item?.isSelected) {
+                            if (!item.markedImportant && markedImportantCount < 2) {
+                                return { ...item, markedImportant: !item.markedImportant };
+                            } else if (item.markedImportant) {
+                                return { ...item, markedImportant: !item.markedImportant };
+                            }
+                        }
+                    }
+                    return item;
+                })
+            }));
+        } else if (value == 'Patience' || value == 'Persistence' || value == 'Thoughtfulness') {
+            setHelpChooseOption(prev => ({
+                ...prev,
+                Consistency: prev?.Consistency?.map((item, i) => {
+                    if (item?.heading === value) {
+                        if (item?.isSelected) {
+                            if (!item.markedImportant && markedImportantCount < 2) {
+                                return { ...item, markedImportant: !item.markedImportant };
+                            } else if (item.markedImportant) {
+                                return { ...item, markedImportant: !item.markedImportant };
+                            }
+                        }
+                    }
+                    return item;
+                })
+            }));
+        } else if (value == 'Accuracy' || value == 'Sensitivity' || value == 'Cooperativeness') {
+            setHelpChooseOption(prev => ({
+                ...prev,
+                Systematic: prev?.Systematic?.map((item, i) => {
+                    if (item?.heading === value) {
+                        if (item?.isSelected) {
+                            if (!item.markedImportant && markedImportantCount < 2) {
+                                return { ...item, markedImportant: !item.markedImportant };
+                            } else if (item.markedImportant) {
+                                return { ...item, markedImportant: !item.markedImportant };
+                            }
+                        }
+                    }
+                    return item;
+                })
+            }));
+        }
     };
     // Handle click on Col
     const handleCardClick = (behaviour) => {
@@ -3298,7 +3363,7 @@ const UpdateJobsRevised = ({
                                                                     className={`fa-star ${item.markedImportant ? "fa important" : "far"
                                                                         }`}
                                                                     // className={`${importantBehaviour.includes(item.uid)?'fa important':'far'} fa-star`}
-                                                                    onClick={(e) => handleStarClick(index, e)}
+                                                                    onClick={(e) => handleStarClick(index, e, item?.heading)}
                                                                 ></i>
                                                             </div>
                                                             <div className="assmntbox-body">
