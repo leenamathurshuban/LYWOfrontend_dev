@@ -3007,7 +3007,6 @@ const ApplicationJobPostModal = ({
     <Modal
       show={show}
       onHide={handleClose}
-      animation={false}
       size="lg"
       backdrop={false}
       className="cmprofile_mdl quizDev_model jobpost_view"

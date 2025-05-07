@@ -13,7 +13,7 @@ const HelpChoose = ({
     show, setShow, behaviours, createUid, isIndex, setIsIndex,
     selectedItem, setSelectedItem, selectedItem1, setSelectedItem1,
     selectedItem2, setSelectedItem2, selectedItem3, setSelectedItem3,
-    totalItem, setTotalItem, important, setImportant, setIsUpdated, helpChooseOption, setHelpChooseOption,setBehaviours
+    totalItem, setTotalItem, important, setImportant, setIsUpdated, helpChooseOption, setHelpChooseOption, setBehaviours
 }) => {
     console.log(helpChooseOption)
     // const [isIndex, setIsIndex] = useState([]);
@@ -136,10 +136,10 @@ const HelpChoose = ({
                 }
                 return item;
             })
-        }));        
+        }));
         setBehaviours((prev) =>
             prev.map((item, i) => {
-                if (item?.heading === value) {                    
+                if (item?.heading === value) {
                     if (!item.isSelected && selectedCount < 6) {
                         return { ...item, isSelected: !item.isSelected };
                     } else if (item.isSelected) {
@@ -176,7 +176,7 @@ const HelpChoose = ({
         }));
         setBehaviours((prev) =>
             prev.map((item, i) => {
-                if (item?.heading === value) {                    
+                if (item?.heading === value) {
                     if (!item.isSelected && selectedCount < 6) {
                         return { ...item, isSelected: !item.isSelected };
                     } else if (item.isSelected) {
@@ -212,7 +212,7 @@ const HelpChoose = ({
         }));
         setBehaviours((prev) =>
             prev.map((item, i) => {
-                if (item?.heading === value) {                    
+                if (item?.heading === value) {
                     if (!item.isSelected && selectedCount < 6) {
                         return { ...item, isSelected: !item.isSelected };
                     } else if (item.isSelected) {
@@ -248,7 +248,7 @@ const HelpChoose = ({
         }));
         setBehaviours((prev) =>
             prev.map((item, i) => {
-                if (item?.heading === value) {                    
+                if (item?.heading === value) {
                     if (!item.isSelected && selectedCount < 6) {
                         return { ...item, isSelected: !item.isSelected };
                     } else if (item.isSelected) {
@@ -283,7 +283,7 @@ const HelpChoose = ({
         //         return item;
         //     })
         // }));
-        
+
         const { selectedCount, markedImportantCount } = countSelectedItems();
         if (value == 'Self Motivation' || value == 'Efficiency' || value == 'Independence') {
             setHelpChooseOption(prev => ({
@@ -352,7 +352,7 @@ const HelpChoose = ({
         }
         setBehaviours((prev) =>
             prev.map((item, i) => {
-                if (item?.heading === value) {                    
+                if (item?.heading === value) {
                     if (item?.isSelected) {
                         if (!item.markedImportant && markedImportantCount < 2) {
                             return { ...item, markedImportant: !item.markedImportant };
@@ -380,9 +380,9 @@ const HelpChoose = ({
             acc[categoryKey] = Object.values(behaviours).filter(values => values.markedImportant);
             return acc;
         }, {});
-        const selectedBehaviourUids = Object.values(transformed).flat().map((val)=>val?.uid);
-        const importantBehaviourUids = Object.values(transformedStart).flat().map((val)=>val?.uid);
-        
+        const selectedBehaviourUids = Object.values(transformed).flat().map((val) => val?.uid);
+        const importantBehaviourUids = Object.values(transformedStart).flat().map((val) => val?.uid);
+
         const formdata = new FormData();
         formdata.append(
             "selected_behaviour",
@@ -409,7 +409,7 @@ const HelpChoose = ({
     console.log(important)
     return (
         <>
-            <div>
+            {/* <div>
                 <Modal
                     show={show}
                     onHide={handleClose}
@@ -613,15 +613,15 @@ const HelpChoose = ({
                         </Button>
                     </Modal.Footer>
                 </Modal>
-            </div>
+            </div> */}
 
             {/* <----------------right side drawer-------------------------------> */}
-            {/* <Offcanvas
+            <Offcanvas
                 show={show}
                 onHide={handleClose}
-                backdrop={false}
+                backdrop={true}
                 placement="end"
-                className="createjob_drawer lg-drawer shadow-md border-0"
+                className="helpme_drawer lg-drawer shadow-md border-0"
             >
                 <Offcanvas.Header closeButton>
                     <Offcanvas.Title>
@@ -673,34 +673,50 @@ const HelpChoose = ({
                     <div className="brvselection mt-3">
                         <h6>Your selection will display here</h6>
                         <Row className="form-row">
-                            {selectedItem.map((item) => (
-                                <Col md={2}>
-                                    <span className="brvbox active-danger">{item} <span><i className={`${important.includes(item) ? 'fa active-danger' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item)}></i>
-                                        <img className="tag_del" src={tagClose} onClick={() => handleCloseItem(item)} />
-                                    </span></span>
-                                </Col>
-                            ))}
-                            {selectedItem1.map((item) => (
-                                <Col md={2}>
-                                    <span className="brvbox active-primery">{item}<span><i className={`${important.includes(item) ? 'fa active-primery' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item)}></i>
-                                        <img className="tag_del" src={tagClose} onClick={() => handleCloseItem1(item)} />
-                                    </span></span>
-                                </Col>
-                            ))}
-                            {selectedItem2.map((item) => (
-                                <Col md={2}>
-                                    <span className="brvbox active-success">{item}<span><i className={`${important.includes(item) ? 'fa active-success' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item)}></i>
-                                        <img className="tag_del" src={tagClose} onClick={() => handleCloseItem2(item)} />
-                                    </span></span>
-                                </Col>
-                            ))}
-                            {selectedItem3.map((item) => (
-                                <Col md={2}>
-                                    <span className="brvbox active-warning">{item}<span><i className={`${important.includes(item) ? 'fa active-warning' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item)}></i>
-                                        <img className="tag_del" src={tagClose} onClick={() => handleCloseItem3(item)} />
-                                    </span></span>
-                                </Col>
-                            ))}
+                            {helpChooseOption?.IndividualEffort?.map((item) => {
+                                if (item?.isSelected) {
+                                    return (
+                                        <Col md={2}>
+                                            <span className="brvbox active-danger">{item?.heading} <span><i className={`${item?.markedImportant ? 'fa active-danger' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item)}></i>
+                                                <img className="tag_del" src={tagClose} onClick={() => handleCloseItem(item)} />
+                                            </span></span>
+                                        </Col>
+                                    )
+                                }
+                            })}
+                            {helpChooseOption?.InterpersonalRelations?.map((item) => {
+                                if (item?.isSelected) {
+                                    return (
+                                        <Col md={2}>
+                                            <span className="brvbox active-primery">{item?.heading}<span><i className={`${item?.markedImportant ? 'fa active-primery' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item)}></i>
+                                                <img className="tag_del" src={tagClose} onClick={() => handleCloseItem1(item)} />
+                                            </span></span>
+                                        </Col>
+                                    )
+                                }
+                            })}
+                            {helpChooseOption?.Consistency?.map((item) => {
+                                if (item?.isSelected) {
+                                    return (
+                                        <Col md={2}>
+                                            <span className="brvbox active-success">{item?.heading}<span><i className={`${item?.markedImportant ? 'fa active-success' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item)}></i>
+                                                <img className="tag_del" src={tagClose} onClick={() => handleCloseItem2(item)} />
+                                            </span></span>
+                                        </Col>
+                                    )
+                                }
+                            })}
+                            {helpChooseOption?.Systematic?.map((item) => {
+                                if (item?.isSelected) {
+                                    return (
+                                        <Col md={2}>
+                                            <span className="brvbox active-warning">{item?.heading}<span><i className={`${item?.markedImportant ? 'fa active-warning' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item)}></i>
+                                                <img className="tag_del" src={tagClose} onClick={() => handleCloseItem3(item)} />
+                                            </span></span>
+                                        </Col>
+                                    )
+                                }
+                            })}
                         </Row>
                     </div>
                     <Row className="my-4 individual">
@@ -708,20 +724,20 @@ const HelpChoose = ({
                             <h5 className="danger h5_title">Individual Effort</h5>
                         </Col>
                         {isIndex.includes(1) ?
-                            IndividualEffort.map((item, index) => (
+                            helpChooseOption?.IndividualEffort?.map((item, index) => (
                                 <Col md={4}>
-                                    <div className={`${selectedItem.includes(item.key) && 'active-danger'} syatic_box ie_box`} onClick={() => handleSelectItem(item.key)}>
+                                    <div className={`${item.isSelected && 'active-danger'} syatic_box ie_box`} onClick={() => handleSelectItem(item.heading)}>
                                         <div className="syatic_head">
-                                            <h6>{item.key}</h6>
+                                            <h6>{item.heading}</h6>
                                             <img src={imgInd[index]} />
                                         </div>
-                                        <p>{item.des}</p>
+                                        <p>{item.data}</p>
                                     </div>
                                 </Col>
                             )) :
-                            IndividualEffort.map((item) => (
+                            helpChooseOption?.IndividualEffort?.map((item) => (
                                 <Col md={4}>
-                                    <span className={`${selectedItem.includes(item.key) && 'active-danger'} brvbox-lg`} onClick={() => handleSelectItem(item.key)}>{item.key}<i className={`${important.includes(item.key) ? 'fa active-danger' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item.key)}></i></span>
+                                    <span className={`${item.isSelected && 'active-danger'} brvbox-lg`} onClick={() => handleSelectItem(item.heading)}>{item.heading}<i className={`${item?.markedImportant ? 'fa active-danger' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item.heading)}></i></span>
                                 </Col>
                             ))
                         }
@@ -731,20 +747,20 @@ const HelpChoose = ({
                             <h5 className="primery h5_title" onClick={() => handleCard(2)}>Interpersonal Relations</h5>
                         </Col>
                         {isIndex.includes(2) ?
-                            InterpersonalRelations.map((item, index) => (
+                            helpChooseOption?.InterpersonalRelations?.map((item, index) => (
                                 <Col md={4}>
-                                    <div className={`${selectedItem1.includes(item.key) && 'active-primery'} syatic_box ir_box`} onClick={() => handleSelectItem1(item.key)}>
+                                    <div className={`${item.isSelected && 'active-primery'} syatic_box ir_box`} onClick={() => handleSelectItem1(item.heading)}>
                                         <div className="syatic_head">
-                                            <h6>{item.key}</h6>
+                                            <h6>{item.heading}</h6>
                                             <img src={imgInd[index]} />
                                         </div>
                                         <p>{item.des}</p>
                                     </div>
                                 </Col>
                             )) :
-                            InterpersonalRelations.map((item) => (
+                            helpChooseOption?.InterpersonalRelations?.map((item) => (
                                 <Col md={4}>
-                                    <span className={`${selectedItem1.includes(item.key) && 'active-primery'} brvbox-lg`} onClick={() => handleSelectItem1(item.key)}>{item.key}<i className={`${important.includes(item.key) ? 'fa active-primery' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item.key)}></i></span>
+                                    <span className={`${item.isSelected && 'active-primery'} brvbox-lg`} onClick={() => handleSelectItem1(item.heading)}>{item.heading}<i className={`${item?.markedImportant ? 'fa active-primery' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item.heading)}></i></span>
                                 </Col>
                             ))
                         }
@@ -754,20 +770,20 @@ const HelpChoose = ({
                             <h5 className="success h5_title" onClick={() => handleCard(3)}>Consistency & Dependability</h5>
                         </Col>
                         {isIndex.includes(3) ?
-                            Consistency.map((item, index) => (
+                            helpChooseOption?.Consistency?.map((item, index) => (
                                 <Col md={4}>
-                                    <div className={`${selectedItem2.includes(item.key) && 'active-success'} syatic_box cd_box`} onClick={() => handleSelectItem2(item.key)}>
+                                    <div className={`${item.isSelected && 'active-success'} syatic_box cd_box`} onClick={() => handleSelectItem2(item.heading)}>
                                         <div className="syatic_head">
-                                            <h6>{item.key}</h6>
+                                            <h6>{item.heading}</h6>
                                             <img src={imgInd[index]} />
                                         </div>
                                         <p>{item.des}</p>
                                     </div>
                                 </Col>
                             )) :
-                            Consistency.map((item) => (
+                            helpChooseOption?.Consistency?.map((item) => (
                                 <Col md={4}>
-                                    <span className={`${selectedItem2.includes(item.key) && 'active-success'} brvbox-lg`} onClick={() => handleSelectItem2(item.key)}>{item.key}<i className={`${important.includes(item.key) ? 'fa active-success' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item.key)}></i></span>
+                                    <span className={`${item.isSelected && 'active-success'} brvbox-lg`} onClick={() => handleSelectItem2(item.heading)}>{item.heading}<i className={`${item?.markedImportant ? 'fa active-success' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item.heading)}></i></span>
                                 </Col>
                             ))
                         }
@@ -777,20 +793,20 @@ const HelpChoose = ({
                             <h5 className="warning h5_title" onClick={() => handleCard(4)}>Systematic and Detail Oriented</h5>
                         </Col>
                         {isIndex.includes(4) ?
-                            Systematic.map((item, index) => (
+                            helpChooseOption?.Systematic?.map((item, index) => (
                                 <Col md={4}>
-                                    <div className={`${selectedItem3.includes(item.key) && 'active-warning'} syatic_box so_box`} onClick={() => handleSelectItem3(item.key)}>
+                                    <div className={`${item.isSelected && 'active-warning'} syatic_box so_box`} onClick={() => handleSelectItem3(item.heading)}>
                                         <div className="syatic_head">
-                                            <h6>{item.key}</h6>
+                                            <h6>{item.heading}</h6>
                                             <img src={imgInd[index]} />
                                         </div>
                                         <p>{item.des}</p>
                                     </div>
                                 </Col>
                             )) :
-                            Systematic.map((item) => (
+                            helpChooseOption?.Systematic?.map((item) => (
                                 <Col md={4}>
-                                    <span className={`${selectedItem3.includes(item.key) && 'active-warning'} brvbox-lg`} onClick={() => handleSelectItem3(item.key)}>{item.key}<i className={`${important.includes(item.key) ? 'fa active-warning' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item.key)}></i></span>
+                                    <span className={`${item.isSelected && 'active-warning'} brvbox-lg`} onClick={() => handleSelectItem3(item.heading)}>{item.heading}<i className={`${item?.markedImportant ? 'fa active-warning' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item.heading)}></i></span>
                                 </Col>
                             ))
                         }
@@ -801,7 +817,7 @@ const HelpChoose = ({
                         Save
                     </Button>
                 </div>
-            </Offcanvas> */}
+            </Offcanvas>
         </>
     )
 }

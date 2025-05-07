@@ -304,6 +304,8 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, jobDetails
                     acc[key].push(item.val);
                 } else if (selectedGroup?.heading == 'Custom Questions') {
                     acc[key].push(item?.item);
+                }else if(key=='all_personalites'){
+                    acc[key].push(item?.key);
                 } else {
                     acc[key].push(item.value.trim());
                 }
@@ -324,18 +326,44 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, jobDetails
             //         ...formatted
             //     }
             // }));
-            const headingKey = selectedGroup.heading.toLowerCase().replace(/ /g, '_');
+            const headingKey = selectedGroup.heading.toLowerCase().replace(/ /g, '_');            
 
-            const isFlat = ['Custom Questions', 'Skills','Roles'].includes(selectedGroup.heading);
+            const isFlat = ['Custom Questions', 'Skills', 'Roles'].includes(selectedGroup.heading);
             const flattened = isFlat ? Object.values(formatted).flat() : null;
-
-            setPayloadList(prev => ({
-                ...prev,
-                [headingKey]:isFlat?flattened: {
-                    ...prev[headingKey],
-                    ...formatted
+            if (headingKey == 'job_match') {
+                if (formatted.job_match_percentage) {
+                    formatted.job_groups = [];
+                } else if (formatted.job_groups) {
+                    formatted.job_match_percentage = [];
                 }
-            }));
+                setPayloadList(prev => ({
+                    ...prev,
+                    [headingKey]: {
+                        ...formatted
+                    }
+                }));
+            } else if (headingKey == 'technical_round_for_ehs_manager' || headingKey == 'pre-interview_round_for_creative_director') {
+                if (formatted.over_all_score) {
+                    formatted.groups = [];
+                } else if (formatted.groups) {
+                    formatted.over_all_score = [];
+                }
+                setPayloadList(prev => ({
+                    ...prev,
+                    [headingKey]: {
+                        ...formatted
+                    }
+                }));
+            } else {
+                const uniqueKey = headingKey=="salary_and_travels"?"salary_and_travel":headingKey;
+                setPayloadList(prev => ({
+                    ...prev,
+                    [uniqueKey]: isFlat ? flattened : {
+                        ...prev[uniqueKey],
+                        ...formatted
+                    }
+                }));
+            }
         }
     }, [selectedGroup])
     const handleBlueDots = (item) => {
@@ -467,15 +495,15 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, jobDetails
                 group_name: groupTitle,
                 group_filter: payloadList
             }
-            const response = await assetSapicreateJobGroupPostAPI(payload)
-            if (response.data.success) {
-                setSelectedGroup({})
-                setPayloadList({})
-                setGroupTitle('')
-                getJobGroupParameterList()
-                handleClose()
-            }
-            // debugger
+            // const response = await assetSapicreateJobGroupPostAPI(payload)
+            // if (response.data.success) {
+            //     setSelectedGroup({})
+            //     setPayloadList({})
+            //     setGroupTitle('')
+            //     getJobGroupParameterList()
+            //     handleClose()
+            // }
+            debugger
         } catch (error) {
             console.log(error);
         }

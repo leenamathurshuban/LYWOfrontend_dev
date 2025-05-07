@@ -633,20 +633,22 @@ const AddUserManagement = () => {
                         </Form.Group>
                       </td>
                       <td>
-                        <Button
-                          variant="light"
-                          className="btn-sm me-2"
-                          onClick={() => handleCancel(item.id)}
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                          variant="primary"
-                          className="btn-sm"
-                          type="submit"
-                        >
-                          Invite
-                        </Button>
+                        <div className="d-flex">
+                          <Button
+                            variant="light"
+                            className="btn-sm me-2"
+                            onClick={() => handleCancel(item.id)}
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            variant="primary"
+                            className="btn-sm"
+                            type="submit"
+                          >
+                            Invite
+                          </Button>
+                        </div>
                       </td>
                       <td>
                         <Form.Check

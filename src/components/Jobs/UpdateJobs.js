@@ -950,7 +950,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
     <Offcanvas
       show={show}
       onHide={handleClose}
-      backdrop={false}
+      backdrop={true}
       placement="end"
       className="createjob_drawer lg-drawer shadow-md border-0"
     >

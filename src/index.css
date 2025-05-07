@@ -21,3 +21,10 @@ input::placeholder {
 input::-ms-input-placeholder { /* Edge 12-18 */
   opacity: 0.7 !important;
 }
+select option {
+  padding: 10px 15px;
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: 500;
+  color: #344054;
+}

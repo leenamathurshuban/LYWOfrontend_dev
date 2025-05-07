@@ -175,12 +175,12 @@ tracker.show_tasks()
             heading: 'Personality', isChecked: false, isSelected: false, flag: 'personality_data',
             listData: [
                 {
-                    name: 'Groups',
+                    name: 'Personality Groups',
                     data: [
-                        { value: 'Excellent',groupname: 'Groups', isSelected: false },
-                        { value: 'Good',groupname: 'Groups', isSelected: false },
-                        { value: 'Average',groupname: 'Groups', isSelected: false },
-                        { value: 'Below Average',groupname: 'Groups', isSelected: false }]
+                        { value: 'Excellent',groupname: 'Personality Groups', isSelected: false },
+                        { value: 'Good',groupname: 'Personality Groups', isSelected: false },
+                        { value: 'Average',groupname: 'Personality Groups', isSelected: false },
+                        { value: 'Below Average',groupname: 'Personality Groups', isSelected: false }]
                 }
             ],
             selectedList: []
@@ -240,21 +240,21 @@ tracker.show_tasks()
                             // 👇 Append static data if it's the 'personality' section
                             const staticGroupsBlock = sectionKey === 'experience'
                                 ? [{
-                                    name: 'Experience',
+                                    name: 'Get Experience',
                                     data: [
-                                        { value: 'Fresher',groupname:"Experience", isSelected: false },
-                                        { value: 'Less than 1 Year',groupname:"Experience", isSelected: false },
-                                        { value: '1 - 2 Years',groupname:"Experience", isSelected: false },
-                                        { value: '2 - 4 Years',groupname:"Experience", isSelected: false },
-                                        { value: '4 - 6 Years',groupname:"Experience", isSelected: false },
-                                        { value: '6 - 9 Years',groupname:"Experience", isSelected: false },
-                                        { value: '9 - 12 Years',groupname:"Experience", isSelected: false },
-                                        { value: '12 - 15 Years',groupname:"Experience", isSelected: false },
-                                        { value: '15 - 20 Years',groupname:"Experience", isSelected: false },
-                                        { value: '20 - 25 Years',groupname:"Experience", isSelected: false },
-                                        { value: '25 - 30 Years',groupname:"Experience", isSelected: false },
-                                        { value: '30 - 40 Years',groupname:"Experience", isSelected: false },
-                                        { value: 'Above 40 Years',groupname:"Experience", isSelected: false },
+                                        { value: 'Fresher',groupname:"Get Experience", isSelected: false },
+                                        { value: 'Less than 1 Year',groupname:"Get Experience", isSelected: false },
+                                        { value: '1 - 2 Years',groupname:"Get Experience", isSelected: false },
+                                        { value: '2 - 4 Years',groupname:"Get Experience", isSelected: false },
+                                        { value: '4 - 6 Years',groupname:"Get Experience", isSelected: false },
+                                        { value: '6 - 9 Years',groupname:"Get Experience", isSelected: false },
+                                        { value: '9 - 12 Years',groupname:"Get Experience", isSelected: false },
+                                        { value: '12 - 15 Years',groupname:"Get Experience", isSelected: false },
+                                        { value: '15 - 20 Years',groupname:"Get Experience", isSelected: false },
+                                        { value: '20 - 25 Years',groupname:"Get Experience", isSelected: false },
+                                        { value: '25 - 30 Years',groupname:"Get Experience", isSelected: false },
+                                        { value: '30 - 40 Years',groupname:"Get Experience", isSelected: false },
+                                        { value: 'Above 40 Years',groupname:"Get Experience", isSelected: false },
                                     ]
                                 }]
                                 : sectionKey === 'salary_and_travels' ?
@@ -444,10 +444,11 @@ tracker.show_tasks()
                     );
                     // debugger
                     const transformed = {
-                        name: 'All Personalities',
+                        name: 'All Personalites',
                         data: matchedBehaviours.map((val, index) => ({
                             value: `${val?.behaviours_name} ${personalityValue[index]}%`,
-                            groupname:'All Personalities',
+                            groupname:'All Personalites',
+                            key:val?.behaviour_type_name,
                             isSelected: false
                         }))
                     };
