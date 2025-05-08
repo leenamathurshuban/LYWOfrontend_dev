@@ -291,6 +291,7 @@ fieldset:disabled .btn {
             color: #6172F3;
             ;
           }
+
           svg {
             path {
               stroke: #6172F3;
@@ -548,10 +549,12 @@ ol.breadcrumb {
     font-weight: 400;
     margin: 18px 0;
   }
+
   span.mdt_icon {
     min-height: 40px;
     display: inline-block;
-}
+  }
+
   span.mdt_name {
     background-color: #eef4ff;
     border: solid 1px #a4bcfd;
@@ -641,7 +644,7 @@ ol.breadcrumb {
 }
 
 .cprofile_right {
-  width: calc(100% - 35%);
+  width: calc(100% - 33.9%);
   padding-left: 0;
   background-color: #f9fafb;
   margin-left: 11%;
@@ -661,6 +664,7 @@ ol.breadcrumb {
   background-color: #ffffff;
   border-left: solid 1px #eaecf0;
 }
+
 .modal-header {
   box-shadow: 3px 0px 6px rgba(0, 0, 0, 0.1098039216);
   border: none;
@@ -792,10 +796,17 @@ ol.breadcrumb {
     width: 89%;
   }
 
+  .modal-content {
+    background-color: #F2F4F7;
+    min-height: 100vh;
+    border: none;
+  }
+
   .modal-body {
     padding: 1.15rem;
     // margin-top: 70px;
     min-height: 100vh;
+    background-color: #F2F4F7;
   }
 }
 
@@ -824,6 +835,7 @@ label.required.form-label {
   border-radius: 8px;
   min-height: 44px;
   border-color: #d0d5dd;
+
   option {
     font-weight: 500;
     color: #344054;
@@ -972,6 +984,7 @@ label.required.form-label {
       font-weight: 400;
       color: #667085;
       line-height: 24px;
+
       strong {
         font-size: 14px;
         color: #344054;
@@ -1002,6 +1015,7 @@ label.required.form-label {
     margin-left: -15px;
     margin-right: -15px;
     padding: 0 15px;
+
     .rects_list {
       padding: 0 12px;
     }
@@ -1143,10 +1157,12 @@ button.btn-link-muted {
 .ql-container.ql-snow {
   border-radius: 0 0 8px 8px;
 }
-.luwoprocess_drawer  {
+
+.luwoprocess_drawer {
   .offcanvas-title {
     font-weight: 700;
   }
+
   .offcanvas-body {
     h6 {
       font-size: 16px;
@@ -1154,49 +1170,58 @@ button.btn-link-muted {
       line-height: 24px;
       margin-bottom: 15px;
     }
-    p{
+
+    p {
       font-weight: 400;
-      font-size:12px;
+      font-size: 12px;
       line-height: 18px;
       letter-spacing: 0%;
       color: #344054;
     }
   }
+
   ul.process_staps {
     margin: 0;
     padding: 0;
     list-style: none;
+
     li {
       display: flex;
       align-items: flex-start;
       margin-bottom: 4px;
     }
+
     .staps_text {
       padding-left: 15px;
+
       h6 {
         font-weight: 700;
         font-size: 12px;
         margin: 0;
       }
+
       p {
         font-size: 12px;
         font-weight: 400;
         color: #344054;
       }
     }
-}
-.bnft_probox {
-  h6 {
-    font-size: 12px;
-    font-weight: 700;
-    margin: 6px 0;
   }
-  p {
-    font-size: 12px;
-    font-weight: 400;
+
+  .bnft_probox {
+    h6 {
+      font-size: 12px;
+      font-weight: 700;
+      margin: 6px 0;
+    }
+
+    p {
+      font-size: 12px;
+      font-weight: 400;
+    }
   }
 }
-}
+
 /**=========SCROLLBAR-CSS==========**/
 /* width */
 .ct_scrollbar::-webkit-scrollbar {
@@ -1303,14 +1328,18 @@ button.btn-link-muted {
     }
   }
 }
+
 .modal-backdrop {
   background-color: rgb(242 244 247 / 80%) !important;
 }
-.filter_modal  {
+
+.filter_modal {
   background-color: rgb(242 244 247 / 80%);
+
   .modal-dialog {
     max-width: 1080px;
   }
+
   .modal-content {
     border-radius: 12px;
     overflow: hidden;
@@ -1319,34 +1348,41 @@ button.btn-link-muted {
     box-shadow: 0px 20px 24px -4px #10182814;
 
   }
+
   .modal-header {
     border-bottom: solid 1px #EAECF0;
     box-shadow: none;
+
     h4 {
       font-size: 20px;
     }
+
     .btn-close {
       border: solid 2px #000;
       font-size: 8px;
       color: #000;
       opacity: 1;
       padding: 6px;
+    }
   }
-  }
+
   .filter_data {
     max-height: 300px;
     overflow-y: auto;
   }
+
   .filter_datalist {
     display: flex;
     flex-wrap: wrap;
     margin: 0;
     padding: 0;
+
     li {
       width: 16.66%;
       list-style: none;
       text-align: left;
       padding: 2px 5px 2px 0;
+
       .form-check-label {
         font-size: 12px;
         font-weight: 500;
@@ -1356,13 +1392,16 @@ button.btn-link-muted {
       }
     }
   }
+
   .modal-footer {
     border-color: #EAECF0;
+
     .btn {
       font-size: 12px;
     }
   }
 }
+
 .confirmation_model {
   background-color: rgb(242 244 247 / 80%);
 
@@ -2861,9 +2900,11 @@ select.h-36.form-select {
   right: 0;
   height: 100vh;
   width: 18%;
+
   p.error {
     font-style: italic;
-}
+  }
+
   h5 {
     font-size: 15px;
     color: #344054;
@@ -3805,9 +3846,11 @@ select.h-36.form-select {
 
 .helpme_drawer {
   z-index: 99999;
+
   &.lg-drawer {
     width: 1024px;
   }
+
   .modal-header {
     button.btn-close {
       color: #000;
@@ -6092,12 +6135,15 @@ select.select-transpant {
     }
   }
 }
+
 .p-32 {
   padding: 35px;
 }
+
 .max-w-1120 {
   max-width: 1120px !important;
 }
+
 .bookmark {
   color: #D0D5DD;
   position: relative;
@@ -6483,36 +6529,43 @@ select.select-transpant {
   background-color: #fff;
   border: none;
 }
-.quiz-texteditor{
-  .ql-container{
+
+.quiz-texteditor {
+  .ql-container {
     min-height: 250px;
   }
 }
+
 .custome_file {
   &.file_attcbtn {
     display: flex;
     align-items: center;
     padding: 14px 16px;
     border-radius: 12px;
+
     label {
       color: #475467;
       font-size: 14px;
       font-weight: 400;
     }
+
     .cloud_icon {
-      margin-right:12px;
+      margin-right: 12px;
     }
+
     small {
-      margin-top:2px;
+      margin-top: 2px;
     }
   }
 }
+
 .attch_label {
   color: #344054;
   font-size: 12px;
   font-weight: 600;
   margin-bottom: 4px;
 }
+
 .words_limit {
   color: #475467;
   font-size: 12px;
@@ -6520,6 +6573,7 @@ select.select-transpant {
   font-weight: 400;
   display: block;
 }
+
 .media_box {
   background-color: #F2F4F7;
   border: solid 1px #D0D5DD;
@@ -6530,25 +6584,30 @@ select.select-transpant {
   margin-bottom: 20px;
   position: relative;
   overflow: hidden;
+
   &.audio {
     min-height: 180px;
+
     .media_boxinner {
       min-height: 150px;
       display: flex;
       flex-direction: column;
     }
   }
+
   .media_boxinner {
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
+
     h6 {
       color: #475467;
       font-size: 14px;
       font-weight: 400;
       margin-bottom: 15px;
     }
+
     .btn {
       font-size: 13px;
       padding: 8px 12px;
@@ -6559,20 +6618,25 @@ select.select-transpant {
       min-width: 95px;
       color: #fff;
     }
+
     .ado_icon {
       margin-bottom: 15px;
     }
+
     .ado_icon2 {
       margin-bottom: 25px;
-    } 
+    }
   }
+
   &.video {
     min-height: 360px;
+
     .media_boxinner {
       min-height: 298px;
       position: relative;
       z-index: 1;
     }
+
     video {
       position: absolute;
       left: 0;
@@ -6583,6 +6647,7 @@ select.select-transpant {
       margin: 0 !important;
     }
   }
+
   .record_overlay {
     position: absolute;
     z-index: 999;
@@ -6595,6 +6660,7 @@ select.select-transpant {
     align-items: center;
     justify-content: center;
     background-color: rgb(242 244 247 / 85%);
+
     h5 {
       font-size: 14px;
       color: #475467;
@@ -6602,6 +6668,7 @@ select.select-transpant {
       line-height: 20px;
       margin-bottom: 15px;
     }
+
     .btn {
       font-size: 13px;
       min-height: 34px;
@@ -6610,6 +6677,7 @@ select.select-transpant {
       min-width: 92px;
     }
   }
+
   .audio_controls {
     .btn-dark {
       width: 34px;
@@ -6621,11 +6689,13 @@ select.select-transpant {
       line-height: 32px;
       text-align: center;
       margin: 0 8px;
+
       svg {
         width: 13px;
         height: 13px;
       }
     }
+
     .btn-danger {
       width: 42px;
       height: 42px;
@@ -6636,14 +6706,17 @@ select.select-transpant {
       line-height: 31px;
       text-align: center;
       margin: 0 8px;
+
       svg {
         width: 20px;
         height: 20px;
       }
     }
   }
+
   .video_controls {
     margin-top: 230px;
+
     .btn-dark {
       width: 42px;
       height: 42px;
@@ -6654,11 +6727,13 @@ select.select-transpant {
       line-height: 32px;
       text-align: center;
       margin: 0 10px;
+
       svg {
         width: 18px;
         height: 18px;
       }
     }
+
     .btn-danger {
       width: 50px;
       height: 50px;
@@ -6669,6 +6744,7 @@ select.select-transpant {
       line-height: 31px;
       text-align: center;
       margin: 0 10px;
+
       svg {
         width: 24px;
         height: 24px;
@@ -6676,20 +6752,23 @@ select.select-transpant {
     }
   }
 }
-.dropdown_ctm{
+
+.dropdown_ctm {
   border: none;
   display: block;
   padding: 0;
   position: relative;
   width: 300px ! IMPORTANT;
 }
-.dropdown_cti{
+
+.dropdown_cti {
   border: none;
   display: block;
   padding: 0;
   position: relative;
-  width: 230px ! IMPORTANT;  
+  width: 230px ! IMPORTANT;
 }
+
 .droplist {
   overflow-y: scroll;
   position: absolute;
@@ -6704,6 +6783,7 @@ select.select-transpant {
   overflow-x: hidden;
   padding: 10px 5px;
 }
+
 .droplistmulti {
   overflow-y: auto;
   position: absolute;
@@ -6716,43 +6796,54 @@ select.select-transpant {
   border-radius: 15px;
   box-shadow: 0 4px 5px rgb(0 0 0 / 12%);
   overflow-x: hidden;
-  padding: 10px 5px; 
+  padding: 10px 5px;
   max-height: 145px;
 }
+
 .droplistmulti a {
   font-size: 15px;
 }
+
 .offcanvas-backdrop {
   background-color: rgb(242 244 247 / 80%);
   backdrop-filter: blur(1px);
   -webkit-backdrop-filter: blur(1px);
   opacity: 1 !important;
 }
+
 .min-w-120 {
   min-width: 120px;
 }
+
 .text-gray-300 {
   color: #98A2B3 !important;
 }
+
 .creategroup_drawer {
   .card-header {
     padding: 0.75rem;
+
     h6 {
       font-size: 13px;
     }
+
     .right_count {
       display: flex;
     }
   }
+
   .behav_assmnt {
     padding: 0;
-    border:0;
+    border: 0;
     background-color: #fff;
-    .assmntbox  {
+
+    .assmntbox {
       min-height: 80px;
     }
+
     .assmntbox-head {
       align-items: center;
+
       h6 {
         font-size: 13px;
         white-space: nowrap;
@@ -6761,6 +6852,7 @@ select.select-transpant {
       }
     }
   }
+
   .educational-card {
     background-color: #FCFCFD;
     border: solid 1px #EAECF0;
@@ -6769,18 +6861,22 @@ select.select-transpant {
     margin-top: 15px;
     margin-left: 5px;
     margin-right: 5px;
+
     .ctm-cardheader {
       position: relative;
+
       h6 {
         font-size: 16px;
         line-height: 24px;
         font-weight: 600;
       }
+
       p {
         color: #667085;
         font-size: 12px;
         font-weight: 400;
       }
+
       .reset-btn {
         color: #3538CD;
         font-size: 12px;
@@ -6790,16 +6886,20 @@ select.select-transpant {
         top: 0;
       }
     }
+
     .starttag_box {
       background-color: #fff;
+
       .stag_item.active {
         background-color: #F5F8FF;
       }
+
       .imprt_icon {
         position: relative;
         left: 0;
         top: -1px;
         margin-right: 5px;
+
         i {
           font-size: 6px;
         }
@@ -6807,24 +6907,28 @@ select.select-transpant {
     }
   }
 }
+
 .livechat {
   position: fixed;
   bottom: 5px;
   right: 5px;
   z-index: 9999;
 }
+
 button#input-group-dropdown-1 {
   border-color: #D0D5DD;
   border-right: 0;
   border-radius: 8px 0 0 8px;
 }
+
 .phone-input {
-  .form-control{
+  .form-control {
     border-left: 0;
     border-radius: 8px;
     padding-left: 5px;
   }
 }
+
 .custom-card {
   .upload-content {
     border: solid 1px #D0D5DD;
@@ -6832,18 +6936,39 @@ button#input-group-dropdown-1 {
     border-radius: 8px;
     display: flex;
     align-items: center;
+  }
+
+  .file-upload-box {
+    padding: 0;
+    text-align: left;
+    border: none;
+  }
+
+  .form-select-sm {
+    font-size: 12px;
+    min-height: 36px;
+  }
+
+  .form-switch .form-check-input {
+    height: 1em;
+    width: 1.8em;
+  }
 }
-.file-upload-box {
-  padding: 0;
-  text-align: left;
-  border: none;
+
+.status_locked {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.form-select-sm {
+.small_subtitle{
+  color: #475467;
   font-size: 12px;
-  min-height: 36px;
-}
-.form-switch .form-check-input {
-  height: 1em;
-  width: 1.8em;
-}
+  display: block;
+  font-weight: 400;
+  margin-top: 2px;
 }

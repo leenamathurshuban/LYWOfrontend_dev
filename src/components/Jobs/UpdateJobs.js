@@ -907,36 +907,43 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
 
   const handleCustomeBeniftsAdd = () => {
     const CreateCustomLabel = { Label: "" };
-    setAddCustomeBenifits((prev) => [...prev, CreateCustomLabel]);
+    if (addCustomeBenifits.length == 0) {
+      setAddCustomeBenifits((prev) => [...prev, CreateCustomLabel]);
+    }
   };
 
   const handleClearCustomInput = (index) => {
+    setCustomValue("")
     setAddCustomeBenifits((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleBlur = async (value) => {
-    const formdata = new FormData();
-    formdata.append("benefit_name", customValue);
+  const handleBlur = async (e, value, index) => {
+    if (e.key === "Enter") {
+      e.preventDefault(); // Prevent form submission or new line
+      const formdata = new FormData();
+      formdata.append("benefit_name", customValue);
 
-    if (value.trim()) {
-      try {
-        const response = await createCustomeBenifitsApi(formdata);
-        if (response.data.status == 200) {
-          //console.log("res=-------", response);
-          benifitsList();
-          setCustomValue("");
-        }
-      } catch (error) {
-        console.log("error=-------", error);
-        if (
-          error?.response?.status === 401 ||
-          error?.response?.data?.detail?.includes(
-            "Given token not valid for any token type"
-          )
-        ) {
-          //console.log("Token expired, redirecting to login");
-          removeToken();
-          navigate("/loginwithpassword");
+      if (value.trim()) {
+        try {
+          const response = await createCustomeBenifitsApi(formdata);
+          if (response.data.status == 200) {
+            //console.log("res=-------", response);
+            benifitsList();
+            setCustomValue("");
+            handleClearCustomInput(index)
+          }
+        } catch (error) {
+          console.log("error=-------", error);
+          if (
+            error?.response?.status === 401 ||
+            error?.response?.data?.detail?.includes(
+              "Given token not valid for any token type"
+            )
+          ) {
+            //console.log("Token expired, redirecting to login");
+            removeToken();
+            navigate("/loginwithpassword");
+          }
         }
       }
     }
@@ -946,6 +953,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
   console.log('==========>', editData)
   console.log(createFormData, isLikeUid)
   console.log(SelectBenefitsData)
+  console.log(addCustomeBenifits.length)
   return (
     <Offcanvas
       show={show}
@@ -1164,7 +1172,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
                     className="fas fa-paperclip"
                     style={{ marginRight: "5px" }}
                   ></i>
-                  Attach File
+                  {fileName ? fileName : 'Attach File'}
                 </label>
                 <input
                   type="file"
@@ -1185,18 +1193,20 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
                     {errorMessage
                       ? errorMessage
                       : fileName
-                        ? fileName
+                        ? ''
                         : "Doc, PNG, JPG or PDF (max. size 5 mb)"}
                   </p>
                 </div>
+                {fileName && (
+                  <span className="pclose">
+                    <i className="fas fa-times" onClick={removeFileValue}></i>
+                  </span>
+                )}
               </div>
 
               <div className="img_progress">
-                {uploadProgress > 0 && (
+                {uploadProgress > 0 && uploadProgress < 100 && (
                   <>
-                    <span className="pclose">
-                      <i className="fas fa-times" onClick={removeFileValue}></i>
-                    </span>
                     <div className="progress-bar" style={{ height: '10px', width: '500px', backgroundColor: 'white' }}>
                       <div
                         className="progress"
@@ -1273,7 +1283,8 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
                     onChange={(e) => setCustomValue(e.target.value)}
                     className={`badge-gray ${SelectBenefitsData.includes(item) && "active"}`}
                     placeholder="Add Custom"
-                    onBlur={() => handleBlur(customValue, index)}
+                    // onBlur={() => handleBlur(customValue, index)}
+                    onKeyDown={(e) => handleBlur(e, customValue, index)}
                   />
                   <i
                     className="fa fa-xmark text-primary me-1 remove-tag"
@@ -1287,6 +1298,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
               <Button
                 className="btn-light-gray"
                 onClick={handleCustomeBeniftsAdd}
+                disabled={addCustomeBenifits.length > 0}
               >
                 <i className="fa fa-plus text-primary me-1"></i>Add Custom
               </Button>

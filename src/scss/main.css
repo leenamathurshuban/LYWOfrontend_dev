@@ -572,7 +572,7 @@ ol.breadcrumb {
 }
 
 .cprofile_right {
-  width: 65%;
+  width: 66.1%;
   padding-left: 0;
   background-color: #f9fafb;
   margin-left: 11%;
@@ -711,9 +711,15 @@ ol.breadcrumb {
 .cmprofile_mdl .modal-header {
   width: 89%;
 }
+.cmprofile_mdl .modal-content {
+  background-color: #F2F4F7;
+  min-height: 100vh;
+  border: none;
+}
 .cmprofile_mdl .modal-body {
   padding: 1.15rem;
   min-height: 100vh;
+  background-color: #F2F4F7;
 }
 
 .form_card {
@@ -5947,4 +5953,23 @@ button#input-group-dropdown-1 {
 .custom-card .form-switch .form-check-input {
   height: 1em;
   width: 1.8em;
+}
+
+.status_locked {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.small_subtitle {
+  color: #475467;
+  font-size: 12px;
+  display: block;
+  font-weight: 400;
+  margin-top: 2px;
 }/*# sourceMappingURL=main.css.map */

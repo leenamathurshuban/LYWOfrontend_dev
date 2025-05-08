@@ -325,6 +325,8 @@ tracker.show_tasks()
                         heading: formatKey(item.asset_title),
                         // title: 'Select to Apply',
                         uid: item?.uid,
+                        assesttitle:item?.asset_title,
+                        id:item?.id,
                         isChecked: false,
                         isSelected: false,
                         listData: [

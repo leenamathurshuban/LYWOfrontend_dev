@@ -3023,8 +3023,7 @@ const ApplicationJobPostModal = ({
       </Modal.Header>
       <Modal.Body className="p-0 bg-lightgray">
         <Container fluid>
-          <Row className="justify-content-center">
-            {/* Left Column */}
+          <Row className="justify-content-center">            
             <Col md={3} lg={2} className="jobpre_leftpanel px-2">
               <h6>Profile</h6>
               <ul className="checklist">

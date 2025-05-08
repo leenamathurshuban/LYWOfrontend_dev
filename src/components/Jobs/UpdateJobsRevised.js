@@ -18,7 +18,8 @@ import Edit03 from "../../images/icons/edit-0303.svg";
 import messageIcon from "../../images/icons/message-square-02.svg";
 import pencilIcon from "../../images/icons/pencil-line.svg";
 import simpleFlag from "../../images/icons/Importance-Flag.svg";
-import importantFlagOutline from "../../images/icons/Importance-Flag-01.svg"
+import importantFlagOutline from "../../images/icons/Importance-Flag-01.svg";
+import ActiveRedFlag from "../../images/icons/Active-Flag-red.svg";
 import flagFill from "../../images/icons/Importance-Flag-02.svg";
 import logoIcon from "../../images/logo_icon.png";
 import AchieverIcn from "../../images/icons/Achiever-icon.svg";
@@ -1425,38 +1426,39 @@ const UpdateJobsRevised = ({
     }
     const handleOutline = () => {
         if (importantFlag.salary && openStep[0] === '1') {
-            return (<img src={importantFlagOutline} className="flag_icon" />)
+            return (<img src={ActiveRedFlag} className="flag_icon" />)
         } else if (importantFlag.education && openStep[0] === '2') {
-            return (<img src={importantFlagOutline} className="flag_icon" />)
+            return (<img src={ActiveRedFlag} className="flag_icon" />)
         } else if (importantFlag.experience && openStep[0] === '3') {
-            return (<img src={importantFlagOutline} className="flag_icon" />)
+            return (<img src={ActiveRedFlag} className="flag_icon" />)
         } else if (importantFlag.targethiredate && openStep[0] === '4') {
-            return (<img src={importantFlagOutline} className="flag_icon" />)
+            return (<img src={ActiveRedFlag} className="flag_icon" />)
         } else if (importantFlag.language && openStep[0] === '5') {
-            return (<img src={importantFlagOutline} className="flag_icon" />)
+            return (<img src={ActiveRedFlag} className="flag_icon" />)
         } else if (importantFlag.geography && openStep[0] === '6') {
-            return (<img src={importantFlagOutline} className="flag_icon" />)
+            return (<img src={ActiveRedFlag} className="flag_icon" />)
         } else {
-            return (<img src={simpleFlag} className="flag_icon" />)
+            return (<img src={importantFlagOutline} className="flag_icon" />)
         }
     }
     const handleLightClass = () => {
-        if (importantFlag.salary && openStep[0] === '1') {
+        if (!importantFlag.salary && openStep[0] === '1') {
             return "active";
-        } else if (importantFlag.education && openStep[0] === '2') {
+        } else if (!importantFlag.education && openStep[0] === '2') {
             return "active";
-        } else if (importantFlag.experience && openStep[0] === '3') {
+        } else if (!importantFlag.experience && openStep[0] === '3') {
             return "active";
-        } else if (importantFlag.targethiredate && openStep[0] === '4') {
+        } else if (!importantFlag.targethiredate && openStep[0] === '4') {
             return "active";
-        } else if (importantFlag.language && openStep[0] === '5') {
+        } else if (!importantFlag.language && openStep[0] === '5') {
             return "active";
-        } else if (importantFlag.geography && openStep[0] === '6') {
+        } else if (!importantFlag.geography && openStep[0] === '6') {
             return "active";
         } else {
             return "";
         }
     }
+    
     useEffect(() => {
         const length = skillGroupData.length
         setDynamicArray(Array.from({ length }, () => []));
@@ -1533,7 +1535,7 @@ const UpdateJobsRevised = ({
     // console.log('must have', mustHaveSkills)
     console.log(components.length)
     console.log(IndustriesBadges)
-
+    console.log('neetu',createRevisedJobData)
     return (
         <>
             <Modal
@@ -3307,7 +3309,7 @@ const UpdateJobsRevised = ({
                                     <Accordion.Header onClick={() => handleOpenStep("11")}>
                                         <div>
                                             Behaviour Assessment{" "}
-                                            <svg
+                                            {/* <svg
                                                 className="flag_icon"
                                                 width="16"
                                                 height="16"
@@ -3321,8 +3323,8 @@ const UpdateJobsRevised = ({
                                                     stroke-linecap="round"
                                                     stroke-linejoin="round"
                                                 />
-                                            </svg>
-                                            <p>Select 6 out of the 12 available options, Identify 2 most important ones</p>
+                                            </svg> */}
+                                            <small className="small_subtitle">Select 6 out of the 12 available options, Identify 2 most important ones</small>
                                         </div>
                                         <button type="button" className="btn btn-lightgray me-4" onClick={(e) => { e.stopPropagation(); setShowHelpChoose(true) }}>
                                             <svg
@@ -3452,7 +3454,7 @@ const UpdateJobsRevised = ({
                                                     </li>
                                                     <li>
                                                         <Link href={''} onClick={(e) => handleImportantFlag(e, openStep?.[0])}>
-                                                            {handleOutline()}
+                                                            {handleOutline()}                                                            
                                                         </Link>
                                                     </li>
                                                 </>
@@ -3514,8 +3516,10 @@ const UpdateJobsRevised = ({
                         <Col md={3} lg={2} className="jobpre_Rightpanel">
                             <h5>{createRevisedJobData?.job_title}</h5>
                             <p>
-                                Like {createRevisedJobData?.department?.department_name},{" "}
-                                {createRevisedJobData?.createRevisedJobData?.job_title} Positions
+                                Like {createRevisedJobData?.is_like?.map((val)=>(
+                                    <>{val?.is_like_name}</>
+                                ))}, 
+                                {createRevisedJobData?.number_of_positions} {createRevisedJobData?.number_of_positions>1?'Positions':'Position'}
                                 <br />
                                 Technology, {createRevisedJobData?.job_location?.location_name},
                                 <br />
@@ -3637,7 +3641,7 @@ const UpdateJobsRevised = ({
                                         <li>Employment: {`${createRevisedJobData?.job_type}/Contract`}</li>
                                     </ul>
                                 </div>
-                                <div className="user_bsinfo">
+                                {/* <div className="user_bsinfo">
                                     <h6>Key Responsibilities</h6>
                                     <ul>
                                         <li>
@@ -3652,7 +3656,7 @@ const UpdateJobsRevised = ({
                                             instruments before procurement.
                                         </li>
                                     </ul>
-                                </div>
+                                </div> */}
                             </div>
                             <div className="recomed_panel">
                                 <div className="recomed_head">

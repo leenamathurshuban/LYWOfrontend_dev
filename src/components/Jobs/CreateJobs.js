@@ -888,36 +888,40 @@ const CreateJobs = ({ show, handleClose }) => {
   };
 
   const handleClearCustomInput = (index) => {
+    setCustomValue("")
     setAddCustomeBenifits((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleBlur = async (value) => {
-    const formdata = new FormData();
-    formdata.append("benefit_name", customValue);
+  const handleBlur = async (e, value, index) => {
+    if (e.key === "Enter") {
+      e.preventDefault(); // Prevent form submission or new line
+      const formdata = new FormData();
+      formdata.append("benefit_name", customValue);
 
-    if (value.trim()) {
-      try {
-        const response = await createCustomeBenifitsApi(formdata);
-        if (response.data.status == 200) {
-          //console.log("res=-------", response);
-          benifitsList();
-          setCustomValue("");
-        }
-      } catch (error) {
-        console.log("error=-------", error);
-        if (
-          error?.response?.status === 401 ||
-          error?.response?.data?.detail?.includes(
-            "Given token not valid for any token type"
-          )
-        ) {
-          //console.log("Token expired, redirecting to login");
-          removeToken();
-          navigate("/loginwithpassword");
+      if (value.trim()) {
+        try {
+          const response = await createCustomeBenifitsApi(formdata);
+          if (response.data.status == 200) {
+            //console.log("res=-------", response);
+            benifitsList();
+            setCustomValue("");
+          }
+        } catch (error) {
+          console.log("error=-------", error);
+          if (
+            error?.response?.status === 401 ||
+            error?.response?.data?.detail?.includes(
+              "Given token not valid for any token type"
+            )
+          ) {
+            //console.log("Token expired, redirecting to login");
+            removeToken();
+            navigate("/loginwithpassword");
+          }
         }
       }
     }
-  };  
+  };
   const isNextButtonDisable = !createFormData.jobTitle;
 
   return (
@@ -1140,7 +1144,7 @@ const CreateJobs = ({ show, handleClose }) => {
                     className="fas fa-paperclip"
                     style={{ marginRight: "5px" }}
                   ></i>
-                  Attach File
+                  {fileName ? fileName : 'Attach File'}
                 </label>
                 <input
                   type="file"
@@ -1161,18 +1165,20 @@ const CreateJobs = ({ show, handleClose }) => {
                     {errorMessage
                       ? errorMessage
                       : fileName
-                        ? fileName
+                        ? ''
                         : "Doc, PNG, JPG or PDF (max. size 5 mb)"}
                   </p>
                 </div>
+                {fileName && (
+                  <span className="pclose">
+                    <i className="fas fa-times" onClick={removeFileValue}></i>
+                  </span>
+                )}
               </div>
 
               <div className="img_progress">
-                {uploadProgress > 0 && (
-                  <>
-                    <span className="pclose">
-                      <i className="fas fa-times" onClick={removeFileValue}></i>
-                    </span>
+                {uploadProgress > 0 && uploadProgress < 100 && (
+                  <>                    
                     <div className="progress-bar" style={{ height: '10px', width: '500px', backgroundColor: 'white' }}>
                       <div
                         className="progress"
@@ -1250,7 +1256,8 @@ const CreateJobs = ({ show, handleClose }) => {
                     className={`badge-gray ${SelectBenefitsData.includes(item) ? "active" : ""
                       }`}
                     placeholder="Add Custom"
-                    onBlur={() => handleBlur(customValue, index)}
+                    // onBlur={() => handleBlur(customValue, index)}
+                    onKeyDown={(e) => handleBlur(e, customValue, index)}
                   />
                   <i
                     className="fa fa-xmark text-primary me-1 remove-tag"
