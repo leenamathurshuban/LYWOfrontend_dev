@@ -1851,6 +1851,7 @@ import { useNavigate } from "react-router-dom";
 import { removeToken } from "../../helpers/helper";
 import DatePicker from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css';
+import { ApplicantFormValidation } from "../../utils/validation";
 
 const ApplicationJobPostModal = ({
   show,
@@ -2343,35 +2344,35 @@ const ApplicationJobPostModal = ({
   const selectedSkillsNames = getSelectedSkillsNames();
   console.log("Selected Skill Names: ", selectedSkillsNames);
 
-  const validateForProfileDetails = () => {
+  const validateForProfileDetails = (newData) => {
     const newErrors = {};
     let formIsValid = true;
 
-    if (!profileformData.name) {
+    if (!newData.name) {
       formIsValid = false;
       newErrors.name = "Name is required";
     }
 
-    if (!profileformData.email) {
+    if (!newData.email) {
       formIsValid = false;
       newErrors.email = "Email is required";
     }
 
-    if (!profileformData.confirmEmail) {
+    if (!newData.confirmEmail) {
       formIsValid = false;
       newErrors.confirmEmail =
         "Your application and progress are linked to this email. Please ensure it is entered correctly.";
-    } else if (profileformData.email !== profileformData.confirmEmail) {
+    } else if (newData.email !== newData.confirmEmail) {
       formIsValid = false;
       newErrors.confirmEmail =
         "The email addresses do not match. Please check both fields and try again";
     }
 
     const phonePattern = /^[0-9]{10}$/;
-    if (!profileformData.phone) {
+    if (!newData.phone) {
       formIsValid = false;
       newErrors.phone = "Phone number is required";
-    } else if (!phonePattern.test(profileformData.phone)) {
+    } else if (!phonePattern.test(newData.phone)) {
       formIsValid = false;
       newErrors.phone = "Phone number must be 10 digits";
     }
@@ -2404,16 +2405,25 @@ const ApplicationJobPostModal = ({
 
   const handleProfileDetailsChange = (e) => {
     const { name, value, type, checked } = e.target;
-
-    setProfileFormData((prevData) => ({
-      ...prevData,
-      [name]:
-        type === "radio"
-          ? value === "true"
-          : type === "checkbox" || type === "switch"
-            ? checked
-            : value,
-    }));
+    const newValue = {[name]:type === "radio"? value === "true": type === "checkbox" || type === "switch"? checked: value}    
+    const {isErrors,isValid} = ApplicantFormValidation(newValue)
+    // setProfileFormData((prevData) => ({
+    //   ...prevData,
+    //   [name]:
+    //     type === "radio"
+    //       ? value === "true"
+    //       : type === "checkbox" || type === "switch"
+    //         ? checked
+    //         : value,
+    // }));
+    setErrors({
+      ...errors,
+      ...isErrors
+    });
+    setProfileFormData({
+      ...profileformData,
+      ...newValue
+    })
   };
   const handleWillingToTeavelJob = (e) => {
     const { name, value, type, checked } = e.target;
@@ -2438,7 +2448,7 @@ const ApplicationJobPostModal = ({
   const handleBlur = (e) => {
     const { name } = e.target;
     setTouchedFields((prevTouched) => ({ ...prevTouched, [name]: true }));
-    validateForProfileDetails();
+    // validateForProfileDetails();
   };
 
   const handleProfileDetailsApi = async () => {
@@ -2614,13 +2624,21 @@ const ApplicationJobPostModal = ({
       }
       const date = new Date(row.gradYear);
       const grad_year = date.getFullYear(); // Extract the year
+      let gradeValue;
+      if(row.gpa == 'GPA in %'){
+        gradeValue = `${row.grade}%`;
+      }else if(row.gpa == '4 Point GPA'){
+        gradeValue = `${row.grade}/4.0`;
+      }else if(row.gpa == '10 Point GPA'){
+        gradeValue = `${row.grade}/10.0`;
+      }
       const formdata = new FormData();
       formdata.append("applicant_profile", storedApplicantId);
       formdata.append("level", row.level);
       formdata.append("applicant_area_of_education", row.areaOfEducation);
       formdata.append("grad_year", grad_year);
       formdata.append("university", row.university);
-      formdata.append("grade", `${row.grade} ${row.gpa}`);
+      formdata.append("grade", gradeValue);      
       const response = await EducationQualificationApi(formdata);
 
       if (response.status === 200) {
@@ -2996,8 +3014,8 @@ const ApplicationJobPostModal = ({
       })
     }
   }, [selectedGroupUid, storedApplicantId])
-  console.log(dynamicArray)
-  console.log('Fixed', skillGroupData.sort((a, b) => a.id - b.id))
+  // console.log(dynamicArray)
+  // console.log('Fixed', skillGroupData.sort((a, b) => a.id - b.id))
   console.log(groupedSkills)
   console.log(EducationRows)
   console.log('checkvalid====>', isValid)
@@ -3218,6 +3236,7 @@ const ApplicationJobPostModal = ({
                         onFocus={handleFocus}
                         onBlur={handleBlur}
                         isInvalid={touchedFields.phone && !!errors.phone}
+                        maxLength={10}
                       />
                     </InputGroup>
                     {/* <Form.Control

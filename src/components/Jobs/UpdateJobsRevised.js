@@ -1458,7 +1458,7 @@ const UpdateJobsRevised = ({
             return "";
         }
     }
-    
+
     useEffect(() => {
         const length = skillGroupData.length
         setDynamicArray(Array.from({ length }, () => []));
@@ -1526,7 +1526,7 @@ const UpdateJobsRevised = ({
         }
     };
     // console.log(behaviours)
-    // console.log('==========>update======>', updateFormData)
+
     // console.log('add skill box', addSkillGroup)
     // console.log("customValue,addSubSkill", skillGroupData, SelectSkillsData)
     console.log(skillGroupData, "group_skills")
@@ -1535,7 +1535,8 @@ const UpdateJobsRevised = ({
     // console.log('must have', mustHaveSkills)
     console.log(components.length)
     console.log(IndustriesBadges)
-    console.log('neetu',createRevisedJobData)
+    console.log('neetu', createRevisedJobData)
+    console.log('==========>update======>', updateFormData)
     return (
         <>
             <Modal
@@ -3454,7 +3455,7 @@ const UpdateJobsRevised = ({
                                                     </li>
                                                     <li>
                                                         <Link href={''} onClick={(e) => handleImportantFlag(e, openStep?.[0])}>
-                                                            {handleOutline()}                                                            
+                                                            {handleOutline()}
                                                         </Link>
                                                     </li>
                                                 </>
@@ -3516,10 +3517,10 @@ const UpdateJobsRevised = ({
                         <Col md={3} lg={2} className="jobpre_Rightpanel">
                             <h5>{createRevisedJobData?.job_title}</h5>
                             <p>
-                                Like {createRevisedJobData?.is_like?.map((val)=>(
+                                Like {createRevisedJobData?.is_like?.map((val) => (
                                     <>{val?.is_like_name}</>
-                                ))}, 
-                                {createRevisedJobData?.number_of_positions} {createRevisedJobData?.number_of_positions>1?'Positions':'Position'}
+                                ))},
+                                {createRevisedJobData?.number_of_positions} {createRevisedJobData?.number_of_positions > 1 ? 'Positions' : 'Position'}
                                 <br />
                                 Technology, {createRevisedJobData?.job_location?.location_name},
                                 <br />
@@ -3531,26 +3532,56 @@ const UpdateJobsRevised = ({
                                     <h6>Expectations</h6>
                                     <ul>
                                         <li>
-                                            {updateFormData?.min_exp}-
-                                            {updateFormData?.max_exp} Years Experience{" "}
+                                            {/* {updateFormData?.min_exp}-
+                                            {updateFormData?.max_exp} Years Experience{" "} */}
+                                            {updateFormData?.min_exp && updateFormData?.max_exp ? (
+                                                <>{updateFormData?.min_exp}-{updateFormData?.max_exp} Years Experience</>
+                                            ) : (
+                                                <>
+                                                    Experience{" "}
+                                                    <span className="text-danger italic">
+                                                        Not defined
+                                                    </span>
+                                                </>
+                                            )}
                                         </li>
                                         <li>
-                                            Salary{" "}
-                                            <span className="text-danger italic">
+                                            {updateFormData?.min_salary && updateFormData?.max_salary ? (
+                                                <>INR {updateFormData?.min_salary} - {updateFormData?.max_salary}</>
+                                            ) : (
+                                                <>
+                                                    Salary{" "}
+                                                    <span className="text-danger italic">
+                                                        Not defined
+                                                    </span>
+                                                </>
+                                            )}
+                                            {/* <span className="text-danger italic">
                                                 {updateFormData?.max_salary}
-                                            </span>{" "}
+                                            </span>{" "} */}
                                         </li>
                                         <li>
-                                            Minimum Qualification{" "}
-                                            <span className="text-danger italic">{updateFormData?.minimum_education}</span>{" "}
+                                            Minimum Qualification
+                                            {updateFormData?.minimum_education ? (
+                                                <> Of {updateFormData?.minimum_education}</>
+                                            ) : (
+                                                <><span className="text-danger italic">Not defined</span>{" "}</>
+                                            )}
+                                            {/* Minimum Qualification{" "} */}
+
                                         </li>
                                         <li>
                                             Education{" "}
-                                            <span className="text-danger italic">
-                                                {badges?.map((Val, index) => (
-                                                    <>{Val?.qualification_name}{index !== badges.length - 1 && ", "}</>
-                                                ))}
-                                            </span>{" "}
+                                            {badges?.length > 0 ? (
+                                                <>
+                                                    in
+                                                    {badges?.map((Val, index) => (
+                                                        <> {Val?.qualification_name}{index !== badges.length - 1 && ", "}</>
+                                                    ))}
+                                                </>
+                                            ) : (
+                                                <span className="text-danger italic">Not defined</span>
+                                            )}
                                         </li>
                                     </ul>
                                 </div>
@@ -3558,28 +3589,74 @@ const UpdateJobsRevised = ({
                                     <h6>Additional</h6>
                                     <ul>
                                         <li>
-                                            Required By{" "}
-                                            <span className="text-danger italic">Not defined</span>
+                                            Required{" "}
+                                            {updateFormData?.immediate_hiring ? (
+                                                <>As soon as possible </>
+                                            ) : updateFormData?.targate_hire_date ? (
+                                                <> in {updateFormData?.targate_hire_date}</>
+                                            ) : (
+                                                <>By <span className="text-danger italic">Not defined</span></>
+                                            )}
+
                                         </li>
                                         <li>Needs to Travel Rarely </li>
-                                        <li>Must Speak {spokenLanguageBadges?.map((lang, index) => (
-                                            <>{lang?.language_name}{index !== spokenLanguageBadges.length - 1 && ", "}</>
-                                        ))}</li>
-                                        <li>Must Read/Write in {rdnwBadges?.map((lang, index) => (
+                                        <li>Must Speak
+                                            {spokenLanguageBadges?.length > 0 ? (
+                                                <>
+                                                    {spokenLanguageBadges?.map((lang, index) => (
+                                                        <> {lang?.language_name}{index !== spokenLanguageBadges.length - 1 && ", "}</>
+                                                    ))}
+                                                </>
+                                            ) : (
+                                                <span className="text-danger italic"> Not defined</span>
+                                            )}
+                                        </li>
+                                        <li>Must Read/Write in
+                                            {rdnwBadges?.length > 0 ? (
+                                                <>
+                                                    {rdnwBadges?.map((lang, index) => (
+                                                        <> {lang?.language_name}{index !== rdnwBadges.length - 1 && ", "}</>
+                                                    ))}
+                                                </>
+                                            ) : (
+                                                <span className="text-danger italic"> Not defined</span>
+                                            )}
+                                            {/* {rdnwBadges?.map((lang, index) => (
                                             <>{lang?.language_name}{index !== rdnwBadges.length - 1 && ", "}</>
-                                        ))}</li>
-                                        <li>Should be from {locationBadges?.map((city, index) => (
+                                        ))} */}
+                                        </li>
+                                        <li>Should be from
+                                            {locationBadges?.length > 0 ? (
+                                                <>
+                                                    {locationBadges?.map((city, index) => (
+                                                        <> {city?.location_name}{index !== locationBadges.length - 1 && ", "}</>
+                                                    ))}
+                                                </>
+                                            ) : (
+                                                <span className="text-danger italic"> Not defined</span>
+                                            )}
+                                            {/* {locationBadges?.map((city, index) => (
                                             <>{city?.location_name}{index !== locationBadges.length - 1 && ", "}</>
-                                        ))}</li>
+                                        ))} */}
+                                        </li>
                                     </ul>
                                 </div>
                                 <div className="user_bsinfo">
                                     <h6>Skills</h6>
                                     <ul>
                                         <li>
-                                            {SelectSkillsData?.map((skill, index) => (
+                                            {SelectSkillsData?.length > 0 ? (
+                                                <>
+                                                    {SelectSkillsData?.map((skill, index) => (
+                                                        <> {skill?.skill_name}{index !== SelectSkillsData.length - 1 && ", "}</>
+                                                    ))}
+                                                </>
+                                            ) : (
+                                                <span className="text-danger italic"> None defined</span>
+                                            )}
+                                            {/* {SelectSkillsData?.map((skill, index) => (
                                                 <>{skill?.skill_name}{index !== SelectSkillsData.length - 1 && ", "}</>
-                                            ))}
+                                            ))} */}
                                         </li>
                                     </ul>
                                 </div>
