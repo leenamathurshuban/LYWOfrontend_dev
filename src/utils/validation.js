@@ -56,7 +56,7 @@ export const ApplicantFormValidation = (userData) => {
         isErrors.phone = "Phone number is required";
         isValid = false;
     } else if (!phonePattern.test(userData.phone)) {
-        isErrors.phone = "Phone number must be 10 digits";
+        isErrors.phone = "Phone number must be 10 digits and numeric value";
         isValid = false;
     } else if (phonePattern.test(userData.phone) && userData.phone) {
         isErrors.phone = "";
