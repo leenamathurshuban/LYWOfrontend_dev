@@ -128,12 +128,11 @@ const JobsList = () => {
     }
   }
 
-  const JobListApi = async (SerachList) => {
+  const JobListApi = async (SerachList) => {    
     setIsLoading(true);
 
     // Base API URL
-    let url = `https://bittrend.shubansoftware.com/assets-api/job-list-api/?page=1&limit=2000&search=${SerachList}`;
-
+    let url = `https://bittrend.shubansoftware.com/assets-api/job-list-api/?page=1&limit=2000&search=${SerachList}`
     try {
       const response = await JobList(url);
       setIsLoading(false);
@@ -148,6 +147,26 @@ const JobsList = () => {
       console.log("response  error-----", error);
     }
   };
+  const jobListAPIByFilter=async ()=>{
+    setIsLoading(true);
+
+    // Base API URL
+    let url = `https://bittrend.shubansoftware.com/assets-api/job-list-api/?page=1&limit=2000&job_type=${filtersList.job_type}&workplace_type=${filtersList.workplace_type}&job_location=${filtersList.job_location}&department=${filtersList.department}&job_status=${filtersList.job_status}&targate_hire_date=${filtersList.targate_hire_date}&posted_on=${filtersList.posted_on}`;
+
+    try {
+      const response = await JobList(url);
+      setIsLoading(false);
+
+      setJobData({
+        jobs: response?.data?.response || [],
+        total_active_job_count: response?.data?.total_active_job_count || 0
+      });
+
+    } catch (error) {
+      setIsLoading(false);
+      console.log("response  error-----", error);
+    }    
+  }
 
   useEffect(() => {
     setJVisiblejobData(jobData.jobs.slice(0, 10));
@@ -253,21 +272,24 @@ const JobsList = () => {
   }
 
   const handleApplyFilter = () => {
-    // const filterRow = jobData.jobs?.filter((cv) => cv.job_type == filtersList.job_type && 
-    // cv.workplace_type == filtersList.workplace_type && cv.job_location.location_name=== filtersList.job_location)    
-    const filteredData = jobData.jobs?.filter(cv => {
-      const matchJobType = filtersList.job_type ? cv.job_type === filtersList.job_type : true;
-      const matchWorkplace = filtersList.workplace_type ? cv.workplace_type === filtersList.workplace_type : true;
-      const matchLocation = filtersList.job_location ? 
-        cv.job_location?.location_name?.toLowerCase().trim() === filtersList.job_location.toLowerCase().trim() : true;
-      const matchJobStatus = filtersList.job_status?cv.job_status?.toLowerCase().trim() === filtersList.job_status.toLowerCase().trim():true;      
-      const matchDepartment = filtersList.department?cv.department?.toLowerCase().trim() === filtersList.department.toLowerCase().trim():true; 
-      const matchTarget = filtersList.targate_hire_date?cv.targate_hire_date === filtersList.targate_hire_date:true;
-      const postOnMatch = filtersList.posted_on?cv.posted_on===filtersList.posted_on:true;
+    // const filteredData = jobData?.jobs?.filter(cv => {
+    //   const matchJobType = filtersList.job_type ? cv.job_type === filtersList.job_type : true;
+    //   const matchWorkplace = filtersList.workplace_type ? cv.workplace_type === filtersList.workplace_type : true;
+    //   const matchLocation = filtersList.job_location ? 
+    //     cv.job_location?.location_name?.toLowerCase().trim() === filtersList.job_location.toLowerCase().trim() : true;
+    //   const matchJobStatus = filtersList.job_status?cv.job_status?.toLowerCase().trim() === filtersList.job_status.toLowerCase().trim():true;      
+    //   const matchDepartment = filtersList.department?cv.department?.toLowerCase().trim() === filtersList.department.toLowerCase().trim():true; 
+    //   const matchTarget = filtersList.targate_hire_date?cv.targate_hire_date === filtersList.targate_hire_date:true;
+    //   const postOnMatch = filtersList.posted_on?cv.posted_on===filtersList.posted_on:true;
 
-      return matchJobType && matchWorkplace && matchLocation && matchJobStatus && matchDepartment && matchTarget && postOnMatch;
-    });
-    setJVisiblejobData(filteredData.slice(0, 10))
+    //   return matchJobType && matchWorkplace && matchLocation && matchJobStatus && matchDepartment && matchTarget && postOnMatch;
+    // });
+    // setJVisiblejobData(filteredData.slice(0, 10))
+    // setModal((prevModals) => ({
+    //   ...prevModals,
+    //   ["MoreFilterModal"]: false,
+    // }));
+    jobListAPIByFilter()
     setModal((prevModals) => ({
       ...prevModals,
       ["MoreFilterModal"]: false,

@@ -162,7 +162,7 @@ a {
 .error {
   color: #F04438 !important;
   font-size: 12px;
-  margin: 0 0 5px 0 !important;
+  margin: 3px 0 0px 0 !important;
   font-weight: 400;
 }
 
@@ -872,13 +872,13 @@ label.required.form-label {
 }
 .cmp_details .cmp_info li {
   list-style: none;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 400;
-  color: #667085;
+  color: #344054;
   line-height: 24px;
 }
 .cmp_details .cmp_info li strong {
-  font-size: 14px;
+  font-size: 13px;
   color: #344054;
   font-weight: 600;
 }
@@ -890,9 +890,9 @@ label.required.form-label {
   border-bottom: solid 1px #eaecf0;
 }
 .cmp_details p {
-  font-size: 13px;
+  font-size: 10px;
   font-weight: 400;
-  color: #667085;
+  color: #1D2939;
   line-height: 24px;
 }
 
@@ -2258,6 +2258,7 @@ select.h-36.form-select {
   right: -4px;
   cursor: pointer;
   position: relative;
+  line-height: normal;
 }
 .tagarea .inline-input {
   font-size: 12px;
@@ -4362,9 +4363,20 @@ select.h-36.form-select {
   max-width: 350px;
 }
 
+.mw-230 {
+  min-width: 230px;
+}
+
+.mw-130 {
+  min-width: 175px;
+}
+
 .jobpost_view .jobMain_panel {
   width: 70%;
   margin-right: 16%;
+}
+.jobpost_view .ctm_dropdown {
+  max-height: 250px !important;
 }
 .jobpost_view .form_table {
   width: 100%;
@@ -5805,27 +5817,27 @@ select.select-transpant:hover, select.select-transpant:focus, select.select-tran
   box-shadow: 0 4px 5px rgba(0, 0, 0, 0.12);
   overflow-x: hidden;
   padding: 10px 5px;
+  max-height: 245px;
 }
 
 .droplistmulti {
+  border: solid 1px #EAECF0;
+  border-radius: 8px;
+  max-height: 290px;
   overflow-y: auto;
+  box-shadow: 0px 12px 16px -4px rgba(16, 24, 40, 0.0784313725);
   position: absolute;
-  top: 100%;
+  width: 100%;
+  z-index: 99;
   background-color: #fff;
-  border: solid 1px #ddd;
-  border-top: 0;
-  max-width: -moz-fit-content;
-  max-width: fit-content;
-  z-index: 999999999;
-  border-radius: 15px;
-  box-shadow: 0 4px 5px rgba(0, 0, 0, 0.12);
-  overflow-x: hidden;
-  padding: 10px 5px;
-  max-height: 145px;
 }
 
 .droplistmulti a {
-  font-size: 15px;
+  padding: 10px 15px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #344054;
+  border-radius: 8px;
 }
 
 .offcanvas-backdrop {
@@ -5972,4 +5984,44 @@ button#input-group-dropdown-1 {
   display: block;
   font-weight: 400;
   margin-top: 2px;
+}
+
+.model_sm .modal-content {
+  background-color: #fff;
+  box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.0784313725);
+  border-radius: 12px;
+  border: none;
+  overflow: hidden;
+}
+.model_sm.alartmdl .modal-header {
+  box-shadow: none;
+}
+.model_sm.alartmdl .modal-title {
+  font-family: Inter;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: 0%;
+  color: #101828;
+}
+.model_sm.alartmdl .mdl_description {
+  font-family: Inter;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0%;
+  color: #475467;
+  margin: 10px 0;
+}
+.model_sm.alartmdl .modal-body {
+  padding: 0 25px 15px 25px;
+}
+.model_sm.alartmdl .modal-footer {
+  justify-content: space-between;
+  border: none;
+  padding: 0 25px 25px 25px;
+}
+.model_sm.alartmdl .modal-footer .btn {
+  width: 47%;
+  min-height: 45px;
 }/*# sourceMappingURL=main.css.map */

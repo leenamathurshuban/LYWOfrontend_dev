@@ -1640,13 +1640,12 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                     onChange={handleWebsite}
                                     value={website}
                                   />
-                                </Form.Group>
                                 {companyUpdateError?.websiteError && (
                                   <p className="error">
                                     {companyUpdateError?.websiteError}
                                   </p>
                                 )}
-
+                                </Form.Group>
                                 <Form.Group className="col-md-12 mb-3 relative">
                                   <Form.Label>Industry</Form.Label>
                                   <Form.Control
@@ -1682,9 +1681,9 @@ const CompanyEditProfile = ({ show, handleClose }) => {
 
                                   {IndustrySearchDropdown &&
                                     industries.length === 0 && (
-                                      <ul>
-                                        <li>No data found</li>
-                                      </ul>
+                                      <p className="error">
+                                        No data found
+                                      </p>
                                     )}
                                 </Form.Group>
 

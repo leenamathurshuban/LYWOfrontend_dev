@@ -17,6 +17,7 @@ import {
 import CreateJobsRevised from "./CreateJobsRevised";
 import { removeToken } from "../../helpers/helper";
 import UpdateJobsRevised from "./UpdateJobsRevised";
+import { CreateJobFormValidation } from "../../utils/validation";
 
 const UpdateJobs = ({ show, handleClose, editData }) => {
   const { id } = useParams();
@@ -25,6 +26,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
     jobType: editData?.job_type,
     workPlaceType: editData?.workplace_type,
     noOfPosition: editData?.number_of_positions,
+    department: editData?.department
   });
 
   const [travelOption, setTravelOption] = useState(editData?.requires_travel);
@@ -311,32 +313,18 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
     return isValid;
   };
   const handleFormData = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     console.log("input name-----", name);
-
+    const newValue = { [name]: type === "radio" ? value === "true" : type === "checkbox" || type === "switch" ? checked : value }
+    const { isErrors, isValid } = CreateJobFormValidation(newValue);
+    setErrors({
+      ...errors,
+      ...isErrors
+    })
     setCreateFormData({
       ...createFormData,
-      [name]: value,
-    });
-    // if (name === 'noOfPosition') {
-    //   setErrors(/[^0-9]/.test(value) ? 'Please enter only numeric values.' : '');
-    // }
-
-    // Validation for noOfPosition (should be a numeric value)
-    if (name === "noOfPosition") {
-      if (/[^0-9]/.test(value)) {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          noOfPosition: "Please enter only numeric values",
-        }));
-      } else {
-        // Clear error if value is valid
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          noOfPosition: "",
-        }));
-      }
-    }
+      ...newValue
+    })
   };
   const handleUpdateFormData = (e) => {
     const { name, value, checked } = e.target;
@@ -630,7 +618,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
       formdata.append("job_title", createFormData.jobTitle);
       formdata.append("is_like", JSON.stringify(isLikeUid));
       formdata.append("number_of_positions", createFormData.noOfPosition);
-      formdata.append("department", department);
+      formdata.append("department", createFormData.department);
       formdata.append("job_location", locationUid);
       formdata.append("requires_travel", travelOption);
       formdata.append("detailed_description", descriptionWithoutTags);
@@ -905,16 +893,45 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
     }
   };
 
-  const handleCustomeBeniftsAdd = () => {
+  const handleCustomeBeniftsAdd = async () => {
     const CreateCustomLabel = { Label: "" };
     if (addCustomeBenifits.length == 0) {
       setAddCustomeBenifits((prev) => [...prev, CreateCustomLabel]);
+    } else {
+      const formdata = new FormData();
+      formdata.append("benefit_name", customValue);
+      if (customValue.trim()) {
+        try {
+          const response = await createCustomeBenifitsApi(formdata);
+          if (response.data.status == 200) {
+            benifitsList();
+            setCustomValue("");
+            handleClearCustomInput('')
+          }
+        } catch (error) {
+          console.log("error=-------", error);
+          if (
+            error?.response?.status === 401 ||
+            error?.response?.data?.detail?.includes(
+              "Given token not valid for any token type"
+            )
+          ) {
+            //console.log("Token expired, redirecting to login");
+            removeToken();
+            navigate("/loginwithpassword");
+          }
+        }
+      }
     }
   };
 
   const handleClearCustomInput = (index) => {
     setCustomValue("")
-    setAddCustomeBenifits((prev) => prev.filter((_, i) => i !== index));
+    if (index !== '') {
+      setAddCustomeBenifits((prev) => prev.filter((_, i) => i !== index));
+    } else {
+      setAddCustomeBenifits([])
+    }
   };
 
   const handleBlur = async (e, value, index) => {
@@ -979,11 +996,11 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
               value={createFormData.jobTitle}
               // onChange={(e) => setJobTitle(e.target.value)}
               onChange={handleFormData}
-            // isInvalid={errors.jobTitle}
+              isInvalid={errors.jobTitle}
             />
-            {/* <Form.Control.Feedback type="invalid">
+            <Form.Control.Feedback type="invalid">
               {errors.jobTitle}
-            </Form.Control.Feedback> */}
+            </Form.Control.Feedback>
           </Form.Group>
 
           <Form.Group className="col-md-6 mb-2" controlId="isLike">
@@ -1012,7 +1029,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
               </div>
             )}
             {isLikeDropdown && isLikeData?.length === 0 && (
-              <span className="error">No data found</span>
+              <span className="error">Invalid key Search</span>
             )}
           </Form.Group>
 
@@ -1027,9 +1044,12 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
               isInvalid={!!errors.noOfPosition}
             />
 
-            {errors.noOfPosition && (
+            {/* {errors.noOfPosition && (
               <span className="error text-danger">{errors.noOfPosition}</span>
-            )}
+            )} */}
+            <Form.Control.Feedback type="invalid">
+              {errors.noOfPosition}
+            </Form.Control.Feedback>
           </Form.Group>
 
           <Form.Group className="col-md-6 mb-2" controlId="department">
@@ -1037,11 +1057,15 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
             <Form.Control
               type="text"
               placeholder="Department"
-              value={department}
-              onChange={handleDepartment}
+              name="department"
+              value={createFormData.department}
+              onChange={handleFormData}
+              isInvalid={errors.department}
             />
 
-            <span className="error">{errors.department}</span>
+            <Form.Control.Feedback type="invalid">
+              {errors.department}
+            </Form.Control.Feedback>
 
             {/* {isDepartmentDropdown && departmentData?.length > 0 && (
               <div className="ctm_dropdown ct_scrollbar">
@@ -1089,7 +1113,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
             )}
 
             {isLocationDropdown && locationData.length === 0 && (
-              <span className="error">No data found</span>
+              <span className="error">Invalid key Search</span>
             )}
           </Form.Group>
           {["radio"].map((type) => (
@@ -1298,7 +1322,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
               <Button
                 className="btn-light-gray"
                 onClick={handleCustomeBeniftsAdd}
-                disabled={addCustomeBenifits.length > 0}
+              // disabled={addCustomeBenifits.length > 0}
               >
                 <i className="fa fa-plus text-primary me-1"></i>Add Custom
               </Button>

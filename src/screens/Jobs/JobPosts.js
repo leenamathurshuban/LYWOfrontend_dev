@@ -130,7 +130,7 @@ const JobPosts = () => {
   },]);
   const [WorkExpreienceRow, setWorkExpreienceRow] = useState([
     {
-      TotalWorkExperience: "",
+      // TotalWorkExperience: "",
       WorkRole: "",
       WorkFrom: "",
       WorkTo: "",
@@ -140,6 +140,7 @@ const JobPosts = () => {
       savedWorkExp: false,
     },
   ]);
+  const [totalWorkExperience,settotalWorkExperience] = useState('')
   const [isExistApplicantError, setIsExistApplicantError] = useState('');
   const [spokenLanguageBadges, setSpokenLanguageBadges] = useState([]);
   const [rdnwBadges, setrdnwBadges] = useState([]);
@@ -428,6 +429,7 @@ const JobPosts = () => {
             savedWorkExp: true
           }))
           setWorkExpreienceRow(newArray)
+          settotalWorkExperience(workExpData?.[0]?.total_work_experience)
         }
 
         if (response?.data?.response?.applicant_status === 'Draft') {
@@ -1037,7 +1039,7 @@ const JobPosts = () => {
               Behavioural Assessment
             </h5>
             <p>
-              {Number(localStorage.getItem("AttemptStatus")) < 28 && "Pending"}
+              {buttonText == "View Form Btn" && Number(localStorage.getItem("AttemptStatus")) < 28 && "Pending"}
               {Number(localStorage.getItem("AttemptStatus")) === 28 &&
                 "Completed"}
             </p>
@@ -1109,7 +1111,7 @@ const JobPosts = () => {
                     {Val?.asset_title}
                   </h5>
                   <p>
-                    {localStorage.getItem("assestQuiz") == 'Completed' ? 'Completed' : localStorage.getItem("assestQuiz") == 'Draft' ? 'Pending' : 'Pending'}
+                    {localStorage.getItem("assestQuiz") == 'Completed' ? 'Completed' : localStorage.getItem("assestQuiz") == 'Draft' ? 'Pending' : ''}
 
                   </p>
                   <div className="text-end">
@@ -1141,7 +1143,7 @@ const JobPosts = () => {
                     {Val?.asset_title}
                   </h5>
                   <p>
-                    {localStorage.getItem("preAssestQuiz") == 'Completed' ? 'Completed' : localStorage.getItem("preAssestQuiz") == 'Draft' ? 'Pending' : 'Pending'}
+                    {localStorage.getItem("preAssestQuiz") == 'Completed' ? 'Completed' : localStorage.getItem("preAssestQuiz") == 'Draft' ? 'Pending' : ''}
 
                   </p>
                   <div className="text-end">
@@ -1207,6 +1209,7 @@ const JobPosts = () => {
           isExistApplicantError={isExistApplicantError} setIsExistApplicantError={setIsExistApplicantError}
           spokenLanguageBadges={spokenLanguageBadges} setSpokenLanguageBadges={setSpokenLanguageBadges}
           rdnwBadges={rdnwBadges} setrdnwBadges={setrdnwBadges}
+          totalWorkExperience={totalWorkExperience} settotalWorkExperience={settotalWorkExperience}
         />
       ) : (
         <p>Loading...</p>

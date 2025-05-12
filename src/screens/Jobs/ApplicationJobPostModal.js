@@ -1866,7 +1866,7 @@ const ApplicationJobPostModal = ({
   ResumeFile, setResumeFile, ResumeFileName, setResumeFileName,
   EducationRows, SetEducationRows, setBehaviourAssModel, WorkExpreienceRow, setWorkExpreienceRow,
   isExistApplicantError, setIsExistApplicantError, spokenLanguageBadges, setSpokenLanguageBadges,
-  rdnwBadges, setrdnwBadges
+  rdnwBadges, setrdnwBadges, totalWorkExperience, settotalWorkExperience
 }) => {
   // const [isYes, setIsYes] = useState({
   //   CurrentlyWorkingToggle: false,
@@ -1887,6 +1887,7 @@ const ApplicationJobPostModal = ({
   const [spokenLanguage, setSpokenLanguage] = useState([])
   const [writtenLanguage, setWittenLanguage] = useState([])
   const [locationList, setLocationList] = useState([])
+
   // const [geographyLocaton,setGeographyLocaton] = useState("")
   // const [selectedSpokenLanguageUids, setSelectedSpokenLanguageUids] = useState(
   //   []
@@ -2098,22 +2099,23 @@ const ApplicationJobPostModal = ({
     let search = newRows[index]["areaOfEducation"]
     SetEducationRows(newRows);
     let url;
-    if (value != "") {
-      url = `https://bittrend.shubansoftware.com/assets-api/education-qualification-list-by-course-api?page=1&limit=10&search=${search}`;
-    }
 
     try {
-      const response = await getQualificationListApi(url);
-      if (response?.data?.response.length > 0) {
-        if (value) {
+      if (value != "") {
+        url = `https://bittrend.shubansoftware.com/assets-api/education-qualification-list-by-course-api?page=1&limit=10&search=${search}`;
+        const response = await getQualificationListApi(url);
+        if (response?.data?.response.length > 0) {
           setAreaEducationOption(response?.data?.response)
           // setBadges((prevBadges) => [
           //   ...prevBadges,
           //   response?.data?.response[0],
           // ]);
-          // setInputValue("");
+          // setInputValue("");          
         }
+      } else {
+        setAreaEducationOption([])
       }
+
     } catch (error) {
       console.log("error response----->>>>>>", error);
     }
@@ -2158,18 +2160,22 @@ const ApplicationJobPostModal = ({
     }
 
     try {
-      const response = await axios.get(
-        "https://bittrend.shubansoftware.com/account-api/industry-list-api/",
-        {
-          params: {
-            page: 1,
-            limit: 500,
-            search: search,
-          },
+      if (value != "") {
+        const response = await axios.get(
+          "https://bittrend.shubansoftware.com/account-api/industry-list-api/",
+          {
+            params: {
+              page: 1,
+              limit: 500,
+              search: search,
+            },
+          }
+        );
+        if (response?.data?.success) {
+          setIndustriesList(response.data.response)
         }
-      );
-      if (response?.data?.success) {
-        setIndustriesList(response.data.response)
+      } else {
+        setIndustriesList([])
       }
     } catch (err) {
       console.error("Error fetching data:", err);
@@ -2246,9 +2252,10 @@ const ApplicationJobPostModal = ({
     }
 
     try {
-      const response = await getQualificationListApi(url);
-      if (response?.data?.response.length > 0) {
-        if (value) {
+      if (value != "") {
+        const response = await getQualificationListApi(url);
+        if (response?.data?.response.length > 0) {
+
           if (from === "spoken") {
             setSpokenLanguage(response?.data?.response)
             // setSpokenLanguageBadges((prevBadges) => [
@@ -2262,9 +2269,11 @@ const ApplicationJobPostModal = ({
             //     response?.data?.response[0],
             // ]);
           }
-
-          // setInputValue("");
+          // setInputValue("");        
         }
+      } else {
+        setSpokenLanguage([])
+        setWittenLanguage([])
       }
     } catch (error) {
       console.log("error response----->>>>>>", error);
@@ -2405,8 +2414,8 @@ const ApplicationJobPostModal = ({
 
   const handleProfileDetailsChange = (e) => {
     const { name, value, type, checked } = e.target;
-    const newValue = {[name]:type === "radio"? value === "true": type === "checkbox" || type === "switch"? checked: value}    
-    const {isErrors,isValid} = ApplicantFormValidation(newValue)
+    const newValue = { [name]: type === "radio" ? value === "true" : type === "checkbox" || type === "switch" ? checked : value }
+    const { isErrors, isValid } = ApplicantFormValidation(newValue)
     // setProfileFormData((prevData) => ({
     //   ...prevData,
     //   [name]:
@@ -2625,11 +2634,11 @@ const ApplicationJobPostModal = ({
       const date = new Date(row.gradYear);
       const grad_year = date.getFullYear(); // Extract the year
       let gradeValue;
-      if(row.gpa == 'GPA in %'){
+      if (row.gpa == 'GPA in %') {
         gradeValue = `${row.grade}%`;
-      }else if(row.gpa == '4 Point GPA'){
+      } else if (row.gpa == '4 Point GPA') {
         gradeValue = `${row.grade}/4.0`;
-      }else if(row.gpa == '10 Point GPA'){
+      } else if (row.gpa == '10 Point GPA') {
         gradeValue = `${row.grade}/10.0`;
       }
       const formdata = new FormData();
@@ -2638,7 +2647,7 @@ const ApplicationJobPostModal = ({
       formdata.append("applicant_area_of_education", row.areaOfEducation);
       formdata.append("grad_year", grad_year);
       formdata.append("university", row.university);
-      formdata.append("grade", gradeValue);      
+      formdata.append("grade", gradeValue);
       const response = await EducationQualificationApi(formdata);
 
       if (response.status === 200) {
@@ -2672,7 +2681,7 @@ const ApplicationJobPostModal = ({
       }
       const formdata = new FormData();
       formdata.append("work_applicant_profile", storedApplicantId);
-      formdata.append("total_work_experience", row.TotalWorkExperience);
+      formdata.append("total_work_experience", totalWorkExperience);
       formdata.append("role", row.WorkRole);
       formdata.append("work_from", row.WorkFrom);
       formdata.append("work_to", row.WorkTo);
@@ -2733,6 +2742,10 @@ const ApplicationJobPostModal = ({
     newWorkRow[index][name] = value;
     setWorkExpreienceRow(newWorkRow);
   };
+  const handleTotalWorkExpeienceChange = (e) => {
+    const { name, value } = e.target;
+    settotalWorkExperience(value)
+  }
   const calculateWorkExperience = (fromDate, toDate) => {
     const from = new Date(fromDate);
     const to = new Date(toDate);
@@ -3026,8 +3039,10 @@ const ApplicationJobPostModal = ({
       show={show}
       onHide={handleClose}
       size="lg"
+      animation={false}
       backdrop={false}
-      className="cmprofile_mdl quizDev_model jobpost_view"
+      // className="cmprofile_mdl quizDev_model jobpost_view"
+      className="cmprofile_mdl quizDev_model jobpost_view ps-0"
     >
       <Modal.Header closeButton>
         <img src={logoIcon} className="me-4" />
@@ -3041,7 +3056,7 @@ const ApplicationJobPostModal = ({
       </Modal.Header>
       <Modal.Body className="p-0 bg-lightgray">
         <Container fluid>
-          <Row className="justify-content-center">            
+          <Row className="justify-content-center">
             <Col md={3} lg={2} className="jobpre_leftpanel px-2">
               <h6>Profile</h6>
               <ul className="checklist">
@@ -3238,6 +3253,9 @@ const ApplicationJobPostModal = ({
                         isInvalid={touchedFields.phone && !!errors.phone}
                         maxLength={10}
                       />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.phone}
+                      </Form.Control.Feedback>
                     </InputGroup>
                     {/* <Form.Control
                       type="text"
@@ -3251,9 +3269,7 @@ const ApplicationJobPostModal = ({
                       onBlur={handleBlur}
                       isInvalid={touchedFields.phone && !!errors.phone}
                     /> */}
-                    <Form.Control.Feedback type="invalid">
-                      {errors.phone}
-                    </Form.Control.Feedback>
+
                   </Col>
                 </Row>
               </div>
@@ -3287,7 +3303,7 @@ const ApplicationJobPostModal = ({
                           </small> */}
                         </div>
                         <small className="text-muted mb-0">
-                        PDF or Doc. Should be less than 2 MB
+                          PDF or Doc. Should be less than 2 MB
                         </small>
                       </div>
                     )}
@@ -3416,7 +3432,7 @@ const ApplicationJobPostModal = ({
                       value={profileformData?.NoticePeriod}
                       onChange={handleProfileDetailsChange}
                       isInvalid={!!errors.NoticePeriod}
-                    >                     
+                    >
                       <option value="" disabled hidden>Notice Period</option>
                       <option value='Less than 30 Days'>Less than 30 Days</option>
                       <option value='30-60 Days'>30 - 60 Days</option>
@@ -3605,20 +3621,20 @@ const ApplicationJobPostModal = ({
 
               <div className="custom-card">
                 <h6>Educational Qualification</h6>
-                {EducationRows.map((row, index) => (
-                  <table className="mb-2 form_table" key={index}>
-                    <thead>
-                      <tr>
-                        <td>Level</td>
-                        <td>Area of Education</td>
-                        <td>Grad. Year</td>
-                        <td>University</td>
-                        <td>Grade</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                      </tr>
-                    </thead>
-                    <tbody>
+                <table className="mb-2 form_table">
+                  <thead>
+                    <tr>
+                      <td>Level</td>
+                      <td>Area of Education</td>
+                      <td>Grad. Year</td>
+                      <td>University</td>
+                      <td>Grade</td>
+                      <td>&nbsp;</td>
+                      <td>&nbsp;</td>
+                    </tr>
+                  </thead>
+                  {EducationRows.map((row, index) => (
+                    <tbody key={index}>
                       <tr>
                         <td>
                           <Form.Select
@@ -3666,7 +3682,7 @@ const ApplicationJobPostModal = ({
                             disabled={row.saved}
                           /> */}
 
-                          <Dropdown show={true} >
+                          {/* <Dropdown show={true} >
                             <Dropdown.Menu className="w-100 dropdown_ctm">
 
                               <FormControl
@@ -3691,7 +3707,33 @@ const ApplicationJobPostModal = ({
                                 ))}
                               </div>
                             </Dropdown.Menu>
-                          </Dropdown>
+                          </Dropdown> */}
+                          <div className="mw-230 relative">
+
+                            <FormControl
+                              // autoFocus
+                              name="areaOfEducation"
+                              placeholder="Area of Education"
+                              size="sm"
+                              value={row.areaOfEducation}
+                              disabled={row.saved}
+                              onChange={(e) => handleAreaOfEducation(index, e)}
+                            />
+                            <div class={`${aresEducationOption.length ? 'ctm_dropdown ct_scrollbar' : ''}`}>
+                              <ul className="m-0">
+                                {aresEducationOption.map((option, idx) => (
+                                  <li
+                                    key={idx}
+                                    onClick={(e) =>
+                                      handleSelectAreaEducation(index, option?.qualification_name)
+                                    }
+                                  >
+                                    {option?.qualification_name}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          </div>
 
                         </td>
                         <td>
@@ -3778,8 +3820,9 @@ const ApplicationJobPostModal = ({
                         </td> */}
                       </tr>
                     </tbody>
-                  </table>
-                ))}
+                  ))}
+                </table>
+
                 <Button onClick={EducationAddRow} variant="link">
                   + Add
                 </Button>
@@ -3787,16 +3830,13 @@ const ApplicationJobPostModal = ({
 
               <div className="custom-card">
                 <h6>Work Experience</h6>
-
-                {WorkExpreienceRow.map((row, index) => (
-                  <div key={index}>
-                    <Row className="align-items-center bg-lightgray py-2">
-                      <Col xs="auto" className="text-center">
-                        <Form.Label>Total Work Experience</Form.Label>
-                      </Col>
-
-                      <Col>
-                        {/* <Form.Control
+                <div >
+                  <Row className="align-items-center bg-lightgray py-2">
+                    <Col xs="auto" className="text-center">
+                      <Form.Label>Total Work Experience</Form.Label>
+                    </Col>
+                    <Col>
+                      {/* <Form.Control
                           type="text"
                           placeholder=""
                           size="sm"
@@ -3806,47 +3846,47 @@ const ApplicationJobPostModal = ({
                           onChange={(e) => handleWorkExpeienceChange(index, e)}
                           disabled={row.savedWorkExp}
                         /> */}
-                        <Form.Select
-                          className="form-control-sm mx-w350"
-                          aria-label="Default select example"
-                          name="TotalWorkExperience"
-                          value={row?.TotalWorkExperience}
-                          onChange={(e) => handleWorkExpeienceChange(index, e)}
-                          isInvalid={!!errors.TotalWorkExperience}
-                          required
-                          disabled={row.savedWorkExp}
-                        >
-                          <option value="" disabled hidden>Work Experience</option>
-                          <option value="Fresher">Fresher</option>
-                          <option value="Less than 1 Year">Less than 1 Year</option>
-                          <option value="1-2 Years">1 - 2 Years</option>
-                          <option value="2-4 Years">2 - 4 Years</option>
-                          <option value="4-6 Years">4 - 6 Years</option>
-                          <option value="6-9 Years">6 - 9 Years</option>
-                          <option value="9-12 Years">9 - 12 Years</option>
-                          <option value="12-15 Years">12 - 15 Years</option>
-                          <option value="15-20 Years">15 - 20 Years</option>
-                          <option value="20-25 Years">20 - 25 Years</option>
-                          <option value="25-30 Years">25 - 30 Years</option>
-                          <option value="30-40 Years">30 - 40 Years</option>
-                          <option value="Above 40 Years">Above 40 Years</option>
-                        </Form.Select>
-                      </Col>
-                    </Row>
-
-                    <table className="mb-2 form_table">
-                      <thead>
-                        <tr>
-                          <td>Role</td>
-                          <td>From</td>
-                          <td>To</td>
-                          <td>Company</td>
-                          <td>Industry</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                      </thead>
-                      <tbody>
+                      <Form.Select
+                        className="form-control-sm mx-w350"
+                        aria-label="Default select example"
+                        name="TotalWorkExperience"
+                        value={totalWorkExperience}
+                        onChange={handleTotalWorkExpeienceChange}
+                        isInvalid={!!errors.totalWorkExperience}
+                        required
+                      // disabled={row.savedWorkExp}
+                      >
+                        <option value="" disabled hidden>Work Experience</option>
+                        <option value="Fresher">Fresher</option>
+                        <option value="Less than 1 Year">Less than 1 Year</option>
+                        <option value="1-2 Years">1 - 2 Years</option>
+                        <option value="2-4 Years">2 - 4 Years</option>
+                        <option value="4-6 Years">4 - 6 Years</option>
+                        <option value="6-9 Years">6 - 9 Years</option>
+                        <option value="9-12 Years">9 - 12 Years</option>
+                        <option value="12-15 Years">12 - 15 Years</option>
+                        <option value="15-20 Years">15 - 20 Years</option>
+                        <option value="20-25 Years">20 - 25 Years</option>
+                        <option value="25-30 Years">25 - 30 Years</option>
+                        <option value="30-40 Years">30 - 40 Years</option>
+                        <option value="Above 40 Years">Above 40 Years</option>
+                      </Form.Select>
+                    </Col>
+                  </Row>
+                  <table className="mb-2 form_table">
+                    <thead>
+                      <tr>
+                        <td>Role</td>
+                        <td>From</td>
+                        <td>To</td>
+                        <td>Company</td>
+                        <td>Industry</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    </thead>
+                    {WorkExpreienceRow.map((row, index) => (
+                      <tbody key={index}>
                         <tr>
                           <td>
                             {/* <Form.Control
@@ -3862,7 +3902,7 @@ const ApplicationJobPostModal = ({
                               disabled={row.savedWorkExp}
                             /> */}
 
-                            <Dropdown show={true} >
+                            {/* <Dropdown show={true} >
                               <Dropdown.Menu className="w-100 dropdown_cti">
                                 <FormControl
                                   autoFocus
@@ -3886,7 +3926,32 @@ const ApplicationJobPostModal = ({
                                   ))}
                                 </div>
                               </Dropdown.Menu>
-                            </Dropdown>
+                            </Dropdown> */}
+                            <div className="mw-130 relative">
+                              <FormControl
+                                // autoFocus
+                                name="WorkRole"
+                                placeholder="Role"
+                                size="sm"
+                                value={row.WorkRole}
+                                disabled={row.savedWorkExp}
+                                onChange={(e) => handleRolelist(index, e)}
+                              />
+                              <div class={`${roleList.length ? 'ctm_dropdown ct_scrollbar' : ''}`}>
+                                <ul className="m-0">
+                                  {roleList.map((option, idx) => (
+                                    <li
+                                      key={idx}
+                                      onClick={(e) =>
+                                        handleWorkRole(index, option?.is_like_name)
+                                      }
+                                    >
+                                      {option?.is_like_name}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            </div>
 
                           </td>
                           <td>
@@ -3945,7 +4010,7 @@ const ApplicationJobPostModal = ({
                               disabled={row.savedWorkExp}
                             /> */}
 
-                            <Dropdown show={true} >
+                            {/* <Dropdown show={true} >
                               <Dropdown.Menu className="w-100 dropdown_cti">
                                 <FormControl
                                   autoFocus
@@ -3969,7 +4034,32 @@ const ApplicationJobPostModal = ({
                                   ))}
                                 </div>
                               </Dropdown.Menu>
-                            </Dropdown>
+                            </Dropdown> */}
+                            <div className="mw-130 relative">
+                              <FormControl
+                                // autoFocus
+                                name="WorkIndustry"
+                                placeholder="Industry"
+                                size="sm"
+                                value={row.WorkIndustry}
+                                disabled={row.savedWorkExp}
+                                onChange={(e) => handleIndustries(index, e)}
+                              />
+                              <div class={`${industriesList.length ? 'ctm_dropdown ct_scrollbar' : ''}`}>
+                                <ul className="m-0">
+                                  {industriesList.map((option, idx) => (
+                                    <li
+                                      key={idx}
+                                      onClick={(e) =>
+                                        handleSelectIndustries(index, option?.industry_name)
+                                      }
+                                    >
+                                      {option?.industry_name}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            </div>
 
                           </td>
 
@@ -4037,16 +4127,15 @@ const ApplicationJobPostModal = ({
                                 </Form>
                               </div>
                             )}
-
                             {row.savedWorkExp && row?.WorkNote && (
                               <p style={{ marginTop: "5px" }}>{row.WorkNote}</p>
                             )}
                           </td>
                         </tr>
                       </tbody>
-                    </table>
-                  </div>
-                ))}
+                    ))}
+                  </table>
+                </div>
 
                 <Button variant="link" onClick={WorkExpreienceAddRow}>
                   + Add
@@ -4296,7 +4385,7 @@ const ApplicationJobPostModal = ({
                       onChange={handleProfileDetailsChange}
                       isInvalid={!!errors.CurrentLocation}
                     /> */}
-                    <Dropdown show={true} >
+                    {/* <Dropdown show={true} >
                       <Dropdown.Menu className="w-100 dropdown_cti">
                         <FormControl
                           // autoFocus
@@ -4320,7 +4409,32 @@ const ApplicationJobPostModal = ({
                           ))}
                         </div>
                       </Dropdown.Menu>
-                    </Dropdown>
+                    </Dropdown> */}
+                    <div className="w-100  mx-w350 relative">
+                      <FormControl
+                        // autoFocus
+                        placeholder="Current Location"
+                        size="sm"
+                        style={{ width: "350px" }}
+                        name="CurrentLocation"
+                        value={profileformData?.CurrentLocation}
+                        onChange={(e) => setProfileFormData({ ...profileformData, ['CurrentLocation']: e.target.value })}
+                      />
+                      <div class={`${locationList.length ? 'ctm_dropdown ct_scrollbar' : ''}`}>
+                        <ul className="m-0">
+                          {locationList.map((option, idx) => (
+                            <li
+                              key={idx}
+                              onClick={(e) =>
+                                handleSelectGeographyLocaton(option?.location_name)
+                              }
+                            >
+                              {option?.location_name}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
                   </Col>
 
                   <Form.Control.Feedback type="invalid">
@@ -4712,15 +4826,18 @@ const ApplicationJobPostModal = ({
         </Container>
 
         <div>
-          <Modal show={showModal.showSaveAsDraft} onHide={handleCloseModals} className="zindex9999">
+          <Modal backdrop={false} aria-labelledby="contained-modal-title-vcenter"
+            centered show={showModal.showSaveAsDraft} onHide={handleCloseModals} className="model_sm alartmdl">
             <Modal.Header closeButton>
-              <Modal.Title>
-                Are you sure you want to exit without submitting?
-              </Modal.Title>
             </Modal.Header>
-            <Modal.Body>
-              Your details will be saved as a draft, and you can log in with{" "}
-              {profileformData?.email} later to finish your application.
+            <Modal.Body className="text-center">
+              <Modal.Title>
+                Are you sure you want to exit<br /> without submitting?
+              </Modal.Title>
+              <p className="mdl_description">
+                Your details will be saved as a draft, and you can log in with{" "}<br />
+                {profileformData?.email} later to finish your application.
+              </p>
             </Modal.Body>
             <Modal.Footer>
               <Button variant="light" onClick={handleCloseModals}>
@@ -4734,13 +4851,15 @@ const ApplicationJobPostModal = ({
         </div>
 
         <div>
-          <Modal show={showModal.showSaveModal} onHide={handleCloseModals} className="zindex9999">
+          <Modal backdrop={false} aria-labelledby="contained-modal-title-vcenter"
+            centered show={showModal.showSaveModal} onHide={handleCloseModals} className="model_sm alartmdl">
             <Modal.Header closeButton>
+
+            </Modal.Header>
+            <Modal.Body>
               <Modal.Title>
                 Your application has been successfully submitted.
               </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
               You can view your progress and complete the next steps by logging
               into LYWO with {profileformData?.email}.
             </Modal.Body>
