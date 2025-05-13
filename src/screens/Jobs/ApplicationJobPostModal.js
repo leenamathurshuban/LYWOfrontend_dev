@@ -1813,7 +1813,7 @@
 
 //dinesh sir code 20 feb
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Alert,
   Badge,
@@ -1887,6 +1887,7 @@ const ApplicationJobPostModal = ({
   const [spokenLanguage, setSpokenLanguage] = useState([])
   const [writtenLanguage, setWittenLanguage] = useState([])
   const [locationList, setLocationList] = useState([])
+  const [isOpen, setIsOpen] = useState({});
 
   // const [geographyLocaton,setGeographyLocaton] = useState("")
   // const [selectedSpokenLanguageUids, setSelectedSpokenLanguageUids] = useState(
@@ -2098,6 +2099,7 @@ const ApplicationJobPostModal = ({
     newRows[index]["areaOfEducation"] = value;
     let search = newRows[index]["areaOfEducation"]
     SetEducationRows(newRows);
+    setIsOpen((prev) => ({ ...prev, [index]: true }));
     let url;
 
     try {
@@ -2126,6 +2128,7 @@ const ApplicationJobPostModal = ({
     newWorkRow[index]["WorkRole"] = value;
     let search = newWorkRow[index]["WorkRole"]
     setWorkExpreienceRow(newWorkRow);
+    setIsOpen((prev) => ({ ...prev, [index]: true }));
     const url = `https://bittrend.shubansoftware.com/assets-api/islike-list-api/?search=${search}&page=1&limit=10`;
     CreateJobIsLike(url)
       .then((res) => {
@@ -2154,6 +2157,7 @@ const ApplicationJobPostModal = ({
     newWorkRow[index]["WorkIndustry"] = value;
     let search = newWorkRow[index]["WorkIndustry"]
     setWorkExpreienceRow(newWorkRow);
+    setIsOpen((prev) => ({ ...prev, [index]: true }));
     if (typeof search !== "string" || search.trim() === "") {
       setIndustriesList([])
       return;
@@ -2185,19 +2189,22 @@ const ApplicationJobPostModal = ({
     const newRows = [...EducationRows];
     newRows[index]["areaOfEducation"] = value;
     SetEducationRows(newRows);
-    setAreaEducationOption([])
+    setAreaEducationOption([]);
+    setIsOpen((prev) => ({ ...prev, [index]: false }));
   }
   const handleWorkRole = (index, value) => {
     const newWorkRow = [...WorkExpreienceRow];
     newWorkRow[index]["WorkRole"] = value;
     setWorkExpreienceRow(newWorkRow);
     setRoleList([])
+    setIsOpen((prev) => ({ ...prev, [index]: false }));
   };
   const handleSelectIndustries = (index, value) => {
     const newWorkRow = [...WorkExpreienceRow];
     newWorkRow[index]["WorkIndustry"] = value;
     setWorkExpreienceRow(newWorkRow);
     setIndustriesList([])
+    setIsOpen((prev) => ({ ...prev, [index]: false }));
   }
 
   const handleKeyPressForlanguages = async (e, from) => {
@@ -2294,38 +2301,48 @@ const ApplicationJobPostModal = ({
     setWittenLanguage([])
   }
 
-  const handleLocationAPIList = () => {
-    // const { name, value } = e.target
-    const url = `https://bittrend.shubansoftware.com/account-api/location-list-api/?page=1&limit=500&search=${profileformData?.CurrentLocation}`;
-    CreateJobLocation(url)
-      .then((res) => {
-        // setLocationData(res.data.response);
-        if (res.data.response.length > 0) {
-          setLocationList(res?.data?.response)
-          //   setLocationBadges((prevBadges) => [
-          //     ...prevBadges,
-          //     res?.data?.response[0],
-          //   ]);
-        }
-      })
-      .catch((error) => {
-        if (
-          error?.response?.status === 401 ||
-          error?.response?.data?.detail?.includes(
-            "Given token not valid for any token type"
-          )
-        ) {
-          //console.log("Token expired, redirecting to login");
-          //   removeToken();
-          //   navigate("/loginwithpassword");
-        }
-      });
-  };
-  useEffect(() => {
-    if (profileformData?.CurrentLocation) {
-      handleLocationAPIList()
+  const handleLocationAPIList = (e) => {
+    const { name, value } = e.target;
+    setProfileFormData({ ...profileformData, [name]: e.target.value })
+    let url;
+    if (value != "") {
+      url = `https://bittrend.shubansoftware.com/account-api/location-list-api/?page=1&limit=500&search=${value}`;
     }
-  }, [profileformData?.CurrentLocation])
+    try {
+      if (value != "") {
+        CreateJobLocation(url)
+          .then((res) => {
+            // setLocationData(res.data.response);
+            if (res.data.response.length > 0) {
+              setLocationList(res?.data?.response)
+              //   setLocationBadges((prevBadges) => [
+              //     ...prevBadges,
+              //     res?.data?.response[0],
+              //   ]);
+            }
+          })
+          .catch((error) => {
+            if (
+              error?.response?.status === 401 ||
+              error?.response?.data?.detail?.includes(
+                "Given token not valid for any token type"
+              )
+            ) {
+              //console.log("Token expired, redirecting to login");
+              //   removeToken();
+              //   navigate("/loginwithpassword");
+            }
+          });
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  };
+  // useEffect(() => {
+  //   if (profileformData?.CurrentLocation) {
+  //     handleLocationAPIList()
+  //   }
+  // }, [profileformData?.CurrentLocation])
   const handleSelectGeographyLocaton = (value) => {
     setProfileFormData({
       ...profileformData,
@@ -3027,6 +3044,45 @@ const ApplicationJobPostModal = ({
       })
     }
   }, [selectedGroupUid, storedApplicantId])
+  const spokenRef = useRef()
+  const writtenRef = useRef()
+  const handleClosecomboEdu = (index, e) => {
+    const { name } = e.target;
+    const newRows = [...EducationRows];
+    newRows[index][name] = '';
+    setTimeout(() => {
+      setAreaEducationOption([])
+      SetEducationRows(newRows)
+      setIsOpen((prev) => ({ ...prev, [index]: false }));
+    }, 200); // delay to allow click on list items
+  };
+  const handleClosecomboExp = (index, e) => {
+    const { name } = e.target;
+    const newRows = [...WorkExpreienceRow];
+    newRows[index][name] = '';
+    setTimeout(() => {
+      setRoleList([])
+      setIndustriesList([])
+      setWorkExpreienceRow(newRows)
+      setIsOpen((prev) => ({ ...prev, [index]: false }));
+    }, 200); // delay to allow click on list items
+  };
+  const handleClosecomboLang = (e, key) => {
+    const { name } = e.target;
+    spokenRef.current.value = '';
+    writtenRef.current.value = '';
+    setTimeout(() => {
+      setSpokenLanguage([])
+      setWittenLanguage([])
+    }, 200); // delay to allow click on list items
+  };
+  const handleDropDownCurrent = (e) => {
+    const { name } = e.target;
+    setProfileFormData({ ...profileformData, [name]: '' })
+    setTimeout(() => {
+      setLocationList([])
+    }, 200);
+  }
   // console.log(dynamicArray)
   // console.log('Fixed', skillGroupData.sort((a, b) => a.id - b.id))
   console.log(groupedSkills)
@@ -3718,20 +3774,23 @@ const ApplicationJobPostModal = ({
                               value={row.areaOfEducation}
                               disabled={row.saved}
                               onChange={(e) => handleAreaOfEducation(index, e)}
+                              onBlur={(e) => handleClosecomboEdu(index, e)} // Close dropdown on blur
                             />
                             <div class={`${aresEducationOption.length ? 'ctm_dropdown ct_scrollbar' : ''}`}>
-                              <ul className="m-0">
-                                {aresEducationOption.map((option, idx) => (
-                                  <li
-                                    key={idx}
-                                    onClick={(e) =>
-                                      handleSelectAreaEducation(index, option?.qualification_name)
-                                    }
-                                  >
-                                    {option?.qualification_name}
-                                  </li>
-                                ))}
-                              </ul>
+                              {isOpen[index] && (
+                                <ul className="m-0">
+                                  {aresEducationOption.map((option, idx) => (
+                                    <li
+                                      key={idx}
+                                      onClick={(e) =>
+                                        handleSelectAreaEducation(index, option?.qualification_name)
+                                      }
+                                    >
+                                      {option?.qualification_name}
+                                    </li>
+                                  ))}
+                                </ul>
+                              )}
                             </div>
                           </div>
 
@@ -3936,20 +3995,23 @@ const ApplicationJobPostModal = ({
                                 value={row.WorkRole}
                                 disabled={row.savedWorkExp}
                                 onChange={(e) => handleRolelist(index, e)}
+                                onBlur={(e) => handleClosecomboExp(index, e)}
                               />
                               <div class={`${roleList.length ? 'ctm_dropdown ct_scrollbar' : ''}`}>
-                                <ul className="m-0">
-                                  {roleList.map((option, idx) => (
-                                    <li
-                                      key={idx}
-                                      onClick={(e) =>
-                                        handleWorkRole(index, option?.is_like_name)
-                                      }
-                                    >
-                                      {option?.is_like_name}
-                                    </li>
-                                  ))}
-                                </ul>
+                                {isOpen[index] && (
+                                  <ul className="m-0">
+                                    {roleList.map((option, idx) => (
+                                      <li
+                                        key={idx}
+                                        onClick={(e) =>
+                                          handleWorkRole(index, option?.is_like_name)
+                                        }
+                                      >
+                                        {option?.is_like_name}
+                                      </li>
+                                    ))}
+                                  </ul>
+                                )}
                               </div>
                             </div>
 
@@ -4044,20 +4106,23 @@ const ApplicationJobPostModal = ({
                                 value={row.WorkIndustry}
                                 disabled={row.savedWorkExp}
                                 onChange={(e) => handleIndustries(index, e)}
+                                onBlur={(e) => handleClosecomboExp(index, e)}
                               />
                               <div class={`${industriesList.length ? 'ctm_dropdown ct_scrollbar' : ''}`}>
-                                <ul className="m-0">
-                                  {industriesList.map((option, idx) => (
-                                    <li
-                                      key={idx}
-                                      onClick={(e) =>
-                                        handleSelectIndustries(index, option?.industry_name)
-                                      }
-                                    >
-                                      {option?.industry_name}
-                                    </li>
-                                  ))}
-                                </ul>
+                                {isOpen[index] && (
+                                  <ul className="m-0">
+                                    {industriesList.map((option, idx) => (
+                                      <li
+                                        key={idx}
+                                        onClick={(e) =>
+                                          handleSelectIndustries(index, option?.industry_name)
+                                        }
+                                      >
+                                        {option?.industry_name}
+                                      </li>
+                                    ))}
+                                  </ul>
+                                )}
                               </div>
                             </div>
 
@@ -4226,9 +4291,11 @@ const ApplicationJobPostModal = ({
                           type="text"
                           className="inline-input"
                           placeholder="Enter text"
+                          ref={spokenRef}
                           // value={row.areaOfEducation}
                           // disabled={row.saved}
                           onChange={(e) => handleWaSlanguages(e, "spoken")}
+                          onBlur={(e) => handleClosecomboLang(e, "spoken")}
                         />
                         {spokenLanguage?.length > 0 ? (
                           <Dropdown show={true} >
@@ -4335,9 +4402,11 @@ const ApplicationJobPostModal = ({
                           type="text"
                           className="inline-input"
                           placeholder="Enter text"
+                          ref={writtenRef}
                           // value={row.areaOfEducation}
                           // disabled={row.saved}
                           onChange={(e) => handleWaSlanguages(e, "rdnw")}
+                          onBlur={(e) => handleClosecomboLang(e, "rdnw")}
                         />
                         {writtenLanguage?.length > 0 ? (
                           <Dropdown show={true} >
@@ -4418,7 +4487,10 @@ const ApplicationJobPostModal = ({
                         style={{ width: "350px" }}
                         name="CurrentLocation"
                         value={profileformData?.CurrentLocation}
-                        onChange={(e) => setProfileFormData({ ...profileformData, ['CurrentLocation']: e.target.value })}
+                        onChange={handleLocationAPIList}
+                        // setProfileFormData({ ...profileformData, ['CurrentLocation']: e.target.value })
+                        // }
+                        onBlur={(e) => handleDropDownCurrent(e)}
                       />
                       <div class={`${locationList.length ? 'ctm_dropdown ct_scrollbar' : ''}`}>
                         <ul className="m-0">

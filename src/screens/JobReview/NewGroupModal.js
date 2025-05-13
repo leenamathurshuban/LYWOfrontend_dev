@@ -38,7 +38,7 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, jobDetails
 
         education: { required_education: [], area_of_education: [] },
 
-        availability: { working_status: "", available_by: "", notice_period: [], notice_buy_out: "", willing_to_travel_for_job: "" },
+        availability: { working_status: "", available_by: "", notice_period: [], notice_buy_out: [], willing_to_travel_for_job: [] },
 
         skills: [], //pass skill group object with their skills in this array
 
@@ -53,7 +53,7 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, jobDetails
         roles: [],
         asset_data: [],
 
-        salary_and_travel: { expected_salary: [], current_location: "", relocation: "", require_relocation_assistance: "" }
+        salary_and_travel: { expected_salary: [], current_location: [], relocation: ['False'], require_relocation_assistance: ['False'] }
     })
     const handleSelect = (key) => {
         setTabActive(key);
@@ -268,14 +268,14 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, jobDetails
     }
     const handleRequireRelacation = (selectedItem, e) => {
         const { name, value, checked } = e.target
-        const newValue = { value: checked ? "Yes" : "No", groupname: "Require Relocation Assistance", isSelected: false }
+        const newValue = { value: checked ? "True" : "False", groupname: "Require Relocation Assistance", isSelected: false }
         setGroupState(prev =>
             prev.map(item => {
                 if (selectedItem.heading === item.heading) {
                     let updatedSelectedList = item.selectedList || [];
 
                     if (!updatedSelectedList.includes(newValue)) {
-                        updatedSelectedList = [...updatedSelectedList, newValue];
+                        updatedSelectedList = [newValue];
                     } else {
                         updatedSelectedList = updatedSelectedList.filter(val => val !== newValue);
                     }
@@ -309,6 +309,15 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, jobDetails
                     acc[key].push(obj);
                 } else if (key == 'all_personalites') {
                     acc[key].push(item?.key);
+                }else if(key == 'notice_buy_out'){
+                    let val = item.value=='Available'?'True':'False';
+                    acc[key].push(val)
+                }else if(key=='working_status'){
+                    let val =item.value=='Currently Working'?'True':'False';
+                    acc[key].push(val)
+                }else if(key=='relocation'){
+                    let val =item.value=='Willing to Relocate'?'True':'False';
+                    acc[key].push(val)
                 } else {
                     acc[key].push(item.value.trim());
                 }
@@ -529,7 +538,7 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, jobDetails
                 getJobGroupParameterList()
                 handleClose()
             }
-            debugger
+            // debugger
         } catch (error) {
             console.log(error);
         }

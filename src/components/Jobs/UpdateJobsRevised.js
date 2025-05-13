@@ -1634,6 +1634,7 @@ const UpdateJobsRevised = ({
                                 activeKey={currentStep} onSelect={(key) => setCurrentStep(key)}>
                                 <Accordion.Item eventKey="0">
                                     <Accordion.Header onClick={() => setOpenStep([])}>Requirements</Accordion.Header>
+                                    {currentStep !== "0" && (<p>Define your ideal hire in detail here. Use flags to indicate the importance as needed. All fields are mandatory</p>)}
                                     <Accordion.Body>
                                         <p>
                                             Use this section to define your ideal hire in more detail.
@@ -2757,6 +2758,7 @@ const UpdateJobsRevised = ({
                                     <Accordion.Header onClick={() => setOpenStep([])}>
                                         Skills and Other Requirements
                                     </Accordion.Header>
+                                    {currentStep !== "7" && (<p> Select Skills and Add at least 1 Custom Question to help you understand your applicants better.</p>)}
                                     <Accordion.Body>
                                         <p>
                                             In this section, you can add additional optional details
@@ -3288,6 +3290,7 @@ const UpdateJobsRevised = ({
                                     <Accordion.Header onClick={() => setOpenStep([])}>
                                         Ideal Behaviour and Personalities
                                     </Accordion.Header>
+                                    {currentStep !== "10" && (<p>Select the 6 most relevant behaviours for the role and company based on daily tasks and work culture. Then, choose the 2 most important ones. Don,t hesitate the Help Me Section.</p>)}
                                     <Accordion.Body>
                                         <p>
                                             Pick the most relevant behaviours for the Role and the
