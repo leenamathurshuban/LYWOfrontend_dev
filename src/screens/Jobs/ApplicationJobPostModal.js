@@ -1866,7 +1866,7 @@ const ApplicationJobPostModal = ({
   ResumeFile, setResumeFile, ResumeFileName, setResumeFileName,
   EducationRows, SetEducationRows, setBehaviourAssModel, WorkExpreienceRow, setWorkExpreienceRow,
   isExistApplicantError, setIsExistApplicantError, spokenLanguageBadges, setSpokenLanguageBadges,
-  rdnwBadges, setrdnwBadges, totalWorkExperience, settotalWorkExperience
+  rdnwBadges, setrdnwBadges, totalWorkExperience, settotalWorkExperience, handleViewDetailsAPi
 }) => {
   // const [isYes, setIsYes] = useState({
   //   CurrentlyWorkingToggle: false,
@@ -2450,6 +2450,7 @@ const ApplicationJobPostModal = ({
       ...profileformData,
       ...newValue
     })
+    setIsValid(isValid)
   };
   const handleWillingToTeavelJob = (e) => {
     const { name, value, type, checked } = e.target;
@@ -2719,7 +2720,7 @@ const ApplicationJobPostModal = ({
       }
     } catch (error) {
       console.error("Error occurred:", error);
-      alert("Please fill all field data");
+      // alert("Please fill all field data");
     }
   };
   useEffect(() => {
@@ -2728,7 +2729,9 @@ const ApplicationJobPostModal = ({
         || !row.WorkComapny || !row.WorkIndustry || !row.WorkNote) {
 
       } else {
-        saveWorkExperienceData(row, index)
+        if (!isExistApplicantError) {
+          saveWorkExperienceData(row, index)
+        }
       }
     })
   }, [WorkExpreienceRow])
@@ -2948,10 +2951,12 @@ const ApplicationJobPostModal = ({
   useEffect(() => {
     if (isExistApplicantError) {
       // setTimeout(()=>{
-      alert(isExistApplicantError)
-      setTimeout(() => {
-        window.location.reload();
-      }, 500)
+      // debugger
+      handleViewDetailsAPi(profileformData?.email)
+      // alert(isExistApplicantError)
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 500)
       // },500)
     }
   }, [isExistApplicantError])
@@ -3069,8 +3074,11 @@ const ApplicationJobPostModal = ({
   };
   const handleClosecomboLang = (e, key) => {
     const { name } = e.target;
-    spokenRef.current.value = '';
-    writtenRef.current.value = '';
+    if (key == "spoken") {
+      spokenRef.current.value = '';
+    } else {
+      writtenRef.current.value = '';
+    }
     setTimeout(() => {
       setSpokenLanguage([])
       setWittenLanguage([])

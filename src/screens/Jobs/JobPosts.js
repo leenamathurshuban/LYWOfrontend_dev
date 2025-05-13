@@ -1210,6 +1210,7 @@ const JobPosts = () => {
           spokenLanguageBadges={spokenLanguageBadges} setSpokenLanguageBadges={setSpokenLanguageBadges}
           rdnwBadges={rdnwBadges} setrdnwBadges={setrdnwBadges}
           totalWorkExperience={totalWorkExperience} settotalWorkExperience={settotalWorkExperience}
+          handleViewDetailsAPi={handleViewDetailsAPi}
         />
       ) : (
         <p>Loading...</p>
