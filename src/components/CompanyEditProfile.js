@@ -951,17 +951,20 @@ import { logoMaker, removeToken } from "../helpers/helper";
 import { cprofilelogo, starIcon } from "../images/assest";
 import imgpEdit from "../images/icons/edit-01.svg";
 import imgplusIcon from "../images/icons/image-plus.svg";
+import CrossIcon from "../images/icons/Cross-Icon.svg";
+import HelpIcon from "../images/icons/Help-icon-gray.svg";
 import imgpTrash from "../images/icons/trash-01.svg";
 import AddUserManagement from "./AddUserManagement";
 import TextEditor from "./TextEditor";
 import { IndustrySelection, LocationSelection } from "../services/provider";
 import { useNavigate } from "react-router-dom";
-import { faCross } from "@fortawesome/free-solid-svg-icons";
+import { isBinaryFile } from "../utils/test";
 
 const CompanyEditProfile = ({ show, handleClose }) => {
   const companyProfileDetails = useSelector(
     (state) => state.login.CompanyProfileDetails
   );
+  console.log(companyProfileDetails)
   const compantUid = companyProfileDetails?.uid;
   const userInfo = useSelector((state) => state.login.loginUserInfo);
   const uid = userInfo?.uid;
@@ -971,28 +974,16 @@ const CompanyEditProfile = ({ show, handleClose }) => {
   const [Location, setLocation] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState(null);
 
-  const [description, setDescription] = useState(
-    companyProfileDetails?.description || ""
-  );
-  const [website, setWebsite] = useState(
-    companyProfileDetails?.website_url || ""
-  );
+  const [description, setDescription] = useState("");
+  const [website, setWebsite] = useState("");
 
-  const [IndustrySearch, SetIndustrySearch] = useState(
-    companyProfileDetails?.industry?.industry_name || ""
-  );
+  const [IndustrySearch, SetIndustrySearch] = useState("");
   const [IndustrySearchDropdown, setIndustrySearchDropdown] = useState(false);
   const [LocationSearchDropdown, setLocationSearchDropdown] = useState(false);
 
-  const [selectedCompanyType, setSelectedCompanyType] = useState(
-    companyProfileDetails?.company_type || ""
-  );
-  const [noOfEmploy, setnoOfEmploy] = useState(
-    companyProfileDetails?.number_of_employees || ""
-  );
-  const [searchLocationTerm, setLocationSearchTerm] = useState(
-    companyProfileDetails?.location?.location_name || ""
-  ); //location state
+  const [selectedCompanyType, setSelectedCompanyType] = useState("");
+  const [noOfEmploy, setnoOfEmploy] = useState("");
+  const [searchLocationTerm, setLocationSearchTerm] = useState(""); //location state
 
   // other state
   const [loading, setLoading] = useState(false);
@@ -1004,27 +995,43 @@ const CompanyEditProfile = ({ show, handleClose }) => {
   });
   const [completionPercentage, setCompletionPercentage] = useState(0);
   const [ids, setIds] = useState({
-    industryName: companyProfileDetails?.industry?.industry_name,
-    industryUid: companyProfileDetails?.industry?.uid,
-    location_name: companyProfileDetails?.location?.location_name,
-    locationUid: companyProfileDetails?.location?.uid,
+    industryName: "",
+    industryUid: "",
+    location_name: "",
+    locationUid: "",
   });
 
   //console.log("logooo-----",companyProfileDetails?.logo)
   // cropping img state
-  const [image, setImage] = useState(
-    `https://bittrend.shubansoftware.com${companyProfileDetails?.logo}` || null
-  );
-
+  const [image, setImage] = useState(null);
   const [imageName, setImageName] = useState("");
   const [zoom, setZoom] = useState(1);
   const [aspectRatio, setAspectRatio] = useState(1);
   const [showLogoModal, setLogoModal] = useState(false);
   const [imageFile, setImageFile] = useState(null);
   const [checkEditImage, setCheckEditImage] = useState(false);
-  const [croppedImage, setCroppedImage] = useState(
-    `https://bittrend.shubansoftware.com${companyProfileDetails?.logo}` || null
-  );
+  const [croppedImage, setCroppedImage] = useState(null);
+
+  useEffect(() => {
+    setDescription(companyProfileDetails?.description)
+    setWebsite(companyProfileDetails?.website_url)
+    SetIndustrySearch(companyProfileDetails?.industry?.industry_name)
+    setSelectedCompanyType(companyProfileDetails?.company_type)
+    setnoOfEmploy(companyProfileDetails?.number_of_employees)
+    setLocationSearchTerm(companyProfileDetails?.location?.location_name)
+    setIds({
+      industryName: companyProfileDetails?.industry?.industry_name,
+      industryUid: companyProfileDetails?.industry?.uid,
+      location_name: companyProfileDetails?.location?.location_name,
+      locationUid: companyProfileDetails?.location?.uid,
+    })
+    const filePath = companyProfileDetails?.logo;
+    setImageFile(filePath)
+    const LogoName = filePath?.split("/").pop();
+    setImageName(LogoName);
+    setImage(companyProfileDetails?.logo ? `https://bittrend.shubansoftware.com${companyProfileDetails?.logo}` : "")
+    setCroppedImage(companyProfileDetails?.logo ? `https://bittrend.shubansoftware.com${companyProfileDetails?.logo}` : "")
+  }, [companyProfileDetails])
   const [isZoomedImg, setIsZoomedImg] = useState(false);
 
   const navigate = useNavigate();
@@ -1145,9 +1152,9 @@ const CompanyEditProfile = ({ show, handleClose }) => {
   const handleDeleteImage = () => {
     setImage(null);
     setImageName("");
-    setImageFile("");
+    setImageFile(null);
     setCheckEditImage(true);
-    toast.success("Logo delete Press save button!");
+    // toast.success("Logo delete Press save button!");
   };
 
   const handleEditImage = () => {
@@ -1183,12 +1190,13 @@ const CompanyEditProfile = ({ show, handleClose }) => {
               {/* Left: Plus icon + title */}
               <div className="d-flex align-items-center">
                 <img src={imgplusIcon} className="me-2" alt="plus" />
-                <span>Add Company Logo</span>
+                <span className="h4">Add Company Logo</span>
+                <img src={HelpIcon} className="ms-2" alt="plus" style={{ cursor: "pointer" }} />
               </div>
 
               {/* Right: Cross icon */}
               <img
-                src={faCross}
+                src={CrossIcon}
                 className="ms-2"
                 alt="close"
                 style={{ cursor: "pointer" }}
@@ -1196,7 +1204,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
               />
             </div>
           </Modal.Header>
-          <Modal.Body>
+          <Modal.Body className='h-auto'>
             <div className="aspect_ratio">
               <label> Select Aspect Ratio</label>
               {aspectRatios.map((ratio) => (
@@ -1409,38 +1417,41 @@ const CompanyEditProfile = ({ show, handleClose }) => {
       };
 
       // Conditional appends
-      if (description !== companyProfileDetails?.description) {
+      // if (description) {
         data.append("description", description);
-      }
+      // }
 
-      if (website !== companyProfileDetails?.website_url) {
+      // if (website) {
         data.append("website_url", website);
-      }
+      // }
 
-      if (selectedCompanyType !== companyProfileDetails?.company_type) {
+      // if (selectedCompanyType) {
         data.append("company_type", selectedCompanyType);
-      }
+      // }
 
-      if (noOfEmploy !== companyProfileDetails?.number_of_employees) {
+      // if (noOfEmploy) {
         data.append("number_of_employees", noOfEmploy);
-      }
+      // }
 
-      if (industries.length > 0) {
+      // if (industries.length > 0) {
         data.append("industry", industries[0]?.uid);
-      }
+      // }
 
-      if (Location.length > 0) {
+      // if (Location.length > 0) {
         data.append("location", Location[0]?.uid);
-      }
+      // }
 
       // if (!imageFile || checkEditImage) {
       //   data.append("logo", imageFile);
       // }
 
-      if (checkEditImage) {
-        data.append("logo", imageFile);
-      } else {
-        data.append("logo", imageFile);
+      // if (checkEditImage) {
+      //   data.append("logo", imageFile);
+      // } else {
+      //   data.append("logo", imageFile);
+      // }
+      if(imageFile && isBinaryFile(imageFile)){
+        data.append("logo",imageFile)
       }
 
       // Now send the `data` via your API call
@@ -1536,9 +1547,9 @@ const CompanyEditProfile = ({ show, handleClose }) => {
     };
   }, [IndustrySearch]);
 
-  const filePath = companyProfileDetails?.logo;
+  // const filePath = companyProfileDetails?.logo;
 
-  const LogoName = filePath?.split("/").pop();
+  // const LogoName = filePath?.split("/").pop();
 
   console.log(
     "companyProfileDetails?.logo----->>>",
@@ -1640,11 +1651,11 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                     onChange={handleWebsite}
                                     value={website}
                                   />
-                                {companyUpdateError?.websiteError && (
-                                  <p className="error">
-                                    {companyUpdateError?.websiteError}
-                                  </p>
-                                )}
+                                  {companyUpdateError?.websiteError && (
+                                    <p className="error">
+                                      {companyUpdateError?.websiteError}
+                                    </p>
+                                  )}
                                 </Form.Group>
                                 <Form.Group className="col-md-12 mb-3 relative">
                                   <Form.Label>Industry</Form.Label>
@@ -1662,7 +1673,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                           {industries.map(
                                             (industry) =>
                                               IndustrySearch !==
-                                                industry?.industry_name && (
+                                              industry?.industry_name && (
                                                 <li
                                                   key={industry.id}
                                                   onClick={() =>
@@ -1693,7 +1704,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                     aria-label="Default select example"
                                     value={selectedCompanyType}
                                     onChange={handleCompanyTypeChange}
-                                   >
+                                  >
                                     <option>
                                       {/* {companyProfileDetails?.company_type
                                         ? companyProfileDetails?.company_type
@@ -1782,7 +1793,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                           {Location.map(
                                             (item) =>
                                               searchLocationTerm !==
-                                                item?.location_name && (
+                                              item?.location_name && (
                                                 <li
                                                   key={item.id}
                                                   onClick={() =>
@@ -1800,7 +1811,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                   {LocationSearchDropdown &&
                                     Location.length === 0 && (
                                       <ul>
-                                        <li>No data found</li>
+                                        <p className="error">Headquarter Not found </p>
                                       </ul>
                                     )}
                                 </Form.Group>
@@ -1809,7 +1820,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                   <Form.Label>Add Company Logo</Form.Label>
 
                                   {!companyProfileDetails?.logo &&
-                                  !imageFile ? (
+                                    !imageFile ? (
                                     <div
                                       className="cmp_uploder file-upload-box"
                                       {...getRootProps()}
@@ -1831,11 +1842,11 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                     </div>
                                   ) : (
                                     <div className="selected_logo">
-                                      {LogoName ? (
+                                      {/* {LogoName ? (
                                         <label>{LogoName}</label>
-                                      ) : (
+                                      ) : ( */}
                                         <label>{imageName}</label>
-                                      )}
+                                      {/* )} */}
                                       <div className="d-flex">
                                         <Button
                                           variant="link"
@@ -1910,7 +1921,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                 {IndustrySearch
                                   ? IndustrySearch
                                   : companyProfileDetails?.industry
-                                      ?.industry_name}
+                                    ?.industry_name}
                               </li>
                               <li>
                                 {selectedCompanyType
@@ -1931,7 +1942,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                 {searchLocationTerm
                                   ? searchLocationTerm
                                   : companyProfileDetails?.location
-                                      ?.location_name}
+                                    ?.location_name}
                               </li>
                             </ul>
                           </Accordion.Body>
@@ -1968,11 +1979,11 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                             companyProfileDetails.description
                               .replace(/<[^>]*>/g, "")
                               .trim() === "") && (
-                            <li>
-                              <img src={starIcon} alt="star" />
-                              Add Description
-                            </li>
-                          )}
+                              <li>
+                                <img src={starIcon} alt="star" />
+                                Add Description
+                              </li>
+                            )}
 
                           {(!companyProfileDetails?.selectedCompanyType &&
                             !selectedCompanyType) ||

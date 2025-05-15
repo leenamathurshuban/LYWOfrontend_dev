@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Form, InputGroup, Dropdown } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { logoMaker, removeToken } from "../helpers/helper";
@@ -7,40 +7,81 @@ import ResetPassIcon from "../images/icons/reset-pass-Hicon.svg";
 import RemovePassIcon from "../images/icons/remove-pass-Hicon.svg";
 import LogoutIcon from "../images/icons/log-out-Hicon.svg";
 import { useNavigate } from "react-router-dom";
-import { logoutApi } from "../services/provider";
+import { GetcompanyDetailsApi, logoutApi } from "../services/provider";
+import { setCompanyProfileDetails } from "../Slice/Login/LoginSlice";
 // import {persistor} from "../../src/Slice/Store"
 // import { logout } from "../Slice/Login/LoginSlice";
 
 const Header = () => {
   const userInfo = useSelector((state) => state.login.loginUserInfo);
-  const logoname = logoMaker(userInfo?.default_company?.company_name  ?? "Infograins Techno");
+  const logoname = logoMaker(userInfo?.default_company?.company_name ?? "Infograins Techno");
+  const filtercompany = userInfo?.company?.filter((val)=>val?.company_name==userInfo?.default_company?.company_name)
+  const companyInfoFetch = useSelector((state)=>state.login.CompanyProfileDetails)
+  const [companyInfo, setCompanyInfo] = useState(companyInfoFetch?.company_name?companyInfoFetch?.company_name:userInfo?.default_company?.company_name)
+  const [compantUid,setCompantUid] = useState(companyInfoFetch?.uid?companyInfoFetch?.uid:filtercompany[0]?.uid)
 
-
-  
   const navigate = useNavigate();
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const handleLogout = async () => {
+    dispatch(setCompanyProfileDetails({}));
     logoutApi();
     removeToken();
     // localStorage.removeItem('applicantToken');
     localStorage.removeItem('applicantData');
     localStorage.removeItem('applicantBehaviour')
-    localStorage.setItem('AttemptStatus',0)
+    localStorage.setItem('AttemptStatus', 0)
     localStorage.removeItem('assestQuiz')
     localStorage.removeItem('preAssestQuiz')
     // sessionStorage.removeItem('applicantToken');
     // sessionStorage.removeItem('applicantData');
     navigate("/emailverify");
   };
-
+  const handleCompanyDropdown = (e) => {
+    const { value } = e.target;    
+    setCompanyInfo(value)
+    const filtercompany = userInfo?.company?.filter((val)=>val?.company_name==value)
+    setCompantUid(filtercompany[0]?.uid)
+  }
+  useEffect(()=>{
+    GetCompanyDetails(compantUid)
+  },[companyInfo])  
+  const GetCompanyDetails = (uid) => {          
+    GetcompanyDetailsApi(uid)
+      .then((res) => {        
+        dispatch(setCompanyProfileDetails(res?.response));
+      })
+      .catch((error) => {
+        if (
+          error?.response?.status === 401 ||
+          error?.response?.data?.detail?.includes(
+            "Given token not valid for any token type"
+          )
+        ) {
+          console.log("Token expired, redirecting to login");
+          removeToken();
+          navigate("/loginwithpassword");
+        } else {
+          console.error("An error occurred:", error);
+        }
+      });
+  };
+  console.log(companyInfo)
   return (
     <header className="main_header">
       <div className="header-wrapper row">
         <Col md={4}>
           <div className="org_name">
             <span className="orgshort_text">{logoname}</span>
-            <p>{userInfo?.default_company?.company_name}</p>
+            {/* <p>{userInfo?.default_company?.company_name}</p> */}
+            <Form.Select
+              value={companyInfo}
+              onChange={handleCompanyDropdown}
+            >
+              {userInfo?.company?.map((item) => (
+                <option value={item.company_name}>{item?.company_name}</option>
+              ))}
+            </Form.Select>
           </div>
         </Col>
         <Col md={4}>

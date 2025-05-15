@@ -35,7 +35,10 @@ const AddUserManagement = () => {
     name: "",
     phoneNumber: "",
   });
-
+  const [createUserError, setCreateUserError] = useState({
+    emailError: "",
+    phoneError: "",
+  });
   const [addRow, setAddRow] = useState([]);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -49,6 +52,7 @@ const AddUserManagement = () => {
 
   const userInfo = useSelector((state) => state.login.loginUserInfo);
   const uid = userInfo?.uid;
+  const companyUid = userInfo?.company[0]?.uid
 
   const handleAddNewUserRow = () => {
     setAddRow([
@@ -69,10 +73,10 @@ const AddUserManagement = () => {
   const handleCheckboxChange = (uid) => {
     setSelectedUids((prevSelectedUids) => {
       if (prevSelectedUids.includes(uid)) {
-        
+
         return prevSelectedUids.filter((id) => id !== uid);
       } else {
-        
+
         return [...prevSelectedUids, uid];
       }
     });
@@ -121,6 +125,12 @@ const AddUserManagement = () => {
       const response = await createUserApi(formData);
       setIsLoading(false);
       if (response.data.status == 200) {
+        setCreateUserError({ emailError: "", phoneError: "" });
+        setCreateUserData({
+          email: "",
+          name: "",
+          phoneNumber: ""
+        })
         setIsLoading(false);
         companyUserListAPI();
       }
@@ -128,8 +138,21 @@ const AddUserManagement = () => {
       setIsLoading(false);
       const errorData = error?.response?.data?.response;
       if (errorData) {
-        errorData?.email?.[0] && toast.error(errorData.email[0]);
-        errorData?.phone_number?.[0] && toast.error(errorData.phone_number[0]);
+        if (errorData.email) {
+          setCreateUserError((prev) => ({
+            ...prev,
+            emailError: errorData.email[0],
+          }));
+        }
+
+        if (errorData.phone_number) {
+          setCreateUserError((prev) => ({
+            ...prev,
+            phoneError: errorData.phone_number[0],
+          }));
+        }
+        // errorData?.email?.[0] && toast.error(errorData.email[0]);
+        // errorData?.phone_number?.[0] && toast.error(errorData.phone_number[0]);
       }
       if (
         error?.response?.status === 401 ||
@@ -238,18 +261,18 @@ const AddUserManagement = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     createUser();
-    setCreateUserData({
-      email: "",
-      name: "",
-      phoneNumber: "",
-    });
+    // setCreateUserData({
+    //   email: "",
+    //   name: "",
+    //   phoneNumber: "",
+    // });
   };
 
   const companyUserListAPI = async (searchQuery) => {
     setIsLoading(true);
     const url = searchQuery
-      ? `https://bittrend.shubansoftware.com/account-api/company-user-list-api/b6cadaab-69bc-4707-8656-2e8573e17547/?search=${searchQuery}`
-      : `https://bittrend.shubansoftware.com/account-api/company-user-list-api/b6cadaab-69bc-4707-8656-2e8573e17547/`;
+      ? `https://bittrend.shubansoftware.com/account-api/company-user-list-api/${companyUid}/?search=${searchQuery}`
+      : `https://bittrend.shubansoftware.com/account-api/company-user-list-api/${companyUid}/`;
 
     // ? `https://bittrend.shubansoftware.com/account-api/company-user-list-api/${uid}/?search=${searchQuery}`
     // : `https://bittrend.shubansoftware.com/account-api/company-user-list-api/${uid}/`;
@@ -268,6 +291,17 @@ const AddUserManagement = () => {
   const adminUsers = companyUserList[0]?.admin_users || [];
   const inActiveUsers = companyUserList[0]?.inactive_users || [];
   const pendingUsers = companyUserList[0]?.pending_users || [];
+
+  const allUserArray = [...activeUsers, ...adminUsers, ...inActiveUsers, ...pendingUsers]
+  const allSelected = selectedUids.length === allUserArray?.length;
+  const handleSelectAll = () => {
+    if (allSelected) {
+      setSelectedUids([]);
+    } else {
+      setSelectedUids(allUserArray.map((user) => user.uid));
+    }
+  };
+  console.log(selectedUids)
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
@@ -321,7 +355,7 @@ const AddUserManagement = () => {
               variant="link"
               className="btn-link-muted"
               onClick={() => updateUserStatus(selectedUids, "Unlock")}
-              // disabled
+            // disabled
             >
               <svg
                 width="20"
@@ -344,7 +378,7 @@ const AddUserManagement = () => {
               variant="link"
               className="btn-link-muted"
               onClick={() => updateUserStatus(selectedUids, "Activate")}
-              // disabled
+            // disabled
             >
               <svg
                 width="20"
@@ -396,7 +430,7 @@ const AddUserManagement = () => {
               variant="link"
               className="btn-link-muted"
               onClick={() => deleteUser(selectedUids)}
-              // disabled={selectedUids.length === 0}
+            // disabled={selectedUids.length === 0}
             >
               <svg
                 width="20"
@@ -432,7 +466,7 @@ const AddUserManagement = () => {
                 <thead>
                   <tr>
                     <th>
-                      <span className="me-2">
+                      <span className="me-2" onClick={handleSelectAll}>
                         <svg
                           width="20"
                           height="20"
@@ -463,6 +497,15 @@ const AddUserManagement = () => {
                             stroke-linecap="round"
                             stroke-linejoin="round"
                           />
+                          {!allSelected && (
+                            <path
+                              d="M10 5.91675V14.0834"
+                              stroke="#444CE7"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          )}
                         </svg>
                       </span>
                       Email (will be used for login)
@@ -475,115 +518,6 @@ const AddUserManagement = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {activeItem === "byDefaultUsers" && (
-                    <>
-                      <ActiveUsersSection
-                        activeUsers={activeUsers}
-                        // companyUserListAPI={companyUserListAPI}
-                        selectedUids={selectedUids}
-                        setSelectedUids={setSelectedUids}
-                        deleteUser={deleteUser}
-                        updateUserStatus={updateUserStatus}
-                        handleCheckboxChange={handleCheckboxChange}
-                        EditUser={EditUser}
-                        editUserData={editUserData}
-                        setEditUserData={setEditUserData}
-                      />
-                      <AdmidUserSection
-                        adminUsers={adminUsers}
-                        companyUserListAPI={companyUserListAPI}
-                        selectedUids={selectedUids}
-                        setSelectedUids={setSelectedUids}
-                        deleteUser={deleteUser}
-                        updateUserStatus={updateUserStatus}
-                        handleCheckboxChange={handleCheckboxChange}
-                        EditUser={EditUser}
-                        editUserData={editUserData}
-                        setEditUserData={setEditUserData}
-                      />
-                      <InActiveUserSection
-                        inActiveUsers={inActiveUsers}
-                        companyUserListAPI={companyUserListAPI}
-                        selectedUids={selectedUids}
-                        setSelectedUids={setSelectedUids}
-                        deleteUser={deleteUser}
-                        updateUserStatus={updateUserStatus}
-                        handleCheckboxChange={handleCheckboxChange}
-                        EditUser={EditUser}
-                        editUserData={editUserData}
-                        setEditUserData={setEditUserData}
-                      />
-                      <PendingUserSection
-                        pendingUsers={pendingUsers}
-                        companyUserListAPI={companyUserListAPI}
-                        selectedUids={selectedUids}
-                        setSelectedUids={setSelectedUids}
-                        deleteUser={deleteUser}
-                        updateUserStatus={updateUserStatus}
-                        handleCheckboxChange={handleCheckboxChange}
-                        EditUser={EditUser}
-                        editUserData={editUserData}
-                        setEditUserData={setEditUserData}
-                      />
-                    </>
-                  )}
-                  {activeItem === "activeUser" && (
-                    <ActiveUsersSection
-                      activeUsers={activeUsers}
-                      companyUserListAPI={companyUserListAPI}
-                      selectedUids={selectedUids}
-                      setSelectedUids={setSelectedUids}
-                      deleteUser={deleteUser}
-                      updateUserStatus={updateUserStatus}
-                      handleCheckboxChange={handleCheckboxChange}
-                      EditUser={EditUser}
-                      editUserData={editUserData}
-                      setEditUserData={setEditUserData}
-                    />
-                  )}
-                  {activeItem === "adminUser" && (
-                    <AdmidUserSection
-                      adminUsers={adminUsers}
-                      companyUserListAPI={companyUserListAPI}
-                      selectedUids={selectedUids}
-                      setSelectedUids={setSelectedUids}
-                      deleteUser={deleteUser}
-                      updateUserStatus={updateUserStatus}
-                      handleCheckboxChange={handleCheckboxChange}
-                      EditUser={EditUser}
-                      editUserData={editUserData}
-                      setEditUserData={setEditUserData}
-                    />
-                  )}
-                  {activeItem === "inActiveUser" && (
-                    <InActiveUserSection
-                      inActiveUsers={inActiveUsers}
-                      companyUserListAPI={companyUserListAPI}
-                      selectedUids={selectedUids}
-                      setSelectedUids={setSelectedUids}
-                      deleteUser={deleteUser}
-                      updateUserStatus={updateUserStatus}
-                      handleCheckboxChange={handleCheckboxChange}
-                      EditUser={EditUser}
-                      editUserData={editUserData}
-                      setEditUserData={setEditUserData}
-                    />
-                  )}
-                  {activeItem === "pendingUser" && (
-                    <PendingUserSection
-                      pendingUsers={pendingUsers}
-                      companyUserListAPI={companyUserListAPI}
-                      selectedUids={selectedUids}
-                      setSelectedUids={setSelectedUids}
-                      deleteUser={deleteUser}
-                      updateUserStatus={updateUserStatus}
-                      handleCheckboxChange={handleCheckboxChange}
-                      EditUser={EditUser}
-                      editUserData={editUserData}
-                      setEditUserData={setEditUserData}
-                    />
-                  )}
-
                   {addRow.map((item) => (
                     <tr key={item.id}>
                       <td>
@@ -692,6 +626,114 @@ const AddUserManagement = () => {
                       </td>
                     </tr>
                   ))}
+                  {activeItem === "byDefaultUsers" && (
+                    <>
+                      <ActiveUsersSection
+                        activeUsers={activeUsers}
+                        // companyUserListAPI={companyUserListAPI}
+                        selectedUids={selectedUids}
+                        setSelectedUids={setSelectedUids}
+                        deleteUser={deleteUser}
+                        updateUserStatus={updateUserStatus}
+                        handleCheckboxChange={handleCheckboxChange}
+                        EditUser={EditUser}
+                        editUserData={editUserData}
+                        setEditUserData={setEditUserData}
+                      />
+                      <AdmidUserSection
+                        adminUsers={adminUsers}
+                        companyUserListAPI={companyUserListAPI}
+                        selectedUids={selectedUids}
+                        setSelectedUids={setSelectedUids}
+                        deleteUser={deleteUser}
+                        updateUserStatus={updateUserStatus}
+                        handleCheckboxChange={handleCheckboxChange}
+                        EditUser={EditUser}
+                        editUserData={editUserData}
+                        setEditUserData={setEditUserData}
+                      />
+                      <InActiveUserSection
+                        inActiveUsers={inActiveUsers}
+                        companyUserListAPI={companyUserListAPI}
+                        selectedUids={selectedUids}
+                        setSelectedUids={setSelectedUids}
+                        deleteUser={deleteUser}
+                        updateUserStatus={updateUserStatus}
+                        handleCheckboxChange={handleCheckboxChange}
+                        EditUser={EditUser}
+                        editUserData={editUserData}
+                        setEditUserData={setEditUserData}
+                      />
+                      <PendingUserSection
+                        pendingUsers={pendingUsers}
+                        companyUserListAPI={companyUserListAPI}
+                        selectedUids={selectedUids}
+                        setSelectedUids={setSelectedUids}
+                        deleteUser={deleteUser}
+                        updateUserStatus={updateUserStatus}
+                        handleCheckboxChange={handleCheckboxChange}
+                        EditUser={EditUser}
+                        editUserData={editUserData}
+                        setEditUserData={setEditUserData}
+                      />
+                    </>
+                  )}
+                  {activeItem === "activeUser" && (
+                    <ActiveUsersSection
+                      activeUsers={activeUsers}
+                      companyUserListAPI={companyUserListAPI}
+                      selectedUids={selectedUids}
+                      setSelectedUids={setSelectedUids}
+                      deleteUser={deleteUser}
+                      updateUserStatus={updateUserStatus}
+                      handleCheckboxChange={handleCheckboxChange}
+                      EditUser={EditUser}
+                      editUserData={editUserData}
+                      setEditUserData={setEditUserData}
+                    />
+                  )}
+                  {activeItem === "adminUser" && (
+                    <AdmidUserSection
+                      adminUsers={adminUsers}
+                      companyUserListAPI={companyUserListAPI}
+                      selectedUids={selectedUids}
+                      setSelectedUids={setSelectedUids}
+                      deleteUser={deleteUser}
+                      updateUserStatus={updateUserStatus}
+                      handleCheckboxChange={handleCheckboxChange}
+                      EditUser={EditUser}
+                      editUserData={editUserData}
+                      setEditUserData={setEditUserData}
+                    />
+                  )}
+                  {activeItem === "inActiveUser" && (
+                    <InActiveUserSection
+                      inActiveUsers={inActiveUsers}
+                      companyUserListAPI={companyUserListAPI}
+                      selectedUids={selectedUids}
+                      setSelectedUids={setSelectedUids}
+                      deleteUser={deleteUser}
+                      updateUserStatus={updateUserStatus}
+                      handleCheckboxChange={handleCheckboxChange}
+                      EditUser={EditUser}
+                      editUserData={editUserData}
+                      setEditUserData={setEditUserData}
+                    />
+                  )}
+                  {activeItem === "pendingUser" && (
+                    <PendingUserSection
+                      pendingUsers={pendingUsers}
+                      companyUserListAPI={companyUserListAPI}
+                      selectedUids={selectedUids}
+                      setSelectedUids={setSelectedUids}
+                      deleteUser={deleteUser}
+                      updateUserStatus={updateUserStatus}
+                      handleCheckboxChange={handleCheckboxChange}
+                      EditUser={EditUser}
+                      editUserData={editUserData}
+                      setEditUserData={setEditUserData}
+                    />
+                  )}
                 </tbody>
               </Table>
             </Card.Body>

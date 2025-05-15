@@ -179,8 +179,8 @@ const EmailVerify = () => {
   const emailValue = useSelector((state) => state.login.emailValue); 
 
   const handleSubmit = (event) => {
-    event.preventDefault();
-    if (emailError || !emailValue || !emailRegex.test(emailValue)) {
+    event.preventDefault();    
+    if (emailError && !emailValue && !emailRegex.test(emailValue)) {
       setValidated(true);
       return;
     }

@@ -32,6 +32,7 @@ const FilterJobs = ({
   const [viewMoreList, setViewMoreList] = useState([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [viewMoreSearch, setViewMoreSearch] = useState([])
   const modalRef = useRef(null);
 
   useEffect(() => {
@@ -144,6 +145,34 @@ const FilterJobs = ({
       return false;
     }
   };
+  const handleLocationDepartmentsearch = async (e) => {
+    const { name, value } = e.target;
+    const limit = 500;
+
+    const url =
+      viewMore.isModalFor === "Location"
+        ? `https://bittrend.shubansoftware.com/account-api/location-list-api/?limit=${limit}&search=${value}`
+        : `https://bittrend.shubansoftware.com/assets-api/department-list-api/?limit=${limit}&search=${value}`;
+
+    try {
+      const response =
+        viewMore.isModalFor === "Location"
+          ? await CreateJobLocation(url)
+          : await CreateJobDepartment(url);
+
+      const newData = response?.data?.response || [];
+
+      // setViewMoreList((prev) => [...prev, ...newData]);
+      setViewMoreSearch(newData)
+      setHasMore(newData.length === limit);
+
+      return true; // resolves when done
+    } catch (err) {
+      console.error("Pagination error:", err);
+      setHasMore(false);
+      return false;
+    }
+  }
 
   useEffect(() => {
     if (viewMore.ModalOpen) {
@@ -185,6 +214,7 @@ const FilterJobs = ({
   const handleViewMoreClose = () => {
     setViewMore((prevState) => ({ ...prevState, ModalOpen: false }));
     setViewMoreList([]); // Clear on close
+    setViewMoreSearch([])
   };
 
   return (
@@ -728,6 +758,43 @@ const FilterJobs = ({
           <div>
             <h4 className="primary">{viewMore?.isModalFor}</h4>
           </div>
+          <Form.Group className="mb-3 relative">
+            <Form.Control
+              placeholder={`${viewMore.isModalFor === "Location" ? "Search Location" : "Search Department"}`}
+              aria-label="Search"
+              className="w-100" // width 50% of the parent container
+              // value={viewMore.isModalFor === "Location"?filtersList.job_location:filtersList.department}
+              onChange={handleLocationDepartmentsearch}
+            />
+            <div className={`${viewMoreSearch.length ? 'ctm_dropdown ct_scrollbar' : ''}`}>
+              <ul>
+                {viewMoreSearch.map((item) => (
+                  (
+                    <li
+                      key={item.id}
+                      onClick={() =>
+                        setFilters((prevState) =>
+                          viewMore.isModalFor === "Location"
+                            ? {
+                              ...prevState,
+                              job_location: item.location_name
+                            }
+                            : {
+                              ...prevState,
+                              department: item.department_name
+                            }
+                        )
+                      }
+                    >
+                      {viewMore.isModalFor === "Location"
+                        ? item.location_name
+                        : item.department_name}
+                    </li>
+                  )
+                ))}
+              </ul>
+            </div>
+          </Form.Group>
         </Modal.Header>
         <Modal.Body className="text-center">
           <div className="filter_data ct_scrollbar" ref={modalRef}>

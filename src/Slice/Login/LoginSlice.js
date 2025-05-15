@@ -29,14 +29,13 @@ const loginSlice = createSlice({
   name: "login",
   initialState,
   reducers: {
-    setEmailValue(state, action: PayloadAction<string>) {
+    setEmailValue(state, action) {
       state.emailValue = action.payload;
     },
-    setLoginuserInfor(state, action: PayloadAction<string>) {
+    setLoginuserInfor(state, action) {
       state.loginUserInfo = action.payload;
     },
-    setCompanyProfileDetails(state, action: PayloadAction<string, any>) {
-      // console.log("action.payload-----",action)
+    setCompanyProfileDetails(state, action) {
       state.CompanyProfileDetails = action.payload;
     },
     logout: (state) => {

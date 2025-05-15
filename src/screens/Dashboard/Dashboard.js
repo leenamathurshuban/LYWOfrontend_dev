@@ -287,6 +287,7 @@ const Dashboard = () => {
   const dispatch = useDispatch();
 
   const userInfo = useSelector((state) => state.login.loginUserInfo);
+  const companyInfo = useSelector((state)=>state.login.CompanyProfileDetails)
 
   const uid = userInfo?.uid;
 
@@ -394,7 +395,7 @@ const Dashboard = () => {
                   <Card.Title>Complete Company Profile</Card.Title>
                   <Button
                     variant="primary"
-                    onClick={() => GetCompanyDetails(userInfo?.company[0]?.uid)}
+                    onClick={() => GetCompanyDetails(companyInfo?.uid?companyInfo?.uid: userInfo?.default_company?.uid)}
                   >
                     Start
                   </Button>

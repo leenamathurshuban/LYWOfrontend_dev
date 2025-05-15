@@ -469,14 +469,14 @@ const OtpVerifyContainer = () => {
                 // }}
 
                 onClick={(e) => {
-                  if (otpErrormsg !== "OTP verified successfully.") {
-                    e.preventDefault();
-                    return;
-                  }
-                  navigate("/set-password");
+                  // if (otpErrormsg !== "OTP verified successfully.") {
+                  //   e.preventDefault();
+                  //   return;
+                  // }
+                  navigate("/loginwithpassword");
                 }}
               >
-                Set Password for future login
+                Use Password for Login
               </a>
             </Form>
           </div>
