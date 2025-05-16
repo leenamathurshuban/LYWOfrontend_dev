@@ -2504,7 +2504,16 @@ const ApplicationJobPostModal = ({
       }
     } catch (error) {
       console.log("ERROR:", error);
-      setIsExistApplicantError(error?.response?.data?.response?.user[0] || error?.response?.data?.response)
+      // debugger
+      setStoredApplicantId(error?.response?.data?.user_login?.uid)
+      localStorage.setItem('authToken', error?.response?.data?.user_login?.access)
+      // localStorage.setItem('authToken',response?.data?.user_login?.access)
+      // localStorage.setItem(
+      //   "applicantProfileData",
+      //   JSON.stringify(response.data)
+      // );
+      updateButtonText("Continue Btn");
+      setIsExistApplicantError(error?.response?.data?.applcant?.user?.[0])
       setIsValid(false);
     }
   };
