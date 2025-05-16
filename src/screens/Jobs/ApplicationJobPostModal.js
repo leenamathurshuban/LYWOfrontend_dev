@@ -2504,7 +2504,7 @@ const ApplicationJobPostModal = ({
       }
     } catch (error) {
       console.log("ERROR:", error);
-      setIsExistApplicantError(error?.response?.data?.response?.user[0])
+      setIsExistApplicantError(error?.response?.data?.response?.user[0] || error?.response?.data?.response)
       setIsValid(false);
     }
   };

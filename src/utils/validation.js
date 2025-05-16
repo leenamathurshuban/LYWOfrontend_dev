@@ -16,7 +16,6 @@ const emailValidation = (userData) => {
     }
     return { error, valid };
 };
-
 export const ApplicantFormValidation = (userData) => {
     let isErrors = {};
     let isValid = true;
@@ -55,10 +54,10 @@ export const ApplicantFormValidation = (userData) => {
     if (userData.phone !== undefined && !userData.phone) {
         isErrors.phone = "Phone number is required";
         isValid = false;
-    } else if (!phonePattern.test(userData.phone)) {
+    } else if (!phonePattern.test(userData.phone) && userData.phone) {
         isErrors.phone = "Phone number must be 10 digits and numeric";
         isValid = false;
-    } else if (phonePattern.test(userData.phone) && userData.phone) {
+    } else {
         isErrors.phone = "";
     }
 

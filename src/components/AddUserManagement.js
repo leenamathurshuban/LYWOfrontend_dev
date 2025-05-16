@@ -151,6 +151,7 @@ const AddUserManagement = () => {
             phoneError: errorData.phone_number[0],
           }));
         }
+
         // errorData?.email?.[0] && toast.error(errorData.email[0]);
         // errorData?.phone_number?.[0] && toast.error(errorData.phone_number[0]);
       }
@@ -166,6 +167,7 @@ const AddUserManagement = () => {
       }
     }
   };
+
 
   const deleteUser = async (uid) => {
     setIsLoading(true);
@@ -539,6 +541,11 @@ const AddUserManagement = () => {
                               value={createUserData.email}
                               name="email"
                             />
+                            {createUserError.emailError && (
+                              <span className="error">
+                                {createUserError.emailError}
+                              </span>
+                            )}
                           </Form.Group>
                         </div>
                       </td>
@@ -564,6 +571,11 @@ const AddUserManagement = () => {
                             value={createUserData.phoneNumber}
                             name="phoneNumber"
                           />
+                          {createUserError.phoneError && (
+                            <span className="error">
+                              {createUserError.phoneError}
+                            </span>
+                          )}
                         </Form.Group>
                       </td>
                       <td>
@@ -579,6 +591,7 @@ const AddUserManagement = () => {
                             variant="primary"
                             className="btn-sm"
                             type="submit"
+                            disabled={createUserData.phoneNumber.length !== 10 || !createUserData.name.trim() || !createUserData.email.trim()}
                           >
                             Invite
                           </Button>
@@ -626,6 +639,7 @@ const AddUserManagement = () => {
                       </td>
                     </tr>
                   ))}
+ 
                   {activeItem === "byDefaultUsers" && (
                     <>
                       <ActiveUsersSection

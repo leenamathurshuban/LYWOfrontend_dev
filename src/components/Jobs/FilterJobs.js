@@ -148,7 +148,17 @@ const FilterJobs = ({
   const handleLocationDepartmentsearch = async (e) => {
     const { name, value } = e.target;
     const limit = 500;
-
+    setFilters((prevState) =>
+      viewMore.isModalFor === "Location"
+        ? {
+          ...prevState,
+          job_location: value
+        }
+        : {
+          ...prevState,
+          department: value
+        }
+    );
     const url =
       viewMore.isModalFor === "Location"
         ? `https://bittrend.shubansoftware.com/account-api/location-list-api/?limit=${limit}&search=${value}`
@@ -763,16 +773,16 @@ const FilterJobs = ({
               placeholder={`${viewMore.isModalFor === "Location" ? "Search Location" : "Search Department"}`}
               aria-label="Search"
               className="w-100" // width 50% of the parent container
-              // value={viewMore.isModalFor === "Location"?filtersList.job_location:filtersList.department}
+              value={viewMore.isModalFor === "Location"?filtersList.job_location:filtersList.department}
               onChange={handleLocationDepartmentsearch}
             />
-            <div className={`${viewMoreSearch.length ? 'ctm_dropdown ct_scrollbar' : ''}`}>
+            <div className={`${viewMoreSearch?.length > 0 ? 'ctm_dropdown ct_scrollbar' : ''}`}>
               <ul>
-                {viewMoreSearch.map((item) => (
+                {viewMoreSearch?.map((item) => (
                   (
                     <li
                       key={item.id}
-                      onClick={() =>
+                      onClick={() => {
                         setFilters((prevState) =>
                           viewMore.isModalFor === "Location"
                             ? {
@@ -783,8 +793,9 @@ const FilterJobs = ({
                               ...prevState,
                               department: item.department_name
                             }
-                        )
-                      }
+                        );
+                        setViewMoreSearch()
+                      }}
                     >
                       {viewMore.isModalFor === "Location"
                         ? item.location_name
@@ -813,12 +824,13 @@ const FilterJobs = ({
                       type="checkbox"
                       checked={
                         viewMore.isModalFor === "Location"
-                          ? item?.job_location
-                          : item?.department?.includes(
-                            viewMore.isModalFor === "Location"
-                              ? item.location_name
-                              : item.department_name
-                          )
+                          // ? item?.job_location
+                          // : item?.department?.includes(
+                          //   viewMore.isModalFor === "Location"
+                          //     ? item.location_name
+                          //     : item.department_name
+                          // )
+                          ? filtersList.job_location?.includes(item?.location_name) : filtersList.department.includes(item.department_name)
                       }
                       onChange={(e) => {
                         setFilters((prevState) =>
