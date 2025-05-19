@@ -966,7 +966,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
     }
   };
 
-  const isNextButtonDisable = !createFormData.jobTitle;
+  const isNextButtonDisable = !createFormData.jobTitle || addCustomeBenifits.length>0;
   console.log('==========>', editData)
   console.log(createFormData, isLikeUid)
   console.log(SelectBenefitsData)

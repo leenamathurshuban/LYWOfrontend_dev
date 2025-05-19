@@ -938,7 +938,7 @@ const CreateJobs = ({ show, handleClose }) => {
       }
     }
   };
-  const isNextButtonDisable = !createFormData.jobTitle;
+  const isNextButtonDisable = !createFormData.jobTitle || addCustomeBenifits.length > 0;
 
   return (
     <Offcanvas

@@ -120,6 +120,7 @@ const JobPosts = () => {
   const [ResumeFile, setResumeFile] = useState(null);
   const [ResumeFileName, setResumeFileName] = useState("");
   const [EducationRows, SetEducationRows] = useState([{
+    id: Math.random().toString(36).slice(2),
     level: "",
     areaOfEducation: "",
     gradYear: "",
@@ -131,6 +132,7 @@ const JobPosts = () => {
   const [WorkExpreienceRow, setWorkExpreienceRow] = useState([
     {
       // TotalWorkExperience: "",
+      id: Math.random().toString(36).slice(2),
       WorkRole: "",
       WorkFrom: "",
       WorkTo: "",
@@ -140,7 +142,7 @@ const JobPosts = () => {
       savedWorkExp: false,
     },
   ]);
-  const [totalWorkExperience,settotalWorkExperience] = useState('')
+  const [totalWorkExperience, settotalWorkExperience] = useState('')
   const [isExistApplicantError, setIsExistApplicantError] = useState('');
   const [spokenLanguageBadges, setSpokenLanguageBadges] = useState([]);
   const [rdnwBadges, setrdnwBadges] = useState([]);
@@ -1024,14 +1026,17 @@ const JobPosts = () => {
                 size=""
                 className="w-100"
                 disabled={jobPostErrorMsg}
+                hidden={buttonText == 'Apply Now' ? true : false}
                 onClick={() => handleBtns(buttonText)}
               >
                 {buttonText === "View Form Btn" ? "View" : buttonText === "Continue Btn" ? "Continue" : buttonText}
               </Button>
             </div>
-            {/* <div className="status_locked">
-              <img src={lockedIcon} />
-            </div> */}
+            {(buttonText == 'Apply Now' || jobPostErrorMsg) && (
+              <div className="status_locked">
+                <img src={lockedIcon} />
+              </div>
+            )}
           </div>
           <div className={`${Number(localStorage.getItem("AttemptStatus")) === 28 ? 'complate_status' : buttonText === "View Form Btn" ? 'pending_status' : ''} progress_box`}>
             <h5>
@@ -1048,6 +1053,7 @@ const JobPosts = () => {
                 variant="primary"
                 size="lg"
                 disabled={buttonText !== "View Form Btn"}
+                hidden={buttonText == 'Apply Now'}
                 // className={`${Number(localStorage.getItem("AttemptStatus")) < 28?'small_btn':'view_btn'}`}
                 onClick={() => {
                   if (
@@ -1119,6 +1125,7 @@ const JobPosts = () => {
                       variant="primary"
                       size="lg"
                       disabled={localStorage.getItem("AttemptStatus") == 28 ? false : true}
+                      hidden={buttonText == 'Apply Now'}
                       onClick={() => {
                         navigate(`/evaluation-quiz/${Val?.uid}`, { state: jobPostData })
                       }}
@@ -1151,6 +1158,7 @@ const JobPosts = () => {
                       variant="primary"
                       size="lg"
                       disabled={localStorage.getItem("assestQuiz") !== 'Completed' ? true : false}
+                      hidden={buttonText == 'Apply Now'}
                       onClick={() => {
                         // setShowAssignmentInstruction(true);
                         // setAssignmentId(Val?.uid)

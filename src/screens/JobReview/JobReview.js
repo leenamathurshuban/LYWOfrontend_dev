@@ -31,6 +31,7 @@ import Ratting from "../../components/Ratting";
 import CodeBlock from "../../components/CodeBlock";
 import CreateGroupModal from "./NewGroupModal";
 import { BehaviourResponse } from "../../utils/behaviour";
+import FilterApplicantModal from "./FilterApplicant";
 const JobReview = () => {
     const codeSnippet = `class WorkloadTracker:
     def __init__(self):
@@ -81,12 +82,16 @@ tracker.show_tasks()
         return 'unknown';
     };
     const [show, setShow] = useState(false);
+    const [FilterApplicantShow, setFilterApplicantShow] = useState(false);
     const [reviewModal, setReviewModal] = useState(false);
     const [groupModal, setGroupModal] = useState(false);
     const [groupParameterId, setGroupParameterId] = useState();
     const handleReviewClose = () => setReviewModal(false);
     const handleClose = () => setShow(false);
-    const handleCloseGrpMdl = () => setGroupModal(false)
+    const handleCloseGrpMdl = () => {
+        setGroupModal(false)
+        setFilterApplicantShow(false)
+    }
     const handleShow = () => setShow(true);
     const { id } = useParams();
     const [jobDetails, setJobDetails] = useState({})
@@ -99,7 +104,10 @@ tracker.show_tasks()
     const [questionWiseDuplicate, setQuestionWiseDuplicate] = useState({});
     const [rating, setRating] = useState({});
     const [currentId, setCurrentId] = useState(questionWiseData?.user_answer_question?.[0]?.id);
-    const [groupParameterList, setGroupParameterList] = useState([])
+    const [groupParameterList, setGroupParameterList] = useState([]);
+    const [ListData, setListData] = useState([]);
+    const [selectedListUids, setSelectedListUids] = useState([]);
+    const [ListShow, setListShow] = useState(false);
     const [groupState, setGroupState] = useState([
         {
             heading: 'Job Match', isChecked: false, isSelected: false,
@@ -112,7 +120,7 @@ tracker.show_tasks()
                         { value: 'Average', groupname: 'Job Groups', isSelected: false },
                         { value: 'Below Average', groupname: 'Job Groups', isSelected: false }]
                 },
-                {name:'',data:[]},
+                { name: '', data: [] },
                 {
                     name: 'Job Match Percentage',
                     data: [
@@ -177,10 +185,10 @@ tracker.show_tasks()
                 {
                     name: 'Personality Groups',
                     data: [
-                        { value: 'Excellent',groupname: 'Personality Groups', isSelected: false },
-                        { value: 'Good',groupname: 'Personality Groups', isSelected: false },
-                        { value: 'Average',groupname: 'Personality Groups', isSelected: false },
-                        { value: 'Below Average',groupname: 'Personality Groups', isSelected: false }]
+                        { value: 'Excellent', groupname: 'Personality Groups', isSelected: false },
+                        { value: 'Good', groupname: 'Personality Groups', isSelected: false },
+                        { value: 'Average', groupname: 'Personality Groups', isSelected: false },
+                        { value: 'Below Average', groupname: 'Personality Groups', isSelected: false }]
                 }
             ],
             selectedList: []
@@ -232,7 +240,7 @@ tracker.show_tasks()
                                 name: formatKey(key),
                                 data: values.map(value => ({
                                     value,
-                                    groupname:formatKey(key),
+                                    groupname: formatKey(key),
                                     isSelected: false
                                 }))
                             }));
@@ -242,43 +250,43 @@ tracker.show_tasks()
                                 ? [{
                                     name: 'Get Experience',
                                     data: [
-                                        { value: 'Fresher',groupname:"Get Experience", isSelected: false },
-                                        { value: 'Less than 1 Year',groupname:"Get Experience", isSelected: false },
-                                        { value: '1 - 2 Years',groupname:"Get Experience", isSelected: false },
-                                        { value: '2 - 4 Years',groupname:"Get Experience", isSelected: false },
-                                        { value: '4 - 6 Years',groupname:"Get Experience", isSelected: false },
-                                        { value: '6 - 9 Years',groupname:"Get Experience", isSelected: false },
-                                        { value: '9 - 12 Years',groupname:"Get Experience", isSelected: false },
-                                        { value: '12 - 15 Years',groupname:"Get Experience", isSelected: false },
-                                        { value: '15 - 20 Years',groupname:"Get Experience", isSelected: false },
-                                        { value: '20 - 25 Years',groupname:"Get Experience", isSelected: false },
-                                        { value: '25 - 30 Years',groupname:"Get Experience", isSelected: false },
-                                        { value: '30 - 40 Years',groupname:"Get Experience", isSelected: false },
-                                        { value: 'Above 40 Years',groupname:"Get Experience", isSelected: false },
+                                        { value: 'Fresher', groupname: "Get Experience", isSelected: false },
+                                        { value: 'Less than 1 Year', groupname: "Get Experience", isSelected: false },
+                                        { value: '1 - 2 Years', groupname: "Get Experience", isSelected: false },
+                                        { value: '2 - 4 Years', groupname: "Get Experience", isSelected: false },
+                                        { value: '4 - 6 Years', groupname: "Get Experience", isSelected: false },
+                                        { value: '6 - 9 Years', groupname: "Get Experience", isSelected: false },
+                                        { value: '9 - 12 Years', groupname: "Get Experience", isSelected: false },
+                                        { value: '12 - 15 Years', groupname: "Get Experience", isSelected: false },
+                                        { value: '15 - 20 Years', groupname: "Get Experience", isSelected: false },
+                                        { value: '20 - 25 Years', groupname: "Get Experience", isSelected: false },
+                                        { value: '25 - 30 Years', groupname: "Get Experience", isSelected: false },
+                                        { value: '30 - 40 Years', groupname: "Get Experience", isSelected: false },
+                                        { value: 'Above 40 Years', groupname: "Get Experience", isSelected: false },
                                     ]
                                 }]
                                 : sectionKey === 'salary_and_travels' ?
                                     [{
                                         name: 'Expected Salary',
                                         data: [
-                                            { value: 'Below ₹3 LPA',groupname:"Expected Salary", isSelected: false },
-                                            { value: '₹3 LPA - ₹5 LPA',groupname:"Expected Salary", isSelected: false },
-                                            { value: '₹5 LPA - ₹7 LPA',groupname:"Expected Salary", isSelected: false },
-                                            { value: '₹7 LPA - ₹10 LPA',groupname:"Expected Salary", isSelected: false },
-                                            { value: '₹10 LPA - ₹12 LPA',groupname:"Expected Salary", isSelected: false },
-                                            { value: '₹12 LPA - ₹15 LPA',groupname:"Expected Salary", isSelected: false },
-                                            { value: '₹15 LPA - ₹20 LPA',groupname:"Expected Salary", isSelected: false },
-                                            { value: '₹20 LPA - ₹25 LPA',groupname:"Expected Salary", isSelected: false },
-                                            { value: '₹25 LPA - ₹30 LPA',groupname:"Expected Salary", isSelected: false },
-                                            { value: '₹30 LPA - ₹35 LPA',groupname:"Expected Salary", isSelected: false },
-                                            { value: '₹35 LPA - ₹40 LPA',groupname:"Expected Salary", isSelected: false },
-                                            { value: '₹40 LPA - ₹45 LPA',groupname:"Expected Salary", isSelected: false },
-                                            { value: '₹45 LPA - ₹50 LPA',groupname:"Expected Salary", isSelected: false },
-                                            { value: '₹50 LPA - ₹55 LPA',groupname:"Expected Salary", isSelected: false },
-                                            { value: '₹55 LPA - ₹60 LPA',groupname:"Expected Salary", isSelected: false },
-                                            { value: 'Above ₹60 LPA',groupname:"Expected Salary", isSelected: false },
+                                            { value: 'Below ₹3 LPA', groupname: "Expected Salary", isSelected: false },
+                                            { value: '₹3 LPA - ₹5 LPA', groupname: "Expected Salary", isSelected: false },
+                                            { value: '₹5 LPA - ₹7 LPA', groupname: "Expected Salary", isSelected: false },
+                                            { value: '₹7 LPA - ₹10 LPA', groupname: "Expected Salary", isSelected: false },
+                                            { value: '₹10 LPA - ₹12 LPA', groupname: "Expected Salary", isSelected: false },
+                                            { value: '₹12 LPA - ₹15 LPA', groupname: "Expected Salary", isSelected: false },
+                                            { value: '₹15 LPA - ₹20 LPA', groupname: "Expected Salary", isSelected: false },
+                                            { value: '₹20 LPA - ₹25 LPA', groupname: "Expected Salary", isSelected: false },
+                                            { value: '₹25 LPA - ₹30 LPA', groupname: "Expected Salary", isSelected: false },
+                                            { value: '₹30 LPA - ₹35 LPA', groupname: "Expected Salary", isSelected: false },
+                                            { value: '₹35 LPA - ₹40 LPA', groupname: "Expected Salary", isSelected: false },
+                                            { value: '₹40 LPA - ₹45 LPA', groupname: "Expected Salary", isSelected: false },
+                                            { value: '₹45 LPA - ₹50 LPA', groupname: "Expected Salary", isSelected: false },
+                                            { value: '₹50 LPA - ₹55 LPA', groupname: "Expected Salary", isSelected: false },
+                                            { value: '₹55 LPA - ₹60 LPA', groupname: "Expected Salary", isSelected: false },
+                                            { value: 'Above ₹60 LPA', groupname: "Expected Salary", isSelected: false },
                                         ]
-                                    }, { name: 'Relocation', data: [{ value: 'Willing to Relocate',groupname:'Relocation', isSelected: false }] }]
+                                    }, { name: 'Relocation', data: [{ value: 'Willing to Relocate', groupname: 'Relocation', isSelected: false }] }]
                                     : [];
 
                             return {
@@ -325,30 +333,30 @@ tracker.show_tasks()
                         heading: formatKey(item.asset_title),
                         // title: 'Select to Apply',
                         uid: item?.uid,
-                        assesttitle:item?.asset_title,
-                        id:item?.id,
+                        assesttitle: item?.asset_title,
+                        id: item?.id,
                         isChecked: false,
                         isSelected: false,
                         listData: [
                             {
                                 name: 'Groups',
                                 data: [
-                                    { value: 'Excellent',groupname:'Groups', isSelected: false },
-                                     { value: 'Good',groupname:'Groups', isSelected: false }, 
-                                     { value: 'Average',groupname:'Groups', isSelected: false }, 
-                                     { value: 'Below Average',groupname:'Groups', isSelected: false }]
+                                    { value: 'Excellent', groupname: 'Groups', isSelected: false },
+                                    { value: 'Good', groupname: 'Groups', isSelected: false },
+                                    { value: 'Average', groupname: 'Groups', isSelected: false },
+                                    { value: 'Below Average', groupname: 'Groups', isSelected: false }]
                             },
-                            {name:'',data:[]},
+                            { name: '', data: [] },
                             {
                                 name: 'Over all Score',
                                 data: [
-                                    { value: '0 - 40',groupname:'Over all Score', isSelected: false },
-                                    { value: '40 - 50',groupname:'Over all Score', isSelected: false },
-                                    { value: '50 - 60',groupname:'Over all Score', isSelected: false },
-                                    { value: '60 - 70',groupname:'Over all Score', isSelected: false },
-                                    { value: '70 - 80',groupname:'Over all Score', isSelected: false },
-                                    { value: '80 - 90',groupname:'Over all Score', isSelected: false },
-                                    { value: '90 - 100',groupname:'Over all Score', isSelected: false },
+                                    { value: '0 - 40', groupname: 'Over all Score', isSelected: false },
+                                    { value: '40 - 50', groupname: 'Over all Score', isSelected: false },
+                                    { value: '50 - 60', groupname: 'Over all Score', isSelected: false },
+                                    { value: '60 - 70', groupname: 'Over all Score', isSelected: false },
+                                    { value: '70 - 80', groupname: 'Over all Score', isSelected: false },
+                                    { value: '80 - 90', groupname: 'Over all Score', isSelected: false },
+                                    { value: '90 - 100', groupname: 'Over all Score', isSelected: false },
                                 ]
                             }
                         ],
@@ -390,7 +398,7 @@ tracker.show_tasks()
                             data: values.map(val => ({
                                 value: val.skill_name,
                                 val,
-                                groupname:formatKey(key),
+                                groupname: formatKey(key),
                                 isSelected: false
                             }))
                         })),
@@ -418,7 +426,7 @@ tracker.show_tasks()
                             data: item.question_option.part1.map(option => ({
                                 value: option,
                                 item,
-                                groupname:item.question_title,
+                                groupname: item.question_title,
                                 isSelected: false
                             }))
                         })),
@@ -449,8 +457,8 @@ tracker.show_tasks()
                         name: 'All Personalites',
                         data: matchedBehaviours.map((val, index) => ({
                             value: `${val?.behaviours_name} ${personalityValue[index]}%`,
-                            groupname:'All Personalites',
-                            key:val?.behaviour_type_name,
+                            groupname: 'All Personalites',
+                            key: val?.behaviour_type_name,
                             isSelected: false
                         }))
                     };
@@ -581,11 +589,33 @@ tracker.show_tasks()
         };
         setQuestionWiseData(filteredData)
     }
+    const handleListData = (data) => {
+        setListShow(true);
+        setListData(data?.job_applicant_group)
+    }
+    const handleCheckBoxBtn = (uid) => {
+        setSelectedListUids((prevSelectedUids) => {
+            if (prevSelectedUids.includes(uid)) {
+                return prevSelectedUids.filter((id) => id !== uid);
+            } else {
+
+                return [...prevSelectedUids, uid];
+            }
+        });
+    }
+    const allSelected = selectedListUids.length === ListData?.length;
+    const handleSelectAll = () => {
+        if (allSelected) {
+            setSelectedListUids([]);
+        } else {
+            setSelectedListUids(ListData.map((user) => user.uid));
+        }
+    };
     // console.log(assignmentReviewList)
     // console.log('section', sectionWiseData)
     // console.log(questionWiseData)
     // console.log(currentItem)
-    // console.log(groupParameterList)
+    console.log(groupParameterList)
     return (
         <>
             <Sidebar />
@@ -627,23 +657,624 @@ tracker.show_tasks()
 
                             </Col>
                             <Col md={6} className="text-end">
-                                <button className="btn btn-traspant"><img src={gridView} /></button>
-                                <button className="btn btn-traspant"><img src={listView} /></button>
+                                <button className="btn btn-traspant" onClick={() => setListShow(false)}><img src={gridView} /></button>
+                                <button className="btn btn-traspant" onClick={() => setListShow(true)}><img src={listView} /></button>
                             </Col>
                         </Row>
                         <Row >
                             <Tab.Content className="p-3">
                                 <Tab.Pane eventKey="first">
                                     <Row className="hori_scroll">
-                                        {groupParameterList.map((paraName, paraIndex) => (
-                                            <Col md={2}>
-                                                <Card className="status_cardpanel">
-                                                    <div className="card-header">
-                                                        <h5>{paraName?.parameter_name} <span className="count">{paraName?.parameter_applicant_count}</span></h5>
-                                                        <button type="button"><i class="fa fa-ellipsis-h"></i></button>
+                                        {ListShow && ListData.length > 0 ? (
+                                            <Card className="shadow-sm border-0 evaluations_data mt-4 rounded overflow-hidden">
+                                                <Card.Header className="py-2">
+                                                    <Row>
+                                                        <Col md={6} className="d-flex">
+                                                            <div className="d-inline">
+                                                                <InputGroup className="defult_serachbox">
+                                                                    <Button id="basic-addon1">
+                                                                        <svg
+                                                                            width="18"
+                                                                            height="18"
+                                                                            viewBox="0 0 18 18"
+                                                                            fill="none"
+                                                                            xmlns="http://www.w3.org/2000/svg"
+                                                                        >
+                                                                            <path
+                                                                                d="M16.5 16.5L11.5001 11.5M13.1667 7.33333C13.1667 10.555 10.555 13.1667 7.33333 13.1667C4.11167 13.1667 1.5 10.555 1.5 7.33333C1.5 4.11167 4.11167 1.5 7.33333 1.5C10.555 1.5 13.1667 4.11167 13.1667 7.33333Z"
+                                                                                stroke="#667085"
+                                                                                stroke-width="1.66667"
+                                                                                stroke-linecap="round"
+                                                                                stroke-linejoin="round"
+                                                                            />
+                                                                        </svg>
+                                                                    </Button>
+                                                                    <Form.Control
+                                                                        placeholder="Serach"
+                                                                        aria-label="Serach"
+                                                                        aria-describedby="basic-addon1"
+                                                                    />
+                                                                </InputGroup>
+                                                            </div>
+                                                        </Col>
+                                                        <Col md={6} className="d-flex justify-content-end align-items-center">
+                                                            <Button className="icon_btnlink"><i className="far fa-check-circle me-2 text-primery"></i>Shortlist</Button>
+                                                            <Button className="icon_btnlink"><i className="far fa-times-circle me-2 text-primery"></i>Reject</Button>
+                                                            <Button className="icon_btnlink"><i className="fa fa-ban me-2 text-primery"></i>Hold</Button>
+                                                            <Button className="icon_btnlink"><i className="fa fa-download me-2 text-primery"></i>Download</Button>
+                                                            <Button
+                                                                // className="btn btn-light-outline me-3"
+                                                                className="icon_btnlink"
+                                                                onClick={() => setFilterApplicantShow(true)}
+                                                            >
+                                                                <svg
+                                                                    width="20"
+                                                                    height="20"
+                                                                    viewBox="0 0 20 20"
+                                                                    className="me-2"
+                                                                    fill="none"
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                >
+                                                                    <path
+                                                                        d="M5 10H15M2.5 5H17.5M7.5 15H12.5"
+                                                                        stroke="#344054"
+                                                                        stroke-width="1.66667"
+                                                                        stroke-linecap="round"
+                                                                        stroke-linejoin="round"
+                                                                    />
+                                                                </svg>
+                                                                filters
+                                                            </Button>
+                                                        </Col>
+                                                    </Row>
+                                                </Card.Header>
+                                                <Card.Body className="pt-2">
+                                                    {/* <div className="applid-filters">
+                                                <span className="filter-tag">Filter 1 <i class="fa fa-times" aria-hidden="true"></i></span>
+                                                <span className="filter-tag">Filter 2 <i class="fa fa-times" aria-hidden="true"></i></span>
+                                                <span className="filter-tag">Filter 3 <i class="fa fa-times" aria-hidden="true"></i></span>
+                                                <span className="filter-tag">Filter 4 <i class="fa fa-times" aria-hidden="true"></i></span>
+                                            </div> */}
+                                                    <div className="elv_datatable jobreview_data">
+                                                        <Table striped className="m-0">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th colSpan={1}>&nbsp;</th>
+                                                                    <th colSpan={5} className="border-b">
+                                                                        <div className="d-flex align-items-end justify-content-between">
+                                                                            <strong>Details</strong><button type="button" className="btn btn-link font-sm pb-0"><i class="fas fa-plus-circle"></i></button>
+                                                                        </div>
+                                                                    </th>
+                                                                    <th colSpan={2} className="border-b"><strong>LYWO Score</strong></th>
+                                                                    <th colSpan={5} className="border-b"><strong>Progress</strong></th>
+                                                                    <th colSpan={2} className="border-b"><strong>Status</strong></th>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>
+                                                                        {/* <img src={baseCheckbox} alt="" className="me-2 mw-16" /> */}
+                                                                        <span className="me-2" onClick={handleSelectAll}>
+                                                                            <svg
+                                                                                width="20"
+                                                                                height="20"
+                                                                                viewBox="0 0 20 20"
+                                                                                fill="none"
+                                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                            >
+                                                                                <rect
+                                                                                    x="0.5"
+                                                                                    y="0.5"
+                                                                                    width="19"
+                                                                                    height="19"
+                                                                                    rx="5.5"
+                                                                                    fill="#EEF4FF"
+                                                                                />
+                                                                                <rect
+                                                                                    x="0.5"
+                                                                                    y="0.5"
+                                                                                    width="19"
+                                                                                    height="19"
+                                                                                    rx="5.5"
+                                                                                    stroke="#444CE7"
+                                                                                />
+                                                                                <path
+                                                                                    d="M5.91675 10H14.0834"
+                                                                                    stroke="#444CE7"
+                                                                                    stroke-width="2"
+                                                                                    stroke-linecap="round"
+                                                                                    stroke-linejoin="round"
+                                                                                />
+                                                                                {!allSelected && (
+                                                                                    <path
+                                                                                        d="M10 5.91675V14.0834"
+                                                                                        stroke="#444CE7"
+                                                                                        strokeWidth="2"
+                                                                                        strokeLinecap="round"
+                                                                                        strokeLinejoin="round"
+                                                                                    />
+                                                                                )}
+                                                                            </svg>
+                                                                        </span>
+                                                                        Candidate Name
+                                                                    </th>
+                                                                    <th>Education</th>
+                                                                    <th>Industry</th>
+                                                                    <th>Experience</th>
+                                                                    <th>Available By</th>
+                                                                    <th>Location</th>
+                                                                    <th>Match</th>
+                                                                    <th>Personality</th>
+                                                                    <th>Step 3</th>
+                                                                    <th>Step 4</th>
+                                                                    <th>Step 5</th>
+                                                                    <th>Step 6</th>
+                                                                    <th>Score</th>
+                                                                    <th>Tag</th>
+                                                                    <th>Decision</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {ListData.map((item, index) => (
+                                                                    <tr>
+                                                                        <td>
+                                                                            <Form.Check
+                                                                                className="inline-checkbox me-2_5"
+                                                                                name="group1"
+                                                                                type="checkbox"
+                                                                                checked={selectedListUids.includes(item?.uid)}
+                                                                                onChange={() => handleCheckBoxBtn(item?.uid)}
+                                                                            />
+                                                                            <span className="font-weight-600">
+                                                                                {/* Sandeep Kattamuri */}
+                                                                                {item?.job_applicant_profile?.user?.username}
+                                                                            </span>
+                                                                        </td>
+                                                                        <td>
+                                                                            <span className="text-elipe-100">
+                                                                                {item?.job_applicant_profile?.qualification_applicantprofile?.map(val => val.level).join(',')}
+                                                                            </span>
+                                                                        </td>
+                                                                        <td><span className="text-elipe-100">
+                                                                            {item?.job_applicant_profile?.work_applicant?.map(val => val.work_industry).join(',')}
+                                                                        </span></td>
+                                                                        <td>{item?.job_applicant_profile?.work_applicant?.[0]?.total_work_experience}</td>
+                                                                        <td>{item?.job_applicant_profile?.availble_by}</td>
+                                                                        <td>{item?.job_applicant_profile?.current_location}</td>
+                                                                        <td>{item?.job_match_score}%</td>
+                                                                        <td>
+                                                                            <div className="d-flex">
+                                                                                <img src={User01Gray} />
+                                                                                <select className="select-transpant">
+                                                                                    {Object.entries(item?.job_applicant_profile?.personality).map(([key, value]) => (
+                                                                                        <option>{value}%</option>
+                                                                                    ))}
+                                                                                </select>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>Invited</td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td>
+                                                                        <td>76%</td>
+                                                                        <td>
+                                                                            <span className="tag tag-lightprimery">Recall</span>
+                                                                        </td>
+                                                                        <td>
+                                                                            <span className="dic_tag inactive"><i class="fa fa-minus"></i> Inactive</span>
+                                                                        </td>
+                                                                    </tr>
+                                                                ))}
+
+                                                                {/* <tr>
+                                                                    <td>
+                                                                        <Form.Check
+                                                                            className="inline-checkbox me-2_5"
+                                                                            name="group1"
+                                                                            type="checkbox"
+
+                                                                        />
+                                                                        <span className="font-weight-600">
+                                                                            Sandeep Kattamuri
+                                                                        </span>
+                                                                    </td>
+                                                                    <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
+                                                                    <td><span className="text-elipe-100">Pharmaceutical</span></td>
+                                                                    <td>5 Years</td>
+                                                                    <td>15/09/2024</td>
+                                                                    <td>Hyderabad</td>
+                                                                    <td>60%</td>
+                                                                    <td>
+                                                                        <div className="d-flex">
+                                                                            <img src={User01Gray} />
+                                                                            <select className="select-transpant">
+                                                                                <option>76%</option>
+                                                                                <option>70%</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>Invited</td>
+                                                                    <td><span className="text-elipe-40">Under Review</span></td>
+                                                                    <td><span className="text-elipe-40">Under Review</span></td>
+                                                                    <td><span className="text-elipe-40">Under Review</span></td>
+                                                                    <td>76%</td>
+                                                                    <td>
+                                                                        <span className="tag tag-lightprimery">Revisit</span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <span className="dic_tag active"><i class="far fa-check-circle"></i> Active</span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <Form.Check
+                                                                            className="inline-checkbox me-2_5"
+                                                                            name="group1"
+                                                                            type="checkbox"
+
+                                                                        />
+                                                                        <span className="font-weight-600">
+                                                                            Sandeep Kattamuri
+                                                                        </span>
+                                                                    </td>
+                                                                    <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
+                                                                    <td><span className="text-elipe-100">Pharmaceutical</span></td>
+                                                                    <td>5 Years</td>
+                                                                    <td>15/09/2024</td>
+                                                                    <td>Hyderabad</td>
+                                                                    <td>80%</td>
+                                                                    <td>
+                                                                        <div className="d-flex">
+                                                                            <img src={User01Gray} />
+                                                                            <select className="select-transpant">
+                                                                                <option>76%</option>
+                                                                                <option>70%</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>Invited</td>
+                                                                    <td><span className="text-elipe-40">Under Review</span></td>
+                                                                    <td><span className="text-elipe-40">Under Review</span></td>
+                                                                    <td><span className="text-elipe-40">Under Review</span></td>
+                                                                    <td>76%</td>
+                                                                    <td>
+                                                                        <span className="tag tag-lightprimery">Recall</span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <span className="dic_tag rejected"><i class="far fa-times-circle"></i> Rejected</span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <Form.Check
+                                                                            className="inline-checkbox me-2_5"
+                                                                            name="group1"
+                                                                            type="checkbox"
+
+                                                                        />
+                                                                        <span className="font-weight-600">
+                                                                            Sandeep Kattamuri
+                                                                        </span>
+                                                                    </td>
+                                                                    <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
+                                                                    <td><span className="text-elipe-100">Pharmaceutical</span></td>
+                                                                    <td>5 Years</td>
+                                                                    <td>15/09/2024</td>
+                                                                    <td>Hyderabad</td>
+                                                                    <td>40%</td>
+                                                                    <td>
+                                                                        <div className="d-flex">
+                                                                            <img src={User01Gray} />
+                                                                            <select className="select-transpant">
+                                                                                <option>76%</option>
+                                                                                <option>70%</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>Invited</td>
+                                                                    <td><span className="text-elipe-40">Under Review</span></td>
+                                                                    <td><span className="text-elipe-40">Under Review</span></td>
+                                                                    <td><span className="text-elipe-40">Under Review</span></td>
+                                                                    <td>76%</td>
+                                                                    <td>
+                                                                        <span className="tag tag-lightprimery">Recall</span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <span className="dic_tag hold"><i class="fa fa-ban"></i> On Hold</span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <Form.Check
+                                                                            className="inline-checkbox me-2_5"
+                                                                            name="group1"
+                                                                            type="checkbox"
+
+                                                                        />
+                                                                        <span className="font-weight-600">
+                                                                            Sandeep Kattamuri
+                                                                        </span>
+                                                                    </td>
+                                                                    <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
+                                                                    <td><span className="text-elipe-100">Pharmaceutical</span></td>
+                                                                    <td>5 Years</td>
+                                                                    <td>15/09/2024</td>
+                                                                    <td>Hyderabad</td>
+                                                                    <td>40%</td>
+                                                                    <td>
+                                                                        <div className="d-flex">
+                                                                            <img src={User01Gray} />
+                                                                            <select className="select-transpant">
+                                                                                <option>76%</option>
+                                                                                <option>70%</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>Invited</td>
+                                                                    <td><span className="text-elipe-40">Under Review</span></td>
+                                                                    <td><span className="text-elipe-40">Under Review</span></td>
+                                                                    <td><span className="text-elipe-40">Under Review</span></td>
+                                                                    <td>76%</td>
+                                                                    <td>
+                                                                        <span className="tag tag-lightprimery">Recall</span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <span className="dic_tag Pending"><i class="far fa-circle"></i> Pending</span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <Form.Check
+                                                                            className="inline-checkbox me-2_5"
+                                                                            name="group1"
+                                                                            type="checkbox"
+
+                                                                        />
+                                                                        <span className="font-weight-600">
+                                                                            Sandeep Kattamuri
+                                                                        </span>
+                                                                    </td>
+                                                                    <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
+                                                                    <td><span className="text-elipe-100">Pharmaceutical</span></td>
+                                                                    <td>5 Years</td>
+                                                                    <td>15/09/2024</td>
+                                                                    <td>Hyderabad</td>
+                                                                    <td>40%</td>
+                                                                    <td>
+                                                                        <div className="d-flex">
+                                                                            <img src={User01Gray} />
+                                                                            <select className="select-transpant">
+                                                                                <option>76%</option>
+                                                                                <option>70%</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>Invited</td>
+                                                                    <td><span className="text-elipe-40">Under Review</span></td>
+                                                                    <td><span className="text-elipe-40">Under Review</span></td>
+                                                                    <td><span className="text-elipe-40">Under Review</span></td>
+                                                                    <td>76%</td>
+                                                                    <td>
+                                                                        <span className="tag tag-lightprimery">Recall</span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <span className="dic_tag shortlisted"><i class="fa fa-check-circle"></i> Shortlisted</span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <Form.Check
+                                                                            className="inline-checkbox me-2_5"
+                                                                            name="group1"
+                                                                            type="checkbox"
+
+                                                                        />
+                                                                        <span className="font-weight-600">
+                                                                            Sandeep Kattamuri
+                                                                        </span>
+                                                                    </td>
+                                                                    <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
+                                                                    <td><span className="text-elipe-100">Pharmaceutical</span></td>
+                                                                    <td>5 Years</td>
+                                                                    <td>15/09/2024</td>
+                                                                    <td>Hyderabad</td>
+                                                                    <td>40%</td>
+                                                                    <td>
+                                                                        <div className="d-flex">
+                                                                            <img src={User01Gray} />
+                                                                            <select className="select-transpant">
+                                                                                <option>76%</option>
+                                                                                <option>70%</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>Invited</td>
+                                                                    <td><span className="text-elipe-40">Under Review</span></td>
+                                                                    <td><span className="text-elipe-40">Under Review</span></td>
+                                                                    <td><span className="text-elipe-40">Under Review</span></td>
+                                                                    <td>76%</td>
+                                                                    <td>
+                                                                        <span className="tag tag-lightprimery">Recall</span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <span className="dic_tag Pending"><i class="far fa-circle"></i> Pending</span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <Form.Check
+                                                                            className="inline-checkbox me-2_5"
+                                                                            name="group1"
+                                                                            type="checkbox"
+
+                                                                        />
+                                                                        <span className="font-weight-600">
+                                                                            Sandeep Kattamuri
+                                                                        </span>
+                                                                    </td>
+                                                                    <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
+                                                                    <td><span className="text-elipe-100">Pharmaceutical</span></td>
+                                                                    <td>5 Years</td>
+                                                                    <td>15/09/2024</td>
+                                                                    <td>Hyderabad</td>
+                                                                    <td>40%</td>
+                                                                    <td>
+                                                                        <div className="d-flex">
+                                                                            <img src={User01Gray} />
+                                                                            <select className="select-transpant">
+                                                                                <option>76%</option>
+                                                                                <option>70%</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>Invited</td>
+                                                                    <td><span className="text-elipe-40">Under Review</span></td>
+                                                                    <td><span className="text-elipe-40">Under Review</span></td>
+                                                                    <td><span className="text-elipe-40">Under Review</span></td>
+                                                                    <td>76%</td>
+                                                                    <td>
+                                                                        <span className="tag tag-lightprimery">Recall</span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <span className="dic_tag hold"><i class="fa fa-ban"></i> On Hold</span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <Form.Check
+                                                                            className="inline-checkbox me-2_5"
+                                                                            name="group1"
+                                                                            type="checkbox"
+
+                                                                        />
+                                                                        <span className="font-weight-600">
+                                                                            Sandeep Kattamuri
+                                                                        </span>
+                                                                    </td>
+                                                                    <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
+                                                                    <td><span className="text-elipe-100">Pharmaceutical</span></td>
+                                                                    <td>5 Years</td>
+                                                                    <td>15/09/2024</td>
+                                                                    <td>Hyderabad</td>
+                                                                    <td>40%</td>
+                                                                    <td>
+                                                                        <div className="d-flex">
+                                                                            <img src={User01Gray} />
+                                                                            <select className="select-transpant">
+                                                                                <option>76%</option>
+                                                                                <option>70%</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>Invited</td>
+                                                                    <td><span className="text-elipe-40">Under Review</span></td>
+                                                                    <td><span className="text-elipe-40">Under Review</span></td>
+                                                                    <td><span className="text-elipe-40">Under Review</span></td>
+                                                                    <td>76%</td>
+                                                                    <td>
+                                                                        <span className="tag tag-lightprimery">Recall</span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <span className="dic_tag hold"><i class="fa fa-ban"></i> On Hold</span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <Form.Check
+                                                                            className="inline-checkbox me-2_5"
+                                                                            name="group1"
+                                                                            type="checkbox"
+
+                                                                        />
+                                                                        <span className="font-weight-600">
+                                                                            Sandeep Kattamuri
+                                                                        </span>
+                                                                    </td>
+                                                                    <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
+                                                                    <td><span className="text-elipe-100">Pharmaceutical</span></td>
+                                                                    <td>5 Years</td>
+                                                                    <td>15/09/2024</td>
+                                                                    <td>Hyderabad</td>
+                                                                    <td>40%</td>
+                                                                    <td>
+                                                                        <div className="d-flex">
+                                                                            <img src={User01Gray} />
+                                                                            <select className="select-transpant">
+                                                                                <option>76%</option>
+                                                                                <option>70%</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>Invited</td>
+                                                                    <td><span className="text-elipe-40">Under Review</span></td>
+                                                                    <td><span className="text-elipe-40">Under Review</span></td>
+                                                                    <td><span className="text-elipe-40">Under Review</span></td>
+                                                                    <td>76%</td>
+                                                                    <td>
+                                                                        <span className="tag tag-lightprimery">Recall</span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <span className="dic_tag Pending"><i class="far fa-circle"></i> Pending</span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <Form.Check
+                                                                            className="inline-checkbox me-2_5"
+                                                                            name="group1"
+                                                                            type="checkbox"
+
+                                                                        />
+                                                                        <span className="font-weight-600">
+                                                                            Sandeep Kattamuri
+                                                                        </span>
+                                                                    </td>
+                                                                    <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
+                                                                    <td><span className="text-elipe-100">Pharmaceutical</span></td>
+                                                                    <td>5 Years</td>
+                                                                    <td>15/09/2024</td>
+                                                                    <td>Hyderabad</td>
+                                                                    <td>40%</td>
+                                                                    <td>
+                                                                        <div className="d-flex">
+                                                                            <img src={User01Gray} />
+                                                                            <select className="select-transpant">
+                                                                                <option>76%</option>
+                                                                                <option>70%</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>Invited</td>
+                                                                    <td><span className="text-elipe-40">Under Review</span></td>
+                                                                    <td><span className="text-elipe-40">Under Review</span></td>
+                                                                    <td><span className="text-elipe-40">Under Review</span></td>
+                                                                    <td>76%</td>
+                                                                    <td>
+                                                                        <span className="tag tag-lightprimery">Recall</span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <span className="dic_tag shortlisted"><i class="fa fa-check-circle"></i> Shortlisted</span>
+                                                                    </td>
+                                                                </tr> */}
+                                                            </tbody>
+                                                            <tfoot>
+                                                                <tr>
+                                                                    <td colspan="2"><button type="button" class="btn-light-outline btn btn-primary">Load More</button></td>
+                                                                    <td colspan="13" class="text-end pe-3"><span class="pagination_count">Showing 10 items</span></td>
+                                                                </tr>
+                                                            </tfoot>
+                                                        </Table>
                                                     </div>
-                                                    <Card.Body>
-                                                        {paraName?.parameter_name === "Screening" ? (
+                                                </Card.Body>
+                                            </Card>
+                                        ) : (<>
+                                            {groupParameterList.map((paraName, paraIndex) => (
+                                                <Col md={2}>
+                                                    <Card className="status_cardpanel">
+                                                        <div className="card-header">
+                                                            <h5>{paraName?.parameter_name} <span className="count">{paraName?.parameter_applicant_count}</span></h5>
+                                                            <button type="button"><i class="fa fa-ellipsis-h"></i></button>
+                                                        </div>
+                                                        <Card.Body>
+                                                            {/* {paraName?.parameter_name === "Screening" ? (
                                                             <>
                                                                 <button type="button" onClick={() => {
                                                                     setGroupModal(true)
@@ -676,8 +1307,32 @@ tracker.show_tasks()
                                                                         <h6>{groupItem?.group_name}<span className="count">{groupItem?.group_wise_applicant_count}</span></h6>
                                                                     </div>
                                                                 ))}
-                                                            </>)}
-                                                        {/* <div className="sts_databox excellent">
+                                                            </>
+                                                        )} */}
+                                                            <button type="button" onClick={() => {
+                                                                setGroupModal(true)
+                                                                setGroupParameterId(paraName?.uid)
+                                                            }} className="btn btn-link mb-3"><i className="fa fa-plus me-2"></i>Create a New Group</button>
+                                                            {paraName?.groups_parameter?.sort((a, b) => a.id - b.id)?.map((groupItem) => (
+                                                                <>
+                                                                    <div className={`sts_databox ${groupItem?.group_name.toLowerCase()}`}>
+                                                                        <div className="d-flex justify-content-between">
+                                                                            <h6>{groupItem?.group_name}<span className="count">{groupItem?.group_wise_applicant_count}</span></h6>
+                                                                        </div>
+                                                                        <div className="d-flex justify-content-between align-items-end">
+                                                                            <Form>
+                                                                                <Form.Check
+                                                                                    type="switch"
+                                                                                    id="custom-switch"
+                                                                                    label="Auto-Remind"
+                                                                                />
+                                                                            </Form>
+                                                                            <button className="button" class="btn-transpant" onClick={() => handleListData(groupItem)}><i class="fa fa-list-ul" aria-hidden="true"></i></button>
+                                                                        </div>
+                                                                    </div>
+                                                                </>
+                                                            ))}
+                                                            {/* <div className="sts_databox excellent">
                                                         <h6>Excellent<span className="count">40</span></h6>
                                                     </div>
                                                     <div className="sts_databox good">
@@ -695,10 +1350,11 @@ tracker.show_tasks()
                                                     <div className="sts_databox rejected">
                                                         <h6>Rejected<span className="count">20</span></h6>
                                                     </div> */}
-                                                    </Card.Body>
-                                                </Card>
-                                            </Col>
-                                        ))}
+                                                        </Card.Body>
+                                                    </Card>
+                                                </Col>
+                                            ))}
+                                        </>)}
                                         {/* <Col md={2}>
                                             <Card className="status_cardpanel">
                                                 <div className="card-header">
@@ -919,550 +1575,6 @@ tracker.show_tasks()
                                             </Card>
                                         </Col>
                                     </Row>
-                                    {/* <Card className="shadow-sm border-0 evaluations_data mt-4 rounded overflow-hidden">
-                                        <Card.Header className="py-2">
-                                            <Row>
-                                                <Col md={6} className="d-flex">
-                                                    <Button
-                                                        className="btn btn-light-outline me-3"
-                                                        onClick={handleShow}
-                                                    >
-                                                        <svg
-                                                            width="20"
-                                                            height="20"
-                                                            viewBox="0 0 20 20"
-                                                            className="me-2"
-                                                            fill="none"
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                        >
-                                                            <path
-                                                                d="M5 10H15M2.5 5H17.5M7.5 15H12.5"
-                                                                stroke="#344054"
-                                                                stroke-width="1.66667"
-                                                                stroke-linecap="round"
-                                                                stroke-linejoin="round"
-                                                            />
-                                                        </svg>
-                                                        More filters
-                                                    </Button>
-                                                    <div className="d-inline">
-                                                        <InputGroup className="defult_serachbox">
-                                                            <Button id="basic-addon1">
-                                                                <svg
-                                                                    width="18"
-                                                                    height="18"
-                                                                    viewBox="0 0 18 18"
-                                                                    fill="none"
-                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                >
-                                                                    <path
-                                                                        d="M16.5 16.5L11.5001 11.5M13.1667 7.33333C13.1667 10.555 10.555 13.1667 7.33333 13.1667C4.11167 13.1667 1.5 10.555 1.5 7.33333C1.5 4.11167 4.11167 1.5 7.33333 1.5C10.555 1.5 13.1667 4.11167 13.1667 7.33333Z"
-                                                                        stroke="#667085"
-                                                                        stroke-width="1.66667"
-                                                                        stroke-linecap="round"
-                                                                        stroke-linejoin="round"
-                                                                    />
-                                                                </svg>
-                                                            </Button>
-                                                            <Form.Control
-                                                                placeholder="Serach"
-                                                                aria-label="Serach"
-                                                                aria-describedby="basic-addon1"
-                                                            />
-                                                        </InputGroup>
-                                                    </div>
-                                                </Col>
-                                                <Col md={6} className="d-flex justify-content-end align-items-center">
-                                                    <Button className="icon_btnlink"><i className="far fa-check-circle me-2 text-primery"></i>Shortlist</Button>
-                                                    <Button className="icon_btnlink"><i className="far fa-times-circle me-2 text-primery"></i>Reject</Button>
-                                                    <Button className="icon_btnlink"><i className="fa fa-ban me-2 text-primery"></i>Hold</Button>
-                                                    <Button className="icon_btnlink"><i className="fa fa-download me-2 text-primery"></i>Download</Button>
-                                                </Col>
-                                            </Row>
-                                        </Card.Header>
-                                        <Card.Body className="pt-2">
-                                            <div className="applid-filters">
-                                                <span className="filter-tag">Filter 1 <i class="fa fa-times" aria-hidden="true"></i></span>
-                                                <span className="filter-tag">Filter 2 <i class="fa fa-times" aria-hidden="true"></i></span>
-                                                <span className="filter-tag">Filter 3 <i class="fa fa-times" aria-hidden="true"></i></span>
-                                                <span className="filter-tag">Filter 4 <i class="fa fa-times" aria-hidden="true"></i></span>
-                                            </div>
-                                            <div className="elv_datatable jobreview_data">
-                                                <Table striped className="m-0">
-                                                    <thead>
-                                                        <tr>
-                                                            <th colSpan={1}>&nbsp;</th>
-                                                            <th colSpan={5} className="border-b">
-                                                                <div className="d-flex align-items-end justify-content-between">
-                                                                    <strong>Details</strong><button type="button" className="btn btn-link font-sm pb-0"><i class="fas fa-plus-circle"></i></button>
-                                                                </div>
-                                                            </th>
-                                                            <th colSpan={2} className="border-b"><strong>LYWO Score</strong></th>
-                                                            <th colSpan={5} className="border-b"><strong>Progress</strong></th>
-                                                            <th colSpan={2} className="border-b"><strong>Status</strong></th>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>
-                                                                <img src={baseCheckbox} alt="" className="me-2 mw-16" />
-                                                                Candidate Name
-                                                            </th>
-                                                            <th>Education</th>
-                                                            <th>Industry</th>
-                                                            <th>Experience</th>
-                                                            <th>Joining Date</th>
-                                                            <th>Location</th>
-                                                            <th>Match</th>
-                                                            <th>Personality</th>
-                                                            <th>Step 3</th>
-                                                            <th>Step 4</th>
-                                                            <th>Step 5</th>
-                                                            <th>Step 6</th>
-                                                            <th>Score</th>
-                                                            <th>Tag</th>
-                                                            <th>Decision</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>
-                                                                <Form.Check
-                                                                    className="inline-checkbox me-2_5"
-                                                                    name="group1"
-                                                                    type="checkbox"
-
-                                                                />
-                                                                <span className="font-weight-600">
-                                                                    Sandeep Kattamuri
-                                                                </span>
-                                                            </td>
-                                                            <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
-                                                            <td><span className="text-elipe-100">Pharmaceutical</span></td>
-                                                            <td>5 Years</td>
-                                                            <td>15/09/2024</td>
-                                                            <td>Hyderabad</td>
-                                                            <td>40%</td>
-                                                            <td>
-                                                                <div className="d-flex">
-                                                                    <img src={User01Gray} />
-                                                                    <select className="select-transpant">
-                                                                        <option>76%</option>
-                                                                        <option>70%</option>
-                                                                    </select>
-                                                                </div>
-                                                            </td>
-                                                            <td>Invited</td>
-                                                            <td><span className="text-elipe-40">Under Review</span></td>
-                                                            <td><span className="text-elipe-40">Under Review</span></td>
-                                                            <td><span className="text-elipe-40">Under Review</span></td>
-                                                            <td>76%</td>
-                                                            <td>
-                                                                <span className="tag tag-lightprimery">Recall</span>
-                                                            </td>
-                                                            <td>
-                                                                <span className="dic_tag inactive"><i class="fa fa-minus"></i> Inactive</span>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <Form.Check
-                                                                    className="inline-checkbox me-2_5"
-                                                                    name="group1"
-                                                                    type="checkbox"
-
-                                                                />
-                                                                <span className="font-weight-600">
-                                                                    Sandeep Kattamuri
-                                                                </span>
-                                                            </td>
-                                                            <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
-                                                            <td><span className="text-elipe-100">Pharmaceutical</span></td>
-                                                            <td>5 Years</td>
-                                                            <td>15/09/2024</td>
-                                                            <td>Hyderabad</td>
-                                                            <td>60%</td>
-                                                            <td>
-                                                                <div className="d-flex">
-                                                                    <img src={User01Gray} />
-                                                                    <select className="select-transpant">
-                                                                        <option>76%</option>
-                                                                        <option>70%</option>
-                                                                    </select>
-                                                                </div>
-                                                            </td>
-                                                            <td>Invited</td>
-                                                            <td><span className="text-elipe-40">Under Review</span></td>
-                                                            <td><span className="text-elipe-40">Under Review</span></td>
-                                                            <td><span className="text-elipe-40">Under Review</span></td>
-                                                            <td>76%</td>
-                                                            <td>
-                                                                <span className="tag tag-lightprimery">Revisit</span>
-                                                            </td>
-                                                            <td>
-                                                                <span className="dic_tag active"><i class="far fa-check-circle"></i> Active</span>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <Form.Check
-                                                                    className="inline-checkbox me-2_5"
-                                                                    name="group1"
-                                                                    type="checkbox"
-
-                                                                />
-                                                                <span className="font-weight-600">
-                                                                    Sandeep Kattamuri
-                                                                </span>
-                                                            </td>
-                                                            <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
-                                                            <td><span className="text-elipe-100">Pharmaceutical</span></td>
-                                                            <td>5 Years</td>
-                                                            <td>15/09/2024</td>
-                                                            <td>Hyderabad</td>
-                                                            <td>80%</td>
-                                                            <td>
-                                                                <div className="d-flex">
-                                                                    <img src={User01Gray} />
-                                                                    <select className="select-transpant">
-                                                                        <option>76%</option>
-                                                                        <option>70%</option>
-                                                                    </select>
-                                                                </div>
-                                                            </td>
-                                                            <td>Invited</td>
-                                                            <td><span className="text-elipe-40">Under Review</span></td>
-                                                            <td><span className="text-elipe-40">Under Review</span></td>
-                                                            <td><span className="text-elipe-40">Under Review</span></td>
-                                                            <td>76%</td>
-                                                            <td>
-                                                                <span className="tag tag-lightprimery">Recall</span>
-                                                            </td>
-                                                            <td>
-                                                                <span className="dic_tag rejected"><i class="far fa-times-circle"></i> Rejected</span>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <Form.Check
-                                                                    className="inline-checkbox me-2_5"
-                                                                    name="group1"
-                                                                    type="checkbox"
-
-                                                                />
-                                                                <span className="font-weight-600">
-                                                                    Sandeep Kattamuri
-                                                                </span>
-                                                            </td>
-                                                            <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
-                                                            <td><span className="text-elipe-100">Pharmaceutical</span></td>
-                                                            <td>5 Years</td>
-                                                            <td>15/09/2024</td>
-                                                            <td>Hyderabad</td>
-                                                            <td>40%</td>
-                                                            <td>
-                                                                <div className="d-flex">
-                                                                    <img src={User01Gray} />
-                                                                    <select className="select-transpant">
-                                                                        <option>76%</option>
-                                                                        <option>70%</option>
-                                                                    </select>
-                                                                </div>
-                                                            </td>
-                                                            <td>Invited</td>
-                                                            <td><span className="text-elipe-40">Under Review</span></td>
-                                                            <td><span className="text-elipe-40">Under Review</span></td>
-                                                            <td><span className="text-elipe-40">Under Review</span></td>
-                                                            <td>76%</td>
-                                                            <td>
-                                                                <span className="tag tag-lightprimery">Recall</span>
-                                                            </td>
-                                                            <td>
-                                                                <span className="dic_tag hold"><i class="fa fa-ban"></i> On Hold</span>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <Form.Check
-                                                                    className="inline-checkbox me-2_5"
-                                                                    name="group1"
-                                                                    type="checkbox"
-
-                                                                />
-                                                                <span className="font-weight-600">
-                                                                    Sandeep Kattamuri
-                                                                </span>
-                                                            </td>
-                                                            <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
-                                                            <td><span className="text-elipe-100">Pharmaceutical</span></td>
-                                                            <td>5 Years</td>
-                                                            <td>15/09/2024</td>
-                                                            <td>Hyderabad</td>
-                                                            <td>40%</td>
-                                                            <td>
-                                                                <div className="d-flex">
-                                                                    <img src={User01Gray} />
-                                                                    <select className="select-transpant">
-                                                                        <option>76%</option>
-                                                                        <option>70%</option>
-                                                                    </select>
-                                                                </div>
-                                                            </td>
-                                                            <td>Invited</td>
-                                                            <td><span className="text-elipe-40">Under Review</span></td>
-                                                            <td><span className="text-elipe-40">Under Review</span></td>
-                                                            <td><span className="text-elipe-40">Under Review</span></td>
-                                                            <td>76%</td>
-                                                            <td>
-                                                                <span className="tag tag-lightprimery">Recall</span>
-                                                            </td>
-                                                            <td>
-                                                                <span className="dic_tag Pending"><i class="far fa-circle"></i> Pending</span>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <Form.Check
-                                                                    className="inline-checkbox me-2_5"
-                                                                    name="group1"
-                                                                    type="checkbox"
-
-                                                                />
-                                                                <span className="font-weight-600">
-                                                                    Sandeep Kattamuri
-                                                                </span>
-                                                            </td>
-                                                            <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
-                                                            <td><span className="text-elipe-100">Pharmaceutical</span></td>
-                                                            <td>5 Years</td>
-                                                            <td>15/09/2024</td>
-                                                            <td>Hyderabad</td>
-                                                            <td>40%</td>
-                                                            <td>
-                                                                <div className="d-flex">
-                                                                    <img src={User01Gray} />
-                                                                    <select className="select-transpant">
-                                                                        <option>76%</option>
-                                                                        <option>70%</option>
-                                                                    </select>
-                                                                </div>
-                                                            </td>
-                                                            <td>Invited</td>
-                                                            <td><span className="text-elipe-40">Under Review</span></td>
-                                                            <td><span className="text-elipe-40">Under Review</span></td>
-                                                            <td><span className="text-elipe-40">Under Review</span></td>
-                                                            <td>76%</td>
-                                                            <td>
-                                                                <span className="tag tag-lightprimery">Recall</span>
-                                                            </td>
-                                                            <td>
-                                                                <span className="dic_tag shortlisted"><i class="fa fa-check-circle"></i> Shortlisted</span>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <Form.Check
-                                                                    className="inline-checkbox me-2_5"
-                                                                    name="group1"
-                                                                    type="checkbox"
-
-                                                                />
-                                                                <span className="font-weight-600">
-                                                                    Sandeep Kattamuri
-                                                                </span>
-                                                            </td>
-                                                            <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
-                                                            <td><span className="text-elipe-100">Pharmaceutical</span></td>
-                                                            <td>5 Years</td>
-                                                            <td>15/09/2024</td>
-                                                            <td>Hyderabad</td>
-                                                            <td>40%</td>
-                                                            <td>
-                                                                <div className="d-flex">
-                                                                    <img src={User01Gray} />
-                                                                    <select className="select-transpant">
-                                                                        <option>76%</option>
-                                                                        <option>70%</option>
-                                                                    </select>
-                                                                </div>
-                                                            </td>
-                                                            <td>Invited</td>
-                                                            <td><span className="text-elipe-40">Under Review</span></td>
-                                                            <td><span className="text-elipe-40">Under Review</span></td>
-                                                            <td><span className="text-elipe-40">Under Review</span></td>
-                                                            <td>76%</td>
-                                                            <td>
-                                                                <span className="tag tag-lightprimery">Recall</span>
-                                                            </td>
-                                                            <td>
-                                                                <span className="dic_tag Pending"><i class="far fa-circle"></i> Pending</span>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <Form.Check
-                                                                    className="inline-checkbox me-2_5"
-                                                                    name="group1"
-                                                                    type="checkbox"
-
-                                                                />
-                                                                <span className="font-weight-600">
-                                                                    Sandeep Kattamuri
-                                                                </span>
-                                                            </td>
-                                                            <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
-                                                            <td><span className="text-elipe-100">Pharmaceutical</span></td>
-                                                            <td>5 Years</td>
-                                                            <td>15/09/2024</td>
-                                                            <td>Hyderabad</td>
-                                                            <td>40%</td>
-                                                            <td>
-                                                                <div className="d-flex">
-                                                                    <img src={User01Gray} />
-                                                                    <select className="select-transpant">
-                                                                        <option>76%</option>
-                                                                        <option>70%</option>
-                                                                    </select>
-                                                                </div>
-                                                            </td>
-                                                            <td>Invited</td>
-                                                            <td><span className="text-elipe-40">Under Review</span></td>
-                                                            <td><span className="text-elipe-40">Under Review</span></td>
-                                                            <td><span className="text-elipe-40">Under Review</span></td>
-                                                            <td>76%</td>
-                                                            <td>
-                                                                <span className="tag tag-lightprimery">Recall</span>
-                                                            </td>
-                                                            <td>
-                                                                <span className="dic_tag hold"><i class="fa fa-ban"></i> On Hold</span>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <Form.Check
-                                                                    className="inline-checkbox me-2_5"
-                                                                    name="group1"
-                                                                    type="checkbox"
-
-                                                                />
-                                                                <span className="font-weight-600">
-                                                                    Sandeep Kattamuri
-                                                                </span>
-                                                            </td>
-                                                            <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
-                                                            <td><span className="text-elipe-100">Pharmaceutical</span></td>
-                                                            <td>5 Years</td>
-                                                            <td>15/09/2024</td>
-                                                            <td>Hyderabad</td>
-                                                            <td>40%</td>
-                                                            <td>
-                                                                <div className="d-flex">
-                                                                    <img src={User01Gray} />
-                                                                    <select className="select-transpant">
-                                                                        <option>76%</option>
-                                                                        <option>70%</option>
-                                                                    </select>
-                                                                </div>
-                                                            </td>
-                                                            <td>Invited</td>
-                                                            <td><span className="text-elipe-40">Under Review</span></td>
-                                                            <td><span className="text-elipe-40">Under Review</span></td>
-                                                            <td><span className="text-elipe-40">Under Review</span></td>
-                                                            <td>76%</td>
-                                                            <td>
-                                                                <span className="tag tag-lightprimery">Recall</span>
-                                                            </td>
-                                                            <td>
-                                                                <span className="dic_tag hold"><i class="fa fa-ban"></i> On Hold</span>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <Form.Check
-                                                                    className="inline-checkbox me-2_5"
-                                                                    name="group1"
-                                                                    type="checkbox"
-
-                                                                />
-                                                                <span className="font-weight-600">
-                                                                    Sandeep Kattamuri
-                                                                </span>
-                                                            </td>
-                                                            <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
-                                                            <td><span className="text-elipe-100">Pharmaceutical</span></td>
-                                                            <td>5 Years</td>
-                                                            <td>15/09/2024</td>
-                                                            <td>Hyderabad</td>
-                                                            <td>40%</td>
-                                                            <td>
-                                                                <div className="d-flex">
-                                                                    <img src={User01Gray} />
-                                                                    <select className="select-transpant">
-                                                                        <option>76%</option>
-                                                                        <option>70%</option>
-                                                                    </select>
-                                                                </div>
-                                                            </td>
-                                                            <td>Invited</td>
-                                                            <td><span className="text-elipe-40">Under Review</span></td>
-                                                            <td><span className="text-elipe-40">Under Review</span></td>
-                                                            <td><span className="text-elipe-40">Under Review</span></td>
-                                                            <td>76%</td>
-                                                            <td>
-                                                                <span className="tag tag-lightprimery">Recall</span>
-                                                            </td>
-                                                            <td>
-                                                                <span className="dic_tag Pending"><i class="far fa-circle"></i> Pending</span>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <Form.Check
-                                                                    className="inline-checkbox me-2_5"
-                                                                    name="group1"
-                                                                    type="checkbox"
-
-                                                                />
-                                                                <span className="font-weight-600">
-                                                                    Sandeep Kattamuri
-                                                                </span>
-                                                            </td>
-                                                            <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
-                                                            <td><span className="text-elipe-100">Pharmaceutical</span></td>
-                                                            <td>5 Years</td>
-                                                            <td>15/09/2024</td>
-                                                            <td>Hyderabad</td>
-                                                            <td>40%</td>
-                                                            <td>
-                                                                <div className="d-flex">
-                                                                    <img src={User01Gray} />
-                                                                    <select className="select-transpant">
-                                                                        <option>76%</option>
-                                                                        <option>70%</option>
-                                                                    </select>
-                                                                </div>
-                                                            </td>
-                                                            <td>Invited</td>
-                                                            <td><span className="text-elipe-40">Under Review</span></td>
-                                                            <td><span className="text-elipe-40">Under Review</span></td>
-                                                            <td><span className="text-elipe-40">Under Review</span></td>
-                                                            <td>76%</td>
-                                                            <td>
-                                                                <span className="tag tag-lightprimery">Recall</span>
-                                                            </td>
-                                                            <td>
-                                                                <span className="dic_tag shortlisted"><i class="fa fa-check-circle"></i> Shortlisted</span>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                    <tfoot>
-                                                        <tr>
-                                                            <td colspan="2"><button type="button" class="btn-light-outline btn btn-primary">Load More</button></td>
-                                                            <td colspan="13" class="text-end pe-3"><span class="pagination_count">Showing 10 items</span></td>
-                                                        </tr>
-                                                    </tfoot>
-                                                </Table>
-                                            </div>
-                                        </Card.Body>
-                                    </Card> */}
                                 </Tab.Pane>
                                 <Tab.Pane eventKey="second">Second tab content</Tab.Pane>
                                 <Tab.Pane eventKey="third">
@@ -1772,7 +1884,6 @@ tracker.show_tasks()
                     </Tab.Container>
                 </Container>
             </div>
-
             {/*======MORE FILTER======*/}
             <Offcanvas
                 show={show}
@@ -2383,6 +2494,20 @@ tracker.show_tasks()
                 getJobGroupParameterList={getJobGroupParameterList}
             />
 
+            <FilterApplicantModal
+                show={FilterApplicantShow}
+                handleClose={handleCloseGrpMdl}
+                assetJob={assetJob}
+                setAssetJob={setAssetJob}
+                jobDetails={jobDetails}
+                localAssetJob={localAssetJob}
+                setLocalAssetJob={setLocalAssetJob}
+                id={id}
+                groupState={groupState}
+                setGroupState={setGroupState}
+                groupParameterId={groupParameterId}
+                getJobGroupParameterList={getJobGroupParameterList}
+            />
             {/*======Answer======*/}
             <Offcanvas
                 show={reviewModal}
