@@ -1336,23 +1336,23 @@ const UpdateJobsRevised = ({
         if (openStep.length && sectionRefs.current[openStep[0]]) {
             //   const top = sectionRefs.current[openStep[0]].offsetTop;
             if (openStep[0] === '1') {
-                setToolbarPosition(85);
+                setToolbarPosition(104);
             } else if (openStep[0] === '2') {
-                setToolbarPosition(142);
+                setToolbarPosition(160);
             } else if (openStep[0] === '3') {
-                setToolbarPosition(200);
+                setToolbarPosition(216);
             } else if (openStep[0] === '4') {
-                setToolbarPosition(255);
+                setToolbarPosition(273);
             } else if (openStep[0] === '5') {
-                setToolbarPosition(310);
+                setToolbarPosition(328);
             } else if (openStep[0] === '6') {
-                setToolbarPosition(367);
+                setToolbarPosition(386);
             } else if (openStep[0] === '8') {
-                setToolbarPosition(485);
+                setToolbarPosition(520);
             } else if (openStep[0] === '9') {
-                setToolbarPosition(540);
+                setToolbarPosition(577);
             } else if (openStep[0] === '11') {
-                setToolbarPosition(675);
+                setToolbarPosition(728);
             }
         }
     }, [openStep]);
@@ -1633,8 +1633,8 @@ const UpdateJobsRevised = ({
                                 defaultActiveKey={["0", "8", "7", "10"]}
                                 activeKey={currentStep} onSelect={(key) => setCurrentStep(key)}>
                                 <Accordion.Item eventKey="0">
-                                    <Accordion.Header onClick={() => setOpenStep([])}>Requirements</Accordion.Header>
-                                    {currentStep !== "0" && (<p>Define your ideal hire in detail here. Use flags to indicate the importance as needed. All fields are mandatory</p>)}
+                                    <Accordion.Header className="bg-lightblue" onClick={() => setOpenStep([])}>Requirements</Accordion.Header>
+                                    {currentStep !== "0" && (<p className="short_text">Define your ideal hire in detail here. Use flags to indicate the importance as needed. All fields are mandatory</p>)}
                                     <Accordion.Body>
                                         <p>
                                             Use this section to define your ideal hire in more detail.
@@ -2755,10 +2755,10 @@ const UpdateJobsRevised = ({
                                     </Accordion.Body>
                                 </Accordion.Item>
                                 <Accordion.Item eventKey="7">
-                                    <Accordion.Header onClick={() => setOpenStep([])}>
+                                    <Accordion.Header className="bg-lightblue" onClick={() => setOpenStep([])}>
                                         Skills and Other Requirements
                                     </Accordion.Header>
-                                    {currentStep !== "7" && (<p> Select Skills and Add at least 1 Custom Question to help you understand your applicants better.</p>)}
+                                    {currentStep !== "7" && (<p className="short_text"> Select Skills and Add at least 1 Custom Question to help you understand your applicants better.</p>)}
                                     <Accordion.Body>
                                         <p>
                                             In this section, you can add additional optional details
@@ -3287,10 +3287,10 @@ const UpdateJobsRevised = ({
                                     </Accordion.Item>
                                 </Accordion>
                                 <Accordion.Item eventKey="10">
-                                    <Accordion.Header onClick={() => setOpenStep([])}>
+                                    <Accordion.Header className="bg-lightblue" onClick={() => setOpenStep([])}>
                                         Ideal Behaviour and Personalities
                                     </Accordion.Header>
-                                    {currentStep !== "10" && (<p>Select the 6 most relevant behaviours for the role and company based on daily tasks and work culture. Then, choose the 2 most important ones. Don,t hesitate the Help Me Section.</p>)}
+                                    {currentStep !== "10" && (<p className="short_text">Select the 6 most relevant behaviours for the role and company based on daily tasks and work culture. Then, choose the 2 most important ones. Don,t hesitate the Help Me Section.</p>)}
                                     <Accordion.Body>
                                         <p>
                                             Pick the most relevant behaviours for the Role and the
@@ -3328,7 +3328,7 @@ const UpdateJobsRevised = ({
                                                     stroke-linejoin="round"
                                                 />
                                             </svg> */}
-                                            <small className="small_subtitle">Select 6 out of the 12 available options, Identify 2 most important ones</small>
+                                            <small className="small_subtitle">Select <span className="text-primery">6 out of the 12</span> available options, Identify <span className="text-primery">2 most important ones</span></small>
                                         </div>
                                         <button type="button" className="btn btn-lightgray me-4" onClick={(e) => { e.stopPropagation(); setShowHelpChoose(true) }}>
                                             <svg

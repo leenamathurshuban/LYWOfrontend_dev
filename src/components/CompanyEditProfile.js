@@ -1810,9 +1810,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
 
                                   {LocationSearchDropdown &&
                                     Location.length === 0 && (
-                                      <ul>
                                         <p className="error">Headquarter Not found </p>
-                                      </ul>
                                     )}
                                 </Form.Group>
 
@@ -1928,11 +1926,6 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                   ? selectedCompanyType
                                   : companyProfileDetails?.company_type}
                               </li>
-                              <p
-                                dangerouslySetInnerHTML={{
-                                  __html: companyProfileDetails?.description,
-                                }}
-                              />
                               <li>
                                 {noOfEmploy
                                   ? noOfEmploy
@@ -1945,6 +1938,11 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                     ?.location_name}
                               </li>
                             </ul>
+                            <p className="cpm_dic"
+                                dangerouslySetInnerHTML={{
+                                  __html: companyProfileDetails?.description,
+                                }}>
+                              </p>
                           </Accordion.Body>
                         </Accordion.Item>
                       </Accordion>

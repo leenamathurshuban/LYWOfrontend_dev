@@ -998,10 +998,9 @@ label.required.form-label {
   .cmp_info {
     margin: 15px 0 0 0;
     padding: 0 0 15px 0;
-    border-bottom: solid 1px #eaecf0;
     max-height: 250px;
     overflow-y: auto;
-    min-height: 230px;
+    min-height: 145px;
 
     li {
       list-style: none;
@@ -1026,11 +1025,12 @@ label.required.form-label {
     border-bottom: solid 1px #eaecf0;
   }
 
-  p {
+  p.cpm_dic {
     font-size: 10px;
     font-weight: 400;
-    color: #1D2939;
-    line-height: 24px;
+    color: #344054;
+    line-height: 16px;
+    border-bottom: solid 1px #eaecf0;
   }
 }
 
@@ -1422,7 +1422,7 @@ button.btn-link-muted {
         font-weight: 500;
         color: #1D2939;
         position: relative;
-        top: -5px;
+        top: -1px;
       }
     }
   }
@@ -2578,7 +2578,9 @@ select.h-36.form-select {
     margin-bottom: 8px;
     position: relative;
     cursor: pointer;
-
+    &:focus-visible{
+      outline:1px solid  #3538cd;
+    }
     &.active {
       background-color: #eef4ff;
       border-color: #c7d7fe;
@@ -2650,8 +2652,19 @@ select.h-36.form-select {
     width: auto;
     text-transform: capitalize;
   }
+  .smbtn-primary {
+    font-family: Inter;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 18px;
+    padding: 6px 15px;
+    text-align: center;
+    border-radius: 50px;
+    i {
+      color: #fff !important;
+    }
+  }
 }
-
 .ctmqus_panel {
   .stagbox_head {
     .form-control {
@@ -2794,8 +2807,20 @@ select.h-36.form-select {
     margin-bottom: 8px;
     border-radius: 8px;
     overflow: hidden;
-    border: solid 1px #e0eaff !important;
-    background-color: #f5f8ff;
+    border: solid 1px #E0EAFF !important;
+    background-color: #F5F8FF;
+    .short_text {
+      margin: 0;
+      font-family: Inter;
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 18px;
+      color: #475467;
+      position: relative;
+      top: -10px;
+      left: 15px;
+      max-width: 97%;
+    }
   }
 
   .accordion-header {
@@ -3883,7 +3908,17 @@ select.h-36.form-select {
   z-index: 99999;
 
   &.lg-drawer {
-    width: 1024px;
+    width: 60%;
+    &::before{
+      content: '';
+      background-color: rgba(242, 244, 247, 0.8);
+      backdrop-filter: blur(1px);
+      position: absolute;
+      top: 0;
+      left: -67%;
+      width: 67%;
+      height: 100%;
+    }
   }
 
   .modal-header {
@@ -7061,9 +7096,37 @@ button#input-group-dropdown-1 {
   }
 
 }
-
-
-
+/* Custom checkbox styles */
+.custom-checkbox {
+    display: inline-block;
+    vertical-align: middle;
+  .form-check-input[type=checkbox] {
+      appearance: none;
+      -webkit-appearance: none;
+      background-color: #fff;
+      border: 2px solid #D0D5DD;
+      border-radius: 4px;
+      width: 17px;
+      height: 17px;
+      position: relative;
+      outline: none;
+      transition: all 0.2s ease-in-out;
+    }
+    .form-check-input[type=checkbox]:checked {
+      background-color: #EEF4FF;
+      border-color: #444CE7;
+    }
+    .form-check-input[type=checkbox]:checked::after {
+        content: "✔";
+        color: #444CE7;
+        font-size: 13px;
+        position: absolute;
+        left: 2px;
+        top: -1px;
+        font-weight: 600;
+        transform: rotate(10deg);
+    }
+}
 /* Custom switch styles */
 .form-switch  {
 .form-check-input:checked {
@@ -7098,4 +7161,14 @@ button#input-group-dropdown-1 {
 .form-check-input:checked::before {
   transform: translateX(1em);
 }
+}
+.bg-lightblue {
+  .accordion-button {
+    background-color: #F5F8FF;
+    &:hover,&:focus,&:focus-visible,&:focus-within{
+      z-index: inherit;
+      box-shadow: none;
+      outline: none;
+    }
+  }
 }

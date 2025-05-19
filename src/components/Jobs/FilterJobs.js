@@ -252,7 +252,7 @@ const FilterJobs = ({
                   <ul className="filter_itemlist">
                     <li>
                       <Form.Check
-                        className="inline-checkbox"
+                        className="custom-checkbox"
                         name="Full-time"
                         type="checkbox"
                         checked={filtersList.job_type.includes("Full-time")}
@@ -280,7 +280,7 @@ const FilterJobs = ({
                     </li>
                     <li>
                       <Form.Check
-                        className="inline-checkbox"
+                        className="custom-checkbox"
                         name="Part-time"
                         type="checkbox"
                         checked={filtersList.job_type.includes("Part-time")}
@@ -317,7 +317,7 @@ const FilterJobs = ({
                   <ul className="filter_itemlist">
                     <li>
                       <Form.Check
-                        className="inline-checkbox"
+                        className="custom-checkbox"
                         name="On-site"
                         type="checkbox"
                         checked={filtersList.workplace_type.includes(
@@ -347,7 +347,7 @@ const FilterJobs = ({
                     </li>
                     <li>
                       <Form.Check
-                        className="inline-checkbox"
+                        className="custom-checkbox"
                         name="Remote"
                         type="checkbox"
                         checked={filtersList.workplace_type.includes("Remote")}
@@ -375,7 +375,7 @@ const FilterJobs = ({
                     </li>
                     <li>
                       <Form.Check
-                        className="inline-checkbox"
+                        className="custom-checkbox"
                         name="Hybrid"
                         type="checkbox"
                         checked={filtersList.workplace_type.includes("Hybrid")}
@@ -446,7 +446,7 @@ const FilterJobs = ({
                         <li>
                           <Form.Check
                             key={locationidx}
-                            className="inline-checkbox"
+                            className="custom-checkbox"
                             name={location.location_name}
                             type="checkbox"
                             checked={filtersList.job_location.includes(
@@ -505,7 +505,7 @@ const FilterJobs = ({
                         <li>
                           <Form.Check
                             key={deptidx}
-                            className="inline-checkbox"
+                            className="custom-checkbox"
                             name={dept.department_name}
                             type="checkbox"
                             checked={filtersList.department.includes(
@@ -560,7 +560,7 @@ const FilterJobs = ({
                   <ul className="filter_itemlist">
                     <li>
                       <Form.Check
-                        className="inline-checkbox"
+                        className="custom-checkbox"
                         name="Active"
                         type="checkbox"
                         checked={filtersList.job_status.includes("Active")}
@@ -588,7 +588,7 @@ const FilterJobs = ({
                     </li>
                     <li>
                       <Form.Check
-                        className="inline-checkbox"
+                        className="custom-checkbox"
                         name="Draft"
                         type="checkbox"
                         checked={filtersList.job_status.includes("Draft")}
@@ -616,7 +616,7 @@ const FilterJobs = ({
                     </li>
                     <li>
                       <Form.Check
-                        className="inline-checkbox"
+                        className="custom-checkbox"
                         name="Application-Stopped"
                         type="checkbox"
                         checked={filtersList.job_status.includes(
@@ -646,7 +646,7 @@ const FilterJobs = ({
                     </li>
                     <li>
                       <Form.Check
-                        className="inline-checkbox"
+                        className="custom-checkbox"
                         name="Closed"
                         type="checkbox"
                         checked={filtersList.job_status.includes("Closed")}
@@ -764,20 +764,21 @@ const FilterJobs = ({
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className="py-3">
           <div>
             <h4 className="primary">{viewMore?.isModalFor}</h4>
           </div>
-          <Form.Group className="mb-3 relative">
+          <Form.Group className="relative ms-3">
             <Form.Control
               placeholder={`${viewMore.isModalFor === "Location" ? "Search Location" : "Search Department"}`}
               aria-label="Search"
-              className="w-100" // width 50% of the parent container
+              style={{minWidth:'280px'}}
+              className="sm-fcontrol" // width 50% of the parent container
               value={viewMore.isModalFor === "Location"?filtersList.job_location:filtersList.department}
               onChange={handleLocationDepartmentsearch}
             />
             <div className={`${viewMoreSearch?.length > 0 ? 'ctm_dropdown ct_scrollbar' : ''}`}>
-              <ul>
+              <ul className="m-0">
                 {viewMoreSearch?.map((item) => (
                   (
                     <li
@@ -815,7 +816,7 @@ const FilterJobs = ({
                 viewMoreList.map((item, idx) => (
                   <li>
                     <Form.Check
-                      className="inline-checkbox"
+                      className="custom-checkbox"
                       name={
                         viewMore.isModalFor === "Location"
                           ? item.location_name

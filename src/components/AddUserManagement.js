@@ -526,7 +526,7 @@ const AddUserManagement = () => {
                       <td>
                         <div className="d-flex align-items-center">
                           <Form.Check
-                            className="inline-checkbox me-2_5"
+                            className="custom-checkbox me-2_5"
                             name="group1"
                             type="checkbox"
                           />

@@ -1320,7 +1320,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
                 Reimburs| <i className="fas fa-close text-primary ms-1"></i>
               </span> */}
               <Button
-                className="btn-light-gray"
+                className={`${addCustomeBenifits.length>0?'smbtn-primary':'btn-light-gray'}`}
                 onClick={handleCustomeBeniftsAdd}
               // disabled={addCustomeBenifits.length > 0}
               >

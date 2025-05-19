@@ -1210,23 +1210,23 @@ const CreateJobsRevised = ({
     if (openStep.length && sectionRefs.current[openStep[0]]) {
       //   const top = sectionRefs.current[openStep[0]].offsetTop;
       if (openStep[0] === '1') {
-        setToolbarPosition(85);
+        setToolbarPosition(104);
       } else if (openStep[0] === '2') {
-        setToolbarPosition(142);
+        setToolbarPosition(160);
       } else if (openStep[0] === '3') {
-        setToolbarPosition(200);
+        setToolbarPosition(216);
       } else if (openStep[0] === '4') {
-        setToolbarPosition(255);
+        setToolbarPosition(273);
       } else if (openStep[0] === '5') {
-        setToolbarPosition(310);
+        setToolbarPosition(328);
       } else if (openStep[0] === '6') {
-        setToolbarPosition(367);
+        setToolbarPosition(386);
       } else if (openStep[0] === '8') {
-        setToolbarPosition(485);
+        setToolbarPosition(520);
       } else if (openStep[0] === '9') {
-        setToolbarPosition(540);
+        setToolbarPosition(577);
       } else if (openStep[0] === '11') {
-        setToolbarPosition(675);
+        setToolbarPosition(728);
       }
     }
   }, [openStep]);
@@ -1500,7 +1500,7 @@ const CreateJobsRevised = ({
                 activeKey={currentStep} onSelect={(key) => setCurrentStep(key)}>
                 <Accordion.Item eventKey="0">
                   <Accordion.Header onClick={() => setOpenStep([])}>Requirements</Accordion.Header>
-                  {currentStep !== "0" && (<p>Define your ideal hire in detail here. Use flags to indicate the importance as needed. All fields are mandatory</p>)}
+                  {currentStep !== "0" && (<p className="short_text">Define your ideal hire in detail here. Use flags to indicate the importance as needed. All fields are mandatory</p>)}
                   <Accordion.Body>
                     <p>
                       Use this section to define your ideal hire in more detail.
@@ -3113,7 +3113,7 @@ const CreateJobsRevised = ({
                           stroke-linejoin="round"
                         />
                       </svg> */}
-                      <small className="small_subtitle">Select 6 out of the 12 available options, Identify 2 most important ones</small>
+                      <small className="small_subtitle">Select <span className="text-primery">6 out of the 12</span> available options, Identify <span className="text-primery">2 most important ones</span></small>
                     </div>
                     <button type="button" className="btn btn-lightgray me-4" onClick={(e) => { e.stopPropagation(); setShowHelpChoose(true) }}>
                       <svg

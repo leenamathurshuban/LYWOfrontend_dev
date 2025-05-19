@@ -817,7 +817,7 @@ tracker.show_tasks()
                                                                     <tr>
                                                                         <td>
                                                                             <Form.Check
-                                                                                className="inline-checkbox me-2_5"
+                                                                                className="custom-checkbox me-2_5"
                                                                                 name="group1"
                                                                                 type="checkbox"
                                                                                 checked={selectedListUids.includes(item?.uid)}
@@ -867,7 +867,7 @@ tracker.show_tasks()
                                                                 {/* <tr>
                                                                     <td>
                                                                         <Form.Check
-                                                                            className="inline-checkbox me-2_5"
+                                                                            className="custom-checkbox me-2_5"
                                                                             name="group1"
                                                                             type="checkbox"
 
@@ -906,7 +906,7 @@ tracker.show_tasks()
                                                                 <tr>
                                                                     <td>
                                                                         <Form.Check
-                                                                            className="inline-checkbox me-2_5"
+                                                                            className="custom-checkbox me-2_5"
                                                                             name="group1"
                                                                             type="checkbox"
 
@@ -945,7 +945,7 @@ tracker.show_tasks()
                                                                 <tr>
                                                                     <td>
                                                                         <Form.Check
-                                                                            className="inline-checkbox me-2_5"
+                                                                            className="custom-checkbox me-2_5"
                                                                             name="group1"
                                                                             type="checkbox"
 
@@ -984,7 +984,7 @@ tracker.show_tasks()
                                                                 <tr>
                                                                     <td>
                                                                         <Form.Check
-                                                                            className="inline-checkbox me-2_5"
+                                                                            className="custom-checkbox me-2_5"
                                                                             name="group1"
                                                                             type="checkbox"
 
@@ -1023,7 +1023,7 @@ tracker.show_tasks()
                                                                 <tr>
                                                                     <td>
                                                                         <Form.Check
-                                                                            className="inline-checkbox me-2_5"
+                                                                            className="custom-checkbox me-2_5"
                                                                             name="group1"
                                                                             type="checkbox"
 
@@ -1062,7 +1062,7 @@ tracker.show_tasks()
                                                                 <tr>
                                                                     <td>
                                                                         <Form.Check
-                                                                            className="inline-checkbox me-2_5"
+                                                                            className="custom-checkbox me-2_5"
                                                                             name="group1"
                                                                             type="checkbox"
 
@@ -1101,7 +1101,7 @@ tracker.show_tasks()
                                                                 <tr>
                                                                     <td>
                                                                         <Form.Check
-                                                                            className="inline-checkbox me-2_5"
+                                                                            className="custom-checkbox me-2_5"
                                                                             name="group1"
                                                                             type="checkbox"
 
@@ -1140,7 +1140,7 @@ tracker.show_tasks()
                                                                 <tr>
                                                                     <td>
                                                                         <Form.Check
-                                                                            className="inline-checkbox me-2_5"
+                                                                            className="custom-checkbox me-2_5"
                                                                             name="group1"
                                                                             type="checkbox"
 
@@ -1179,7 +1179,7 @@ tracker.show_tasks()
                                                                 <tr>
                                                                     <td>
                                                                         <Form.Check
-                                                                            className="inline-checkbox me-2_5"
+                                                                            className="custom-checkbox me-2_5"
                                                                             name="group1"
                                                                             type="checkbox"
 
@@ -1218,7 +1218,7 @@ tracker.show_tasks()
                                                                 <tr>
                                                                     <td>
                                                                         <Form.Check
-                                                                            className="inline-checkbox me-2_5"
+                                                                            className="custom-checkbox me-2_5"
                                                                             name="group1"
                                                                             type="checkbox"
 
@@ -1909,7 +1909,7 @@ tracker.show_tasks()
                                         <ul className="filter_itemlist">
                                             <li>
                                                 <Form.Check
-                                                    className="inline-checkbox"
+                                                    className="custom-checkbox"
                                                     id="1"
                                                     type="checkbox"
                                                     label="0% - 50%"
@@ -1917,7 +1917,7 @@ tracker.show_tasks()
                                             </li>
                                             <li>
                                                 <Form.Check
-                                                    className="inline-checkbox"
+                                                    className="custom-checkbox"
                                                     id="2"
                                                     type="checkbox"
                                                     label="50% - 70%"
@@ -1925,7 +1925,7 @@ tracker.show_tasks()
                                             </li>
                                             <li>
                                                 <Form.Check
-                                                    className="inline-checkbox"
+                                                    className="custom-checkbox"
                                                     id="3"
                                                     type="checkbox"
                                                     label="More than 70%"
@@ -1944,7 +1944,7 @@ tracker.show_tasks()
                                         <ul className="filter_itemlist">
                                             <li>
                                                 <Form.Check
-                                                    className="inline-checkbox"
+                                                    className="custom-checkbox"
                                                     id="leader"
                                                     type="checkbox"
                                                     label="Leader"
@@ -1952,7 +1952,7 @@ tracker.show_tasks()
                                             </li>
                                             <li>
                                                 <Form.Check
-                                                    className="inline-checkbox"
+                                                    className="custom-checkbox"
                                                     id="influencer2"
                                                     type="checkbox"
                                                     label="Influencer"
@@ -1960,7 +1960,7 @@ tracker.show_tasks()
                                             </li>
                                             <li>
                                                 <Form.Check
-                                                    className="inline-checkbox"
+                                                    className="custom-checkbox"
                                                     id="team"
                                                     type="checkbox"
                                                     label="Team Player"
@@ -1968,7 +1968,7 @@ tracker.show_tasks()
                                             </li>
                                             <li>
                                                 <Form.Check
-                                                    className="inline-checkbox"
+                                                    className="custom-checkbox"
                                                     id="perfectionist"
                                                     type="checkbox"
                                                     label="Perfectionist"
@@ -1987,7 +1987,7 @@ tracker.show_tasks()
                                         <ul className="filter_itemlist">
                                             <li>
                                                 <Form.Check
-                                                    className="inline-checkbox"
+                                                    className="custom-checkbox"
                                                     id="4"
                                                     type="checkbox"
                                                     label="Shortlisted"
@@ -1995,7 +1995,7 @@ tracker.show_tasks()
                                             </li>
                                             <li>
                                                 <Form.Check
-                                                    className="inline-checkbox"
+                                                    className="custom-checkbox"
                                                     id="5"
                                                     type="checkbox"
                                                     label="On Hold"
@@ -2003,7 +2003,7 @@ tracker.show_tasks()
                                             </li>
                                             <li>
                                                 <Form.Check
-                                                    className="inline-checkbox"
+                                                    className="custom-checkbox"
                                                     id="6"
                                                     type="checkbox"
                                                     label="Rejected"
@@ -2011,7 +2011,7 @@ tracker.show_tasks()
                                             </li>
                                             <li>
                                                 <Form.Check
-                                                    className="inline-checkbox"
+                                                    className="custom-checkbox"
                                                     id="7"
                                                     type="checkbox"
                                                     label="Review Pending"
@@ -2019,7 +2019,7 @@ tracker.show_tasks()
                                             </li>
                                             <li>
                                                 <Form.Check
-                                                    className="inline-checkbox"
+                                                    className="custom-checkbox"
                                                     id="8"
                                                     type="checkbox"
                                                     label="Reminder Sent"
@@ -2209,7 +2209,7 @@ tracker.show_tasks()
                                                             <tr>
                                                                 <td style={{ cursor: 'pointer' }}>
                                                                     <Form.Check
-                                                                        className="inline-checkbox me-1"
+                                                                        className="custom-checkbox me-1"
                                                                         id="1"
                                                                         type="checkbox"
                                                                     />
@@ -2224,7 +2224,7 @@ tracker.show_tasks()
                                                             <tr>
                                                                 <td style={{ cursor: 'pointer' }}>
                                                                     <Form.Check
-                                                                        className="inline-checkbox me-1"
+                                                                        className="custom-checkbox me-1"
                                                                         id="1"
                                                                         type="checkbox"
                                                                     />
@@ -2239,7 +2239,7 @@ tracker.show_tasks()
                                                             <tr>
                                                                 <td style={{ cursor: 'pointer' }}>
                                                                     <Form.Check
-                                                                        className="inline-checkbox me-1"
+                                                                        className="custom-checkbox me-1"
                                                                         id="1"
                                                                         type="checkbox"
                                                                     />
@@ -2254,7 +2254,7 @@ tracker.show_tasks()
                                                             <tr>
                                                                 <td style={{ cursor: 'pointer' }}>
                                                                     <Form.Check
-                                                                        className="inline-checkbox me-1"
+                                                                        className="custom-checkbox me-1"
                                                                         id="1"
                                                                         type="checkbox"
                                                                     />
@@ -2269,7 +2269,7 @@ tracker.show_tasks()
                                                             <tr>
                                                                 <td style={{ cursor: 'pointer' }}>
                                                                     <Form.Check
-                                                                        className="inline-checkbox me-1"
+                                                                        className="custom-checkbox me-1"
                                                                         id="1"
                                                                         type="checkbox"
                                                                     />

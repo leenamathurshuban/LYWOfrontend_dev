@@ -294,7 +294,7 @@ const Evaluations = ({ show, handleClose, assetJob, setAssetJob, localAssetJob, 
                                                                             style={{ cursor: "pointer" }}
                                                                         >
                                                                             <Form.Check
-                                                                                className="inline-checkbox me-1"
+                                                                                className="custom-checkbox me-1"
                                                                                 id='1'
                                                                                 type="checkbox"
                                                                                 onChange={() => handleMultiple(item)}

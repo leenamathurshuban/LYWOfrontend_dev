@@ -721,12 +721,12 @@ const HelpChoose = ({
                     </div>
                     <Row className="my-4 individual">
                         <Col md={12} onClick={() => handleCard(1)}>
-                            <h5 className="danger h5_title">Individual Effort</h5>
+                            <h5 className="danger h5_title mb-2">Individual Effort</h5>
                         </Col>
                         {isIndex.includes(1) ?
                             helpChooseOption?.IndividualEffort?.map((item, index) => (
                                 <Col md={4}>
-                                    <div className={`${item.isSelected && 'active-danger'} syatic_box ie_box`} onClick={() => handleSelectItem(item.heading)}>
+                                    <div className={`${item.isSelected && 'active-danger'} mt-1 syatic_box ie_box`} onClick={() => handleSelectItem(item.heading)}>
                                         <div className="syatic_head">
                                             <h6>{item.heading}</h6>
                                             <img src={imgInd[index]} />
