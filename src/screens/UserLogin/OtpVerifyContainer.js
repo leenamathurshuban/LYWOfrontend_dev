@@ -420,9 +420,9 @@ const OtpVerifyContainer = () => {
                   <span
                     style={{
                       color:
-                        otpErrormsg === "Incorrect OTP. Please try again." || "OTP has been expired"
-                          ? "red"
-                          : "#079455",
+                        otpErrormsg === "OTP verified successfully."
+                          ? "#079455"
+                          : "red",
                     }}
                   >
                     {otpErrormsg}

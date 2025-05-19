@@ -53,6 +53,7 @@ const AddUserManagement = () => {
   const userInfo = useSelector((state) => state.login.loginUserInfo);
   const uid = userInfo?.uid;
   const companyUid = userInfo?.company[0]?.uid
+  const userRoleUid = userInfo?.user_role?.uid
 
   const handleAddNewUserRow = () => {
     setAddRow([
@@ -119,7 +120,7 @@ const AddUserManagement = () => {
     formData.append("email", createUserData.email);
     formData.append("first_name", createUserData.name);
     formData.append("phone_number", createUserData.phoneNumber);
-    formData.append("user_role", "9b476335-0e67-4e01-9997-88ba8d2cf6e2"); // ComputerUser
+    formData.append("user_role", userRoleUid) // ComputerUser
     formData.append("company", JSON.stringify([companyProfileDetails?.uid]));
     try {
       const response = await createUserApi(formData);
@@ -639,7 +640,7 @@ const AddUserManagement = () => {
                       </td>
                     </tr>
                   ))}
- 
+
                   {activeItem === "byDefaultUsers" && (
                     <>
                       <ActiveUsersSection
