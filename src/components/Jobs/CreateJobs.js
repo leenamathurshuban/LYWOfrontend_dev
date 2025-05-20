@@ -271,7 +271,7 @@ const CreateJobs = ({ show, handleClose }) => {
       newErrors.isLike = "isLike is required";
       isValid = false;
     }
-    if (!department) {
+    if (!createFormData.department) {
       newErrors.department = "This Field is required";
       isValid = false;
     }
@@ -938,7 +938,26 @@ const CreateJobs = ({ show, handleClose }) => {
       }
     }
   };
-  const isNextButtonDisable = !createFormData.jobTitle || addCustomeBenifits.length > 0;
+  const isNextButtonDisable = createFormData.jobTitle && createFormData.department &&
+    createFormData.jobType && createFormData.noOfPosition && createFormData.workPlaceType
+    && isLike && location;
+
+  const handleCloseComboRole = (e) => {
+    const { name, value } = e.target
+    setIsLike('')
+    setTimeout(() => {
+      setIsLikeData([])
+      setIsLikeDropdown(false)
+    }, 200);
+  }
+  const handleCloseComboLoc = (e) => {
+    const { name, value } = e.target
+    setLocation('')
+    setTimeout(() => {
+      setLocationData([])
+      setIsLocationDropdown(false)
+    }, 200);
+  }
 
   return (
     <Offcanvas
@@ -979,6 +998,7 @@ const CreateJobs = ({ show, handleClose }) => {
               placeholder="Is Like"
               value={isLike}
               onChange={handleLike}
+              onBlur={handleCloseComboRole}
             />
 
             <p className="m-0 error">{errors.isLike}</p>
@@ -1064,6 +1084,7 @@ const CreateJobs = ({ show, handleClose }) => {
               placeholder="Location"
               value={location}
               onChange={handleLocation}
+              onBlur={handleCloseComboLoc}
             />
 
             <span className="error">{errors.location}</span>
@@ -1292,7 +1313,7 @@ const CreateJobs = ({ show, handleClose }) => {
                 Reimburs| <i className="fas fa-close text-primary ms-1"></i>
               </span> */}
               <Button
-                className={`${addCustomeBenifits.length>0?'smbtn-primary':'btn-light-gray'}`}
+                className={`${addCustomeBenifits.length > 0 ? 'smbtn-primary' : 'btn-light-gray'}`}
                 onClick={handleCustomeBeniftsAdd}
               // disabled={
               //   addCustomeBenifits.length > 0 &&
@@ -1312,7 +1333,7 @@ const CreateJobs = ({ show, handleClose }) => {
         </Button>
         <Button
           variant="primary"
-          disabled={isNextButtonDisable}
+          disabled={!isNextButtonDisable || addCustomeBenifits.length > 0}
           onClick={handleCreateForm}
         >
           Next

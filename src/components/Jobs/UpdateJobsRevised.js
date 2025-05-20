@@ -133,6 +133,12 @@ const UpdateJobsRevised = ({
     const [writtenLanguage, setWittenLanguage] = useState([])
     const [locationList, setLocationList] = useState([])
     const [currentStep, setCurrentStep] = useState("0"); // Controls which section is open
+    const areaEduRef = useRef();
+    const industriesRef = useRef();
+    const roleRef = useRef();
+    const spokenRef = useRef()
+    const writtenRef = useRef()
+    const locationRef = useRef()
     // const [importantFlag, setImportantFlag] = useState({
     //     salary: false,
     //     education: false,
@@ -1025,12 +1031,13 @@ const UpdateJobsRevised = ({
     const getTotalValues = (array) => {
         return array.reduce((total, arr) => total + arr.length, 0);
     };
-    const handleSelectedSkill = (benefititem, index) => {
+    const handleSelectedSkill = (e,benefititem, index) => {
         // setSelectSkillsData((prevState) =>
         //     prevState.includes(benefititem)
         //         ? prevState.filter((item2) => item2 !== benefititem)
         //         : [...prevState, benefititem]
         // );
+        e.stopPropagation();
         setSkillError("")
         setDynamicArray((prevArray) => {
             const totalValues = getTotalValues(prevArray);
@@ -1459,6 +1466,73 @@ const UpdateJobsRevised = ({
         }
     }
 
+    const handleRefreshData = (e, index) => {
+        e.stopPropagation();
+        if (index == "1") {
+            setUpdateFormData({
+                ...updateFormData,
+                ["salary_price_type"]: "Salary-range",
+                ["min_salary"]: "",
+                ["max_salary"]: "",
+                ["currency"]: "INR",
+                ["salary_type"]: "",
+                ["display_salary"]: false,
+                ["non_negotiable_salary"]: false
+            })
+        } else if (index == "2") {
+            setUpdateFormData({
+                ...updateFormData,
+                ["minimum_education"]: "",
+                ["higher_qualification_preferred"]: false,
+                ["other_areas_acceptable"]: false
+            })
+            setBadges([])
+        } else if (index == "3") {
+            setUpdateFormData({
+                ...updateFormData,
+                ["year_of_experience_type"]: "",
+                ["min_exp"]: "",
+                ["max_exp"]: ""
+            })
+            setIsHideIndustries(false)
+            setIsHideRestrictedRoles(false)
+            setIndustriesBadge([])
+            setRestrictedRoleBadges([])
+        } else if (index == "4") {
+            setUpdateFormData({
+                ...updateFormData,
+                ["targate_hire_date"]: "",
+                ["explore_buy_out_option"]: ""
+            })
+            setIsDisabledTarget(false)
+        } else if (index == "5") {
+            setUpdateFormData({
+                ...updateFormData,
+                ["no_specific_language_require"]: false
+            })
+            setSpokenLanguageBadges([]);
+            setrdnwBadges([])
+        } else if (index == "6") {
+            setUpdateFormData({
+                ...updateFormData,
+                ["no_specific_location"]: false,
+                ["relocation_cost_covered"]: false
+            })
+            setLocationBadges([])
+        } else if (index == "8") {
+            const length = skillGroupData.length
+            setDynamicArray(Array.from({ length }, () => []));
+        } else if (index == "11") {
+            const updatedArray = behaviours.map((item) => ({
+                ...item,
+                isSelected: false,
+                markedImportant: false
+            }))
+            setBehaviours(updatedArray)
+            setPersonalityData([])
+        }
+    }
+
     useEffect(() => {
         const length = skillGroupData.length
         setDynamicArray(Array.from({ length }, () => []));
@@ -1525,6 +1599,46 @@ const UpdateJobsRevised = ({
             }
         }
     };
+    const handleClosecomboEdu = (e) => {
+        const { name } = e.target;
+        areaEduRef.current.value = "";
+        setTimeout(() => {
+            setAreaEducationOption([])
+        }, 200); // delay to allow click on list items
+    };
+    const handleClosecomboIndustry = (e) => {
+        const { name } = e.target;
+        industriesRef.current.value = "";
+        setTimeout(() => {
+            setShorlistedIndustries([])
+        }, 200); // delay to allow click on list items        
+    }
+    const handleClosecomboRole = (e) => {
+        const { name } = e.target;
+        roleRef.current.value = "";
+        setTimeout(() => {
+            setRestrictedRole([])
+        }, 200); // delay to allow click on list items
+    }
+    const handleClosecomboLang = (e, key) => {
+        const { name } = e.target;
+        if (key == "spoken") {
+            spokenRef.current.value = '';
+        } else {
+            writtenRef.current.value = '';
+        }
+        setTimeout(() => {
+            setSpokenLanguage([])
+            setWittenLanguage([])
+        }, 200); // delay to allow click on list items
+    };
+    const handleCloseComboLocation = (e) => {
+        const { name } = e.target;
+        locationRef.current.value = "";
+        setTimeout(() => {
+            setLocationList([])
+        }, 200); // delay to allow click on list items        
+    }
     // console.log(behaviours)
 
     // console.log('add skill box', addSkillGroup)
@@ -1532,7 +1646,7 @@ const UpdateJobsRevised = ({
     console.log(skillGroupData, "group_skills")
     console.log('======>selecting skills', SelectSkillsData)
     // console.log("openStep", importantFlag)
-    // console.log('must have', mustHaveSkills)
+    console.log('must have', mustHaveSkills)
     console.log(components.length)
     console.log(IndustriesBadges)
     console.log('neetu', createRevisedJobData)
@@ -1933,9 +2047,11 @@ const UpdateJobsRevised = ({
                                                             type="text"
                                                             className="inline-input"
                                                             placeholder="Enter text"
+                                                            ref={areaEduRef}
                                                             // value={row.areaOfEducation}
                                                             // disabled={row.saved}
                                                             onChange={handleAreaOfEducation}
+                                                            onBlur={handleClosecomboEdu} // Close dropdown on blur
                                                         />
                                                         {aresEducationOption?.length > 0 ? (
                                                             <Dropdown show={true} >
@@ -2138,9 +2254,11 @@ const UpdateJobsRevised = ({
                                                                 type="text"
                                                                 className="inline-input"
                                                                 placeholder="Enter text"
+                                                                ref={industriesRef}
                                                                 // value={row.areaOfEducation}
                                                                 // disabled={row.saved}
                                                                 onChange={handlesShorlistedIndustries}
+                                                                onBlur={handleClosecomboIndustry}
                                                             />
                                                             {shorlistedIndustries?.length > 0 ? (
                                                                 <Dropdown show={true} >
@@ -2237,9 +2355,11 @@ const UpdateJobsRevised = ({
                                                                 type="text"
                                                                 className="inline-input"
                                                                 placeholder="Enter text"
+                                                                ref={roleRef}
                                                                 // value={row.areaOfEducation}
                                                                 // disabled={row.saved}
                                                                 onChange={isLikeHandleRole}
+                                                                onBlur={handleClosecomboRole}
                                                             />
                                                             {restrictedRole?.length > 0 ? (
                                                                 <Dropdown show={true} >
@@ -2475,9 +2595,11 @@ const UpdateJobsRevised = ({
                                                                 type="text"
                                                                 className="inline-input"
                                                                 placeholder="Enter text"
+                                                                ref={spokenRef}
                                                                 // value={row.areaOfEducation}
                                                                 // disabled={row.saved}
                                                                 onChange={(e) => handleWaSlanguages(e, "spoken")}
+                                                                onBlur={(e) => handleClosecomboLang(e, "spoken")}
                                                             />
                                                             {spokenLanguage?.length > 0 ? (
                                                                 <Dropdown show={true} >
@@ -2558,9 +2680,11 @@ const UpdateJobsRevised = ({
                                                                 type="text"
                                                                 className="inline-input"
                                                                 placeholder="Enter text"
+                                                                ref={writtenRef}
                                                                 // value={row.areaOfEducation}
                                                                 // disabled={row.saved}
                                                                 onChange={(e) => handleWaSlanguages(e, "rdnw")}
+                                                                onBlur={(e) => handleClosecomboLang(e, "rdnw")}
                                                             />
                                                             {writtenLanguage?.length > 0 ? (
                                                                 <Dropdown show={true} >
@@ -2685,9 +2809,11 @@ const UpdateJobsRevised = ({
                                                                 type="text"
                                                                 className="inline-input"
                                                                 placeholder="Enter text"
+                                                                ref={locationRef}
                                                                 // value={row.areaOfEducation}
                                                                 // disabled={row.saved}
                                                                 onChange={handleLocationAPIList}
+                                                                onBlur={handleCloseComboLocation}
                                                             />
                                                             {locationList?.length > 0 ? (
                                                                 <Dropdown show={true} >
@@ -2923,14 +3049,14 @@ const UpdateJobsRevised = ({
                                                             Val?.group_skill?.map((skill, index) => (
                                                                 <span
                                                                     onClick={(e) => {
-                                                                        handleSelectedSkill(skill, i);
+                                                                        handleSelectedSkill(e, skill, i);
                                                                     }}
-                                                                    className={`stag_item ${SelectSkillsData.includes(skill) ? "active" : ""
+                                                                    className={`stag_item ${SelectSkillsData.some(item => JSON.stringify(item) === JSON.stringify(skill)) ? "active" : ""
                                                                         }`}
                                                                 >
                                                                     {skill.skill_name}
-                                                                    <span className={`imprt_icon ${mustHaveSkills.includes(skill) ? "text-primery" : ""} `} onClick={() => handleMustHaveSkill(skill)}>
-                                                                        <i class={`${mustHaveSkills.includes(skill) ? "fa" : "far"}  fa-star`} aria-hidden="true"></i>
+                                                                    <span className={`imprt_icon ${mustHaveSkills.some(item => JSON.stringify(item) === JSON.stringify(skill)) ? "text-primery" : ""} `} onClick={() => handleMustHaveSkill(skill)}>
+                                                                        <i class={`${mustHaveSkills.some(item => JSON.stringify(item) === JSON.stringify(skill)) ? "fa" : "far"}  fa-star`} aria-hidden="true"></i>
                                                                     </span>
                                                                 </span>
                                                             ))}
@@ -2938,7 +3064,7 @@ const UpdateJobsRevised = ({
                                                         {selectedIndex.includes(Val?.uid) && addSubSkill?.map((item, index) => (
                                                             <span
                                                                 onClick={(e) => {
-                                                                    handleSelectedSkill(item, i);
+                                                                    handleSelectedSkill(e,item, i);
                                                                 }}
                                                                 className={`stag_item ${SelectSkillsData.includes(item) ? "active" : ""
                                                                     }`}
@@ -2964,13 +3090,19 @@ const UpdateJobsRevised = ({
                                                             </span>
                                                         ))}
 
-                                                        <button
+                                                        {/* <button
                                                             type="button"
                                                             class="btn-light-gray btn btn-primary"
                                                             onClick={() => handlesubSkillAdd(Val?.uid)}
                                                         >
                                                             <i class="fa fa-plus text-primary me-1"></i>Add Skill
-                                                        </button>
+                                                        </button> */}
+                                                        <Button
+                                                            className={`${addSubSkill.length > 0 && selectedIndex.includes(Val?.uid) ? 'smbtn-primary' : 'btn-light-gray'}`}
+                                                            onClick={() => handlesubSkillAdd(Val?.uid)}
+                                                        >
+                                                            <i className="fa fa-plus text-primary me-1"></i>Add Skill
+                                                        </Button>
                                                     </div>
                                                 </div>
                                             ))
@@ -3021,7 +3153,7 @@ const UpdateJobsRevised = ({
                                                     {selectedIndex.includes(i) && addSubSkill.map((item, index) => (
                                                         <span
                                                             onClick={(e) => {
-                                                                handleSelectedSkill(item, i);
+                                                                handleSelectedSkill(e,item, i);
                                                             }}
                                                             className={`stag_item ${SelectSkillsData.includes(item) ? "active" : ""
                                                                 }`}
@@ -3049,13 +3181,19 @@ const UpdateJobsRevised = ({
                                                         </span>
                                                     ))}
 
-                                                    <button
+                                                    {/* <button
                                                         type="button"
                                                         class="btn-light-gray btn btn-primary"
                                                         onClick={() => handlesubSkillAdd(i)}
                                                     >
                                                         <i class="fa fa-plus text-primary me-1"></i>Add Skill
-                                                    </button>
+                                                    </button> */}
+                                                    <Button
+                                                        className={`${addSubSkill.length > 0 && selectedIndex.includes(i) ? 'smbtn-primary' : 'btn-light-gray'}`}
+                                                        onClick={() => handlesubSkillAdd(i)}
+                                                    >
+                                                        <i className="fa fa-plus text-primary me-1"></i>Add Skill
+                                                    </Button>
                                                 </div>
                                             </div>
                                         ))}
@@ -3449,7 +3587,7 @@ const UpdateJobsRevised = ({
                                             (
                                                 <>
                                                     <li>
-                                                        <Link href={''}><i className="fa fa-undo"></i></Link>
+                                                        <Link href={''} onClick={(e) => handleRefreshData(e, openStep?.[0])}><i className="fa fa-undo"></i></Link>
                                                     </li>
                                                     <li className={handleLightClass()}>
                                                         <Link href={''} onClick={(e) => removeImportantFlag(e, openStep?.[0])}>
@@ -3466,7 +3604,7 @@ const UpdateJobsRevised = ({
                                         {openStep[0] === '8' && (
                                             <>
                                                 <li>
-                                                    <Link href={''}><i className="fa fa-undo"></i></Link>
+                                                    <Link href={''} onClick={(e) => handleRefreshData(e, openStep?.[0])}><i className="fa fa-undo"></i></Link>
                                                 </li>
                                                 <li>
                                                     <Link href={''} onClick={handleAddSkillGroup}><i className="fa fa-plus"></i></Link>
@@ -3476,7 +3614,7 @@ const UpdateJobsRevised = ({
                                         {openStep[0] === '9' && (
                                             <>
                                                 <li>
-                                                    <Link href={''}><i className="fa fa-undo"></i></Link>
+                                                    <Link href={''} onClick={(e) => handleRefreshData(e, openStep?.[0])}><i className="fa fa-undo"></i></Link>
                                                 </li>
                                                 <li>
                                                     <Link href={''} onClick={() => setActiveKeyAdd(true)}><i className="fa fa-plus"></i></Link>
@@ -3489,7 +3627,7 @@ const UpdateJobsRevised = ({
                                         {openStep[0] === '11' && (
                                             <>
                                                 <li>
-                                                    <Link href={''}><i className="fa fa-undo" onClick={handleReferesh}></i></Link>
+                                                    <Link href={''} onClick={(e) => handleRefreshData(e, openStep?.[0])}><i className="fa fa-undo"></i></Link>
                                                 </li>
                                                 <li className="active">
                                                     <Link href={''} onClick={() => setShowHelpChoose(true)}>

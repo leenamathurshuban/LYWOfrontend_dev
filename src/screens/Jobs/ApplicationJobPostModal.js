@@ -2616,6 +2616,11 @@ const ApplicationJobPostModal = ({
       setShowNotesByIndex([...showNotesByIndex, id])
     }
   }
+  const handleButtonEdit=(val,index)=>{
+    const newRows = [...WorkExpreienceRow];
+    newRows[index]["savedWorkExp"] = false;
+    setWorkExpreienceRow(newRows);
+  }
 
   const EducationAddRow = () => {
     SetEducationRows([
@@ -2697,7 +2702,7 @@ const ApplicationJobPostModal = ({
 
   const saveWorkExperienceData = async (row, index) => {
     try {
-      if (!storedApplicantId || !totalWorkExperience || row.WorkRole || !row.WorkFrom || !row.WorkTo || !row.WorkComapny || !row.WorkIndustry || !row.WorkNote) {
+      if (!storedApplicantId || !totalWorkExperience || !row.WorkRole || !row.WorkFrom || !row.WorkTo || !row.WorkComapny || !row.WorkIndustry || !row.WorkNote) {
         // alert("Please fill Profile Details");
         toast.error("Please fill Profile Details");
         return;
@@ -3939,25 +3944,24 @@ const ApplicationJobPostModal = ({
                       </Form.Select>
                     </Col>
                   </Row>
-                  {totalWorkExperience !== 'Fresher' && (
-                    <table className="mb-2 form_table">
-                      <thead>
-                        <tr>
-                          <td>Role</td>
-                          <td>From</td>
-                          <td>To</td>
-                          <td>Company</td>
-                          <td>Industry</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {WorkExpreienceRow.map((row, index) => (
-                          <>
-                            <tr>
-                              <td>
-                                {/* <Form.Control
+                  <table className="mb-2 form_table">
+                    <thead>
+                      <tr>
+                        <td>Role</td>
+                        <td>From</td>
+                        <td>To</td>
+                        <td>Company</td>
+                        <td>Industry</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {WorkExpreienceRow.map((row, index) => (
+                        <>
+                          <tr>
+                            <td>
+                              {/* <Form.Control
                               type="text"
                               placeholder="Role"
                               size="sm"
@@ -3970,7 +3974,7 @@ const ApplicationJobPostModal = ({
                               disabled={row.savedWorkExp}
                             /> */}
 
-                                {/* <Dropdown show={true} >
+                              {/* <Dropdown show={true} >
                               <Dropdown.Menu className="w-100 dropdown_cti">
                                 <FormControl
                                   autoFocus
@@ -3995,80 +3999,80 @@ const ApplicationJobPostModal = ({
                                 </div>
                               </Dropdown.Menu>
                             </Dropdown> */}
-                                <div className="mw-130 relative">
-                                  <FormControl
-                                    // autoFocus
-                                    name="WorkRole"
-                                    placeholder="Role"
-                                    size="sm"
-                                    value={row.WorkRole}
-                                    disabled={row.savedWorkExp}
-                                    onChange={(e) => handleRolelist(index, e)}
-                                    onBlur={(e) => handleClosecomboExp(index, e)}
-                                  />
-                                  <div class={`${roleList.length ? 'ctm_dropdown ct_scrollbar' : ''}`}>
-                                    {isOpen[index] && (
-                                      <ul className="m-0">
-                                        {roleList.map((option, idx) => (
-                                          <li
-                                            key={idx}
-                                            onClick={(e) =>
-                                              handleWorkRole(index, option?.is_like_name)
-                                            }
-                                          >
-                                            {option?.is_like_name}
-                                          </li>
-                                        ))}
-                                      </ul>
-                                    )}
-                                  </div>
+                              <div className="mw-130 relative">
+                                <FormControl
+                                  // autoFocus
+                                  name="WorkRole"
+                                  placeholder="Role"
+                                  size="sm"
+                                  value={row.WorkRole}
+                                  disabled={row.savedWorkExp}
+                                  onChange={(e) => handleRolelist(index, e)}
+                                  onBlur={(e) => handleClosecomboExp(index, e)}
+                                />
+                                <div class={`${roleList.length ? 'ctm_dropdown ct_scrollbar' : ''}`}>
+                                  {isOpen[index] && (
+                                    <ul className="m-0">
+                                      {roleList.map((option, idx) => (
+                                        <li
+                                          key={idx}
+                                          onClick={(e) =>
+                                            handleWorkRole(index, option?.is_like_name)
+                                          }
+                                        >
+                                          {option?.is_like_name}
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  )}
                                 </div>
+                              </div>
 
-                              </td>
-                              <td>
-                                <Form.Control
-                                  placeholder="June 2019"
-                                  size="sm"
-                                  style={{ width: "150px" }}
-                                  type="date"
-                                  value={row?.WorkFrom}
-                                  name="WorkFrom"
-                                  onChange={(e) =>
-                                    handleWorkExpeienceChange(index, e)
-                                  }
-                                  disabled={row.savedWorkExp}
-                                />
-                              </td>
-                              <td>
-                                <Form.Control
-                                  type="date"
-                                  placeholder="May 2022"
-                                  size="sm"
-                                  style={{ width: "150px" }}
-                                  value={row?.WorkTo}
-                                  name="WorkTo"
-                                  onChange={(e) =>
-                                    handleWorkExpeienceChange(index, e)
-                                  }
-                                  disabled={row.savedWorkExp}
-                                />
-                              </td>
-                              <td>
-                                <Form.Control
-                                  type="text"
-                                  placeholder="Company"
-                                  size="sm"
-                                  style={{ width: "150px" }}
-                                  value={row?.WorkComapny}
-                                  name="WorkComapny"
-                                  onChange={(e) =>
-                                    handleWorkExpeienceChange(index, e)
-                                  }
-                                  disabled={row.savedWorkExp}
-                                />
-                              </td>
-                              <td>
-                                {/* <Form.Control
+                            </td>
+                            <td>
+                              <Form.Control
+                                placeholder="June 2019"
+                                size="sm"
+                                style={{ width: "150px" }}
+                                type="date"
+                                value={row?.WorkFrom}
+                                name="WorkFrom"
+                                onChange={(e) =>
+                                  handleWorkExpeienceChange(index, e)
+                                }
+                                disabled={row.savedWorkExp}
+                              />
+                            </td>
+                            <td>
+                              <Form.Control
+                                type="date"
+                                placeholder="May 2022"
+                                size="sm"
+                                style={{ width: "150px" }}
+                                value={row?.WorkTo}
+                                name="WorkTo"
+                                onChange={(e) =>
+                                  handleWorkExpeienceChange(index, e)
+                                }
+                                disabled={row.savedWorkExp}
+                              />
+                            </td>
+                            <td>
+                              <Form.Control
+                                type="text"
+                                placeholder="Company"
+                                size="sm"
+                                style={{ width: "150px" }}
+                                value={row?.WorkComapny}
+                                name="WorkComapny"
+                                onChange={(e) =>
+                                  handleWorkExpeienceChange(index, e)
+                                }
+                                disabled={row.savedWorkExp}
+                              />
+                            </td>
+                            <td>
+                              {/* <Form.Control
                               type="text"
                               placeholder="Industry"
                               size="sm"
@@ -4081,7 +4085,7 @@ const ApplicationJobPostModal = ({
                               disabled={row.savedWorkExp}
                             /> */}
 
-                                {/* <Dropdown show={true} >
+                              {/* <Dropdown show={true} >
                               <Dropdown.Menu className="w-100 dropdown_cti">
                                 <FormControl
                                   autoFocus
@@ -4106,128 +4110,125 @@ const ApplicationJobPostModal = ({
                                 </div>
                               </Dropdown.Menu>
                             </Dropdown> */}
-                                <div className="mw-130 relative">
-                                  <FormControl
-                                    // autoFocus
-                                    name="WorkIndustry"
-                                    placeholder="Industry"
-                                    size="sm"
-                                    value={row.WorkIndustry}
-                                    disabled={row.savedWorkExp}
-                                    onChange={(e) => handleIndustries(index, e)}
-                                    onBlur={(e) => handleClosecomboExp(index, e)}
-                                  />
-                                  <div class={`${industriesList.length ? 'ctm_dropdown ct_scrollbar' : ''}`}>
-                                    {isOpen[index] && (
-                                      <ul className="m-0">
-                                        {industriesList.map((option, idx) => (
-                                          <li
-                                            key={idx}
-                                            onClick={(e) =>
-                                              handleSelectIndustries(index, option?.industry_name)
-                                            }
-                                          >
-                                            {option?.industry_name}
-                                          </li>
-                                        ))}
-                                      </ul>
-                                    )}
-                                  </div>
+                              <div className="mw-130 relative">
+                                <FormControl
+                                  // autoFocus
+                                  name="WorkIndustry"
+                                  placeholder="Industry"
+                                  size="sm"
+                                  value={row.WorkIndustry}
+                                  disabled={row.savedWorkExp}
+                                  onChange={(e) => handleIndustries(index, e)}
+                                  onBlur={(e) => handleClosecomboExp(index, e)}
+                                />
+                                <div class={`${industriesList.length ? 'ctm_dropdown ct_scrollbar' : ''}`}>
+                                  {isOpen[index] && (
+                                    <ul className="m-0">
+                                      {industriesList.map((option, idx) => (
+                                        <li
+                                          key={idx}
+                                          onClick={(e) =>
+                                            handleSelectIndustries(index, option?.industry_name)
+                                          }
+                                        >
+                                          {option?.industry_name}
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  )}
                                 </div>
+                              </div>
 
-                              </td>
+                            </td>
 
-                              <td>
-                                <div className="d-flex align-items-center">
-                                  {!row.savedWorkExp && !showNotesByIndex.includes(row?.id) && (
-                                    <Button
-                                      variant="link"
-                                      className="p-1 font-sm mt-1"
-                                      onClick={() => handleButtonClick(row?.id)}
-                                    >
-                                      <i className="far fa-file me-1 "></i>
-                                      Note
-                                    </Button>
-                                  )}
-                                  {!row.savedWorkExp && showNotesByIndex.includes(row?.id) && (
-                                    <Button
-                                      variant="link"
-                                      className="p-1 font-sm mt-1"
-                                      // onClick={handleButtonClick}
-                                      onClick={() => saveWorkExperienceData(row, index)}
-                                    >
-                                      <img
-                                        src={saveIcon}
-                                        alt="Delete"
-                                        style={{ width: "20px", height: "20px" }}
-                                      />
-                                      Save
-                                    </Button>
-                                  )}
-
-                                  {row.savedWorkExp && (
-                                    <Button
-                                      variant="link"
-                                      className="p-1 font-sm mt-1"
-                                      onClick={() => handleButtonClick(row?.id)}
-                                    >
-                                      Edit
-                                    </Button>
-                                  )}
-
+                            <td>
+                              <div className="d-flex align-items-center">
+                                {!row.savedWorkExp && !showNotesByIndex.includes(row?.id) && (
                                   <Button
                                     variant="link"
-                                    className="p-1"
-                                    onClick={() => WorkExperienceDeleteRow(index, row?.id)}
+                                    className="p-1 font-sm mt-1"
+                                    onClick={() => handleButtonClick(row?.id)}
+                                  >
+                                    <i className="far fa-file me-1 "></i>
+                                    Note
+                                  </Button>
+                                )}
+                                {!row.savedWorkExp && showNotesByIndex.includes(row?.id) && (
+                                  <Button
+                                    variant="link"
+                                    className="p-1 font-sm mt-1"
+                                    // onClick={handleButtonClick}
+                                    onClick={() => saveWorkExperienceData(row, index)}
                                   >
                                     <img
-                                      src={imgpTrash}
+                                      src={saveIcon}
                                       alt="Delete"
                                       style={{ width: "20px", height: "20px" }}
                                     />
+                                    Save
                                   </Button>
+                                )}
+
+                                {row.savedWorkExp && (
+                                  <Button
+                                    variant="link"
+                                    className="p-1 font-sm mt-1"
+                                    onClick={() => handleButtonEdit(row,index)}
+                                  >
+                                    Edit
+                                  </Button>
+                                )}
+
+                                <Button
+                                  variant="link"
+                                  className="p-1"
+                                  onClick={() => WorkExperienceDeleteRow(index, row?.id)}
+                                >
+                                  <img
+                                    src={imgpTrash}
+                                    alt="Delete"
+                                    style={{ width: "20px", height: "20px" }}
+                                  />
+                                </Button>
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td colSpan={7}>
+                              {!row.savedWorkExp && showNotesByIndex.includes(row?.id) && (
+                                <div className="abt-textbox">
+                                  <Form>
+                                    <Form.Group controlId="noteInput">
+                                      <Form.Label>
+                                        About your experience
+                                      </Form.Label>
+                                      <Form.Control
+                                        as="textarea"
+                                        rows={3}
+                                        value={row?.WorkNote}
+                                        name="WorkNote"
+                                        onChange={(e) =>
+                                          handleWorkExpeienceChange(index, e)
+                                        }
+                                        placeholder="Write your note here..."
+                                      />
+                                    </Form.Group>
+                                  </Form>
                                 </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td colSpan={7}>
-                                {!row.savedWorkExp && showNotesByIndex.includes(row?.id) && (
-                                  <div className="abt-textbox">
-                                    <Form>
-                                      <Form.Group controlId="noteInput">
-                                        <Form.Label>
-                                          About your experience
-                                        </Form.Label>
-                                        <Form.Control
-                                          as="textarea"
-                                          rows={3}
-                                          value={row?.WorkNote}
-                                          name="WorkNote"
-                                          onChange={(e) =>
-                                            handleWorkExpeienceChange(index, e)
-                                          }
-                                          placeholder="Write your note here..."
-                                        />
-                                      </Form.Group>
-                                    </Form>
-                                  </div>
-                                )}
-                                {row.savedWorkExp && row?.WorkNote && (
-                                  <p style={{ marginTop: "5px" }}>{row.WorkNote}</p>
-                                )}
-                              </td>
-                            </tr>
-                          </>
-                        ))}
-                      </tbody>
-                    </table>
-                  )}
+                              )}
+                              {row.savedWorkExp && row?.WorkNote && (
+                                <p style={{ marginTop: "5px" }}>{row.WorkNote}</p>
+                              )}
+                            </td>
+                          </tr>
+                        </>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-                {totalWorkExperience !== 'Fresher' && (
-                  <Button variant="link" onClick={WorkExpreienceAddRow}>
-                    + Add
-                  </Button>
-                )}
+                <Button variant="link" onClick={WorkExpreienceAddRow}>
+                  + Add
+                </Button>
               </div>
 
               <div className="custom-card">

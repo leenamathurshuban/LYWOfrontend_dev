@@ -132,6 +132,12 @@ const CreateJobsRevised = ({
   const [writtenLanguage, setWittenLanguage] = useState([])
   const [locationList, setLocationList] = useState([])
   const [currentStep, setCurrentStep] = useState("0"); // Controls which section is open
+  const areaEduRef = useRef()
+  const industriesRef = useRef()
+  const roleRef = useRef();
+  const spokenRef = useRef()
+  const writtenRef = useRef()
+  const locationRef = useRef()
   // const [importantFlag, setImportantFlag] = useState({
   //   salary: false,
   //   education: false,
@@ -904,12 +910,13 @@ const CreateJobsRevised = ({
   const getTotalValues = (array) => {
     return array.reduce((total, arr) => total + arr.length, 0);
   };
-  const handleSelectedSkill = (benefititem, index) => {
+  const handleSelectedSkill = (e,benefititem, index) => {
     // setSelectSkillsData((prevState) =>
     //   prevState.includes(benefititem)
     //     ? prevState.filter((item2) => item2 !== benefititem)
     //     : [...prevState, benefititem]
     // );
+     e.stopPropagation();
     setDynamicArray((prevArray) => {
       const totalValues = getTotalValues(prevArray);
       return prevArray.map((arr, i) => {
@@ -1332,6 +1339,74 @@ const CreateJobsRevised = ({
       return "";
     }
   }
+
+  const handleRefreshData = (e, index) => {
+    e.stopPropagation();
+    if (index == "1") {
+      setUpdateFormData({
+        ...updateFormData,
+        ["salary_price_type"]: "Salary-range",
+        ["min_salary"]: "",
+        ["max_salary"]: "",
+        ["currency"]: "INR",
+        ["salary_type"]: "",
+        ["display_salary"]: false,
+        ["non_negotiable_salary"]: false
+      })
+    } else if (index == "2") {
+      setUpdateFormData({
+        ...updateFormData,
+        ["minimum_education"]: "",
+        ["higher_qualification_preferred"]: false,
+        ["other_areas_acceptable"]: false
+      })
+      setBadges([])
+    } else if (index == "3") {
+      setUpdateFormData({
+        ...updateFormData,
+        ["year_of_experience_type"]: "",
+        ["min_exp"]: "",
+        ["max_exp"]: ""
+      })
+      setIsHideIndustries(false)
+      setIsHideRestrictedRoles(false)
+      setIndustriesBadge([])
+      setRestrictedRoleBadges([])
+    } else if (index == "4") {
+      setUpdateFormData({
+        ...updateFormData,
+        ["targate_hire_date"]: "",
+        ["explore_buy_out_option"]: ""
+      })
+      setIsDisabledTarget(false)
+    } else if (index == "5") {
+      setUpdateFormData({
+        ...updateFormData,
+        ["no_specific_language_require"]: false
+      })
+      setSpokenLanguageBadges([]);
+      setrdnwBadges([])
+    } else if (index == "6") {
+      setUpdateFormData({
+        ...updateFormData,
+        ["no_specific_location"]: false,
+        ["relocation_cost_covered"]: false
+      })
+      setLocationBadges([])
+    } else if (index == "8") {
+      const length = skillGroupData.length
+      setDynamicArray(Array.from({ length }, () => []));
+    } else if (index == "11") {
+      const updatedArray = behaviours.map((item) => ({
+        ...item,
+        isSelected: false,
+        markedImportant: false
+      }))
+      setBehaviours(updatedArray)
+      setPersonalityData([])
+    }
+  }
+
   useEffect(() => {
     const length = skillGroupData?.length
     setDynamicArray(Array.from({ length }, () => []));
@@ -1398,6 +1473,46 @@ const CreateJobsRevised = ({
       }
     }
   };
+  const handleClosecomboEdu = (e) => {
+    const { name } = e.target;
+    areaEduRef.current.value = "";
+    setTimeout(() => {
+      setAreaEducationOption([])
+    }, 200); // delay to allow click on list items
+  };
+  const handleClosecomboIndustry = (e) => {
+    const { name } = e.target;
+    industriesRef.current.value = "";
+    setTimeout(() => {
+      setShorlistedIndustries([])
+    }, 200); // delay to allow click on list items        
+  }
+  const handleClosecomboRole = (e) => {
+    const { name } = e.target;
+    roleRef.current.value = "";
+    setTimeout(() => {
+      setRestrictedRole([])
+    }, 200); // delay to allow click on list items        
+  }
+  const handleClosecomboLang = (e, key) => {
+    const { name } = e.target;
+    if (key == "spoken") {
+      spokenRef.current.value = '';
+    } else {
+      writtenRef.current.value = '';
+    }
+    setTimeout(() => {
+      setSpokenLanguage([])
+      setWittenLanguage([])
+    }, 200); // delay to allow click on list items
+  };
+  const handleCloseComboLocation = (e) => {
+    const { name } = e.target;
+    locationRef.current.value = "";
+    setTimeout(() => {
+      setLocationList([])
+    }, 200); // delay to allow click on list items        
+  }
   // console.log(activeBehaviour)
   // const updatedArray = behaviours.map((item)=>({
   //   ...item,
@@ -1499,7 +1614,7 @@ const CreateJobsRevised = ({
               <Accordion defaultActiveKey={["0", "8", "7", "10"]}
                 activeKey={currentStep} onSelect={(key) => setCurrentStep(key)}>
                 <Accordion.Item eventKey="0">
-                  <Accordion.Header onClick={() => setOpenStep([])}>Requirements</Accordion.Header>
+                  <Accordion.Header className="bg-lightblue" onClick={() => setOpenStep([])}>Requirements</Accordion.Header>
                   {currentStep !== "0" && (<p className="short_text">Define your ideal hire in detail here. Use flags to indicate the importance as needed. All fields are mandatory</p>)}
                   <Accordion.Body>
                     <p>
@@ -1791,9 +1906,11 @@ const CreateJobsRevised = ({
                               type="text"
                               className="inline-input"
                               placeholder="Enter text"
+                              ref={areaEduRef}
                               // value={row.areaOfEducation}
                               // disabled={row.saved}
                               onChange={handleAreaOfEducation}
+                              onBlur={handleClosecomboEdu} // Close dropdown on blur
                             />
                             {aresEducationOption?.length > 0 ? (
                               <Dropdown show={true} >
@@ -1997,9 +2114,11 @@ const CreateJobsRevised = ({
                                 type="text"
                                 className="inline-input"
                                 placeholder="Enter text"
+                                ref={industriesRef}
                                 // value={row.areaOfEducation}
                                 // disabled={row.saved}
                                 onChange={handlesShorlistedIndustries}
+                                onBlur={handleClosecomboIndustry}
                               />
                               {shorlistedIndustries?.length > 0 ? (
                                 <Dropdown show={true} >
@@ -2097,9 +2216,11 @@ const CreateJobsRevised = ({
                                 type="text"
                                 className="inline-input"
                                 placeholder="Enter text"
+                                ref={roleRef}
                                 // value={row.areaOfEducation}
                                 // disabled={row.saved}
                                 onChange={isLikeHandleRole}
+                                onBlur={handleClosecomboRole}
                               />
                               {restrictedRole?.length > 0 ? (
                                 <Dropdown show={true} >
@@ -2330,9 +2451,11 @@ const CreateJobsRevised = ({
                                 type="text"
                                 className="inline-input"
                                 placeholder="Enter text"
+                                ref={spokenRef}
                                 // value={row.areaOfEducation}
                                 // disabled={row.saved}
                                 onChange={(e) => handleWaSlanguages(e, "spoken")}
+                                onBlur={(e) => handleClosecomboLang(e, "spoken")}
                               />
                               {spokenLanguage?.length > 0 ? (
                                 <Dropdown show={true} >
@@ -2412,9 +2535,11 @@ const CreateJobsRevised = ({
                                 type="text"
                                 className="inline-input"
                                 placeholder="Enter text"
+                                ref={writtenRef}
                                 // value={row.areaOfEducation}
                                 // disabled={row.saved}
                                 onChange={(e) => handleWaSlanguages(e, "rdnw")}
+                                onBlur={(e) => handleClosecomboLang(e, "rdnw")}
                               />
                               {writtenLanguage?.length > 0 ? (
                                 <Dropdown show={true} >
@@ -2536,9 +2661,11 @@ const CreateJobsRevised = ({
                                 type="text"
                                 className="inline-input"
                                 placeholder="Enter text"
+                                ref={locationRef}
                                 // value={row.areaOfEducation}
                                 // disabled={row.saved}
                                 onChange={handleLocationAPIList}
+                                onBlur={handleCloseComboLocation}
                               />
                               {locationList?.length > 0 ? (
                                 <Dropdown show={true} >
@@ -2603,7 +2730,7 @@ const CreateJobsRevised = ({
                   </Accordion.Body>
                 </Accordion.Item>
                 <Accordion.Item eventKey="7">
-                  <Accordion.Header onClick={() => setOpenStep([])}>
+                  <Accordion.Header className="bg-lightblue" onClick={() => setOpenStep([])}>
                     Skills and Other Requirements
                   </Accordion.Header>
                   {currentStep !== "7" && (<p> Select Skills and Add at least 1 Custom Question to help you understand your applicants better.</p>)}
@@ -2707,7 +2834,7 @@ const CreateJobsRevised = ({
                             skillGroupData.group_skill.map((skill, index) => (
                               <span
                                 onClick={(e) => {
-                                  handleSelectedSkill(skill, index);
+                                  handleSelectedSkill(e,skill, index);
                                 }}
                                 className={`stag_item ${SelectSkillsData.includes(skill) ? "active" : ""
                                   }`}
@@ -2723,7 +2850,7 @@ const CreateJobsRevised = ({
                           {addSubSkill.map((item, index) => (
                             <span
                               onClick={(e) => {
-                                handleSelectedSkill(item, index);
+                                handleSelectedSkill(e,item, index);
                               }}
                               className={`stag_item ${SelectSkillsData.includes(item) ? "active" : ""
                                 }`}
@@ -2807,7 +2934,7 @@ const CreateJobsRevised = ({
                           {addSubSkill.map((item, index) => (
                             <span
                               onClick={(e) => {
-                                handleSelectedSkill(item, index);
+                                handleSelectedSkill(e,item, index);
                               }}
                               className={`stag_item ${SelectSkillsData.includes(item) ? "active" : ""
                                 }`}
@@ -3072,7 +3199,7 @@ const CreateJobsRevised = ({
                   </Accordion.Item>
                 </Accordion>
                 <Accordion.Item eventKey="10">
-                  <Accordion.Header onClick={() => setOpenStep([])}>
+                  <Accordion.Header className="bg-lightblue" onClick={() => setOpenStep([])}>
                     Ideal Behaviour and Personalities
                   </Accordion.Header>
                   {currentStep !== "10" && (<p>Select the 6 most relevant behaviours for the role and company based on daily tasks and work culture. Then, choose the 2 most important ones. Don,t hesitate the Help Me Section.</p>)}
@@ -3225,7 +3352,7 @@ const CreateJobsRevised = ({
                       (
                         <>
                           <li>
-                            <Link href={''}><i className="fa fa-undo"></i></Link>
+                            <Link href={''} onClick={(e) => handleRefreshData(e, openStep?.[0])}><i className="fa fa-undo"></i></Link>
                           </li>
                           <li className={handleLightClass()}>
                             <Link href={''} onClick={(e) => removeImportantFlag(e, openStep?.[0])}>
@@ -3242,7 +3369,7 @@ const CreateJobsRevised = ({
                     {openStep[0] === '8' && (
                       <>
                         <li>
-                          <Link href={''}><i className="fa fa-undo"></i></Link>
+                          <Link href={''} onClick={(e) => handleRefreshData(e, openStep?.[0])}><i className="fa fa-undo"></i></Link>
                         </li>
                         <li>
                           <Link href={''} onClick={handleAddSkillGroup}><i className="fa fa-plus"></i></Link>
@@ -3252,7 +3379,7 @@ const CreateJobsRevised = ({
                     {openStep[0] === '9' && (
                       <>
                         <li>
-                          <Link href={''}><i className="fa fa-undo"></i></Link>
+                          <Link href={''} onClick={(e) => handleRefreshData(e, openStep?.[0])}><i className="fa fa-undo"></i></Link>
                         </li>
                         <li>
                           <Link href={''} onClick={() => setActiveKeyAdd(true)}><i className="fa fa-plus"></i></Link>
@@ -3265,7 +3392,7 @@ const CreateJobsRevised = ({
                     {openStep[0] === '11' && (
                       <>
                         <li>
-                          <Link href={''}><i className="fa fa-undo" onClick={handleReferesh}></i></Link>
+                          <Link href={''} onClick={(e) => handleRefreshData(e, openStep?.[0])}><i className="fa fa-undo" ></i></Link>
                         </li>
                         <li className="active">
                           <Link href={''} onClick={() => setShowHelpChoose(true)}>
