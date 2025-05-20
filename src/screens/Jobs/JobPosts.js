@@ -421,6 +421,7 @@ const JobPosts = () => {
         }
         if (Array.isArray(workExpData)) {
           const newArray = workExpData.map((item) => ({
+            id: Math.random().toString(36).slice(2),
             TotalWorkExperience: item?.total_work_experience,
             WorkRole: item?.role,
             WorkFrom: item?.work_from,

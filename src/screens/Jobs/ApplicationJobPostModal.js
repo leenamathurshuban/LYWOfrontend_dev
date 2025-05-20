@@ -2617,6 +2617,9 @@ const ApplicationJobPostModal = ({
     }
   }
   const handleButtonEdit = (val, index) => {
+    if (!showNotesByIndex.includes(val?.id)) {
+      setShowNotesByIndex([...showNotesByIndex, val?.id])
+    }
     const newRows = [...WorkExpreienceRow];
     newRows[index]["savedWorkExp"] = false;
     setWorkExpreienceRow(newRows);
@@ -2723,6 +2726,7 @@ const ApplicationJobPostModal = ({
         console.log("Data added of work experience");
         const newRows = [...WorkExpreienceRow];
         newRows[index].savedWorkExp = true;
+        newRows[index].id= Math.random().toString(36).slice(2);
         setWorkExpreienceRow(newRows);
       } else {
         console.error("Failed to save form: ", response.data);
