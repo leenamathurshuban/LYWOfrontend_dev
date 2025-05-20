@@ -2616,7 +2616,7 @@ const ApplicationJobPostModal = ({
       setShowNotesByIndex([...showNotesByIndex, id])
     }
   }
-  const handleButtonEdit=(val,index)=>{
+  const handleButtonEdit = (val, index) => {
     const newRows = [...WorkExpreienceRow];
     newRows[index]["savedWorkExp"] = false;
     setWorkExpreienceRow(newRows);
@@ -3159,9 +3159,9 @@ const ApplicationJobPostModal = ({
                 </li>
                 <li
                   className={`${profileformData?.AvailableBy &&
-                    isYes?.CurrentlyWorkingToggle &&
-                    profileformData?.NoticePeriod &&
-                    isYes?.NoticeBuyOutToggle &&
+                    // isYes?.CurrentlyWorkingToggle &&
+                    // profileformData?.NoticePeriod &&
+                    // isYes?.NoticeBuyOutToggle &&
                     "active"
                     }`}
                 >
@@ -3497,77 +3497,78 @@ const ApplicationJobPostModal = ({
                     </Row>
                   </Col>
                 </Row>
-
-                <Row className="mb-3 mt-2">
-                  <Col md={2}>
-                    <Form.Label>Notice Period</Form.Label>
-                  </Col>
-
-                  <Col>
-                    <Form.Select
-                      placeholder="Notice Period"
-                      size="sm"
-                      style={{ width: "350px" }}
-                      name="NoticePeriod"
-                      value={profileformData?.NoticePeriod}
-                      onChange={handleProfileDetailsChange}
-                      isInvalid={!!errors.NoticePeriod}
-                    >
-                      <option value="" disabled hidden>Notice Period</option>
-                      <option value='Less than 30 Days'>Less than 30 Days</option>
-                      <option value='30-60 Days'>30 - 60 Days</option>
-                      <option value='60-90 Days'>60 - 90 Days</option>
-                      <option value='More than 90'>More than 90 Days</option>
-                    </Form.Select>
-                  </Col>
-                  <Form.Control.Feedback type="invalid">
-                    {errors.NoticePeriod}
-                  </Form.Control.Feedback>
-                </Row>
-
-                <Row className="mb-3 mt-2">
-                  <Col md={2}>
-                    <Form.Label>Notice Buyout Available</Form.Label>
-                  </Col>
-
-                  <Col>
-                    <Row className="align-items-center">
-                      <Col xs="auto">
-                        <Form.Label
-                          className="mb-0"
-                          style={{
-                            color: isYes?.NoticeBuyOutToggle ? "grey" : "black",
-                          }}
-                        >
-                          {!isYes?.NoticeBuyOutToggle ? "No" : "No"}
-                        </Form.Label>
+                {isYes?.CurrentlyWorkingToggle && (
+                  <>
+                    <Row className="mb-3 mt-2">
+                      <Col md={2}>
+                        <Form.Label>Notice Period</Form.Label>
                       </Col>
 
-                      <Col xs="auto">
-                        <Form.Check
-                          type="switch"
-                          id="custom-switch"
-                          checked={isYes?.NoticeBuyOutToggle}
-                          onChange={() =>
-                            handleSwitchChange("NoticeBuyOutToggle")
-                          }
-                        />
+                      <Col>
+                        <Form.Select
+                          placeholder="Notice Period"
+                          size="sm"
+                          style={{ width: "350px" }}
+                          name="NoticePeriod"
+                          value={profileformData?.NoticePeriod}
+                          onChange={handleProfileDetailsChange}
+                          isInvalid={!!errors.NoticePeriod}
+                        >
+                          <option value="" disabled hidden>Notice Period</option>
+                          <option value='Less than 30 Days'>Less than 30 Days</option>
+                          <option value='30-60 Days'>30 - 60 Days</option>
+                          <option value='60-90 Days'>60 - 90 Days</option>
+                          <option value='More than 90'>More than 90 Days</option>
+                        </Form.Select>
+                      </Col>
+                      <Form.Control.Feedback type="invalid">
+                        {errors.NoticePeriod}
+                      </Form.Control.Feedback>
+                    </Row>
+                    <Row className="mb-3 mt-2">
+                      <Col md={2}>
+                        <Form.Label>Notice Buyout Available</Form.Label>
                       </Col>
 
-                      <Col xs="auto">
-                        <Form.Label
-                          className="mb-0"
-                          style={{
-                            color: isYes?.NoticeBuyOutToggle ? "black" : "grey",
-                          }}
-                        >
-                          {isYes?.NoticeBuyOutToggle ? "Yes" : "Yes"}
-                        </Form.Label>
+                      <Col>
+                        <Row className="align-items-center">
+                          <Col xs="auto">
+                            <Form.Label
+                              className="mb-0"
+                              style={{
+                                color: isYes?.NoticeBuyOutToggle ? "grey" : "black",
+                              }}
+                            >
+                              {!isYes?.NoticeBuyOutToggle ? "No" : "No"}
+                            </Form.Label>
+                          </Col>
+
+                          <Col xs="auto">
+                            <Form.Check
+                              type="switch"
+                              id="custom-switch"
+                              checked={isYes?.NoticeBuyOutToggle}
+                              onChange={() =>
+                                handleSwitchChange("NoticeBuyOutToggle")
+                              }
+                            />
+                          </Col>
+
+                          <Col xs="auto">
+                            <Form.Label
+                              className="mb-0"
+                              style={{
+                                color: isYes?.NoticeBuyOutToggle ? "black" : "grey",
+                              }}
+                            >
+                              {isYes?.NoticeBuyOutToggle ? "Yes" : "Yes"}
+                            </Form.Label>
+                          </Col>
+                        </Row>
                       </Col>
                     </Row>
-                  </Col>
-                </Row>
-
+                  </>
+                )}                
                 <Row className="mb-3 mt-2">
                   <Col md={2}>
                     <Form.Label>Willing to Travel for Job?</Form.Label>
@@ -4173,7 +4174,7 @@ const ApplicationJobPostModal = ({
                                   <Button
                                     variant="link"
                                     className="p-1 font-sm mt-1"
-                                    onClick={() => handleButtonEdit(row,index)}
+                                    onClick={() => handleButtonEdit(row, index)}
                                   >
                                     Edit
                                   </Button>
