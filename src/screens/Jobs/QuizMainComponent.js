@@ -63,6 +63,7 @@ const QuizMainComponent = (item) => {
   const handleInstructionShow = () => setShow(true);
   const navigate = useNavigate();
   const applcant = JSON.parse(localStorage.getItem("applicantProfileData"))
+  const applicantUid = JSON.parse(localStorage.getItem("applicantData"))
   const handleInstructionClose = () => {
     navigate(-1)
   };
@@ -349,7 +350,7 @@ const QuizMainComponent = (item) => {
       const isSingleArray = QuizData[getKeyIndex]?.some(Array.isArray) ? QuizData[getKeyIndex]?.flat() : QuizData[getKeyIndex]
       const formData = new FormData();
       formData.append("job", jobData?.state?.uid)
-      formData.append("applicant", applcant?.applcant?.uid)
+      formData.append("applicant", applicantUid?.uid)
       formData.append("question", questionId)
       formData.append("selected_answer", JSON.stringify(isSingleArray))
       const res = await PostQuizDataApi(formData)
@@ -366,7 +367,7 @@ const QuizMainComponent = (item) => {
           const fillUpdate = [{ answer_uid: answerUids[getKeyIndex], question_uid: questionId, selected_answer: isSingleArray }]
           formData.append('job_uid', jobData?.state?.uid)
           formData.append('question_answer_array', JSON.stringify(fillUpdate))
-          const res = await ApplicationFormDetailsApi(formData, applcant?.applcant?.uid)
+          const res = await ApplicationFormDetailsApi(formData, applicantUid?.uid)
           if (res?.data?.success) {
             // applicantDetailAPI()
           }
@@ -380,7 +381,8 @@ const QuizMainComponent = (item) => {
   }
   const applicantDetailAPI = async () => {
     try {
-      const res = await ApplicationDeatilsApi(applcant?.applcant?.user)
+      const user = applcant?.user_login?.email?applcant?.user_login?.email:applcant?.applcant?.user;
+      const res = await ApplicationDeatilsApi(user)
       // debugger
       if (res?.data?.success) {
         // setSelectedSectionAnswer(res?.data?.response?.asset_data)

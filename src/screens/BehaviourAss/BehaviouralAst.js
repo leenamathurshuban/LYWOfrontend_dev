@@ -56,6 +56,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel,jobPostData })
     const navigate = useNavigate();
     // let applicantId = JSON.parse(localStorage.getItem('applicantData'))
     let applicantId = JSON.parse(localStorage.getItem("applicantProfileData"))
+    let applicantUid = JSON.parse(localStorage.getItem("applicantData"))
     let behavioralId = JSON.parse(localStorage.getItem('applicantBehaviour'))
     // let applicantId = JSON.parse(sessionStorage.getItem('applicantData'))
     // let behavioralId = JSON.parse(sessionStorage.getItem('applicantBehaviour'))
@@ -82,7 +83,8 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel,jobPostData })
     const getApplicantBehaviourDetail = async (id) => {
         try {
             // const response = await getApplicantBehaviourDetailApi(behavioralId?.uid);
-            const response = await ApplicationDeatilsApi(applicantId.applcant.user)
+            const user = applicantId.user_login.email?applicantId.user_login.email:applicantId.applcant.user
+            const response = await ApplicationDeatilsApi(user)
             if (response?.data?.success) {
                 setAttemptQuiz(response?.data?.response?.most_like?.map((cv) => cv.uid))
                 setAttemptLeastQuiz(response?.data?.response?.least_like?.map((cv) => cv.uid))
@@ -147,7 +149,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel,jobPostData })
             try {
                 const formData = new FormData();
                 if (!attemptQuiz.length) {
-                    // formData.append('applicant', applicantId?.uid);
+                    formData.append('job_uid', jobPostData?.uid);
                     formData.append('most_like', JSON.stringify(quizMostLeastLike.flatMap(row => row.mostList)));
                     formData.append('least_like', JSON.stringify(quizMostLeastLike.flatMap(row => row.leastList)));
                     if (runCounter() < 28) {
@@ -156,7 +158,9 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel,jobPostData })
                         formData.append('behaviour_status', 'Completed');
                     }
                     // debugger
-                    const response = await ApplicationFormDetailsApi(formData, applicantId.applcant.uid)
+                    const UID = applicantUid?.uid
+                    // const response = await ApplicationFormDetailsApi(formData, applicantId.applcant.uid)
+                     const response = await ApplicationFormDetailsApi(formData, UID)
                     if (response?.data?.success) {
                         setPopupShow(false)
                         // setComplete(true)
@@ -164,13 +168,18 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel,jobPostData })
                         // sessionStorage.setItem('applicantBehaviour',JSON.stringify(response?.data?.response))   
                         localStorage.setItem("AttemptStatus", runCounter())
                         // sessionStorage.setItem("AttemptStatus",runCounter())                         
-                        setTimeout(()=>{
-                            window.location.reload();
-                        },1000)
+                         if(runCounter() === 28){
+                            jobPostData?.asset_job?.map((Val) => {
+                                if (Val?.asset_title === 'Technical round for EHS Manager') {
+                                    navigate(`/evaluation-quiz/${Val?.uid}`, { state: jobPostData })
+                                }
+                            })                            
+                        }
                     }
                 } else {
                     let mostLike = quizMostLeastLike.flatMap(row => row.mostList);
                     let leastLike = quizMostLeastLike.flatMap(row => row.leastList)
+                    formData.append('job_uid', jobPostData?.uid);
                     formData.append('most_like', JSON.stringify([...attemptQuiz, ...mostLike]));
                     formData.append('least_like', JSON.stringify([...attemptLeastQuiz, ...leastLike]));
                     if (runCounter() < 28) {

@@ -72,6 +72,7 @@ const AssignmentComponent = (item) => {
     const fileInputRef = useRef(null);
     const navigate = useNavigate();
     const applcant = JSON.parse(localStorage.getItem("applicantProfileData"))
+    const applicantUid = JSON.parse(localStorage.getItem("applicantData"))
     const handleInstructionClose = () => {
         navigate(-1)
     };
@@ -519,7 +520,7 @@ const AssignmentComponent = (item) => {
                 }
             }
             formData.append("job", jobdetail?.state?.uid)
-            formData.append("applicant", applcant?.applcant?.uid)
+            formData.append("applicant", applicantUid?.uid)
             formData.append("question", questionId)
             // formData.append("text", QuizData[`${getKeyIndex}-text`]?QuizData[`${getKeyIndex}-text`]:QuizData[getKeyIndex])
             // formData.append("attach_or_video", QuizData[`${getKeyIndex}-file`]?QuizData[`${getKeyIndex}-file`]:QuizData[getKeyIndex])
@@ -554,7 +555,7 @@ const AssignmentComponent = (item) => {
                         }
                     }
                     formData.append('job_or_custom_question_type', 'Job')
-                    const res = await ApplicationFormDetailsApi(formData, applcant?.applcant?.uid)
+                    const res = await ApplicationFormDetailsApi(formData, applicantUid?.uid)
                     if (res?.data?.success) {
                         setIsLoading(false)
                         // applicantDetailAPI()
@@ -579,7 +580,8 @@ const AssignmentComponent = (item) => {
     };
     const applicantDetailAPI = async () => {
         try {
-            const res = await ApplicationDeatilsApi(applcant?.applcant?.user)
+            const user = applcant?.user_login?.email?applcant?.user_login?.email:applcant?.applcant?.user;
+            const res = await ApplicationDeatilsApi(user)
             if (res?.data?.success) {
                 // setSelectedSectionAnswer(res?.data?.response?.asset_data)
                 res.data.response.asset_data.map((Val) => {
