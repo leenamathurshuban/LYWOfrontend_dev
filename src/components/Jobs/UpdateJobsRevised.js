@@ -1320,7 +1320,7 @@ const UpdateJobsRevised = ({
         setMustHaveSkills((prevState) =>
             !prevState.includes(benefititem) && prevState.length < 3
                 ? [...prevState, benefititem]
-                : prevState.filter((item2) => item2 !== benefititem)
+                : prevState.filter((item2) => JSON.stringify(item2) != JSON.stringify(benefititem))
         );
     }
     const handleOpenStep = (index) => {
@@ -1643,14 +1643,15 @@ const UpdateJobsRevised = ({
 
     // console.log('add skill box', addSkillGroup)
     // console.log("customValue,addSubSkill", skillGroupData, SelectSkillsData)
-    console.log(skillGroupData, "group_skills")
-    console.log('======>selecting skills', SelectSkillsData)
-    // console.log("openStep", importantFlag)
-    console.log('must have', mustHaveSkills)
-    console.log(components.length)
-    console.log(IndustriesBadges)
-    console.log('neetu', createRevisedJobData)
-    console.log('==========>update======>', updateFormData)
+    // console.log(skillGroupData, "group_skills")
+    // console.log('======>selecting skills', SelectSkillsData)
+    // // console.log("openStep", importantFlag)
+    // console.log('must have', mustHaveSkills)
+    // console.log(components.length)
+    // console.log(IndustriesBadges)
+    // console.log('neetu', createRevisedJobData)
+    // console.log('==========>update======>', updateFormData)
+    console.log('=========>',dynamicArray)
     return (
         <>
             <Modal

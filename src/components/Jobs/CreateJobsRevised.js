@@ -1194,7 +1194,7 @@ const CreateJobsRevised = ({
     setMustHaveSkills((prevState) =>
       !prevState.includes(benefititem) && prevState.length < 3
         ? [...prevState, benefititem]
-        : prevState.filter((item2) => item2 !== benefititem)
+        : prevState.filter((item2) => JSON.stringify(item2) != JSON.stringify(benefititem))
     );
   }
   const handleOpenStep = (index) => {
@@ -2836,13 +2836,13 @@ const CreateJobsRevised = ({
                                 onClick={(e) => {
                                   handleSelectedSkill(e,skill, index);
                                 }}
-                                className={`stag_item ${SelectSkillsData.includes(skill) ? "active" : ""
+                                className={`stag_item ${SelectSkillsData.some(item => JSON.stringify(item) == JSON.stringify(skill)) ? "active" : ""
                                   }`}
                               >
                                 {skill.skill_name}
                                 {/* <i className="far fa-star ms-1"></i> */}
-                                <span className={`imprt_icon ${mustHaveSkills.includes(skill) ? "text-primery" : ""} `} onClick={() => handleMustHaveSkill(skill)}>
-                                  <i class={`${mustHaveSkills.includes(skill) ? "fa" : "far"}  fa-star`} aria-hidden="true"></i>
+                                <span className={`imprt_icon ${mustHaveSkills.some(item => JSON.stringify(item) == JSON.stringify(skill)) ? "text-primery" : ""} `} onClick={() => handleMustHaveSkill(skill)}>
+                                  <i class={`${mustHaveSkills.some(item => JSON.stringify(item) == JSON.stringify(skill)) ? "fa" : "far"}  fa-star`} aria-hidden="true"></i>
                                 </span>
                               </span>
                             ))}

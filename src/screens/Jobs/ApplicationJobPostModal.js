@@ -2499,10 +2499,10 @@ const ApplicationJobPostModal = ({
       console.log("ERROR:", error);
       setStoredApplicantId(error?.response?.data?.user_login?.uid)
       localStorage.setItem('authToken', error?.response?.data?.user_login?.access)
-      // localStorage.setItem(
-      //   "applicantProfileData",
-      //   JSON.stringify(response.data)
-      // );
+      localStorage.setItem(
+        "applicantProfileData",
+        JSON.stringify(error?.response?.data)
+      );
       updateButtonText("Continue Btn");
       setIsExistApplicantError(error?.response?.data?.applcant?.user?.[0])
       setIsValid(false);
