@@ -2616,6 +2616,11 @@ const ApplicationJobPostModal = ({
       setShowNotesByIndex([...showNotesByIndex, id])
     }
   }
+  const handleEditRowEducation=(row,index)=>{
+    const newRows = [...EducationRows];
+    newRows[index]["saved"] = false;
+    SetEducationRows(newRows);
+  }
   const handleButtonEdit = (val, index) => {
     if (!showNotesByIndex.includes(val?.id)) {
       setShowNotesByIndex([...showNotesByIndex, val?.id])
@@ -2629,6 +2634,7 @@ const ApplicationJobPostModal = ({
     SetEducationRows([
       ...EducationRows,
       {
+        id: Math.random().toString(36).slice(2),
         level: "",
         areaOfEducation: "",
         gradYear: "",
@@ -2683,6 +2689,7 @@ const ApplicationJobPostModal = ({
       if (response.status === 200) {
         const newRows = [...EducationRows];
         newRows[index].saved = true;
+        newRows[index].id = Math.random().toString(36).slice(2);
         SetEducationRows(newRows);
       } else {
         console.error("Failed to save form: ", response.data);
@@ -2692,16 +2699,16 @@ const ApplicationJobPostModal = ({
       console.error("Error occurred:", error);
     }
   };
-  useEffect(() => {
-    EducationRows?.map((row, index) => {
-      if (!row.level || !row.areaOfEducation || !row.gradYear || !row.university
-        || !row.grade || !row.gpa) {
+  // useEffect(() => {
+  //   EducationRows?.map((row, index) => {
+  //     if (!row.level || !row.areaOfEducation || !row.gradYear || !row.university
+  //       || !row.grade || !row.gpa) {
 
-      } else {
-        saveQualificationData(row, index)
-      }
-    })
-  }, [EducationRows])
+  //     } else {
+  //       saveQualificationData(row, index)
+  //     }
+  //   })
+  // }, [EducationRows])
 
   const saveWorkExperienceData = async (row, index) => {
     try {
@@ -2726,7 +2733,7 @@ const ApplicationJobPostModal = ({
         console.log("Data added of work experience");
         const newRows = [...WorkExpreienceRow];
         newRows[index].savedWorkExp = true;
-        newRows[index].id= Math.random().toString(36).slice(2);
+        newRows[index].id = Math.random().toString(36).slice(2);
         setWorkExpreienceRow(newRows);
       } else {
         console.error("Failed to save form: ", response.data);
@@ -2964,6 +2971,7 @@ const ApplicationJobPostModal = ({
     if (isValid) {
       if (profileformData.name && profileformData.email && profileformData.phone) {
         handleProfileDetailsApi();
+        setIsExistApplicantError("")
       }
     }
   }, [profileformData.name, profileformData.email, profileformData.phone])
@@ -2977,6 +2985,54 @@ const ApplicationJobPostModal = ({
       //   window.location.reload();
       // }, 500)
       // },500)
+    } else {
+      setProfileFormData((prevState) => ({
+        ...prevState,
+        AvailableBy: "",
+        NoticePeriod: "",
+        ExpectedSalary: "",
+        CurrentLocation: "",
+        relocationChoice: false,
+        willing_to_travel_for_job: "",
+        requiredCompanyAssist: false,
+      }));
+      setIsYes({
+        CurrentlyWorkingToggle: false,
+        NoticeBuyOutToggle: false,
+        willingToTeavelJob: false,
+      });
+      // setStoredApplicantId(response?.data?.response?.uid);
+      setSelectedSpokenLanguageUids([]);
+      setSelectedWrittenLanguageUids([]);
+      setSpokenLanguageBadges([]);
+      setrdnwBadges([])
+      setSelectedSkills([]);
+      setResumeFile(null);
+      setResumeFileName("");
+      SetEducationRows([{
+        id: Math.random().toString(36).slice(2),
+        level: "",
+        areaOfEducation: "",
+        gradYear: "",
+        university: "",
+        grade: "",
+        saved: false,
+        gpa: ""
+      },])
+      setWorkExpreienceRow([
+        {
+          // TotalWorkExperience: "",
+          id: Math.random().toString(36).slice(2),
+          WorkRole: "",
+          WorkFrom: "",
+          WorkTo: "",
+          WorkComapny: "",
+          WorkIndustry: "",
+          WorkNote: "",
+          savedWorkExp: false,
+        },
+      ])
+      settotalWorkExperience("")
     }
   }, [isExistApplicantError])
 
@@ -3572,7 +3628,7 @@ const ApplicationJobPostModal = ({
                       </Col>
                     </Row>
                   </>
-                )}                
+                )}
                 <Row className="mb-3 mt-2">
                   <Col md={2}>
                     <Form.Label>Willing to Travel for Job?</Form.Label>
@@ -3870,6 +3926,40 @@ const ApplicationJobPostModal = ({
                             </Form.Select>
                           </div>
                         </td>
+                        {!row.saved && (
+                          <td>
+                            <Button
+                              variant="link"
+                              className="p-1 font-sm mt-1"
+                              // onClick={handleButtonClick}
+                              onClick={() => saveQualificationData(row, index)}
+                            >
+                              <img
+                                src={saveIcon}
+                                alt="Delete"
+                                style={{ width: "20px", height: "20px" }}
+                              />
+                              Save
+                            </Button>
+                          </td>
+                        )}                        
+                        {row.saved && (
+                          <td>
+                            <Button
+                              variant="link"
+                              className="p-1 font-sm mt-1"
+                              // onClick={handleButtonClick}
+                              onClick={() => handleEditRowEducation(row, index)}
+                            >
+                              <img
+                                src={saveIcon}
+                                alt="Delete"
+                                style={{ width: "20px", height: "20px" }}
+                              />
+                              Edit
+                            </Button>
+                          </td>
+                        )}                        
                         <td>
                           <button
                             type="button"
@@ -3894,6 +3984,7 @@ const ApplicationJobPostModal = ({
                             </Button>
                           )}
                         </td> */}
+
                       </tr>
                     </tbody>
                   ))}
@@ -3966,44 +4057,6 @@ const ApplicationJobPostModal = ({
                         <>
                           <tr>
                             <td>
-                              {/* <Form.Control
-                              type="text"
-                              placeholder="Role"
-                              size="sm"
-                              style={{ width: "150px" }}
-                              value={row?.WorkRole}
-                              name="WorkRole"
-                              onChange={(e) =>
-                                handleWorkExpeienceChange(index, e)
-                              }
-                              disabled={row.savedWorkExp}
-                            /> */}
-
-                              {/* <Dropdown show={true} >
-                              <Dropdown.Menu className="w-100 dropdown_cti">
-                                <FormControl
-                                  autoFocus
-                                  name="WorkRole"
-                                  placeholder="Role"
-                                  size="sm"
-                                  value={row.WorkRole}
-                                  disabled={row.savedWorkExp}
-                                  onChange={(e) => handleRolelist(index, e)}
-                                />
-                                <div class={`${roleList.length ? 'droplist' : ''}`}>
-                                  {roleList.map((option, idx) => (
-                                    <Dropdown.Item
-                                      key={idx}
-                                      onClick={(e) =>
-                                        handleWorkRole(index, option?.is_like_name)
-                                      }
-                                    >
-                                      {option?.is_like_name}
-                                    </Dropdown.Item>
-                                  ))}
-                                </div>
-                              </Dropdown.Menu>
-                            </Dropdown> */}
                               <div className="mw-130 relative">
                                 <FormControl
                                   // autoFocus
@@ -4077,44 +4130,6 @@ const ApplicationJobPostModal = ({
                               />
                             </td>
                             <td>
-                              {/* <Form.Control
-                              type="text"
-                              placeholder="Industry"
-                              size="sm"
-                              style={{ width: "150px" }}
-                              name="WorkIndustry"
-                              value={row?.WorkIndustry}
-                              onChange={(e) =>
-                                handleWorkExpeienceChange(index, e)
-                              }
-                              disabled={row.savedWorkExp}
-                            /> */}
-
-                              {/* <Dropdown show={true} >
-                              <Dropdown.Menu className="w-100 dropdown_cti">
-                                <FormControl
-                                  autoFocus
-                                  name="WorkIndustry"
-                                  placeholder="Industry"
-                                  size="sm"
-                                  value={row.WorkIndustry}
-                                  disabled={row.savedWorkExp}
-                                  onChange={(e) => handleIndustries(index, e)}
-                                />
-                                <div class={`${industriesList.length ? 'droplist' : ''}`}>
-                                  {industriesList.map((option, idx) => (
-                                    <Dropdown.Item
-                                      key={idx}
-                                      onClick={(e) =>
-                                        handleSelectIndustries(index, option?.industry_name)
-                                      }
-                                    >
-                                      {option?.industry_name}
-                                    </Dropdown.Item>
-                                  ))}
-                                </div>
-                              </Dropdown.Menu>
-                            </Dropdown> */}
                               <div className="mw-130 relative">
                                 <FormControl
                                   // autoFocus
@@ -4143,9 +4158,7 @@ const ApplicationJobPostModal = ({
                                   )}
                                 </div>
                               </div>
-
                             </td>
-
                             <td>
                               <div className="d-flex align-items-center">
                                 {!row.savedWorkExp && !showNotesByIndex.includes(row?.id) && (

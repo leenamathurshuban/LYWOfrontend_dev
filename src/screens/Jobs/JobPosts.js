@@ -397,8 +397,13 @@ const JobPosts = () => {
         const resumeFileName = resumeFileUrl ? resumeFileUrl.split("/").pop() : "";
         setResumeFileName(resumeFileName);
         const educationData = response?.data?.response?.qualification_applicantprofile || [];
-        const workExpData = response?.data?.response?.work_applicant || []
-        if (Array.isArray(educationData)) {
+        const workExpData = response?.data?.response?.work_applicant || []        
+        const filterEducation = educationData.filter((obj, index) => {
+          return index !== educationData.findIndex(o => obj.level === o.level && obj.applicant_area_of_education === o.applicant_area_of_education && 
+            obj.grad_year === o.grad_year && obj.university === o.university  
+          );
+        });
+        if (Array.isArray(filterEducation)) {
           // SetEducationRows((prevState) => [
           //   // ...prevState,
           //   ...educationData.map((item) => ({
@@ -409,7 +414,8 @@ const JobPosts = () => {
           //     grade: item?.grade || "",
           //   })),
           // ]);
-          const newArry = educationData.map((item) => ({
+          const newArry = filterEducation.map((item) => ({
+            id: Math.random().toString(36).slice(2),
             level: item?.level || "",
             areaOfEducation: item?.applicant_area_of_education || "",
             gradYear: item?.grad_year || "",

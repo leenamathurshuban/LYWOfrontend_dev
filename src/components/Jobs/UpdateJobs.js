@@ -742,10 +742,15 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
           formdata.append(key, "True");
         }
       } else if (key === "immediate_hiring") {
-        if (!isDisabledTarget) {
-          formdata.append(key, "False");
-        } else if (isDisabledTarget) {
-          formdata.append(key, "True");
+        // if (!isDisabledTarget) {
+        //   formdata.append(key, "False");
+        // } else if (isDisabledTarget) {
+        //   formdata.append(key, "True");
+        // }
+        if(updateFormData.targate_hire_date!==""){
+          formdata.append(key,"False")
+        }else{
+          formdata.append(key,"False")
         }
       } else if (key === "no_specific_language_require") {
         if (!isSpecificLanguareRequired) {
