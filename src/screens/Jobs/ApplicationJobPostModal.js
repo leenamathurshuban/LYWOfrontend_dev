@@ -4964,18 +4964,21 @@ const ApplicationJobPostModal = ({
           </Modal>
         </div>
 
+
         <div>
           <Modal backdrop={false} aria-labelledby="contained-modal-title-vcenter"
-            centered show={showModal.showSaveModal} onHide={handleCloseModals} className="model_sm alartmdl">
+            centered show={showModal.showSaveModal} onHide={handleCloseModals} className="model_sm alartmdl alart-submited">
             <Modal.Header closeButton>
 
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body className="text-center">
               <Modal.Title>
                 Your application has been successfully submitted.
               </Modal.Title>
-              You can view your progress and complete the next steps by logging
+              <p className="mdl_description">
+                You can view your progress and complete the next steps by logging
               into LYWO with {profileformData?.email}.
+              </p>
             </Modal.Body>
             <Modal.Footer>
               <Button variant="light" onClick={() => handleFormDetailsApi('Completed', '')}>

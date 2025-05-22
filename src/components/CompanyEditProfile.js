@@ -1938,7 +1938,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                     ?.location_name}
                               </li>
                             </ul>
-                            <p className="cpm_dic"
+                            <p className="cpm_dic ct_scrollbar"
                                 dangerouslySetInnerHTML={{
                                   __html: companyProfileDetails?.description,
                                 }}>
@@ -2026,6 +2026,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
     </Modal>
   );
 };
+
 
 const radioButtonStyle = {
   display: "block",

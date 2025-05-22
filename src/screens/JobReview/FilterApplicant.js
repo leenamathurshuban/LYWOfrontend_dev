@@ -29,32 +29,32 @@ import DragDrop from "../../images/icons/dragdrop-bullet.svg";
 import usericon from "../../images/icons/user-01-gray.svg";
 import { BehaviourResponse } from '../../utils/behaviour';
 
-const FilterApplicantModal = ({ show, handleClose, assetJob, setAssetJob, jobDetails, localAssetJob, setLocalAssetJob, id, groupState, setGroupState, groupParameterId, getJobGroupParameterList }) => {
+const FilterApplicantModal = ({ show, handleClose, assetJob, setAssetJob, jobDetails, localAssetJob, setLocalAssetJob, id, groupState, setGroupState, groupParameterId, getJobGroupParameterList, payloadList, setPayloadList,getJobGroupParameterMethod }) => {
     const [tabActive, setTabActive] = useState("evaluation");
     const [groupTitle, setGroupTitle] = useState("");
     const [selectedGroup, setSelectedGroup] = useState({});
-    const [payloadList, setPayloadList] = useState({
-        job_match: { job_groups: [], job_match_percentage: [] },
+    // const [payloadList, setPayloadList] = useState({
+    //     job_match: { job_groups: [], job_match_percentage: [] },
 
-        education: { required_education: [], area_of_education: [] },
+    //     education: { required_education: [], area_of_education: [] },
 
-        availability: { working_status: "", available_by: "", notice_period: [], notice_buy_out: [], willing_to_travel_for_job: [] },
+    //     availability: { working_status: "", available_by: "", notice_period: [], notice_buy_out: [], willing_to_travel_for_job: [] },
 
-        skills: [], //pass skill group object with their skills in this array
+    //     skills: [], //pass skill group object with their skills in this array
 
-        language: { read_and_write: [], speak: [] },
+    //     language: { read_and_write: [], speak: [] },
 
-        custom_questions: [], //pass questions object with their options selected in this array
+    //     custom_questions: [], //pass questions object with their options selected in this array
 
-        personality: { personality_groups: [], all_personalites: [] },
+    //     personality: { personality_groups: [], all_personalites: [] },
 
-        experience: { get_experience: [], industries: [] },
+    //     experience: { get_experience: [], industries: [] },
 
-        roles: [],
-        asset_data: [],
+    //     roles: [],
+    //     asset_data: [],
 
-        salary_and_travel: { expected_salary: [], current_location: [], relocation: ['False'], require_relocation_assistance: ['False'] }
-    })
+    //     salary_and_travel: { expected_salary: [], current_location: [], relocation: ['False'], require_relocation_assistance: ['False'] }
+    // })
     const handleSelect = (key) => {
         setTabActive(key);
     };
@@ -579,8 +579,8 @@ const FilterApplicantModal = ({ show, handleClose, assetJob, setAssetJob, jobDet
                     <Row>
                         <Col sm={12}>
                             <Tab.Content>
-                                <Tab.Pane eventKey="evaluation">                                    
-                                    <Card className="mt-4">                                        
+                                <Tab.Pane eventKey="evaluation">
+                                    <Card className="mt-4">
                                         <Card.Body className="p-3">
                                             <div className="behav_assmnt">
                                                 {groupState.map((item, index) => (
@@ -704,6 +704,17 @@ const FilterApplicantModal = ({ show, handleClose, assetJob, setAssetJob, jobDet
                     </Row>
                 </Tab.Container>
             </Offcanvas.Body>
+            <div className="offcanvas-footer text-end">
+                <Button variant="light" className="me-3">
+                    Reset
+                </Button>
+                <Button
+                    variant="primary"
+                    onClick={getJobGroupParameterMethod}
+                >
+                    Apply
+                </Button>
+            </div>
         </Offcanvas>
     )
 }

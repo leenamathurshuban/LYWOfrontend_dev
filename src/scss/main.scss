@@ -702,6 +702,7 @@ ol.breadcrumb {
     font-weight: 600;
     font-size: 18px;
     position: relative;
+    text-transform: capitalize;
 
     .subtitle {
       color: #667085;
@@ -1031,6 +1032,8 @@ label.required.form-label {
     color: #344054;
     line-height: 16px;
     border-bottom: solid 1px #eaecf0;
+    max-height: 100px;
+    overflow-y: auto;
   }
 }
 
@@ -2969,6 +2972,7 @@ select.h-36.form-select {
     font-size: 15px;
     color: #344054;
     margin-bottom: 5px;
+    text-transform: capitalize;
   }
 
   h6 {
@@ -2979,9 +2983,9 @@ select.h-36.form-select {
 
   p,
   li {
-    font-size: 12px;
+    font-size: 11px;
     color: #667085;
-    line-height: 18px;
+    line-height: 16px;
   }
 
   ul {
@@ -3355,7 +3359,15 @@ select.h-36.form-select {
   padding: 4px;
   border-radius: 4px;
 }
-
+.ql-editor {
+  p {
+    font-family: Inter;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 18px;
+    color: #101828;
+  }
+}
 .lw-toolbar {
   position: absolute;
   right: -30px;
@@ -5262,6 +5274,7 @@ select.h-36.form-select {
   .jobpre_Rightpanel h6 {
     font-size: 12px;
     line-height: 12px;
+    font-weight: 500;
   }
 
   .ct_scrollbar {
@@ -7061,6 +7074,9 @@ button#input-group-dropdown-1 {
     overflow: hidden;
   }
   &.alartmdl {
+    background-color: rgba(242, 244, 247, 0.8);
+    backdrop-filter: blur(1px);
+    -webkit-backdrop-filter: blur(1px);
     .modal-header {
       box-shadow: none;
     }
@@ -7172,3 +7188,12 @@ button#input-group-dropdown-1 {
     }
   }
 }
+.alart-submited {
+  .modal-footer {
+    .btn {
+      width: auto !important;
+      min-width: 190px;
+    }
+  }
+}  
+

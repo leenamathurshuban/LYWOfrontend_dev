@@ -86,6 +86,7 @@ tracker.show_tasks()
     const [reviewModal, setReviewModal] = useState(false);
     const [groupModal, setGroupModal] = useState(false);
     const [groupParameterId, setGroupParameterId] = useState();
+    const [groupTitleName, setGroupTitleName] = useState("");
     const handleReviewClose = () => setReviewModal(false);
     const handleClose = () => setShow(false);
     const handleCloseGrpMdl = () => {
@@ -108,6 +109,45 @@ tracker.show_tasks()
     const [ListData, setListData] = useState([]);
     const [selectedListUids, setSelectedListUids] = useState([]);
     const [ListShow, setListShow] = useState(false);
+    const [payloadList, setPayloadList] = useState({        
+        roles: [],
+        skills: [],
+        language: {
+            speak: [],
+            read_and_write: []
+        },
+        education: {
+            area_of_education: [],
+            required_education: []
+        },
+        job_match: {
+            job_groups: [],
+            job_match_percentage: []
+        },
+        asset_data: [],
+        experience: {
+            industries: [],
+            get_experience: []
+        },
+        personality: {
+            all_personalites: [],
+            personality_groups: []
+        },
+        availability: {
+            available_by: [],
+            notice_period: [],
+            notice_buy_out: [],
+            working_status: [],
+            willing_to_travel_for_job: []
+        },
+        custom_questions: [],
+        salary_and_travel: {
+            relocation: [],
+            expected_salary: [],
+            current_location: [],
+            require_relocation_assistance: []
+        }
+    })
     const [groupState, setGroupState] = useState([
         {
             heading: 'Job Match', isChecked: false, isSelected: false,
@@ -481,7 +521,13 @@ tracker.show_tasks()
     }
     const getJobGroupParameterList = async () => {
         try {
-            const response = await getJobGroupParameterListAPI(id)
+            const payload = {
+                job_group_parameter: groupParameterId,
+                group_name: groupTitleName,
+                group_filter: payloadList
+            }
+            const response = await getJobGroupParameterListAPI(id,payload)
+            debugger
             if (response.data.success) {
                 setGroupParameterList(response?.data?.response)
             }
@@ -616,6 +662,7 @@ tracker.show_tasks()
     // console.log(questionWiseData)
     // console.log(currentItem)
     console.log(groupParameterList)
+    console.log(groupParameterId)
     return (
         <>
             <Sidebar />
@@ -1327,7 +1374,10 @@ tracker.show_tasks()
                                                                                     label="Auto-Remind"
                                                                                 />
                                                                             </Form>
-                                                                            <button className="button" class="btn-transpant" onClick={() => handleListData(groupItem)}><i class="fa fa-list-ul" aria-hidden="true"></i></button>
+                                                                            <button className="button" class="btn-transpant" onClick={() => {
+                                                                                handleListData(groupItem);
+                                                                                setGroupParameterId(paraName?.uid)
+                                                                                setGroupTitleName(groupItem?.group_name)}}><i class="fa fa-list-ul" aria-hidden="true"></i></button>
                                                                         </div>
                                                                     </div>
                                                                 </>
@@ -2507,6 +2557,8 @@ tracker.show_tasks()
                 setGroupState={setGroupState}
                 groupParameterId={groupParameterId}
                 getJobGroupParameterList={getJobGroupParameterList}
+                payloadList={payloadList} setPayloadList={setPayloadList}
+                getJobGroupParameterMethod={getJobGroupParameterList}
             />
             {/*======Answer======*/}
             <Offcanvas

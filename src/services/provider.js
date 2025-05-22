@@ -1,4 +1,4 @@
-import { AuthUrl, CompanyUrl, UsersUrl, JobsUrl, SkillsUrl, ApplicationJobPostUrl,BehaviourUrl } from "./apiUrl";
+import { AuthUrl, CompanyUrl, UsersUrl, JobsUrl, SkillsUrl, ApplicationJobPostUrl, BehaviourUrl } from "./apiUrl";
 import client from "./axiosInstance";
 
 //Login Api's
@@ -198,77 +198,78 @@ export const getQualificationListApi = (url) => {
   return getJobDetails;
 };
 
-export const LanguageApi = () =>{
+export const LanguageApi = () => {
   const languageList = client.getWithToken(`${ApplicationJobPostUrl.languageList}`)
-   return languageList
+  return languageList
 }
 
-export const getQuizQuestionListAPi=()=>{
+export const getQuizQuestionListAPi = () => {
   const getQuizList = client.getWithToken(`${BehaviourUrl.getQuizList}?page=1&limit=28&search=`)
   return getQuizList
 }
-export const postQuizQuestionApi=(data)=>{
-  const resultApi = client.postWithToken(`${BehaviourUrl.postQuizQuestion}`,data)
+export const postQuizQuestionApi = (data) => {
+  const resultApi = client.postWithToken(`${BehaviourUrl.postQuizQuestion}`, data)
   return resultApi
 }
-export const getApplicantBehaviourDetailApi=(id)=>{
+export const getApplicantBehaviourDetailApi = (id) => {
   const getQuizList = client.getWithToken(`${BehaviourUrl.getApplicantBehaviourDetail}${id}`)
   return getQuizList
 }
-export const updateApplicantBehaviourApi=(id,data)=>{
-  const resultApi = client.putForUpload(`${BehaviourUrl.updateApplicantBehaviour}${id}/`,data)
+export const updateApplicantBehaviourApi = (id, data) => {
+  const resultApi = client.putForUpload(`${BehaviourUrl.updateApplicantBehaviour}${id}/`, data)
   return resultApi
 }
 
-export const ApplicationJobApi = (data) =>{
-  const ApplicationJob = client.postWithoutToken(`${ApplicationJobPostUrl.JobApplication}`,data)
+export const ApplicationJobApi = (data) => {
+  const ApplicationJob = client.postWithoutToken(`${ApplicationJobPostUrl.JobApplication}`, data)
   return ApplicationJob
 }
 
-export const ApplicationDeatilsApi = (EmailId) =>{
+export const ApplicationDeatilsApi = (EmailId) => {
   const ApplicationJob = client.getWithToken(`${ApplicationJobPostUrl.JobGetDetails}${EmailId}/`)
   return ApplicationJob
 }
 
 
-export const EducationQualificationApi = (data) =>{
-  const EducationQualification = client.postWithToken(`${ApplicationJobPostUrl.EducationQualification}`,data)
+export const EducationQualificationApi = (data) => {
+  const EducationQualification = client.postWithToken(`${ApplicationJobPostUrl.EducationQualification}`, data)
   return EducationQualification
 }
-export const WorkExperienceApi = (data) =>{
-  const WorkExperience = client.postWithToken(`${ApplicationJobPostUrl.WorkExperience}`,data)
+export const WorkExperienceApi = (data) => {
+  const WorkExperience = client.postWithToken(`${ApplicationJobPostUrl.WorkExperience}`, data)
   return WorkExperience
 }
 
 
-export const ApplicationFormDetailsApi = (data,Id) =>{
+export const ApplicationFormDetailsApi = (data, Id) => {
   const url = `${ApplicationJobPostUrl.ApplicationFormDetails}${Id}/`;
-  const ApplicationJob = client.putWithUpload(url,data)
+  const ApplicationJob = client.putWithUpload(url, data)
   return ApplicationJob
 }
 
 //evalution quiz api
-export const PostQuizDataApi=(data)=>{
-  const quizData = client.postWithToken(`${BehaviourUrl.PostQuizQuestionAnswer}`,data);
+export const PostQuizDataApi = (data) => {
+  const quizData = client.postWithToken(`${BehaviourUrl.PostQuizQuestionAnswer}`, data);
   return quizData
 }
-export const getJobAssignmentReview=(id)=>{
+export const getJobAssignmentReview = (id) => {
   const getJobReview = client.getWithToken(`${JobsUrl.getJobAssignmentQuestionReview}${id}`)
   return getJobReview
 }
-export const updateAassignmentTypeUserAnswerUpdateAPI=(data,id)=>{
-  const result = client.putWithUpload(`${JobsUrl.updateAssetAassignmentTypeUserAnswerUpdate}${id}/`,data);
+export const updateAassignmentTypeUserAnswerUpdateAPI = (data, id) => {
+  const result = client.putWithUpload(`${JobsUrl.updateAssetAassignmentTypeUserAnswerUpdate}${id}/`, data);
   return result
 }
-export const getScreeningParameterDataAPI=(id)=>{
+export const getScreeningParameterDataAPI = (id) => {
   const getResult = client.getWithToken(`${JobsUrl.ScreeningParameterData}${id}`);
   return getResult
 }
-export const getJobGroupParameterListAPI=(id)=>{
-  const getResult = client.getWithToken(`${JobsUrl.getJobGroupParameterList}${id}/?page=1&limit=10`)
+export const getJobGroupParameterListAPI = (id, data) => {
+  const url = `${JobsUrl.getJobGroupParameterList}${id}/?page=1&limit=10`
+  const getResult = client.getWithToken(url, data)
   return getResult
 }
-export const assetSapicreateJobGroupPostAPI=(data)=>{
-  const postResult = client.postWithToken(`${JobsUrl.assetSapicreateJobGroupPost}`,data)
+export const assetSapicreateJobGroupPostAPI = (data) => {
+  const postResult = client.postWithToken(`${JobsUrl.assetSapicreateJobGroupPost}`, data)
   return postResult
 }
