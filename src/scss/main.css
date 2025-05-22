@@ -633,6 +633,7 @@ ol.breadcrumb {
   font-weight: 600;
   font-size: 18px;
   position: relative;
+  text-transform: capitalize;
 }
 .modal-header .modal-title .subtitle {
   color: #667085;
@@ -921,6 +922,8 @@ label.required.form-label {
   color: #344054;
   line-height: 16px;
   border-bottom: solid 1px #eaecf0;
+  max-height: 100px;
+  overflow-y: auto;
 }
 
 .rects-panel.bottom-fixed {
@@ -2582,6 +2585,7 @@ select.h-36.form-select {
   font-size: 15px;
   color: #344054;
   margin-bottom: 5px;
+  text-transform: capitalize;
 }
 .jobpre_Rightpanel h6 {
   font-size: 13px;
@@ -2590,9 +2594,9 @@ select.h-36.form-select {
 }
 .jobpre_Rightpanel p,
 .jobpre_Rightpanel li {
-  font-size: 12px;
+  font-size: 11px;
   color: #667085;
-  line-height: 18px;
+  line-height: 16px;
 }
 .jobpre_Rightpanel ul {
   margin: 0;
@@ -2935,6 +2939,14 @@ select.h-36.form-select {
   border: solid 1px #bac5da;
   padding: 4px;
   border-radius: 4px;
+}
+
+.ql-editor p {
+  font-family: Inter;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+  color: #101828;
 }
 
 .lw-toolbar {
@@ -4523,6 +4535,7 @@ select.h-36.form-select {
 .jobpost_view .jobpre_Rightpanel h6 {
   font-size: 12px;
   line-height: 12px;
+  font-weight: 500;
 }
 .jobpost_view .ct_scrollbar {
   max-height: 65vh;
@@ -6070,6 +6083,11 @@ button#input-group-dropdown-1 {
   border: none;
   overflow: hidden;
 }
+.model_sm.alartmdl {
+  background-color: rgba(242, 244, 247, 0.8);
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+}
 .model_sm.alartmdl .modal-header {
   box-shadow: none;
 }
@@ -6177,4 +6195,9 @@ button#input-group-dropdown-1 {
   z-index: inherit;
   box-shadow: none;
   outline: none;
+}
+
+.alart-submited .modal-footer .btn {
+  width: auto !important;
+  min-width: 190px;
 }/*# sourceMappingURL=main.css.map */
