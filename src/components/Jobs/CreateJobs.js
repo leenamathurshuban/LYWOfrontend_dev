@@ -220,6 +220,7 @@ const CreateJobs = ({ show, handleClose }) => {
     description: "",
     jobType: "",
     workPlaceType: "",
+    detailed_description:""
   });
   const [modal, setModal] = useState({
     createJobRevisedModal: false,
@@ -614,6 +615,13 @@ const CreateJobs = ({ show, handleClose }) => {
         }
       } catch (error) {
         console.log("create eroor------", error);
+        Object.entries(error?.response?.data?.response).map(([key,err])=>{
+          // toast.error(`${key} ${err[0]}`)
+          setErrors({
+            ...errors,
+            [key]:err[0]
+          })
+        })
         if (
           error?.response?.status === 401 ||
           error?.response?.data?.detail?.includes(
@@ -881,6 +889,7 @@ const CreateJobs = ({ show, handleClose }) => {
         try {
           const response = await createCustomeBenifitsApi(formdata);
           if (response.data.status == 200) {
+            setSelectBenefitsData([...SelectBenefitsData,response?.data?.response?.uid])
             benifitsList();
             setCustomValue("");
             handleClearCustomInput('')
@@ -923,6 +932,7 @@ const CreateJobs = ({ show, handleClose }) => {
           const response = await createCustomeBenifitsApi(formdata);
           if (response.data.status == 200) {
             //console.log("res=-------", response);
+            setSelectBenefitsData([...SelectBenefitsData,response?.data?.response?.uid])
             benifitsList();
             setCustomValue("");
             handleClearCustomInput(index)
@@ -1244,6 +1254,9 @@ const CreateJobs = ({ show, handleClose }) => {
             </div>
             {descriptionError && (
               <div className="error">{descriptionError}</div>
+            )}
+            {errors.detailed_description && (
+              <div className="error">{errors.detailed_description}</div>
             )}
           </Form.Group>
 

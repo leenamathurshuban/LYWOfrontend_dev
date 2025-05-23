@@ -1391,6 +1391,20 @@ const CompanyEditProfile = ({ show, handleClose }) => {
     setLocationSearchTerm(e.target.value);
     setLocationSearchDropdown(true);
   };
+  const handlecloseLocationDrop = (e) => {
+    setLocationSearchTerm("")
+    setLocationSearchDropdown(false)
+    setTimeout(() => {
+      setLocation([])
+    }, 200);
+  }
+  const handleCloseIndustryCombo=(e)=>{
+    SetIndustrySearch("")
+    setIndustrySearchDropdown(false)
+    setTimeout(() => {
+      setIndustries([])
+    }, 200);
+  }
 
   const updateCompanyProfile = async () => {
     if (companyUpdateError?.websiteError) {
@@ -1418,27 +1432,27 @@ const CompanyEditProfile = ({ show, handleClose }) => {
 
       // Conditional appends
       // if (description) {
-        data.append("description", description);
+      data.append("description", description);
       // }
 
       // if (website) {
-        data.append("website_url", website);
+      data.append("website_url", website);
       // }
 
       // if (selectedCompanyType) {
-        data.append("company_type", selectedCompanyType);
+      data.append("company_type", selectedCompanyType);
       // }
 
       // if (noOfEmploy) {
-        data.append("number_of_employees", noOfEmploy);
+      data.append("number_of_employees", noOfEmploy);
       // }
 
       // if (industries.length > 0) {
-        data.append("industry", industries[0]?.uid);
+      data.append("industry", industries[0]?.uid);
       // }
 
       // if (Location.length > 0) {
-        data.append("location", Location[0]?.uid);
+      data.append("location", Location[0]?.uid);
       // }
 
       // if (!imageFile || checkEditImage) {
@@ -1450,8 +1464,8 @@ const CompanyEditProfile = ({ show, handleClose }) => {
       // } else {
       //   data.append("logo", imageFile);
       // }
-      if(imageFile && isBinaryFile(imageFile)){
-        data.append("logo",imageFile)
+      if (imageFile && isBinaryFile(imageFile)) {
+        data.append("logo", imageFile)
       }
 
       // Now send the `data` via your API call
@@ -1485,7 +1499,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
     }
 
     handlecustomModalClose();
-    handleClose();
+    // handleClose();
   };
 
   const handleUpdate = (updatedDescription) => {
@@ -1664,6 +1678,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                     placeholder="Search for an industry.."
                                     value={IndustrySearch}
                                     onChange={handleIndustrySearchChange}
+                                    onBlur={handleCloseIndustryCombo}
                                   />
 
                                   {IndustrySearchDropdown &&
@@ -1784,6 +1799,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                     placeholder="Search for an Headquarter..."
                                     value={searchLocationTerm}
                                     onChange={handleLocationSearchChange}
+                                    onBlur={handlecloseLocationDrop}
                                   />
 
                                   {LocationSearchDropdown &&
@@ -1810,7 +1826,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
 
                                   {LocationSearchDropdown &&
                                     Location.length === 0 && (
-                                        <p className="error">Headquarter Not found </p>
+                                      <p className="error">Headquarter Not found </p>
                                     )}
                                 </Form.Group>
 
@@ -1843,7 +1859,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                       {/* {LogoName ? (
                                         <label>{LogoName}</label>
                                       ) : ( */}
-                                        <label>{imageName}</label>
+                                      <label>{imageName}</label>
                                       {/* )} */}
                                       <div className="d-flex">
                                         <Button
@@ -1939,10 +1955,10 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                               </li>
                             </ul>
                             <p className="cpm_dic ct_scrollbar"
-                                dangerouslySetInnerHTML={{
-                                  __html: companyProfileDetails?.description,
-                                }}>
-                              </p>
+                              dangerouslySetInnerHTML={{
+                                __html: companyProfileDetails?.description,
+                              }}>
+                            </p>
                           </Accordion.Body>
                         </Accordion.Item>
                       </Accordion>

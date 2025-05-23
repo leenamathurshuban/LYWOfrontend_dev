@@ -105,6 +105,7 @@ const UpdateJobsRevised = ({
     const [industries, setIndustries] = useState([]);
     const [minValue, setMinValue] = useState(0);
     const [maxValue, setMaxValue] = useState(50);
+    const [range, setRange] = useState({ min: 2, max: 5 });
     const [activeKeyAdd, setActiveKeyAdd] = useState(false);
     const [questionType, setQuestionType] = useState("single");
     const [activeKey, setActiveKey] = useState(null);
@@ -662,7 +663,11 @@ const UpdateJobsRevised = ({
     const handleMinInputChange = (e) => {
         const value = parseInt(e.target.value, 10);
         if (!isNaN(value) && value >= 0 && value <= maxValue) {
-            setMinValue(value);
+            // setMinValue(value);
+            setRange({
+                ...range,
+                ["min"]:value
+            })
         }
     };
 
@@ -670,7 +675,11 @@ const UpdateJobsRevised = ({
         const value = parseInt(e.target.value, 10);
         if (!isNaN(value)) {
             if (value >= minValue && value <= 50) {
-                setMaxValue(Math.min(value, 50)); // Cap the value at 40
+                // setMaxValue(Math.min(value, 50)); // Cap the value at 40
+                setRange({
+                    ...range,
+                    ["max"]:Math.min(value, 50)
+                })
             }
         }
     };
@@ -2157,14 +2166,14 @@ const UpdateJobsRevised = ({
                                                     {(expRangeType === "Range" ||
                                                         expRangeType === "Min") && (
                                                             <Form.Control
-                                                                type="number"
+                                                                type="text"
                                                                 className="sm-fcontrol w-150"
-                                                                name="min_exp"
+                                                                name="min"
                                                                 onChange={(e) => {
-                                                                    handleFormData(e);
+                                                                    // handleFormData(e);
                                                                     handleMinInputChange(e);
                                                                 }}
-                                                                value={updateFormData?.min_exp}
+                                                                value={range.min}
                                                                 placeholder="Min."
                                                             />
                                                         )}
@@ -2178,10 +2187,10 @@ const UpdateJobsRevised = ({
                                                                 max={50}
                                                                 className="sm-fcontrol w-150"
                                                                 placeholder="Max."
-                                                                value={updateFormData?.max_exp}
-                                                                name="max_exp"
+                                                                value={range.max}
+                                                                name="max"
                                                                 onChange={(e) => {
-                                                                    handleFormData(e);
+                                                                    // handleFormData(e);
                                                                     handleMaxInputChange(e);
                                                                 }}
                                                             />
@@ -2194,6 +2203,8 @@ const UpdateJobsRevised = ({
                                                         setMaxValue={setMaxValue}
                                                     /> */}
                                                     <RangeSliderNew
+                                                        range={range}
+                                                        setRange={setRange}
                                                         minExp={minValue}
                                                         setMinExp={setMinValue}
                                                         displayMaxValue={displayMaxValue}

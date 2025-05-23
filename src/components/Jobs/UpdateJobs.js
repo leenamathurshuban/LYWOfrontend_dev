@@ -18,6 +18,7 @@ import CreateJobsRevised from "./CreateJobsRevised";
 import { removeToken } from "../../helpers/helper";
 import UpdateJobsRevised from "./UpdateJobsRevised";
 import { CreateJobFormValidation } from "../../utils/validation";
+import { toast } from "react-toastify";
 
 const UpdateJobs = ({ show, handleClose, editData }) => {
   const { id } = useParams();
@@ -177,8 +178,8 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
     higher_qualification_preferred: "",
     other_areas_acceptable: "",
     year_of_experience_type: "",
-    min_exp: "",
-    max_exp: "",
+    min_exp: 0,
+    max_exp: 5,
     restricted_industries: "",
     define_current_role: "",
     shortlisted_industry: "",
@@ -229,6 +230,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
     description: "",
     jobType: "",
     workPlaceType: "",
+    detailed_description:""
   });
   const [modal, setModal] = useState({
     createJobRevisedModal: false,
@@ -293,7 +295,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
       isValid = false;
     }
     if (!description) {
-      newErrors.description = "This Field is required";
+      newErrors.detailed_description = "This Field is required";
       isValid = false;
     }
     if (!createFormData.jobType) {
@@ -634,7 +636,15 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
           setRestrictedRoleBadges([]);
         }
       } catch (error) {
+        // debugger
         console.log("create eroor------", error);
+        Object.entries(error?.response?.data?.response).map(([key,err])=>{
+          // toast.error(`${key} ${err[0]}`)
+          setErrors({
+            ...errors,
+            [key]:err[0]
+          })
+        })
         if (
           error?.response?.status === 401 ||
           error?.response?.data?.detail?.includes(
@@ -909,6 +919,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
         try {
           const response = await createCustomeBenifitsApi(formdata);
           if (response.data.status == 200) {
+            setSelectBenefitsData([...SelectBenefitsData,response?.data?.response?.uid])
             benifitsList();
             setCustomValue("");
             handleClearCustomInput('')
@@ -950,6 +961,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
           const response = await createCustomeBenifitsApi(formdata);
           if (response.data.status == 200) {
             //console.log("res=-------", response);
+            setSelectBenefitsData([...SelectBenefitsData,response?.data?.response?.uid])
             benifitsList();
             setCustomValue("");
             handleClearCustomInput(index)
@@ -1272,6 +1284,9 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
             </div>
             {descriptionError && (
               <div className="error">{descriptionError}</div>
+            )}
+            {errors.detailed_description && (
+              <div className="error">{errors.detailed_description}</div>
             )}
           </Form.Group>
 

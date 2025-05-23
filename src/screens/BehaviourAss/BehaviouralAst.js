@@ -43,6 +43,7 @@ import { useNavigate } from 'react-router-dom';
 const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel,jobPostData }) => {
     const [show, setShow] = useState(false);
     const [showInstruction,setShowInstruction] = useState(false)
+    const handleInstructionModel =()=>setShowInstruction(false);
     const [popupShow, setPopupShow] = useState(false);
     const handleClosePop = () => {
         if(complete && runCounter()==28){
@@ -430,7 +431,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel,jobPostData })
             </Modal>
             <Offcanvas 
                 show={showInstruction} 
-                onHide={handleClose}
+                onHide={handleInstructionModel}
                 backdrop={false}
                 placement="end"
                 className="instructions_dwr lg-drawer shadow-md border-0" 

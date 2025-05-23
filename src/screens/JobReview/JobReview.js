@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
-    Container, Row, Col, Tab, Nav, Card, Form, Button, InputGroup, Table, Offcanvas, Accordion, ProgressBar
+    Container, Row, Col, Tab, Nav, Card, Form, Button, InputGroup, Table, Offcanvas, Accordion,Badge,Stack,  ProgressBar
 } from "react-bootstrap";
 import Header from "../../components/Header";
 import Sidebar from "../../components/Sidebar";
@@ -13,6 +13,10 @@ import listView from "../../images/icons/list_icon.svg"
 import baseCheckbox from "../../images/icons/Checkbox_base.svg";
 import User01Gray from "../../images/icons/user-01-gray.svg";
 import filterLines from "../../images/icons/filter-lines.svg";
+import SReminder from "../../images/icons/send-01-primery.svg";
+import Hold from "../../images/icons/hold-primery.svg";
+import Reject from "../../images/icons/user-x-01-primery.svg";
+import ShortList from "../../images/icons/user-check-01-primery.svg";
 import fileIcon from "../../images/icons/file_icon.svg";
 import faRingicon from "../../images/icons/Ring.svg";
 import RingSucess from "../../images/icons/ring_sucess.svg";
@@ -93,6 +97,7 @@ tracker.show_tasks()
         setGroupModal(false)
         setFilterApplicantShow(false)
     }
+    
     const handleShow = () => setShow(true);
     const { id } = useParams();
     const [jobDetails, setJobDetails] = useState({})
@@ -527,7 +532,7 @@ tracker.show_tasks()
                 group_filter: payloadList
             }
             const response = await getJobGroupParameterListAPI(id,payload)
-            debugger
+            // debugger
             if (response.data.success) {
                 setGroupParameterList(response?.data?.response)
             }
@@ -870,7 +875,7 @@ tracker.show_tasks()
                                                                                 checked={selectedListUids.includes(item?.uid)}
                                                                                 onChange={() => handleCheckBoxBtn(item?.uid)}
                                                                             />
-                                                                            <span className="font-weight-600">
+                                                                            <span className="font-weight-600" onClick={() => handleReviewModal()}>
                                                                                 {/* Sandeep Kattamuri */}
                                                                                 {item?.job_applicant_profile?.user?.username}
                                                                             </span>
@@ -2561,7 +2566,7 @@ tracker.show_tasks()
                 getJobGroupParameterMethod={getJobGroupParameterList}
             />
             {/*======Answer======*/}
-            <Offcanvas
+            {/* <Offcanvas
                 show={reviewModal}
                 onHide={handleReviewClose}
                 backdrop={false}
@@ -2588,20 +2593,6 @@ tracker.show_tasks()
                             <Ratting rating={rating} setRating={setRating} ID={currentItem?.uid} getJobAssignmentReviewList={getJobAssignmentReviewList} questionWiseData={questionWiseData} />
                         </Card.Header>
                         <Card.Body className="px-0">
-                            {/* <Card.Text>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vulputate scelerisque mi, in iaculis ante tempor et. Aliquam fermentum, sem eu tincidunt vehicula, purus velit molestie sem, sed sodales libero elit ut massa. Maecenas egestas sit amet sem vitae ornare. Curabitur faucibus maximus neque, quis sollicitudin velit ornare vel. Donec nec mollis metus. Curabitur auctor mollis metus sit amet tristique. Nulla ut maximus ante.</p>
-                                <p>Phasellus erat arcu, scelerisque vitae efficitur sed, ornare et purus. Duis vel semper ligula. Proin consectetur magna quis ullamcorper efficitur. Donec suscipit tristique leo, ac porta odio maximus quis. Mauris quis lacinia massa. Curabitur vitae leo quis lorem elementum tincidunt. Morbi et convallis nibh.
-                                </p>
-                                <p>Etiam at consequat mi, nec scelerisque erat. Fusce condimentum cursus metus, ultricies scelerisque tortor. Aenean est tellus, varius ullamcorper felis quis, mollis finibus eros. In efficitur sed nisl semper vulputate. Duis vitae mi non neque volutpat aliquam vel et nulla. Curabitur rutrum vulputate lorem et sagittis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam erat volutpat. Sed turpis risus, tempor eget cursus nec, aliquet ac tellus.
-                                </p>
-                                <p>Ut ut fringilla tellus, vel rhoncus neque. Proin turpis mi, feugiat id maximus eget, aliquet id purus. Donec tellus purus, viverra id dolor quis, fringilla varius augue. Pellentesque pellentesque ut nunc eu gravida. Etiam rhoncus auctor dui quis maximus. Sed tempor, libero a efficitur auctor, augue turpis volutpat nulla, ac pellentesque magna purus ac turpis. In hac habitasse platea dictumst. Phasellus ligula mi, sodales vitae velit sit amet, eleifend varius ligula.
-                                </p>
-                            </Card.Text>
-                            <div className="video-frame">
-                                <iframe width="100%" height="430" src="https://www.youtube.com/embed/tgbNymZ7vqY">
-                                </iframe>
-                            </div>
-                            <CodeBlock language="javascript" code={codeSnippet} /> */}
                             {currentItem?.text && (
                                 <Card.Text>{currentItem?.text?.replace(/<[^>]*>/g, '')}</Card.Text>
                             )}
@@ -2623,7 +2614,65 @@ tracker.show_tasks()
                         </Card.Body>
                     </Card>
                 </Offcanvas.Body>
+            </Offcanvas> */}
+            {/*======Applicant Profile======*/}
+            <Offcanvas
+                show={reviewModal}
+                onHide={handleReviewClose}
+                backdrop={true}
+                placement="end"
+                className="apcnt_prfle lg-drawer shadow-md border-0"
+            >
+                <Offcanvas.Header closeButton>
+                    <Offcanvas.Title>
+                         <h5>Sandeep Kattamuri</h5>
+                          <div className="d-flex">
+                            <p className="subtitle">Assignment for Figma Designer</p>
+                            <span className="status">Incomplete</span>
+                          </div>
+                    </Offcanvas.Title>
+                    <div className="d-flex ml-auto">
+                        <Button variant="link" className="btn-sm btn-link-muted"><img className="me-2" src={SReminder}/>Send Reminder</Button>
+                        <Button variant="link" className="btn-sm btn-link-muted"><img className="me-2" src={Hold}/>Hold</Button>
+                        <Button variant="link" className="btn-sm btn-link-muted"><img className="me-2" src={Reject}/>Reject</Button>
+                        <Button variant="link" className="btn-sm btn-link-muted"><img className="me-2" src={ShortList}/>Short List</Button>
+                    </div>
+                </Offcanvas.Header>
+                <Offcanvas.Body>
+                   <Row>
+                        <Col md={9}>
+                             <Tab.Container id="left-tabs-example" defaultActiveKey="Application">
+                                <Nav variant="pills" className="tab-underline">
+                                    <Nav.Item>
+                                        <Nav.Link eventKey="Application">Application <span className="count badge ms-2">1</span></Nav.Link>
+                                    </Nav.Item>
+                                    <Nav.Item>
+                                        <Nav.Link eventKey="Resume">Resume</Nav.Link>
+                                    </Nav.Item>
+                                    <Nav.Item>
+                                        <Nav.Link eventKey="Personality">Personality</Nav.Link>
+                                    </Nav.Item>
+                                    <Nav.Item>
+                                        <Nav.Link eventKey="Evaluations">Evaluations</Nav.Link>
+                                    </Nav.Item>
+                                    <Nav.Item>
+                                        <Nav.Link eventKey="Messages">Messages <span className="count badge ms-2">1</span></Nav.Link>
+                                    </Nav.Item>
+                                </Nav>
+                                <Tab.Content>
+                                    <Tab.Pane eventKey="Application">First tab content</Tab.Pane>
+                                    <Tab.Pane eventKey="Resume">Second tab content</Tab.Pane>
+                                    <Tab.Pane eventKey="Personality">Second tab content</Tab.Pane>
+                                    <Tab.Pane eventKey="Evaluations">Second tab content</Tab.Pane>
+                                    <Tab.Pane eventKey="Messages">Second tab content</Tab.Pane>
+                                </Tab.Content>
+                            </Tab.Container>
+                        </Col>
+                        <Col md={3}>World</Col>
+                   </Row>
+                </Offcanvas.Body>
             </Offcanvas>
+
         </>
     );
 };

@@ -273,9 +273,10 @@ const imageMap = {
     "Respectful": RespectfulIQ,
 };
 
-const QuizQuestionSlider = ({ quizMostLeastLike, setQuizMostLeastLike, language,counter }) => {
+const QuizQuestionSlider = ({ quizMostLeastLike, setQuizMostLeastLike, language, counter }) => {
     const sliderRef = useRef(null);
     const [currentSlide, setCurrentSlide] = useState(0);
+    const [isHovered, setIsHovered] = useState([]);
     const options = {
         dots: true,
         infinite: true,
@@ -293,9 +294,8 @@ const QuizQuestionSlider = ({ quizMostLeastLike, setQuizMostLeastLike, language,
                 {dots.map((dot, index) => (
                     <li key={index} className={`${quizMostLeastLike[index] && 'slick-active'}`}>
                         <button
-                            className={`h-3 w-3 rounded-full mx-1 ${
-                                quizMostLeastLike[index]?.most && quizMostLeastLike[index]?.least  ? "quiz-completed" : "bg-gray-400"
-                            }`}
+                            className={`h-3 w-3 rounded-full mx-1 ${quizMostLeastLike[index]?.most && quizMostLeastLike[index]?.least ? "quiz-completed" : "bg-gray-400"
+                                }`}
                             onClick={() => sliderRef.current.slickGoTo(index)}
                         ></button>
                     </li>
@@ -304,7 +304,7 @@ const QuizQuestionSlider = ({ quizMostLeastLike, setQuizMostLeastLike, language,
         )
     };
 
-    console.log(language,counter)
+    console.log(language, counter)
     const handleClikcquiz = (rowIndex, option, type) => {
         // setQuizMostLeastLike((prevState) => {
         //     const newState = prevState.map((row, index) => {
@@ -389,6 +389,8 @@ const QuizQuestionSlider = ({ quizMostLeastLike, setQuizMostLeastLike, language,
                                 <Col md={3}>
                                     <div key={option}
                                         className={`quiz_card ${row.most === option?.option_name ? "info-select" : ""} ${row.least === option?.option_name ? "info-warring" : ""} `}
+                                        onMouseEnter={() => setIsHovered([option?.option_name])}
+                                        onMouseLeave={() => setIsHovered([])}
                                     >
                                         <span className="quiz_icon"><img src={imageMap[option?.option_name]} /></span>
                                         <h4>
@@ -399,10 +401,10 @@ const QuizQuestionSlider = ({ quizMostLeastLike, setQuizMostLeastLike, language,
                                         <div className="quiz-btns">
                                             <button type="button" className="btn-up" onClick={() => {
                                                 handleClikcquiz(rowIndex, option, "most")
-                                            }}><i className={`fa ${row.most === option?.option_name ? 'fa-times' : 'fa-arrow-up'}`}></i></button>
+                                            }}><i className={`fa ${row.most === option?.option_name && isHovered.includes(option?.option_name) ? 'fa-times' : 'fa-arrow-up'}`}></i></button>
                                             <button type="button" className="btn-down" onClick={() => {
                                                 handleClikcquiz(rowIndex, option, "least")
-                                            }}><i className={`fa ${row.least === option?.option_name ? 'fa-times' : 'fa-arrow-down'} `}></i></button>
+                                            }}><i className={`fa ${row.least === option?.option_name && isHovered.includes(option?.option_name) ? 'fa-times' : 'fa-arrow-down'} `}></i></button>
                                         </div>
                                     </div>
                                 </Col>

@@ -397,10 +397,10 @@ const JobPosts = () => {
         const resumeFileName = resumeFileUrl ? resumeFileUrl.split("/").pop() : "";
         setResumeFileName(resumeFileName);
         const educationData = response?.data?.response?.qualification_applicantprofile || [];
-        const workExpData = response?.data?.response?.work_applicant || []        
+        const workExpData = response?.data?.response?.work_applicant || []
         const filterEducation = educationData.filter((obj, index) => {
-          return index !== educationData.findIndex(o => obj.level === o.level && obj.applicant_area_of_education === o.applicant_area_of_education && 
-            obj.grad_year === o.grad_year && obj.university === o.university  
+          return index !== educationData.findIndex(o => obj.level === o.level && obj.applicant_area_of_education === o.applicant_area_of_education &&
+            obj.grad_year === o.grad_year && obj.university === o.university
           );
         });
         if (Array.isArray(filterEducation)) {
@@ -1031,7 +1031,7 @@ const JobPosts = () => {
               <Button
                 variant="primary"
                 size=""
-                className="w-100"
+                className={`${buttonText == "Apply Now" && 'w-100'}`}
                 disabled={jobPostErrorMsg}
                 hidden={buttonText == 'Apply Now' ? true : false}
                 onClick={() => handleBtns(buttonText)}
@@ -1130,7 +1130,7 @@ const JobPosts = () => {
                   <div className="text-end">
                     <Button
                       variant="primary"
-                      size="lg"
+                      // size="lg"
                       disabled={localStorage.getItem("AttemptStatus") == 28 ? false : true}
                       hidden={buttonText == 'Apply Now'}
                       onClick={() => {
@@ -1186,11 +1186,13 @@ const JobPosts = () => {
             }
           })}
 
-          <div className="livechat">
-            <div className="chat_icon">
-              <img src={Chat} onClick={() => handleShowModal("chatModal")} />
+          {!behaviourAssModel && (
+            <div className="livechat">
+              <div className="chat_icon">
+                <img src={Chat} onClick={() => handleShowModal("chatModal")} />
+              </div>
             </div>
-          </div>
+          )}
         </Col>
       </Row>
 

@@ -21,6 +21,7 @@ import {
 const QuizSlider = ({ mostLeastLike, setMostLeastLike }) => {
     const sliderRef = useRef(null);
     const [currentSlide, setCurrentSlide] = useState(0);
+    const [isHovered, setIsHovered] = useState([]);
     const options = {
         dots: true,
         infinite: false,
@@ -38,9 +39,8 @@ const QuizSlider = ({ mostLeastLike, setMostLeastLike }) => {
                 {dots.map((dot, index) => (
                     <li key={index} className={`${index && 'slick-active'}`}>
                         <button
-                            className={`h-3 w-3 rounded-full mx-1 ${
-                                mostLeastLike[index]?.most && mostLeastLike[index]?.least  ? "quiz-completed" : "bg-gray-400"
-                            }`}
+                            className={`h-3 w-3 rounded-full mx-1 ${mostLeastLike[index]?.most && mostLeastLike[index]?.least ? "quiz-completed" : "bg-gray-400"
+                                }`}
                             onClick={() => sliderRef.current.slickGoTo(index)}
                         ></button>
                     </li>
@@ -77,11 +77,11 @@ const QuizSlider = ({ mostLeastLike, setMostLeastLike }) => {
                         }
                         newRow.least = row.least === option ? "" : option; // Toggle least
                     }
-                    if(newRow.most && newRow.least){
+                    if (newRow.most && newRow.least) {
                         setTimeout(() => {
                             if (currentSlide < mostLeastLike.length - 1) {
                                 sliderRef.current.slickNext();
-                            }                            
+                            }
                         }, 1000);
                     }
                     return newRow;
@@ -93,51 +93,54 @@ const QuizSlider = ({ mostLeastLike, setMostLeastLike }) => {
     };
 
     return (
-        <div className="qzslider"><span className='handraw'><img src={handDrawicon}/>Hover over the cards below to begin.</span>
-        <Slider ref={sliderRef} {...options}>
-            {mostLeastLike.map((row, rowIndex) => (
-                <div key={row.id} className="item">
-                    <Row>
-                        {row.options.map(option => (
-                            <Col md={3}>
-                                <div key={option}
-                                    className={`quiz_card ${row.most === option?.name ? "info-select" : ""} ${row.least === option?.name ? "info-warring" : ""} `}>
-                                    <span className="quiz_icon"><img src={option?.img} /></span>
-                                    <h4>{option?.name}</h4>
-                                    <div className="quiz-btns">
-                                        <button type="button" className="btn-up" onClick={() => {
-                                            handleClick(rowIndex, option?.name, "most")
-                                        }}><i className={`fa ${row.most === option?.name ? 'fa-times' : 'fa-arrow-up'}`}></i></button>
-                                        <button type="button" className="btn-down" onClick={() => {
-                                            handleClick(rowIndex, option?.name, "least")
-                                        }}><i className={`fa ${row.least === option?.name ? 'fa-times' : 'fa-arrow-down'} `}></i></button>
-                                        <div className='mlike-sugg'>
-                                            <img src={handDrawmlike}/>
-                                            <span>Click to pick “Most Like”</span>
-                                        </div>
-                                        <div className='lelike-sugg'>
-                                            <img src={handDrawlelike}/>
-                                            <span>Click to pick “Least Like”</span>
-                                        </div>
-                                        <div className='mlike-sugg_active'>
-                                            <img src={handDrawmlikeactive}/>
-                                            <span>Click to remove the selection</span>
-                                        </div>
-                                        <div className='lelike-sugg_active'>
-                                            <img src={handDrawlelikeactive}/>
-                                            <span>Click to remove the selection</span>
+        <div className="qzslider"><span className='handraw'><img src={handDrawicon} />Hover over the cards below to begin.</span>
+            <Slider ref={sliderRef} {...options}>
+                {mostLeastLike.map((row, rowIndex) => (
+                    <div key={row.id} className="item">
+                        <Row>
+                            {row.options.map(option => (
+                                <Col md={3}>
+                                    <div key={option}
+                                        className={`quiz_card ${row.most === option?.name ? "info-select" : ""} ${row.least === option?.name ? "info-warring" : ""} `}
+                                        onMouseEnter={() => setIsHovered([option?.name])}
+                                        onMouseLeave={() => setIsHovered([])}
+                                    >
+                                        <span className="quiz_icon"><img src={option?.img} /></span>
+                                        <h4>{option?.name}</h4>
+                                        <div className="quiz-btns">
+                                            <button type="button" className="btn-up" onClick={() => {
+                                                handleClick(rowIndex, option?.name, "most")
+                                            }}><i className={`fa ${row.most === option?.name && isHovered.includes(option?.name) ? 'fa-times' : 'fa-arrow-up'}`}></i></button>
+                                            <button type="button" className="btn-down" onClick={() => {
+                                                handleClick(rowIndex, option?.name, "least")
+                                            }}><i className={`fa ${row.least === option?.name && isHovered.includes(option?.name) ? 'fa-times' : 'fa-arrow-down'} `}></i></button>
+                                            <div className='mlike-sugg'>
+                                                <img src={handDrawmlike} />
+                                                <span>Click to pick “Most Like”</span>
+                                            </div>
+                                            <div className='lelike-sugg'>
+                                                <img src={handDrawlelike} />
+                                                <span>Click to pick “Least Like”</span>
+                                            </div>
+                                            <div className='mlike-sugg_active'>
+                                                <img src={handDrawmlikeactive} />
+                                                <span>Click to remove the selection</span>
+                                            </div>
+                                            <div className='lelike-sugg_active'>
+                                                <img src={handDrawlelikeactive} />
+                                                <span>Click to remove the selection</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                </Col>
+                            ))}
+                            <Col md={12} className="text-center mt-4">
+                                <p className="mostlike">Pick one <strong>"Most Like”</strong> you and one <strong>"Least Like”</strong> you</p>
                             </Col>
-                        ))}
-                        <Col md={12} className="text-center mt-4">
-                            <p className="mostlike">Pick one <strong>"Most Like”</strong> you and one <strong>"Least Like”</strong> you</p>
-                        </Col>
-                    </Row>
-                </div>
-            ))}
-            {/* {mostLeastLike.map((row, rowIndex) => (
+                        </Row>
+                    </div>
+                ))}
+                {/* {mostLeastLike.map((row, rowIndex) => (
                 <div key={row.id} className="item">
                     <Row>
                         {row.options.map(option => (
@@ -160,7 +163,7 @@ const QuizSlider = ({ mostLeastLike, setMostLeastLike }) => {
                     </Row>
                 </div>
             ))} */}
-            {/* <div className="item">
+                {/* <div className="item">
                 <Row>
                     <Col md={3}>
                         <div className={`quiz_card ${item?.iceCream === 'most' && 'info-select'}`}>
@@ -204,7 +207,7 @@ const QuizSlider = ({ mostLeastLike, setMostLeastLike }) => {
                     </Col>
                 </Row>
             </div> */}
-            {/* <div className="item">
+                {/* <div className="item">
             <Row>
                 <Col md={3}>
                     <div className="quiz_card">
@@ -248,7 +251,7 @@ const QuizSlider = ({ mostLeastLike, setMostLeastLike }) => {
                 </Col>
             </Row>
         </div> */}
-        </Slider>
+            </Slider>
         </div>
     );
 };
