@@ -246,25 +246,25 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel,jobPostData })
                                 <Row>
                                     <Col md={3}>
                                         <div className="brb_cards">
-                                            <img src={stack2_brb} />
+                                            <span className="brb-cicon"><img src={stack2_brb} /></span>
                                             <h6>28 Sets</h6>
                                         </div>
                                     </Col>
                                     <Col md={3}>
                                         <div className="brb_cards">
-                                            <img src={option_brb} />
+                                           <span className="brb-cicon"><img src={option_brb} /></span>
                                             <h6>4 Options</h6>
                                         </div>
                                     </Col>
                                     <Col md={3}>
                                         <div className="brb_cards most_like">
-                                            <img src={choice_brb} />
+                                            <span className="brb-cicon"><img src={choice_brb} /></span>
                                             <h6>Pick one "Most Like” you</h6>
                                         </div>
                                     </Col>
                                     <Col md={3}>
                                         <div className="brb_cards least_like">
-                                            <img src={pink_brb} />
+                                            <span className="brb-cicon"><img src={pink_brb} /></span>
                                             <h6>Pick one "Least Like” you</h6>
                                         </div>
                                     </Col>
@@ -303,8 +303,8 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel,jobPostData })
                     <Modal.Title>Behavioural Assessment</Modal.Title>
                     <div className="score_panel">
                         <span className="att_count">Attempted <strong>{runCounter()} / 28</strong></span>
-                        <button type="button" onClick={()=>setShowInstruction(true)} className="outline_scorebtn me-3"><img src={infogray} />Instructions</button>
-                        <button type="button" className="outline_scorebtn me-3 setlanguage"><img src={globgray} />
+                        <button type="button" onClick={()=>setShowInstruction(true)} className="me-3 btn-light-outline-sm"><img src={infogray} />Instructions</button>
+                        <button type="button" className="btn-light-outline-sm me-3 setlanguage"><img src={globgray} />
                             <Form.Select
                                 name="currency"
                                 aria-label="Default select example"

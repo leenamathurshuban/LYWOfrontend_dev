@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
-    Container, Row, Col, Tab, Nav, Card, Form, Button, InputGroup, Table, Offcanvas, Accordion,Badge,Stack,  ProgressBar
+    Container, Row, Col, Tab, Nav, Card, Form, Button, InputGroup, Table, Offcanvas, Accordion, Badge, Stack, ProgressBar
 } from "react-bootstrap";
 import Header from "../../components/Header";
 import Sidebar from "../../components/Sidebar";
@@ -29,13 +29,17 @@ import ExpandButton from "../../images/icons/expand-03-primery.svg";
 import ArrowBack from "../../images/icons/arrowBack.svg";
 import ArrowNext from "../../images/icons/arrowNext.svg";
 import { useParams } from "react-router-dom";
-import { getJobAssignmentReview, getJobDetailsApi, getJobGroupParameterListAPI, getScreeningParameterDataAPI } from "../../services/provider";
+import { ApplicationDeatilsApi, getJobAssignmentReview, getJobDetailsApi, getJobGroupParameterListAPI, getScreeningParameterDataAPI, postJobGroupParameterListByFetchAPI } from "../../services/provider";
 import Evaluations from "./Evaluations";
 import Ratting from "../../components/Ratting";
 import CodeBlock from "../../components/CodeBlock";
 import CreateGroupModal from "./NewGroupModal";
 import { BehaviourResponse } from "../../utils/behaviour";
 import FilterApplicantModal from "./FilterApplicant";
+import Step1 from "./Step/Step1";
+import Step2 from "./Step/Step2";
+import SideCard from "./Step/SideCard";
+import Step3 from "./Step/Step3";
 const JobReview = () => {
     const codeSnippet = `class WorkloadTracker:
     def __init__(self):
@@ -90,14 +94,18 @@ tracker.show_tasks()
     const [reviewModal, setReviewModal] = useState(false);
     const [groupModal, setGroupModal] = useState(false);
     const [groupParameterId, setGroupParameterId] = useState();
+    const [paramUid, setParamUid] = useState()
     const [groupTitleName, setGroupTitleName] = useState("");
-    const handleReviewClose = () => setReviewModal(false);
+    const handleReviewClose = () => {
+        setReviewModal(false);
+        setCandidateEmail('')
+    };
     const handleClose = () => setShow(false);
     const handleCloseGrpMdl = () => {
         setGroupModal(false)
         setFilterApplicantShow(false)
     }
-    
+
     const handleShow = () => setShow(true);
     const { id } = useParams();
     const [jobDetails, setJobDetails] = useState({})
@@ -114,7 +122,11 @@ tracker.show_tasks()
     const [ListData, setListData] = useState([]);
     const [selectedListUids, setSelectedListUids] = useState([]);
     const [ListShow, setListShow] = useState(false);
-    const [payloadList, setPayloadList] = useState({        
+    const [candidateEmail, setCandidateEmail] = useState('')
+    const [candidateDetails, setCandidateDetails] = useState({})
+    const [applicantPersonality, setApplicantPersonality] = useState();
+    const [personalityData, setPersonalityData] = useState()
+    const [payloadList, setPayloadList] = useState({
         roles: [],
         skills: [],
         language: {
@@ -152,6 +164,54 @@ tracker.show_tasks()
             current_location: [],
             require_relocation_assistance: []
         }
+        // "roles": [],
+
+        // "skills": [],
+
+        // "language": {
+
+        //     "speak": [],
+        //     "read_and_write": []
+        // },
+
+        // "education": {
+        //     "area_of_education": [],
+        //     "required_education": ["Below Secondary Education"]
+        // },
+
+        // "job_match": {
+        //     "job_groups": [],
+        //     "job_match_percentage": []
+        // },
+
+        // "asset_data": [],
+
+        // "experience": {
+        //     "industries": [],
+        //     "get_experience": []
+        // },
+
+        // "personality": {
+        //     "all_personalites": [],
+        //     "personality_groups": []
+        // },
+
+        // "availability": {
+        //     "available_by": [],
+        //     "notice_period": [],
+        //     "notice_buy_out": [],
+        //     "working_status": [],
+        //     "willing_to_travel_for_job": []
+        // },
+
+        // "custom_questions": [],
+
+        // "salary_and_travel": {
+        //     "relocation": [],
+        //     "expected_salary": [],
+        //     "current_location": [],
+        //     "require_relocation_assistance": []
+        // }
     })
     const [groupState, setGroupState] = useState([
         {
@@ -497,6 +557,7 @@ tracker.show_tasks()
                     const matchedBehaviours = updatedBehaviourResponse.filter(item =>
                         personalityKeys.includes(item.behaviour_type_name)
                     );
+                    setPersonalityData(matchedBehaviours)
                     // debugger
                     const transformed = {
                         name: 'All Personalites',
@@ -526,13 +587,7 @@ tracker.show_tasks()
     }
     const getJobGroupParameterList = async () => {
         try {
-            const payload = {
-                job_group_parameter: groupParameterId,
-                group_name: groupTitleName,
-                group_filter: payloadList
-            }
-            const response = await getJobGroupParameterListAPI(id,payload)
-            // debugger
+            const response = await getJobGroupParameterListAPI(id)
             if (response.data.success) {
                 setGroupParameterList(response?.data?.response)
             }
@@ -578,7 +633,6 @@ tracker.show_tasks()
         setQuestionWiseDuplicate(obj)
     }
     const handleReviewModal = (data) => {
-        setReviewModal(true)
         // setPopupData(data)
         setCurrentId(data?.id)
     }
@@ -662,6 +716,45 @@ tracker.show_tasks()
             setSelectedListUids(ListData.map((user) => user.uid));
         }
     };
+    const getFilterApplicantListBycandidateReview = async () => {
+        try {
+            const payload = {
+                job_group_parameter: groupParameterId,
+                group_name: groupTitleName,
+                group_filter: payloadList
+            }
+            const response = await postJobGroupParameterListByFetchAPI(paramUid, payload)
+            if (response?.data?.success) {
+                setListData(response?.data?.response)
+                handleCloseGrpMdl()
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    const ApplicantEmailDetails = async () => {
+        try {
+            const response = await ApplicationDeatilsApi(candidateEmail);
+            if (response?.data?.success) {
+                setCandidateDetails(response?.data?.response);
+                //personmality -------->
+                const personalityKeys = Object.values(response?.data?.response?.applicant_personality_data);
+                const updatedBehaviourResponse = BehaviourResponse.map(item => ({
+                    ...item,
+                    personality_percentage: response.data.response.applicant_personality_data[item.behaviour_type_name] || 0 // Default to 0 if no match
+                }));
+                const matchedBehaviours = updatedBehaviourResponse.filter(item =>
+                    personalityKeys.includes(item.behaviour_type_name)
+                );
+                setApplicantPersonality(matchedBehaviours)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    useEffect(() => {
+        ApplicantEmailDetails();
+    }, [candidateEmail])
     // console.log(assignmentReviewList)
     // console.log('section', sectionWiseData)
     // console.log(questionWiseData)
@@ -717,7 +810,7 @@ tracker.show_tasks()
                             <Tab.Content className="p-3">
                                 <Tab.Pane eventKey="first">
                                     <Row className="hori_scroll">
-                                        {ListShow && ListData.length > 0 ? (
+                                        {ListShow && ListData?.length > 0 ? (
                                             <Card className="shadow-sm border-0 evaluations_data mt-4 rounded overflow-hidden">
                                                 <Card.Header className="py-2">
                                                     <Row>
@@ -875,7 +968,10 @@ tracker.show_tasks()
                                                                                 checked={selectedListUids.includes(item?.uid)}
                                                                                 onChange={() => handleCheckBoxBtn(item?.uid)}
                                                                             />
-                                                                            <span className="font-weight-600" onClick={() => handleReviewModal()}>
+                                                                            <span className="font-weight-600" onClick={() => {
+                                                                                setReviewModal(true)
+                                                                                setCandidateEmail(item?.job_applicant_profile?.user?.email)
+                                                                            }}>
                                                                                 {/* Sandeep Kattamuri */}
                                                                                 {item?.job_applicant_profile?.user?.username}
                                                                             </span>
@@ -1382,7 +1478,9 @@ tracker.show_tasks()
                                                                             <button className="button" class="btn-transpant" onClick={() => {
                                                                                 handleListData(groupItem);
                                                                                 setGroupParameterId(paraName?.uid)
-                                                                                setGroupTitleName(groupItem?.group_name)}}><i class="fa fa-list-ul" aria-hidden="true"></i></button>
+                                                                                setGroupTitleName(groupItem?.group_name)
+                                                                                setParamUid(groupItem?.uid)
+                                                                            }}><i class="fa fa-list-ul" aria-hidden="true"></i></button>
                                                                         </div>
                                                                     </div>
                                                                 </>
@@ -2563,7 +2661,7 @@ tracker.show_tasks()
                 groupParameterId={groupParameterId}
                 getJobGroupParameterList={getJobGroupParameterList}
                 payloadList={payloadList} setPayloadList={setPayloadList}
-                getJobGroupParameterMethod={getJobGroupParameterList}
+                getJobGroupParameterMethod={getFilterApplicantListBycandidateReview}
             />
             {/*======Answer======*/}
             {/* <Offcanvas
@@ -2625,23 +2723,23 @@ tracker.show_tasks()
             >
                 <Offcanvas.Header closeButton>
                     <Offcanvas.Title>
-                         <h5>Sandeep Kattamuri</h5>
-                          <div className="d-flex">
+                        <h5>{candidateDetails?.user?.username}</h5>
+                        <div className="d-flex">
                             <p className="subtitle">Assignment for Figma Designer</p>
                             <span className="status">Incomplete</span>
-                          </div>
+                        </div>
                     </Offcanvas.Title>
                     <div className="d-flex ml-auto">
-                        <Button variant="link" className="btn-sm btn-link-muted"><img className="me-2" src={SReminder}/>Send Reminder</Button>
-                        <Button variant="link" className="btn-sm btn-link-muted"><img className="me-2" src={Hold}/>Hold</Button>
-                        <Button variant="link" className="btn-sm btn-link-muted"><img className="me-2" src={Reject}/>Reject</Button>
-                        <Button variant="link" className="btn-sm btn-link-muted"><img className="me-2" src={ShortList}/>Short List</Button>
+                        <Button variant="link" className="btn-sm btn-link-muted"><img className="me-2" src={SReminder} />Send Reminder</Button>
+                        <Button variant="link" className="btn-sm btn-link-muted"><img className="me-2" src={Hold} />Hold</Button>
+                        <Button variant="link" className="btn-sm btn-link-muted"><img className="me-2" src={Reject} />Reject</Button>
+                        <Button variant="link" className="btn-sm btn-link-muted"><img className="me-2" src={ShortList} />Short List</Button>
                     </div>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
-                   <Row>
+                    <Row>
                         <Col md={9}>
-                             <Tab.Container id="left-tabs-example" defaultActiveKey="Application">
+                            <Tab.Container id="left-tabs-example" defaultActiveKey="Application">
                                 <Nav variant="pills" className="tab-underline">
                                     <Nav.Item>
                                         <Nav.Link eventKey="Application">Application <span className="count badge ms-2">1</span></Nav.Link>
@@ -2660,16 +2758,24 @@ tracker.show_tasks()
                                     </Nav.Item>
                                 </Nav>
                                 <Tab.Content>
-                                    <Tab.Pane eventKey="Application">First tab content</Tab.Pane>
-                                    <Tab.Pane eventKey="Resume">Second tab content</Tab.Pane>
-                                    <Tab.Pane eventKey="Personality">Second tab content</Tab.Pane>
+                                    <Tab.Pane eventKey="Application">
+                                        <Step1 candidateDetails={candidateDetails} />
+                                    </Tab.Pane>
+                                    <Tab.Pane eventKey="Resume">
+                                        <Step2 candidateDetails={candidateDetails} />
+                                    </Tab.Pane>
+                                    <Tab.Pane eventKey="Personality">
+                                        <Step3 applicantPersonality={applicantPersonality} personalityData={personalityData} />
+                                    </Tab.Pane>
                                     <Tab.Pane eventKey="Evaluations">Second tab content</Tab.Pane>
                                     <Tab.Pane eventKey="Messages">Second tab content</Tab.Pane>
                                 </Tab.Content>
                             </Tab.Container>
                         </Col>
-                        <Col md={3}>World</Col>
-                   </Row>
+                        <Col md={3}>
+                            <SideCard candidateDetails={candidateDetails} />
+                        </Col>
+                    </Row>
                 </Offcanvas.Body>
             </Offcanvas>
 

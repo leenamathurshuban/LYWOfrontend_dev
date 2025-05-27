@@ -29,7 +29,7 @@ import DragDrop from "../../images/icons/dragdrop-bullet.svg";
 import usericon from "../../images/icons/user-01-gray.svg";
 import { BehaviourResponse } from '../../utils/behaviour';
 
-const FilterApplicantModal = ({ show, handleClose, assetJob, setAssetJob, jobDetails, localAssetJob, setLocalAssetJob, id, groupState, setGroupState, groupParameterId, getJobGroupParameterList, payloadList, setPayloadList,getJobGroupParameterMethod }) => {
+const FilterApplicantModal = ({ show, handleClose, assetJob, setAssetJob, jobDetails, localAssetJob, setLocalAssetJob, id, groupState, setGroupState, groupParameterId, getJobGroupParameterList, payloadList, setPayloadList, getJobGroupParameterMethod }) => {
     const [tabActive, setTabActive] = useState("evaluation");
     const [groupTitle, setGroupTitle] = useState("");
     const [selectedGroup, setSelectedGroup] = useState({});
@@ -109,33 +109,6 @@ const FilterApplicantModal = ({ show, handleClose, assetJob, setAssetJob, jobDet
         // );
     }
     const handleGroupItem = (selectedItem, listIndex, dataindex, selectedValue) => {
-        // setGroupState(prev =>
-        //     prev.map(item => {
-        //         if (selectedItem.heading === item.heading) {
-        //             return {
-        //                 ...item,
-        //                 listData: item.listData.map((listItem, listIdx) => {
-        //                     if (listIdx === listIndex) {
-        //                         return {
-        //                             ...listItem,
-        //                             data: listItem.data.map((dataItem, dataIdx) => {
-        //                                 if (dataIdx === dataindex) {
-        //                                     return {
-        //                                         ...dataItem,
-        //                                         isSelected: !dataItem.isSelected
-        //                                     };
-        //                                 }
-        //                                 return dataItem;
-        //                             })
-        //                         };
-        //                     }
-        //                     return listItem;
-        //                 })
-        //             };
-        //         }
-        //         return item;
-        //     })
-        // );
         if (selectedItem?.heading === 'Job Match' || selectedItem?.heading === 'Personality' || selectedItem?.heading === 'Technical Round For EHS Manager' || selectedItem?.heading === 'Pre-Interview Round For Creative Director') {
             setGroupState(prev =>
                 prev.map(item => {
@@ -323,25 +296,12 @@ const FilterApplicantModal = ({ show, handleClose, assetJob, setAssetJob, jobDet
                 }
                 return acc;
             }, {});
-            // setPayloadList({
-            //     ...payloadList,
-            //     [selectedGroup?.heading]: formatted
-            // })
-            // let flattened=null;
-            // if(selectedGroup?.heading == 'Custom Questions' || selectedGroup?.heading == 'Skills'){
-            // flattened = Object.values(formatted).flat();
-            // }
-            // setPayloadList(prev => ({
-            //     ...prev,
-            //     [selectedGroup?.heading.toLowerCase().replace(/ /g, '_')]: {
-            //         ...prev[selectedGroup?.heading.toLowerCase().replace(/ /g, '_')],
-            //         ...formatted
-            //     }
-            // }));
-            const headingKey = selectedGroup.heading.toLowerCase().replace(/ /g, '_');
 
+
+            const headingKey = selectedGroup.heading.toLowerCase().replace(/ /g, '_');
             const isFlat = ['Custom Questions', 'Skills', 'Roles'].includes(selectedGroup.heading);
             const flattened = isFlat ? Object.values(formatted).flat() : null;
+
             if (headingKey == 'job_match') {
                 if (formatted.job_match_percentage) {
                     formatted.job_groups = [];
@@ -375,12 +335,6 @@ const FilterApplicantModal = ({ show, handleClose, assetJob, setAssetJob, jobDet
                 } else if (formatted.groups) {
                     formatted.over_all_score = [];
                 }
-                // setPayloadList(prev => ({
-                //     ...prev,
-                //     ["asset_data"]: [
-                //         formatted
-                //     ]
-                // }));
                 setPayloadList(prev => {
                     const existing = prev.asset_data || [];
                     const filtered = existing.filter(item => item.uid !== formatted.uid); // Remove old with same uid
@@ -389,16 +343,112 @@ const FilterApplicantModal = ({ show, handleClose, assetJob, setAssetJob, jobDet
                         asset_data: [...filtered, formatted] // Add current one
                     };
                 });
-            } else {
-                const uniqueKey = headingKey == "salary_and_travels" ? "salary_and_travel" : headingKey;
+            } else if (headingKey == 'availability') {
+                if (!formatted?.available_by) {
+                    formatted.available_by = [];
+                }
+                if (!formatted?.notice_buy_out) {
+                    formatted.notice_buy_out = [];
+                }
+                if (!formatted?.notice_period) {
+                    formatted.notice_period = [];
+                }
+                if (!formatted?.willing_to_travel_for_job) {
+                    formatted.willing_to_travel_for_job = [];
+                }
+                if (!formatted?.working_status) {
+                    formatted.working_status = [];
+                }
                 setPayloadList(prev => ({
                     ...prev,
-                    [uniqueKey]: isFlat ? flattened : {
-                        ...prev[uniqueKey],
+                    [headingKey]: {
                         ...formatted
                     }
                 }));
+            } else if (headingKey == 'language') {
+                if (!formatted?.read_and_write) {
+                    formatted.read_and_write = [];
+                } else if (!formatted?.speak) {
+                    formatted.speak = [];
+                }
+                setPayloadList(prev => ({
+                    ...prev,
+                    [headingKey]: {
+                        ...formatted
+                    }
+                }));
+            } else if (headingKey == 'experience') {
+                if (!formatted?.get_experience) {
+                    formatted.get_experience = [];
+                } else if (!formatted?.industries) {
+                    formatted.industries = [];
+                }
+                setPayloadList(prev => ({
+                    ...prev,
+                    [headingKey]: {
+                        ...formatted
+                    }
+                }));
+            } else if (headingKey == 'education') {
+                if (!formatted?.required_education) {
+                    formatted.required_education = [];
+                } else if (!formatted?.area_of_education) {
+                    formatted.area_of_education = [];
+                }
+                setPayloadList(prev => ({
+                    ...prev,
+                    [headingKey]: {
+                        ...formatted
+                    }
+                }));
+            } else if (headingKey == 'salary_and_travels') {
+                if (!formatted?.current_location) {
+                    formatted.current_location = [];
+                }
+                if (!formatted?.expected_salary) {
+                    formatted.expected_salary = [];
+                }
+                if (!formatted?.relocation) {
+                    formatted.relocation = [];
+                }
+                if(!formatted?.require_relocation_assistance){
+                    formatted.require_relocation_assistance=[]
+                }
+                setPayloadList(prev => ({
+                    ...prev,
+                    ["salary_and_travel"]: formatted
+                }));
+            } else if (isFlat) {
+                setPayloadList(prev => ({
+                    ...prev,
+                    [headingKey]: flattened
+                }));
             }
+            // else {
+            //     const uniqueKey = headingKey == "salary_and_travels" ? "salary_and_travel" : headingKey;
+            //     setPayloadList(prev => ({
+            //         ...prev,
+            //         [uniqueKey]: isFlat ? flattened : {
+            //             ...prev[uniqueKey],
+            //             ...formatted
+            //         }
+            //     }));
+            // }
+        } else if (!selectedGroup?.selectedList?.length) {
+            const headingKey = selectedGroup?.heading?.toLowerCase().replace(/ /g, '_');
+            const formatted = {}
+            selectedGroup?.listData?.map((val) => {
+                const key = val?.name?.toLowerCase().replace(/ /g, '_');
+                if (val.name != "") {
+                    formatted[key] = []
+                }
+            })
+            setPayloadList(prev => ({
+                ...prev,
+                [headingKey]: {
+                    ...formatted
+                }
+            }));
         }
     }, [selectedGroup])
     const handleBlueDots = (item) => {
@@ -523,28 +573,10 @@ const FilterApplicantModal = ({ show, handleClose, assetJob, setAssetJob, jobDet
         //     )
         // }
     }
-    const handleCreateGroup = async () => {
-        try {
-            const payload = {
-                job_group_parameter: groupParameterId,
-                group_name: groupTitle,
-                group_filter: payloadList
-            }
-            const response = await assetSapicreateJobGroupPostAPI(payload)
-            if (response.data.success) {
-                setSelectedGroup({})
-                setPayloadList({})
-                setGroupTitle('')
-                getJobGroupParameterList()
-                handleClose()
-            }
-            // debugger
-        } catch (error) {
-            console.log(error);
-        }
-    }
+
     console.log(groupState)
     console.log(selectedGroup)
+    console.log(payloadList)
     return (
         <Offcanvas
             show={show}

@@ -264,12 +264,15 @@ export const getScreeningParameterDataAPI = (id) => {
   const getResult = client.getWithToken(`${JobsUrl.ScreeningParameterData}${id}`);
   return getResult
 }
-export const getJobGroupParameterListAPI = (id, data) => {
-  const url = `${JobsUrl.getJobGroupParameterList}${id}/?page=1&limit=10`
-  const getResult = client.getWithToken(url, data)
+export const getJobGroupParameterListAPI = (id) => {
+  const getResult = client.getWithToken(`${JobsUrl.getJobGroupParameterList}${id}/?page=1&limit=10`)
   return getResult
 }
 export const assetSapicreateJobGroupPostAPI = (data) => {
   const postResult = client.postWithToken(`${JobsUrl.assetSapicreateJobGroupPost}`, data)
   return postResult
+}
+export const postJobGroupParameterListByFetchAPI=(id,data)=>{
+  const resultFilter = client.postWithToken(`${JobsUrl.postJobGroupParameterListByFetch}${id}/?page=1&limit=10`,data)
+  return resultFilter
 }

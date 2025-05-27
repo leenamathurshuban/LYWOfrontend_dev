@@ -628,6 +628,10 @@ ol.breadcrumb {
   top: 0;
   width: 100%;
 }
+.modal-header .btn-close {
+  opacity: 0.8;
+  background-size: 40%;
+}
 .modal-header .modal-title {
   color: #101828;
   font-weight: 600;
@@ -3729,18 +3733,18 @@ select.h-36.form-select {
   border-radius: 48px;
   padding: 50px 30px;
   text-align: center;
-  border: solid 2px #fff;
+  outline: solid 2px #fff;
 }
 .beharlasmnt_mdl .brb_cards:hover {
-  border: solid 2px #A4BCFD;
+  outline: solid 2px #A4BCFD;
 }
 .beharlasmnt_mdl .brb_cards.most_like:hover {
-  border: solid 4px #6172F3;
+  outline: solid 4px #6172F3;
   box-shadow: 0px 0px 80px 8px rgba(96, 113, 241, 0.2) inset;
   background-color: #EEF4FF;
 }
 .beharlasmnt_mdl .brb_cards.least_like:hover {
-  border: solid 4px #FEC84B;
+  outline: solid 4px #FEC84B;
   box-shadow: 0px 0px 80px 8px rgba(220, 104, 3, 0.2) inset;
   box-shadow: 0px 12px 16px -4px rgba(16, 24, 40, 0.0784313725);
   background-color: #FFFAEB;
@@ -3753,21 +3757,32 @@ select.h-36.form-select {
 .beharlasmnt_mdl .brb_cards .brb_cards img {
   max-height: 100px;
 }
+.beharlasmnt_mdl .brb_cards .brb-cicon {
+  display: inline-block;
+  min-height: 120px;
+}
 .beharlasmnt_mdl .container {
   max-width: 1080px;
 }
 .beharlasmnt_mdl .keypoints h6 {
-  font-size: 15px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+  font-family: Inter;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 20px;
+  color: #344054;
 }
 .beharlasmnt_mdl .keypoints ul {
   padding-left: 15px;
   margin-bottom: 0;
 }
 .beharlasmnt_mdl .keypoints ul li {
-  color: #667085;
-  font-size: 13px;
-  line-height: 22px;
+  color: #344054;
+  font-size: 12px;
+  font-family: Inter;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 20px;
 }
 .beharlasmnt_mdl .modal-footer {
   background-color: #fff;
@@ -3810,14 +3825,16 @@ select.h-36.form-select {
 .beharquiz_mdl .modal-header .score_panel .setlanguage {
   display: flex;
   align-items: center;
+  padding-right: 0;
 }
 .beharquiz_mdl .modal-header .score_panel .setlanguage .sm-fselect {
   border: none;
-  padding: 0 25px 0 0;
-  min-height: 20px;
+  padding: 0px 25px 0 8px;
+  min-height: 16px;
 }
 .beharquiz_mdl .modal-header .score_panel .setlanguage .sm-fselect option {
-  padding: 10px;
+  padding: 10px !important;
+  width: 100%;
 }
 .beharquiz_mdl .modal-header .btn-close {
   margin-left: 0;
@@ -3834,6 +3851,7 @@ select.h-36.form-select {
 .beharquiz_mdl .modal-content,
 .beharquiz_mdl .modal-dialog {
   background-color: #F2F4F7;
+  border: none;
 }
 .beharquiz_mdl .modal-body {
   padding: 30px 100px;
@@ -3994,7 +4012,7 @@ select.h-36.form-select {
 
 .qzslider {
   position: relative;
-  padding-top: 90px;
+  padding-top: 40px;
 }
 .qzslider span.handraw {
   position: absolute;
@@ -4015,7 +4033,7 @@ select.h-36.form-select {
   box-shadow: 0px 0px 0px 4px #F2F4F7;
   box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.0509803922);
   border-radius: 8px;
-  padding: 60px 80px 50px 80px;
+  padding: 60px 80px 15px 80px;
   background-color: #fff;
 }
 .qzslider .slick-dots {
@@ -4439,6 +4457,16 @@ select.h-36.form-select {
 }
 .jobMain_panel .custom-card .form-label {
   font-size: 12px;
+}
+.jobMain_panel .custom-card .link-iconbtn {
+  font-size: 11px;
+  font-weight: 600;
+  font-family: "Inter";
+  display: flex;
+  align-items: center;
+}
+.jobMain_panel .custom-card .link-iconbtn i {
+  font-size: 16px;
 }
 
 .invalid-feedback {
@@ -5457,7 +5485,7 @@ select.select-transpant:hover, select.select-transpant:focus, select.select-tran
   left: 40px;
 }
 .instructions_dwr .ints_card.lelike .mlike-sugg span {
-  max-width: 45px;
+  max-width: 75px;
 }
 .instructions_dwr .ints_card.mlike_select {
   border: solid 4px #6172F3;
@@ -5499,7 +5527,7 @@ select.select-transpant:hover, select.select-transpant:focus, select.select-tran
   border-color: #17B26A;
   max-width: 525px;
   margin: auto;
-  margin-top: 2.5rem;
+  margin-top: 2rem;
   position: relative;
 }
 .toster .closebtn {
@@ -6261,4 +6289,113 @@ button#input-group-dropdown-1 {
 }
 .apcnt_prfle .tab-underline .nav-link.active {
   color: #3538CD;
+}
+
+.btn-light-outline-sm {
+  font-family: Inter;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+  color: #1D2939;
+  border: solid 1px #D0D5DD;
+  border-radius: 8px;
+  padding: 8px 12px;
+  background-color: #fff;
+}
+.btn-light-outline-sm img {
+  margin-right: 8px;
+  vertical-align: sub;
+}
+
+.pt-90 {
+  padding-top: 90px;
+}
+
+.slick-vertical .slick-slide > div {
+  margin-bottom: 60px;
+}
+
+.apcnt_info {
+  font-family: Inter;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+  color: #344054;
+}
+.apcnt_info .h6-title {
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  color: #101828;
+  margin: 0;
+}
+.apcnt_info p {
+  font-family: Inter;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+  color: #344054;
+  margin: 5px 0;
+}
+.apcnt_info .bulted_list {
+  margin: 0;
+  padding: 0;
+}
+.apcnt_info .bulted_list li {
+  font-family: Inter;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+  color: #344054;
+  position: relative;
+  padding: 0 10px;
+}
+.apcnt_info .bulted_list li::after {
+  content: "";
+  background-color: #98A2B3;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  position: absolute;
+  left: 0;
+  top: 7px;
+}
+.apcnt_info .bulted_list li:first-child {
+  padding-left: 0;
+}
+.apcnt_info .bulted_list li:first-child::after {
+  content: inherit;
+}
+.apcnt_info.availability .inline-list li {
+  width: 50%;
+  padding: 0;
+}
+.apcnt_info.availability .inline-list li::after {
+  content: inherit;
+}
+.apcnt_info.experience ul {
+  margin: 8px 0 0 0;
+  padding: 0 0 0 15px;
+}
+.apcnt_info.experience ul li {
+  font-family: Inter;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+  color: #344054;
+}
+.apcnt_info.experience ul li p {
+  font-family: Inter;
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 14px;
+  color: #344054;
+}
+
+.inline-list li {
+  display: inline-block;
+}
+
+.border-b {
+  border-bottom: solid 1px #F2F4F7;
 }/*# sourceMappingURL=main.css.map */

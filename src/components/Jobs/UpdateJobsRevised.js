@@ -43,6 +43,7 @@ import axios from "axios";
 import { motion } from 'framer-motion';
 import HelpChoose from "../../screens/HelpmeChoose/HelpChoose";
 import RangeSliderNew from "../SliderRange";
+import imgpTrash from "../../images/icons/trash-01.svg";
 
 const UpdateJobsRevised = ({
     show,
@@ -666,7 +667,7 @@ const UpdateJobsRevised = ({
             // setMinValue(value);
             setRange({
                 ...range,
-                ["min"]:value
+                ["min"]: value
             })
         }
     };
@@ -678,7 +679,7 @@ const UpdateJobsRevised = ({
                 // setMaxValue(Math.min(value, 50)); // Cap the value at 40
                 setRange({
                     ...range,
-                    ["max"]:Math.min(value, 50)
+                    ["max"]: Math.min(value, 50)
                 })
             }
         }
@@ -1040,7 +1041,7 @@ const UpdateJobsRevised = ({
     const getTotalValues = (array) => {
         return array.reduce((total, arr) => total + arr.length, 0);
     };
-    const handleSelectedSkill = (e,benefititem, index) => {
+    const handleSelectedSkill = (e, benefititem, index) => {
         // setSelectSkillsData((prevState) =>
         //     prevState.includes(benefititem)
         //         ? prevState.filter((item2) => item2 !== benefititem)
@@ -1660,7 +1661,7 @@ const UpdateJobsRevised = ({
     // console.log(IndustriesBadges)
     // console.log('neetu', createRevisedJobData)
     // console.log('==========>update======>', updateFormData)
-    console.log('=========>',dynamicArray)
+    console.log('=========>', dynamicArray)
     return (
         <>
             <Modal
@@ -3076,7 +3077,7 @@ const UpdateJobsRevised = ({
                                                         {selectedIndex.includes(Val?.uid) && addSubSkill?.map((item, index) => (
                                                             <span
                                                                 onClick={(e) => {
-                                                                    handleSelectedSkill(e,item, i);
+                                                                    handleSelectedSkill(e, item, i);
                                                                 }}
                                                                 className={`stag_item ${SelectSkillsData.includes(item) ? "active" : ""
                                                                     }`}
@@ -3165,7 +3166,7 @@ const UpdateJobsRevised = ({
                                                     {selectedIndex.includes(i) && addSubSkill.map((item, index) => (
                                                         <span
                                                             onClick={(e) => {
-                                                                handleSelectedSkill(e,item, i);
+                                                                handleSelectedSkill(e, item, i);
                                                             }}
                                                             className={`stag_item ${SelectSkillsData.includes(item) ? "active" : ""
                                                                 }`}
@@ -3347,6 +3348,19 @@ const UpdateJobsRevised = ({
                                                                         </button>
                                                                     </div>
                                                                 )}
+                                                                <div className="d-flex ms-3">
+                                                                    <button
+                                                                        type="button"
+                                                                        className="btn-transpant"
+                                                                    // onClick={() => EducationdeleteRow(index)}
+                                                                    >
+                                                                        <img
+                                                                            src={imgpTrash}
+                                                                            alt="Delete"
+                                                                            style={{ width: "20px", height: "20px" }}
+                                                                        />
+                                                                    </button>
+                                                                </div>
                                                             </div>
                                                             <h6 className="mt-3 hadding-xs">Answer Options</h6>
                                                             <p className="mt-1">

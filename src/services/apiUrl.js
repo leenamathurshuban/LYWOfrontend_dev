@@ -34,7 +34,8 @@ export const JobsUrl = {
   updateAssetAassignmentTypeUserAnswerUpdate:"assets-api/assignment-type-user-answer-update-api/",
   ScreeningParameterData: "assets-api/get-screening-parameter-data-api/",
   getJobGroupParameterList:"assets-api/get-job-group-parameter-list-api/",
-  assetSapicreateJobGroupPost:"assets-api/create-job-group-api/"
+  assetSapicreateJobGroupPost:"assets-api/create-job-group-api/",
+  postJobGroupParameterListByFetch:"assets-api/job-applicant-group-filter-api/"
 }
 
 export const SkillsUrl = {

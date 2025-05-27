@@ -3930,15 +3930,14 @@ const ApplicationJobPostModal = ({
                           <td>
                             <Button
                               variant="link"
-                              className="p-1 font-sm mt-1 link-iconbtn"
+                              className="p-1 font-sm mt-1"
                               // onClick={handleButtonClick}
                               onClick={() => saveQualificationData(row, index)}
                             >
                               <img
                                 src={saveIcon}
                                 alt="Delete"
-                                className="me-1"
-                                style={{ width: "16px", height: "16px" }}
+                                style={{ width: "20px", height: "20px" }}
                               />
                               Save
                             </Button>
@@ -3948,14 +3947,14 @@ const ApplicationJobPostModal = ({
                           <td>
                             <Button
                               variant="link"
-                              className="p-1 font-sm mt-1 link-iconbtn"
+                              className="p-1 font-sm mt-1"
                               // onClick={handleButtonClick}
                               onClick={() => handleEditRowEducation(row, index)}
                             >
                               <img
                                 src={saveIcon}
                                 alt="Delete"
-                                style={{ width: "16px", height: "16px" }}
+                                style={{ width: "20px", height: "20px" }}
                               />
                               Edit
                             </Button>
@@ -4165,7 +4164,7 @@ const ApplicationJobPostModal = ({
                                 {!row.savedWorkExp && !showNotesByIndex.includes(row?.id) && (
                                   <Button
                                     variant="link"
-                                    className="p-1 font-sm mt-1 link-iconbtn"
+                                    className="p-1 font-sm mt-1"
                                     onClick={() => handleButtonClick(row?.id)}
                                   >
                                     <i className="far fa-file me-1 "></i>
@@ -4175,15 +4174,14 @@ const ApplicationJobPostModal = ({
                                 {!row.savedWorkExp && showNotesByIndex.includes(row?.id) && (
                                   <Button
                                     variant="link"
-                                    className="p-1 font-sm mt-1 link-iconbtn"
+                                    className="p-1 font-sm mt-1"
                                     // onClick={handleButtonClick}
                                     onClick={() => saveWorkExperienceData(row, index)}
                                   >
                                     <img
                                       src={saveIcon}
-                                      className="me-1"
                                       alt="Delete"
-                                      style={{ width: "16px", height: "16px" }}
+                                      style={{ width: "20px", height: "20px" }}
                                     />
                                     Save
                                   </Button>
@@ -4192,12 +4190,9 @@ const ApplicationJobPostModal = ({
                                 {row.savedWorkExp && (
                                   <Button
                                     variant="link"
-                                    className="p-1 font-sm mt-1 link-iconbtn"
+                                    className="p-1 font-sm mt-1"
                                     onClick={() => handleButtonEdit(row, index)}
-                                  >    
-                                  <svg className="me-1" width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M6.99998 12.3341H13M1 12.3341H2.11636C2.44248 12.3341 2.60554 12.3341 2.75899 12.2973C2.89504 12.2646 3.0251 12.2108 3.1444 12.1377C3.27895 12.0552 3.39425 11.9399 3.62486 11.7093L12 3.33414C12.5523 2.78185 12.5523 1.88642 12 1.33413C11.4477 0.781851 10.5523 0.781851 10 1.33414L1.62484 9.7093C1.39424 9.9399 1.27894 10.0552 1.19648 10.1898C1.12338 10.3091 1.0695 10.4391 1.03684 10.5752C1 10.7286 1 10.8917 1 11.2178V12.3341Z" stroke="#3538CD" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-                                  </svg>
+                                  >
                                     Edit
                                   </Button>
                                 )}
