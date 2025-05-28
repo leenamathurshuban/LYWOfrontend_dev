@@ -6255,6 +6255,7 @@ button#input-group-dropdown-1 {
 .apcnt_prfle .offcanvas-title h5 {
   font-weight: 700;
   margin-bottom: 3px;
+  text-transform: capitalize;
 }
 .apcnt_prfle .offcanvas-title .subtitle {
   font-family: Inter;
@@ -6391,6 +6392,10 @@ button#input-group-dropdown-1 {
   line-height: 14px;
   color: #344054;
 }
+.apcnt_info .tab-content {
+  border: solid 1px #F2F4F7;
+  padding: 15px 20px;
+}
 
 .inline-list li {
   display: inline-block;
@@ -6398,4 +6403,117 @@ button#input-group-dropdown-1 {
 
 .border-b {
   border-bottom: solid 1px #F2F4F7;
+}
+
+.candidate-card {
+  border: solid 1px #EAECF0;
+  border-radius: 8px;
+  padding: 16px;
+}
+.candidate-card .header {
+  display: flex;
+  flex-wrap: wrap;
+}
+.candidate-card .header h2 {
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 18px;
+  color: #101828;
+}
+.candidate-card .header span.score {
+  color: #4C60E5;
+  font-weight: 400;
+}
+.candidate-card .header .description {
+  font-family: Inter;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+  color: #475467;
+  margin-top: 10px;
+}
+.candidate-card .match-section {
+  display: flex;
+  width: 100%;
+  border-top: solid 1px #EAECF0;
+  border-bottom: solid 1px #EAECF0;
+  padding: 10px 0;
+}
+.candidate-card .match-section .match {
+  flex: 0 0 50%;
+}
+.candidate-card .match-section .match:last-child {
+  border-left: solid 1px #EAECF0;
+  padding-left: 15px;
+}
+.candidate-card .match-section p {
+  font-size: 10px;
+  color: #475467;
+  line-height: 18px;
+  margin-bottom: 2px;
+}
+.candidate-card .match-section .good {
+  color: #17B26A;
+  font-size: 12px;
+  font-weight: 700;
+}
+.candidate-card .match-section .excellent {
+  color: #FDB022;
+  font-weight: 700;
+  font-size: 12px;
+}
+.candidate-card .contact-info {
+  padding: 10px 0;
+  border-bottom: solid 1px #EAECF0;
+}
+.candidate-card .contact-info ul {
+  margin: 0;
+  padding: 0;
+}
+.candidate-card .contact-info ul li {
+  list-style: none;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 18px;
+  color: #344054;
+  padding: 4px 0;
+}
+.candidate-card .contact-info ul li img {
+  margin-right: 8px;
+}
+.candidate-card .history, .candidate-card .skills {
+  padding: 10px 0;
+}
+.candidate-card .history h6, .candidate-card .skills h6 {
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  color: #344054;
+}
+.candidate-card .history p, .candidate-card .skills p {
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 15px;
+  color: #667085;
+}
+.candidate-card .skills {
+  border-top: solid 1px #EAECF0;
+  border-bottom: solid 1px #EAECF0;
+}
+.candidate-card .score-bar {
+  padding: 10px 0;
+}
+.candidate-card .score-bar p {
+  text-align: center;
+  font-weight: 400;
+  font-size: 10px;
+  color: #667085;
+  margin: 0;
+}
+.candidate-card .score-bar .progress {
+  margin-top: 12px;
+  height: 10px;
+}
+.candidate-card .score-bar .progress .filled {
+  background-color: #7CD4FD;
 }/*# sourceMappingURL=main.css.map */

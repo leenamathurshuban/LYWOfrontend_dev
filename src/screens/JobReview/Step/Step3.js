@@ -12,14 +12,9 @@ const Step3 = ({ applicantPersonality, personalityData }) => {
   // debugger
   return (
     <div className="perlity_mth mt-3">
-      <Row className="behav_assmnt">
-        <Col
-          md={12}
-          className="d-flex justify-content-center align-item-center "
-        >
-          <span>
-            Recommended Personalities for Java Backend Developer
-          </span>
+      <Row>
+        <Col md={12} className='mb-2'>
+          Recommended Personalities for Java Backend Developer
         </Col>
 
         {personalityData.length > 0 && personalityData?.sort((a, b) => b?.personality_percentage - a?.personality_percentage).map((item, index) => (
