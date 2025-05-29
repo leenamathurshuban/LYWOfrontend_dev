@@ -1413,16 +1413,17 @@ tracker.show_tasks()
                                                     </div>
                                                 </Card.Body>
                                             </Card>
-                                        ) : (<>
-                                            {groupParameterList.map((paraName, paraIndex) => (
-                                                <Col md={2}>
-                                                    <Card className="status_cardpanel">
-                                                        <div className="card-header">
-                                                            <h5>{paraName?.parameter_name} <span className="count">{paraName?.parameter_applicant_count}</span></h5>
-                                                            <button type="button"><i class="fa fa-ellipsis-h"></i></button>
-                                                        </div>
-                                                        <Card.Body>
-                                                            {/* {paraName?.parameter_name === "Screening" ? (
+                                        ) : (
+                                            <>
+                                                {groupParameterList.map((paraName, paraIndex) => (
+                                                    <Col md={2}>
+                                                        <Card className="status_cardpanel">
+                                                            <div className="card-header">
+                                                                <h5>{paraName?.parameter_name} <span className="count">{paraName?.parameter_applicant_count}</span></h5>
+                                                                <button type="button"><i class="fa fa-ellipsis-h"></i></button>
+                                                            </div>
+                                                            <Card.Body>
+                                                                {/* {paraName?.parameter_name === "Screening" ? (
                                                             <>
                                                                 <button type="button" onClick={() => {
                                                                     setGroupModal(true)
@@ -1457,35 +1458,35 @@ tracker.show_tasks()
                                                                 ))}
                                                             </>
                                                         )} */}
-                                                            <button type="button" onClick={() => {
-                                                                setGroupModal(true)
-                                                                setGroupParameterId(paraName?.uid)
-                                                            }} className="btn btn-link mb-3"><i className="fa fa-plus me-2"></i>Create a New Group</button>
-                                                            {paraName?.groups_parameter?.sort((a, b) => a.id - b.id)?.map((groupItem) => (
-                                                                <>
-                                                                    <div className={`sts_databox ${groupItem?.group_name.toLowerCase()}`}>
-                                                                        <div className="d-flex justify-content-between">
-                                                                            <h6>{groupItem?.group_name}<span className="count">{groupItem?.group_wise_applicant_count}</span></h6>
+                                                                <button type="button" onClick={() => {
+                                                                    setGroupModal(true)
+                                                                    setGroupParameterId(paraName?.uid)
+                                                                }} className="btn btn-link mb-3"><i className="fa fa-plus me-2"></i>Create a New Group</button>
+                                                                {paraName?.groups_parameter?.sort((a, b) => a.id - b.id)?.map((groupItem) => (
+                                                                    <>
+                                                                        <div className={`sts_databox ${groupItem?.group_name.toLowerCase()}`}>
+                                                                            <div className="d-flex justify-content-between">
+                                                                                <h6>{groupItem?.group_name}<span className="count">{groupItem?.group_wise_applicant_count}</span></h6>
+                                                                            </div>
+                                                                            <div className="d-flex justify-content-between align-items-end">
+                                                                                <Form>
+                                                                                    <Form.Check
+                                                                                        type="switch"
+                                                                                        id="custom-switch"
+                                                                                        label="Auto-Remind"
+                                                                                    />
+                                                                                </Form>
+                                                                                <button className="button" class="btn-transpant" onClick={() => {
+                                                                                    handleListData(groupItem);
+                                                                                    setGroupParameterId(paraName?.uid)
+                                                                                    setGroupTitleName(groupItem?.group_name)
+                                                                                    setParamUid(groupItem?.uid)
+                                                                                }}><i class="fa fa-list-ul" aria-hidden="true"></i></button>
+                                                                            </div>
                                                                         </div>
-                                                                        <div className="d-flex justify-content-between align-items-end">
-                                                                            <Form>
-                                                                                <Form.Check
-                                                                                    type="switch"
-                                                                                    id="custom-switch"
-                                                                                    label="Auto-Remind"
-                                                                                />
-                                                                            </Form>
-                                                                            <button className="button" class="btn-transpant" onClick={() => {
-                                                                                handleListData(groupItem);
-                                                                                setGroupParameterId(paraName?.uid)
-                                                                                setGroupTitleName(groupItem?.group_name)
-                                                                                setParamUid(groupItem?.uid)
-                                                                            }}><i class="fa fa-list-ul" aria-hidden="true"></i></button>
-                                                                        </div>
-                                                                    </div>
-                                                                </>
-                                                            ))}
-                                                            {/* <div className="sts_databox excellent">
+                                                                    </>
+                                                                ))}
+                                                                {/* <div className="sts_databox excellent">
                                                         <h6>Excellent<span className="count">40</span></h6>
                                                     </div>
                                                     <div className="sts_databox good">
@@ -1503,11 +1504,20 @@ tracker.show_tasks()
                                                     <div className="sts_databox rejected">
                                                         <h6>Rejected<span className="count">20</span></h6>
                                                     </div> */}
+                                                            </Card.Body>
+                                                        </Card>
+                                                    </Col>
+                                                ))}
+                                                <Col md={3}>
+                                                    <Card className="status_cardpanel">
+                                                        <Card.Body className="text-center d-flex align-items-center justify-content-center flex-column">
+                                                            <button type="button" className="btn btn-light-primery" onClick={handleShow}><i className="fa fa-plus me-2"></i>Add Evaluation</button>
+                                                            <button type="button" className="btn btn-white mt-2"><i className="fa fa-plus me-2"></i>Finalise Selection</button>
                                                         </Card.Body>
                                                     </Card>
                                                 </Col>
-                                            ))}
-                                        </>)}
+                                            </>
+                                        )}
                                         {/* <Col md={2}>
                                             <Card className="status_cardpanel">
                                                 <div className="card-header">
@@ -1719,14 +1729,6 @@ tracker.show_tasks()
                                                 </Card.Body>
                                             </Card>
                                         </Col> */}
-                                        <Col md={3}>
-                                            <Card className="status_cardpanel">
-                                                <Card.Body className="text-center d-flex align-items-center justify-content-center flex-column">
-                                                    <button type="button" className="btn btn-light-primery" onClick={handleShow}><i className="fa fa-plus me-2"></i>Add Evaluation</button>
-                                                    <button type="button" className="btn btn-white mt-2"><i className="fa fa-plus me-2"></i>Finalise Selection</button>
-                                                </Card.Body>
-                                            </Card>
-                                        </Col>
                                     </Row>
                                 </Tab.Pane>
                                 <Tab.Pane eventKey="second">Second tab content</Tab.Pane>

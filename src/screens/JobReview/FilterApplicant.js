@@ -411,8 +411,8 @@ const FilterApplicantModal = ({ show, handleClose, assetJob, setAssetJob, jobDet
                 if (!formatted?.relocation) {
                     formatted.relocation = [];
                 }
-                if(!formatted?.require_relocation_assistance){
-                    formatted.require_relocation_assistance=[]
+                if (!formatted?.require_relocation_assistance) {
+                    formatted.require_relocation_assistance = []
                 }
                 setPayloadList(prev => ({
                     ...prev,
@@ -574,6 +574,25 @@ const FilterApplicantModal = ({ show, handleClose, assetJob, setAssetJob, jobDet
         // }
     }
 
+    const handleResetAll = () => {
+        setSelectedGroup({})
+        const updatedData = groupState?.map(item => ({
+            ...item,
+            isChecked: false,
+            isSelected: false,
+            selectedList: []
+        }));
+        setGroupState(updatedData);
+    }
+    const handleReset = () => {
+        const updatedData = groupState?.map(item =>
+            item?.heading === selectedGroup?.heading
+                ? { ...item, isChecked: false, isSelected: false, selectedList: [] }
+                : item
+        );
+        setGroupState(updatedData);
+        setSelectedGroup({})
+    }
     console.log(groupState)
     console.log(selectedGroup)
     console.log(payloadList)
@@ -640,7 +659,7 @@ const FilterApplicantModal = ({ show, handleClose, assetJob, setAssetJob, jobDet
                                                     <div className='ctm-cardheader'>
                                                         <h6>{selectedGroup?.heading}</h6>
                                                         <p>{selectedGroup?.heading ? "Candidates with any of the following attributes will be prioritized and filtered for selection." : "Select filter to start."}</p>
-                                                        {selectedGroup?.heading && <Button variant="link" className='reset-btn'>Reset</Button>}
+                                                        {selectedGroup?.heading && <Button variant="link" className='reset-btn' onClick={handleReset}>Reset</Button>}
                                                     </div>
                                                     {selectedGroup?.listData?.map((item, listIndex) => (
                                                         <div className="starttag_box">
@@ -737,7 +756,7 @@ const FilterApplicantModal = ({ show, handleClose, assetJob, setAssetJob, jobDet
                 </Tab.Container>
             </Offcanvas.Body>
             <div className="offcanvas-footer text-end">
-                <Button variant="light" className="me-3">
+                <Button variant="light" className="me-3" onClick={handleResetAll}>
                     Reset
                 </Button>
                 <Button

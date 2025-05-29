@@ -44,6 +44,7 @@ import { motion } from 'framer-motion';
 import HelpChoose from "../../screens/HelpmeChoose/HelpChoose";
 import RangeSliderNew from "../SliderRange";
 import imgpTrash from "../../images/icons/trash-01.svg";
+import { toast } from "react-toastify";
 
 const UpdateJobsRevised = ({
     show,
@@ -1178,6 +1179,13 @@ const UpdateJobsRevised = ({
                             return { ...item, markedImportant: !item.markedImportant };
                         } else if (item.markedImportant) {
                             return { ...item, markedImportant: !item.markedImportant };
+                        } else {
+                            toast.error(
+                                <div>
+                                    <strong>2 most important ones</strong>
+                                    <div>You can highlight only 2 behaviors as the most important at a time.</div>
+                                </div>
+                            )
                         }
                     }
                 }
