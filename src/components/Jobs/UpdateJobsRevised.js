@@ -135,7 +135,7 @@ const UpdateJobsRevised = ({
     const [spokenLanguage, setSpokenLanguage] = useState([])
     const [writtenLanguage, setWittenLanguage] = useState([])
     const [locationList, setLocationList] = useState([])
-    const [currentStep, setCurrentStep] = useState("0"); // Controls which section is open
+    const [currentStep, setCurrentStep] = useState(["0","1"]); // Controls which section is open
     const areaEduRef = useRef();
     const industriesRef = useRef();
     const roleRef = useRef();
@@ -816,6 +816,10 @@ const UpdateJobsRevised = ({
         updatedComponents[questionIndex].question_option.part1.push(""); // Add a new empty option
         setComponents(updatedComponents);
     };
+    const handleDeleteRowQuestion = (questionIndex) => {
+        const filerArray = components.filter((_, index) => index != questionIndex)
+        setComponents(filerArray);
+    }
 
     // Function to add a new question component
     const handleAddComponent = () => {
@@ -1601,20 +1605,66 @@ const UpdateJobsRevised = ({
         }
         return isError;
     }
-    const handleNext = (e) => {
+    const handlerecommodentProgress = () => {
+        let value;
+        if (updateFormData.max_salary && updateFormData.min_salary) {
+            value = 10;
+        }
+        if (updateFormData.minimum_education && badges?.length) {
+            value = 20;
+        }
+        if (updateFormData.min_exp && updateFormData.max_exp) {
+            value = 30;
+        }
+        if (IndustriesBadges?.length && restrictedRoleBadges?.length) {
+            value = 40;
+        }
+        if (updateFormData.targate_hire_date) {
+            value = 50;
+        }
+        if (spokenLanguageBadges.length && rdnwBadges.length) {
+            value = 60;
+        }
+        if (locationBadges.length) {
+            value = 70;
+        }
+        if (SelectSkillsData.length && mustHaveSkills.length) {
+            value = 80;
+        }
+        if (hasSelectedAndImportant) {
+            value = 90;
+        }
+        return value;
+    }
+    const handleNext = (e) => {        
         const nextStep = (parseInt(currentStep) + 1).toString();
         if (parseInt(currentStep) < 11) {
-            setCurrentStep(nextStep);
-            // custom question open extra
-            if (parseInt(currentStep) == 8) {
+            if(Array.isArray(currentStep) && nextStep=="1"){
+                setCurrentStep("2")
+            }else if(currentStep=="6"){                
+                setCurrentStep(["7","8"])
+            }else if(Array.isArray(currentStep) && nextStep=="8"){
+                setCurrentStep("9")
                 setActiveKeyAdd(true);
                 setActiveKey("9");
                 handleAddComponent(e);
-            } else if (parseInt(currentStep) == 9) {
+            }else if(currentStep=="9"){
                 setActiveKeyAdd(false);
                 setActiveKey(null);
-                // handleAddComponent(e);
-            }
+                setCurrentStep(["10","11"])
+            }else{
+                setCurrentStep(nextStep);
+            }            
+            // custom question open extra
+            // if (parseInt(currentStep) == 8) {
+            //     setActiveKeyAdd(true);
+            //     setActiveKey("9");
+            //     handleAddComponent(e);
+            // } else if (parseInt(currentStep) == 9) {
+            //     setActiveKeyAdd(false);
+            //     setActiveKey(null);
+            //     // handleAddComponent(e);
+            // }
         }
     };
     const handleClosecomboEdu = (e) => {
@@ -1668,8 +1718,8 @@ const UpdateJobsRevised = ({
     // console.log(components.length)
     // console.log(IndustriesBadges)
     // console.log('neetu', createRevisedJobData)
-    // console.log('==========>update======>', updateFormData)
-    console.log('=========>', dynamicArray)
+    console.log('==========>update======>', updateFormData)
+    // console.log('=========>', dynamicArray)
     return (
         <>
             <Modal
@@ -1706,33 +1756,63 @@ const UpdateJobsRevised = ({
                         <Col md={3} lg={2} className="jobpre_leftpanel px-2">
                             <h6>Requirements</h6>
                             <ul className="checklist">
-                                <li className={`${setClassForSalary()}`}>
+                                <li className={`${setClassForSalary()}`}
+                                    onClick={() => {
+                                        setCurrentStep("1")
+                                        handleOpenStep("1")
+                                    }}
+                                >
                                     <Link href={""}>
                                         Salary <i class="fa fa-check" aria-hidden="true"></i>
                                     </Link>
                                 </li>
-                                <li className={`${badges?.length > 0 && updateFormData?.minimum_education ? "active" : ''}`}>
+                                <li className={`${badges?.length > 0 && updateFormData?.minimum_education ? "active" : ''}`}
+                                    onClick={() => {
+                                        setCurrentStep("2")
+                                        handleOpenStep("2")
+                                    }}
+                                >
                                     <Link href={""}>
                                         Education <i class="fa fa-check" aria-hidden="true"></i>
                                     </Link>
                                 </li>
-                                <li className={`${setClassName()}`}>
+                                <li className={`${setClassName()}`}
+                                    onClick={() => {
+                                        setCurrentStep("3")
+                                        handleOpenStep("3")
+                                    }}
+                                >
                                     <Link href={""}>
                                         Experience <i class="fa fa-check" aria-hidden="true"></i>
                                     </Link>
                                 </li>
-                                <li className={`${updateFormData?.targate_hire_date && 'active'}`}>
+                                <li className={`${updateFormData?.targate_hire_date && 'active'}`}
+                                    onClick={() => {
+                                        setCurrentStep("4")
+                                        handleOpenStep("4")
+                                    }}
+                                >
                                     <Link href={""}>
                                         Target Hire Date{" "}
                                         <i class="fa fa-check" aria-hidden="true"></i>
                                     </Link>
                                 </li>
-                                <li className={`${spokenLanguageBadges?.length > 0 && rdnwBadges?.length > 0 ? 'active' : ''}`}>
+                                <li className={`${spokenLanguageBadges?.length > 0 && rdnwBadges?.length > 0 ? 'active' : ''}`}
+                                    onClick={() => {
+                                        setCurrentStep("5")
+                                        handleOpenStep("5")
+                                    }}
+                                >
                                     <Link href={""}>
                                         Language <i class="fa fa-check" aria-hidden="true"></i>
                                     </Link>
                                 </li>
-                                <li className={`${locationBadges?.length > 0 ? 'active' : ''}`}>
+                                <li className={`${locationBadges?.length > 0 ? 'active' : ''}`}
+                                    onClick={() => {
+                                        setCurrentStep("6")
+                                        handleOpenStep("6")
+                                    }}
+                                >
                                     <Link href={""}>
                                         Geography <i class="fa fa-check" aria-hidden="true"></i>
                                     </Link>
@@ -1740,12 +1820,22 @@ const UpdateJobsRevised = ({
                             </ul>
                             <h6>Skills</h6>
                             <ul className="checklist">
-                                <li className={`${SelectSkillsData?.length > 0 && 'active'}`}>
+                                <li className={`${SelectSkillsData?.length > 0 && 'active'}`}
+                                    onClick={() => {
+                                        setCurrentStep("8")
+                                        handleOpenStep("8")
+                                    }}
+                                >
                                     <Link href={""}>
                                         Skills <i class="fa fa-check" aria-hidden="true"></i>
                                     </Link>
                                 </li>
-                                <li className={`${cusQuestion()}`}>
+                                <li className={`${cusQuestion()}`}
+                                    onClick={() => {
+                                        setCurrentStep("9")
+                                        handleOpenStep("9")
+                                    }}
+                                >
                                     <Link href={""}>
                                         Custom Questions{" "}
                                         <i class="fa fa-check" aria-hidden="true"></i>
@@ -1754,7 +1844,12 @@ const UpdateJobsRevised = ({
                             </ul>
                             <h6>Personality</h6>
                             <ul className="checklist">
-                                <li className={`${behaviours.length == 12 && 'active'}`}>
+                                <li className={`${behaviours.length == 12 && 'active'}`}
+                                    onClick={() => {
+                                        setCurrentStep("11")
+                                        handleOpenStep("11")
+                                    }}
+                                >
                                     <Link href={""}>
                                         Behaviours <i class="fa fa-check" aria-hidden="true"></i>
                                     </Link>
@@ -3360,7 +3455,8 @@ const UpdateJobsRevised = ({
                                                                     <button
                                                                         type="button"
                                                                         className="btn-transpant"
-                                                                    // onClick={() => EducationdeleteRow(index)}
+                                                                        // onClick={() => EducationdeleteRow(index)}
+                                                                        onClick={() => handleDeleteRowQuestion(questionIndex)}
                                                                     >
                                                                         <img
                                                                             src={imgpTrash}
@@ -3843,7 +3939,7 @@ const UpdateJobsRevised = ({
                                                 if (item.isSelected) {
                                                     return (
                                                         <>
-                                                            {item?.heading}
+                                                            {item?.heading}&nbsp;
                                                             {item?.markedImportant && (
                                                                 <i className={`fa-star ${item.markedImportant ? "fa important" : "far"}`}
                                                                     onClick={(e) => handleStarClick(index, e)}
@@ -3871,7 +3967,7 @@ const UpdateJobsRevised = ({
                                 <div className="user_bsinfo">
                                     <h6>Description</h6>
                                     <ul>
-                                        <li>Job details-{createRevisedJobData?.job_title}</li>
+                                        {/* <li>Job details-{createRevisedJobData?.job_title}</li>
                                         <li>{createRevisedJobData?.job_company?.company_name} </li>
                                         <li>
                                             Area: {locationBadges?.map((city, index) => (
@@ -3890,7 +3986,8 @@ const UpdateJobsRevised = ({
                                                 <>{Val?.industry_name}{index !== IndustriesBadges.length - 1 && ", "}</>
                                             ))}
                                         </li>
-                                        <li>Employment: {`${createRevisedJobData?.job_type}/Contract`}</li>
+                                        <li>Employment: {`${createRevisedJobData?.job_type}/Contract`}</li> */}
+                                        <li>{createRevisedJobData?.detailed_description?.replace(/&nbsp;/g, ' ')}</li>
                                     </ul>
                                 </div>
                                 {/* <div className="user_bsinfo">
@@ -3913,68 +4010,74 @@ const UpdateJobsRevised = ({
                             <div className="recomed_panel">
                                 <div className="recomed_head">
                                     <h6>Recommendations</h6>
-                                    <ProgressBar now={60} />
+                                    <ProgressBar now={handlerecommodentProgress()} />
                                 </div>
                                 <ul class="rects_list2 px-3">
-                                    <li class="active">
-                                        <svg
-                                            width="12"
-                                            height="12"
-                                            viewBox="0 0 12 12"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                d="M6 1L5.34925 3.60299C5.22227 4.11092 5.15878 4.36489 5.02654 4.57154C4.90958 4.75434 4.75434 4.90958 4.57154 5.02654C4.36489 5.15878 4.11092 5.22227 3.603 5.34925L1 6L3.60299 6.65075C4.11092 6.77773 4.36489 6.84122 4.57154 6.97346C4.75434 7.09042 4.90958 7.24566 5.02654 7.42846C5.15878 7.63511 5.22227 7.88908 5.34925 8.397L6 11L6.65075 8.39701C6.77773 7.88908 6.84122 7.63511 6.97346 7.42846C7.09042 7.24566 7.24566 7.09042 7.42846 6.97346C7.63511 6.84122 7.88908 6.77773 8.397 6.65075L11 6L8.39701 5.34925C7.88908 5.22227 7.63511 5.15878 7.42846 5.02654C7.24566 4.90958 7.09042 4.75434 6.97346 4.57154C6.84122 4.36489 6.77773 4.11092 6.65075 3.603L6 1Z"
-                                                stroke="black"
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                            />
-                                        </svg>
-                                        <p>
-                                            Add a preferred <strong>salary</strong> even if not
-                                            displayed to applicant.
-                                        </p>
-                                    </li>
-                                    <li>
-                                        <svg
-                                            width="12"
-                                            height="12"
-                                            viewBox="0 0 12 12"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                d="M6 1L5.34925 3.60299C5.22227 4.11092 5.15878 4.36489 5.02654 4.57154C4.90958 4.75434 4.75434 4.90958 4.57154 5.02654C4.36489 5.15878 4.11092 5.22227 3.603 5.34925L1 6L3.60299 6.65075C4.11092 6.77773 4.36489 6.84122 4.57154 6.97346C4.75434 7.09042 4.90958 7.24566 5.02654 7.42846C5.15878 7.63511 5.22227 7.88908 5.34925 8.397L6 11L6.65075 8.39701C6.77773 7.88908 6.84122 7.63511 6.97346 7.42846C7.09042 7.24566 7.24566 7.09042 7.42846 6.97346C7.63511 6.84122 7.88908 6.77773 8.397 6.65075L11 6L8.39701 5.34925C7.88908 5.22227 7.63511 5.15878 7.42846 5.02654C7.24566 4.90958 7.09042 4.75434 6.97346 4.57154C6.84122 4.36489 6.77773 4.11092 6.65075 3.603L6 1Z"
-                                                stroke="black"
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                            />
-                                        </svg>
-                                        <p>
-                                            Add a preferred work <strong>experience</strong>
-                                        </p>
-                                    </li>
-                                    <li>
-                                        <svg
-                                            width="12"
-                                            height="12"
-                                            viewBox="0 0 12 12"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                d="M6 1L5.34925 3.60299C5.22227 4.11092 5.15878 4.36489 5.02654 4.57154C4.90958 4.75434 4.75434 4.90958 4.57154 5.02654C4.36489 5.15878 4.11092 5.22227 3.603 5.34925L1 6L3.60299 6.65075C4.11092 6.77773 4.36489 6.84122 4.57154 6.97346C4.75434 7.09042 4.90958 7.24566 5.02654 7.42846C5.15878 7.63511 5.22227 7.88908 5.34925 8.397L6 11L6.65075 8.39701C6.77773 7.88908 6.84122 7.63511 6.97346 7.42846C7.09042 7.24566 7.24566 7.09042 7.42846 6.97346C7.63511 6.84122 7.88908 6.77773 8.397 6.65075L11 6L8.39701 5.34925C7.88908 5.22227 7.63511 5.15878 7.42846 5.02654C7.24566 4.90958 7.09042 4.75434 6.97346 4.57154C6.84122 4.36489 6.77773 4.11092 6.65075 3.603L6 1Z"
-                                                stroke="black"
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                            />
-                                        </svg>
-                                        <p>
-                                            Select multiple <strong>educational fields</strong> to
-                                            expand candidate pool
-                                        </p>
-                                    </li>
+                                    {(!updateFormData?.salary_price_type || !updateFormData?.min_salary || !updateFormData?.max_salary || !updateFormData?.salary_type) && (
+                                        <li class={`${openStep[0] == '1' && "active"}`}>
+                                            <svg
+                                                width="12"
+                                                height="12"
+                                                viewBox="0 0 12 12"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path
+                                                    d="M6 1L5.34925 3.60299C5.22227 4.11092 5.15878 4.36489 5.02654 4.57154C4.90958 4.75434 4.75434 4.90958 4.57154 5.02654C4.36489 5.15878 4.11092 5.22227 3.603 5.34925L1 6L3.60299 6.65075C4.11092 6.77773 4.36489 6.84122 4.57154 6.97346C4.75434 7.09042 4.90958 7.24566 5.02654 7.42846C5.15878 7.63511 5.22227 7.88908 5.34925 8.397L6 11L6.65075 8.39701C6.77773 7.88908 6.84122 7.63511 6.97346 7.42846C7.09042 7.24566 7.24566 7.09042 7.42846 6.97346C7.63511 6.84122 7.88908 6.77773 8.397 6.65075L11 6L8.39701 5.34925C7.88908 5.22227 7.63511 5.15878 7.42846 5.02654C7.24566 4.90958 7.09042 4.75434 6.97346 4.57154C6.84122 4.36489 6.77773 4.11092 6.65075 3.603L6 1Z"
+                                                    stroke="black"
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                />
+                                            </svg>
+                                            <p>
+                                                Add a preferred <strong>salary</strong> even if not
+                                                displayed to applicant.
+                                            </p>
+                                        </li>
+                                    )}
+                                    {(badges?.length == 0 || !updateFormData?.minimum_education) && (
+                                        <li class={`${openStep[0] == '2' && "active"}`}>
+                                            <svg
+                                                width="12"
+                                                height="12"
+                                                viewBox="0 0 12 12"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path
+                                                    d="M6 1L5.34925 3.60299C5.22227 4.11092 5.15878 4.36489 5.02654 4.57154C4.90958 4.75434 4.75434 4.90958 4.57154 5.02654C4.36489 5.15878 4.11092 5.22227 3.603 5.34925L1 6L3.60299 6.65075C4.11092 6.77773 4.36489 6.84122 4.57154 6.97346C4.75434 7.09042 4.90958 7.24566 5.02654 7.42846C5.15878 7.63511 5.22227 7.88908 5.34925 8.397L6 11L6.65075 8.39701C6.77773 7.88908 6.84122 7.63511 6.97346 7.42846C7.09042 7.24566 7.24566 7.09042 7.42846 6.97346C7.63511 6.84122 7.88908 6.77773 8.397 6.65075L11 6L8.39701 5.34925C7.88908 5.22227 7.63511 5.15878 7.42846 5.02654C7.24566 4.90958 7.09042 4.75434 6.97346 4.57154C6.84122 4.36489 6.77773 4.11092 6.65075 3.603L6 1Z"
+                                                    stroke="black"
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                />
+                                            </svg>
+                                            <p>
+                                                Select multiple <strong>educational fields</strong> to
+                                                expand candidate pool
+                                            </p>
+                                        </li>
+                                    )}
+                                    {(setClassName() != "active" || restrictedRoleBadges.length == 0 || IndustriesBadges.length == 0) && (
+                                        <li class={`${openStep[0] == '3' && "active"}`}>
+                                            <svg
+                                                width="12"
+                                                height="12"
+                                                viewBox="0 0 12 12"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path
+                                                    d="M6 1L5.34925 3.60299C5.22227 4.11092 5.15878 4.36489 5.02654 4.57154C4.90958 4.75434 4.75434 4.90958 4.57154 5.02654C4.36489 5.15878 4.11092 5.22227 3.603 5.34925L1 6L3.60299 6.65075C4.11092 6.77773 4.36489 6.84122 4.57154 6.97346C4.75434 7.09042 4.90958 7.24566 5.02654 7.42846C5.15878 7.63511 5.22227 7.88908 5.34925 8.397L6 11L6.65075 8.39701C6.77773 7.88908 6.84122 7.63511 6.97346 7.42846C7.09042 7.24566 7.24566 7.09042 7.42846 6.97346C7.63511 6.84122 7.88908 6.77773 8.397 6.65075L11 6L8.39701 5.34925C7.88908 5.22227 7.63511 5.15878 7.42846 5.02654C7.24566 4.90958 7.09042 4.75434 6.97346 4.57154C6.84122 4.36489 6.77773 4.11092 6.65075 3.603L6 1Z"
+                                                    stroke="black"
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                />
+                                            </svg>
+                                            <p>
+                                                Add a preferred work <strong>experience</strong>
+                                            </p>
+                                        </li>
+                                    )}
                                 </ul>
                             </div>
                         </Col>

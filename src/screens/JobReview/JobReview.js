@@ -755,6 +755,26 @@ tracker.show_tasks()
     useEffect(() => {
         ApplicantEmailDetails();
     }, [candidateEmail])
+    const fetchListAPIByKey = async (uid,groupname,gId) => {
+        setListShow(true);
+        setGroupParameterId(uid)
+        setGroupTitleName(groupname)
+        setParamUid(gId)
+        try {
+            const payload = {
+                job_group_parameter: uid,
+                group_name: groupname,
+                group_filter: {}
+            }
+            const response = await postJobGroupParameterListByFetchAPI(gId, payload)
+            if (response?.data?.success) {
+                setListData(response?.data?.response)
+                handleCloseGrpMdl()
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
     // console.log(assignmentReviewList)
     // console.log('section', sectionWiseData)
     // console.log(questionWiseData)
@@ -1476,12 +1496,16 @@ tracker.show_tasks()
                                                                                         label="Auto-Remind"
                                                                                     />
                                                                                 </Form>
-                                                                                <button className="button" class="btn-transpant" onClick={() => {
+                                                                                {/* <button className="button" class="btn-transpant" onClick={() => {
                                                                                     handleListData(groupItem);
                                                                                     setGroupParameterId(paraName?.uid)
                                                                                     setGroupTitleName(groupItem?.group_name)
                                                                                     setParamUid(groupItem?.uid)
-                                                                                }}><i class="fa fa-list-ul" aria-hidden="true"></i></button>
+                                                                                }}><i class="fa fa-list-ul" aria-hidden="true"></i></button> */}
+                                                                                <button className="button" class="btn-transpant" onClick={() =>
+                                                                                    // handleListData(groupItem)
+                                                                                    fetchListAPIByKey(paraName?.uid, groupItem?.group_name, groupItem?.uid)
+                                                                                }><i class="fa fa-list-ul" aria-hidden="true"></i></button>
                                                                             </div>
                                                                         </div>
                                                                     </>
@@ -2775,7 +2799,7 @@ tracker.show_tasks()
                             </Tab.Container>
                         </Col>
                         <Col md={3}>
-                            <SideCard candidateDetails={candidateDetails} />
+                            <SideCard candidateDetails={candidateDetails} applicantPersonality={applicantPersonality} />
                         </Col>
                     </Row>
                 </Offcanvas.Body>

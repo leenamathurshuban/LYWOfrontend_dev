@@ -6,19 +6,24 @@ import emailGray from "../../../images/icons/email_gray.svg"
 import calendarGray from "../../../images/icons/calendar_gray.svg"
 import briefcaseGray from "../../../images/icons/briefcase-01_gray.svg"
 import walletGray from "../../../images/icons/wallet-04_gray.svg"
+const title = ['Your Dominant Personality', 'Your Secondary Personality']
+const content = ['The dominant personality signifies the traits and behaviors that the you most closely associate with and are easily observable.',
+  'The secondary personality is less visible and only shown in certain situations or to certain people. This could be aspects of ourselves that we keep more private or that only come out in specific contexts'
+]
 
-const SideCard = ({ candidateDetails }) => {
+const SideCard = ({ candidateDetails,applicantPersonality }) => {
     // debugger
     return (
         <div className="candidate-card">
             <div className="header">
                 <img src={LeaderIcon} alt=""/>
                 <div className="title-section ms-2 pt-1">
-                    <h2>Leader</h2>
-                    <span className="score">83%</span>
+                    <h2>{applicantPersonality?.[0]?.behaviours_name}</h2>
+                    <span className="score">{applicantPersonality?.[0]?.personality_percentage}%</span>
                 </div>
                 <p className="description">
-                    They are in constant pursuit of innovative solutions and seek new horizons
+                    {/* They are in constant pursuit of innovative solutions and seek new horizons */}
+                    {applicantPersonality?.[0]?.behaviour_desctiption}
                 </p>
             </div>
 

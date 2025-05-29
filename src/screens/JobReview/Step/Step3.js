@@ -42,6 +42,7 @@ const Step3 = ({ applicantPersonality, personalityData }) => {
                 <p>{content[index]} </p>
                 <img className="mt-35" src={InfluencerLarge} />
                 <h2>{item?.behaviours_name}</h2>
+                <p>{item?.behaviour_desctiption}</p>
               </div>
             </Col>
           ))}

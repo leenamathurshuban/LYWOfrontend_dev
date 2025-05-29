@@ -148,17 +148,17 @@ const FilterJobs = ({
   const handleLocationDepartmentsearch = async (e) => {
     const { name, value } = e.target;
     const limit = 500;
-    setFilters((prevState) =>
-      viewMore.isModalFor === "Location"
-        ? {
-          ...prevState,
-          job_location: value
-        }
-        : {
-          ...prevState,
-          department: value
-        }
-    );
+    // setFilters((prevState) =>
+    //   viewMore.isModalFor === "Location"
+    //     ? {
+    //       ...prevState,
+    //       job_location: value
+    //     }
+    //     : {
+    //       ...prevState,
+    //       department: value
+    //     }
+    // );
     const url =
       viewMore.isModalFor === "Location"
         ? `https://bittrend.shubansoftware.com/account-api/location-list-api/?limit=${limit}&search=${value}`
@@ -227,6 +227,15 @@ const FilterJobs = ({
     setViewMoreSearch([])
   };
 
+  const reorderedOptions = viewMore.isModalFor === "Location" ? [
+    ...viewMoreList.filter((option) => filtersList.job_location?.includes(option?.location_name)),
+    ...viewMoreList.filter((option) => !filtersList.job_location?.includes(option?.location_name)),
+  ] : [
+    ...viewMoreList.filter((option) => filtersList.department.includes(option.department_name)),
+    ...viewMoreList.filter((option) => !filtersList.department.includes(option.department_name)),
+  ];
+
+  console.log(filtersList)
   return (
     <>
       <Offcanvas
@@ -772,14 +781,14 @@ const FilterJobs = ({
             <Form.Control
               placeholder={`${viewMore.isModalFor === "Location" ? "Search Location" : "Search Department"}`}
               aria-label="Search"
-              style={{minWidth:'280px'}}
+              style={{ minWidth: '280px' }}
               className="sm-fcontrol" // width 50% of the parent container
-              value={viewMore.isModalFor === "Location"?filtersList.job_location:filtersList.department}
+              // value={viewMore.isModalFor === "Location" ? filtersList.job_location : filtersList.department}
               onChange={handleLocationDepartmentsearch}
             />
             <div className={`${viewMoreSearch?.length > 0 ? 'ctm_dropdown ct_scrollbar' : ''}`}>
               <ul className="m-0">
-                {viewMoreSearch?.map((item) => (
+                {/* {viewMoreSearch?.map((item) => (
                   (
                     <li
                       key={item.id}
@@ -803,7 +812,36 @@ const FilterJobs = ({
                         : item.department_name}
                     </li>
                   )
-                ))}
+                ))} */}
+                {viewMoreSearch?.map((item) => {
+                  const key = viewMore.isModalFor === "Location" ? "job_location" : "department";
+                  const value = viewMore.isModalFor === "Location" ? item.location_name : item.department_name;
+
+                  return (
+                    <li
+                      key={item.id}
+                      onClick={() => {
+                        setFilters((prevState) => {
+                          const selected = prevState[key]?.split(",").filter(Boolean) || [];
+                          const isAlreadySelected = selected.includes(value);
+
+                          const updated = isAlreadySelected
+                            ? selected.filter((v) => v !== value)
+                            : [...selected, value];
+
+                          return {
+                            ...prevState,
+                            [key]: updated.join(","),
+                          };
+                        });
+
+                        setViewMoreSearch(); // Close or reset the modal/search list
+                      }}
+                    >
+                      {value}
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           </Form.Group>
@@ -813,7 +851,7 @@ const FilterJobs = ({
             <ul className="filter_datalist">
               {viewMoreList &&
                 viewMoreList.length > 0 &&
-                viewMoreList.map((item, idx) => (
+                reorderedOptions.map((item, idx) => (
                   <li>
                     <Form.Check
                       className="custom-checkbox"

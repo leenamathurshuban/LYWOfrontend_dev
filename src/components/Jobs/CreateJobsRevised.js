@@ -910,13 +910,13 @@ const CreateJobsRevised = ({
   const getTotalValues = (array) => {
     return array.reduce((total, arr) => total + arr.length, 0);
   };
-  const handleSelectedSkill = (e,benefititem, index) => {
+  const handleSelectedSkill = (e, benefititem, index) => {
     // setSelectSkillsData((prevState) =>
     //   prevState.includes(benefititem)
     //     ? prevState.filter((item2) => item2 !== benefititem)
     //     : [...prevState, benefititem]
     // );
-     e.stopPropagation();
+    e.stopPropagation();
     setDynamicArray((prevArray) => {
       const totalValues = getTotalValues(prevArray);
       return prevArray.map((arr, i) => {
@@ -1457,20 +1457,66 @@ const CreateJobsRevised = ({
     }
     return isError;
   }
+  const handlerecommodentProgress = () => {
+    let value;
+    if (updateFormData.max_salary && updateFormData.min_salary) {
+      value = 10;
+    }
+    if (updateFormData.minimum_education && badges?.length) {
+      value = 20;
+    }
+    if (updateFormData.min_exp && updateFormData.max_exp) {
+      value = 30;
+    }
+    if (IndustriesBadges?.length && restrictedRoleBadges?.length) {
+      value = 40;
+    }
+    if (updateFormData.targate_hire_date) {
+      value = 50;
+    }
+    if (spokenLanguageBadges.length && rdnwBadges.length) {
+      value = 60;
+    }
+    if (locationBadges.length) {
+      value = 70;
+    }
+    if (SelectSkillsData.length && mustHaveSkills.length) {
+      value = 80;
+    }
+    if (hasSelectedAndImportant) {
+      value = 90;
+    }
+    return value;
+  }
   const handleNext = (e) => {
     const nextStep = (parseInt(currentStep) + 1).toString();
-    if (parseInt(currentStep) < 9) {
-      setCurrentStep(nextStep);
-      // custom question open extra      
-      if (parseInt(currentStep) == 8) {
+    if (parseInt(currentStep) < 11) {
+      if (Array.isArray(currentStep) && nextStep == "1") {
+        setCurrentStep("2")
+      } else if (currentStep == "6") {
+        setCurrentStep(["7", "8"])
+      } else if (Array.isArray(currentStep) && nextStep == "8") {
+        setCurrentStep("9")
         setActiveKeyAdd(true);
         setActiveKey("9");
         handleAddComponent(e);
-      } else if (parseInt(currentStep) == 9) {
+      } else if (currentStep == "9") {
         setActiveKeyAdd(false);
         setActiveKey(null);
-        // handleAddComponent(e);
+        setCurrentStep(["10", "11"])
+      } else {
+        setCurrentStep(nextStep);
       }
+      // custom question open extra
+      // if (parseInt(currentStep) == 8) {
+      //     setActiveKeyAdd(true);
+      //     setActiveKey("9");
+      //     handleAddComponent(e);
+      // } else if (parseInt(currentStep) == 9) {
+      //     setActiveKeyAdd(false);
+      //     setActiveKey(null);
+      //     // handleAddComponent(e);
+      // }
     }
   };
   const handleClosecomboEdu = (e) => {
@@ -2834,7 +2880,7 @@ const CreateJobsRevised = ({
                             skillGroupData.group_skill.map((skill, index) => (
                               <span
                                 onClick={(e) => {
-                                  handleSelectedSkill(e,skill, index);
+                                  handleSelectedSkill(e, skill, index);
                                 }}
                                 className={`stag_item ${SelectSkillsData.some(item => JSON.stringify(item) == JSON.stringify(skill)) ? "active" : ""
                                   }`}
@@ -2850,7 +2896,7 @@ const CreateJobsRevised = ({
                           {addSubSkill.map((item, index) => (
                             <span
                               onClick={(e) => {
-                                handleSelectedSkill(e,item, index);
+                                handleSelectedSkill(e, item, index);
                               }}
                               className={`stag_item ${SelectSkillsData.includes(item) ? "active" : ""
                                 }`}
@@ -2934,7 +2980,7 @@ const CreateJobsRevised = ({
                           {addSubSkill.map((item, index) => (
                             <span
                               onClick={(e) => {
-                                handleSelectedSkill(e,item, index);
+                                handleSelectedSkill(e, item, index);
                               }}
                               className={`stag_item ${SelectSkillsData.includes(item) ? "active" : ""
                                 }`}
@@ -3001,7 +3047,7 @@ const CreateJobsRevised = ({
                           <i className="fa fa-plus me-2"></i>
                           Add
                         </button>
-                        <div
+                        {/* <div
                           class="btn btn-lightgray p-3"
                           onClick={(e) => {
                             setActiveKey(activeKey === "9" ? null : "9");
@@ -3024,7 +3070,7 @@ const CreateJobsRevised = ({
                               stroke-linejoin="round"
                             />
                           </svg>
-                        </div>
+                        </div> */}
                       </div>
                     </Accordion.Header>
                     <Accordion.Body ref={(el) => (sectionRefs.current['9'] = el)}>
@@ -3580,7 +3626,7 @@ const CreateJobsRevised = ({
                         if (item.isSelected) {
                           return (
                             <>
-                              {item?.heading}
+                              {item?.heading}&nbsp;
                               {item?.markedImportant && (
                                 <i className={`fa-star ${item.markedImportant ? "fa important" : "far"}`}
                                   onClick={(e) => handleStarClick(index, e)}
@@ -3608,7 +3654,7 @@ const CreateJobsRevised = ({
                 <div className="user_bsinfo">
                   <h6>Description</h6>
                   <ul>
-                    <li>Job details-{createRevisedJobData?.job_title}</li>
+                    {/* <li>Job details-{createRevisedJobData?.job_title}</li>
                     <li>{createRevisedJobData?.job_company?.company_name} </li>
                     <li>
                       Area: {locationBadges?.map((city, index) => (
@@ -3627,10 +3673,11 @@ const CreateJobsRevised = ({
                         <>{Val?.industry_name}{index !== IndustriesBadges.length - 1 && ", "}</>
                       ))}
                     </li>
-                    <li>Employment: {`${createRevisedJobData?.job_type}/Contract`}</li>
+                    <li>Employment: {`${createRevisedJobData?.job_type}/Contract`}</li> */}
+                    <li>{createRevisedJobData?.detailed_description?.replace(/&nbsp;/g, ' ')}</li>
                   </ul>
                 </div>
-                <div className="user_bsinfo">
+                {/* <div className="user_bsinfo">
                   <h6>Key Responsibilities</h6>
                   <ul>
                     <li>
@@ -3645,15 +3692,15 @@ const CreateJobsRevised = ({
                       instruments before procurement.
                     </li>
                   </ul>
-                </div>
+                </div> */}
               </div>
               <div className="recomed_panel">
                 <div className="recomed_head">
                   <h6>Recommendations</h6>
-                  <ProgressBar now={60} />
+                  <ProgressBar now={handlerecommodentProgress()} />
                 </div>
                 <ul class="rects_list2 px-3">
-                  <li class="active">
+                  {/* <li class="active">
                     <svg
                       width="12"
                       height="12"
@@ -3711,7 +3758,72 @@ const CreateJobsRevised = ({
                       Select multiple <strong>educational fields</strong> to
                       expand candidate pool
                     </p>
-                  </li>
+                  </li> */}
+                  {(!updateFormData?.salary_price_type || !updateFormData?.min_salary || !updateFormData?.max_salary || !updateFormData?.salary_type) && (
+                    <li class={`${openStep[0] == '1' && "active"}`}>
+                      <svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 12 12"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M6 1L5.34925 3.60299C5.22227 4.11092 5.15878 4.36489 5.02654 4.57154C4.90958 4.75434 4.75434 4.90958 4.57154 5.02654C4.36489 5.15878 4.11092 5.22227 3.603 5.34925L1 6L3.60299 6.65075C4.11092 6.77773 4.36489 6.84122 4.57154 6.97346C4.75434 7.09042 4.90958 7.24566 5.02654 7.42846C5.15878 7.63511 5.22227 7.88908 5.34925 8.397L6 11L6.65075 8.39701C6.77773 7.88908 6.84122 7.63511 6.97346 7.42846C7.09042 7.24566 7.24566 7.09042 7.42846 6.97346C7.63511 6.84122 7.88908 6.77773 8.397 6.65075L11 6L8.39701 5.34925C7.88908 5.22227 7.63511 5.15878 7.42846 5.02654C7.24566 4.90958 7.09042 4.75434 6.97346 4.57154C6.84122 4.36489 6.77773 4.11092 6.65075 3.603L6 1Z"
+                          stroke="black"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                      <p>
+                        Add a preferred <strong>salary</strong> even if not
+                        displayed to applicant.
+                      </p>
+                    </li>
+                  )}
+                  {(badges?.length == 0 || !updateFormData?.minimum_education) && (
+                    <li class={`${openStep[0] == '2' && "active"}`}>
+                      <svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 12 12"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M6 1L5.34925 3.60299C5.22227 4.11092 5.15878 4.36489 5.02654 4.57154C4.90958 4.75434 4.75434 4.90958 4.57154 5.02654C4.36489 5.15878 4.11092 5.22227 3.603 5.34925L1 6L3.60299 6.65075C4.11092 6.77773 4.36489 6.84122 4.57154 6.97346C4.75434 7.09042 4.90958 7.24566 5.02654 7.42846C5.15878 7.63511 5.22227 7.88908 5.34925 8.397L6 11L6.65075 8.39701C6.77773 7.88908 6.84122 7.63511 6.97346 7.42846C7.09042 7.24566 7.24566 7.09042 7.42846 6.97346C7.63511 6.84122 7.88908 6.77773 8.397 6.65075L11 6L8.39701 5.34925C7.88908 5.22227 7.63511 5.15878 7.42846 5.02654C7.24566 4.90958 7.09042 4.75434 6.97346 4.57154C6.84122 4.36489 6.77773 4.11092 6.65075 3.603L6 1Z"
+                          stroke="black"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                      <p>
+                        Select multiple <strong>educational fields</strong> to
+                        expand candidate pool
+                      </p>
+                    </li>
+                  )}
+                  {(setClassName() != "active" || restrictedRoleBadges.length == 0 || IndustriesBadges.length == 0) && (
+                    <li class={`${openStep[0] == '3' && "active"}`}>
+                      <svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 12 12"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M6 1L5.34925 3.60299C5.22227 4.11092 5.15878 4.36489 5.02654 4.57154C4.90958 4.75434 4.75434 4.90958 4.57154 5.02654C4.36489 5.15878 4.11092 5.22227 3.603 5.34925L1 6L3.60299 6.65075C4.11092 6.77773 4.36489 6.84122 4.57154 6.97346C4.75434 7.09042 4.90958 7.24566 5.02654 7.42846C5.15878 7.63511 5.22227 7.88908 5.34925 8.397L6 11L6.65075 8.39701C6.77773 7.88908 6.84122 7.63511 6.97346 7.42846C7.09042 7.24566 7.24566 7.09042 7.42846 6.97346C7.63511 6.84122 7.88908 6.77773 8.397 6.65075L11 6L8.39701 5.34925C7.88908 5.22227 7.63511 5.15878 7.42846 5.02654C7.24566 4.90958 7.09042 4.75434 6.97346 4.57154C6.84122 4.36489 6.77773 4.11092 6.65075 3.603L6 1Z"
+                          stroke="black"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                      <p>
+                        Add a preferred work <strong>experience</strong>
+                      </p>
+                    </li>
+                  )}
                 </ul>
               </div>
             </Col>

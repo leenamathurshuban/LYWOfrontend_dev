@@ -2419,7 +2419,7 @@ const ApplicationJobPostModal = ({
   );
 
   const validationEnable =
-    isWorkExperienceFormValid &&
+    totalWorkExperience &&
     isEducationFormValid &&
     rdnwBadges.length !== 0 &&
     spokenLanguageBadges.length !== 0 &&
