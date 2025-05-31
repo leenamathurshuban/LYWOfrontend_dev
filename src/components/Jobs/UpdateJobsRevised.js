@@ -1350,10 +1350,11 @@ const UpdateJobsRevised = ({
     const handleOpenStep = (index) => {
         if (!openStep.includes(index)) {
             setOpenStep([index])
-        } else {
-            // const newArray = openStep.filter((cv) => cv !== index);
-            setOpenStep([])
-        }
+        } 
+        // else {
+        //     // const newArray = openStep.filter((cv) => cv !== index);
+        //     setOpenStep([])
+        // }
     }
     const sectionRefs = useRef([]);
     const toolbarRef = useRef(null);
@@ -1755,6 +1756,7 @@ const UpdateJobsRevised = ({
     // console.log('neetu', createRevisedJobData)
     console.log('==========>update======>', updateFormData)
     // console.log('=========>', dynamicArray)
+    console.log('dada ji', currentStep, openStep[0])
     return (
         <>
             <Modal
@@ -1793,7 +1795,7 @@ const UpdateJobsRevised = ({
                             <ul className="checklist">
                                 <li className={`${setClassForSalary()}`}
                                     onClick={() => {
-                                        setCurrentStep("1")
+                                        setCurrentStep(["0","1"])
                                         handleOpenStep("1")
                                     }}
                                 >
@@ -1857,7 +1859,7 @@ const UpdateJobsRevised = ({
                             <ul className="checklist">
                                 <li className={`${SelectSkillsData?.length > 0 && 'active'}`}
                                     onClick={() => {
-                                        setCurrentStep("8")
+                                        setCurrentStep(["7","8"])
                                         handleOpenStep("8")
                                     }}
                                 >
@@ -1881,7 +1883,7 @@ const UpdateJobsRevised = ({
                             <ul className="checklist">
                                 <li className={`${behaviours.length == 12 && 'active'}`}
                                     onClick={() => {
-                                        setCurrentStep("11")
+                                        setCurrentStep(["10","11"])
                                         handleOpenStep("11")
                                     }}
                                 >
@@ -1895,53 +1897,55 @@ const UpdateJobsRevised = ({
                             <Accordion
                                 defaultActiveKey={["0", "8", "7", "10"]}
                                 activeKey={currentStep} onSelect={(key) => setCurrentStep(key)}>
-                                <Accordion.Item eventKey="0">
-                                    <Accordion.Header className="bg-lightblue" onClick={() => setOpenStep([])}>Requirements</Accordion.Header>
-                                    {currentStep !== "0" && (<p className="short_text">Define your ideal hire in detail here. Use flags to indicate the importance as needed. All fields are mandatory</p>)}
-                                    <Accordion.Body>
-                                        <p>
-                                            Use this section to define your ideal hire in more detail.
-                                            All the information required in this section is mandatory.
-                                            The information from this section will play an essential
-                                            role in scoring and screening candidates based on their
-                                            profile.
-                                        </p>
-                                        <p>
-                                            If there is any one parameter that is very important [Yellow
-                                            Flag] or a must have [Red Flag], use the flags to indicate
-                                            the same. This information will allow us to rate each
-                                            application as below.
-                                        </p>
-                                        <ul className="applicant_info">
-                                            <li>
-                                                <h6>Applicant Name</h6>
-                                                <strong>Match</strong>
-                                            </li>
-                                            <li>
-                                                <p>James Winslow</p>
-                                                <Badge bg="success">Good 85%</Badge>
-                                            </li>
-                                            <li>
-                                                <p>Rajesh Sundaran</p>
-                                                <Badge bg="danger">Poor 23%</Badge>
-                                            </li>
-                                            <li>
-                                                <p>Abhilasha Choudhary</p>
-                                                <Badge bg="warning">Average 49%</Badge>
-                                            </li>
-                                        </ul>
-                                    </Accordion.Body>
-                                </Accordion.Item>
-                                <Accordion.Item
-                                    eventKey="1"
-                                    className="accd_child"
-                                    id="item_salary"
-                                >
-                                    <Accordion.Header onClick={() => handleOpenStep("1")}>
-                                        <span>Salary
-                                            {!openStep.includes("1") && <small className="text-muted"><i>Don’t Display</i><i>Non Negotiable</i></small>}
-                                        </span>
-                                        {/* <svg
+                                {parseInt(openStep[0]) <= 6 && (
+                                    <>
+                                        <Accordion.Item eventKey="0">
+                                            <Accordion.Header className="bg-lightblue" onClick={() => setOpenStep([])}>Requirements</Accordion.Header>
+                                            {currentStep !== "0" && (<p className="short_text">Define your ideal hire in detail here. Use flags to indicate the importance as needed. All fields are mandatory</p>)}
+                                            <Accordion.Body>
+                                                <p>
+                                                    Use this section to define your ideal hire in more detail.
+                                                    All the information required in this section is mandatory.
+                                                    The information from this section will play an essential
+                                                    role in scoring and screening candidates based on their
+                                                    profile.
+                                                </p>
+                                                <p>
+                                                    If there is any one parameter that is very important [Yellow
+                                                    Flag] or a must have [Red Flag], use the flags to indicate
+                                                    the same. This information will allow us to rate each
+                                                    application as below.
+                                                </p>
+                                                <ul className="applicant_info">
+                                                    <li>
+                                                        <h6>Applicant Name</h6>
+                                                        <strong>Match</strong>
+                                                    </li>
+                                                    <li>
+                                                        <p>James Winslow</p>
+                                                        <Badge bg="success">Good 85%</Badge>
+                                                    </li>
+                                                    <li>
+                                                        <p>Rajesh Sundaran</p>
+                                                        <Badge bg="danger">Poor 23%</Badge>
+                                                    </li>
+                                                    <li>
+                                                        <p>Abhilasha Choudhary</p>
+                                                        <Badge bg="warning">Average 49%</Badge>
+                                                    </li>
+                                                </ul>
+                                            </Accordion.Body>
+                                        </Accordion.Item>
+                                        <Accordion.Item
+                                            eventKey="1"
+                                            className="accd_child"
+                                            id="item_salary"
+                                        >
+                                            <Accordion.Header onClick={() => handleOpenStep("1")}>
+                                                <span>Salary
+                                                    {!openStep.includes("1") && <small className="text-muted"><i>Don’t Display</i><i>Non Negotiable</i></small>}
+                                                </span>
+                                                {/* <svg
                                             className="flag_icon"
                                             width="16"
                                             height="16"
@@ -1956,163 +1960,163 @@ const UpdateJobsRevised = ({
                                                 stroke-linejoin="round"
                                             />
                                         </svg> */}
-                                        {importantFlag.salary ? (
-                                            <img src={flagFill} className="flag_icon" onClick={(e) => removeImportantFlag(e, '1')} />
-                                        ) : (
-                                            <img src={simpleFlag} className="flag_icon" onClick={(e) => handleImportantFlag(e, '1')} />
-                                        )}
-                                        {!openStep.includes("1") && (
-                                            <span className="acheade_right">{updateFormData?.currency} {updateFormData?.min_salary} - {updateFormData?.max_salary} {updateFormData?.salary_type}</span>
-                                        )}
-                                    </Accordion.Header>
-                                    <Accordion.Body ref={(el) => (sectionRefs.current['1'] = el)}>
-                                        <Row className="align-items-center mb-3">
-                                            <div className="form-group w-auto mb-0">
-                                                <Form.Select
-                                                    name="salary_price_type"
-                                                    aria-label="Default select example"
-                                                    value={updateFormData?.salary_price_type}
-                                                    onChange={(e) => {
-                                                        handleFormData(e);
-                                                        setPriceRangeType(e.target.value);
-                                                    }}
-                                                    className="sm-fselect"
-                                                >
-                                                    <option selected value="Salary-range">
-                                                        Salary Range
-                                                    </option>
-                                                    <option value="Min-salary">Min. Salary</option>
-                                                    <option value="Max-salary">Max. Salary</option>
-                                                </Form.Select>
-                                            </div>
-                                            {(priceRangeType === "Salary-range" ||
-                                                priceRangeType === "Min-salary") && (
-                                                    <div className="form-group w-150 mb-0">
-                                                        <Form.Control
-                                                            type="text"
-                                                            name="min_salary"
-                                                            placeholder="Min."
-                                                            className="sm-fcontrol"
-                                                            value={updateFormData?.min_salary}
-                                                            onChange={handleFormData}
-                                                        />
-                                                    </div>
+                                                {importantFlag.salary ? (
+                                                    <img src={flagFill} className="flag_icon" onClick={(e) => removeImportantFlag(e, '1')} />
+                                                ) : (
+                                                    <img src={simpleFlag} className="flag_icon" onClick={(e) => handleImportantFlag(e, '1')} />
                                                 )}
+                                                {!openStep.includes("1") && (
+                                                    <span className="acheade_right">{updateFormData?.currency} {updateFormData?.min_salary} - {updateFormData?.max_salary} {updateFormData?.salary_type}</span>
+                                                )}
+                                            </Accordion.Header>
+                                            <Accordion.Body ref={(el) => (sectionRefs.current['1'] = el)}>
+                                                <Row className="align-items-center mb-3">
+                                                    <div className="form-group w-auto mb-0">
+                                                        <Form.Select
+                                                            name="salary_price_type"
+                                                            aria-label="Default select example"
+                                                            value={updateFormData?.salary_price_type}
+                                                            onChange={(e) => {
+                                                                handleFormData(e);
+                                                                setPriceRangeType(e.target.value);
+                                                            }}
+                                                            className="sm-fselect"
+                                                        >
+                                                            <option selected value="Salary-range">
+                                                                Salary Range
+                                                            </option>
+                                                            <option value="Min-salary">Min. Salary</option>
+                                                            <option value="Max-salary">Max. Salary</option>
+                                                        </Form.Select>
+                                                    </div>
+                                                    {(priceRangeType === "Salary-range" ||
+                                                        priceRangeType === "Min-salary") && (
+                                                            <div className="form-group w-150 mb-0">
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    name="min_salary"
+                                                                    placeholder="Min."
+                                                                    className="sm-fcontrol"
+                                                                    value={updateFormData?.min_salary}
+                                                                    onChange={handleFormData}
+                                                                />
+                                                            </div>
+                                                        )}
 
-                                            {priceRangeType === "Salary-range" && (
-                                                <div className="form-group w-auto mb-0 px-0">
-                                                    <span>to</span>
+                                                    {priceRangeType === "Salary-range" && (
+                                                        <div className="form-group w-auto mb-0 px-0">
+                                                            <span>to</span>
+                                                        </div>
+                                                    )}
+
+                                                    {(priceRangeType === "Salary-range" ||
+                                                        priceRangeType === "Max-salary") && (
+                                                            <div className="form-group w-150 mb-0">
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    name="max_salary"
+                                                                    placeholder="Max."
+                                                                    className="sm-fcontrol"
+                                                                    value={updateFormData?.max_salary}
+                                                                    onChange={handleFormData}
+                                                                />
+                                                            </div>
+                                                        )}
+                                                    <div className="form-group w-auto mb-0 pe-1">
+                                                        <Form.Select
+                                                            name="currency"
+                                                            aria-label="Default select example"
+                                                            className="sm-fselect"
+                                                            onChange={handleFormData}
+                                                            value={updateFormData?.currency}
+                                                        >
+                                                            <option selected value="INR">
+                                                                INR
+                                                            </option>
+                                                        </Form.Select>
+                                                    </div>
+                                                    <div className="form-group w-auto mb-0 ps-1">
+                                                        <Form.Select
+                                                            name="salary_type"
+                                                            aria-label="Default select example"
+                                                            className="sm-fselect"
+                                                            onChange={handleFormData}
+                                                            value={updateFormData?.salary_type}
+                                                        >
+                                                            <option value="" disabled hidden>Select..</option>
+                                                            <option value="Per-Month">Per Month</option>
+                                                            <option value="Per-Annum">Per Anmum</option>
+                                                        </Form.Select>
+                                                    </div>
+                                                </Row>
+                                                <div className="accordion_footer">
+                                                    <Form>
+                                                        {["checkbox"].map((type) => (
+                                                            <div key={`inline-${type}`} className="me-3">
+                                                                <Form.Check
+                                                                    inline
+                                                                    onChange={handleFormData}
+                                                                    label="Don’t Display"
+                                                                    name="display_salary"
+                                                                    type={type}
+                                                                    id={`inline-${type}-1`}
+                                                                    checked={updateFormData?.display_salary}
+                                                                />
+                                                                <Form.Check
+                                                                    inline
+                                                                    onChange={handleFormData}
+                                                                    label="Non Negotiable"
+                                                                    name="non_negotiable_salary"
+                                                                    type={type}
+                                                                    id={`inline-${type}-2`}
+                                                                    checked={updateFormData?.non_negotiable_salary}
+                                                                />
+                                                            </div>
+                                                        ))}
+                                                    </Form>
+                                                    <button
+                                                        // onClick={handleCreateForm}
+                                                        type="button"
+                                                        class="btn btn-lightgray"
+                                                        onClick={handleNext}
+                                                    >
+                                                        Next
+                                                    </button>
                                                 </div>
-                                            )}
-
-                                            {(priceRangeType === "Salary-range" ||
-                                                priceRangeType === "Max-salary") && (
-                                                    <div className="form-group w-150 mb-0">
-                                                        <Form.Control
-                                                            type="text"
-                                                            name="max_salary"
-                                                            placeholder="Max."
-                                                            className="sm-fcontrol"
-                                                            value={updateFormData?.max_salary}
-                                                            onChange={handleFormData}
-                                                        />
-                                                    </div>
+                                            </Accordion.Body>
+                                        </Accordion.Item>
+                                        <Accordion.Item eventKey="2" className="accd_child" id="item_edu">
+                                            <Accordion.Header onClick={() => handleOpenStep("2")}>
+                                                <span>Educational qualification
+                                                    {!openStep.includes('2') && <small className="text-muted"><i>Higher Qualification Preferrable</i><i>Other Areas are Acceptable</i></small>}
+                                                </span>
+                                                {importantFlag.education ? (
+                                                    <img src={flagFill} className="flag_icon" onClick={(e) => removeImportantFlag(e, '2')} />
+                                                ) : (
+                                                    <img src={simpleFlag} className="flag_icon" onClick={(e) => handleImportantFlag(e, '2')} />
                                                 )}
-                                            <div className="form-group w-auto mb-0 pe-1">
-                                                <Form.Select
-                                                    name="currency"
-                                                    aria-label="Default select example"
-                                                    className="sm-fselect"
-                                                    onChange={handleFormData}
-                                                    value={updateFormData?.currency}
-                                                >
-                                                    <option selected value="INR">
-                                                        INR
-                                                    </option>
-                                                </Form.Select>
-                                            </div>
-                                            <div className="form-group w-auto mb-0 ps-1">
-                                                <Form.Select
-                                                    name="salary_type"
-                                                    aria-label="Default select example"
-                                                    className="sm-fselect"
-                                                    onChange={handleFormData}
-                                                    value={updateFormData?.salary_type}
-                                                >
-                                                    <option value="" disabled hidden>Select..</option>
-                                                    <option value="Per-Month">Per Month</option>
-                                                    <option value="Per-Annum">Per Anmum</option>
-                                                </Form.Select>
-                                            </div>
-                                        </Row>
-                                        <div className="accordion_footer">
-                                            <Form>
-                                                {["checkbox"].map((type) => (
-                                                    <div key={`inline-${type}`} className="me-3">
-                                                        <Form.Check
-                                                            inline
-                                                            onChange={handleFormData}
-                                                            label="Don’t Display"
-                                                            name="display_salary"
-                                                            type={type}
-                                                            id={`inline-${type}-1`}
-                                                            checked={updateFormData?.display_salary}
-                                                        />
-                                                        <Form.Check
-                                                            inline
-                                                            onChange={handleFormData}
-                                                            label="Non Negotiable"
-                                                            name="non_negotiable_salary"
-                                                            type={type}
-                                                            id={`inline-${type}-2`}
-                                                            checked={updateFormData?.non_negotiable_salary}
-                                                        />
-                                                    </div>
-                                                ))}
-                                            </Form>
-                                            <button
-                                                // onClick={handleCreateForm}
-                                                type="button"
-                                                class="btn btn-lightgray"
-                                                onClick={handleNext}
-                                            >
-                                                Next
-                                            </button>
-                                        </div>
-                                    </Accordion.Body>
-                                </Accordion.Item>
-                                <Accordion.Item eventKey="2" className="accd_child" id="item_edu">
-                                    <Accordion.Header onClick={() => handleOpenStep("2")}>
-                                        <span>Educational qualification
-                                            {!openStep.includes('2') && <small className="text-muted"><i>Higher Qualification Preferrable</i><i>Other Areas are Acceptable</i></small>}
-                                        </span>
-                                        {importantFlag.education ? (
-                                            <img src={flagFill} className="flag_icon" onClick={(e) => removeImportantFlag(e, '2')} />
-                                        ) : (
-                                            <img src={simpleFlag} className="flag_icon" onClick={(e) => handleImportantFlag(e, '2')} />
-                                        )}
-                                        {!openStep.includes('2') && (
-                                            <span className="acheade_right">{updateFormData?.minimum_education},{badges?.map((cv) => (<>{cv?.qualification_name}</>))}</span>
-                                        )}
-                                    </Accordion.Header>
-                                    <Accordion.Body ref={(el) => (sectionRefs.current['2'] = el)}>
-                                        <Form>
-                                            <Form.Group className="mb-3">
-                                                <Form.Label className="sm-label">
-                                                    Minimum Education
-                                                </Form.Label>
-                                                <Form.Select
-                                                    aria-label="Default select example"
-                                                    className="sm-fselect"
-                                                    name="minimum_education"
-                                                    value={updateFormData?.minimum_education}
-                                                    onChange={(e) => {
-                                                        setMinEdu(e.target.value);
-                                                        handleFormData(e);
-                                                    }}
-                                                >
-                                                    <option value="" disabled hidden>Select...</option>
-                                                    {/* <option value="High school">High school</option>
+                                                {!openStep.includes('2') && (
+                                                    <span className="acheade_right">{updateFormData?.minimum_education},{badges?.map((cv) => (<>{cv?.qualification_name}</>))}</span>
+                                                )}
+                                            </Accordion.Header>
+                                            <Accordion.Body ref={(el) => (sectionRefs.current['2'] = el)}>
+                                                <Form>
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className="sm-label">
+                                                            Minimum Education
+                                                        </Form.Label>
+                                                        <Form.Select
+                                                            aria-label="Default select example"
+                                                            className="sm-fselect"
+                                                            name="minimum_education"
+                                                            value={updateFormData?.minimum_education}
+                                                            onChange={(e) => {
+                                                                setMinEdu(e.target.value);
+                                                                handleFormData(e);
+                                                            }}
+                                                        >
+                                                            <option value="" disabled hidden>Select...</option>
+                                                            {/* <option value="High school">High school</option>
                                                     <option value="Bachelors Degree">
                                                         Bachelors Degree
                                                     </option>
@@ -2121,22 +2125,22 @@ const UpdateJobsRevised = ({
                                                     <option value="PG Diploma">PG Diploma</option>
                                                     <option value="PhD">PhD</option>
                                                     <option value="Post Doctorate">Post Doctorate</option> */}
-                                                    <option value="Below Secondary Education">Below Secondary Education</option>
-                                                    <option value="Upper Secondary (Intermediate, High School, Grade 12)">Upper Secondary (Intermediate, High School, Grade 12)</option>
-                                                    <option value="Certification  / Vocational / Technical Training">Certification  / Vocational / Technical Training</option>
-                                                    <option value="Diploma / Associate Degree">Diploma / Associate Degree</option>
-                                                    <option value="Bachelor's Degree">Bachelor's Degree</option>
-                                                    <option value="Master's Degree">Master's Degree</option>
-                                                    <option value="Professional Degree (e.g., MD, JD)">Professional Degree (e.g., MD, JD)</option>
-                                                    <option value="Doctoral Degree (Ph.D., Ed.D.)">Doctoral Degree (Ph.D., Ed.D.)</option>
-                                                    <option value="Postdoctoral Research">Postdoctoral Research</option>
-                                                </Form.Select>
-                                                <span className="required_text">
-                                                    Select the minimum level of education that you would
-                                                    require
-                                                </span>
-                                            </Form.Group>
-                                            {/* <Form.Group
+                                                            <option value="Below Secondary Education">Below Secondary Education</option>
+                                                            <option value="Upper Secondary (Intermediate, High School, Grade 12)">Upper Secondary (Intermediate, High School, Grade 12)</option>
+                                                            <option value="Certification  / Vocational / Technical Training">Certification  / Vocational / Technical Training</option>
+                                                            <option value="Diploma / Associate Degree">Diploma / Associate Degree</option>
+                                                            <option value="Bachelor's Degree">Bachelor's Degree</option>
+                                                            <option value="Master's Degree">Master's Degree</option>
+                                                            <option value="Professional Degree (e.g., MD, JD)">Professional Degree (e.g., MD, JD)</option>
+                                                            <option value="Doctoral Degree (Ph.D., Ed.D.)">Doctoral Degree (Ph.D., Ed.D.)</option>
+                                                            <option value="Postdoctoral Research">Postdoctoral Research</option>
+                                                        </Form.Select>
+                                                        <span className="required_text">
+                                                            Select the minimum level of education that you would
+                                                            require
+                                                        </span>
+                                                    </Form.Group>
+                                                    {/* <Form.Group
                                                 className="mb-3"
                                                 controlId="exampleForm.ControlTextarea1"
                                             >
@@ -2170,199 +2174,199 @@ const UpdateJobsRevised = ({
                                                     Select all relevant areas of education
                                                 </span>
                                             </Form.Group> */}
-                                            {/* <-------------------> */}
-                                            <Form.Group
-                                                className="mb-3"
-                                                controlId="exampleForm.ControlTextarea1"
-                                            >
-                                                <Form.Label className="sm-label">
-                                                    Areas of Education
-                                                </Form.Label>
-                                                <div className="tagarea p-2 position-relative">
-                                                    {badges?.map((badge, index) => (
-                                                        <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
-                                                            {badge?.qualification_name}
-                                                            <button
-                                                                className="btn close_tag"
-                                                                style={{ cursor: "pointer" }}
-                                                                onClick={() => handleRemoveBadge(index)}
-                                                            >
-                                                                <i className="fa fa-close ms-1"></i>
-                                                            </button>
-                                                        </Badge>
-                                                    ))}
-                                                    <div className="inline-dropdown-container position-relative d-inline-block">
-                                                        <Form.Control
-                                                            type="text"
-                                                            className="inline-input"
-                                                            placeholder="Enter text"
-                                                            ref={areaEduRef}
-                                                            // value={row.areaOfEducation}
-                                                            // disabled={row.saved}
-                                                            onChange={handleAreaOfEducation}
-                                                            onBlur={handleClosecomboEdu} // Close dropdown on blur
-                                                        />
-                                                        {aresEducationOption?.length > 0 ? (
-                                                            <Dropdown show={true} >
-                                                                <Dropdown.Menu className="w-100 dropdown_ctm">
-                                                                    <div class={`${aresEducationOption.length ? 'droplistmulti' : ''}`}>
-                                                                        {aresEducationOption.map((option, idx) => (
-                                                                            <Dropdown.Item
-                                                                                key={idx}
-                                                                                onClick={(e) =>
-                                                                                    handleSelectAreaEducation(option)
-                                                                                }
-                                                                            >
-                                                                                {option?.qualification_name}
-                                                                            </Dropdown.Item>
-                                                                        ))}
-                                                                    </div>
-                                                                </Dropdown.Menu>
-                                                            </Dropdown>
-                                                        ) : ('')}
-                                                    </div>
-                                                </div>
-                                            </Form.Group>
-                                        </Form>
-                                        <div className="accordion_footer">
-                                            <Form>
-                                                {["checkbox"].map((type) => (
-                                                    <div key={`inline-${type}`} className="me-3">
-                                                        <Form.Check
-                                                            inline
-                                                            label="Higher Qualification Preferrable"
-                                                            name="higher_qualification_preferred"
-                                                            onChange={handleFormData}
-                                                            type={type}
-                                                            id={`inline-${type}-1`}
-                                                            checked={updateFormData?.higher_qualification_preferred}
-                                                        />
-                                                        <Form.Check
-                                                            inline
-                                                            label="Other Areas are Acceptable"
-                                                            name="other_areas_acceptable"
-                                                            onChange={handleFormData}
-                                                            type={type}
-                                                            id={`inline-${type}-2`}
-                                                            checked={updateFormData?.other_areas_acceptable}
-                                                        />
-                                                    </div>
-                                                ))}
-                                            </Form>
-                                            <button
-                                                type="button"
-                                                // onClick={handleCreateForm}
-                                                onClick={handleNext}
-                                                class="btn btn-lightgray"
-                                            >
-                                                Next
-                                            </button>
-                                        </div>
-                                    </Accordion.Body>
-                                </Accordion.Item>
-                                <Accordion.Item eventKey="3" className="accd_child" id="item_Exp">
-                                    <Accordion.Header onClick={() => handleOpenStep("3")}>
-                                        {/* Experience{" "} */}
-                                        <span>Experience
-                                            {!openStep.includes('3') && <small className="text-muted"><i>Restrict Industries</i><i>Define Current Role</i></small>}
-                                        </span>
-                                        {importantFlag.experience ? (
-                                            <img src={flagFill} className="flag_icon" onClick={(e) => removeImportantFlag(e, '3')} />
-                                        ) : (
-                                            <img src={simpleFlag} className="flag_icon" onClick={(e) => handleImportantFlag(e, '3')} />
-                                        )}
-                                        {!openStep.includes('3') && (
-                                            <span className="acheade_right">
-                                                {updateFormData?.min_exp} - {updateFormData?.max_exp} Years in {IndustriesBadges?.map((cv) => (<>{cv?.industry_name}</>))}
-                                            </span>
-                                        )}
-                                    </Accordion.Header>
-                                    <Accordion.Body ref={(el) => (sectionRefs.current['3'] = el)}>
-                                        <Form>
-                                            <Form.Group className="mb-3">
-                                                <Form.Label className="sm-label">
-                                                    Ideal Years of Experience
-                                                </Form.Label>
-
-                                                <Row className="gap-2 align-items-center mx-0">
-                                                    <Form.Select
-                                                        name="year_of_experience_type"
-                                                        onChange={(e) => {
-                                                            handleFormData(e);
-                                                            setExpRangeTpe(e.target.value);
-                                                        }}
-                                                        value={updateFormData?.year_of_experience_type}
-                                                        aria-label="Default select example"
-                                                        className="sm-fselect w-150"
+                                                    {/* <-------------------> */}
+                                                    <Form.Group
+                                                        className="mb-3"
+                                                        controlId="exampleForm.ControlTextarea1"
                                                     >
-                                                        <option value="Range">Range</option>
+                                                        <Form.Label className="sm-label">
+                                                            Areas of Education
+                                                        </Form.Label>
+                                                        <div className="tagarea p-2 position-relative">
+                                                            {badges?.map((badge, index) => (
+                                                                <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
+                                                                    {badge?.qualification_name}
+                                                                    <button
+                                                                        className="btn close_tag"
+                                                                        style={{ cursor: "pointer" }}
+                                                                        onClick={() => handleRemoveBadge(index)}
+                                                                    >
+                                                                        <i className="fa fa-close ms-1"></i>
+                                                                    </button>
+                                                                </Badge>
+                                                            ))}
+                                                            <div className="inline-dropdown-container position-relative d-inline-block">
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    className="inline-input"
+                                                                    placeholder="Enter text"
+                                                                    ref={areaEduRef}
+                                                                    // value={row.areaOfEducation}
+                                                                    // disabled={row.saved}
+                                                                    onChange={handleAreaOfEducation}
+                                                                    onBlur={handleClosecomboEdu} // Close dropdown on blur
+                                                                />
+                                                                {aresEducationOption?.length > 0 ? (
+                                                                    <Dropdown show={true} >
+                                                                        <Dropdown.Menu className="w-100 dropdown_ctm">
+                                                                            <div class={`${aresEducationOption.length ? 'droplistmulti' : ''}`}>
+                                                                                {aresEducationOption.map((option, idx) => (
+                                                                                    <Dropdown.Item
+                                                                                        key={idx}
+                                                                                        onClick={(e) =>
+                                                                                            handleSelectAreaEducation(option)
+                                                                                        }
+                                                                                    >
+                                                                                        {option?.qualification_name}
+                                                                                    </Dropdown.Item>
+                                                                                ))}
+                                                                            </div>
+                                                                        </Dropdown.Menu>
+                                                                    </Dropdown>
+                                                                ) : ('')}
+                                                            </div>
+                                                        </div>
+                                                    </Form.Group>
+                                                </Form>
+                                                <div className="accordion_footer">
+                                                    <Form>
+                                                        {["checkbox"].map((type) => (
+                                                            <div key={`inline-${type}`} className="me-3">
+                                                                <Form.Check
+                                                                    inline
+                                                                    label="Higher Qualification Preferrable"
+                                                                    name="higher_qualification_preferred"
+                                                                    onChange={handleFormData}
+                                                                    type={type}
+                                                                    id={`inline-${type}-1`}
+                                                                    checked={updateFormData?.higher_qualification_preferred}
+                                                                />
+                                                                <Form.Check
+                                                                    inline
+                                                                    label="Other Areas are Acceptable"
+                                                                    name="other_areas_acceptable"
+                                                                    onChange={handleFormData}
+                                                                    type={type}
+                                                                    id={`inline-${type}-2`}
+                                                                    checked={updateFormData?.other_areas_acceptable}
+                                                                />
+                                                            </div>
+                                                        ))}
+                                                    </Form>
+                                                    <button
+                                                        type="button"
+                                                        // onClick={handleCreateForm}
+                                                        onClick={handleNext}
+                                                        class="btn btn-lightgray"
+                                                    >
+                                                        Next
+                                                    </button>
+                                                </div>
+                                            </Accordion.Body>
+                                        </Accordion.Item>
+                                        <Accordion.Item eventKey="3" className="accd_child" id="item_Exp">
+                                            <Accordion.Header onClick={() => handleOpenStep("3")}>
+                                                {/* Experience{" "} */}
+                                                <span>Experience
+                                                    {!openStep.includes('3') && <small className="text-muted"><i>Restrict Industries</i><i>Define Current Role</i></small>}
+                                                </span>
+                                                {importantFlag.experience ? (
+                                                    <img src={flagFill} className="flag_icon" onClick={(e) => removeImportantFlag(e, '3')} />
+                                                ) : (
+                                                    <img src={simpleFlag} className="flag_icon" onClick={(e) => handleImportantFlag(e, '3')} />
+                                                )}
+                                                {!openStep.includes('3') && (
+                                                    <span className="acheade_right">
+                                                        {updateFormData?.min_exp} - {updateFormData?.max_exp} Years in {IndustriesBadges?.map((cv) => (<>{cv?.industry_name}</>))}
+                                                    </span>
+                                                )}
+                                            </Accordion.Header>
+                                            <Accordion.Body ref={(el) => (sectionRefs.current['3'] = el)}>
+                                                <Form>
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className="sm-label">
+                                                            Ideal Years of Experience
+                                                        </Form.Label>
 
-                                                        <option value="Min">Min</option>
-
-                                                        <option value="Max">Max</option>
-                                                    </Form.Select>
-
-                                                    {(expRangeType === "Range" ||
-                                                        expRangeType === "Min") && (
-                                                            <Form.Control
-                                                                type="text"
-                                                                className="sm-fcontrol w-150"
-                                                                name="min"
+                                                        <Row className="gap-2 align-items-center mx-0">
+                                                            <Form.Select
+                                                                name="year_of_experience_type"
                                                                 onChange={(e) => {
-                                                                    // handleFormData(e);
-                                                                    handleMinInputChange(e);
+                                                                    handleFormData(e);
+                                                                    setExpRangeTpe(e.target.value);
                                                                 }}
-                                                                value={range.min}
-                                                                placeholder="Min."
-                                                            />
-                                                        )}
-                                                    {expRangeType === "Range" && (
-                                                        <span className="w-auto to_divider">to</span>
-                                                    )}
-                                                    {(expRangeType === "Range" ||
-                                                        expRangeType === "Max") && (
-                                                            <Form.Control
-                                                                type={maxValue > 40 ? "text" : "number"}
-                                                                max={50}
-                                                                className="sm-fcontrol w-150"
-                                                                placeholder="Max."
-                                                                value={range.max}
-                                                                name="max"
-                                                                onChange={(e) => {
-                                                                    // handleFormData(e);
-                                                                    handleMaxInputChange(e);
-                                                                }}
-                                                            />
-                                                        )}
-                                                    {/* <RangeSlider
+                                                                value={updateFormData?.year_of_experience_type}
+                                                                aria-label="Default select example"
+                                                                className="sm-fselect w-150"
+                                                            >
+                                                                <option value="Range">Range</option>
+
+                                                                <option value="Min">Min</option>
+
+                                                                <option value="Max">Max</option>
+                                                            </Form.Select>
+
+                                                            {(expRangeType === "Range" ||
+                                                                expRangeType === "Min") && (
+                                                                    <Form.Control
+                                                                        type="text"
+                                                                        className="sm-fcontrol w-150"
+                                                                        name="min"
+                                                                        onChange={(e) => {
+                                                                            // handleFormData(e);
+                                                                            handleMinInputChange(e);
+                                                                        }}
+                                                                        value={range.min}
+                                                                        placeholder="Min."
+                                                                    />
+                                                                )}
+                                                            {expRangeType === "Range" && (
+                                                                <span className="w-auto to_divider">to</span>
+                                                            )}
+                                                            {(expRangeType === "Range" ||
+                                                                expRangeType === "Max") && (
+                                                                    <Form.Control
+                                                                        type={maxValue > 40 ? "text" : "number"}
+                                                                        max={50}
+                                                                        className="sm-fcontrol w-150"
+                                                                        placeholder="Max."
+                                                                        value={range.max}
+                                                                        name="max"
+                                                                        onChange={(e) => {
+                                                                            // handleFormData(e);
+                                                                            handleMaxInputChange(e);
+                                                                        }}
+                                                                    />
+                                                                )}
+                                                            {/* <RangeSlider
                                                         minValue={minValue}
                                                         setMinValue={setMinValue}
                                                         displayMaxValue={displayMaxValue}
                                                         maxValue={maxValue}
                                                         setMaxValue={setMaxValue}
                                                     /> */}
-                                                    <RangeSliderNew
-                                                        range={range}
-                                                        setRange={setRange}
-                                                        minExp={minValue}
-                                                        setMinExp={setMinValue}
-                                                        displayMaxValue={displayMaxValue}
-                                                        maxExp={maxValue}
-                                                        setMaxExp={setMaxValue}
-                                                    />
-                                                </Row>
-                                            </Form.Group>
+                                                            <RangeSliderNew
+                                                                range={range}
+                                                                setRange={setRange}
+                                                                minExp={minValue}
+                                                                setMinExp={setMinValue}
+                                                                displayMaxValue={displayMaxValue}
+                                                                maxExp={maxValue}
+                                                                setMaxExp={setMaxValue}
+                                                            />
+                                                        </Row>
+                                                    </Form.Group>
 
-                                            {ishideIndustries && (
-                                                <Form.Group
-                                                    className="mb-3"
-                                                    controlId="exampleForm.ControlTextarea1"
-                                                >
-                                                    <Form.Label className="sm-label">
-                                                        Mention Shorlisted Industries
-                                                    </Form.Label>
+                                                    {ishideIndustries && (
+                                                        <Form.Group
+                                                            className="mb-3"
+                                                            controlId="exampleForm.ControlTextarea1"
+                                                        >
+                                                            <Form.Label className="sm-label">
+                                                                Mention Shorlisted Industries
+                                                            </Form.Label>
 
-                                                    {/* <div className="tagarea p-2">
+                                                            {/* <div className="tagarea p-2">
                                                         {IndustriesBadges.map((badge, index) => (
                                                             <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
                                                                 {badge?.industry_name}
@@ -2387,67 +2391,67 @@ const UpdateJobsRevised = ({
                                                             onKeyDown={handleKeyPressForIndustries}
                                                         />
                                                     </div> */}
-                                                    <div className="tagarea p-2 position-relative">
-                                                        {IndustriesBadges?.map((badge, index) => (
-                                                            <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
-                                                                {badge?.industry_name}
-                                                                <button
-                                                                    className="btn close_tag"
-                                                                    style={{ cursor: "pointer" }}
-                                                                    onClick={() => handleRemoveIndustriesBadge(index)}
-                                                                >
-                                                                    <i className="fa fa-close ms-1"></i>
-                                                                </button>
-                                                            </Badge>
-                                                        ))}
-                                                        <div className="inline-dropdown-container position-relative d-inline-block">
-                                                            <Form.Control
-                                                                type="text"
-                                                                className="inline-input"
-                                                                placeholder="Enter text"
-                                                                ref={industriesRef}
-                                                                // value={row.areaOfEducation}
-                                                                // disabled={row.saved}
-                                                                onChange={handlesShorlistedIndustries}
-                                                                onBlur={handleClosecomboIndustry}
-                                                            />
-                                                            {shorlistedIndustries?.length > 0 ? (
-                                                                <Dropdown show={true} >
-                                                                    <Dropdown.Menu className="w-100 dropdown_ctm">
-                                                                        <div class={`${shorlistedIndustries.length ? 'droplistmulti' : ''}`}>
-                                                                            {shorlistedIndustries.map((option, idx) => (
-                                                                                <Dropdown.Item
-                                                                                    key={idx}
-                                                                                    onClick={(e) =>
-                                                                                        handleSelectShortlistIndustries(option)
-                                                                                    }
-                                                                                >
-                                                                                    {option?.industry_name}
-                                                                                </Dropdown.Item>
-                                                                            ))}
-                                                                        </div>
-                                                                    </Dropdown.Menu>
-                                                                </Dropdown>
-                                                            ) : ('')}
-                                                        </div>
-                                                    </div>
-                                                    <span className="required_text">
-                                                        Add a comprehensive list as this can significantly
-                                                        impact applicant shortlisting
-                                                    </span>
-                                                </Form.Group>
-                                            )}
+                                                            <div className="tagarea p-2 position-relative">
+                                                                {IndustriesBadges?.map((badge, index) => (
+                                                                    <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
+                                                                        {badge?.industry_name}
+                                                                        <button
+                                                                            className="btn close_tag"
+                                                                            style={{ cursor: "pointer" }}
+                                                                            onClick={() => handleRemoveIndustriesBadge(index)}
+                                                                        >
+                                                                            <i className="fa fa-close ms-1"></i>
+                                                                        </button>
+                                                                    </Badge>
+                                                                ))}
+                                                                <div className="inline-dropdown-container position-relative d-inline-block">
+                                                                    <Form.Control
+                                                                        type="text"
+                                                                        className="inline-input"
+                                                                        placeholder="Enter text"
+                                                                        ref={industriesRef}
+                                                                        // value={row.areaOfEducation}
+                                                                        // disabled={row.saved}
+                                                                        onChange={handlesShorlistedIndustries}
+                                                                        onBlur={handleClosecomboIndustry}
+                                                                    />
+                                                                    {shorlistedIndustries?.length > 0 ? (
+                                                                        <Dropdown show={true} >
+                                                                            <Dropdown.Menu className="w-100 dropdown_ctm">
+                                                                                <div class={`${shorlistedIndustries.length ? 'droplistmulti' : ''}`}>
+                                                                                    {shorlistedIndustries.map((option, idx) => (
+                                                                                        <Dropdown.Item
+                                                                                            key={idx}
+                                                                                            onClick={(e) =>
+                                                                                                handleSelectShortlistIndustries(option)
+                                                                                            }
+                                                                                        >
+                                                                                            {option?.industry_name}
+                                                                                        </Dropdown.Item>
+                                                                                    ))}
+                                                                                </div>
+                                                                            </Dropdown.Menu>
+                                                                        </Dropdown>
+                                                                    ) : ('')}
+                                                                </div>
+                                                            </div>
+                                                            <span className="required_text">
+                                                                Add a comprehensive list as this can significantly
+                                                                impact applicant shortlisting
+                                                            </span>
+                                                        </Form.Group>
+                                                    )}
 
-                                            {isHideRestrictedRoles && (
-                                                <Form.Group
-                                                    className="mb-3"
-                                                    controlId="exampleForm.ControlTextarea1"
-                                                >
-                                                    <Form.Label className="sm-label">
-                                                        Restrict Roles
-                                                    </Form.Label>
+                                                    {isHideRestrictedRoles && (
+                                                        <Form.Group
+                                                            className="mb-3"
+                                                            controlId="exampleForm.ControlTextarea1"
+                                                        >
+                                                            <Form.Label className="sm-label">
+                                                                Restrict Roles
+                                                            </Form.Label>
 
-                                                    {/* <div className="tagarea p-2">
+                                                            {/* <div className="tagarea p-2">
                                                         {restrictedRoleBadges.map((badge, index) => (
                                                             <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
                                                                 {badge?.is_like_name}
@@ -2488,218 +2492,218 @@ const UpdateJobsRevised = ({
                                                             </div>
                                                         )}
                                                     </div> */}
-                                                    <div className="tagarea p-2 position-relative">
-                                                        {restrictedRoleBadges?.map((badge, index) => (
-                                                            <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
-                                                                {badge?.is_like_name}
-                                                                <button
-                                                                    className="btn close_tag"
-                                                                    style={{ cursor: "pointer" }}
-                                                                    onClick={() => handleRemoveRoleBadge(index)}
-                                                                >
-                                                                    <i className="fa fa-close ms-1"></i>
-                                                                </button>
-                                                            </Badge>
+                                                            <div className="tagarea p-2 position-relative">
+                                                                {restrictedRoleBadges?.map((badge, index) => (
+                                                                    <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
+                                                                        {badge?.is_like_name}
+                                                                        <button
+                                                                            className="btn close_tag"
+                                                                            style={{ cursor: "pointer" }}
+                                                                            onClick={() => handleRemoveRoleBadge(index)}
+                                                                        >
+                                                                            <i className="fa fa-close ms-1"></i>
+                                                                        </button>
+                                                                    </Badge>
+                                                                ))}
+                                                                <div className="inline-dropdown-container position-relative d-inline-block">
+                                                                    <Form.Control
+                                                                        type="text"
+                                                                        className="inline-input"
+                                                                        placeholder="Enter text"
+                                                                        ref={roleRef}
+                                                                        // value={row.areaOfEducation}
+                                                                        // disabled={row.saved}
+                                                                        onChange={isLikeHandleRole}
+                                                                        onBlur={handleClosecomboRole}
+                                                                    />
+                                                                    {restrictedRole?.length > 0 ? (
+                                                                        <Dropdown show={true} >
+                                                                            <Dropdown.Menu className="w-100 dropdown_ctm">
+                                                                                <div class={`${restrictedRole.length ? 'droplistmulti' : ''}`}>
+                                                                                    {restrictedRole.map((option, idx) => (
+                                                                                        <Dropdown.Item
+                                                                                            key={idx}
+                                                                                            onClick={(e) =>
+                                                                                                handleSelectRestrictedRole(option)
+                                                                                            }
+                                                                                        >
+                                                                                            {option?.is_like_name}
+                                                                                        </Dropdown.Item>
+                                                                                    ))}
+                                                                                </div>
+                                                                            </Dropdown.Menu>
+                                                                        </Dropdown>
+                                                                    ) : ('')}
+                                                                </div>
+                                                            </div>
+
+                                                            <span className="required_text">
+                                                                Please add multiple versions of the role and multiple
+                                                                roles that can ensure you do not exclude any deserving
+                                                                applicants
+                                                            </span>
+                                                        </Form.Group>
+                                                    )}
+                                                </Form>
+
+                                                <div className="accordion_footer">
+                                                    <Form>
+                                                        {["checkbox"].map((type) => (
+                                                            <div key={`inline-${type}`} className="me-3">
+                                                                <Form.Check
+                                                                    inline
+                                                                    label="Restrict Industries"
+                                                                    name="restricted_industries"
+                                                                    type={type}
+                                                                    onChange={(e) => {
+                                                                        handleFormData(e);
+                                                                        setIsHideIndustries(!ishideIndustries);
+                                                                    }}
+                                                                    checked={ishideIndustries ? true : false}
+                                                                    id={`inline-${type}-1`}
+                                                                />
+
+                                                                <Form.Check
+                                                                    inline
+                                                                    label="Define Current Role"
+                                                                    name="define_current_role"
+                                                                    type={type}
+                                                                    onChange={(e) => {
+                                                                        handleFormData(e);
+                                                                        setIsHideRestrictedRoles(!isHideRestrictedRoles);
+                                                                    }}
+                                                                    checked={isHideRestrictedRoles ? true : false}
+                                                                    id={`inline-${type}-2`}
+                                                                />
+                                                            </div>
                                                         ))}
-                                                        <div className="inline-dropdown-container position-relative d-inline-block">
-                                                            <Form.Control
-                                                                type="text"
-                                                                className="inline-input"
-                                                                placeholder="Enter text"
-                                                                ref={roleRef}
-                                                                // value={row.areaOfEducation}
-                                                                // disabled={row.saved}
-                                                                onChange={isLikeHandleRole}
-                                                                onBlur={handleClosecomboRole}
-                                                            />
-                                                            {restrictedRole?.length > 0 ? (
-                                                                <Dropdown show={true} >
-                                                                    <Dropdown.Menu className="w-100 dropdown_ctm">
-                                                                        <div class={`${restrictedRole.length ? 'droplistmulti' : ''}`}>
-                                                                            {restrictedRole.map((option, idx) => (
-                                                                                <Dropdown.Item
-                                                                                    key={idx}
-                                                                                    onClick={(e) =>
-                                                                                        handleSelectRestrictedRole(option)
-                                                                                    }
-                                                                                >
-                                                                                    {option?.is_like_name}
-                                                                                </Dropdown.Item>
-                                                                            ))}
-                                                                        </div>
-                                                                    </Dropdown.Menu>
-                                                                </Dropdown>
-                                                            ) : ('')}
-                                                        </div>
-                                                    </div>
+                                                    </Form>
 
-                                                    <span className="required_text">
-                                                        Please add multiple versions of the role and multiple
-                                                        roles that can ensure you do not exclude any deserving
-                                                        applicants
+                                                    <button
+                                                        type="button"
+                                                        // onClick={handleCreateForm}
+                                                        class="btn btn-lightgray"
+                                                        onClick={handleNext}
+                                                    >
+                                                        Next
+                                                    </button>
+                                                </div>
+                                            </Accordion.Body>
+                                        </Accordion.Item>
+                                        <Accordion.Item
+                                            eventKey="4"
+                                            className="accd_child"
+                                            id="item_Target"
+                                        >
+                                            <Accordion.Header onClick={() => handleOpenStep("4")}>
+                                                {/* Target Hire Date{" "} */}
+                                                <span>Target Hire Date
+                                                    {!openStep.includes('4') && <small className="text-muted"><i>Explore Buy-Out Option</i></small>}
+                                                </span>
+                                                {importantFlag.targethiredate ? (
+                                                    <img src={flagFill} className="flag_icon" onClick={(e) => removeImportantFlag(e, '4')} />
+                                                ) : (
+                                                    <img src={simpleFlag} className="flag_icon" onClick={(e) => handleImportantFlag(e, '4')} />
+                                                )}
+                                                {!openStep.includes('4') && (
+                                                    <span className="acheade_right">
+                                                        {updateFormData?.immediate_hiring ? 'Immediate Hiring' : `Targate Hire Date  ${updateFormData?.targate_hire_date}`}
                                                     </span>
-                                                </Form.Group>
-                                            )}
-                                        </Form>
-
-                                        <div className="accordion_footer">
-                                            <Form>
-                                                {["checkbox"].map((type) => (
-                                                    <div key={`inline-${type}`} className="me-3">
-                                                        <Form.Check
-                                                            inline
-                                                            label="Restrict Industries"
-                                                            name="restricted_industries"
-                                                            type={type}
-                                                            onChange={(e) => {
-                                                                handleFormData(e);
-                                                                setIsHideIndustries(!ishideIndustries);
-                                                            }}
-                                                            checked={ishideIndustries ? true : false}
-                                                            id={`inline-${type}-1`}
-                                                        />
-
-                                                        <Form.Check
-                                                            inline
-                                                            label="Define Current Role"
-                                                            name="define_current_role"
-                                                            type={type}
-                                                            onChange={(e) => {
-                                                                handleFormData(e);
-                                                                setIsHideRestrictedRoles(!isHideRestrictedRoles);
-                                                            }}
-                                                            checked={isHideRestrictedRoles ? true : false}
-                                                            id={`inline-${type}-2`}
-                                                        />
-                                                    </div>
-                                                ))}
-                                            </Form>
-
-                                            <button
-                                                type="button"
-                                                // onClick={handleCreateForm}
-                                                class="btn btn-lightgray"
-                                                onClick={handleNext}
-                                            >
-                                                Next
-                                            </button>
-                                        </div>
-                                    </Accordion.Body>
-                                </Accordion.Item>
-                                <Accordion.Item
-                                    eventKey="4"
-                                    className="accd_child"
-                                    id="item_Target"
-                                >
-                                    <Accordion.Header onClick={() => handleOpenStep("4")}>
-                                        {/* Target Hire Date{" "} */}
-                                        <span>Target Hire Date
-                                            {!openStep.includes('4') && <small className="text-muted"><i>Explore Buy-Out Option</i></small>}
-                                        </span>
-                                        {importantFlag.targethiredate ? (
-                                            <img src={flagFill} className="flag_icon" onClick={(e) => removeImportantFlag(e, '4')} />
-                                        ) : (
-                                            <img src={simpleFlag} className="flag_icon" onClick={(e) => handleImportantFlag(e, '4')} />
-                                        )}
-                                        {!openStep.includes('4') && (
-                                            <span className="acheade_right">
-                                                {updateFormData?.immediate_hiring ? 'Immediate Hiring' : `Targate Hire Date  ${updateFormData?.targate_hire_date}`}
-                                            </span>
-                                        )}
-                                    </Accordion.Header>
-                                    <Accordion.Body ref={(el) => (sectionRefs.current['4'] = el)}>
-                                        <Row className="align-items-center">
-                                            <Form.Group
-                                                className="mb-3 col-md-4"
-                                                controlId="exampleForm.ControlInput1"
-                                            >
-                                                <Form.Control
-                                                    name="targate_hire_date"
-                                                    // disabled={isDisabledTarget ? true : false}
-                                                    onChange={handleFormData}
-                                                    type="date"
-                                                    className="sm-fcontrol"
-                                                    value={updateFormData?.targate_hire_date}
-                                                    placeholder="DD/MM/YYYY"
-                                                    min={new Date().toISOString().split("T")[0]}
-                                                />
-                                            </Form.Group>
-                                        </Row>
-                                        <div className="accordion_footer">
-                                            <Form>
-                                                {["checkbox"].map((type) => (
-                                                    <div key={`inline-${type}`} className="me-3">
-                                                        <Form.Check
-                                                            inline
-                                                            label="Immediate Hiring"
-                                                            name="immediate_hiring"
-                                                            onChange={(e) => {
-                                                                handleFormData(e);
-                                                                setIsDisabledTarget(!isDisabledTarget);
-                                                            }}
-                                                            type={type}
-                                                            checked={isDisabledTarget ? true : false}
-                                                            id={`inline-${type}-1`}
-                                                        />
-                                                        <Form.Check
-                                                            inline
-                                                            label="Explore Buy-Out Option"
+                                                )}
+                                            </Accordion.Header>
+                                            <Accordion.Body ref={(el) => (sectionRefs.current['4'] = el)}>
+                                                <Row className="align-items-center">
+                                                    <Form.Group
+                                                        className="mb-3 col-md-4"
+                                                        controlId="exampleForm.ControlInput1"
+                                                    >
+                                                        <Form.Control
+                                                            name="targate_hire_date"
+                                                            // disabled={isDisabledTarget ? true : false}
                                                             onChange={handleFormData}
-                                                            name="explore_buy_out_option"
-                                                            type={type}
-                                                            id={`inline-${type}-2`}
-                                                            checked={updateFormData?.explore_buy_out_option}
+                                                            type="date"
+                                                            className="sm-fcontrol"
+                                                            value={updateFormData?.targate_hire_date}
+                                                            placeholder="DD/MM/YYYY"
+                                                            min={new Date().toISOString().split("T")[0]}
                                                         />
-                                                    </div>
-                                                ))}
-                                            </Form>
-                                            <button
-                                                type="button"
-                                                // onClick={handleCreateForm}
-                                                class="btn btn-lightgray"
-                                                onClick={handleNext}
-                                            >
-                                                Next
-                                            </button>
-                                        </div>
-                                    </Accordion.Body>
-                                </Accordion.Item>
-                                <Accordion.Item
-                                    eventKey="5"
-                                    className="accd_child"
-                                    id="item_lang"
-                                >
-                                    <Accordion.Header onClick={() => handleOpenStep("5")}>
-                                        Language{" "}
-                                        {importantFlag.language ? (
-                                            <img src={flagFill} className="flag_icon" onClick={(e) => removeImportantFlag(e, '5')} />
-                                        ) : (
-                                            <img src={simpleFlag} className="flag_icon" onClick={(e) => handleImportantFlag(e, '5')} />
-                                        )}
-                                        {!openStep.includes('5') && (
-                                            <span className="acheade_right">
-                                                <img src={messageIcon} />&nbsp;&nbsp;
-                                                {spokenLanguageBadges?.map((cv, index) => (
-                                                    <>{cv?.language_name}{index !== spokenLanguageBadges.length - 1 && ", "}</>
-                                                ))}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                <img src={pencilIcon} />&nbsp;&nbsp;
-                                                {rdnwBadges?.map((cv, index) => (
-                                                    <>{cv?.language_name}{index !== rdnwBadges.length - 1 && ", "}</>
-                                                ))}
-                                            </span>
-                                        )}
-                                    </Accordion.Header>
-                                    <Accordion.Body ref={(el) => (sectionRefs.current['5'] = el)}>
-                                        {isSpecificLanguareRequired && (
-                                            <Form className="row">
-                                                <Form.Group
-                                                    className="mb-3 col-md-6"
-                                                    controlId="exampleForm.ControlTextarea1"
-                                                >
-                                                    <Form.Label className="sm-label">
-                                                        Spoken Language
-                                                    </Form.Label>
-                                                    {/* <div className="tagarea p-2">
+                                                    </Form.Group>
+                                                </Row>
+                                                <div className="accordion_footer">
+                                                    <Form>
+                                                        {["checkbox"].map((type) => (
+                                                            <div key={`inline-${type}`} className="me-3">
+                                                                <Form.Check
+                                                                    inline
+                                                                    label="Immediate Hiring"
+                                                                    name="immediate_hiring"
+                                                                    onChange={(e) => {
+                                                                        handleFormData(e);
+                                                                        setIsDisabledTarget(!isDisabledTarget);
+                                                                    }}
+                                                                    type={type}
+                                                                    checked={isDisabledTarget ? true : false}
+                                                                    id={`inline-${type}-1`}
+                                                                />
+                                                                <Form.Check
+                                                                    inline
+                                                                    label="Explore Buy-Out Option"
+                                                                    onChange={handleFormData}
+                                                                    name="explore_buy_out_option"
+                                                                    type={type}
+                                                                    id={`inline-${type}-2`}
+                                                                    checked={updateFormData?.explore_buy_out_option}
+                                                                />
+                                                            </div>
+                                                        ))}
+                                                    </Form>
+                                                    <button
+                                                        type="button"
+                                                        // onClick={handleCreateForm}
+                                                        class="btn btn-lightgray"
+                                                        onClick={handleNext}
+                                                    >
+                                                        Next
+                                                    </button>
+                                                </div>
+                                            </Accordion.Body>
+                                        </Accordion.Item>
+                                        <Accordion.Item
+                                            eventKey="5"
+                                            className="accd_child"
+                                            id="item_lang"
+                                        >
+                                            <Accordion.Header onClick={() => handleOpenStep("5")}>
+                                                Language{" "}
+                                                {importantFlag.language ? (
+                                                    <img src={flagFill} className="flag_icon" onClick={(e) => removeImportantFlag(e, '5')} />
+                                                ) : (
+                                                    <img src={simpleFlag} className="flag_icon" onClick={(e) => handleImportantFlag(e, '5')} />
+                                                )}
+                                                {!openStep.includes('5') && (
+                                                    <span className="acheade_right">
+                                                        <img src={messageIcon} />&nbsp;&nbsp;
+                                                        {spokenLanguageBadges?.map((cv, index) => (
+                                                            <>{cv?.language_name}{index !== spokenLanguageBadges.length - 1 && ", "}</>
+                                                        ))}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        <img src={pencilIcon} />&nbsp;&nbsp;
+                                                        {rdnwBadges?.map((cv, index) => (
+                                                            <>{cv?.language_name}{index !== rdnwBadges.length - 1 && ", "}</>
+                                                        ))}
+                                                    </span>
+                                                )}
+                                            </Accordion.Header>
+                                            <Accordion.Body ref={(el) => (sectionRefs.current['5'] = el)}>
+                                                {isSpecificLanguareRequired && (
+                                                    <Form className="row">
+                                                        <Form.Group
+                                                            className="mb-3 col-md-6"
+                                                            controlId="exampleForm.ControlTextarea1"
+                                                        >
+                                                            <Form.Label className="sm-label">
+                                                                Spoken Language
+                                                            </Form.Label>
+                                                            {/* <div className="tagarea p-2">
                                                         {spokenLanguageBadges.map((badge, index) => (
                                                             <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
                                                                 {badge?.language_name}
@@ -2726,64 +2730,64 @@ const UpdateJobsRevised = ({
                                                             }}
                                                         />
                                                     </div> */}
-                                                    <div className="tagarea p-2 position-relative">
-                                                        {spokenLanguageBadges?.map((badge, index) => (
-                                                            <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
-                                                                {badge?.language_name}
-                                                                <button
-                                                                    className="btn close_tag"
-                                                                    style={{ cursor: "pointer" }}
-                                                                    onClick={() =>
-                                                                        handleRemoveSpokenLanguageBadge(index)
-                                                                    }
-                                                                >
-                                                                    <i className="fa fa-close ms-1"></i>
-                                                                </button>
-                                                            </Badge>
-                                                        ))}
-                                                        <div className="inline-dropdown-container position-relative d-inline-block">
-                                                            <Form.Control
-                                                                type="text"
-                                                                className="inline-input"
-                                                                placeholder="Enter text"
-                                                                ref={spokenRef}
-                                                                // value={row.areaOfEducation}
-                                                                // disabled={row.saved}
-                                                                onChange={(e) => handleWaSlanguages(e, "spoken")}
-                                                                onBlur={(e) => handleClosecomboLang(e, "spoken")}
-                                                            />
-                                                            {spokenLanguage?.length > 0 ? (
-                                                                <Dropdown show={true} >
-                                                                    <Dropdown.Menu className="w-100 dropdown_ctm">
-                                                                        <div class={`${spokenLanguage.length ? 'droplistmulti' : ''}`}>
-                                                                            {spokenLanguage.map((option, idx) => (
-                                                                                <Dropdown.Item
-                                                                                    key={idx}
-                                                                                    onClick={(e) =>
-                                                                                        handleSelectSpokenLang(option)
-                                                                                    }
-                                                                                >
-                                                                                    {option?.language_name}
-                                                                                </Dropdown.Item>
-                                                                            ))}
-                                                                        </div>
-                                                                    </Dropdown.Menu>
-                                                                </Dropdown>
-                                                            ) : ('')}
-                                                        </div>
-                                                    </div>
-                                                    <span className="required_text">
-                                                        Select all spoken languages
-                                                    </span>
-                                                </Form.Group>
-                                                <Form.Group
-                                                    className="mb-3 col-md-6"
-                                                    controlId="exampleForm.ControlTextarea1"
-                                                >
-                                                    <Form.Label className="sm-label">
-                                                        Written and Reading Language
-                                                    </Form.Label>
-                                                    {/* <div className="tagarea p-2">
+                                                            <div className="tagarea p-2 position-relative">
+                                                                {spokenLanguageBadges?.map((badge, index) => (
+                                                                    <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
+                                                                        {badge?.language_name}
+                                                                        <button
+                                                                            className="btn close_tag"
+                                                                            style={{ cursor: "pointer" }}
+                                                                            onClick={() =>
+                                                                                handleRemoveSpokenLanguageBadge(index)
+                                                                            }
+                                                                        >
+                                                                            <i className="fa fa-close ms-1"></i>
+                                                                        </button>
+                                                                    </Badge>
+                                                                ))}
+                                                                <div className="inline-dropdown-container position-relative d-inline-block">
+                                                                    <Form.Control
+                                                                        type="text"
+                                                                        className="inline-input"
+                                                                        placeholder="Enter text"
+                                                                        ref={spokenRef}
+                                                                        // value={row.areaOfEducation}
+                                                                        // disabled={row.saved}
+                                                                        onChange={(e) => handleWaSlanguages(e, "spoken")}
+                                                                        onBlur={(e) => handleClosecomboLang(e, "spoken")}
+                                                                    />
+                                                                    {spokenLanguage?.length > 0 ? (
+                                                                        <Dropdown show={true} >
+                                                                            <Dropdown.Menu className="w-100 dropdown_ctm">
+                                                                                <div class={`${spokenLanguage.length ? 'droplistmulti' : ''}`}>
+                                                                                    {spokenLanguage.map((option, idx) => (
+                                                                                        <Dropdown.Item
+                                                                                            key={idx}
+                                                                                            onClick={(e) =>
+                                                                                                handleSelectSpokenLang(option)
+                                                                                            }
+                                                                                        >
+                                                                                            {option?.language_name}
+                                                                                        </Dropdown.Item>
+                                                                                    ))}
+                                                                                </div>
+                                                                            </Dropdown.Menu>
+                                                                        </Dropdown>
+                                                                    ) : ('')}
+                                                                </div>
+                                                            </div>
+                                                            <span className="required_text">
+                                                                Select all spoken languages
+                                                            </span>
+                                                        </Form.Group>
+                                                        <Form.Group
+                                                            className="mb-3 col-md-6"
+                                                            controlId="exampleForm.ControlTextarea1"
+                                                        >
+                                                            <Form.Label className="sm-label">
+                                                                Written and Reading Language
+                                                            </Form.Label>
+                                                            {/* <div className="tagarea p-2">
                                                         {rdnwBadges.map((badge, index) => (
                                                             <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
                                                                 {badge?.language_name}
@@ -2811,114 +2815,114 @@ const UpdateJobsRevised = ({
                                                         />
                                                     </div> */}
 
-                                                    <div className="tagarea p-2 position-relative">
-                                                        {rdnwBadges.map((badge, index) => (
-                                                            <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
-                                                                {badge?.language_name}
-                                                                <button
-                                                                    className="btn close_tag"
-                                                                    style={{ cursor: "pointer" }}
-                                                                    onClick={() =>
-                                                                        handleRemoveReadAndWriteLanguageBadge(index)
-                                                                    }
-                                                                >
-                                                                    <i className="fa fa-close ms-1"></i>
-                                                                </button>
-                                                            </Badge>
+                                                            <div className="tagarea p-2 position-relative">
+                                                                {rdnwBadges.map((badge, index) => (
+                                                                    <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
+                                                                        {badge?.language_name}
+                                                                        <button
+                                                                            className="btn close_tag"
+                                                                            style={{ cursor: "pointer" }}
+                                                                            onClick={() =>
+                                                                                handleRemoveReadAndWriteLanguageBadge(index)
+                                                                            }
+                                                                        >
+                                                                            <i className="fa fa-close ms-1"></i>
+                                                                        </button>
+                                                                    </Badge>
+                                                                ))}
+                                                                <div className="inline-dropdown-container position-relative d-inline-block">
+                                                                    <Form.Control
+                                                                        type="text"
+                                                                        className="inline-input"
+                                                                        placeholder="Enter text"
+                                                                        ref={writtenRef}
+                                                                        // value={row.areaOfEducation}
+                                                                        // disabled={row.saved}
+                                                                        onChange={(e) => handleWaSlanguages(e, "rdnw")}
+                                                                        onBlur={(e) => handleClosecomboLang(e, "rdnw")}
+                                                                    />
+                                                                    {writtenLanguage?.length > 0 ? (
+                                                                        <Dropdown show={true} >
+                                                                            <Dropdown.Menu className="w-100 dropdown_ctm">
+                                                                                <div class={`${writtenLanguage.length ? 'droplistmulti' : ''}`}>
+                                                                                    {writtenLanguage.map((option, idx) => (
+                                                                                        <Dropdown.Item
+                                                                                            key={idx}
+                                                                                            onClick={(e) =>
+                                                                                                handleSelectWrittenLang(option)
+                                                                                            }
+                                                                                        >
+                                                                                            {option?.language_name}
+                                                                                        </Dropdown.Item>
+                                                                                    ))}
+                                                                                </div>
+                                                                            </Dropdown.Menu>
+                                                                        </Dropdown>
+                                                                    ) : ('')}
+                                                                </div>
+                                                            </div>
+                                                            <span className="required_text">
+                                                                Select all written and reading languages
+                                                            </span>
+                                                        </Form.Group>
+                                                    </Form>
+                                                )}
+                                                <div className="accordion_footer">
+                                                    <Form>
+                                                        {["checkbox"].map((type) => (
+                                                            <div key={`inline-${type}`} className="me-3">
+                                                                <Form.Check
+                                                                    inline
+                                                                    label="No Specific Language Requirements"
+                                                                    name="no_specific_language_require"
+                                                                    type={type}
+                                                                    onChange={(e) => {
+                                                                        setIsSpecificLanguareRequired(
+                                                                            !isSpecificLanguareRequired
+                                                                        );
+                                                                        handleFormData(e);
+                                                                    }}
+                                                                    id={`inline-${type}-1`}
+                                                                    checked={updateFormData?.no_specific_language_require}
+                                                                />
+                                                            </div>
                                                         ))}
-                                                        <div className="inline-dropdown-container position-relative d-inline-block">
-                                                            <Form.Control
-                                                                type="text"
-                                                                className="inline-input"
-                                                                placeholder="Enter text"
-                                                                ref={writtenRef}
-                                                                // value={row.areaOfEducation}
-                                                                // disabled={row.saved}
-                                                                onChange={(e) => handleWaSlanguages(e, "rdnw")}
-                                                                onBlur={(e) => handleClosecomboLang(e, "rdnw")}
-                                                            />
-                                                            {writtenLanguage?.length > 0 ? (
-                                                                <Dropdown show={true} >
-                                                                    <Dropdown.Menu className="w-100 dropdown_ctm">
-                                                                        <div class={`${writtenLanguage.length ? 'droplistmulti' : ''}`}>
-                                                                            {writtenLanguage.map((option, idx) => (
-                                                                                <Dropdown.Item
-                                                                                    key={idx}
-                                                                                    onClick={(e) =>
-                                                                                        handleSelectWrittenLang(option)
-                                                                                    }
-                                                                                >
-                                                                                    {option?.language_name}
-                                                                                </Dropdown.Item>
-                                                                            ))}
-                                                                        </div>
-                                                                    </Dropdown.Menu>
-                                                                </Dropdown>
-                                                            ) : ('')}
-                                                        </div>
-                                                    </div>
-                                                    <span className="required_text">
-                                                        Select all written and reading languages
-                                                    </span>
-                                                </Form.Group>
-                                            </Form>
-                                        )}
-                                        <div className="accordion_footer">
-                                            <Form>
-                                                {["checkbox"].map((type) => (
-                                                    <div key={`inline-${type}`} className="me-3">
-                                                        <Form.Check
-                                                            inline
-                                                            label="No Specific Language Requirements"
-                                                            name="no_specific_language_require"
-                                                            type={type}
-                                                            onChange={(e) => {
-                                                                setIsSpecificLanguareRequired(
-                                                                    !isSpecificLanguareRequired
-                                                                );
-                                                                handleFormData(e);
-                                                            }}
-                                                            id={`inline-${type}-1`}
-                                                            checked={updateFormData?.no_specific_language_require}
-                                                        />
-                                                    </div>
-                                                ))}
-                                            </Form>
-                                            <button
-                                                type="button"
-                                                // onClick={handleCreateForm}
-                                                class="btn btn-lightgray"
-                                                onClick={handleNext}
-                                            >
-                                                Next
-                                            </button>
-                                        </div>
-                                    </Accordion.Body>
-                                </Accordion.Item>
-                                <Accordion.Item
-                                    eventKey="6"
-                                    className="accd_child"
-                                    id="item_Geog"
-                                >
-                                    <Accordion.Header onClick={() => handleOpenStep("6")}>
-                                        Geography{" "}
-                                        {importantFlag.geography ? (
-                                            <img src={flagFill} className="flag_icon" onClick={(e) => removeImportantFlag(e, '6')} />
-                                        ) : (
-                                            <img src={simpleFlag} className="flag_icon" onClick={(e) => handleImportantFlag(e, '6')} />
-                                        )}
-                                    </Accordion.Header>
-                                    <Accordion.Body ref={(el) => (sectionRefs.current['6'] = el)}>
-                                        {isHideLocation && (
-                                            <Form>
-                                                <Form.Group
-                                                    className="mb-3"
-                                                    controlId="exampleForm.ControlTextarea1"
-                                                >
-                                                    <Form.Label className="sm-label">
-                                                        Preferred States / Cities / Towns
-                                                    </Form.Label>
-                                                    {/* <div className="tagarea p-2">
+                                                    </Form>
+                                                    <button
+                                                        type="button"
+                                                        // onClick={handleCreateForm}
+                                                        class="btn btn-lightgray"
+                                                        onClick={handleNext}
+                                                    >
+                                                        Next
+                                                    </button>
+                                                </div>
+                                            </Accordion.Body>
+                                        </Accordion.Item>
+                                        <Accordion.Item
+                                            eventKey="6"
+                                            className="accd_child"
+                                            id="item_Geog"
+                                        >
+                                            <Accordion.Header onClick={() => handleOpenStep("6")}>
+                                                Geography{" "}
+                                                {importantFlag.geography ? (
+                                                    <img src={flagFill} className="flag_icon" onClick={(e) => removeImportantFlag(e, '6')} />
+                                                ) : (
+                                                    <img src={simpleFlag} className="flag_icon" onClick={(e) => handleImportantFlag(e, '6')} />
+                                                )}
+                                            </Accordion.Header>
+                                            <Accordion.Body ref={(el) => (sectionRefs.current['6'] = el)}>
+                                                {isHideLocation && (
+                                                    <Form>
+                                                        <Form.Group
+                                                            className="mb-3"
+                                                            controlId="exampleForm.ControlTextarea1"
+                                                        >
+                                                            <Form.Label className="sm-label">
+                                                                Preferred States / Cities / Towns
+                                                            </Form.Label>
+                                                            {/* <div className="tagarea p-2">
                                                         {locationBadges.map((badge, index) => (
                                                             <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
                                                                 {badge?.location_name}
@@ -2941,191 +2945,195 @@ const UpdateJobsRevised = ({
                                                             onKeyDown={handleKeyPressForLocation}
                                                         />
                                                     </div> */}
-                                                    {/* <--------workingbaba-------? */}
-                                                    <div className="tagarea p-2 position-relative">
-                                                        {locationBadges.map((badge, index) => (
-                                                            <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
-                                                                {badge?.location_name}
-                                                                <button
-                                                                    className="btn close_tag"
-                                                                    style={{ cursor: "pointer" }}
-                                                                    onClick={() => handleRemoveLocationBadge(index)}
-                                                                >
-                                                                    <i className="fa fa-close ms-1"></i>
-                                                                </button>
-                                                            </Badge>
+                                                            {/* <--------workingbaba-------? */}
+                                                            <div className="tagarea p-2 position-relative">
+                                                                {locationBadges.map((badge, index) => (
+                                                                    <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
+                                                                        {badge?.location_name}
+                                                                        <button
+                                                                            className="btn close_tag"
+                                                                            style={{ cursor: "pointer" }}
+                                                                            onClick={() => handleRemoveLocationBadge(index)}
+                                                                        >
+                                                                            <i className="fa fa-close ms-1"></i>
+                                                                        </button>
+                                                                    </Badge>
+                                                                ))}
+                                                                <div className="inline-dropdown-container position-relative d-inline-block">
+                                                                    <Form.Control
+                                                                        type="text"
+                                                                        className="inline-input"
+                                                                        placeholder="Enter text"
+                                                                        ref={locationRef}
+                                                                        // value={row.areaOfEducation}
+                                                                        // disabled={row.saved}
+                                                                        onChange={handleLocationAPIList}
+                                                                        onBlur={handleCloseComboLocation}
+                                                                    />
+                                                                    {locationList?.length > 0 ? (
+                                                                        <Dropdown show={true} >
+                                                                            <Dropdown.Menu className="w-100 dropdown_ctm">
+                                                                                <div class={`${locationList.length ? 'droplistmulti' : ''}`}>
+                                                                                    {locationList.map((option, idx) => (
+                                                                                        <Dropdown.Item
+                                                                                            key={idx}
+                                                                                            onClick={(e) =>
+                                                                                                handleSelectLocation(option)
+                                                                                            }
+                                                                                        >
+                                                                                            {option?.location_name}
+                                                                                        </Dropdown.Item>
+                                                                                    ))}
+                                                                                </div>
+                                                                            </Dropdown.Menu>
+                                                                        </Dropdown>
+                                                                    ) : ('')}
+                                                                </div>
+                                                            </div>
+                                                            <span className="required_text">
+                                                                Select all relevant locations
+                                                            </span>
+                                                        </Form.Group>
+                                                    </Form>
+                                                )}
+                                                <div className="accordion_footer">
+                                                    <Form>
+                                                        {["checkbox"].map((type) => (
+                                                            <div key={`inline-${type}`} className="me-3">
+                                                                <Form.Check
+                                                                    inline
+                                                                    label="No Specific Location"
+                                                                    name="no_specific_location"
+                                                                    onChange={(e) => {
+                                                                        setIsHideLLocation(!isHideLocation);
+                                                                        handleFormData(e);
+                                                                    }}
+                                                                    type={type}
+                                                                    id={`inline-${type}-1`}
+                                                                    checked={updateFormData?.no_specific_location}
+                                                                />
+                                                                <Form.Check
+                                                                    inline
+                                                                    label="Relocation Expenses Covered"
+                                                                    name="relocation_cost_covered"
+                                                                    type={type}
+                                                                    onChange={handleFormData}
+                                                                    id={`inline-${type}-2`}
+                                                                    checked={updateFormData?.relocation_cost_covered}
+                                                                />
+                                                            </div>
                                                         ))}
-                                                        <div className="inline-dropdown-container position-relative d-inline-block">
-                                                            <Form.Control
-                                                                type="text"
-                                                                className="inline-input"
-                                                                placeholder="Enter text"
-                                                                ref={locationRef}
-                                                                // value={row.areaOfEducation}
-                                                                // disabled={row.saved}
-                                                                onChange={handleLocationAPIList}
-                                                                onBlur={handleCloseComboLocation}
-                                                            />
-                                                            {locationList?.length > 0 ? (
-                                                                <Dropdown show={true} >
-                                                                    <Dropdown.Menu className="w-100 dropdown_ctm">
-                                                                        <div class={`${locationList.length ? 'droplistmulti' : ''}`}>
-                                                                            {locationList.map((option, idx) => (
-                                                                                <Dropdown.Item
-                                                                                    key={idx}
-                                                                                    onClick={(e) =>
-                                                                                        handleSelectLocation(option)
-                                                                                    }
-                                                                                >
-                                                                                    {option?.location_name}
-                                                                                </Dropdown.Item>
-                                                                            ))}
-                                                                        </div>
-                                                                    </Dropdown.Menu>
-                                                                </Dropdown>
-                                                            ) : ('')}
-                                                        </div>
-                                                    </div>
-                                                    <span className="required_text">
-                                                        Select all relevant locations
+                                                    </Form>
+                                                    <button
+                                                        type="button"
+                                                        // onClick={handleCreateForm}
+                                                        class="btn btn-lightgray"
+                                                        onClick={handleNext}
+                                                    >
+                                                        Next
+                                                    </button>
+                                                </div>
+                                            </Accordion.Body>
+                                        </Accordion.Item>
+                                    </>
+                                )}
+                                {parseInt(openStep[0]) < 10 && (
+                                    <>
+                                        <Accordion.Item eventKey="7">
+                                            <Accordion.Header className="bg-lightblue" onClick={() => setOpenStep([])}>
+                                                Skills and Other Requirements
+                                            </Accordion.Header>
+                                            {currentStep !== "7" && (<p className="short_text"> Select Skills and Add at least 1 Custom Question to help you understand your applicants better.</p>)}
+                                            <Accordion.Body>
+                                                <p>
+                                                    In this section, you can add additional optional details
+                                                    such as Skills expected from the ideal candidate and also
+                                                    add some specific questions that will allow you to gain a
+                                                    deeper insight about the candidate.
+                                                    <br />
+                                                    <br />
+                                                    Don’t forget that here too Skills or Questions can be marked
+                                                    as very important [Yellow Flag] or a must have [Red Flag] to
+                                                    indicate the Importance to you.
+                                                </p>
+                                            </Accordion.Body>
+                                        </Accordion.Item>
+                                        <Accordion.Item eventKey="8" className="accd_child">
+                                            <Accordion.Header onClick={() => handleOpenStep("8")}>
+                                                Skills
+                                                <div className="head_actions">
+                                                    <span className="imprt_icon text-primery">
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
                                                     </span>
-                                                </Form.Group>
-                                            </Form>
-                                        )}
-                                        <div className="accordion_footer">
-                                            <Form>
-                                                {["checkbox"].map((type) => (
-                                                    <div key={`inline-${type}`} className="me-3">
-                                                        <Form.Check
-                                                            inline
-                                                            label="No Specific Location"
-                                                            name="no_specific_location"
-                                                            onChange={(e) => {
-                                                                setIsHideLLocation(!isHideLocation);
-                                                                handleFormData(e);
-                                                            }}
-                                                            type={type}
-                                                            id={`inline-${type}-1`}
-                                                            checked={updateFormData?.no_specific_location}
-                                                        />
-                                                        <Form.Check
-                                                            inline
-                                                            label="Relocation Expenses Covered"
-                                                            name="relocation_cost_covered"
-                                                            type={type}
-                                                            onChange={handleFormData}
-                                                            id={`inline-${type}-2`}
-                                                            checked={updateFormData?.relocation_cost_covered}
-                                                        />
-                                                    </div>
-                                                ))}
-                                            </Form>
-                                            <button
-                                                type="button"
-                                                // onClick={handleCreateForm}
-                                                class="btn btn-lightgray"
-                                                onClick={handleNext}
-                                            >
-                                                Next
-                                            </button>
-                                        </div>
-                                    </Accordion.Body>
-                                </Accordion.Item>
-                                <Accordion.Item eventKey="7">
-                                    <Accordion.Header className="bg-lightblue" onClick={() => setOpenStep([])}>
-                                        Skills and Other Requirements
-                                    </Accordion.Header>
-                                    {currentStep !== "7" && (<p className="short_text"> Select Skills and Add at least 1 Custom Question to help you understand your applicants better.</p>)}
-                                    <Accordion.Body>
-                                        <p>
-                                            In this section, you can add additional optional details
-                                            such as Skills expected from the ideal candidate and also
-                                            add some specific questions that will allow you to gain a
-                                            deeper insight about the candidate.
-                                            <br />
-                                            <br />
-                                            Don’t forget that here too Skills or Questions can be marked
-                                            as very important [Yellow Flag] or a must have [Red Flag] to
-                                            indicate the Importance to you.
-                                        </p>
-                                    </Accordion.Body>
-                                </Accordion.Item>
-                                <Accordion.Item eventKey="8" className="accd_child">
-                                    <Accordion.Header onClick={() => handleOpenStep("8")}>
-                                        Skills
-                                        <div className="head_actions">
-                                            <span className="imprt_icon text-primery">
-                                                <i class="fa fa-star" aria-hidden="true"></i>
-                                            </span>
-                                            <span className="imprt_icon">
-                                                <i class="far fa-star" aria-hidden="true"></i>
-                                            </span>
-                                            <span className="imprt_icon">
-                                                <i class="far fa-star" aria-hidden="true"></i>
-                                            </span>
-                                            <span className="count ms-1">1 of 3</span>
-                                        </div>
-                                    </Accordion.Header>
-                                    <Accordion.Body ref={(el) => (sectionRefs.current['8'] = el)}>
-                                        <Row className="skills_seraching">
-                                            <Col md={9}>
-                                                <InputGroup className="defult_serachbox">
-                                                    <Button id="basic-addon1">
-                                                        <svg
-                                                            width="18"
-                                                            height="18"
-                                                            viewBox="0 0 18 18"
-                                                            fill="none"
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                        >
-                                                            <path
-                                                                d="M16.5 16.5L11.5001 11.5M13.1667 7.33333C13.1667 10.555 10.555 13.1667 7.33333 13.1667C4.11167 13.1667 1.5 10.555 1.5 7.33333C1.5 4.11167 4.11167 1.5 7.33333 1.5C10.555 1.5 13.1667 4.11167 13.1667 7.33333Z"
-                                                                stroke="#667085"
-                                                                stroke-width="1.66667"
-                                                                stroke-linecap="round"
-                                                                stroke-linejoin="round"
-                                                            />
-                                                        </svg>
-                                                    </Button>
-                                                    <Form.Control
-                                                        placeholder="Serach"
-                                                        aria-label="Serach"
-                                                        onChange={(e) => {
-                                                            setSkillSearch(e.target.value);
-                                                        }}
-                                                    />
-                                                </InputGroup>
-                                                {showSkillList && skillngroupList.length > 0 && (
-                                                    <div className="ctm_dropdown ct_scrollbar">
-                                                        <ul>
-                                                            {skillngroupList.map((item) => (
-                                                                <li
-                                                                    key={item.skill_group_name}
-                                                                    onClick={() => getSkillGroupDetails(item.uid)}
+                                                    <span className="imprt_icon">
+                                                        <i class="far fa-star" aria-hidden="true"></i>
+                                                    </span>
+                                                    <span className="imprt_icon">
+                                                        <i class="far fa-star" aria-hidden="true"></i>
+                                                    </span>
+                                                    <span className="count ms-1">1 of 3</span>
+                                                </div>
+                                            </Accordion.Header>
+                                            <Accordion.Body ref={(el) => (sectionRefs.current['8'] = el)}>
+                                                <Row className="skills_seraching">
+                                                    <Col md={9}>
+                                                        <InputGroup className="defult_serachbox">
+                                                            <Button id="basic-addon1">
+                                                                <svg
+                                                                    width="18"
+                                                                    height="18"
+                                                                    viewBox="0 0 18 18"
+                                                                    fill="none"
+                                                                    xmlns="http://www.w3.org/2000/svg"
                                                                 >
-                                                                    {item.skill_group_name}
-                                                                </li>
-                                                            ))}
-                                                        </ul>
-                                                    </div>
-                                                )}
-                                                {showSkillList && skillngroupList.length === 0 && (
-                                                    <ul>
-                                                        <li>No data found</li>
-                                                    </ul>
-                                                )}
-                                            </Col>
-                                            <Col md={3}>
-                                                <button
-                                                    type="button"
-                                                    onClick={handleAddSkillGroup}
-                                                    class="btn btn-lightgray w-100"
-                                                >
-                                                    <i className="fa fa-plus me-2"></i>Create Skill Group
-                                                </button>{" "}
-                                            </Col>
-                                        </Row>
-                                        {/* {skillGroupData && (
+                                                                    <path
+                                                                        d="M16.5 16.5L11.5001 11.5M13.1667 7.33333C13.1667 10.555 10.555 13.1667 7.33333 13.1667C4.11167 13.1667 1.5 10.555 1.5 7.33333C1.5 4.11167 4.11167 1.5 7.33333 1.5C10.555 1.5 13.1667 4.11167 13.1667 7.33333Z"
+                                                                        stroke="#667085"
+                                                                        stroke-width="1.66667"
+                                                                        stroke-linecap="round"
+                                                                        stroke-linejoin="round"
+                                                                    />
+                                                                </svg>
+                                                            </Button>
+                                                            <Form.Control
+                                                                placeholder="Serach"
+                                                                aria-label="Serach"
+                                                                onChange={(e) => {
+                                                                    setSkillSearch(e.target.value);
+                                                                }}
+                                                            />
+                                                        </InputGroup>
+                                                        {showSkillList && skillngroupList.length > 0 && (
+                                                            <div className="ctm_dropdown ct_scrollbar">
+                                                                <ul>
+                                                                    {skillngroupList.map((item) => (
+                                                                        <li
+                                                                            key={item.skill_group_name}
+                                                                            onClick={() => getSkillGroupDetails(item.uid)}
+                                                                        >
+                                                                            {item.skill_group_name}
+                                                                        </li>
+                                                                    ))}
+                                                                </ul>
+                                                            </div>
+                                                        )}
+                                                        {showSkillList && skillngroupList.length === 0 && (
+                                                            <ul>
+                                                                <li>No data found</li>
+                                                            </ul>
+                                                        )}
+                                                    </Col>
+                                                    <Col md={3}>
+                                                        <button
+                                                            type="button"
+                                                            onClick={handleAddSkillGroup}
+                                                            class="btn btn-lightgray w-100"
+                                                        >
+                                                            <i className="fa fa-plus me-2"></i>Create Skill Group
+                                                        </button>{" "}
+                                                    </Col>
+                                                </Row>
+                                                {/* {skillGroupData && (
                                             <div className="starttag_box">
                                                 <div className="stagbox_head">
                                                     <h6>{skillGroupData?.skill_group_name}</h6>
@@ -3184,205 +3192,205 @@ const UpdateJobsRevised = ({
                                                 </div>
                                             </div>
                                         )} */}
-                                        {skillError && (
-                                            <p className="text-danger mt-1">
-                                                {skillError}
-                                            </p>
-                                        )}
-                                        {skillGroupData?.length > 0 && (
-                                            skillGroupData?.map((Val, i) => (
-                                                <div className="starttag_box">
-                                                    <div className="stagbox_head">
-                                                        <h6>{Val?.skill_group_name}</h6>
-                                                    </div>
-                                                    <div className="stag_list mt-2">
-                                                        {Val?.group_skill?.length > 0 &&
-                                                            Val?.group_skill?.map((skill, index) => (
-                                                                <span
-                                                                    onClick={(e) => {
-                                                                        handleSelectedSkill(e, skill, i);
-                                                                    }}
-                                                                    className={`stag_item ${SelectSkillsData.some(item => JSON.stringify(item) === JSON.stringify(skill)) ? "active" : ""
-                                                                        }`}
-                                                                >
-                                                                    {skill.skill_name}
-                                                                    <span className={`imprt_icon ${mustHaveSkills.some(item => JSON.stringify(item) === JSON.stringify(skill)) ? "text-primery" : ""} `} onClick={() => handleMustHaveSkill(skill)}>
-                                                                        <i class={`${mustHaveSkills.some(item => JSON.stringify(item) === JSON.stringify(skill)) ? "fa" : "far"}  fa-star`} aria-hidden="true"></i>
+                                                {skillError && (
+                                                    <p className="text-danger mt-1">
+                                                        {skillError}
+                                                    </p>
+                                                )}
+                                                {skillGroupData?.length > 0 && (
+                                                    skillGroupData?.map((Val, i) => (
+                                                        <div className="starttag_box">
+                                                            <div className="stagbox_head">
+                                                                <h6>{Val?.skill_group_name}</h6>
+                                                            </div>
+                                                            <div className="stag_list mt-2">
+                                                                {Val?.group_skill?.length > 0 &&
+                                                                    Val?.group_skill?.map((skill, index) => (
+                                                                        <span
+                                                                            onClick={(e) => {
+                                                                                handleSelectedSkill(e, skill, i);
+                                                                            }}
+                                                                            className={`stag_item ${SelectSkillsData.some(item => JSON.stringify(item) === JSON.stringify(skill)) ? "active" : ""
+                                                                                }`}
+                                                                        >
+                                                                            {skill.skill_name}
+                                                                            <span className={`imprt_icon ${mustHaveSkills.some(item => JSON.stringify(item) === JSON.stringify(skill)) ? "text-primery" : ""} `} onClick={() => handleMustHaveSkill(skill)}>
+                                                                                <i class={`${mustHaveSkills.some(item => JSON.stringify(item) === JSON.stringify(skill)) ? "fa" : "far"}  fa-star`} aria-hidden="true"></i>
+                                                                            </span>
+                                                                        </span>
+                                                                    ))}
+
+                                                                {selectedIndex.includes(Val?.uid) && addSubSkill?.map((item, index) => (
+                                                                    <span
+                                                                        onClick={(e) => {
+                                                                            handleSelectedSkill(e, item, i);
+                                                                        }}
+                                                                        className={`stag_item ${SelectSkillsData.includes(item) ? "active" : ""
+                                                                            }`}
+                                                                    >
+                                                                        <input
+                                                                            onChange={(e) => {
+                                                                                const updatedSkills = addSubSkill.map(
+                                                                                    (skill, i) =>
+                                                                                        i === index
+                                                                                            ? { ...skill, skill_name: e.target.value }
+                                                                                            : skill
+                                                                                );
+                                                                                setAddSubSkill(updatedSkills);
+                                                                            }}
+                                                                            onBlur={() => handleBlur(item.skill_name, Val, index)}
+                                                                        />{" "}
+                                                                        <i
+                                                                            onClick={() => {
+                                                                                hadleDeleteCurrentSkill(index);
+                                                                            }}
+                                                                            className="fa fa-close ms-1 tag_remove"
+                                                                        ></i>
                                                                     </span>
-                                                                </span>
-                                                            ))}
+                                                                ))}
 
-                                                        {selectedIndex.includes(Val?.uid) && addSubSkill?.map((item, index) => (
-                                                            <span
-                                                                onClick={(e) => {
-                                                                    handleSelectedSkill(e, item, i);
-                                                                }}
-                                                                className={`stag_item ${SelectSkillsData.includes(item) ? "active" : ""
-                                                                    }`}
-                                                            >
-                                                                <input
-                                                                    onChange={(e) => {
-                                                                        const updatedSkills = addSubSkill.map(
-                                                                            (skill, i) =>
-                                                                                i === index
-                                                                                    ? { ...skill, skill_name: e.target.value }
-                                                                                    : skill
-                                                                        );
-                                                                        setAddSubSkill(updatedSkills);
-                                                                    }}
-                                                                    onBlur={() => handleBlur(item.skill_name, Val, index)}
-                                                                />{" "}
-                                                                <i
-                                                                    onClick={() => {
-                                                                        hadleDeleteCurrentSkill(index);
-                                                                    }}
-                                                                    className="fa fa-close ms-1 tag_remove"
-                                                                ></i>
-                                                            </span>
-                                                        ))}
-
-                                                        {/* <button
+                                                                {/* <button
                                                             type="button"
                                                             class="btn-light-gray btn btn-primary"
                                                             onClick={() => handlesubSkillAdd(Val?.uid)}
                                                         >
                                                             <i class="fa fa-plus text-primary me-1"></i>Add Skill
                                                         </button> */}
-                                                        <Button
-                                                            className={`${addSubSkill.length > 0 && selectedIndex.includes(Val?.uid) ? 'smbtn-primary' : 'btn-light-gray'}`}
-                                                            onClick={() => handlesubSkillAdd(Val?.uid)}
-                                                        >
-                                                            <i className="fa fa-plus text-primary me-1"></i>Add Skill
-                                                        </Button>
-                                                    </div>
-                                                </div>
-                                            ))
-                                        )}
-                                        {addSkillGroup.map((item, i) => (
-                                            <div className="starttag_box">
-                                                <div className="stagbox_head">
-                                                    <Form.Control
-                                                        placeholder="Add Custom Skill Group"
-                                                        className="sm-fcontrol"
-                                                        onChange={(e) => {
-                                                            setCustomValue(e.target.value);
-                                                        }}
-                                                    />
+                                                                <Button
+                                                                    className={`${addSubSkill.length > 0 && selectedIndex.includes(Val?.uid) ? 'smbtn-primary' : 'btn-light-gray'}`}
+                                                                    onClick={() => handlesubSkillAdd(Val?.uid)}
+                                                                >
+                                                                    <i className="fa fa-plus text-primary me-1"></i>Add Skill
+                                                                </Button>
+                                                            </div>
+                                                        </div>
+                                                    ))
+                                                )}
+                                                {addSkillGroup.map((item, i) => (
+                                                    <div className="starttag_box">
+                                                        <div className="stagbox_head">
+                                                            <Form.Control
+                                                                placeholder="Add Custom Skill Group"
+                                                                className="sm-fcontrol"
+                                                                onChange={(e) => {
+                                                                    setCustomValue(e.target.value);
+                                                                }}
+                                                            />
 
-                                                    <div class="d-flex ms-3">
-                                                        <button
-                                                            type="button"
-                                                            onClick={handleSaveSkillGroup}
-                                                            class="icon-btn"
-                                                        >
-                                                            <i class="far fa-save"></i>
-                                                        </button>
+                                                            <div class="d-flex ms-3">
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={handleSaveSkillGroup}
+                                                                    class="icon-btn"
+                                                                >
+                                                                    <i class="far fa-save"></i>
+                                                                </button>
 
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => {
-                                                                handleDeleteGroup(i);
-                                                            }}
-                                                            class="icon-btn"
-                                                        >
-                                                            <i class="fa fa-close"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                                {/* {addSkillGroup && addSkillGroup[0] && (
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => {
+                                                                        handleDeleteGroup(i);
+                                                                    }}
+                                                                    class="icon-btn"
+                                                                >
+                                                                    <i class="fa fa-close"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        {/* {addSkillGroup && addSkillGroup[0] && (
                                                     <p className="mt-1">
                                                         Add at least 6 individual skills within this skill
                                                         Group
                                                     </p>
                                                 )} */}
-                                                {skillError && (
-                                                    <p className="text-danger mt-1">
-                                                        {skillError}
-                                                    </p>
-                                                )}
-                                                <div className="stag_list mt-2">
-                                                    {selectedIndex.includes(i) && addSubSkill.map((item, index) => (
-                                                        <span
-                                                            onClick={(e) => {
-                                                                handleSelectedSkill(e, item, i);
-                                                            }}
-                                                            className={`stag_item ${SelectSkillsData.includes(item) ? "active" : ""
-                                                                }`}
-                                                        >
-                                                            <input
-                                                                className="border-0"
-                                                                onChange={(e) => {
-                                                                    // Create a new array with the updated item
-                                                                    const updatedSkills = addSubSkill.map(
-                                                                        (skill, i) =>
-                                                                            i === index
-                                                                                ? { ...skill, skill_name: e.target.value }
-                                                                                : skill
-                                                                    );
-                                                                    setAddSubSkill(updatedSkills); // Update the state
-                                                                }}
-                                                            // onBlur={() => handleBlur(item.skill_name, index)}
-                                                            />{" "}
-                                                            <i
-                                                                onClick={() => {
-                                                                    hadleDeleteCurrentSkill(index);
-                                                                }}
-                                                                className="fa fa-close ms-1 tag_remove"
-                                                            ></i>
-                                                        </span>
-                                                    ))}
+                                                        {skillError && (
+                                                            <p className="text-danger mt-1">
+                                                                {skillError}
+                                                            </p>
+                                                        )}
+                                                        <div className="stag_list mt-2">
+                                                            {selectedIndex.includes(i) && addSubSkill.map((item, index) => (
+                                                                <span
+                                                                    onClick={(e) => {
+                                                                        handleSelectedSkill(e, item, i);
+                                                                    }}
+                                                                    className={`stag_item ${SelectSkillsData.includes(item) ? "active" : ""
+                                                                        }`}
+                                                                >
+                                                                    <input
+                                                                        className="border-0"
+                                                                        onChange={(e) => {
+                                                                            // Create a new array with the updated item
+                                                                            const updatedSkills = addSubSkill.map(
+                                                                                (skill, i) =>
+                                                                                    i === index
+                                                                                        ? { ...skill, skill_name: e.target.value }
+                                                                                        : skill
+                                                                            );
+                                                                            setAddSubSkill(updatedSkills); // Update the state
+                                                                        }}
+                                                                    // onBlur={() => handleBlur(item.skill_name, index)}
+                                                                    />{" "}
+                                                                    <i
+                                                                        onClick={() => {
+                                                                            hadleDeleteCurrentSkill(index);
+                                                                        }}
+                                                                        className="fa fa-close ms-1 tag_remove"
+                                                                    ></i>
+                                                                </span>
+                                                            ))}
 
-                                                    {/* <button
+                                                            {/* <button
                                                         type="button"
                                                         class="btn-light-gray btn btn-primary"
                                                         onClick={() => handlesubSkillAdd(i)}
                                                     >
                                                         <i class="fa fa-plus text-primary me-1"></i>Add Skill
                                                     </button> */}
-                                                    <Button
-                                                        className={`${addSubSkill.length > 0 && selectedIndex.includes(i) ? 'smbtn-primary' : 'btn-light-gray'}`}
-                                                        onClick={() => handlesubSkillAdd(i)}
+                                                            <Button
+                                                                className={`${addSubSkill.length > 0 && selectedIndex.includes(i) ? 'smbtn-primary' : 'btn-light-gray'}`}
+                                                                onClick={() => handlesubSkillAdd(i)}
+                                                            >
+                                                                <i className="fa fa-plus text-primary me-1"></i>Add Skill
+                                                            </Button>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                                <div className="accordion_footer mt-3 justify-content-end">
+                                                    <button
+                                                        // onClick={handleCreateForm}
+                                                        type="button"
+                                                        class="btn btn-lightgray"
+                                                        onClick={handleNext}
                                                     >
-                                                        <i className="fa fa-plus text-primary me-1"></i>Add Skill
-                                                    </Button>
+                                                        Next
+                                                    </button>
                                                 </div>
-                                            </div>
-                                        ))}
-                                        <div className="accordion_footer mt-3 justify-content-end">
-                                            <button
-                                                // onClick={handleCreateForm}
-                                                type="button"
-                                                class="btn btn-lightgray"
-                                                onClick={handleNext}
-                                            >
-                                                Next
-                                            </button>
-                                        </div>
-                                    </Accordion.Body>
-                                </Accordion.Item>
-                                {/* <Accordion activeKey={activeKey}> */}
-                                <Accordion.Item eventKey="9" className="accd_child">
-                                    <Accordion.Header onClick={() => {
-                                        handleOpenStep("9")
-                                        setComponents([]);
-                                        setActiveKeyAdd(false);
-                                    }}>
-                                        Custom Questions{" "}
-                                        <div>
-                                            <button
-                                                type="button"
-                                                onClick={(e) => {
-                                                    // handleOpenStep("9")
-                                                    setActiveKeyAdd(true);
-                                                    // setActiveKey("9");
-                                                    handleAddComponent(e);
-                                                }}
-                                                class="btn btn-lightgray me-3"
-                                            >
-                                                <i className="fa fa-plus me-2"></i>
-                                                Add
-                                            </button>
-                                            {/* <div
+                                            </Accordion.Body>
+                                        </Accordion.Item>
+                                        {/* <Accordion activeKey={activeKey}> */}
+                                        <Accordion.Item eventKey="9" className="accd_child">
+                                            <Accordion.Header onClick={() => {
+                                                handleOpenStep("9")
+                                                setComponents([]);
+                                                setActiveKeyAdd(false);
+                                            }}>
+                                                Custom Questions{" "}
+                                                <div>
+                                                    <button
+                                                        type="button"
+                                                        onClick={(e) => {
+                                                            // handleOpenStep("9")
+                                                            setActiveKeyAdd(true);
+                                                            // setActiveKey("9");
+                                                            handleAddComponent(e);
+                                                        }}
+                                                        class="btn btn-lightgray me-3"
+                                                    >
+                                                        <i className="fa fa-plus me-2"></i>
+                                                        Add
+                                                    </button>
+                                                    {/* <div
                                                     class="btn btn-lightgray p-3"
                                                     onClick={(e) => {
                                                         setActiveKey(activeKey === "9" ? null : "9");
@@ -3406,192 +3414,195 @@ const UpdateJobsRevised = ({
                                                         />
                                                     </svg>
                                                 </div> */}
-                                        </div>
-                                    </Accordion.Header>
-                                    <Accordion.Body ref={(el) => (sectionRefs.current['9'] = el)}>
-                                        <div className="starttag_box ctmqus_panel mt-0">
-                                            {!activeKeyAdd && (
-                                                <>
-                                                    <div className="stagbox_head">
-                                                        <span className="border_box">
-                                                            How many companies have you changed in your
-                                                            career?
-                                                        </span>
-                                                        <div class="d-flex ms-3">
-                                                            <button type="button" class="icon-btn">
-                                                                <i class="far fa-save"></i>
-                                                            </button>
-                                                            <button type="button" class="icon-btn">
-                                                                <i class="far fa-star"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                    <h6 className="mt-3 hadding-xs">Answer Options</h6>
-                                                    <p className="mt-1">
-                                                        Select the preferred answer using the radio
-                                                        button.
-                                                    </p>
-                                                    <div className="cmt_questions">
-                                                        {["radio"].map((type) => (
-                                                            <div key={`default-${type}`} className="mb-3">
-                                                                <Form.Check // prettier-ignore
-                                                                    label="No"
-                                                                    name="group1"
-                                                                    type={type}
-                                                                    id={`default-${type}`}
-                                                                />
-
-                                                                <Form.Check
-                                                                    label="Yes"
-                                                                    name="group1"
-                                                                    type={type}
-                                                                    id={`default-${type}`}
-                                                                />
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </>
-                                            )}
-                                            {activeKeyAdd &&
-                                                components.map((question, questionIndex) => (
-                                                    <div key={questionIndex} className="mb-4">
-                                                        <div className="stagbox_head">
-                                                            <span className="border_box">
-                                                                <Form.Control
-                                                                    className="formControl_cstmQuestion"
-                                                                    placeholder="Your Question"
-                                                                    onChange={(e) =>
-                                                                        handleQuestionTitleChange(
-                                                                            questionIndex,
-                                                                            e.target.value
-                                                                        )
-                                                                    }
-                                                                    value={question.question_title}
-                                                                />
-                                                            </span>
-                                                            {questionIndex === 0 && (
-                                                                <div className="d-flex ms-3">
-                                                                    <Form.Select
-                                                                        onChange={(e) =>
-                                                                            handleQuestionTypeChange(
-                                                                                questionIndex,
-                                                                                e.target.value
-                                                                            )
-                                                                        }
-                                                                    >
-                                                                        <option value="single">MCQ Single</option>
-                                                                        <option value="multiple">
-                                                                            MCQ Multiple
-                                                                        </option>
-                                                                    </Form.Select>
-                                                                    <button type="button" className="icon-btn">
-                                                                        <i className="far fa-star"></i>
+                                                </div>
+                                            </Accordion.Header>
+                                            <Accordion.Body ref={(el) => (sectionRefs.current['9'] = el)}>
+                                                <div className="starttag_box ctmqus_panel mt-0">
+                                                    {!activeKeyAdd && (
+                                                        <>
+                                                            <div className="stagbox_head">
+                                                                <span className="border_box">
+                                                                    How many companies have you changed in your
+                                                                    career?
+                                                                </span>
+                                                                <div class="d-flex ms-3">
+                                                                    <button type="button" class="icon-btn">
+                                                                        <i class="far fa-save"></i>
+                                                                    </button>
+                                                                    <button type="button" class="icon-btn">
+                                                                        <i class="far fa-star"></i>
                                                                     </button>
                                                                 </div>
-                                                            )}
-                                                            <div className="d-flex ms-3">
-                                                                <button
-                                                                    type="button"
-                                                                    className="btn-transpant"
-                                                                    // onClick={() => EducationdeleteRow(index)}
-                                                                    onClick={() => handleDeleteRowQuestion(questionIndex)}
-                                                                >
-                                                                    <img
-                                                                        src={imgpTrash}
-                                                                        alt="Delete"
-                                                                        style={{ width: "20px", height: "20px" }}
-                                                                    />
-                                                                </button>
                                                             </div>
-                                                        </div>
-                                                        <h6 className="mt-3 hadding-xs">Answer Options</h6>
-                                                        <p className="mt-1">
-                                                            Select the preferred answer using the radio
-                                                            button.
-                                                        </p>
-                                                        <div className="cmt_questions">
-                                                            {question.question_option.part1.map(
-                                                                (option, optionIndex) => (
-                                                                    <div
-                                                                        key={`option-${optionIndex}`}
-                                                                        className="mb-3"
-                                                                    >
+                                                            <h6 className="mt-3 hadding-xs">Answer Options</h6>
+                                                            <p className="mt-1">
+                                                                Select the preferred answer using the radio
+                                                                button.
+                                                            </p>
+                                                            <div className="cmt_questions">
+                                                                {["radio"].map((type) => (
+                                                                    <div key={`default-${type}`} className="mb-3">
+                                                                        <Form.Check // prettier-ignore
+                                                                            label="No"
+                                                                            name="group1"
+                                                                            type={type}
+                                                                            id={`default-${type}`}
+                                                                        />
+
                                                                         <Form.Check
-                                                                            name={`question-${questionIndex}`} // Group radio buttons by question
-                                                                            checked={question.questions_answer.includes(
-                                                                                option
-                                                                            )} // Check if the option is selected
-                                                                            onChange={(e) =>
-                                                                                handleAnswerChange(
-                                                                                    questionIndex,
-                                                                                    option,
-                                                                                    e.target.checked
-                                                                                )
-                                                                            }
-                                                                            label={
-                                                                                <div className="inputTypes">
-                                                                                    <Form.Control
-                                                                                        type="text"
-                                                                                        placeholder="Enter your text here"
-                                                                                        className="formControl_cstmQuestion"
-                                                                                        onChange={(e) =>
-                                                                                            handleQuestionOptionChange(
-                                                                                                questionIndex,
-                                                                                                optionIndex,
-                                                                                                e.target.value
-                                                                                            )
-                                                                                        }
-                                                                                        value={option}
-                                                                                    />
-                                                                                    <i
-                                                                                        className="fa fa-times"
-                                                                                        onClick={() =>
-                                                                                            handleDeleteOption(
-                                                                                                questionIndex,
-                                                                                                optionIndex
-                                                                                            )
-                                                                                        }
-                                                                                    ></i>
-                                                                                </div>
-                                                                            }
-                                                                            type={
-                                                                                questionType === "single"
-                                                                                    ? "radio"
-                                                                                    : "checkbox"
-                                                                            }
-                                                                            id={`option-${optionIndex}`}
-                                                                            className="d-flex align-items-center"
+                                                                            label="Yes"
+                                                                            name="group1"
+                                                                            type={type}
+                                                                            id={`default-${type}`}
                                                                         />
                                                                     </div>
-                                                                )
-                                                            )}
-                                                        </div>
-                                                        <button
-                                                            type="button"
-                                                            className="btn btn-lightgray me-3"
-                                                            onClick={() => handleAddResponse(questionIndex)} // Add a new response option
-                                                        >
-                                                            <i className="fa fa-plus me-1"></i>
-                                                            Add Response
-                                                        </button>
-                                                        <button
-                                                            type="button"
-                                                            onClick={handleSaveCustomQuestion} // Log all questions
-                                                            className="btn btn-lightgray"
-                                                        >
-                                                            Save
-                                                        </button>
-                                                    </div>
-                                                ))}
-                                        </div>
-                                        <div className="accordion_footer mt-3 justify-content-end">
-                                            <button type="button" class="btn btn-lightgray" onClick={handleNext}>
-                                                Next
-                                            </button>
-                                        </div>
-                                    </Accordion.Body>
-                                </Accordion.Item>
-                                {/* </Accordion> */}
+                                                                ))}
+                                                            </div>
+                                                        </>
+                                                    )}
+                                                    {activeKeyAdd &&
+                                                        components.map((question, questionIndex) => (
+                                                            <div key={questionIndex} className="mb-4">
+                                                                <div className="stagbox_head">
+                                                                    <span className="border_box">
+                                                                        <Form.Control
+                                                                            className="formControl_cstmQuestion"
+                                                                            placeholder="Your Question"
+                                                                            onChange={(e) =>
+                                                                                handleQuestionTitleChange(
+                                                                                    questionIndex,
+                                                                                    e.target.value
+                                                                                )
+                                                                            }
+                                                                            value={question.question_title}
+                                                                        />
+                                                                    </span>
+                                                                    {questionIndex === 0 && (
+                                                                        <div className="d-flex ms-3">
+                                                                            <Form.Select
+                                                                                onChange={(e) =>
+                                                                                    handleQuestionTypeChange(
+                                                                                        questionIndex,
+                                                                                        e.target.value
+                                                                                    )
+                                                                                }
+                                                                            >
+                                                                                <option value="single">MCQ Single</option>
+                                                                                <option value="multiple">
+                                                                                    MCQ Multiple
+                                                                                </option>
+                                                                            </Form.Select>
+                                                                            <button type="button" className="icon-btn">
+                                                                                <i className="far fa-star"></i>
+                                                                            </button>
+                                                                        </div>
+                                                                    )}
+                                                                    <div className="d-flex ms-3">
+                                                                        <button
+                                                                            type="button"
+                                                                            className="btn-transpant"
+                                                                            // onClick={() => EducationdeleteRow(index)}
+                                                                            onClick={() => handleDeleteRowQuestion(questionIndex)}
+                                                                        >
+                                                                            <img
+                                                                                src={imgpTrash}
+                                                                                alt="Delete"
+                                                                                style={{ width: "20px", height: "20px" }}
+                                                                            />
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                                <h6 className="mt-3 hadding-xs">Answer Options</h6>
+                                                                <p className="mt-1">
+                                                                    Select the preferred answer using the radio
+                                                                    button.
+                                                                </p>
+                                                                <div className="cmt_questions">
+                                                                    {question.question_option.part1.map(
+                                                                        (option, optionIndex) => (
+                                                                            <div
+                                                                                key={`option-${optionIndex}`}
+                                                                                className="mb-3"
+                                                                            >
+                                                                                <Form.Check
+                                                                                    name={`question-${questionIndex}`} // Group radio buttons by question
+                                                                                    checked={question.questions_answer.includes(
+                                                                                        option
+                                                                                    )} // Check if the option is selected
+                                                                                    onChange={(e) =>
+                                                                                        handleAnswerChange(
+                                                                                            questionIndex,
+                                                                                            option,
+                                                                                            e.target.checked
+                                                                                        )
+                                                                                    }
+                                                                                    label={
+                                                                                        <div className="inputTypes">
+                                                                                            <Form.Control
+                                                                                                type="text"
+                                                                                                placeholder="Enter your text here"
+                                                                                                className="formControl_cstmQuestion"
+                                                                                                onChange={(e) =>
+                                                                                                    handleQuestionOptionChange(
+                                                                                                        questionIndex,
+                                                                                                        optionIndex,
+                                                                                                        e.target.value
+                                                                                                    )
+                                                                                                }
+                                                                                                value={option}
+                                                                                            />
+                                                                                            <i
+                                                                                                className="fa fa-times"
+                                                                                                onClick={() =>
+                                                                                                    handleDeleteOption(
+                                                                                                        questionIndex,
+                                                                                                        optionIndex
+                                                                                                    )
+                                                                                                }
+                                                                                            ></i>
+                                                                                        </div>
+                                                                                    }
+                                                                                    type={
+                                                                                        questionType === "single"
+                                                                                            ? "radio"
+                                                                                            : "checkbox"
+                                                                                    }
+                                                                                    id={`option-${optionIndex}`}
+                                                                                    className="d-flex align-items-center"
+                                                                                />
+                                                                            </div>
+                                                                        )
+                                                                    )}
+                                                                </div>
+                                                                <button
+                                                                    type="button"
+                                                                    className="btn btn-lightgray me-3"
+                                                                    onClick={() => handleAddResponse(questionIndex)} // Add a new response option
+                                                                >
+                                                                    <i className="fa fa-plus me-1"></i>
+                                                                    Add Response
+                                                                </button>
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={handleSaveCustomQuestion} // Log all questions
+                                                                    className="btn btn-lightgray"
+                                                                >
+                                                                    Save
+                                                                </button>
+                                                            </div>
+                                                        ))}
+                                                </div>
+                                                <div className="accordion_footer mt-3 justify-content-end">
+                                                    <button type="button" class="btn btn-lightgray" onClick={handleNext}>
+                                                        Next
+                                                    </button>
+                                                </div>
+                                            </Accordion.Body>
+                                        </Accordion.Item>
+                                        {/* </Accordion> */}
+                                    </>
+                                )}
+
                                 <Accordion.Item eventKey="10">
                                     <Accordion.Header className="bg-lightblue" onClick={() => setOpenStep([])}>
                                         Ideal Behaviour and Personalities
