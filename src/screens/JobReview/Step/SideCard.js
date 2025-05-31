@@ -6,59 +6,66 @@ import emailGray from "../../../images/icons/email_gray.svg"
 import calendarGray from "../../../images/icons/calendar_gray.svg"
 import briefcaseGray from "../../../images/icons/briefcase-01_gray.svg"
 import walletGray from "../../../images/icons/wallet-04_gray.svg"
+import iconGreen from "../../../images/facegreen.svg";
+import iconYellow from "../../../images/faceyellow.svg";
 const title = ['Your Dominant Personality', 'Your Secondary Personality']
 const content = ['The dominant personality signifies the traits and behaviors that the you most closely associate with and are easily observable.',
-  'The secondary personality is less visible and only shown in certain situations or to certain people. This could be aspects of ourselves that we keep more private or that only come out in specific contexts'
+    'The secondary personality is less visible and only shown in certain situations or to certain people. This could be aspects of ourselves that we keep more private or that only come out in specific contexts'
 ]
 
-const SideCard = ({ candidateDetails,applicantPersonality }) => {
-    // debugger
+const SideCard = ({ candidateDetails, applicantPersonality, data }) => {
     return (
         <div className="candidate-card">
             <div className="header">
-                <img src={LeaderIcon} alt=""/>
+                <img src={LeaderIcon} alt="" />
                 <div className="title-section ms-2 pt-1">
                     <h2>{applicantPersonality?.[0]?.behaviours_name}</h2>
                     <span className="score">{applicantPersonality?.[0]?.personality_percentage}%</span>
                 </div>
                 <p className="description">
-                    {/* They are in constant pursuit of innovative solutions and seek new horizons */}
                     {applicantPersonality?.[0]?.behaviour_desctiption}
                 </p>
             </div>
-
             <div className="match-section">
-                <div className="match">
-                    <p>Job Match</p>
-                    <span className="good">Excellent ✅</span>
-                </div>
-                <div className="match">
-                    <p>Behaviour Match</p>
-                    <span className="excellent">Good 🙂</span>
-                </div>
+                {data?.job_groups?.map((Val) => {
+                    if (Val.job_group_parameter.parameter_name === "Application") {
+                        return (
+                            <div className="match">
+                                <p>Job Match</p>
+                                <span className="good">{Val?.group_name} <img src={iconGreen} /></span>
+                            </div>
+                        )
+                    } else if (Val.job_group_parameter.parameter_name === "Behaviour") {
+                        return (
+                            <div className="match">
+                                <p>Behaviour Match</p>
+                                <span className="excellent">Good <img src={iconYellow} /></span>
+                            </div>
+                        )
+                    }
+                })}
             </div>
-
             <div className="contact-info">
                 <ul>
-                    <li><img src={phoneGray} alt=""/>{candidateDetails?.user?.phone_number}</li>
-                    <li><img src={emailGray} alt=""/>{candidateDetails?.user?.email}</li>
+                    <li><img src={phoneGray} alt="" />{candidateDetails?.user?.phone_number}</li>
+                    <li><img src={emailGray} alt="" />{candidateDetails?.user?.email}</li>
                     <li>
-                        <img src={gradHat} alt=""/>
+                        <img src={gradHat} alt="" />
                         {candidateDetails?.qualification_applicantprofile?.map((edu) => (
-                        <>{edu?.level}</>
+                            <>{edu?.level}</>
                         ))}
                     </li>
                     <li>
-                        <img src={briefcaseGray} alt=""/>
+                        <img src={briefcaseGray} alt="" />
                         {candidateDetails?.work_applicant?.map((exp) => (
-                        <>
-                            {exp?.total_work_experience}
-                        </>
+                            <>
+                                {exp?.total_work_experience}
+                            </>
                         ))}
                     </li>
-                    <li><img src={walletGray} alt=""/>{candidateDetails?.expected_salary} per annum</li>
-                    <li><img src={calendarGray} alt=""/>{candidateDetails?.notice_period} notice period</li>
-                </ul>        
+                    <li><img src={walletGray} alt="" />{candidateDetails?.expected_salary} per annum</li>
+                    <li><img src={calendarGray} alt="" />{candidateDetails?.notice_period} notice period</li>
+                </ul>
             </div>
             <div className="history">
                 <h6>Previous Company</h6>

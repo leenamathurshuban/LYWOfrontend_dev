@@ -2616,7 +2616,7 @@ const ApplicationJobPostModal = ({
       setShowNotesByIndex([...showNotesByIndex, id])
     }
   }
-  const handleEditRowEducation=(row,index)=>{
+  const handleEditRowEducation = (row, index) => {
     const newRows = [...EducationRows];
     newRows[index]["saved"] = false;
     SetEducationRows(newRows);
@@ -3166,8 +3166,19 @@ const ApplicationJobPostModal = ({
       setLocationList([])
     }, 200);
   }
+  useEffect(() => {
+    if (!isYes?.CurrentlyWorkingToggle) {
+      setIsYes({
+        ...isYes,
+        ["NoticeBuyOutToggle"]: false
+      })
+      setProfileFormData({ ...profileformData, ["NoticePeriod"]: "" })
+    }
+  }, [isYes?.CurrentlyWorkingToggle])
+
   // console.log(dynamicArray)
   // console.log('Fixed', skillGroupData.sort((a, b) => a.id - b.id))
+  console.log(isYes, profileformData)
   console.log(groupedSkills)
   console.log(EducationRows)
   console.log('checkvalid====>', isValid)
@@ -3943,7 +3954,7 @@ const ApplicationJobPostModal = ({
                               Save
                             </Button>
                           </td>
-                        )}                        
+                        )}
                         {row.saved && (
                           <td>
                             <Button
@@ -3960,7 +3971,7 @@ const ApplicationJobPostModal = ({
                               Edit
                             </Button>
                           </td>
-                        )}                        
+                        )}
                         <td>
                           <button
                             type="button"
@@ -4194,10 +4205,10 @@ const ApplicationJobPostModal = ({
                                     variant="link"
                                     className="p-1 font-sm mt-1 link-iconbtn"
                                     onClick={() => handleButtonEdit(row, index)}
-                                  >    
-                                  <svg className="me-1" width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M6.99998 12.3341H13M1 12.3341H2.11636C2.44248 12.3341 2.60554 12.3341 2.75899 12.2973C2.89504 12.2646 3.0251 12.2108 3.1444 12.1377C3.27895 12.0552 3.39425 11.9399 3.62486 11.7093L12 3.33414C12.5523 2.78185 12.5523 1.88642 12 1.33413C11.4477 0.781851 10.5523 0.781851 10 1.33414L1.62484 9.7093C1.39424 9.9399 1.27894 10.0552 1.19648 10.1898C1.12338 10.3091 1.0695 10.4391 1.03684 10.5752C1 10.7286 1 10.8917 1 11.2178V12.3341Z" stroke="#3538CD" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-                                  </svg>
+                                  >
+                                    <svg className="me-1" width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <path d="M6.99998 12.3341H13M1 12.3341H2.11636C2.44248 12.3341 2.60554 12.3341 2.75899 12.2973C2.89504 12.2646 3.0251 12.2108 3.1444 12.1377C3.27895 12.0552 3.39425 11.9399 3.62486 11.7093L12 3.33414C12.5523 2.78185 12.5523 1.88642 12 1.33413C11.4477 0.781851 10.5523 0.781851 10 1.33414L1.62484 9.7093C1.39424 9.9399 1.27894 10.0552 1.19648 10.1898C1.12338 10.3091 1.0695 10.4391 1.03684 10.5752C1 10.7286 1 10.8917 1 11.2178V12.3341Z" stroke="#3538CD" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
                                     Edit
                                   </Button>
                                 )}
@@ -4740,8 +4751,7 @@ const ApplicationJobPostModal = ({
                     <div className="user_bsinfo">
                       <h6>Availability</h6>
 
-                      {profileformData?.AvailableBy &&
-                        profileformData?.NoticePeriod ? (
+                      {profileformData?.AvailableBy ? (
                         <>
                           <p>Can join {profileformData?.AvailableBy}</p>
                           <p>
@@ -4749,8 +4759,8 @@ const ApplicationJobPostModal = ({
                             {isYes?.CurrentlyWorkingToggle ? "Yes" : "No"}
                           </p>
                           <p>
-                            Notice period {profileformData?.NoticePeriod} notice
-                            period
+                            {profileformData?.NoticePeriod && `Notice period ${profileformData?.NoticePeriod} notice
+                            period`}
                           </p>
                           <p>
                             Buyout option available{" "}
@@ -4805,7 +4815,9 @@ const ApplicationJobPostModal = ({
                     </div>
                     <div className="user_bsinfo">
                       <h6>Work Experience</h6>
-
+                      {totalWorkExperience ? (<p>{totalWorkExperience}</p>) : (
+                        <p className="error" style={{ color: "red" }}> Not defined</p>
+                      )}
                       {isAllWorkExperienceFieldsFilled &&
                         WorkExpreienceRow.map((row, index) => (
                           <div key={index}>
@@ -4831,9 +4843,6 @@ const ApplicationJobPostModal = ({
                             </p>
                           </div>
                         ))}
-                      {!isAllWorkExperienceFieldsFilled && (
-                        <p className="error" style={{ color: "red" }}> Not defined</p>
-                      )}
                     </div>
                     <div className="user_bsinfo">
                       <h6>Language</h6>
@@ -4982,7 +4991,7 @@ const ApplicationJobPostModal = ({
               </Modal.Title>
               <p className="mdl_description">
                 You can view your progress and complete the next steps by logging
-              into LYWO with {profileformData?.email}.
+                into LYWO with {profileformData?.email}.
               </p>
             </Modal.Body>
             <Modal.Footer>

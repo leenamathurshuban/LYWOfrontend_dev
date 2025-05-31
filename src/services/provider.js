@@ -276,3 +276,7 @@ export const postJobGroupParameterListByFetchAPI=(id,data)=>{
   const resultFilter = client.postWithToken(`${JobsUrl.postJobGroupParameterListByFetch}${id}/?page=1&limit=10`,data)
   return resultFilter
 }
+export const getAssetDataDetailsAPI=(job_uid,applicant_uid)=>{
+  const resultAsset = client.get(`${ApplicationJobPostUrl.getApplicantAssetData}${job_uid}/applicant-uid/${applicant_uid}/`)
+  return resultAsset
+}

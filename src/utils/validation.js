@@ -44,7 +44,7 @@ export const ApplicantFormValidation = (userData) => {
     } else if (
         userData.confirmEmail !== emailPrev && userData.confirmEmail
     ) {
-        isErrors.confirmEmail = "The email addresses do not match. Please check both fields and try again";
+        isErrors.confirmEmail = "Emails don’t match.";
         isValid = false;
     } else if (userData.confirmEmail === emailPrev && userData.confirmEmail) {
         isErrors.confirmEmail = "";

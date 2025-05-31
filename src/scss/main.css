@@ -487,14 +487,12 @@ ol.breadcrumb {
 }
 
 .h1_welcometext {
-  text-align: center;
-  font-size: 30px;
-  line-height: 38px;
+  text-align: left;
+  font-size: 20px;
+  line-height: 30px;
   font-weight: 400;
   color: #475467;
   padding-bottom: 15px;
-  border-bottom: solid 1px #d0d5dd;
-  margin-bottom: 30px;
 }
 .h1_welcometext strong {
   color: #101828;
@@ -6516,4 +6514,95 @@ button#input-group-dropdown-1 {
 }
 .candidate-card .score-bar .progress .filled {
   background-color: #7CD4FD;
+}
+
+.insights_tab .head_filterlist {
+  box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.0509803922);
+}
+.insights_tab .head_filterlist li.active {
+  background-color: #f3f3f3;
+}
+.insights_tab .card-title {
+  font-family: Inter;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  color: #101828;
+  margin: 0;
+}
+.insights_tab .chart_warp {
+  margin-top: 10px;
+}
+.insights_tab .chart_warp img {
+  width: 100%;
+}
+
+button.btn-icon {
+  border: none;
+  background-color: transparent;
+  padding: 2px 8px;
+}
+
+.radius-sm {
+  border-radius: 8px;
+}
+
+.border-light-2 {
+  border-color: #EAECF0;
+}
+
+.designation_card .card-title {
+  font-family: Inter;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  color: #101828;
+  margin: 0;
+}
+.designation_card .fav_status {
+  color: #FEC84B;
+}
+.designation_card .total_appcnt {
+  margin-bottom: 15px;
+}
+.designation_card .total_appcnt h2 {
+  font-family: Inter;
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 38px;
+  color: #101828;
+}
+.designation_card .total_appcnt p {
+  font-family: Inter;
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 18px;
+  color: #475467;
+  margin: 0;
+}
+.designation_card .new_appcnt h4 {
+  font-family: Inter;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+}
+.designation_card .new_appcnt h4.status_up {
+  color: #067647;
+}
+.designation_card .new_appcnt p {
+  font-family: Inter;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  color: #475467;
+  margin: 0;
+}
+
+.title-md {
+  font-family: Inter;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 24px;
+  color: #101828;
+  margin-bottom: 10px;
 }/*# sourceMappingURL=main.css.map */

@@ -138,6 +138,7 @@ const CreateJobsRevised = ({
   const spokenRef = useRef()
   const writtenRef = useRef()
   const locationRef = useRef()
+  const [calculateRecommend, setCalculatedRecommend] = useState([])
   // const [importantFlag, setImportantFlag] = useState({
   //   salary: false,
   //   education: false,
@@ -1228,12 +1229,16 @@ const CreateJobsRevised = ({
         setToolbarPosition(328);
       } else if (openStep[0] === '6') {
         setToolbarPosition(386);
-      } else if (openStep[0] === '8') {
+      } else if (openStep[0] === '8' && !Array.isArray(currentStep)) {
         setToolbarPosition(520);
+      } else if (openStep[0] === '8' && Array.isArray(currentStep)) {
+        setToolbarPosition(640);
       } else if (openStep[0] === '9') {
         setToolbarPosition(577);
-      } else if (openStep[0] === '11') {
+      } else if (openStep[0] === '11' && !Array.isArray(currentStep)) {
         setToolbarPosition(728);
+      } else if (openStep[0] === '11' && Array.isArray(currentStep)) {
+        setToolbarPosition(880);
       }
     }
   }, [openStep]);
@@ -1457,55 +1462,79 @@ const CreateJobsRevised = ({
     }
     return isError;
   }
-  const handlerecommodentProgress = () => {
-    let value;
+  useEffect(() => {
+    let array = []
     if (updateFormData.max_salary && updateFormData.min_salary) {
-      value = 10;
+      // setCalculatedRecommend([...calculateRecommend,"salary"])
+      array.push('salary')
+    } else if (!updateFormData.max_salary || !updateFormData.min_salary) {
+      array.filter((item) => item != "salary");
     }
     if (updateFormData.minimum_education && badges?.length) {
-      value = 20;
+      array.push("education")
+    } else if (!updateFormData.minimum_education || !badges?.length) {
+      array.filter((item) => item != "education");
     }
     if (updateFormData.min_exp && updateFormData.max_exp) {
-      value = 30;
+      array.push('exp')
+    } else if (!updateFormData.min_exp || !updateFormData.max_exp) {
+      array.filter((item) => item != "exp");
     }
     if (IndustriesBadges?.length && restrictedRoleBadges?.length) {
-      value = 40;
+      array.push('exp1')
+    } else if (!IndustriesBadges?.length || !restrictedRoleBadges?.length) {
+      array.filter((item) => item != "exp1");
     }
     if (updateFormData.targate_hire_date) {
-      value = 50;
+      array.push('target')
+    } else if (!updateFormData.targate_hire_date) {
+      array.filter((item) => item != "target");
     }
     if (spokenLanguageBadges.length && rdnwBadges.length) {
-      value = 60;
+      array.push('language')
+    } else if (!spokenLanguageBadges.length || !rdnwBadges.length) {
+      array.filter((item) => item != "language");
     }
     if (locationBadges.length) {
-      value = 70;
+      array.push('location')
+    } else if (!locationBadges.length) {
+      array.filter((item) => item != "location");
     }
     if (SelectSkillsData.length && mustHaveSkills.length) {
-      value = 80;
+      array.push('skills')
+    } else if (!SelectSkillsData.length || !mustHaveSkills.length) {
+      array.filter((item) => item != "skills");
     }
     if (hasSelectedAndImportant) {
-      value = 90;
+      array.push('behaviour')
+    } else if (!hasSelectedAndImportant) {
+      array.filter((item) => item != "behaviour");
     }
-    return value;
-  }
+    setCalculatedRecommend(array)
+  }, [updateFormData, badges, IndustriesBadges, restrictedRoleBadges, spokenLanguageBadges, rdnwBadges, locationBadges, SelectSkillsData, mustHaveSkills, hasSelectedAndImportant])
   const handleNext = (e) => {
     const nextStep = (parseInt(currentStep) + 1).toString();
     if (parseInt(currentStep) < 11) {
       if (Array.isArray(currentStep) && nextStep == "1") {
         setCurrentStep("2")
+        setOpenStep(["2"])
       } else if (currentStep == "6") {
         setCurrentStep(["7", "8"])
+        setOpenStep(["8"])
       } else if (Array.isArray(currentStep) && nextStep == "8") {
         setCurrentStep("9")
         setActiveKeyAdd(true);
-        setActiveKey("9");
-        handleAddComponent(e);
+        // setActiveKey("9");
+        setOpenStep(["9"])
+        // handleAddComponent(e);
       } else if (currentStep == "9") {
         setActiveKeyAdd(false);
-        setActiveKey(null);
+        // setActiveKey(null);
         setCurrentStep(["10", "11"])
+        setOpenStep(["11"])
       } else {
         setCurrentStep(nextStep);
+        setOpenStep([nextStep])
       }
       // custom question open extra
       // if (parseInt(currentStep) == 8) {
@@ -1519,6 +1548,11 @@ const CreateJobsRevised = ({
       // }
     }
   };
+  useEffect(() => {
+    if (Array.isArray(currentStep)) {
+      setToolbarPosition(307)
+    }
+  }, [])
   const handleClosecomboEdu = (e) => {
     const { name } = e.target;
     areaEduRef.current.value = "";
@@ -3029,25 +3063,29 @@ const CreateJobsRevised = ({
                     </div>
                   </Accordion.Body>
                 </Accordion.Item>
-                <Accordion activeKey={activeKey}>
-                  <Accordion.Item eventKey="9" className="accd_child">
-                    <Accordion.Header onClick={() => handleOpenStep("9")}>
-                      Custom Questions{" "}
-                      <div>
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            handleOpenStep("9")
-                            setActiveKeyAdd(true);
-                            setActiveKey("9");
-                            handleAddComponent(e);
-                          }}
-                          class="btn btn-lightgray me-3"
-                        >
-                          <i className="fa fa-plus me-2"></i>
-                          Add
-                        </button>
-                        {/* <div
+                {/* <Accordion activeKey={activeKey}> */}
+                <Accordion.Item eventKey="9" className="accd_child">
+                  <Accordion.Header onClick={() => {
+                    handleOpenStep("9")
+                    setComponents([]);
+                    setActiveKeyAdd(false);
+                  }}>
+                    Custom Questions{" "}
+                    <div>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          // handleOpenStep("9")
+                          setActiveKeyAdd(true);
+                          // setActiveKey("9");
+                          handleAddComponent(e);
+                        }}
+                        class="btn btn-lightgray me-3"
+                      >
+                        <i className="fa fa-plus me-2"></i>
+                        Add
+                      </button>
+                      {/* <div
                           class="btn btn-lightgray p-3"
                           onClick={(e) => {
                             setActiveKey(activeKey === "9" ? null : "9");
@@ -3071,179 +3109,178 @@ const CreateJobsRevised = ({
                             />
                           </svg>
                         </div> */}
-                      </div>
-                    </Accordion.Header>
-                    <Accordion.Body ref={(el) => (sectionRefs.current['9'] = el)}>
-                      <div className="starttag_box ctmqus_panel mt-0">
-                        {!activeKeyAdd &&
-                          createRevisedJobData?.question_job?.length > 0 && (
-                            <>
-                              <div className="stagbox_head">
-                                <span className="border_box">
-                                  How many companies have you changed in your
-                                  career?
-                                </span>
-                                <div class="d-flex ms-3">
-                                  <button type="button" class="icon-btn">
-                                    <i class="far fa-save"></i>
-                                  </button>
-                                  <button type="button" class="icon-btn">
-                                    <i class="far fa-star"></i>
-                                  </button>
-                                </div>
+                    </div>
+                  </Accordion.Header>
+                  <Accordion.Body ref={(el) => (sectionRefs.current['9'] = el)}>
+                    <div className="starttag_box ctmqus_panel mt-0">
+                      {!activeKeyAdd  && (
+                          <>
+                            <div className="stagbox_head">
+                              <span className="border_box">
+                                How many companies have you changed in your
+                                career?
+                              </span>
+                              <div class="d-flex ms-3">
+                                <button type="button" class="icon-btn">
+                                  <i class="far fa-save"></i>
+                                </button>
+                                <button type="button" class="icon-btn">
+                                  <i class="far fa-star"></i>
+                                </button>
                               </div>
-                              <h6 className="mt-3 hadding-xs">Answer Options</h6>
-                              <p className="mt-1">
-                                Select the preferred answer using the radio
-                                button.
-                              </p>
-                              <div className="cmt_questions">
-                                {["radio"].map((type) => (
-                                  <div key={`default-${type}`} className="mb-3">
-                                    <Form.Check // prettier-ignore
-                                      label="No"
-                                      name="group1"
-                                      type={type}
-                                      id={`default-${type}`}
-                                    />
+                            </div>
+                            <h6 className="mt-3 hadding-xs">Answer Options</h6>
+                            <p className="mt-1">
+                              Select the preferred answer using the radio
+                              button.
+                            </p>
+                            <div className="cmt_questions">
+                              {["radio"].map((type) => (
+                                <div key={`default-${type}`} className="mb-3">
+                                  <Form.Check // prettier-ignore
+                                    label="No"
+                                    name="group1"
+                                    type={type}
+                                    id={`default-${type}`}
+                                  />
 
-                                    <Form.Check
-                                      label="Yes"
-                                      name="group1"
-                                      type={type}
-                                      id={`default-${type}`}
-                                    />
-                                  </div>
-                                ))}
-                              </div>
-                            </>
-                          )}
-                        {activeKeyAdd &&
-                          components.map((question, questionIndex) => (
-                            <div key={questionIndex} className="mb-4">
-                              <div className="stagbox_head">
-                                <span className="border_box">
-                                  <Form.Control
-                                    className="formControl_cstmQuestion"
-                                    placeholder="Your Question"
+                                  <Form.Check
+                                    label="Yes"
+                                    name="group1"
+                                    type={type}
+                                    id={`default-${type}`}
+                                  />
+                                </div>
+                              ))}
+                            </div>
+                          </>
+                        )}
+                      {activeKeyAdd &&
+                        components.map((question, questionIndex) => (
+                          <div key={questionIndex} className="mb-4">
+                            <div className="stagbox_head">
+                              <span className="border_box">
+                                <Form.Control
+                                  className="formControl_cstmQuestion"
+                                  placeholder="Your Question"
+                                  onChange={(e) =>
+                                    handleQuestionTitleChange(
+                                      questionIndex,
+                                      e.target.value
+                                    )
+                                  }
+                                  value={question.question_title}
+                                />
+                              </span>
+                              {questionIndex === 0 && (
+                                <div className="d-flex ms-3">
+                                  <Form.Select
                                     onChange={(e) =>
-                                      handleQuestionTitleChange(
+                                      handleQuestionTypeChange(
                                         questionIndex,
                                         e.target.value
                                       )
                                     }
-                                    value={question.question_title}
-                                  />
-                                </span>
-                                {questionIndex === 0 && (
-                                  <div className="d-flex ms-3">
-                                    <Form.Select
+                                  >
+                                    <option value="single">MCQ Single</option>
+                                    <option value="multiple">
+                                      MCQ Multiple
+                                    </option>
+                                  </Form.Select>
+                                  <button type="button" className="icon-btn">
+                                    <i className="far fa-star"></i>
+                                  </button>
+                                </div>
+                              )}
+                            </div>
+                            <h6 className="mt-3 hadding-xs">Answer Options</h6>
+                            <p className="mt-1">
+                              Select the preferred answer using the radio
+                              button.
+                            </p>
+                            <div className="cmt_questions">
+                              {question.question_option.part1.map(
+                                (option, optionIndex) => (
+                                  <div
+                                    key={`option-${optionIndex}`}
+                                    className="mb-3"
+                                  >
+                                    <Form.Check
+                                      name={`question-${questionIndex}`} // Group radio buttons by question
+                                      checked={question.questions_answer.includes(
+                                        option
+                                      )} // Check if the option is selected
                                       onChange={(e) =>
-                                        handleQuestionTypeChange(
+                                        handleAnswerChange(
                                           questionIndex,
-                                          e.target.value
+                                          option,
+                                          e.target.checked
                                         )
                                       }
-                                    >
-                                      <option value="single">MCQ Single</option>
-                                      <option value="multiple">
-                                        MCQ Multiple
-                                      </option>
-                                    </Form.Select>
-                                    <button type="button" className="icon-btn">
-                                      <i className="far fa-star"></i>
-                                    </button>
+                                      label={
+                                        <div className="inputTypes">
+                                          <Form.Control
+                                            type="text"
+                                            placeholder="Enter your text here"
+                                            className="formControl_cstmQuestion"
+                                            onChange={(e) =>
+                                              handleQuestionOptionChange(
+                                                questionIndex,
+                                                optionIndex,
+                                                e.target.value
+                                              )
+                                            }
+                                            value={option}
+                                          />
+                                          <i
+                                            className="fa fa-times"
+                                            onClick={() =>
+                                              handleDeleteOption(
+                                                questionIndex,
+                                                optionIndex
+                                              )
+                                            }
+                                          ></i>
+                                        </div>
+                                      }
+                                      type={
+                                        questionType === "single"
+                                          ? "radio"
+                                          : "checkbox"
+                                      }
+                                      id={`option-${optionIndex}`}
+                                      className="d-flex align-items-center"
+                                    />
                                   </div>
-                                )}
-                              </div>
-                              <h6 className="mt-3 hadding-xs">Answer Options</h6>
-                              <p className="mt-1">
-                                Select the preferred answer using the radio
-                                button.
-                              </p>
-                              <div className="cmt_questions">
-                                {question.question_option.part1.map(
-                                  (option, optionIndex) => (
-                                    <div
-                                      key={`option-${optionIndex}`}
-                                      className="mb-3"
-                                    >
-                                      <Form.Check
-                                        name={`question-${questionIndex}`} // Group radio buttons by question
-                                        checked={question.questions_answer.includes(
-                                          option
-                                        )} // Check if the option is selected
-                                        onChange={(e) =>
-                                          handleAnswerChange(
-                                            questionIndex,
-                                            option,
-                                            e.target.checked
-                                          )
-                                        }
-                                        label={
-                                          <div className="inputTypes">
-                                            <Form.Control
-                                              type="text"
-                                              placeholder="Enter your text here"
-                                              className="formControl_cstmQuestion"
-                                              onChange={(e) =>
-                                                handleQuestionOptionChange(
-                                                  questionIndex,
-                                                  optionIndex,
-                                                  e.target.value
-                                                )
-                                              }
-                                              value={option}
-                                            />
-                                            <i
-                                              className="fa fa-times"
-                                              onClick={() =>
-                                                handleDeleteOption(
-                                                  questionIndex,
-                                                  optionIndex
-                                                )
-                                              }
-                                            ></i>
-                                          </div>
-                                        }
-                                        type={
-                                          questionType === "single"
-                                            ? "radio"
-                                            : "checkbox"
-                                        }
-                                        id={`option-${optionIndex}`}
-                                        className="d-flex align-items-center"
-                                      />
-                                    </div>
-                                  )
-                                )}
-                              </div>
-                              <button
-                                type="button"
-                                className="btn btn-lightgray me-3"
-                                onClick={() => handleAddResponse(questionIndex)} // Add a new response option
-                              >
-                                <i className="fa fa-plus me-1"></i>
-                                Add Response
-                              </button>
-                              <button
-                                type="button"
-                                onClick={handleSaveCustomQuestion} // Log all questions
-                                className="btn btn-lightgray"
-                              >
-                                Save
-                              </button>
+                                )
+                              )}
                             </div>
-                          ))}
-                      </div>
-                      <div className="accordion_footer mt-3 justify-content-end">
-                        <button type="button" class="btn btn-lightgray" onClick={handleNext}>
-                          Next
-                        </button>
-                      </div>
-                    </Accordion.Body>
-                  </Accordion.Item>
-                </Accordion>
+                            <button
+                              type="button"
+                              className="btn btn-lightgray me-3"
+                              onClick={() => handleAddResponse(questionIndex)} // Add a new response option
+                            >
+                              <i className="fa fa-plus me-1"></i>
+                              Add Response
+                            </button>
+                            <button
+                              type="button"
+                              onClick={handleSaveCustomQuestion} // Log all questions
+                              className="btn btn-lightgray"
+                            >
+                              Save
+                            </button>
+                          </div>
+                        ))}
+                    </div>
+                    <div className="accordion_footer mt-3 justify-content-end">
+                      <button type="button" class="btn btn-lightgray" onClick={handleNext}>
+                        Next
+                      </button>
+                    </div>
+                  </Accordion.Body>
+                </Accordion.Item>
+                {/* </Accordion> */}
                 <Accordion.Item eventKey="10">
                   <Accordion.Header className="bg-lightblue" onClick={() => setOpenStep([])}>
                     Ideal Behaviour and Personalities
@@ -3697,7 +3734,7 @@ const CreateJobsRevised = ({
               <div className="recomed_panel">
                 <div className="recomed_head">
                   <h6>Recommendations</h6>
-                  <ProgressBar now={handlerecommodentProgress()} />
+                  <ProgressBar now={calculateRecommend.length * 10} />
                 </div>
                 <ul class="rects_list2 px-3">
                   {/* <li class="active">

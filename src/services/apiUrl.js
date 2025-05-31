@@ -57,5 +57,6 @@ export const ApplicationJobPostUrl = {
   JobGetDetails : "assets-api/applicant-detail-api/",
   EducationQualification : "assets-api/applicant-qualification-post-api/",
   WorkExperience:"assets-api/applicant-work-experience-post-api/",
-  ApplicationFormDetails : "assets-api/applicant-update-api/"
+  ApplicationFormDetails : "assets-api/applicant-update-api/",
+  getApplicantAssetData:"assets-api/get-job-applicant-asset-data-api/job-uid/",
 }

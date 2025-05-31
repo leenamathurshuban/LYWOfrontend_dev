@@ -10,6 +10,12 @@ import AutomatBtn from "../../images/icons/automations_icon.svg"
 import stopBtn from "../../images/icons/pause-circle-16x16.svg"
 import gridView from "../../images/icons/grid_icon.svg"
 import listView from "../../images/icons/list_icon.svg"
+import ApplicantStaChrt from "../../images/icons/Applicant_Status_chart.svg"
+import AvabCandite from "../../images/icons/aval_candi_grap.svg"
+import SaleryRange from "../../images/icons/salery_ranggrap.svg"
+import PersonalityGrp from "../../images/icons/Personality_grap.svg"
+// import listView from "../../images/icons/list_icon.svg"
+import CopyBtn from "../../images/icons/copy_gray.svg"
 import baseCheckbox from "../../images/icons/Checkbox_base.svg";
 import User01Gray from "../../images/icons/user-01-gray.svg";
 import filterLines from "../../images/icons/filter-lines.svg";
@@ -29,7 +35,7 @@ import ExpandButton from "../../images/icons/expand-03-primery.svg";
 import ArrowBack from "../../images/icons/arrowBack.svg";
 import ArrowNext from "../../images/icons/arrowNext.svg";
 import { useParams } from "react-router-dom";
-import { ApplicationDeatilsApi, getJobAssignmentReview, getJobDetailsApi, getJobGroupParameterListAPI, getScreeningParameterDataAPI, postJobGroupParameterListByFetchAPI } from "../../services/provider";
+import { ApplicationDeatilsApi, getAssetDataDetailsAPI, getJobAssignmentReview, getJobDetailsApi, getJobGroupParameterListAPI, getScreeningParameterDataAPI, postJobGroupParameterListByFetchAPI } from "../../services/provider";
 import Evaluations from "./Evaluations";
 import Ratting from "../../components/Ratting";
 import CodeBlock from "../../components/CodeBlock";
@@ -40,6 +46,7 @@ import Step1 from "./Step/Step1";
 import Step2 from "./Step/Step2";
 import SideCard from "./Step/SideCard";
 import Step3 from "./Step/Step3";
+import Step4 from "./Step/Step4";
 const JobReview = () => {
     const codeSnippet = `class WorkloadTracker:
     def __init__(self):
@@ -124,6 +131,7 @@ tracker.show_tasks()
     const [ListShow, setListShow] = useState(false);
     const [candidateEmail, setCandidateEmail] = useState('')
     const [candidateDetails, setCandidateDetails] = useState({})
+    const [assetData, setAssetData] = useState({})
     const [applicantPersonality, setApplicantPersonality] = useState();
     const [personalityData, setPersonalityData] = useState()
     const [payloadList, setPayloadList] = useState({
@@ -755,7 +763,7 @@ tracker.show_tasks()
     useEffect(() => {
         ApplicantEmailDetails();
     }, [candidateEmail])
-    const fetchListAPIByKey = async (uid,groupname,gId) => {
+    const fetchListAPIByKey = async (uid, groupname, gId) => {
         setListShow(true);
         setGroupParameterId(uid)
         setGroupTitleName(groupname)
@@ -775,6 +783,19 @@ tracker.show_tasks()
             console.log(error);
         }
     }
+    const getAssetEvalutionData = async () => {
+        try {
+            const res = await getAssetDataDetailsAPI(id, candidateDetails?.uid)
+            if (res?.success) {
+                setAssetData(res.response)
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    useEffect(() => {
+        getAssetEvalutionData()
+    }, [candidateDetails])
     // console.log(assignmentReviewList)
     // console.log('section', sectionWiseData)
     // console.log(questionWiseData)
@@ -1755,7 +1776,107 @@ tracker.show_tasks()
                                         </Col> */}
                                     </Row>
                                 </Tab.Pane>
-                                <Tab.Pane eventKey="second">Second tab content</Tab.Pane>
+                                <Tab.Pane eventKey="second" className="insights_tab">
+                                    <Row>
+                                        <Col md={12}>
+                                            <ul className="head_filterlist">
+                                                <li className="active">All Candidates</li>
+                                                <li>Quiz 1</li>
+                                                <li>Quiz 2</li>
+                                                <li>Assignment 1</li>
+                                                <li>Assignment 2</li>
+                                                <li>Final Short List</li>
+                                            </ul>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col md={12}>
+                                            <Card className="shadow-sm border-0 grap_card mt-3 radius-sm">
+                                                <Card.Body>
+                                                    <div className="d-flex align-items-center justify-content-between">
+                                                        <Card.Title>Applicant Status</Card.Title>
+                                                        <button className="btn-icon"><img src={CopyBtn} alt="" /></button>
+                                                    </div>
+                                                    <div className="chart_warp">
+                                                        <img src={ApplicantStaChrt} alt="" />
+                                                    </div>
+                                                </Card.Body>
+                                            </Card>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col md={6}>
+                                            <Card className="shadow-sm border-0 grap_card mt-3 radius-sm">
+                                                <Card.Body>
+                                                    <div className="d-flex align-items-center justify-content-between">
+                                                        <Card.Title>Availability Of candidates</Card.Title>
+                                                        <button className="btn-icon"><img src={CopyBtn} alt="" /></button>
+                                                    </div>
+                                                    <div className="chart_warp">
+                                                        <img src={AvabCandite} alt="" />
+                                                    </div>
+                                                </Card.Body>
+                                            </Card>
+                                        </Col>
+                                        <Col md={6}>
+                                            <Card className="shadow-sm border-0 grap_card mt-3 radius-sm">
+                                                <Card.Body>
+                                                    <div className="d-flex align-items-center justify-content-between">
+                                                        <Card.Title>Salary Range  (₹ LPA)</Card.Title>
+                                                        <button className="btn-icon"><img src={CopyBtn} alt="" /></button>
+                                                    </div>
+                                                    <div className="chart_warp">
+                                                        <img src={SaleryRange} alt="" />
+                                                    </div>
+                                                </Card.Body>
+                                            </Card>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col md={12}>
+                                            <Card className="shadow-sm border-0 grap_card mt-3 radius-sm">
+                                                <Card.Body>
+                                                    <div className="d-flex align-items-center justify-content-between">
+                                                        <Card.Title>Personality</Card.Title>
+                                                        <button className="btn-icon"><img src={CopyBtn} alt="" /></button>
+                                                    </div>
+                                                    <div className="chart_warp">
+                                                        <img src={PersonalityGrp} alt="" />
+                                                    </div>
+                                                </Card.Body>
+                                            </Card>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col md={6}>
+                                            <Card className="shadow-sm border-0 grap_card mt-3 radius-sm">
+                                                <Card.Body>
+                                                    <div className="d-flex align-items-center justify-content-between">
+                                                        <Card.Title>Areas Of Education</Card.Title>
+                                                        <button className="btn-icon"><img src={CopyBtn} alt="" /></button>
+                                                    </div>
+                                                    <div className="chart_warp">
+                                                        <img src={AvabCandite} alt="" />
+                                                    </div>
+                                                </Card.Body>
+                                            </Card>
+                                        </Col>
+                                        <Col md={6}>
+                                            <Card className="shadow-sm border-0 grap_card mt-3 radius-sm">
+                                                <Card.Body>
+                                                    <div className="d-flex align-items-center justify-content-between">
+                                                        <Card.Title>Education Level </Card.Title>
+                                                        <button className="btn-icon"><img src={CopyBtn} alt="" /></button>
+                                                    </div>
+                                                    <div className="chart_warp">
+                                                        <img src={SaleryRange} alt="" />
+                                                    </div>
+                                                </Card.Body>
+                                            </Card>
+                                        </Col>
+                                    </Row>
+                                </Tab.Pane>
+                                {/* <Tab.Pane eventKey="second">Second tab content</Tab.Pane> */}
                                 <Tab.Pane eventKey="third">
                                     <Card className="rounded border-0 review_card">
                                         <Card.Header>
@@ -2793,13 +2914,15 @@ tracker.show_tasks()
                                     <Tab.Pane eventKey="Personality">
                                         <Step3 applicantPersonality={applicantPersonality} personalityData={personalityData} />
                                     </Tab.Pane>
-                                    <Tab.Pane eventKey="Evaluations">Second tab content</Tab.Pane>
+                                    <Tab.Pane eventKey="Evaluations">
+                                        <Step4 data={assetData} />
+                                    </Tab.Pane>
                                     <Tab.Pane eventKey="Messages">Second tab content</Tab.Pane>
                                 </Tab.Content>
                             </Tab.Container>
                         </Col>
                         <Col md={3}>
-                            <SideCard candidateDetails={candidateDetails} applicantPersonality={applicantPersonality} />
+                            <SideCard candidateDetails={candidateDetails} applicantPersonality={applicantPersonality} data={assetData} />
                         </Col>
                     </Row>
                 </Offcanvas.Body>

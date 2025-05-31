@@ -35,6 +35,7 @@ import {
   ApplicationFormDetailsApi,
   EvalationAssestDetails,
   EvalationAssestList,
+  getAssetDataDetailsAPI,
   PostQuizDataApi,
 } from "../../services/provider";
 import sectionIcon from "../../images/icons/sections_icon.svg";
@@ -381,8 +382,10 @@ const QuizMainComponent = (item) => {
   }
   const applicantDetailAPI = async () => {
     try {
-      const user = applcant?.user_login?.email?applcant?.user_login?.email:applcant?.applcant?.user;
+      const user = applcant.user_login.email?applcant.user_login.email:applcant?.applcant?.user;
       const res = await ApplicationDeatilsApi(user)
+      // const res = await getAssetDataDetailsAPI(id,applicantUid?.uid)
+      // debugger
       // debugger
       if (res?.data?.success) {
         // setSelectedSectionAnswer(res?.data?.response?.asset_data)

@@ -270,7 +270,9 @@ import { setCompanyProfileDetails } from "../../Slice/Login/LoginSlice";
 import logoIcon from "../../images/logo_icon.png";
 import pink_brb from "../../images/icons/pink_brb.svg";
 import choice_brb from "../../images/icons/choice_brb.svg";
+import LineChart02 from "../../images/line_chat01.svg";
 import stack2_brb from "../../images/icons/stack 2_brb.svg";
+import upArrow from "../../images/icons/arrow-up-green.svg";
 import option_brb from "../../images/icons/option_brb.svg";
 import infogray from "../../images/icons/info_gray.svg";
 import globgray from "../../images/icons/glob_gray.svg";
@@ -325,11 +327,11 @@ const Dashboard = () => {
       <Sidebar />
       <Header />
       <div className="page-body">
-        <Container fluid>
+        <Container fluid className="pt-3">
           <Row>
-            <Col md={12}>
+            {/* <Col md={12}>
               <Breadcrumb>
-                {/* <Breadcrumb.Item href="#">login</Breadcrumb.Item> */}
+                <Breadcrumb.Item href="#">login</Breadcrumb.Item>
                 <Breadcrumb.Item active>
                   <svg
                     width="14"
@@ -346,7 +348,7 @@ const Dashboard = () => {
                   Home
                 </Breadcrumb.Item>
               </Breadcrumb>
-            </Col>
+            </Col> */}
           </Row>
           <Row>
             <Col md={12}>
@@ -416,6 +418,172 @@ const Dashboard = () => {
                 semper.
               </p>
             </Col>
+          </Row>
+          <Row className="mt-3">
+            <Col md={3}>
+              <Card className="shadow-sm border-light-2 designation_card radius-sm">
+                <Card.Body>
+                  <div className="d-flex align-items-center justify-content-between mb-3">
+                    <Card.Title>Python Developer</Card.Title>
+                    <span className="fav_status"><i className="fa fa-star"></i></span>
+                  </div>
+                  <Row className="align-items-end">
+                    <Col>
+                      <div className="total_appcnt">
+                        <h2>1,210</h2>
+                        <p>Total Applicants</p>  
+                      </div>
+                      <div className="new_appcnt">
+                        <h4 className="status_up"><img src={upArrow}/>44</h4>
+                        <p>New Applicants</p>  
+                      </div>
+                    </Col>
+                    <Col>
+                        <div className="chart_small">
+                          <img src={LineChart02}/>
+                        </div>
+                    </Col>
+                  </Row>
+                </Card.Body>
+            </Card>
+            </Col>
+            <Col md={3}>
+              <Card className="shadow-sm border-light-2 designation_card radius-sm">
+                <Card.Body>
+                  <div className="d-flex align-items-center justify-content-between mb-3">
+                    <Card.Title>Finance Manager</Card.Title>
+                    <span className="fav_status"><i className="fa fa-star"></i></span>
+                  </div>
+                  <Row className="align-items-end">
+                    <Col>
+                      <div className="total_appcnt">
+                        <h2>181</h2>
+                        <p>Total Applicants</p>  
+                      </div>
+                      <div className="new_appcnt">
+                        <h4 className="status_up"><img src={upArrow}/>317</h4>
+                        <p>New Applicants</p>  
+                      </div>
+                    </Col>
+                    <Col>
+                        <div className="chart_small">
+                          <img src={LineChart02}/>
+                        </div>
+                    </Col>
+                  </Row>
+                </Card.Body>
+            </Card>
+            </Col>
+            <Col md={3}>
+              <Card className="shadow-sm border-light-2 designation_card radius-sm">
+                <Card.Body>
+                  <div className="d-flex align-items-center justify-content-between mb-3">
+                    <Card.Title>UI Designer</Card.Title>
+                    <span className="fav_status"><i className="fa fa-star"></i></span>
+                  </div>
+                  <Row className="align-items-end">
+                    <Col>
+                      <div className="total_appcnt">
+                        <h2>954</h2>
+                        <p>Total Applicants</p>  
+                      </div>
+                      <div className="new_appcnt">
+                        <h4 className="status_up"><img src={upArrow}/>44</h4>
+                        <p>New Applicants</p>  
+                      </div>
+                    </Col>
+                    <Col>
+                        <div className="chart_small">
+                          <img src={LineChart02}/>
+                        </div>
+                    </Col>
+                  </Row>
+                </Card.Body>
+            </Card>
+            </Col>
+            <Col md={3}>
+              <Card className="shadow-sm border-light-2 designation_card radius-sm">
+                <Card.Body>
+                  <div className="d-flex align-items-center justify-content-between mb-3">
+                    <Card.Title>Figma Designer</Card.Title>
+                    <span className="fav_status"><i className="fa fa-star"></i></span>
+                  </div>
+                  <Row className="align-items-end">
+                    <Col>
+                      <div className="total_appcnt">
+                        <h2>756</h2>
+                        <p>Total Applicants</p>  
+                      </div>
+                      <div className="new_appcnt">
+                        <h4 className="status_up"><img src={upArrow}/>44</h4>
+                        <p>New Applicants</p>  
+                      </div>
+                    </Col>
+                    <Col>
+                        <div className="chart_small">
+                          <img src={LineChart02}/>
+                        </div>
+                    </Col>
+                  </Row>
+                </Card.Body>
+            </Card>
+            </Col>
+          </Row>
+          <Row>
+            <Col className="text-end py-2"><button className="btn btn-link btn-md">View All Favorite Jobs <i className="fa fa-angle-down"></i></button></Col>
+          </Row>
+          <Row>
+            <Col md={12}>
+              <h4 className="title-md"><i className="fa fa-briefcase text-primery me-2"></i>Quick Access to Jobs</h4>
+            </Col>
+             <Col md={12} className="mb-3">
+              <Card className="shadow-sm border-light-2 radius-sm">
+                <Card.Body className=" p-2">
+                  <table className="m-0 table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Job</th>
+                        <th>Details</th>
+                        <th>Total Applicants</th>
+                        <th>Pending Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><strong>Figma Designer</strong></td>
+                        <td>Hyderabad, Automated Testing, 5 yrs Experience </td>
+                        <td>2154</td>
+                        <td>12</td>
+                      </tr>
+                      <tr>
+                        <td><strong>UI Designer</strong></td>
+                        <td>Hyderabad, Automated Testing, 5 yrs Experience </td>
+                        <td>2154</td>
+                        <td>12</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Finance Manager</strong></td>
+                        <td>Hyderabad, Automated Testing, 5 yrs Experience </td>
+                        <td>2154</td>
+                        <td>12</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Python Developer</strong></td>
+                        <td>Hyderabad, Automated Testing, 5 yrs Experience </td>
+                        <td>2154</td>
+                        <td>12</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Figma Designer</strong></td>
+                        <td>Hyderabad, Automated Testing, 5 yrs Experience </td>
+                        <td>2154</td>
+                        <td>12</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </Card.Body>
+              </Card>
+             </Col>
           </Row>
         </Container>
       </div>
