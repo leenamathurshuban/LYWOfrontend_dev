@@ -1367,8 +1367,10 @@ const UpdateJobsRevised = ({
     useEffect(() => {
         if (openStep.length && sectionRefs.current[openStep[0]]) {
             //   const top = sectionRefs.current[openStep[0]].offsetTop;
-            if (openStep[0] === '1') {
+            if (openStep[0] === '1' && !Array.isArray(currentStep)) {
                 setToolbarPosition(104);
+            }else if (openStep[0] === '1' && Array.isArray(currentStep)) {
+                setToolbarPosition(307);
             } else if (openStep[0] === '2') {
                 setToolbarPosition(160);
             } else if (openStep[0] === '3') {
@@ -1380,15 +1382,15 @@ const UpdateJobsRevised = ({
             } else if (openStep[0] === '6') {
                 setToolbarPosition(386);
             } else if (openStep[0] === '8' && !Array.isArray(currentStep)) {
-                setToolbarPosition(520);
+                setToolbarPosition(103);
             } else if (openStep[0] === '8' && Array.isArray(currentStep)) {
-                setToolbarPosition(640);
+                setToolbarPosition(224);
             } else if (openStep[0] === '9') {
-                setToolbarPosition(577);
+                setToolbarPosition(160);
             } else if (openStep[0] === '11' && !Array.isArray(currentStep)) {
-                setToolbarPosition(728);
+                setToolbarPosition(103);
             } else if (openStep[0] === '11' && Array.isArray(currentStep)) {
-                setToolbarPosition(880);
+                setToolbarPosition(254);
             }
         }
     }, [openStep]);
@@ -1900,7 +1902,7 @@ const UpdateJobsRevised = ({
                                 {parseInt(openStep[0]) <= 6 && (
                                     <>
                                         <Accordion.Item eventKey="0">
-                                            <Accordion.Header className="bg-lightblue" onClick={() => setOpenStep([])}>Requirements</Accordion.Header>
+                                            <Accordion.Header className="bg-lightblue" >Requirements</Accordion.Header>
                                             {currentStep !== "0" && (<p className="short_text">Define your ideal hire in detail here. Use flags to indicate the importance as needed. All fields are mandatory</p>)}
                                             <Accordion.Body>
                                                 <p>
@@ -3040,7 +3042,7 @@ const UpdateJobsRevised = ({
                                 {parseInt(openStep[0]) < 10 && (
                                     <>
                                         <Accordion.Item eventKey="7">
-                                            <Accordion.Header className="bg-lightblue" onClick={() => setOpenStep([])}>
+                                            <Accordion.Header className="bg-lightblue">
                                                 Skills and Other Requirements
                                             </Accordion.Header>
                                             {currentStep !== "7" && (<p className="short_text"> Select Skills and Add at least 1 Custom Question to help you understand your applicants better.</p>)}
