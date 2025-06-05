@@ -47,6 +47,7 @@ import Step2 from "./Step/Step2";
 import SideCard from "./Step/SideCard";
 import Step3 from "./Step/Step3";
 import Step4 from "./Step/Step4";
+import CandidateQuestionList from "./Step/CandidateQuestionList";
 const JobReview = () => {
     const codeSnippet = `class WorkloadTracker:
     def __init__(self):
@@ -103,9 +104,12 @@ tracker.show_tasks()
     const [groupParameterId, setGroupParameterId] = useState();
     const [paramUid, setParamUid] = useState()
     const [groupTitleName, setGroupTitleName] = useState("");
+    const [candidateQuestionShow, setCandidateQuestionShow] = useState(false);
+    const [candidateQuestionList,setCandidateQuestionList] = useState([])
     const handleReviewClose = () => {
         setReviewModal(false);
         setCandidateEmail('')
+        setCandidateQuestionShow(false)
     };
     const handleClose = () => setShow(false);
     const handleCloseGrpMdl = () => {
@@ -133,7 +137,8 @@ tracker.show_tasks()
     const [candidateDetails, setCandidateDetails] = useState({})
     const [assetData, setAssetData] = useState({})
     const [applicantPersonality, setApplicantPersonality] = useState();
-    const [personalityData, setPersonalityData] = useState()
+    const [personalityData, setPersonalityData] = useState(); 
+    const [reviewEventKey,setReviewEventKey] = useState('first')  
     const [payloadList, setPayloadList] = useState({
         roles: [],
         skills: [],
@@ -802,6 +807,7 @@ tracker.show_tasks()
     // console.log(currentItem)
     console.log(groupParameterList)
     console.log(groupParameterId)
+    console.log(ListData)
     return (
         <>
             <Sidebar />
@@ -826,7 +832,7 @@ tracker.show_tasks()
                     </Row>
                 </Container>
                 <Container fluid>
-                    <Tab.Container id="left-tabs-example" defaultActiveKey="first">
+                    <Tab.Container id="left-tabs-example" activeKey={reviewEventKey} onSelect={k => setReviewEventKey(k)}>
                         <Row className="bg-white">
                             <Col md={6}>
                                 <Nav variant="pills" className="tab-underline">
@@ -2884,47 +2890,52 @@ tracker.show_tasks()
                     </div>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
-                    <Row>
-                        <Col md={9}>
-                            <Tab.Container id="left-tabs-example" defaultActiveKey="Application">
-                                <Nav variant="pills" className="tab-underline">
-                                    <Nav.Item>
-                                        <Nav.Link eventKey="Application">Application <span className="count badge ms-2">1</span></Nav.Link>
-                                    </Nav.Item>
-                                    <Nav.Item>
-                                        <Nav.Link eventKey="Resume">Resume</Nav.Link>
-                                    </Nav.Item>
-                                    <Nav.Item>
-                                        <Nav.Link eventKey="Personality">Personality</Nav.Link>
-                                    </Nav.Item>
-                                    <Nav.Item>
-                                        <Nav.Link eventKey="Evaluations">Evaluations</Nav.Link>
-                                    </Nav.Item>
-                                    <Nav.Item>
-                                        <Nav.Link eventKey="Messages">Messages <span className="count badge ms-2">1</span></Nav.Link>
-                                    </Nav.Item>
-                                </Nav>
-                                <Tab.Content>
-                                    <Tab.Pane eventKey="Application">
-                                        <Step1 candidateDetails={candidateDetails} />
-                                    </Tab.Pane>
-                                    <Tab.Pane eventKey="Resume">
-                                        <Step2 candidateDetails={candidateDetails} />
-                                    </Tab.Pane>
-                                    <Tab.Pane eventKey="Personality">
-                                        <Step3 applicantPersonality={applicantPersonality} personalityData={personalityData} />
-                                    </Tab.Pane>
-                                    <Tab.Pane eventKey="Evaluations">
-                                        <Step4 data={assetData} />
-                                    </Tab.Pane>
-                                    <Tab.Pane eventKey="Messages">Second tab content</Tab.Pane>
-                                </Tab.Content>
-                            </Tab.Container>
-                        </Col>
-                        <Col md={3}>
-                            <SideCard candidateDetails={candidateDetails} applicantPersonality={applicantPersonality} data={assetData} />
-                        </Col>
-                    </Row>
+                    {candidateQuestionShow ? (
+                        <CandidateQuestionList data={candidateQuestionList} />
+                    ) : (
+                        <Row>
+                            <Col md={9}>
+                                <Tab.Container id="left-tabs-example" defaultActiveKey="Application">
+                                    <Nav variant="pills" className="tab-underline">
+                                        <Nav.Item>
+                                            <Nav.Link eventKey="Application">Application <span className="count badge ms-2">1</span></Nav.Link>
+                                        </Nav.Item>
+                                        <Nav.Item>
+                                            <Nav.Link eventKey="Resume">Resume</Nav.Link>
+                                        </Nav.Item>
+                                        <Nav.Item>
+                                            <Nav.Link eventKey="Personality">Personality</Nav.Link>
+                                        </Nav.Item>
+                                        <Nav.Item>
+                                            <Nav.Link eventKey="Evaluations">Evaluations</Nav.Link>
+                                        </Nav.Item>
+                                        <Nav.Item>
+                                            <Nav.Link eventKey="Messages">Messages <span className="count badge ms-2">1</span></Nav.Link>
+                                        </Nav.Item>
+                                    </Nav>
+                                    <Tab.Content>
+                                        <Tab.Pane eventKey="Application">
+                                            <Step1 candidateDetails={candidateDetails} />
+                                        </Tab.Pane>
+                                        <Tab.Pane eventKey="Resume">
+                                            <Step2 candidateDetails={candidateDetails} />
+                                        </Tab.Pane>
+                                        <Tab.Pane eventKey="Personality">
+                                            <Step3 applicantPersonality={applicantPersonality} personalityData={personalityData} />
+                                        </Tab.Pane>
+                                        <Tab.Pane eventKey="Evaluations">
+                                            <Step4 data={assetData} setCandidateQuestionShow={setCandidateQuestionShow} 
+                                            setCandidateQuestionList={setCandidateQuestionList} handleReviewClose={handleReviewClose} setReviewEventKey={setReviewEventKey} />
+                                        </Tab.Pane>
+                                        <Tab.Pane eventKey="Messages">Second tab content</Tab.Pane>
+                                    </Tab.Content>
+                                </Tab.Container>
+                            </Col>
+                            <Col md={3}>
+                                <SideCard candidateDetails={candidateDetails} applicantPersonality={applicantPersonality} data={assetData} />
+                            </Col>
+                        </Row>
+                    )}
                 </Offcanvas.Body>
             </Offcanvas>
 

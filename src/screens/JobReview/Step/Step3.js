@@ -17,7 +17,7 @@ const Step3 = ({ applicantPersonality, personalityData }) => {
           Recommended Personalities for Java Backend Developer
         </Col>
 
-        {personalityData.length > 0 && personalityData?.sort((a, b) => b?.personality_percentage - a?.personality_percentage).map((item, index) => (
+        {personalityData?.length > 0 && personalityData?.sort((a, b) => b?.personality_percentage - a?.personality_percentage)?.map((item, index) => (
           <Col key={index} md={3}>
             <div className="perlitymth-card">
               <div className="perlitymth-head">

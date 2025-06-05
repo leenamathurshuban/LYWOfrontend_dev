@@ -7144,8 +7144,8 @@ button#input-group-dropdown-1 {
       background-color: #fff;
       border: 2px solid #D0D5DD;
       border-radius: 4px;
-      width: 17px;
-      height: 17px;
+      width: 19px;
+      height: 19px;
       position: relative;
       outline: none;
       transition: all 0.2s ease-in-out;
@@ -7159,8 +7159,8 @@ button#input-group-dropdown-1 {
         color: #444CE7;
         font-size: 13px;
         position: absolute;
-        left: 2px;
-        top: -1px;
+        left: 3px;
+        top: -2px;
         font-weight: 600;
         transform: rotate(10deg);
     }
@@ -7282,6 +7282,68 @@ button#input-group-dropdown-1 {
   .tab-underline .nav-link.active {
     color: #3538CD;
   }
+  .tab-content {
+    border: solid 1px #F2F4F7;
+    padding: 15px 20px;
+  }
+  .eval_accordion {
+    .accordion-button {
+      &::after{
+        margin-left: 10px;
+        background-size: 16px;
+      }
+      .evl_title {
+        font-family: Inter;
+        font-weight: 500;
+        font-size: 12px;
+        line-height: 18px;
+        vertical-align: middle;
+
+      }
+      .avl_right {
+        font-family: Inter;
+        font-weight: 600;
+        font-size: 10px;
+        line-height: 18px;
+        color: #344054;
+      }
+    }
+    .evl_itemsrow.row {
+      border: solid 1px #EAECF0;
+      border-radius: 8px;
+    }
+    .evl_subitems {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 15px;
+      font-family: Inter;
+      font-weight: 600;
+      font-size: 10px;
+      line-height: 18px;
+      color: #344054;
+      &:last-child {
+        border-top: solid 1px #EAECF0;
+      }
+      .sub_title {
+        font-family: Inter;
+        font-weight: 500;
+        font-size: 12px;
+        line-height: 18px;
+        color: #101828;
+        vertical-align: middle;
+
+      }
+      svg.ms-1 {
+          color: #4C60E5;
+          width: 12px;
+          height: 12px;
+          margin-left: 10px !important;
+      }
+    }
+  }
+  .que_head {
+    margin-bottom: 10px;
+  }
 }
 .btn-light-outline-sm {
   font-family: Inter;
@@ -7384,10 +7446,6 @@ button#input-group-dropdown-1 {
         }
       }
     }
-  }
-  .tab-content {
-    border: solid 1px #F2F4F7;
-    padding: 15px 20px;
   }
 }
 .inline-list {

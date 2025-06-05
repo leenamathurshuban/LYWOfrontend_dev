@@ -136,6 +136,7 @@ const UpdateJobsRevised = ({
     const [writtenLanguage, setWittenLanguage] = useState([])
     const [locationList, setLocationList] = useState([])
     const [currentStep, setCurrentStep] = useState(["0", "1"]); // Controls which section is open
+    const [expandCollapse, setExpandCollapse] = useState([1, 2, 3])
     const areaEduRef = useRef();
     const industriesRef = useRef();
     const roleRef = useRef();
@@ -1350,11 +1351,11 @@ const UpdateJobsRevised = ({
     const handleOpenStep = (index) => {
         if (!openStep.includes(index)) {
             setOpenStep([index])
-        } 
-        // else {
-        //     // const newArray = openStep.filter((cv) => cv !== index);
-        //     setOpenStep([])
-        // }
+        }
+        else {
+            // const newArray = openStep.filter((cv) => cv !== index);
+            setOpenStep([])
+        }
     }
     const sectionRefs = useRef([]);
     const toolbarRef = useRef(null);
@@ -1369,7 +1370,7 @@ const UpdateJobsRevised = ({
             //   const top = sectionRefs.current[openStep[0]].offsetTop;
             if (openStep[0] === '1' && !Array.isArray(currentStep)) {
                 setToolbarPosition(104);
-            }else if (openStep[0] === '1' && Array.isArray(currentStep)) {
+            } else if (openStep[0] === '1' && Array.isArray(currentStep)) {
                 setToolbarPosition(307);
             } else if (openStep[0] === '2') {
                 setToolbarPosition(160);
@@ -1397,35 +1398,149 @@ const UpdateJobsRevised = ({
     const handleImportantFlag = (e, index) => {
         e.stopPropagation();
         if (index === '1') {
-            setImportantFlag({
-                ...importantFlag,
-                ["salary"]: true
-            })
+            // setImportantFlag({
+            //     ...importantFlag,
+            //     ["salary"]: true
+            // })
+            setImportantFlag(prev => {
+                const trueCount = Object.values(prev).filter(Boolean).length;
+
+                // If already true or max reached, do nothing
+                if (prev["salary"] === true || trueCount >= 2) {
+                    toast.error(
+                        <div>
+                            <strong>2 most important ones</strong>
+                            <div>You can highlight only 2 the most important at a time.</div>
+                        </div>
+                    )
+                    return prev;
+                }
+
+                return {
+                    ...prev,
+                    ["salary"]: true,
+                };
+            });
         } else if (index === '2') {
-            setImportantFlag({
-                ...importantFlag,
-                ["education"]: true
-            })
+            // setImportantFlag({
+            //     ...importantFlag,
+            //     ["education"]: true
+            // })
+            setImportantFlag(prev => {
+                const trueCount = Object.values(prev).filter(Boolean).length;
+
+                // If already true or max reached, do nothing
+                if (prev["education"] === true || trueCount >= 2) {
+                    toast.error(
+                        <div>
+                            <strong>2 most important ones</strong>
+                            <div>You can highlight only 2 the most important at a time.</div>
+                        </div>
+                    )
+                    return prev;
+                }
+
+                return {
+                    ...prev,
+                    ["education"]: true,
+                };
+            });
         } else if (index === '3') {
-            setImportantFlag({
-                ...importantFlag,
-                ["experience"]: true
-            })
+            // setImportantFlag({
+            //     ...importantFlag,
+            //     ["experience"]: true
+            // })
+            setImportantFlag(prev => {
+                const trueCount = Object.values(prev).filter(Boolean).length;
+
+                // If already true or max reached, do nothing
+                if (prev["experience"] === true || trueCount >= 2) {
+                    toast.error(
+                        <div>
+                            <strong>2 most important ones</strong>
+                            <div>You can highlight only 2 the most important at a time.</div>
+                        </div>
+                    )
+                    return prev;
+                }
+
+                return {
+                    ...prev,
+                    ["experience"]: true,
+                };
+            });
         } else if (index === '4') {
-            setImportantFlag({
-                ...importantFlag,
-                ["targethiredate"]: true
-            })
+            // setImportantFlag({
+            //     ...importantFlag,
+            //     ["targethiredate"]: true
+            // })
+            setImportantFlag(prev => {
+                const trueCount = Object.values(prev).filter(Boolean).length;
+
+                // If already true or max reached, do nothing
+                if (prev["targethiredate"] === true || trueCount >= 2) {
+                    toast.error(
+                        <div>
+                            <strong>2 most important ones</strong>
+                            <div>You can highlight only 2 the most important at a time.</div>
+                        </div>
+                    )
+                    return prev;
+                }
+
+                return {
+                    ...prev,
+                    ["targethiredate"]: true,
+                };
+            });
         } else if (index === '5') {
-            setImportantFlag({
-                ...importantFlag,
-                ["language"]: true
-            })
+            // setImportantFlag({
+            //     ...importantFlag,
+            //     ["language"]: true
+            // })
+            setImportantFlag(prev => {
+                const trueCount = Object.values(prev).filter(Boolean).length;
+
+                // If already true or max reached, do nothing
+                if (prev["language"] === true || trueCount >= 2) {
+                    toast.error(
+                        <div>
+                            <strong>2 most important ones</strong>
+                            <div>You can highlight only 2 the most important at a time.</div>
+                        </div>
+                    )
+                    return prev;
+                }
+
+                return {
+                    ...prev,
+                    ["language"]: true,
+                };
+            });
         } else if (index === '6') {
-            setImportantFlag({
-                ...importantFlag,
-                ["geography"]: true
-            })
+            // setImportantFlag({
+            //     ...importantFlag,
+            //     ["geography"]: true
+            // })
+            setImportantFlag(prev => {
+                const trueCount = Object.values(prev).filter(Boolean).length;
+
+                // If already true or max reached, do nothing
+                if (prev["geography"] === true || trueCount >= 2) {
+                    toast.error(
+                        <div>
+                            <strong>2 most important ones</strong>
+                            <div>You can highlight only 2 the most important at a time.</div>
+                        </div>
+                    )
+                    return prev;
+                }
+
+                return {
+                    ...prev,
+                    ["geography"]: true,
+                };
+            });
         }
     }
     const removeImportantFlag = (e, index) => {
@@ -1673,6 +1788,7 @@ const UpdateJobsRevised = ({
             } else if (currentStep == "6") {
                 setCurrentStep(["7", "8"])
                 setOpenStep(["8"])
+                setExpandCollapse([2,3])
             } else if (Array.isArray(currentStep) && nextStep == "8") {
                 setCurrentStep("9")
                 setActiveKeyAdd(true);
@@ -1683,6 +1799,7 @@ const UpdateJobsRevised = ({
                 setActiveKeyAdd(false);
                 // setActiveKey(null);
                 setCurrentStep(["10", "11"])
+                setExpandCollapse([3])
                 setOpenStep(["11"])
             } else {
                 setCurrentStep(nextStep);
@@ -1797,8 +1914,9 @@ const UpdateJobsRevised = ({
                             <ul className="checklist">
                                 <li className={`${setClassForSalary()}`}
                                     onClick={() => {
-                                        setCurrentStep(["0","1"])
+                                        setCurrentStep(["0", "1"])
                                         handleOpenStep("1")
+                                        setExpandCollapse([1, 2, 3])
                                     }}
                                 >
                                     <Link href={""}>
@@ -1809,6 +1927,7 @@ const UpdateJobsRevised = ({
                                     onClick={() => {
                                         setCurrentStep("2")
                                         handleOpenStep("2")
+                                        setExpandCollapse([1, 2, 3])
                                     }}
                                 >
                                     <Link href={""}>
@@ -1819,6 +1938,7 @@ const UpdateJobsRevised = ({
                                     onClick={() => {
                                         setCurrentStep("3")
                                         handleOpenStep("3")
+                                        setExpandCollapse([1, 2, 3])
                                     }}
                                 >
                                     <Link href={""}>
@@ -1829,6 +1949,7 @@ const UpdateJobsRevised = ({
                                     onClick={() => {
                                         setCurrentStep("4")
                                         handleOpenStep("4")
+                                        setExpandCollapse([1, 2, 3])
                                     }}
                                 >
                                     <Link href={""}>
@@ -1840,6 +1961,7 @@ const UpdateJobsRevised = ({
                                     onClick={() => {
                                         setCurrentStep("5")
                                         handleOpenStep("5")
+                                        setExpandCollapse([1, 2, 3])
                                     }}
                                 >
                                     <Link href={""}>
@@ -1850,6 +1972,7 @@ const UpdateJobsRevised = ({
                                     onClick={() => {
                                         setCurrentStep("6")
                                         handleOpenStep("6")
+                                        setExpandCollapse([1, 2, 3])
                                     }}
                                 >
                                     <Link href={""}>
@@ -1861,8 +1984,9 @@ const UpdateJobsRevised = ({
                             <ul className="checklist">
                                 <li className={`${SelectSkillsData?.length > 0 && 'active'}`}
                                     onClick={() => {
-                                        setCurrentStep(["7","8"])
+                                        setCurrentStep(["7", "8"])
                                         handleOpenStep("8")
+                                        setExpandCollapse([2, 3])
                                     }}
                                 >
                                     <Link href={""}>
@@ -1873,6 +1997,7 @@ const UpdateJobsRevised = ({
                                     onClick={() => {
                                         setCurrentStep("9")
                                         handleOpenStep("9")
+                                        setExpandCollapse([2, 3])
                                     }}
                                 >
                                     <Link href={""}>
@@ -1885,8 +2010,9 @@ const UpdateJobsRevised = ({
                             <ul className="checklist">
                                 <li className={`${behaviours.length == 12 && 'active'}`}
                                     onClick={() => {
-                                        setCurrentStep(["10","11"])
+                                        setCurrentStep(["10", "11"])
                                         handleOpenStep("11")
+                                        setExpandCollapse([3])
                                     }}
                                 >
                                     <Link href={""}>
@@ -1899,10 +2025,10 @@ const UpdateJobsRevised = ({
                             <Accordion
                                 defaultActiveKey={["0", "8", "7", "10"]}
                                 activeKey={currentStep} onSelect={(key) => setCurrentStep(key)}>
-                                {parseInt(openStep[0]) <= 6 && (
+                                {expandCollapse.includes(1) && (
                                     <>
                                         <Accordion.Item eventKey="0">
-                                            <Accordion.Header className="bg-lightblue" >Requirements</Accordion.Header>
+                                            <Accordion.Header className="bg-lightblue" onClick={() => setOpenStep([])}>Requirements</Accordion.Header>
                                             {currentStep !== "0" && (<p className="short_text">Define your ideal hire in detail here. Use flags to indicate the importance as needed. All fields are mandatory</p>)}
                                             <Accordion.Body>
                                                 <p>
@@ -3039,10 +3165,13 @@ const UpdateJobsRevised = ({
                                         </Accordion.Item>
                                     </>
                                 )}
-                                {parseInt(openStep[0]) < 10 && (
+                                {expandCollapse.includes(2) && (
                                     <>
                                         <Accordion.Item eventKey="7">
-                                            <Accordion.Header className="bg-lightblue">
+                                            <Accordion.Header className="bg-lightblue" onClick={()=>{
+                                                setOpenStep([])
+                                                setExpandCollapse([2, 3])
+                                            }}>
                                                 Skills and Other Requirements
                                             </Accordion.Header>
                                             {currentStep !== "7" && (<p className="short_text"> Select Skills and Add at least 1 Custom Question to help you understand your applicants better.</p>)}
@@ -3061,7 +3190,10 @@ const UpdateJobsRevised = ({
                                             </Accordion.Body>
                                         </Accordion.Item>
                                         <Accordion.Item eventKey="8" className="accd_child">
-                                            <Accordion.Header onClick={() => handleOpenStep("8")}>
+                                            <Accordion.Header onClick={() => {
+                                                handleOpenStep("8")
+                                                setExpandCollapse([2, 3])
+                                            }}>
                                                 Skills
                                                 <div className="head_actions">
                                                     <span className="imprt_icon text-primery">
@@ -3375,6 +3507,7 @@ const UpdateJobsRevised = ({
                                             <Accordion.Header onClick={() => {
                                                 handleOpenStep("9")
                                                 setComponents([]);
+                                                setExpandCollapse([2, 3])
                                                 setActiveKeyAdd(false);
                                             }}>
                                                 Custom Questions{" "}
@@ -3605,34 +3738,42 @@ const UpdateJobsRevised = ({
                                     </>
                                 )}
 
-                                <Accordion.Item eventKey="10">
-                                    <Accordion.Header className="bg-lightblue" onClick={() => setOpenStep([])}>
-                                        Ideal Behaviour and Personalities
-                                    </Accordion.Header>
-                                    {currentStep !== "10" && (<p className="short_text">Select the 6 most relevant behaviours for the role and company based on daily tasks and work culture. Then, choose the 2 most important ones. Don,t hesitate the Help Me Section.</p>)}
-                                    <Accordion.Body>
-                                        <p>
-                                            Pick the most relevant behaviours for the Role and the
-                                            Company considering their daily tasks and work culture
-                                            within the group or the company. While all Behaviours are
-                                            good to have, some are more important that others that can
-                                            affect the success of the role.
-                                        </p>
-                                        <p>
-                                            Please select 6 Behaviours among the 12 and then the pick
-                                            the 2 among that are most important.
-                                        </p>
-                                        <p>
-                                            Use the Help Me Section for more support in making your
-                                            selections.
-                                        </p>
-                                    </Accordion.Body>
-                                </Accordion.Item>
-                                <Accordion.Item eventKey="11" className="accd_child">
-                                    <Accordion.Header onClick={() => handleOpenStep("11")}>
-                                        <div>
-                                            Behaviour Assessment{" "}
-                                            {/* <svg
+                                {expandCollapse.includes(3) && (
+                                    <>
+                                        <Accordion.Item eventKey="10">
+                                            <Accordion.Header className="bg-lightblue" onClick={() => {
+                                                setOpenStep([])
+                                                setExpandCollapse([3])
+                                                }}>
+                                                Ideal Behaviour and Personalities
+                                            </Accordion.Header>
+                                            {currentStep !== "10" && (<p className="short_text">Select the 6 most relevant behaviours for the role and company based on daily tasks and work culture. Then, choose the 2 most important ones. Don,t hesitate the Help Me Section.</p>)}
+                                            <Accordion.Body>
+                                                <p>
+                                                    Pick the most relevant behaviours for the Role and the
+                                                    Company considering their daily tasks and work culture
+                                                    within the group or the company. While all Behaviours are
+                                                    good to have, some are more important that others that can
+                                                    affect the success of the role.
+                                                </p>
+                                                <p>
+                                                    Please select 6 Behaviours among the 12 and then the pick
+                                                    the 2 among that are most important.
+                                                </p>
+                                                <p>
+                                                    Use the Help Me Section for more support in making your
+                                                    selections.
+                                                </p>
+                                            </Accordion.Body>
+                                        </Accordion.Item>
+                                        <Accordion.Item eventKey="11" className="accd_child">
+                                            <Accordion.Header onClick={() => {
+                                                handleOpenStep("11")
+                                                setExpandCollapse([3])
+                                            }}>
+                                                <div>
+                                                    Behaviour Assessment{" "}
+                                                    {/* <svg
                                                 className="flag_icon"
                                                 width="16"
                                                 height="16"
@@ -3647,90 +3788,90 @@ const UpdateJobsRevised = ({
                                                     stroke-linejoin="round"
                                                 />
                                             </svg> */}
-                                            <small className="small_subtitle">Select <span className="text-primery">6 out of the 12</span> available options, Identify <span className="text-primery">2 most important ones</span></small>
-                                        </div>
-                                        <button type="button" className="btn btn-lightgray me-4" onClick={(e) => { e.stopPropagation(); setShowHelpChoose(true) }}>
-                                            <svg
-                                                className="me-1"
-                                                width="20"
-                                                height="20"
-                                                viewBox="0 0 20 20"
-                                                fill="none"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                            >
-                                                <path
-                                                    d="M10.8332 11.6667L8.33321 9.16666M12.5085 2.91666V1.66666M15.7913 4.21721L16.6752 3.33332M15.7913 10.8333L16.6752 11.7172M9.17517 4.21721L8.29128 3.33332M17.0918 7.49999H18.3418M5.10935 17.3905L12.8071 9.6928C13.1371 9.36278 13.3021 9.19778 13.3639 9.0075C13.4183 8.84013 13.4183 8.65985 13.3639 8.49248C13.3021 8.3022 13.1371 8.1372 12.8071 7.80718L12.1927 7.1928C11.8627 6.86278 11.6977 6.69778 11.5074 6.63595C11.34 6.58157 11.1597 6.58157 10.9924 6.63595C10.8021 6.69778 10.6371 6.86279 10.3071 7.1928L2.60935 14.8905C2.27934 15.2205 2.11433 15.3855 2.0525 15.5758C1.99812 15.7432 1.99812 15.9235 2.0525 16.0908C2.11433 16.2811 2.27934 16.4461 2.60935 16.7761L3.22373 17.3905C3.55375 17.7205 3.71875 17.8855 3.90903 17.9474C4.0764 18.0017 4.25669 18.0017 4.42405 17.9474C4.61433 17.8855 4.77934 17.7205 5.10935 17.3905Z"
-                                                    stroke="#3538CD"
-                                                    stroke-width="1.66667"
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                />
-                                            </svg>
-                                            Help me Choose
-                                        </button>
-                                    </Accordion.Header>
-                                    <Accordion.Body ref={(el) => (sectionRefs.current['11'] = el)}>
-                                        <div className="behav_assmnt">
-                                            {behaviours &&
-                                                behaviours.map((item, index) => (
-                                                    <Col key={index} md={3}>
-                                                        <div
-                                                            className={`assmntbox ${item.isSelected ? "active" : ""
-                                                                }`}
-                                                            // className={`assmntbox ${activeBehaviour.includes(item.uid) && 'active'}`}
-                                                            onClick={() => handleBoxClick(index, item)} style={{ cursor: 'pointer' }}
-                                                        >
-                                                            <div className="assmntbox-head">
-                                                                <h6>
-                                                                    {item.heading}
-                                                                </h6>
-                                                                <i
-                                                                    className={`fa-star ${item.markedImportant ? "fa important" : "far"
+                                                    <small className="small_subtitle">Select <span className="text-primery">6 out of the 12</span> available options, Identify <span className="text-primery">2 most important ones</span></small>
+                                                </div>
+                                                <button type="button" className="btn btn-lightgray me-4" onClick={(e) => { e.stopPropagation(); setShowHelpChoose(true) }}>
+                                                    <svg
+                                                        className="me-1"
+                                                        width="20"
+                                                        height="20"
+                                                        viewBox="0 0 20 20"
+                                                        fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <path
+                                                            d="M10.8332 11.6667L8.33321 9.16666M12.5085 2.91666V1.66666M15.7913 4.21721L16.6752 3.33332M15.7913 10.8333L16.6752 11.7172M9.17517 4.21721L8.29128 3.33332M17.0918 7.49999H18.3418M5.10935 17.3905L12.8071 9.6928C13.1371 9.36278 13.3021 9.19778 13.3639 9.0075C13.4183 8.84013 13.4183 8.65985 13.3639 8.49248C13.3021 8.3022 13.1371 8.1372 12.8071 7.80718L12.1927 7.1928C11.8627 6.86278 11.6977 6.69778 11.5074 6.63595C11.34 6.58157 11.1597 6.58157 10.9924 6.63595C10.8021 6.69778 10.6371 6.86279 10.3071 7.1928L2.60935 14.8905C2.27934 15.2205 2.11433 15.3855 2.0525 15.5758C1.99812 15.7432 1.99812 15.9235 2.0525 16.0908C2.11433 16.2811 2.27934 16.4461 2.60935 16.7761L3.22373 17.3905C3.55375 17.7205 3.71875 17.8855 3.90903 17.9474C4.0764 18.0017 4.25669 18.0017 4.42405 17.9474C4.61433 17.8855 4.77934 17.7205 5.10935 17.3905Z"
+                                                            stroke="#3538CD"
+                                                            stroke-width="1.66667"
+                                                            stroke-linecap="round"
+                                                            stroke-linejoin="round"
+                                                        />
+                                                    </svg>
+                                                    Help me Choose
+                                                </button>
+                                            </Accordion.Header>
+                                            <Accordion.Body ref={(el) => (sectionRefs.current['11'] = el)}>
+                                                <div className="behav_assmnt">
+                                                    {behaviours &&
+                                                        behaviours.map((item, index) => (
+                                                            <Col key={index} md={3}>
+                                                                <div
+                                                                    className={`assmntbox ${item.isSelected ? "active" : ""
                                                                         }`}
-                                                                    // className={`${importantBehaviour.includes(item.uid)?'fa important':'far'} fa-star`}
-                                                                    onClick={(e) => handleStarClick(index, e, item?.heading)}
-                                                                ></i>
+                                                                    // className={`assmntbox ${activeBehaviour.includes(item.uid) && 'active'}`}
+                                                                    onClick={() => handleBoxClick(index, item)} style={{ cursor: 'pointer' }}
+                                                                >
+                                                                    <div className="assmntbox-head">
+                                                                        <h6>
+                                                                            {item.heading}
+                                                                        </h6>
+                                                                        <i
+                                                                            className={`fa-star ${item.markedImportant ? "fa important" : "far"
+                                                                                }`}
+                                                                            // className={`${importantBehaviour.includes(item.uid)?'fa important':'far'} fa-star`}
+                                                                            onClick={(e) => handleStarClick(index, e, item?.heading)}
+                                                                        ></i>
+                                                                    </div>
+                                                                    <div className="assmntbox-body">
+                                                                        <p>{item.data}</p>
+                                                                    </div>
+                                                                </div>
+                                                            </Col>
+                                                        ))}
+                                                </div>
+                                                <div className="perlity_mth mt-3">
+                                                    <h5>Personality Matches</h5>
+                                                    <p>
+                                                        The personalities will help you understand the right
+                                                        combination of behaviours
+                                                    </p>
+                                                    <Row className="behav_assmnt">
+                                                        {createRevisedJobData?.calculation_job.length === 0 && <Col
+                                                            md={12}
+                                                            className="d-flex justify-content-center align-item-center "
+                                                        >
+                                                            <span>
+                                                                Personality matches appear only after behaviour
+                                                                selections are made
+                                                            </span>
+                                                        </Col>}
+                                                        {createRevisedJobData?.calculation_job.length > 0 && personalityData.length > 0 && personalityData?.sort((a, b) => b?.personality_percentage - a?.personality_percentage).map((item, index) => (<Col key={index} md={3}>
+                                                            <div onClick={() => handleCardClick(item)} className="perlitymth-card">
+                                                                <div className="perlitymth-head">
+                                                                    <span className="prtmth_icon"><img src={LeaderIcn} /></span>
+                                                                    <div className="prtmth_title">
+                                                                        <h6>{item?.behaviours_name}</h6>
+                                                                        <span>{item?.personality_percentage}%</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="perlitymth-body">
+                                                                    <p className="m-0 text-truncate">{item?.behaviour_desctiption}</p>
+                                                                </div>
                                                             </div>
-                                                            <div className="assmntbox-body">
-                                                                <p>{item.data}</p>
-                                                            </div>
-                                                        </div>
-                                                    </Col>
-                                                ))}
-                                        </div>
-                                        <div className="perlity_mth mt-3">
-                                            <h5>Personality Matches</h5>
-                                            <p>
-                                                The personalities will help you understand the right
-                                                combination of behaviours
-                                            </p>
-                                            <Row className="behav_assmnt">
-                                                {createRevisedJobData?.calculation_job.length === 0 && <Col
-                                                    md={12}
-                                                    className="d-flex justify-content-center align-item-center "
-                                                >
-                                                    <span>
-                                                        Personality matches appear only after behaviour
-                                                        selections are made
-                                                    </span>
-                                                </Col>}
-                                                {createRevisedJobData?.calculation_job.length > 0 && personalityData.length > 0 && personalityData?.sort((a, b) => b?.personality_percentage - a?.personality_percentage).map((item, index) => (<Col key={index} md={3}>
-                                                    <div onClick={() => handleCardClick(item)} className="perlitymth-card">
-                                                        <div className="perlitymth-head">
-                                                            <span className="prtmth_icon"><img src={LeaderIcn} /></span>
-                                                            <div className="prtmth_title">
-                                                                <h6>{item?.behaviours_name}</h6>
-                                                                <span>{item?.personality_percentage}%</span>
-                                                            </div>
-                                                        </div>
-                                                        <div className="perlitymth-body">
-                                                            <p className="m-0 text-truncate">{item?.behaviour_desctiption}</p>
-                                                        </div>
-                                                    </div>
-                                                </Col>))}
-                                            </Row>
-                                        </div>
-                                        {/* <div class="d-flex justify-content-center align-items-center col-md-12 mt-3">
+                                                        </Col>))}
+                                                    </Row>
+                                                </div>
+                                                {/* <div class="d-flex justify-content-center align-items-center col-md-12 mt-3">
                                             <button
                                                 onClick={handleCreateForm}
                                                 type="button"
@@ -3740,8 +3881,11 @@ const UpdateJobsRevised = ({
                                                 Review And Post
                                             </button>
                                         </div> */}
-                                    </Accordion.Body>
-                                </Accordion.Item>
+                                            </Accordion.Body>
+                                        </Accordion.Item>
+                                    </>
+                                )}
+
                                 <div class="d-flex justify-content-center align-items-center col-md-12 mt-3">
                                     <button
                                         onClick={handleCreateForm}
