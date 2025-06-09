@@ -1848,7 +1848,7 @@ import {
 } from "../../services/provider";
 import axios from "axios";
 import { compose } from "@reduxjs/toolkit";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { removeToken } from "../../helpers/helper";
 import DatePicker from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css';
@@ -2752,33 +2752,37 @@ const ApplicationJobPostModal = ({
         alert("Please fill Profile Details");
         return;
       }
-      const date = new Date(row.gradYear);
-      const grad_year = date.getFullYear(); // Extract the year
-      let gradeValue;
-      if (row.gpa == 'GPA in %') {
-        gradeValue = `${row.grade}%`;
-      } else if (row.gpa == '4 Point GPA') {
-        gradeValue = `${row.grade}/4.0`;
-      } else if (row.gpa == '10 Point GPA') {
-        gradeValue = `${row.grade}/10.0`;
-      }
-      const formdata = new FormData();
-      formdata.append("applicant_profile", storedApplicantId);
-      formdata.append("level", row.level);
-      formdata.append("applicant_area_of_education", row.areaOfEducation);
-      formdata.append("grad_year", grad_year);
-      formdata.append("university", row.university);
-      formdata.append("grade", gradeValue);
-      const response = await EducationQualificationApi(formdata);
+      if (isEducationFormValid) {
+        const date = new Date(row.gradYear);
+        const grad_year = date.getFullYear(); // Extract the year
+        let gradeValue;
+        if (row.gpa == 'GPA in %') {
+          gradeValue = `${row.grade}%`;
+        } else if (row.gpa == '4 Point GPA') {
+          gradeValue = `${row.grade}/4.0`;
+        } else if (row.gpa == '10 Point GPA') {
+          gradeValue = `${row.grade}/10.0`;
+        }
+        const formdata = new FormData();
+        formdata.append("applicant_profile", storedApplicantId);
+        formdata.append("level", row.level);
+        formdata.append("applicant_area_of_education", row.areaOfEducation);
+        formdata.append("grad_year", grad_year);
+        formdata.append("university", row.university);
+        formdata.append("grade", gradeValue);
+        const response = await EducationQualificationApi(formdata);
 
-      if (response.status === 200) {
-        const newRows = [...EducationRows];
-        newRows[index].saved = true;
-        newRows[index].id = Math.random().toString(36).slice(2);
-        SetEducationRows(newRows);
-      } else {
-        console.error("Failed to save form: ", response.data);
-        alert("There was an issue saving the form.");
+        if (response.status === 200) {
+          const newRows = [...EducationRows];
+          newRows[index].saved = true;
+          newRows[index].id = Math.random().toString(36).slice(2);
+          SetEducationRows(newRows);
+        } else {
+          console.error("Failed to save form: ", response.data);
+          alert("There was an issue saving the form.");
+        }
+      }else{
+        toast.warning('Please fill all fields')
       }
     } catch (error) {
       console.error("Error occurred:", error);
@@ -2799,7 +2803,7 @@ const ApplicationJobPostModal = ({
     try {
       if (!storedApplicantId || !totalWorkExperience || !row.WorkRole || !row.WorkFrom || !row.WorkTo || !row.WorkComapny || !row.WorkIndustry || !row.WorkNote) {
         // alert("Please fill Profile Details");
-        toast.error("Please fill Profile Details");
+        toast.warning("Please fill Profile Details");
         return;
       }
       const formdata = new FormData();
@@ -2934,8 +2938,7 @@ const ApplicationJobPostModal = ({
   };
 
   const isAllEducationFieldsFilled = checkAllFieldsFilled(EducationRows);
-  const isAllWorkExperienceFieldsFilled =
-    checkAllFieldsFilled(WorkExpreienceRow);
+  const isAllWorkExperienceFieldsFilled = totalWorkExperience != ""
 
   const handleSpokenLanguageClick = (uid) => {
     if (selectedSpokenLanguageUids.includes(uid)) {
@@ -3306,15 +3309,19 @@ const ApplicationJobPostModal = ({
                     "active"
                     }`}
                 >
-                  <a href="#item_salary">
+                  {/* <a href="#item_salary"> */}
+                  <Link to={''}>
                     Basic Details <i class="fa fa-check" aria-hidden="true"></i>
-                  </a>
+                    {/* </a> */}
+                  </Link>
                 </li>
 
                 <li className={`${ResumeFile && "active"}`}>
-                  <a href="#item_edu">
+                  {/* <a href="#item_edu"> */}
+                  <Link to={''}>
                     Resume <i class="fa fa-check" aria-hidden="true"></i>
-                  </a>
+                    {/* </a> */}
+                  </Link>
                 </li>
                 <li
                   className={`${profileformData?.AvailableBy &&
@@ -3324,29 +3331,37 @@ const ApplicationJobPostModal = ({
                     "active"
                     }`}
                 >
-                  <a href="#item_Exp">
+                  {/* <a href="#item_Exp"> */}
+                  <Link to={''}>
                     Availability <i class="fa fa-check" aria-hidden="true"></i>
-                  </a>
+                    {/* </a> */}
+                  </Link>
                 </li>
                 <li
                   className={`${profileformData?.ExpectedSalary && "active"}`}
                 >
-                  <a href="#item_Target">
+                  {/* <a href="#item_Target"> */}
+                  <Link to={''}>
                     Expected Salary{" "}
                     <i class="fa fa-check" aria-hidden="true"></i>
-                  </a>
+                    {/* </a> */}
+                  </Link>
                 </li>
                 <li className={`${isAllEducationFieldsFilled && "active"}`}>
-                  <a href="#item_lang">
+                  {/* <a href="#item_lang"> */}
+                  <Link to={''}>
                     Education <i class="fa fa-check" aria-hidden="true"></i>
-                  </a>
+                  </Link>
+                  {/* </a> */}
                 </li>
                 <li
                   className={`${isAllWorkExperienceFieldsFilled && "active"}`}
                 >
-                  <a href="#item_Geog">
+                  {/* <a href="#item_Geog"> */}
+                  <Link to={''}>
                     Experience <i class="fa fa-check" aria-hidden="true"></i>
-                  </a>
+                  </Link>
+                  {/* </a> */}
                 </li>
                 <li
                   className={`${spokenLanguageBadges.length &&
@@ -3354,32 +3369,40 @@ const ApplicationJobPostModal = ({
                     "active"
                     }`}
                 >
-                  <a href="#item_Geog">
+                  {/* <a href="#item_Geog"> */}
+                  <Link to={''}>
                     Language <i class="fa fa-check" aria-hidden="true"></i>
-                  </a>
+                  </Link>
+                  {/* </a> */}
                 </li>
 
                 <li
                   className={`${profileformData?.CurrentLocation && "active"}`}
                 >
-                  <a href="#item_Geog">
+                  {/* <a href="#item_Geog"> */}
+                  <Link to={''}>
                     Geography <i class="fa fa-check" aria-hidden="true"></i>
-                  </a>
+                  </Link>
+                  {/* </a> */}
                 </li>
                 <li className={`${selectedSkills.length > 0 && "active"}`}>
-                  <a href="#item_Geog">
+                  {/* <a href="#item_Geog"> */}
+                  <Link to={''}>
                     Skills <i class="fa fa-check" aria-hidden="true"></i>
-                  </a>
+                  </Link>
+                  {/* </a> */}
                 </li>
                 <li
                   className={
                     Object.keys(selectedAnswers).length > 0 ? "active" : ""
                   }
                 >
-                  <a href="#item_Geog">
+                  {/* <a href="#item_Geog"> */}
+                  <Link to={''}>
                     Custom Questions{" "}
                     <i class="fa fa-check" aria-hidden="true"></i>
-                  </a>
+                  </Link>
+                  {/* </a> */}
                 </li>
               </ul>
             </Col>
@@ -5229,7 +5252,7 @@ const ApplicationJobPostModal = ({
         </Container>
 
         <div>
-          <Modal backdrop={false} aria-labelledby="contained-modal-title-vcenter"
+          <Modal backdrop={false} aria-labelledby="contained-modal-title-vcenter zinde999"
             centered show={showModal.showSaveAsDraft} onHide={handleCloseModals} className="model_sm alartmdl">
             <Modal.Header closeButton>
             </Modal.Header>
@@ -5255,7 +5278,7 @@ const ApplicationJobPostModal = ({
 
 
         <div>
-          <Modal backdrop={false} aria-labelledby="contained-modal-title-vcenter"
+          <Modal backdrop={false} aria-labelledby="contained-modal-title-vcenter zinde999"
             centered show={showModal.showSaveModal} onHide={handleCloseModals} className="model_sm alartmdl alart-submited">
             <Modal.Header closeButton>
 

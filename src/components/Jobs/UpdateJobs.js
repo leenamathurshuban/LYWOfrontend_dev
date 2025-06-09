@@ -409,16 +409,16 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
 
     if (file.type.startsWith("image/")) {
       // Handle Image Upload
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        // Insert image into Quill editor
-        const quill = quillRef.current.getEditor();
-        const range = quill.getSelection();
-        if (range) {
-          quill.insertEmbed(range.index, "image", reader.result);
-        }
-      };
-      reader.readAsDataURL(file);
+      // const reader = new FileReader();
+      // reader.onloadend = () => {
+      //   // Insert image into Quill editor
+      //   const quill = quillRef.current.getEditor();
+      //   const range = quill.getSelection();
+      //   if (range) {
+      //     quill.insertEmbed(range.index, "image", reader.result);
+      //   }
+      // };
+      // reader.readAsDataURL(file);
       const uploadSimulation = setInterval(() => {
         setUploadProgress((prevProgress) => {
           if (prevProgress >= 100) {

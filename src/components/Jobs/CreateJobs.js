@@ -393,16 +393,16 @@ const CreateJobs = ({ show, handleClose }) => {
 
     if (file.type.startsWith("image/")) {
       // Handle Image Upload
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        // Insert image into Quill editor
-        const quill = quillRef.current.getEditor();
-        const range = quill.getSelection();
-        if (range) {
-          quill.insertEmbed(range.index, "image", reader.result);
-        }
-      };
-      reader.readAsDataURL(file);
+      // const reader = new FileReader();
+      // reader.onloadend = () => {
+      //   // Insert image into Quill editor
+      //   const quill = quillRef.current.getEditor();
+      //   const range = quill.getSelection();
+      //   if (range) {
+      //     quill.insertEmbed(range.index, "image", reader.result);
+      //   }
+      // };
+      // reader.readAsDataURL(file);
       const uploadSimulation = setInterval(() => {
         setUploadProgress((prevProgress) => {
           if (prevProgress >= 100) {
@@ -539,12 +539,25 @@ const CreateJobs = ({ show, handleClose }) => {
         }
       });
   };
+  // const handleBenifts = (benefititem) => {
+  //   setSelectBenefitsData((prevState) =>
+  //     prevState.includes(benefititem)
+  //       ? prevState.filter((item2) => item2 !== benefititem)
+  //       : [...prevState, benefititem]
+  //   );
+  // };
   const handleBenifts = (benefititem) => {
-    setSelectBenefitsData((prevState) =>
-      prevState.includes(benefititem)
-        ? prevState.filter((item2) => item2 !== benefititem)
-        : [...prevState, benefititem]
-    );
+    if (!SelectBenefitsData.includes(benefititem.uid)) {
+      setSelectBenefitsData([...SelectBenefitsData, benefititem?.uid])
+    } else {
+      const newArray = SelectBenefitsData.filter((item) => item !== benefititem?.uid)
+      setSelectBenefitsData(newArray)
+    }
+    // setSelectBenefitsData((prevState) =>
+    //   prevState.includes(benefititem)
+    //     ? prevState.filter((item2) => item2 !== benefititem)
+    //     : [...prevState, benefititem]
+    // );
   };
   const getSelectedBenefitUids = () => {
     return SelectBenefitsData.map((item) => item.uid);
@@ -1419,7 +1432,7 @@ const CreateJobs = ({ show, handleClose }) => {
                 <span
                   key={item}
                   onClick={() => handleBenifts(item)}
-                  className={`badge-gray ${SelectBenefitsData.includes(item) ? "active" : ""
+                  className={`badge-gray ${SelectBenefitsData.includes(item?.uid) ? "active" : ""
                     }`}
                 >
                   {item.benefit_name}

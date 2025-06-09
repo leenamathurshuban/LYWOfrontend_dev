@@ -3618,7 +3618,7 @@ const UpdateJobsRevised = ({
                                                                             value={question.question_title}
                                                                         />
                                                                     </span>
-                                                                    {questionIndex === 0 && (
+                                                                    {/* {questionIndex === 0 && ( */}
                                                                         <div className="d-flex ms-3">
                                                                             <Form.Select
                                                                                 onChange={(e) =>
@@ -3633,11 +3633,11 @@ const UpdateJobsRevised = ({
                                                                                     MCQ Multiple
                                                                                 </option>
                                                                             </Form.Select>
-                                                                            <button type="button" className="icon-btn">
+                                                                            {/* <button type="button" className="icon-btn">
                                                                                 <i className="far fa-star"></i>
-                                                                            </button>
+                                                                            </button> */}
                                                                         </div>
-                                                                    )}
+                                                                    {/* )} */}
                                                                     <div className="d-flex ms-3">
                                                                         <button
                                                                             type="button"

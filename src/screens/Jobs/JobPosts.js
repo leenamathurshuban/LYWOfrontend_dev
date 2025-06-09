@@ -1186,7 +1186,7 @@ const JobPosts = () => {
             }
           })}
 
-          {!behaviourAssModel && (
+          {!behaviourAssModel && !modalOpen.showFirstModal && (
             <div className="livechat">
               <div className="chat_icon">
                 <img src={Chat} onClick={() => handleShowModal("chatModal")} />
