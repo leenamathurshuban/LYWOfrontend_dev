@@ -10,7 +10,8 @@ body {
   padding: 0;
   font-family: "Inter", sans-serif !important;
   color: #475467;
-  background-color: #f9fafb;
+  // background-color: #f9fafb;
+  background-color: #F2F4F7;
   scroll-behavior: smooth;
 }
 
@@ -374,7 +375,8 @@ fieldset:disabled .btn {
       padding: 5px;
     }
   }
-  .header_serach {
+}
+.header_serach {
     .form-control {
       min-height: 40px;
       border-color: #d0d5dd;
@@ -391,8 +393,6 @@ fieldset:disabled .btn {
       border-radius: 8px;
     }
   }
-}
-
 .header_right {
   display: flex;
   justify-content: end;
@@ -874,8 +874,17 @@ label.required.form-label {
 .form-select:focus {
   box-shadow: none;
   outline: none;
+  border-color: #d0d5dd;
 }
-
+.defult_serachbox  {
+  .form-control:focus,
+  .form-select:focus {
+    box-shadow: none;
+    outline: none;
+    border-color: #d0d5dd;
+    border-left: transparent;
+  }
+}
 .form_card {
   .form-label {
     margin-bottom: 0.3rem;
@@ -2663,6 +2672,7 @@ select.h-36.form-select {
     padding: 6px 15px;
     text-align: center;
     border-radius: 50px;
+    max-height: 30px;
     i {
       color: #fff !important;
     }
@@ -7345,6 +7355,7 @@ button#input-group-dropdown-1 {
     margin-bottom: 10px;
   }
 }
+
 .btn-light-outline-sm {
   font-family: Inter;
   font-weight: 400;
@@ -7601,45 +7612,63 @@ button.btn-icon {
 .border-light-2{
     border-color: #EAECF0;
 }
-.designation_card  {
-  .card-title {
-    font-family: Inter;
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 20px;
-    color: #101828;
-    margin: 0;
-  }
-  .fav_status {
-    color: #FEC84B;
-  }
-  .total_appcnt {
-    margin-bottom: 15px;
-    h2 {
-      font-family: Inter;
-      font-weight: 600;
-      font-size: 30px;
-      line-height: 38px;
-      color: #101828;
-    }
-    p {
-      font-family: Inter;
-      font-weight: 400;
-      font-size: 10px;
-      line-height: 18px;
-      color: #475467;
-      margin: 0;
+.dbstatus_card  {
+  border-radius: 12px;
+  border: solid 1px #EAECF0;
+  background-color: #fff;
+  box-shadow: 0px 4px 10px -4px #1018280F;
+  position: relative;
+  &.border-active {
+    &::after {
+      content: '';
+      background-color: #0BA5EC;
+      width: 4px;
+      height: 57px;
+      border-radius: 5px;
+      position: absolute;
+      top: 50%;
+      transform: translate(0, -50%);
+      left: 0;
     }
   }
-  .new_appcnt {
+  &.border-applications {
+    &::after {
+      content: '';
+      background-color: #875BF7;
+      width: 4px;
+      height: 57px;
+      border-radius: 5px;
+      position: absolute;
+      top: 50%;
+      transform: translate(0, -50%);
+      left: 0;
+    }
+  }
+  &.border-shortlist {
+    &::after {
+      content: '';
+      background-color: #15B79E;
+      width: 4px;
+      height: 57px;
+      border-radius: 5px;
+      position: absolute;
+      top: 50%;
+      transform: translate(0, -50%);
+      left: 0;
+    }
+  }
+  .card-body {
+     padding: 15px;
+  }
+  .dbst_info {
+    margin-left: 20px;
     h4 {
       font-family: Inter;
-      font-weight: 500;
-      font-size: 14px;
-      line-height: 20px;  
-      &.status_up {
-        color: #067647;
-      }
+      font-weight: 600;
+      font-size: 18px;
+      line-height: 28px;
+      color: #101828;
+      margin-bottom: 4px;
     }
     p {
       font-family: Inter;
@@ -7651,6 +7680,109 @@ button.btn-icon {
     }
   }
 } 
+.pending_reviews {
+  .table {
+    tr th {
+      padding: 12px 15px;
+      background-color: #FCFCFD;
+      border-bottom: solid 1px #EAECF0;
+      font-family: Inter;
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 18px;
+      color: #475467;
+    }
+    tr td {
+      padding: 12px 15px;
+      border-bottom: solid 1px #EAECF0;
+      font-family: Inter;
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 18px;
+      color: #101828;
+    }
+  }
+  .badge-outline {
+    min-width: 80px;
+    display: inline-block;
+  }
+  &::after{
+    content: "";
+    background-color: #EAAA08;
+    width: 4px;
+    height: 57px;
+    border-radius: 5px;
+    position: absolute;
+    top: 15px;
+    left: 0;
+  }
+}
+.draft_jobs {
+  .table {
+    tr th {
+      padding: 12px 15px;
+      background-color: #FCFCFD;
+      border-bottom: solid 1px #EAECF0;
+      font-family: Inter;
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 18px;
+      color: #475467;
+    }
+    tr td {
+      padding: 12px 15px;
+      border-bottom: solid 1px #EAECF0;
+      font-family: Inter;
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 18px;
+      color: #101828;
+      span {
+        font-weight: 400;
+        color: #344054;
+      }
+    }
+  }
+  &::after{
+    content: "";
+    background-color: #F38744;
+    width: 4px;
+    height: 57px;
+    border-radius: 5px;
+    position: absolute;
+    top: 15px;
+    left: 0;
+  }
+}
+.hiring_pipeline {
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px -4px #1018280F;
+  .card-header {
+    border-radius: 12px 12px 0 0;
+    padding: 15px;
+   .defult_serachbox {
+    max-width: 240px;
+    margin-left: 15px;
+   }
+  }
+  .table{
+    .count{
+      margin-left: 4px;
+      font-weight: 500;
+      color: #667085;
+    }
+  }
+}
+.hiring_ppldata {
+    padding: 0 15px 15px;
+    .elv_datatable {
+    border: solid 1px #eaecf0;
+    border-radius: 8px;
+    margin: 0;
+    box-shadow: 0 1px 4px rgb(0 0 0 / 14%);
+    overflow: hidden;
+  }
+}
 .title-md {
   font-family: Inter;
   font-weight: 600;
@@ -7659,3 +7791,54 @@ button.btn-icon {
   color: #101828;
   margin-bottom: 10px;
 }
+.badge-outline {
+  font-family: Inter;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  color: #344054;
+  text-align: center;
+  background-color: #fff;
+  border: solid 1px #D0D5DD;
+  padding: 4px 6px;
+  border-radius: 6px;
+}
+.gray_iconbtn {
+  background-color: #F2F4F7;
+  border-radius: 4px;
+  width: 30px;
+  height: 30px;
+  border: none;
+  img {
+    width: 18px;
+    height: 18px;
+  }
+  &.active {
+      img {
+        filter: invert(1);
+      }
+  }
+}
+.badge-primery,.badge-warning,.badge-sucess {
+  background-color: #EEF4FF;
+  border: solid 1px #C7D7FE;
+  border-radius: 16px;
+  padding: 4px 8px;
+  font-family: Inter;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  color: #3538CD;
+  text-align: center;
+  display: inline-block;
+}
+.badge-sucess {
+  background-color: #ECFDF3;
+  border: solid 1px #ABEFC6;
+  color: #067647;
+}
+.badge-warning {
+   background-color: #FFFAEB;
+   border: solid 1px #FEDF89;
+   color: #B54708;
+} 

@@ -10,7 +10,7 @@ body {
   padding: 0;
   font-family: "Inter", sans-serif !important;
   color: #475467;
-  background-color: #f9fafb;
+  background-color: #F2F4F7;
   scroll-behavior: smooth;
 }
 
@@ -345,15 +345,16 @@ fieldset:disabled .btn {
   color: #344054;
   padding: 5px;
 }
-.header-wrapper.row .header_serach .form-control {
+
+.header_serach .form-control {
   min-height: 40px;
   border-color: #d0d5dd;
   border-radius: 8px;
   border-left: 0;
   padding-left: 0;
 }
-.header-wrapper.row .header_serach .btn,
-.header-wrapper.row .header_serach .input-group-text {
+.header_serach .btn,
+.header_serach .input-group-text {
   background-color: transparent !important;
   border-color: #d0d5dd;
   border-right: transparent;
@@ -788,6 +789,15 @@ label.required.form-label {
 .form-select:focus {
   box-shadow: none;
   outline: none;
+  border-color: #d0d5dd;
+}
+
+.defult_serachbox .form-control:focus,
+.defult_serachbox .form-select:focus {
+  box-shadow: none;
+  outline: none;
+  border-color: #d0d5dd;
+  border-left: transparent;
 }
 
 .form_card .form-label {
@@ -2320,6 +2330,7 @@ select.h-36.form-select {
   padding: 6px 15px;
   text-align: center;
   border-radius: 50px;
+  max-height: 30px;
 }
 .tagarea .smbtn-primary i {
   color: #fff !important;
@@ -6603,51 +6614,164 @@ button.btn-icon {
   border-color: #EAECF0;
 }
 
-.designation_card .card-title {
+.dbstatus_card {
+  border-radius: 12px;
+  border: solid 1px #EAECF0;
+  background-color: #fff;
+  box-shadow: 0px 4px 10px -4px rgba(16, 24, 40, 0.0588235294);
+  position: relative;
+}
+.dbstatus_card.border-active::after {
+  content: "";
+  background-color: #0BA5EC;
+  width: 4px;
+  height: 57px;
+  border-radius: 5px;
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+  left: 0;
+}
+.dbstatus_card.border-applications::after {
+  content: "";
+  background-color: #875BF7;
+  width: 4px;
+  height: 57px;
+  border-radius: 5px;
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+  left: 0;
+}
+.dbstatus_card.border-shortlist::after {
+  content: "";
+  background-color: #15B79E;
+  width: 4px;
+  height: 57px;
+  border-radius: 5px;
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+  left: 0;
+}
+.dbstatus_card .card-body {
+  padding: 15px;
+}
+.dbstatus_card .dbst_info {
+  margin-left: 20px;
+}
+.dbstatus_card .dbst_info h4 {
   font-family: Inter;
   font-weight: 600;
-  font-size: 14px;
-  line-height: 20px;
+  font-size: 18px;
+  line-height: 28px;
   color: #101828;
-  margin: 0;
+  margin-bottom: 4px;
 }
-.designation_card .fav_status {
-  color: #FEC84B;
-}
-.designation_card .total_appcnt {
-  margin-bottom: 15px;
-}
-.designation_card .total_appcnt h2 {
-  font-family: Inter;
-  font-weight: 600;
-  font-size: 30px;
-  line-height: 38px;
-  color: #101828;
-}
-.designation_card .total_appcnt p {
-  font-family: Inter;
-  font-weight: 400;
-  font-size: 10px;
-  line-height: 18px;
-  color: #475467;
-  margin: 0;
-}
-.designation_card .new_appcnt h4 {
-  font-family: Inter;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 20px;
-}
-.designation_card .new_appcnt h4.status_up {
-  color: #067647;
-}
-.designation_card .new_appcnt p {
+.dbstatus_card .dbst_info p {
   font-family: Inter;
   font-weight: 500;
   font-size: 12px;
   line-height: 18px;
   color: #475467;
   margin: 0;
+}
+
+.pending_reviews .table tr th {
+  padding: 12px 15px;
+  background-color: #FCFCFD;
+  border-bottom: solid 1px #EAECF0;
+  font-family: Inter;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  color: #475467;
+}
+.pending_reviews .table tr td {
+  padding: 12px 15px;
+  border-bottom: solid 1px #EAECF0;
+  font-family: Inter;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  color: #101828;
+}
+.pending_reviews .badge-outline {
+  min-width: 80px;
+  display: inline-block;
+}
+.pending_reviews::after {
+  content: "";
+  background-color: #EAAA08;
+  width: 4px;
+  height: 57px;
+  border-radius: 5px;
+  position: absolute;
+  top: 15px;
+  left: 0;
+}
+
+.draft_jobs .table tr th {
+  padding: 12px 15px;
+  background-color: #FCFCFD;
+  border-bottom: solid 1px #EAECF0;
+  font-family: Inter;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  color: #475467;
+}
+.draft_jobs .table tr td {
+  padding: 12px 15px;
+  border-bottom: solid 1px #EAECF0;
+  font-family: Inter;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  color: #101828;
+}
+.draft_jobs .table tr td span {
+  font-weight: 400;
+  color: #344054;
+}
+.draft_jobs::after {
+  content: "";
+  background-color: #F38744;
+  width: 4px;
+  height: 57px;
+  border-radius: 5px;
+  position: absolute;
+  top: 15px;
+  left: 0;
+}
+
+.hiring_pipeline {
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px -4px rgba(16, 24, 40, 0.0588235294);
+}
+.hiring_pipeline .card-header {
+  border-radius: 12px 12px 0 0;
+  padding: 15px;
+}
+.hiring_pipeline .card-header .defult_serachbox {
+  max-width: 240px;
+  margin-left: 15px;
+}
+.hiring_pipeline .table .count {
+  margin-left: 4px;
+  font-weight: 500;
+  color: #667085;
+}
+
+.hiring_ppldata {
+  padding: 0 15px 15px;
+}
+.hiring_ppldata .elv_datatable {
+  border: solid 1px #eaecf0;
+  border-radius: 8px;
+  margin: 0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.14);
+  overflow: hidden;
 }
 
 .title-md {
@@ -6657,4 +6781,58 @@ button.btn-icon {
   line-height: 24px;
   color: #101828;
   margin-bottom: 10px;
+}
+
+.badge-outline {
+  font-family: Inter;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  color: #344054;
+  text-align: center;
+  background-color: #fff;
+  border: solid 1px #D0D5DD;
+  padding: 4px 6px;
+  border-radius: 6px;
+}
+
+.gray_iconbtn {
+  background-color: #F2F4F7;
+  border-radius: 4px;
+  width: 30px;
+  height: 30px;
+  border: none;
+}
+.gray_iconbtn img {
+  width: 18px;
+  height: 18px;
+}
+.gray_iconbtn.active img {
+  filter: invert(1);
+}
+
+.badge-primery, .badge-warning, .badge-sucess {
+  background-color: #EEF4FF;
+  border: solid 1px #C7D7FE;
+  border-radius: 16px;
+  padding: 4px 8px;
+  font-family: Inter;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  color: #3538CD;
+  text-align: center;
+  display: inline-block;
+}
+
+.badge-sucess {
+  background-color: #ECFDF3;
+  border: solid 1px #ABEFC6;
+  color: #067647;
+}
+
+.badge-warning {
+  background-color: #FFFAEB;
+  border: solid 1px #FEDF89;
+  color: #B54708;
 }/*# sourceMappingURL=main.css.map */

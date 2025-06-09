@@ -280,3 +280,7 @@ export const getAssetDataDetailsAPI=(job_uid,applicant_uid)=>{
   const resultAsset = client.get(`${ApplicationJobPostUrl.getApplicantAssetData}${job_uid}/applicant-uid/${applicant_uid}/`)
   return resultAsset
 }
+export const jobApplicantUpdateAPI=(data)=>{
+  const result = client.putWithUpload(`${JobsUrl.jobApplicantUpdateForList}`,data)
+  return result
+}

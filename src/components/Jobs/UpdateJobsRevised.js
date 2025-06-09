@@ -1788,7 +1788,7 @@ const UpdateJobsRevised = ({
             } else if (currentStep == "6") {
                 setCurrentStep(["7", "8"])
                 setOpenStep(["8"])
-                setExpandCollapse([2,3])
+                setExpandCollapse([2, 3])
             } else if (Array.isArray(currentStep) && nextStep == "8") {
                 setCurrentStep("9")
                 setActiveKeyAdd(true);
@@ -1862,6 +1862,12 @@ const UpdateJobsRevised = ({
             setLocationList([])
         }, 200); // delay to allow click on list items        
     }
+    const formatNumber = (num) => {
+        // Remove all non-digit characters
+        const cleaned = num.replace(/\D/g, "");
+        if (!cleaned) return "";
+        return new Intl.NumberFormat("en-US").format(Number(cleaned));
+    };
     // console.log(behaviours)
 
     // console.log('add skill box', addSkillGroup)
@@ -2125,7 +2131,7 @@ const UpdateJobsRevised = ({
                                                                     name="min_salary"
                                                                     placeholder="Min."
                                                                     className="sm-fcontrol"
-                                                                    value={updateFormData?.min_salary}
+                                                                    value={formatNumber(updateFormData?.min_salary)}
                                                                     onChange={handleFormData}
                                                                 />
                                                             </div>
@@ -2145,7 +2151,7 @@ const UpdateJobsRevised = ({
                                                                     name="max_salary"
                                                                     placeholder="Max."
                                                                     className="sm-fcontrol"
-                                                                    value={updateFormData?.max_salary}
+                                                                    value={formatNumber(updateFormData?.max_salary)}
                                                                     onChange={handleFormData}
                                                                 />
                                                             </div>
@@ -3168,7 +3174,7 @@ const UpdateJobsRevised = ({
                                 {expandCollapse.includes(2) && (
                                     <>
                                         <Accordion.Item eventKey="7">
-                                            <Accordion.Header className="bg-lightblue" onClick={()=>{
+                                            <Accordion.Header className="bg-lightblue" onClick={() => {
                                                 setOpenStep([])
                                                 setExpandCollapse([2, 3])
                                             }}>
@@ -3744,7 +3750,7 @@ const UpdateJobsRevised = ({
                                             <Accordion.Header className="bg-lightblue" onClick={() => {
                                                 setOpenStep([])
                                                 setExpandCollapse([3])
-                                                }}>
+                                            }}>
                                                 Ideal Behaviour and Personalities
                                             </Accordion.Header>
                                             {currentStep !== "10" && (<p className="short_text">Select the 6 most relevant behaviours for the role and company based on daily tasks and work culture. Then, choose the 2 most important ones. Don,t hesitate the Help Me Section.</p>)}

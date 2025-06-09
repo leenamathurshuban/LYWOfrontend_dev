@@ -1890,6 +1890,82 @@ const ApplicationJobPostModal = ({
   const [writtenLanguage, setWittenLanguage] = useState([])
   const [locationList, setLocationList] = useState([])
   const [isOpen, setIsOpen] = useState({});
+  const [showDropdown, setShowDropdown] = useState({ NoticePeriod: false, ExpectedSalary: false, level: false, TotalWorkExperience: false });
+  const dropdownRef = useRef(null);
+
+  const noticeOptions = [
+    "Less than 30 Days",
+    "30-60 Days",
+    "60-90 Days",
+    "More than 90 Days",
+  ];
+  const expectedSalaryOption = [
+    "Below 3 Lacs per Annum",
+    "3 - 5 Lacs per Annum",
+    "5 - 7 Lacs per Annum",
+    "7 - 10 Lacs per Annum",
+    "10 - 12 Lacs per Annum",
+    "12 - 15 Lacs per Annum",
+    "15 - 20 Lacs per Annum",
+    "20 - 25 Lacs per Annum",
+    "25 - 30 Lacs per Annum",
+    "30 - 35 Lacs per Annum",
+    "35 - 40 Lacs per Annum",
+    "40 - 45 Lacs per Annum",
+    "45 - 50 Lacs per Annum",
+    "50 - 55 Lacs per Annum",
+    "55 - 60 Lacs per Annum",
+    "Above 60 Lacs per Annum",
+  ]
+  const levelOption = [
+    "Below Secondary Education",
+    "Upper Secondary (Intermediate, High School, Grade 12)",
+    "Certification  / Vocational / Technical Training",
+    "Diploma / Associate Degree",
+    "Bachelor's Degree",
+    "Master's Degree",
+    "Professional Degree (e.g., MD, JD)",
+    "Doctoral Degree (Ph.D., Ed.D.)",
+    "Postdoctoral Research"
+  ]
+  const totalWorkExperienceOption = [
+    "Fresher",
+    "Less than 1 Year",
+    "1 - 2 Years",
+    "2 - 4 Years",
+    "4 - 6 Years",
+    "6 - 9 Years",
+    "9 - 12 Years",
+    "12 - 15 Years",
+    "15 - 20 Years",
+    "20 - 25 Years",
+    "25 - 30 Years",
+    "30 - 40 Years",
+    "Above 40 Years",
+  ]
+
+  const handleSelect = (key, value) => {
+    handleProfileDetailsChange({
+      target: { name: [key], value }
+    });
+    // setShowDropdown(false);
+    setShowDropdown({
+      ...showDropdown,
+      [key]: false
+    })
+  };
+  // useEffect(() => {
+  //   function handleClickOutside(event) {
+  //     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+  //       // setShowDropdown(false);
+  //       setShowDropdown({
+  //         NoticePeriod: false, ExpectedSalary: false
+  //       })
+  //     }
+  //   }
+  //   document.addEventListener("mousedown", handleClickOutside);
+  //   return () => document.removeEventListener("mousedown", handleClickOutside);
+  // }, []);
 
   // const [geographyLocaton,setGeographyLocaton] = useState("")
   // const [selectedSpokenLanguageUids, setSelectedSpokenLanguageUids] = useState(
@@ -2428,7 +2504,7 @@ const ApplicationJobPostModal = ({
     profileformData?.CurrentLocation &&
     ResumeFile &&
     profileformData?.AvailableBy &&
-    profileformData?.NoticePeriod &&
+    // profileformData?.NoticePeriod &&
     profileformData?.ExpectedSalary;
 
   const handleProfileDetailsChange = (e) => {
@@ -2655,6 +2731,15 @@ const ApplicationJobPostModal = ({
     newRows[index][name] = value;
     SetEducationRows(newRows);
   };
+  const handleSelectLevel = (index, value) => {
+    const newRows = [...EducationRows];
+    newRows[index]['level'] = value;
+    SetEducationRows(newRows)
+    setShowDropdown({
+      ...showDropdown,
+      ["level"]: false
+    })
+  }
   const handleGradYear = (index, dateString) => {
     const newRows = [...EducationRows];
     newRows[index]['gradYear'] = dateString;
@@ -2786,9 +2871,12 @@ const ApplicationJobPostModal = ({
     newWorkRow[index][name] = value;
     setWorkExpreienceRow(newWorkRow);
   };
-  const handleTotalWorkExpeienceChange = (e) => {
-    const { name, value } = e.target;
+  const handleTotalWorkExpeienceChange = (value) => {
     settotalWorkExperience(value)
+    setShowDropdown({
+      ...showDropdown,
+      ["TotalWorkExperience"]: false
+    })
   }
   const calculateWorkExperience = (fromDate, toDate) => {
     const from = new Date(fromDate);
@@ -3576,7 +3664,7 @@ const ApplicationJobPostModal = ({
                       </Col>
 
                       <Col>
-                        <Form.Select
+                        {/* <Form.Select
                           placeholder="Notice Period"
                           size="sm"
                           style={{ width: "350px" }}
@@ -3590,7 +3678,55 @@ const ApplicationJobPostModal = ({
                           <option value='30-60 Days'>30 - 60 Days</option>
                           <option value='60-90 Days'>60 - 90 Days</option>
                           <option value='More than 90'>More than 90 Days</option>
-                        </Form.Select>
+                        </Form.Select> */}
+
+                        <div className="mw-230 relative" ref={dropdownRef}>
+                          <FormControl
+                            placeholder="Notice Period"
+                            size="sm"
+                            style={{ width: "350px" }}
+                            name="NoticePeriod"
+                            value={profileformData?.NoticePeriod || ""}
+                            onClick={() => {
+                              // setShowDropdown((prev) => !prev)
+                              setShowDropdown(prev => ({
+                                ...prev,
+                                ["NoticePeriod"]: !prev["NoticePeriod"]
+                              }));
+                            }}
+                            onBlur={() => setTimeout(() => {
+                              setShowDropdown(prev => ({
+                                ...prev,
+                                ["NoticePeriod"]: false
+                              }));
+                            }, 150)}
+                            isInvalid={!!errors?.NoticePeriod}
+                            readOnly
+                          />
+                          {showDropdown.NoticePeriod && (
+                            <div className="ctm_dropdown ct_scrollbar" style={{
+                              position: "absolute",
+                              background: "#fff",
+                              zIndex: 10,
+                              width: "38%",
+                              border: "1px solid #ccc",
+                              maxHeight: "150px",
+                              overflowY: "auto"
+                            }}>
+                              <ul className="m-0 p-0 list-unstyled">
+                                {noticeOptions.map((option, index) => (
+                                  <li
+                                    key={index}
+                                    style={{ padding: "8px 12px", cursor: "pointer" }}
+                                    onClick={() => handleSelect('NoticePeriod', option)}
+                                  >
+                                    {option}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                        </div>
                       </Col>
                       <Form.Control.Feedback type="invalid">
                         {errors.NoticePeriod}
@@ -3734,7 +3870,7 @@ const ApplicationJobPostModal = ({
                     <Form.Label>Expected Salary</Form.Label>
                   </Col>
                   <Col>
-                    <Form.Select
+                    {/* <Form.Select
                       className="form-control-sm mx-w350"
                       aria-label="Default select example"
                       name="ExpectedSalary"
@@ -3744,9 +3880,6 @@ const ApplicationJobPostModal = ({
                       required
                     >
                       <option value="" disabled hidden>Expected Salary</option>
-                      {/* <option value="15K">₹5 LPA - ₹ 10 LPA</option>
-                      <option value="20K">₹15 LPA - ₹ 20 LPA</option>
-                      <option value="30K">₹25 LPA - ₹ 30 LPA</option> */}
                       <option value="Below 3 Lacs per Annum">Below 3 Lacs per Annum</option>
                       <option value="3-5 Lacs per Annum">3 - 5 Lacs per Annum</option>
                       <option value="5-7 Lacs per Annum">5 - 7 Lacs per Annum</option>
@@ -3763,7 +3896,55 @@ const ApplicationJobPostModal = ({
                       <option value="50-55 Lacs per Annum">50 - 55 Lacs per Annum</option>
                       <option value="55-60 Lacs per Annum">55 - 60 Lacs per Annum</option>
                       <option value="Above 60 Lacs per Annum">Above 60 Lacs per Annum</option>
-                    </Form.Select>
+                    </Form.Select> */}
+
+                    <div className="mw-230 relative" ref={dropdownRef}>
+                      <FormControl
+                        placeholder="Expected Salary"
+                        size="sm"
+                        style={{ width: "350px" }}
+                        name="ExpectedSalary"
+                        value={profileformData?.ExpectedSalary || ""}
+                        onClick={() => {
+                          // setShowDropdown((prev) => !prev)
+                          setShowDropdown(prev => ({
+                            ...prev,
+                            ["ExpectedSalary"]: !prev["ExpectedSalary"]
+                          }));
+                        }}
+                        onBlur={() => setTimeout(() => {
+                          setShowDropdown(prev => ({
+                            ...prev,
+                            ["ExpectedSalary"]: false
+                          }));
+                        }, 150)}
+                        isInvalid={!!errors?.ExpectedSalary}
+                        readOnly
+                      />
+                      {showDropdown.ExpectedSalary && (
+                        <div className="ctm_dropdown ct_scrollbar" style={{
+                          position: "absolute",
+                          background: "#fff",
+                          zIndex: 10,
+                          width: "35%",
+                          border: "1px solid #ccc",
+                          maxHeight: "150px",
+                          overflowY: "auto"
+                        }}>
+                          <ul className="m-0 p-0 list-unstyled">
+                            {expectedSalaryOption.map((option, index) => (
+                              <li
+                                key={index}
+                                style={{ padding: "8px 12px", cursor: "pointer" }}
+                                onClick={() => handleSelect('ExpectedSalary', option)}
+                              >
+                                {option}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
                     <Form.Control.Feedback type="invalid" className="error">
                       {errors.ExpectedSalary}
                     </Form.Control.Feedback>
@@ -3789,7 +3970,7 @@ const ApplicationJobPostModal = ({
                     <tbody key={index}>
                       <tr>
                         <td>
-                          <Form.Select
+                          {/* <Form.Select
                             name="level"
                             value={row.level}
                             onChange={(e) =>
@@ -3807,7 +3988,54 @@ const ApplicationJobPostModal = ({
                             <option value="Professional Degree (e.g., MD, JD)">Professional Degree (e.g., MD, JD)</option>
                             <option value="Doctoral Degree (Ph.D., Ed.D.)">Doctoral Degree (Ph.D., Ed.D.)</option>
                             <option value="Postdoctoral Research">Postdoctoral Research</option>
-                          </Form.Select>
+                          </Form.Select> */}
+
+                          <div className="mw-230 relative" ref={dropdownRef}>
+                            <FormControl
+                              placeholder="Level"
+                              size="sm"
+                              style={{ width: "350px" }}
+                              name="level"
+                              value={row.level || ""}
+                              onClick={() => {
+                                setShowDropdown(prev => ({
+                                  ...prev,
+                                  ["level"]: !prev["level"]
+                                }));
+                              }}
+                              onBlur={() => setTimeout(() => {
+                                setShowDropdown(prev => ({
+                                  ...prev,
+                                  ["level"]: false
+                                }));
+                              }, 150)}
+                              disabled={row.saved}
+                              readOnly
+                            />
+                            {showDropdown.level && (
+                              <div className="ctm_dropdown ct_scrollbar" style={{
+                                position: "absolute",
+                                background: "#fff",
+                                zIndex: 10,
+                                width: "100%",
+                                border: "1px solid #ccc",
+                                maxHeight: "150px",
+                                overflowY: "auto"
+                              }}>
+                                <ul className="m-0 p-0 list-unstyled">
+                                  {levelOption.map((option, i) => (
+                                    <li
+                                      key={i}
+                                      style={{ padding: "8px 12px", cursor: "pointer" }}
+                                      onClick={() => handleSelectLevel(index, option)}
+                                    >
+                                      {option}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                          </div>
                         </td>
                         <td>
                           {/* <Form.Control
@@ -4025,7 +4253,7 @@ const ApplicationJobPostModal = ({
                           onChange={(e) => handleWorkExpeienceChange(index, e)}
                           disabled={row.savedWorkExp}
                         /> */}
-                      <Form.Select
+                      {/* <Form.Select
                         className="form-control-sm mx-w350"
                         aria-label="Default select example"
                         name="TotalWorkExperience"
@@ -4049,7 +4277,54 @@ const ApplicationJobPostModal = ({
                         <option value="25-30 Years">25 - 30 Years</option>
                         <option value="30-40 Years">30 - 40 Years</option>
                         <option value="Above 40 Years">Above 40 Years</option>
-                      </Form.Select>
+                      </Form.Select> */}
+
+                      <div className="mw-230 relative" ref={dropdownRef}>
+                        <FormControl
+                          placeholder="Work Experience"
+                          className="form-control-sm mx-w350"
+                          aria-label="Default select example"
+                          name="TotalWorkExperience"
+                          value={totalWorkExperience}
+                          onClick={() => {
+                            setShowDropdown(prev => ({
+                              ...prev,
+                              ["TotalWorkExperience"]: !prev["TotalWorkExperience"]
+                            }));
+                          }}
+                          onBlur={() => setTimeout(() => {
+                            setShowDropdown(prev => ({
+                              ...prev,
+                              ["TotalWorkExperience"]: false
+                            }));
+                          }, 150)}
+                          isInvalid={!!errors.totalWorkExperience}
+                          readOnly
+                        />
+                        {showDropdown.TotalWorkExperience && (
+                          <div className="ctm_dropdown ct_scrollbar" style={{
+                            position: "absolute",
+                            background: "#fff",
+                            zIndex: 10,
+                            width: "37%",
+                            border: "1px solid #ccc",
+                            maxHeight: "150px",
+                            overflowY: "auto"
+                          }}>
+                            <ul className="m-0 p-0 list-unstyled">
+                              {totalWorkExperienceOption.map((option, i) => (
+                                <li
+                                  key={i}
+                                  style={{ padding: "8px 12px", cursor: "pointer" }}
+                                  onClick={() => handleTotalWorkExpeienceChange(option)}
+                                >
+                                  {option}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
                     </Col>
                   </Row>
                   <table className="mb-2 form_table">

@@ -35,7 +35,8 @@ export const JobsUrl = {
   ScreeningParameterData: "assets-api/get-screening-parameter-data-api/",
   getJobGroupParameterList:"assets-api/get-job-group-parameter-list-api/",
   assetSapicreateJobGroupPost:"assets-api/create-job-group-api/",
-  postJobGroupParameterListByFetch:"assets-api/job-applicant-group-filter-api/"
+  postJobGroupParameterListByFetch:"assets-api/job-applicant-group-filter-api/",
+  jobApplicantUpdateForList:"assets-api/job-applicant-update-api/"
 }
 
 export const SkillsUrl = {

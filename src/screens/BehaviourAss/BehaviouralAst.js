@@ -40,18 +40,18 @@ import { ApplicationDeatilsApi, ApplicationFormDetailsApi, getApplicantBehaviour
 import QuizQuestionSlider from '../../components/QuizQuestionSlider';
 import { useNavigate } from 'react-router-dom';
 
-const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel,jobPostData }) => {
+const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }) => {
     const [show, setShow] = useState(false);
-    const [showInstruction,setShowInstruction] = useState(false)
-    const handleInstructionModel =()=>setShowInstruction(false);
+    const [showInstruction, setShowInstruction] = useState(false)
+    const handleInstructionModel = () => setShowInstruction(false);
     const [popupShow, setPopupShow] = useState(false);
     const handleClosePop = () => {
-        if(complete && runCounter()==28){
+        if (complete && runCounter() == 28) {
             handleSubmit();
             setPopupShow(false)
-        }else{
+        } else {
             setPopupShow(false);
-        }    
+        }
     }
     const handleShow = () => setShow(true);
     const navigate = useNavigate();
@@ -84,7 +84,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel,jobPostData })
     const getApplicantBehaviourDetail = async (id) => {
         try {
             // const response = await getApplicantBehaviourDetailApi(behavioralId?.uid);
-            const user = applicantId.user_login.email?applicantId.user_login.email:applicantId.applcant.user
+            const user = applicantId.user_login.email ? applicantId.user_login.email : applicantId.applcant.user
             const response = await ApplicationDeatilsApi(user)
             if (response?.data?.success) {
                 setAttemptQuiz(response?.data?.response?.most_like?.map((cv) => cv.uid))
@@ -161,7 +161,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel,jobPostData })
                     // debugger
                     const UID = applicantUid?.uid
                     // const response = await ApplicationFormDetailsApi(formData, applicantId.applcant.uid)
-                     const response = await ApplicationFormDetailsApi(formData, UID)
+                    const response = await ApplicationFormDetailsApi(formData, UID)
                     if (response?.data?.success) {
                         setPopupShow(false)
                         // setComplete(true)
@@ -169,12 +169,12 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel,jobPostData })
                         // sessionStorage.setItem('applicantBehaviour',JSON.stringify(response?.data?.response))   
                         localStorage.setItem("AttemptStatus", runCounter())
                         // sessionStorage.setItem("AttemptStatus",runCounter())                         
-                         if(runCounter() === 28){
+                        if (runCounter() === 28) {
                             jobPostData?.asset_job?.map((Val) => {
                                 if (Val?.asset_title === 'Technical round for EHS Manager') {
                                     navigate(`/evaluation-quiz/${Val?.uid}`, { state: jobPostData })
                                 }
-                            })                            
+                            })
                         }
                     }
                 } else {
@@ -197,16 +197,16 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel,jobPostData })
                         // sessionStorage.setItem('applicantBehaviour',JSON.stringify(response?.data?.response))
                         localStorage.setItem("AttemptStatus", runCounter())
                         // sessionStorage.setItem("AttemptStatus",runCounter())  
-                        if(runCounter() === 28){
+                        if (runCounter() === 28) {
                             jobPostData?.asset_job?.map((Val) => {
                                 if (Val?.asset_title === 'Technical round for EHS Manager') {
                                     navigate(`/evaluation-quiz/${Val?.uid}`, { state: jobPostData })
                                 }
-                            })                            
+                            })
                         }
-                        setTimeout(()=>{
+                        setTimeout(() => {
                             window.location.reload();
-                        },1000)                       
+                        }, 1000)
                     }
                 }
             } catch (error) {
@@ -252,7 +252,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel,jobPostData })
                                     </Col>
                                     <Col md={3}>
                                         <div className="brb_cards">
-                                           <span className="brb-cicon"><img src={option_brb} /></span>
+                                            <span className="brb-cicon"><img src={option_brb} /></span>
                                             <h6>4 Options</h6>
                                         </div>
                                     </Col>
@@ -303,14 +303,17 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel,jobPostData })
                     <Modal.Title>Behavioural Assessment</Modal.Title>
                     <div className="score_panel">
                         <span className="att_count">Attempted <strong>{runCounter()} / 28</strong></span>
-                        <button type="button" onClick={()=>setShowInstruction(true)} className="me-3 btn-light-outline-sm"><img src={infogray} />Instructions</button>
+                        <button type="button" onClick={() => setShowInstruction(true)} className="me-3 btn-light-outline-sm"><img src={infogray} />Instructions</button>
                         <button type="button" className="btn-light-outline-sm me-3 setlanguage"><img src={globgray} />
                             <Form.Select
                                 name="currency"
                                 aria-label="Default select example"
                                 className="sm-fselect"
                                 value={language}
-                                onChange={(e) => { setLanguage(e?.target?.value); getQuizQuestion() }}
+                                onChange={(e) => {
+                                    setLanguage(e?.target?.value);
+                                    // getQuizQuestion()
+                                }}
                             >
                                 <option selected value="english">English</option>
                                 <option selected value="hindi">Hindi</option>
@@ -359,7 +362,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel,jobPostData })
                     {quizMostLeastLike.flatMap(row => row.mostList).length === 20 && quizMostLeastLike.flatMap(row => row.leastList).length === 20 && (
                         <div className="toster">
                             <img src={closeBtn} className='closebtn' />
-                            <h6>Almost There</h6><br/>
+                            <h6>Almost There</h6><br />
                             <span>Just a few more choices to go!</span>
                         </div>
                     )}
@@ -429,12 +432,12 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel,jobPostData })
                     </Button>
                 </Modal.Footer>
             </Modal>
-            <Offcanvas 
-                show={showInstruction} 
+            <Offcanvas
+                show={showInstruction}
                 onHide={handleInstructionModel}
                 backdrop={false}
                 placement="end"
-                className="instructions_dwr lg-drawer shadow-md border-0" 
+                className="instructions_dwr lg-drawer shadow-md border-0"
             >
                 <Offcanvas.Header closeButton>
                     <Offcanvas.Title>Important Instructions</Offcanvas.Title>
@@ -444,11 +447,11 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel,jobPostData })
                         <Col md={4}>
                             <div className="ints_card normal">
                                 <span className="itns_icon">
-                                    <img src={iceIQ}/>
+                                    <img src={iceIQ} />
                                 </span>
                                 <h4>Ice Cream</h4>
                                 <div className='mlike-sugg'>
-                                    <img src={SuggNormal}/>
+                                    <img src={SuggNormal} />
                                     <span>Hover over the cards below to begin.</span>
                                 </div>
                             </div>
@@ -456,14 +459,14 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel,jobPostData })
                         <Col md={4}>
                             <div className="ints_card hover">
                                 <span className="itns_icon">
-                                    <img src={iceIQ}/>
+                                    <img src={iceIQ} />
                                 </span>
                                 <h4>Ice Cream</h4>
                                 <div className='quiz-btns'>
                                     <button type="button" class="btn-up"><i class="fa fa-arrow-up"></i></button>
                                     <button type="button" class="btn-down"><i class="fa fa-arrow-down "></i></button>
                                     <div className='mlike-sugg'>
-                                        <img src={SuggNormal}/>
+                                        <img src={SuggNormal} />
                                         <span>Click to pick “Most Like”</span>
                                     </div>
                                 </div>
@@ -472,7 +475,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel,jobPostData })
                         <Col md={4}>
                             <div className="ints_card hover lelike">
                                 <span className="itns_icon">
-                                    <img src={iceIQ}/>
+                                    <img src={iceIQ} />
                                 </span>
                                 <h4>Ice Cream</h4>
                                 <div className='quiz-btns'>
@@ -480,7 +483,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel,jobPostData })
                                     <button type="button" class="btn-down"><i class="fa fa-arrow-down "></i></button>
                                     <div className='mlike-sugg'>
                                         <span>Click to pick “Least Like”</span>
-                                        <img src={SuggLealike}/>
+                                        <img src={SuggLealike} />
                                     </div>
                                 </div>
                             </div>
@@ -488,7 +491,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel,jobPostData })
                         <Col md={4} className='mt-6'>
                             <div className="ints_card hover lelike_select">
                                 <span className="itns_icon">
-                                    <img src={iceIQ}/>
+                                    <img src={iceIQ} />
                                 </span>
                                 <h4>Ice Cream</h4>
                                 <div className='quiz-btns'>
@@ -496,7 +499,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel,jobPostData })
                                     <button type="button" class="btn-down"><i class="fa fa-times"></i></button>
                                     <div className='mlike-sugg'>
                                         <span>Click to remove the selection</span>
-                                        <img src={SuggLealike}/>
+                                        <img src={SuggLealike} />
                                     </div>
                                 </div>
                             </div>
@@ -504,21 +507,21 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel,jobPostData })
                         <Col md={4} className='mt-6'>
                             <div className="ints_card hover mlike_select">
                                 <span className="itns_icon">
-                                    <img src={iceIQ}/>
+                                    <img src={iceIQ} />
                                 </span>
                                 <h4>Ice Cream</h4>
                                 <div className='quiz-btns'>
                                     <button type="button" class="btn-up"><i class="fa fa-times"></i></button>
                                     <button type="button" class="btn-down"><i class="fa fa-arrow-down "></i></button>
-                                    <div className='mlike-sugg'> 
-                                        <img src={SuggNormal}/>
+                                    <div className='mlike-sugg'>
+                                        <img src={SuggNormal} />
                                         <span>Click to remove the selection</span>
                                     </div>
                                 </div>
                             </div>
                         </Col>
                     </Row>
-                    <h6 style={{marginTop:'5rem'}}>Recommendations </h6>
+                    <h6 style={{ marginTop: '5rem' }}>Recommendations </h6>
                     <ul>
                         <li>The test contains 28 questions.</li>
                         <li>Do not overthink your decisions.</li>

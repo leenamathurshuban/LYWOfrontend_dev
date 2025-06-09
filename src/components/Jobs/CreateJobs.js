@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Button, Col, Form, Offcanvas } from "react-bootstrap";
+import { Button, Col, Form, FormControl, Offcanvas } from "react-bootstrap";
 import threeLayers from "../../images/icons/layers-three-01.svg";
 import axios from "axios";
 
@@ -220,11 +220,26 @@ const CreateJobs = ({ show, handleClose }) => {
     description: "",
     jobType: "",
     workPlaceType: "",
-    detailed_description:""
+    detailed_description: ""
   });
   const [modal, setModal] = useState({
     createJobRevisedModal: false,
   });
+  const jobTypeOption = [
+    "Full -Time",
+    "Part -Time",
+    "Contract",
+    "Temporary",
+    "Volunteer",
+    "Internship",
+    "Other"
+  ]
+  const workplaceOption = [
+    "On-site",
+    "Remote",
+    "Hybrid",
+  ]
+  const [showDropdown, setShowDropdown] = useState({ jobType: false, workPlaceType: false });
   const MAX_FILE_SIZE = 5 * 1024 * 1024;
   const MAX_DESCRIPTION_WORDS = 500;
   const quillRef = useRef(null);
@@ -318,6 +333,16 @@ const CreateJobs = ({ show, handleClose }) => {
       ...newValue
     })
   };
+  const handleJobType = (key, value) => {
+    setCreateFormData({
+      ...createFormData,
+      [key]: value
+    })
+    setShowDropdown({
+      ...showDropdown,
+      [key]: false
+    })
+  }
   const handleUpdateFormData = (e) => {
     const { name, value } = e.target;
 
@@ -615,11 +640,11 @@ const CreateJobs = ({ show, handleClose }) => {
         }
       } catch (error) {
         console.log("create eroor------", error);
-        Object.entries(error?.response?.data?.response).map(([key,err])=>{
+        Object.entries(error?.response?.data?.response).map(([key, err]) => {
           // toast.error(`${key} ${err[0]}`)
           setErrors({
             ...errors,
-            [key]:err[0]
+            [key]: err[0]
           })
         })
         if (
@@ -728,10 +753,10 @@ const CreateJobs = ({ show, handleClose }) => {
         // } else if (isDisabledTarget) {
         //   formdata.append(key, "True");
         // }
-        if(updateFormData.targate_hire_date!==""){
-          formdata.append(key,"False")
-        }else{
-          formdata.append(key,"False")
+        if (updateFormData.targate_hire_date !== "") {
+          formdata.append(key, "False")
+        } else {
+          formdata.append(key, "False")
         }
       } else if (key === "no_specific_language_require") {
         if (!isSpecificLanguareRequired) {
@@ -889,7 +914,7 @@ const CreateJobs = ({ show, handleClose }) => {
         try {
           const response = await createCustomeBenifitsApi(formdata);
           if (response.data.status == 200) {
-            setSelectBenefitsData([...SelectBenefitsData,response?.data?.response?.uid])
+            setSelectBenefitsData([...SelectBenefitsData, response?.data?.response?.uid])
             benifitsList();
             setCustomValue("");
             handleClearCustomInput('')
@@ -932,7 +957,7 @@ const CreateJobs = ({ show, handleClose }) => {
           const response = await createCustomeBenifitsApi(formdata);
           if (response.data.status == 200) {
             //console.log("res=-------", response);
-            setSelectBenefitsData([...SelectBenefitsData,response?.data?.response?.uid])
+            setSelectBenefitsData([...SelectBenefitsData, response?.data?.response?.uid])
             benifitsList();
             setCustomValue("");
             handleClearCustomInput(index)
@@ -1262,7 +1287,7 @@ const CreateJobs = ({ show, handleClose }) => {
 
           <Col md={6} className="mb-2">
             <Form.Label>Job Type</Form.Label>
-            <Form.Select
+            {/* <Form.Select
               value={createFormData.jobType}
               onChange={handleFormData}
               name="jobType"
@@ -1275,13 +1300,58 @@ const CreateJobs = ({ show, handleClose }) => {
               <option value="Volunteer">Volunteer</option>
               <option value="Internship">Internship</option>
               <option value="Other">Other</option>
-            </Form.Select>
+            </Form.Select> */}
+            <div className="mw-230 relative">
+              <FormControl
+                placeholder="Job Type"
+                className="form-control-sm mx-w350"
+                aria-label="Default select example"
+                name="jobType"
+                value={createFormData.jobType}
+                onClick={() => {
+                  setShowDropdown(prev => ({
+                    ...prev,
+                    ["jobType"]: !prev["jobType"]
+                  }));
+                }}
+                onBlur={() => setTimeout(() => {
+                  setShowDropdown(prev => ({
+                    ...prev,
+                    ["jobType"]: false
+                  }));
+                }, 150)}
+                readOnly
+              />
+              {showDropdown.jobType && (
+                <div className="ctm_dropdown ct_scrollbar" style={{
+                  position: "absolute",
+                  background: "#fff",
+                  zIndex: 10,
+                  width: "100%",
+                  border: "1px solid #ccc",
+                  maxHeight: "150px",
+                  overflowY: "auto"
+                }}>
+                  <ul className="m-0 p-0 list-unstyled">
+                    {jobTypeOption.map((option, i) => (
+                      <li
+                        key={i}
+                        style={{ padding: "8px 12px", cursor: "pointer" }}
+                        onClick={() => handleJobType("jobType", option)}
+                      >
+                        {option}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
             <span style={{ color: "red" }}>{errors.jobType}</span>
           </Col>
 
           <Col md={6} className="mb-2">
             <Form.Label>Workplace Type</Form.Label>
-            <Form.Select
+            {/* <Form.Select
               value={createFormData.workPlaceType}
               onChange={handleFormData}
               name="workPlaceType"
@@ -1290,8 +1360,53 @@ const CreateJobs = ({ show, handleClose }) => {
               <option value="On-site">On-site</option>
               <option value="Remote">Remote</option>
               <option value="Hybrid">Hybrid</option>
-              {/* <option value="Work-from-home">Work from Home</option> */}
-            </Form.Select>
+              <option value="Work-from-home">Work from Home</option>
+            </Form.Select> */}
+            <div className="mw-230 relative">
+              <FormControl
+                placeholder="Workplace Type"
+                className="form-control-sm mx-w350"
+                aria-label="Default select example"
+                name="workPlaceType"
+                value={createFormData.workPlaceType}
+                onClick={() => {
+                  setShowDropdown(prev => ({
+                    ...prev,
+                    ["workPlaceType"]: !prev["workPlaceType"]
+                  }));
+                }}
+                onBlur={() => setTimeout(() => {
+                  setShowDropdown(prev => ({
+                    ...prev,
+                    ["workPlaceType"]: false
+                  }));
+                }, 150)}
+                readOnly
+              />
+              {showDropdown.workPlaceType && (
+                <div className="ctm_dropdown ct_scrollbar" style={{
+                  position: "absolute",
+                  background: "#fff",
+                  zIndex: 10,
+                  width: "100%",
+                  border: "1px solid #ccc",
+                  maxHeight: "150px",
+                  overflowY: "auto"
+                }}>
+                  <ul className="m-0 p-0 list-unstyled">
+                    {workplaceOption.map((option, i) => (
+                      <li
+                        key={i}
+                        style={{ padding: "8px 12px", cursor: "pointer" }}
+                        onClick={() => handleJobType("workPlaceType", option)}
+                      >
+                        {option}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
             <span style={{ color: "red" }}>{errors.workPlaceType}</span>
           </Col>
 

@@ -1720,6 +1720,12 @@ const CreateJobsRevised = ({
       setLocationList([])
     }, 200); // delay to allow click on list items        
   }
+  const formatNumber = (num) => {
+    // Remove all non-digit characters
+    const cleaned = num.replace(/\D/g, "");
+    if (!cleaned) return "";
+    return new Intl.NumberFormat("en-US").format(Number(cleaned));
+  };
   // console.log(activeBehaviour)
   // const updatedArray = behaviours.map((item)=>({
   //   ...item,
@@ -1966,7 +1972,7 @@ const CreateJobsRevised = ({
                                 <Form.Control
                                   type="text"
                                   name="min_salary"
-                                  value={updateFormData?.min_salary}
+                                  value={formatNumber(updateFormData?.min_salary)}
                                   placeholder="Min."
                                   className="sm-fcontrol"
                                   onChange={handleFormData}
@@ -1986,7 +1992,7 @@ const CreateJobsRevised = ({
                                 <Form.Control
                                   type="text"
                                   name="max_salary"
-                                  value={updateFormData?.max_salary}
+                                  value={formatNumber(updateFormData?.max_salary)}
                                   placeholder="Max."
                                   className="sm-fcontrol"
                                   onChange={handleFormData}
@@ -3094,12 +3100,12 @@ const CreateJobsRevised = ({
                         {skillGroupData && (
                           <div className="starttag_box">
                             <div className="stagbox_head">
-                              <h6>{skillGroupData.skill_group_name}</h6>
+                              <h6>{skillGroupData?.skill_group_name}</h6>
                             </div>
                             <div className="stag_list mt-2">
                               {skillGroupData &&
-                                skillGroupData.group_skill.length > 0 &&
-                                skillGroupData.group_skill.map((skill, index) => (
+                                skillGroupData?.group_skill?.length > 0 &&
+                                skillGroupData?.group_skill?.map((skill, index) => (
                                   <span
                                     onClick={(e) => {
                                       handleSelectedSkill(e, skill, index);

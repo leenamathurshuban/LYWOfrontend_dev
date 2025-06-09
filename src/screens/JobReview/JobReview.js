@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
-    Container, Row, Col, Tab, Nav, Card, Form, Button, InputGroup, Table, Offcanvas, Accordion, Badge, Stack, ProgressBar
+    Container, Row, Col, Tab, Nav, Card, Form, Button, InputGroup, Table, Offcanvas, Accordion, Badge, Stack, ProgressBar,
+    Dropdown
 } from "react-bootstrap";
 import Header from "../../components/Header";
 import Sidebar from "../../components/Sidebar";
@@ -23,6 +24,7 @@ import SReminder from "../../images/icons/send-01-primery.svg";
 import Hold from "../../images/icons/hold-primery.svg";
 import Reject from "../../images/icons/user-x-01-primery.svg";
 import ShortList from "../../images/icons/user-check-01-primery.svg";
+import threeDots from "../../images/icons/dots-vertical_icon.svg";
 import fileIcon from "../../images/icons/file_icon.svg";
 import faRingicon from "../../images/icons/Ring.svg";
 import RingSucess from "../../images/icons/ring_sucess.svg";
@@ -35,7 +37,7 @@ import ExpandButton from "../../images/icons/expand-03-primery.svg";
 import ArrowBack from "../../images/icons/arrowBack.svg";
 import ArrowNext from "../../images/icons/arrowNext.svg";
 import { useParams } from "react-router-dom";
-import { ApplicationDeatilsApi, getAssetDataDetailsAPI, getJobAssignmentReview, getJobDetailsApi, getJobGroupParameterListAPI, getScreeningParameterDataAPI, postJobGroupParameterListByFetchAPI } from "../../services/provider";
+import { ApplicationDeatilsApi, getAssetDataDetailsAPI, getJobAssignmentReview, getJobDetailsApi, getJobGroupParameterListAPI, getScreeningParameterDataAPI, jobApplicantUpdateAPI, postJobGroupParameterListByFetchAPI } from "../../services/provider";
 import Evaluations from "./Evaluations";
 import Ratting from "../../components/Ratting";
 import CodeBlock from "../../components/CodeBlock";
@@ -105,7 +107,7 @@ tracker.show_tasks()
     const [paramUid, setParamUid] = useState()
     const [groupTitleName, setGroupTitleName] = useState("");
     const [candidateQuestionShow, setCandidateQuestionShow] = useState(false);
-    const [candidateQuestionList,setCandidateQuestionList] = useState([])
+    const [candidateQuestionList, setCandidateQuestionList] = useState([])
     const handleReviewClose = () => {
         setReviewModal(false);
         setCandidateEmail('')
@@ -137,8 +139,8 @@ tracker.show_tasks()
     const [candidateDetails, setCandidateDetails] = useState({})
     const [assetData, setAssetData] = useState({})
     const [applicantPersonality, setApplicantPersonality] = useState();
-    const [personalityData, setPersonalityData] = useState(); 
-    const [reviewEventKey,setReviewEventKey] = useState('first')  
+    const [personalityData, setPersonalityData] = useState();
+    const [reviewEventKey, setReviewEventKey] = useState('first')
     const [payloadList, setPayloadList] = useState({
         roles: [],
         skills: [],
@@ -721,12 +723,16 @@ tracker.show_tasks()
             }
         });
     }
-    const allSelected = selectedListUids.length === ListData?.length;
+    const allSelected = selectedListUids.length === ListData.filter(user => user?.job_applicant_status !== "Reject").length;
     const handleSelectAll = () => {
         if (allSelected) {
             setSelectedListUids([]);
         } else {
-            setSelectedListUids(ListData.map((user) => user.uid));
+            // setSelectedListUids(ListData.map((user) => user.uid));
+            setSelectedListUids(
+                ListData.filter(user => user?.job_applicant_status !== "Reject")
+                    .map(user => user.uid)
+            );
         }
     };
     const getFilterApplicantListBycandidateReview = async () => {
@@ -793,6 +799,26 @@ tracker.show_tasks()
             const res = await getAssetDataDetailsAPI(id, candidateDetails?.uid)
             if (res?.success) {
                 setAssetData(res.response)
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    const handleStatusGroup = async (status, applicant_uid) => {
+        try {
+            const formData = new FormData();
+            if(Array.isArray(applicant_uid)){
+               formData.append('job_applicant_uid', JSON.stringify(selectedListUids)) 
+            }else{
+                formData.append('job_applicant_uid', JSON.stringify([applicant_uid]))
+            }            
+            formData.append('job_groups', JSON.stringify([paramUid]))
+            formData.append('parameter_uid', groupParameterId)
+            formData.append('job_applicant_status', status)
+            const res = await jobApplicantUpdateAPI(formData)
+            if (res?.data?.success) {
+                fetchListAPIByKey(groupParameterId, groupTitleName, paramUid)
+                setSelectedListUids([]);
             }
         } catch (error) {
             console.log(error);
@@ -890,10 +916,11 @@ tracker.show_tasks()
                                                             </div>
                                                         </Col>
                                                         <Col md={6} className="d-flex justify-content-end align-items-center">
-                                                            <Button className="icon_btnlink"><i className="far fa-check-circle me-2 text-primery"></i>Shortlist</Button>
-                                                            <Button className="icon_btnlink"><i className="far fa-times-circle me-2 text-primery"></i>Reject</Button>
-                                                            <Button className="icon_btnlink"><i className="fa fa-ban me-2 text-primery"></i>Hold</Button>
-                                                            <Button className="icon_btnlink"><i className="fa fa-download me-2 text-primery"></i>Download</Button>
+                                                            <Button className="icon_btnlink" onClick={()=>handleStatusGroup('Active',selectedListUids)}><i className="fa fa-download me-2 text-primery"></i>Active</Button>
+                                                            <Button className="icon_btnlink" onClick={()=>handleStatusGroup('InActive',selectedListUids)}><i className="fa fa-download me-2 text-primery"></i>InActive</Button>
+                                                            <Button className="icon_btnlink" onClick={()=>handleStatusGroup('Select',selectedListUids)}><i className="far fa-check-circle me-2 text-primery"></i>Select</Button>
+                                                            <Button className="icon_btnlink" onClick={()=>handleStatusGroup('Reject',selectedListUids)}><i className="far fa-times-circle me-2 text-primery"></i>Reject</Button>
+                                                            <Button className="icon_btnlink" onClick={()=>handleStatusGroup('On Hold',selectedListUids)}><i className="fa fa-ban me-2 text-primery"></i>On Hold</Button>                                                            
                                                             <Button
                                                                 // className="btn btn-light-outline me-3"
                                                                 className="icon_btnlink"
@@ -1002,6 +1029,7 @@ tracker.show_tasks()
                                                                     <th>Score</th>
                                                                     <th>Tag</th>
                                                                     <th>Decision</th>
+                                                                    <th style={{ width: "42px" }}></th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
@@ -1014,6 +1042,7 @@ tracker.show_tasks()
                                                                                 type="checkbox"
                                                                                 checked={selectedListUids.includes(item?.uid)}
                                                                                 onChange={() => handleCheckBoxBtn(item?.uid)}
+                                                                                disabled={item?.job_applicant_status == "Reject"}
                                                                             />
                                                                             <span className="font-weight-600" onClick={() => {
                                                                                 setReviewModal(true)
@@ -1054,7 +1083,35 @@ tracker.show_tasks()
                                                                             <span className="tag tag-lightprimery">Recall</span>
                                                                         </td>
                                                                         <td>
-                                                                            <span className="dic_tag inactive"><i class="fa fa-minus"></i> Inactive</span>
+                                                                            <span className="dic_tag inactive"><i class="fa fa-minus"></i> {item?.job_applicant_status}</span>
+                                                                        </td>
+                                                                        <td className="action" style={{ width: "42px" }}>
+                                                                            <Dropdown className="action_dropdown">
+                                                                                <Dropdown.Toggle
+                                                                                    variant="success"
+                                                                                    id="dropdown-basic"
+                                                                                    className="btn-transpant"
+                                                                                >
+                                                                                    <img src={threeDots} />
+                                                                                </Dropdown.Toggle>
+                                                                                <Dropdown.Menu>
+                                                                                    <Dropdown.Item href={""} onClick={() => handleStatusGroup('Inactive', item?.uid)} disabled={item?.job_applicant_status == "Reject"}>
+                                                                                        Inactive
+                                                                                    </Dropdown.Item>
+                                                                                    <Dropdown.Item href={""} onClick={() => handleStatusGroup('Active', item?.uid)} disabled={item?.job_applicant_status == "Reject"}>
+                                                                                        Active
+                                                                                    </Dropdown.Item>
+                                                                                    <Dropdown.Item href={""} onClick={() => handleStatusGroup('Reject', item?.uid)} disabled={item?.job_applicant_status == "Reject"}>
+                                                                                        Reject
+                                                                                    </Dropdown.Item>
+                                                                                    <Dropdown.Item href={""} onClick={() => handleStatusGroup('On Hold', item?.uid)} disabled={item?.job_applicant_status == "Reject"}>
+                                                                                        On Hold
+                                                                                    </Dropdown.Item>
+                                                                                    <Dropdown.Item href={""} onClick={() => handleStatusGroup('Select', item?.uid)} disabled={item?.job_applicant_status == "Reject"}>
+                                                                                        Select
+                                                                                    </Dropdown.Item>
+                                                                                </Dropdown.Menu>
+                                                                            </Dropdown>
                                                                         </td>
                                                                     </tr>
                                                                 ))}
@@ -2924,8 +2981,8 @@ tracker.show_tasks()
                                             <Step3 applicantPersonality={applicantPersonality} personalityData={personalityData} />
                                         </Tab.Pane>
                                         <Tab.Pane eventKey="Evaluations">
-                                            <Step4 data={assetData} setCandidateQuestionShow={setCandidateQuestionShow} 
-                                            setCandidateQuestionList={setCandidateQuestionList} handleReviewClose={handleReviewClose} setReviewEventKey={setReviewEventKey} />
+                                            <Step4 data={assetData} setCandidateQuestionShow={setCandidateQuestionShow}
+                                                setCandidateQuestionList={setCandidateQuestionList} handleReviewClose={handleReviewClose} setReviewEventKey={setReviewEventKey} />
                                         </Tab.Pane>
                                         <Tab.Pane eventKey="Messages">Second tab content</Tab.Pane>
                                     </Tab.Content>

@@ -86,6 +86,7 @@ const QuizMainComponent = (item) => {
   const [questionId, setQuestionId] = useState()
   const [getKeyIndex, setGetKeyIndex] = useState();
   const [assestStatus, setAssetStatus] = useState({});
+  const [succees,setSuccess] = useState(false)
   const [answerUids, setAnswerUids] = useState({})
 
   //List state
@@ -383,11 +384,9 @@ const QuizMainComponent = (item) => {
   const applicantDetailAPI = async () => {
     try {
       const user = applcant.user_login.email?applcant.user_login.email:applcant?.applcant?.user;
-      const res = await ApplicationDeatilsApi(user)
-      // const res = await getAssetDataDetailsAPI(id,applicantUid?.uid)
-      // debugger
-      // debugger
-      if (res?.data?.success) {
+      // const res = await ApplicationDeatilsApi(user)
+      const res = await getAssetDataDetailsAPI(jobData?.state?.uid,applicantUid?.uid)
+      if (res?.success) {
         // setSelectedSectionAnswer(res?.data?.response?.asset_data)
         // res?.data?.response?.asset_data[0].section_asset.sort((a, b) => a.id - b.id).map((item, quesIndex) =>
         //   item.question_section.map((Val, sectionIndex) => {
@@ -401,7 +400,8 @@ const QuizMainComponent = (item) => {
         //     }))
         //   })
         // )
-        res.data.response.asset_data.map((Val) => {
+        
+        res?.response?.job?.asset_job.map((Val) => {
           if (Val?.asset_title === "Technical round for EHS Manager") {
             Val?.section_asset.sort((a, b) => a.id - b.id).map((item, quesIndex) =>
               item.question_section.map((Val, sectionIndex) => {
@@ -415,10 +415,11 @@ const QuizMainComponent = (item) => {
                 }))
               })
             )
-            setAssetStatus(res?.data?.response?.asset_data[0]?.assets_applicant_asset_completion[0])
-            localStorage.setItem("assestQuiz", res?.data?.response?.asset_data[0]?.assets_applicant_asset_completion[0]?.asset_completion_status)
-            if (res?.data?.response?.asset_data[0]?.assets_applicant_asset_completion[0]?.asset_completion_status == 'Completed') {
+            setAssetStatus(Val?.assets_applicant_asset_completion[0])
+            localStorage.setItem("assestQuiz", Val?.assets_applicant_asset_completion[0]?.asset_completion_status)
+            if (Val?.assets_applicant_asset_completion[0]?.asset_completion_status == 'Completed') {
               setShow(false)
+              setSuccess(true)
             }
           }
         })
@@ -453,6 +454,12 @@ const QuizMainComponent = (item) => {
     const secs = seconds % 60;
     return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
   };
+  const handleSubmit=()=>{
+    debugger
+    if(assestStatus?.asset_completion_status === 'Completed'){
+      setSuccess(true)
+    }
+  }
   console.log(QuizData, EvaluationListDetails)
   // console.log(markReview)
   // console.log(QuizData[getKeyIndex], applcant)
@@ -1111,14 +1118,14 @@ const QuizMainComponent = (item) => {
           </Tab.Container>
         </Modal.Body>
         <Modal.Footer className="quiz-modelfooter">
-          <Button variant="primary" onClick={handleClose}>
+          <Button variant="primary" onClick={handleSubmit}>
             Submit
           </Button>
         </Modal.Footer>
       </Modal>
       {/* <------------Complete Quiz--------------------------------- */}
       <Modal
-        show={assestStatus?.asset_completion_status === 'Completed' ? true : false}
+        show={succees}
         onHide={handleClose}
         animation={false}
         size="lg"

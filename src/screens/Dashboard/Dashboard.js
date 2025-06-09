@@ -54,9 +54,9 @@
 //         console.log("dispatch calll", res?.response);
 //         dispatch(setCompanyProfileDetails(res?.response));
 //       })
-     
+
 //       .catch((error) => {
-        
+
 //         if (
 //           error?.response?.status === 401 ||
 //           error?.response?.data?.detail?.includes(
@@ -67,7 +67,7 @@
 //           removeToken();
 //           navigate("/loginwithpassword");
 //         } else {
-          
+
 //           console.error("An error occurred:", error);
 //         }
 //       });
@@ -172,7 +172,7 @@
 //       </div>
 
 //       <CompanyEditProfile show={show} handleClose={handleClose} />
-      
+
 //       {/* <Modal 
 //         show={show} 
 //         onHide={handleClose}
@@ -256,6 +256,8 @@ import {
   Container,
   Modal,
   Row,
+  InputGroup,
+  Form,
 } from "react-bootstrap";
 import FileUploader from "../../components/FileUploader";
 import { useDispatch, useSelector } from "react-redux";
@@ -268,8 +270,13 @@ import { liwotextlogo } from "../../images/assest";
 import { GetcompanyDetailsApi } from "../../services/provider";
 import { setCompanyProfileDetails } from "../../Slice/Login/LoginSlice";
 import logoIcon from "../../images/logo_icon.png";
-import pink_brb from "../../images/icons/pink_brb.svg";
-import choice_brb from "../../images/icons/choice_brb.svg";
+import applicationstIcon from "../../images/icons/application_stIcon.svg";
+import activejobIcon from "../../images/icons/active_jobIcon.svg";
+import shortlistedstIcon from "../../images/icons/shortlisted_stIcon.svg";
+import pendingrwstIcon from "../../images/icons/pendingrw_stIcon.svg";
+import draftjobstIcon from "../../images/icons/draftjobs_stIcon.svg";
+import listview from "../../images/icons/listview_Icon.svg";
+import gridview from "../../images/icons/gridview_Icon.svg";
 import LineChart02 from "../../images/line_chat01.svg";
 import stack2_brb from "../../images/icons/stack 2_brb.svg";
 import upArrow from "../../images/icons/arrow-up-green.svg";
@@ -289,7 +296,7 @@ const Dashboard = () => {
   const dispatch = useDispatch();
 
   const userInfo = useSelector((state) => state.login.loginUserInfo);
-  const companyInfo = useSelector((state)=>state.login.CompanyProfileDetails)
+  const companyInfo = useSelector((state) => state.login.CompanyProfileDetails)
 
   const uid = userInfo?.uid;
 
@@ -363,6 +370,20 @@ const Dashboard = () => {
             <Col md={4}>
               <Card className="mdt_card">
                 <Card.Body>
+                  <span className="mdt_name">{logoname}</span>
+                  <Card.Title>Complete Company Profile</Card.Title>
+                  <Button
+                    variant="primary"
+                    onClick={() => GetCompanyDetails(companyInfo?.uid ? companyInfo?.uid : userInfo?.default_company?.uid)}
+                  >
+                    Start
+                  </Button>
+                </Card.Body>
+              </Card>
+            </Col>
+            <Col md={4}>
+              <Card className="mdt_card">
+                <Card.Body>
                   <span className="mdt_icon">
                     <svg
                       width="34"
@@ -384,22 +405,8 @@ const Dashboard = () => {
                     </svg>
                   </span>
                   <Card.Title>Start by creating your first job</Card.Title>
-                  <Button variant="primary" onClick={()=>navigate('/jobs')}>
+                  <Button variant="primary" onClick={() => navigate('/jobs')}>
                     Create Job
-                  </Button>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col md={4}>
-              <Card className="mdt_card">
-                <Card.Body>
-                  <span className="mdt_name">{logoname}</span>
-                  <Card.Title>Complete Company Profile</Card.Title>
-                  <Button
-                    variant="primary"
-                    onClick={() => GetCompanyDetails(companyInfo?.uid?companyInfo?.uid: userInfo?.default_company?.uid)}
-                  >
-                    Start
                   </Button>
                 </Card.Body>
               </Card>
@@ -420,116 +427,302 @@ const Dashboard = () => {
             </Col>
           </Row>
           <Row className="mt-3">
-            <Col md={3}>
-              <Card className="shadow-sm border-light-2 designation_card radius-sm">
-                <Card.Body>
-                  <div className="d-flex align-items-center justify-content-between mb-3">
-                    <Card.Title>Python Developer</Card.Title>
-                    <span className="fav_status"><i className="fa fa-star"></i></span>
-                  </div>
-                  <Row className="align-items-end">
-                    <Col>
-                      <div className="total_appcnt">
-                        <h2>1,210</h2>
-                        <p>Total Applicants</p>  
-                      </div>
-                      <div className="new_appcnt">
-                        <h4 className="status_up"><img src={upArrow}/>44</h4>
-                        <p>New Applicants</p>  
-                      </div>
-                    </Col>
-                    <Col>
-                        <div className="chart_small">
-                          <img src={LineChart02}/>
+            <Col md={9}>
+              <Row>
+                <Col md={4}>
+                  <Card className="border-active dbstatus_card">
+                    <Card.Body>
+                      <div className="d-flex align-items-center">
+                        <span className="status_icon">
+                          <img src={activejobIcon} />
+                        </span>
+                        <div className="dbst_info">
+                          <h4><strong className="font-weight-600">4</strong> Active Jobs</h4>
+                          <p>20 Open Positions</p>
                         </div>
+                      </div>
+                    </Card.Body>
+                  </Card>
+                </Col>
+                <Col md={4}>
+                  <Card className="border-applications dbstatus_card">
+                    <Card.Body>
+                      <div className="d-flex align-items-center">
+                        <span className="status_icon">
+                          <img src={applicationstIcon} />
+                        </span>
+                        <div className="dbst_info">
+                          <h4><strong className="font-weight-600">1500</strong> Applications</h4>
+                          <p>in last 7 days</p>
+                        </div>
+                      </div>
+                    </Card.Body>
+                  </Card>
+                </Col>
+                <Col md={4}>
+                  <Card className="border-shortlist dbstatus_card">
+                    <Card.Body>
+                      <div className="d-flex align-items-center">
+                        <span className="status_icon">
+                          <img src={shortlistedstIcon} />
+                        </span>
+                        <div className="dbst_info">
+                          <h4><strong className="font-weight-600">40</strong> Shortlisted</h4>
+                          <p>in last 7 days</p>
+                        </div>
+                      </div>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              </Row>
+              <Card className="border-0 hiring_pipeline mt-4">
+                <Card.Header>
+                  <Row>
+                    <Col md={6} className="d-flex align-items-center">
+                       <h4 className="title-md m-0">Hiring Pipeline</h4>
+                      <InputGroup className="defult_serachbox">
+                        <Button id="basic-addon1">
+                          <svg
+                            width="18"
+                            height="18"
+                            viewBox="0 0 18 18"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M16.5 16.5L11.5001 11.5M13.1667 7.33333C13.1667 10.555 10.555 13.1667 7.33333 13.1667C4.11167 13.1667 1.5 10.555 1.5 7.33333C1.5 4.11167 4.11167 1.5 7.33333 1.5C10.555 1.5 13.1667 4.11167 13.1667 7.33333Z"
+                              stroke="#667085"
+                              stroke-width="1.66667"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            />
+                          </svg>
+                        </Button>
+                        <Form.Control
+                          placeholder="Search"
+                          aria-label="Search"
+                          aria-describedby="basic-addon1"
+                        />
+                      </InputGroup>
+                    </Col>
+                    <Col md={6} className="justify-content-end d-flex align-items-center">
+                        <button className="gray_iconbtn me-2 active"><img src={gridview}/></button>
+                        <button className="gray_iconbtn"><img src={listview}/></button>
                     </Col>
                   </Row>
+                </Card.Header>
+                <Card.Body className="p-0 mt-3">
+                    <div className="hiring_ppldata">
+                        <table className="m-0 table table-striped elv_datatable">
+                          <thead>
+                            <tr>
+                              <th>Job</th>
+                              <th>Location</th>
+                              <th>Department</th>
+                              <th>Job Age</th>
+                              <th>Total App.</th>
+                              <th>Status</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td className="font-weight-600">Figma Designer<span className="count">(10)</span></td>
+                              <td>Mumbai</td>
+                              <td>Technology</td>
+                              <td>10 days</td>
+                              <td>2154</td>
+                              <td><span className="badge-primery">Evaluation 1</span></td>
+                            </tr>
+                            <tr>
+                              <td className="font-weight-600">UI Designer<span className="count">(5)</span></td>
+                              <td>Goa</td>
+                              <td>Creative</td>
+                              <td>5 days</td>
+                              <td>513</td>
+                              <td><span className="badge-sucess">Final Shortlist</span></td>
+                            </tr>
+                            <tr>
+                              <td className="font-weight-600">Finance Manager<span className="count">(2)</span></td>
+                              <td>Delhi</td>
+                              <td>Finance</td>
+                              <td>7 days </td>
+                              <td>184</td>
+                              <td><span className="badge-warning">Screening</span></td>
+                            </tr>
+                            <tr>
+                              <td className="font-weight-600">Figma Designer<span className="count">(10)</span></td>
+                              <td>Mumbai</td>
+                              <td>Technology</td>
+                              <td>10 days</td>
+                              <td>2154</td>
+                              <td><span className="badge-primery">Evaluation 1</span></td>
+                            </tr>
+                            <tr>
+                              <td className="font-weight-600">Figma Designer<span className="count">(10)</span></td>
+                              <td>Mumbai</td>
+                              <td>Technology</td>
+                              <td>10 days</td>
+                              <td>2154</td>
+                              <td><span className="badge-primery">Evaluation 1</span></td>
+                            </tr>
+                            <tr>
+                              <td className="font-weight-600">Figma Designer<span className="count">(10)</span></td>
+                              <td>Mumbai</td>
+                              <td>Technology</td>
+                              <td>10 days</td>
+                              <td>2154</td>
+                              <td><span className="badge-primery">Evaluation 1</span></td>
+                            </tr>
+                             <tr>
+                              <td className="font-weight-600">Finance Manager<span className="count">(2)</span></td>
+                              <td>Delhi</td>
+                              <td>Finance</td>
+                              <td>7 days </td>
+                              <td>184</td>
+                              <td><span className="badge-warning">Screening</span></td>
+                            </tr>
+                            <tr>
+                              <td className="font-weight-600">UI Designer<span className="count">(5)</span></td>
+                              <td>Goa</td>
+                              <td>Creative</td>
+                              <td>5 days</td>
+                              <td>513</td>
+                              <td><span className="badge-sucess">Final Shortlist</span></td>
+                            </tr>
+                            <tr>
+                              <td className="font-weight-600">Figma Designer<span className="count">(10)</span></td>
+                              <td>Mumbai</td>
+                              <td>Technology</td>
+                              <td>10 days</td>
+                              <td>2154</td>
+                              <td><span className="badge-primery">Evaluation 1</span></td>
+                            </tr>
+                            <tr>
+                              <td className="font-weight-600">Figma Designer<span className="count">(10)</span></td>
+                              <td>Mumbai</td>
+                              <td>Technology</td>
+                              <td>10 days</td>
+                              <td>2154</td>
+                              <td><span className="badge-primery">Evaluation 1</span></td>
+                            </tr>
+                             <tr>
+                              <td className="font-weight-600">Finance Manager<span className="count">(2)</span></td>
+                              <td>Delhi</td>
+                              <td>Finance</td>
+                              <td>7 days </td>
+                              <td>184</td>
+                              <td><span className="badge-warning">Screening</span></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                    </div>
                 </Card.Body>
-            </Card>
+              </Card>
             </Col>
-            <Col md={3}>
-              <Card className="shadow-sm border-light-2 designation_card radius-sm">
+            <Col md={3} className="mb-3">
+              <Card className="pending_reviews dbstatus_card">
                 <Card.Body>
-                  <div className="d-flex align-items-center justify-content-between mb-3">
-                    <Card.Title>Finance Manager</Card.Title>
-                    <span className="fav_status"><i className="fa fa-star"></i></span>
+                  <div className="d-flex align-items-center">
+                    <span className="status_icon">
+                      <img src={pendingrwstIcon} />
+                    </span>
+                    <div className="dbst_info">
+                      <h4>342 Pending Reviews</h4>
+                      <p>50 in last 7 days</p>
+                    </div>
                   </div>
-                  <Row className="align-items-end">
-                    <Col>
-                      <div className="total_appcnt">
-                        <h2>181</h2>
-                        <p>Total Applicants</p>  
-                      </div>
-                      <div className="new_appcnt">
-                        <h4 className="status_up"><img src={upArrow}/>317</h4>
-                        <p>New Applicants</p>  
-                      </div>
-                    </Col>
-                    <Col>
-                        <div className="chart_small">
-                          <img src={LineChart02}/>
-                        </div>
-                    </Col>
-                  </Row>
+                  <InputGroup className="header_serach mt-3">
+                    <InputGroup.Text id="basic-addon1">
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 18 18"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M16.5 16.5L11.5001 11.5M13.1667 7.33333C13.1667 10.555 10.555 13.1667 7.33333 13.1667C4.11167 13.1667 1.5 10.555 1.5 7.33333C1.5 4.11167 4.11167 1.5 7.33333 1.5C10.555 1.5 13.1667 4.11167 13.1667 7.33333Z"
+                          stroke="#667085"
+                          stroke-width="1.66667"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </InputGroup.Text>
+                    <Form.Control
+                      placeholder="Search"
+                      aria-label="Search"
+                      aria-describedby="basic-addon1"
+                    />
+                  </InputGroup>
+                  <table className="mt-3 mb-0 table">
+                    <thead>
+                      <tr>
+                        <th>Active Jobs</th>
+                        <th className="text-end">Oldest First <i className="fa fa-arrow-down"></i></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Full Stack Developer</td>
+                        <td className="text-end"><span className="badge-outline">12 Pending</span></td>
+                      </tr>
+                      <tr>
+                        <td>Mern Stack Developer</td>
+                        <td className="text-end"><span className="badge-outline">27 Pending</span></td>
+                      </tr>
+                      <tr>
+                        <td>Product Owner</td>
+                        <td className="text-end"><span className="badge-outline">35 Pending</span></td>
+                      </tr>
+                      <tr>
+                        <td>Product Manager - Design</td>
+                        <td className="text-end"><span className="badge-outline">09 Pending</span></td>
+                      </tr>
+                      <tr>
+                        <td>Product Manager - Marketing</td>
+                        <td className="text-end"><span className="badge-outline">16 Pending</span></td>
+                      </tr>
+                      <tr>
+                        <td>Full Stack Developer</td>
+                        <td className="text-end"><span className="badge-outline">22 Pending</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </Card.Body>
-            </Card>
-            </Col>
-            <Col md={3}>
-              <Card className="shadow-sm border-light-2 designation_card radius-sm">
+              </Card>
+              <Card className="draft_jobs dbstatus_card mt-3">
                 <Card.Body>
-                  <div className="d-flex align-items-center justify-content-between mb-3">
-                    <Card.Title>UI Designer</Card.Title>
-                    <span className="fav_status"><i className="fa fa-star"></i></span>
+                  <div className="d-flex align-items-center">
+                    <span className="status_icon">
+                      <img src={draftjobstIcon} />
+                    </span>
+                    <div className="dbst_info">
+                      <h4 className="mb-0">5 Draft Jobs</h4>
+                      <a href="#" className="btn-link btn-sm py-0">View All</a>
+                    </div>
                   </div>
-                  <Row className="align-items-end">
-                    <Col>
-                      <div className="total_appcnt">
-                        <h2>954</h2>
-                        <p>Total Applicants</p>  
-                      </div>
-                      <div className="new_appcnt">
-                        <h4 className="status_up"><img src={upArrow}/>44</h4>
-                        <p>New Applicants</p>  
-                      </div>
-                    </Col>
-                    <Col>
-                        <div className="chart_small">
-                          <img src={LineChart02}/>
-                        </div>
-                    </Col>
-                  </Row>
+                  <table className="mt-3 mb-0 table">
+                    <tbody>
+                      <tr>
+                        <td>Full Stack Developer</td>
+                        <td className="text-end"><span>01/05/2025</span></td>
+                      </tr>
+                      <tr>
+                        <td>Mern Stack Developer</td>
+                        <td className="text-end"><span>01/05/2025</span></td>
+                      </tr>
+                      <tr>
+                        <td>Product Owner</td>
+                        <td className="text-end"><span>01/05/2025</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </Card.Body>
-            </Card>
-            </Col>
-            <Col md={3}>
-              <Card className="shadow-sm border-light-2 designation_card radius-sm">
-                <Card.Body>
-                  <div className="d-flex align-items-center justify-content-between mb-3">
-                    <Card.Title>Figma Designer</Card.Title>
-                    <span className="fav_status"><i className="fa fa-star"></i></span>
-                  </div>
-                  <Row className="align-items-end">
-                    <Col>
-                      <div className="total_appcnt">
-                        <h2>756</h2>
-                        <p>Total Applicants</p>  
-                      </div>
-                      <div className="new_appcnt">
-                        <h4 className="status_up"><img src={upArrow}/>44</h4>
-                        <p>New Applicants</p>  
-                      </div>
-                    </Col>
-                    <Col>
-                        <div className="chart_small">
-                          <img src={LineChart02}/>
-                        </div>
-                    </Col>
-                  </Row>
-                </Card.Body>
-            </Card>
+              </Card>
             </Col>
           </Row>
-          <Row>
+          {/* <Row>
             <Col className="text-end py-2"><button className="btn btn-link btn-md">View All Favorite Jobs <i className="fa fa-angle-down"></i></button></Col>
           </Row>
           <Row>
@@ -584,7 +777,7 @@ const Dashboard = () => {
                 </Card.Body>
               </Card>
              </Col>
-          </Row>
+          </Row> */}
         </Container>
       </div>
 
