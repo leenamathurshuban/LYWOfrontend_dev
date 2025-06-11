@@ -1862,12 +1862,19 @@ const UpdateJobsRevised = ({
             setLocationList([])
         }, 200); // delay to allow click on list items        
     }
+    // const formatNumber = (num) => {
+    //     // Remove all non-digit characters
+    //     const cleaned = num.replace(/\D/g, "");
+    //     if (!cleaned) return "";
+    //     return new Intl.NumberFormat("en-US").format(Number(cleaned));
+    // };
     const formatNumber = (num) => {
-        // Remove all non-digit characters
-        const cleaned = num.replace(/\D/g, "");
+        if (num == null) return ""; // handles null or undefined
+        const cleaned = String(num).replace(/\D/g, "");
         if (!cleaned) return "";
         return new Intl.NumberFormat("en-US").format(Number(cleaned));
     };
+
     // console.log(behaviours)
 
     // console.log('add skill box', addSkillGroup)
@@ -3619,24 +3626,24 @@ const UpdateJobsRevised = ({
                                                                         />
                                                                     </span>
                                                                     {/* {questionIndex === 0 && ( */}
-                                                                        <div className="d-flex ms-3">
-                                                                            <Form.Select
-                                                                                onChange={(e) =>
-                                                                                    handleQuestionTypeChange(
-                                                                                        questionIndex,
-                                                                                        e.target.value
-                                                                                    )
-                                                                                }
-                                                                            >
-                                                                                <option value="single">MCQ Single</option>
-                                                                                <option value="multiple">
-                                                                                    MCQ Multiple
-                                                                                </option>
-                                                                            </Form.Select>
-                                                                            {/* <button type="button" className="icon-btn">
+                                                                    <div className="d-flex ms-3">
+                                                                        <Form.Select
+                                                                            onChange={(e) =>
+                                                                                handleQuestionTypeChange(
+                                                                                    questionIndex,
+                                                                                    e.target.value
+                                                                                )
+                                                                            }
+                                                                        >
+                                                                            <option value="single">MCQ Single</option>
+                                                                            <option value="multiple">
+                                                                                MCQ Multiple
+                                                                            </option>
+                                                                        </Form.Select>
+                                                                        {/* <button type="button" className="icon-btn">
                                                                                 <i className="far fa-star"></i>
                                                                             </button> */}
-                                                                        </div>
+                                                                    </div>
                                                                     {/* )} */}
                                                                     <div className="d-flex ms-3">
                                                                         <button

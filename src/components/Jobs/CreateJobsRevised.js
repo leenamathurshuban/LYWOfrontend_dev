@@ -1720,12 +1720,19 @@ const CreateJobsRevised = ({
       setLocationList([])
     }, 200); // delay to allow click on list items        
   }
+  // const formatNumber = (num) => {
+  //   // Remove all non-digit characters
+  //   const cleaned = num.replace(/\D/g, "");
+  //   if (!cleaned) return "";
+  //   return new Intl.NumberFormat("en-US").format(Number(cleaned));
+  // };
   const formatNumber = (num) => {
-    // Remove all non-digit characters
-    const cleaned = num.replace(/\D/g, "");
+    if (num == null) return ""; // handles null or undefined
+    const cleaned = String(num).replace(/\D/g, "");
     if (!cleaned) return "";
     return new Intl.NumberFormat("en-US").format(Number(cleaned));
   };
+
   // console.log(activeBehaviour)
   // const updatedArray = behaviours.map((item)=>({
   //   ...item,
