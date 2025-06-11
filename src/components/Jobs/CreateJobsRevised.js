@@ -1732,7 +1732,6 @@ const CreateJobsRevised = ({
     if (!cleaned) return "";
     return new Intl.NumberFormat("en-US").format(Number(cleaned));
   };
-
   // console.log(activeBehaviour)
   // const updatedArray = behaviours.map((item)=>({
   //   ...item,
@@ -1933,7 +1932,7 @@ const CreateJobsRevised = ({
                     >
                       <Accordion.Header onClick={() => handleOpenStep("1")}>
                         <span>Salary
-                          {!openStep.includes("1") && <small className="text-muted"><i>Don’t Display</i><i>Non Negotiable</i></small>}
+                          {!openStep.includes("1") && <small className="text-muted">{updateFormData?.display_salary && <i>Don’t Display</i>} {updateFormData?.non_negotiable_salary && <i>Non Negotiable</i>}</small>}
                         </span>
                         {importantFlag.salary ? (
                           <img src={flagFill} className="flag_icon" onClick={(e) => removeImportantFlag(e, '1')} />
@@ -2069,7 +2068,7 @@ const CreateJobsRevised = ({
                     <Accordion.Item eventKey="2" className="accd_child" id="item_edu">
                       <Accordion.Header onClick={() => handleOpenStep("2")}>
                         <span>Educational qualification
-                          {!openStep.includes('2') && <small className="text-muted"><i>Higher Qualification Preferrable</i><i>Other Areas are Acceptable</i></small>}
+                          {!openStep.includes('2') && <small className="text-muted">{updateFormData?.higher_qualification_preferred && <i>Higher Qualification Preferrable</i>}{updateFormData?.other_areas_acceptable && <i>Other Areas are Acceptable</i>}</small>}
                         </span>
                         {importantFlag.education ? (
                           <img src={flagFill} className="flag_icon" onClick={(e) => removeImportantFlag(e, '2')} />
@@ -2247,7 +2246,7 @@ const CreateJobsRevised = ({
                       <Accordion.Header onClick={() => handleOpenStep("3")}>
                         {/* Experience{" "} */}
                         <span>Experience
-                          {!openStep.includes('3') && <small className="text-muted"><i>Restrict Industries</i><i>Define Current Role</i></small>}
+                          {!openStep.includes('3') && <small className="text-muted">{ishideIndustries && <i>Restrict Industries</i>}{isHideRestrictedRoles && <i>Define Current Role</i>}</small>}
                         </span>
                         {importantFlag.experience ? (
                           <img src={flagFill} className="flag_icon" onClick={(e) => removeImportantFlag(e, '3')} />
@@ -2579,7 +2578,7 @@ const CreateJobsRevised = ({
                       <Accordion.Header onClick={() => handleOpenStep("4")}>
                         {/* Target Hire Date{" "} */}
                         <span>Target Hire Date
-                          {!openStep.includes('4') && <small className="text-muted"><i>Explore Buy-Out Option</i></small>}
+                          {!openStep.includes('4') && <small className="text-muted">{updateFormData?.explore_buy_out_option && <i>Explore Buy-Out Option</i>}</small>}
                         </span>
                         {importantFlag.targethiredate ? (
                           <img src={flagFill} className="flag_icon" onClick={(e) => removeImportantFlag(e, '4')} />

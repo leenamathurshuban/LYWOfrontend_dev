@@ -17,6 +17,7 @@ import {
 import CreateJobsRevised from "./CreateJobsRevised";
 import { removeToken } from "../../helpers/helper";
 import { CreateJobFormValidation } from "../../utils/validation";
+import { toast } from "react-toastify";
 
 const CreateJobs = ({ show, handleClose }) => {
   const [createFormData, setCreateFormData] = useState({
@@ -652,6 +653,9 @@ const CreateJobs = ({ show, handleClose }) => {
           setRestrictedRoleBadges([]);
         }
       } catch (error) {
+        if(error?.response?.data?.status==400){
+          toast.warning(error?.response?.data?.response?.error?.[0])
+        }
         console.log("create eroor------", error);
         Object.entries(error?.response?.data?.response).map(([key, err]) => {
           // toast.error(`${key} ${err[0]}`)

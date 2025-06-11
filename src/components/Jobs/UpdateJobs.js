@@ -662,6 +662,9 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
         }
       } catch (error) {
         // debugger
+        if (error?.response?.data?.status == 400) {
+          toast.warning(error?.response?.data?.response?.error?.[0])
+        }
         console.log("create eroor------", error);
         Object.entries(error?.response?.data?.response).map(([key, err]) => {
           // toast.error(`${key} ${err[0]}`)
@@ -1457,20 +1460,22 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
                 </span>
               ))}
               {addCustomeBenifits?.map((item, index) => (
-                <div className="input-container position-relative">
-                  <input
-                    value={customValue}
-                    onChange={(e) => setCustomValue(e.target.value)}
-                    className={`badge-gray ${SelectBenefitsData.includes(item) && "active"}`}
-                    placeholder="Add Custom"
-                    // onBlur={() => handleBlur(customValue, index)}
-                    onKeyDown={(e) => handleBlur(e, customValue, index)}
-                  />
-                  <i
-                    className="fa fa-xmark text-primary me-1 remove-tag"
-                    onClick={() => handleClearCustomInput(index)}
-                  ></i>
-                </div>
+                <>
+                  <div className="input-container position-relative">
+                    <input
+                      value={customValue}
+                      onChange={(e) => setCustomValue(e.target.value)}
+                      className={`badge-gray ${SelectBenefitsData.includes(item) && "active"}`}
+                      placeholder="Add Custom"
+                      // onBlur={() => handleBlur(customValue, index)}
+                      onKeyDown={(e) => handleBlur(e, customValue, index)}
+                    />
+                    <i
+                      className="fa fa-xmark text-primary me-1 remove-tag"
+                      onClick={() => handleClearCustomInput(index)}
+                    ></i>
+                  </div>
+                </>
               ))}
               {/* <span class="badge-gray ">
                 Reimburs| <i className="fas fa-close text-primary ms-1"></i>

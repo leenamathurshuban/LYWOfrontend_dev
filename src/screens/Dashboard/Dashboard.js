@@ -286,10 +286,13 @@ import globgray from "../../images/icons/glob_gray.svg";
 import leaderLarge from "../../images/icons/Leader-icon.svg";
 import InfluencerLarge from "../../images/icons/Influencer-icon.svg";
 import QuizSlider from "../../components/QuizSlider";
+import CreateJobs from "../../components/Jobs/CreateJobs";
 
 const Dashboard = () => {
   const [show, setShow] = useState(false);
+  const [modal, setModal] = useState(false)
   const handleClose = () => setShow(false);
+  const handleModalClose =()=>setModal(false);
   const handleShow = () => setShow(true);
 
   const navigate = useNavigate();
@@ -405,7 +408,10 @@ const Dashboard = () => {
                     </svg>
                   </span>
                   <Card.Title>Start by creating your first job</Card.Title>
-                  <Button variant="primary" onClick={() => navigate('/jobs')}>
+                  <Button variant="primary"
+                    // onClick={() => navigate('/jobs')}
+                    onClick={() => setModal(true)}
+                  >
                     Create Job
                   </Button>
                 </Card.Body>
@@ -479,7 +485,7 @@ const Dashboard = () => {
                 <Card.Header>
                   <Row>
                     <Col md={6} className="d-flex align-items-center">
-                       <h4 className="title-md m-0">Hiring Pipeline</h4>
+                      <h4 className="title-md m-0">Hiring Pipeline</h4>
                       <InputGroup className="defult_serachbox">
                         <Button id="basic-addon1">
                           <svg
@@ -506,116 +512,116 @@ const Dashboard = () => {
                       </InputGroup>
                     </Col>
                     <Col md={6} className="justify-content-end d-flex align-items-center">
-                        <button className="gray_iconbtn me-2 active"><img src={gridview}/></button>
-                        <button className="gray_iconbtn"><img src={listview}/></button>
+                      <button className="gray_iconbtn me-2 active"><img src={gridview} /></button>
+                      <button className="gray_iconbtn"><img src={listview} /></button>
                     </Col>
                   </Row>
                 </Card.Header>
                 <Card.Body className="p-0 mt-3">
-                    <div className="hiring_ppldata">
-                        <table className="m-0 table table-striped elv_datatable">
-                          <thead>
-                            <tr>
-                              <th>Job</th>
-                              <th>Location</th>
-                              <th>Department</th>
-                              <th>Job Age</th>
-                              <th>Total App.</th>
-                              <th>Status</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <td className="font-weight-600">Figma Designer<span className="count">(10)</span></td>
-                              <td>Mumbai</td>
-                              <td>Technology</td>
-                              <td>10 days</td>
-                              <td>2154</td>
-                              <td><span className="badge-primery">Evaluation 1</span></td>
-                            </tr>
-                            <tr>
-                              <td className="font-weight-600">UI Designer<span className="count">(5)</span></td>
-                              <td>Goa</td>
-                              <td>Creative</td>
-                              <td>5 days</td>
-                              <td>513</td>
-                              <td><span className="badge-sucess">Final Shortlist</span></td>
-                            </tr>
-                            <tr>
-                              <td className="font-weight-600">Finance Manager<span className="count">(2)</span></td>
-                              <td>Delhi</td>
-                              <td>Finance</td>
-                              <td>7 days </td>
-                              <td>184</td>
-                              <td><span className="badge-warning">Screening</span></td>
-                            </tr>
-                            <tr>
-                              <td className="font-weight-600">Figma Designer<span className="count">(10)</span></td>
-                              <td>Mumbai</td>
-                              <td>Technology</td>
-                              <td>10 days</td>
-                              <td>2154</td>
-                              <td><span className="badge-primery">Evaluation 1</span></td>
-                            </tr>
-                            <tr>
-                              <td className="font-weight-600">Figma Designer<span className="count">(10)</span></td>
-                              <td>Mumbai</td>
-                              <td>Technology</td>
-                              <td>10 days</td>
-                              <td>2154</td>
-                              <td><span className="badge-primery">Evaluation 1</span></td>
-                            </tr>
-                            <tr>
-                              <td className="font-weight-600">Figma Designer<span className="count">(10)</span></td>
-                              <td>Mumbai</td>
-                              <td>Technology</td>
-                              <td>10 days</td>
-                              <td>2154</td>
-                              <td><span className="badge-primery">Evaluation 1</span></td>
-                            </tr>
-                             <tr>
-                              <td className="font-weight-600">Finance Manager<span className="count">(2)</span></td>
-                              <td>Delhi</td>
-                              <td>Finance</td>
-                              <td>7 days </td>
-                              <td>184</td>
-                              <td><span className="badge-warning">Screening</span></td>
-                            </tr>
-                            <tr>
-                              <td className="font-weight-600">UI Designer<span className="count">(5)</span></td>
-                              <td>Goa</td>
-                              <td>Creative</td>
-                              <td>5 days</td>
-                              <td>513</td>
-                              <td><span className="badge-sucess">Final Shortlist</span></td>
-                            </tr>
-                            <tr>
-                              <td className="font-weight-600">Figma Designer<span className="count">(10)</span></td>
-                              <td>Mumbai</td>
-                              <td>Technology</td>
-                              <td>10 days</td>
-                              <td>2154</td>
-                              <td><span className="badge-primery">Evaluation 1</span></td>
-                            </tr>
-                            <tr>
-                              <td className="font-weight-600">Figma Designer<span className="count">(10)</span></td>
-                              <td>Mumbai</td>
-                              <td>Technology</td>
-                              <td>10 days</td>
-                              <td>2154</td>
-                              <td><span className="badge-primery">Evaluation 1</span></td>
-                            </tr>
-                             <tr>
-                              <td className="font-weight-600">Finance Manager<span className="count">(2)</span></td>
-                              <td>Delhi</td>
-                              <td>Finance</td>
-                              <td>7 days </td>
-                              <td>184</td>
-                              <td><span className="badge-warning">Screening</span></td>
-                            </tr>
-                          </tbody>
-                        </table>
-                    </div>
+                  <div className="hiring_ppldata">
+                    <table className="m-0 table table-striped elv_datatable">
+                      <thead>
+                        <tr>
+                          <th>Job</th>
+                          <th>Location</th>
+                          <th>Department</th>
+                          <th>Job Age</th>
+                          <th>Total App.</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td className="font-weight-600">Figma Designer<span className="count">(10)</span></td>
+                          <td>Mumbai</td>
+                          <td>Technology</td>
+                          <td>10 days</td>
+                          <td>2154</td>
+                          <td><span className="badge-primery">Evaluation 1</span></td>
+                        </tr>
+                        <tr>
+                          <td className="font-weight-600">UI Designer<span className="count">(5)</span></td>
+                          <td>Goa</td>
+                          <td>Creative</td>
+                          <td>5 days</td>
+                          <td>513</td>
+                          <td><span className="badge-sucess">Final Shortlist</span></td>
+                        </tr>
+                        <tr>
+                          <td className="font-weight-600">Finance Manager<span className="count">(2)</span></td>
+                          <td>Delhi</td>
+                          <td>Finance</td>
+                          <td>7 days </td>
+                          <td>184</td>
+                          <td><span className="badge-warning">Screening</span></td>
+                        </tr>
+                        <tr>
+                          <td className="font-weight-600">Figma Designer<span className="count">(10)</span></td>
+                          <td>Mumbai</td>
+                          <td>Technology</td>
+                          <td>10 days</td>
+                          <td>2154</td>
+                          <td><span className="badge-primery">Evaluation 1</span></td>
+                        </tr>
+                        <tr>
+                          <td className="font-weight-600">Figma Designer<span className="count">(10)</span></td>
+                          <td>Mumbai</td>
+                          <td>Technology</td>
+                          <td>10 days</td>
+                          <td>2154</td>
+                          <td><span className="badge-primery">Evaluation 1</span></td>
+                        </tr>
+                        <tr>
+                          <td className="font-weight-600">Figma Designer<span className="count">(10)</span></td>
+                          <td>Mumbai</td>
+                          <td>Technology</td>
+                          <td>10 days</td>
+                          <td>2154</td>
+                          <td><span className="badge-primery">Evaluation 1</span></td>
+                        </tr>
+                        <tr>
+                          <td className="font-weight-600">Finance Manager<span className="count">(2)</span></td>
+                          <td>Delhi</td>
+                          <td>Finance</td>
+                          <td>7 days </td>
+                          <td>184</td>
+                          <td><span className="badge-warning">Screening</span></td>
+                        </tr>
+                        <tr>
+                          <td className="font-weight-600">UI Designer<span className="count">(5)</span></td>
+                          <td>Goa</td>
+                          <td>Creative</td>
+                          <td>5 days</td>
+                          <td>513</td>
+                          <td><span className="badge-sucess">Final Shortlist</span></td>
+                        </tr>
+                        <tr>
+                          <td className="font-weight-600">Figma Designer<span className="count">(10)</span></td>
+                          <td>Mumbai</td>
+                          <td>Technology</td>
+                          <td>10 days</td>
+                          <td>2154</td>
+                          <td><span className="badge-primery">Evaluation 1</span></td>
+                        </tr>
+                        <tr>
+                          <td className="font-weight-600">Figma Designer<span className="count">(10)</span></td>
+                          <td>Mumbai</td>
+                          <td>Technology</td>
+                          <td>10 days</td>
+                          <td>2154</td>
+                          <td><span className="badge-primery">Evaluation 1</span></td>
+                        </tr>
+                        <tr>
+                          <td className="font-weight-600">Finance Manager<span className="count">(2)</span></td>
+                          <td>Delhi</td>
+                          <td>Finance</td>
+                          <td>7 days </td>
+                          <td>184</td>
+                          <td><span className="badge-warning">Screening</span></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </Card.Body>
               </Card>
             </Col>
@@ -782,6 +788,10 @@ const Dashboard = () => {
       </div>
 
       <CompanyEditProfile show={show} handleClose={handleClose} />
+      <CreateJobs
+        show={modal}
+        handleClose={() => handleModalClose()}
+      />
 
       {/* <Modal 
         show={show} 

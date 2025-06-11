@@ -732,6 +732,7 @@ const HelpChoose = ({
                                             <img src={imgInd[index]} />
                                         </div>
                                         <p>{item.data}</p>
+                                        <i className={`${item?.markedImportant ? 'fa active-danger' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item.heading)}></i>
                                     </div>
                                 </Col>
                             )) :
@@ -754,7 +755,8 @@ const HelpChoose = ({
                                             <h6>{item.heading}</h6>
                                             <img src={imgInd[index]} />
                                         </div>
-                                        <p>{item.des}</p>
+                                        <p>{item.data}</p>
+                                        <i className={`${item?.markedImportant ? 'fa active-primery' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item.heading)}></i>
                                     </div>
                                 </Col>
                             )) :
@@ -777,7 +779,8 @@ const HelpChoose = ({
                                             <h6>{item.heading}</h6>
                                             <img src={imgInd[index]} />
                                         </div>
-                                        <p>{item.des}</p>
+                                        <p>{item.data}</p>
+                                        <i className={`${item?.markedImportant ? 'fa active-success' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item.heading)}></i>
                                     </div>
                                 </Col>
                             )) :
@@ -800,7 +803,8 @@ const HelpChoose = ({
                                             <h6>{item.heading}</h6>
                                             <img src={imgInd[index]} />
                                         </div>
-                                        <p>{item.des}</p>
+                                        <p>{item.data}</p>
+                                        <i className={`${item?.markedImportant ? 'fa active-warning' : 'far'} fa-star`} onClick={(e) => handleImportant(e, item.heading)}></i>
                                     </div>
                                 </Col>
                             )) :
