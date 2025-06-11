@@ -34,6 +34,7 @@ const FilterJobs = ({
   const [hasMore, setHasMore] = useState(true);
   const [viewMoreSearch, setViewMoreSearch] = useState([])
   const modalRef = useRef(null);
+  const countfilter = Object.values(filtersList).filter(value => value !== "").length;
 
   useEffect(() => {
     if (show) {
@@ -250,7 +251,7 @@ const FilterJobs = ({
             <img src={filterLines} alt="" />
             More Filters
           </Offcanvas.Title>
-          <span className="applied_count">Applied ({filterAppliedCount})</span>
+          <span className="applied_count">Applied ({countfilter})</span>
         </Offcanvas.Header>
         <Offcanvas.Body className="filter_warp">
           <Accordion defaultActiveKey={["0", "1", "2", "3", "4"]} alwaysOpen>
@@ -497,7 +498,7 @@ const FilterJobs = ({
                       }}
                       variant="link"
                     >
-                      View More
+                      View More {filtersList?.job_location?.split(',').length}
                     </Button>
                   )}
                 </Accordion.Body>
@@ -556,7 +557,7 @@ const FilterJobs = ({
                       }}
                       variant="link"
                     >
-                      View More
+                      View More {filtersList?.department?.split(',').length}
                     </Button>
                   )}
                 </Accordion.Body>

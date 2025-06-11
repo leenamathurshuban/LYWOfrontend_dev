@@ -2781,7 +2781,7 @@ const ApplicationJobPostModal = ({
           console.error("Failed to save form: ", response.data);
           alert("There was an issue saving the form.");
         }
-      }else{
+      } else {
         toast.warning('Please fill all fields')
       }
     } catch (error) {
@@ -3277,249 +3277,250 @@ const ApplicationJobPostModal = ({
   console.log(spokenLanguageBadges, rdnwBadges)
   console.log(WorkExpreienceRow)
   return (
-    <Modal
-      show={show}
-      onHide={handleClose}
-      size="lg"
-      animation={false}
-      backdrop={false}
-      // className="cmprofile_mdl quizDev_model jobpost_view"
-      className="cmprofile_mdl quizDev_model jobpost_view ps-0"
-    >
-      <Modal.Header closeButton>
-        <img src={logoIcon} className="me-4" />
-        <div className="modal-title h4">
-          Job Application <strong className="font-weight500">{jobPostData?.job_title}</strong>
-          <p className="subtitle m-0">
-            {jobPostData?.job_location?.location_name},{jobPostData?.job_type} ,{" "}
-            {jobPostData?.workplace_type}
-          </p>
-        </div>
-      </Modal.Header>
-      <Modal.Body className="p-0 bg-lightgray">
-        <Container fluid>
-          <Row className="justify-content-center">
-            <Col md={3} lg={2} className="jobpre_leftpanel px-2">
-              <h6>Profile</h6>
-              <ul className="checklist">
-                <li
-                  className={`${profileformData?.name &&
-                    profileformData?.email &&
-                    profileformData?.phone &&
-                    "active"
-                    }`}
-                >
-                  {/* <a href="#item_salary"> */}
-                  <Link to={''}>
-                    Basic Details <i class="fa fa-check" aria-hidden="true"></i>
+    <>
+      <Modal
+        show={show}
+        onHide={handleClose}
+        size="lg"
+        animation={false}
+        backdrop={false}
+        // className="cmprofile_mdl quizDev_model jobpost_view"
+        className="cmprofile_mdl quizDev_model jobpost_view ps-0"
+      >
+        <Modal.Header closeButton>
+          <img src={logoIcon} className="me-4" />
+          <div className="modal-title h4">
+            Job Application <strong className="font-weight500">{jobPostData?.job_title}</strong>
+            <p className="subtitle m-0">
+              {jobPostData?.job_location?.location_name},{jobPostData?.job_type} ,{" "}
+              {jobPostData?.workplace_type}
+            </p>
+          </div>
+        </Modal.Header>
+        <Modal.Body className="p-0 bg-lightgray">
+          <Container fluid>
+            <Row className="justify-content-center">
+              <Col md={3} lg={2} className="jobpre_leftpanel px-2">
+                <h6>Profile</h6>
+                <ul className="checklist">
+                  <li
+                    className={`${profileformData?.name &&
+                      profileformData?.email &&
+                      profileformData?.phone &&
+                      "active"
+                      }`}
+                  >
+                    {/* <a href="#item_salary"> */}
+                    <Link to={''}>
+                      Basic Details <i class="fa fa-check" aria-hidden="true"></i>
+                      {/* </a> */}
+                    </Link>
+                  </li>
+
+                  <li className={`${ResumeFile && "active"}`}>
+                    {/* <a href="#item_edu"> */}
+                    <Link to={''}>
+                      Resume <i class="fa fa-check" aria-hidden="true"></i>
+                      {/* </a> */}
+                    </Link>
+                  </li>
+                  <li
+                    className={`${profileformData?.AvailableBy &&
+                      // isYes?.CurrentlyWorkingToggle &&
+                      // profileformData?.NoticePeriod &&
+                      // isYes?.NoticeBuyOutToggle &&
+                      "active"
+                      }`}
+                  >
+                    {/* <a href="#item_Exp"> */}
+                    <Link to={''}>
+                      Availability <i class="fa fa-check" aria-hidden="true"></i>
+                      {/* </a> */}
+                    </Link>
+                  </li>
+                  <li
+                    className={`${profileformData?.ExpectedSalary && "active"}`}
+                  >
+                    {/* <a href="#item_Target"> */}
+                    <Link to={''}>
+                      Expected Salary{" "}
+                      <i class="fa fa-check" aria-hidden="true"></i>
+                      {/* </a> */}
+                    </Link>
+                  </li>
+                  <li className={`${isAllEducationFieldsFilled && "active"}`}>
+                    {/* <a href="#item_lang"> */}
+                    <Link to={''}>
+                      Education <i class="fa fa-check" aria-hidden="true"></i>
+                    </Link>
                     {/* </a> */}
-                  </Link>
-                </li>
-
-                <li className={`${ResumeFile && "active"}`}>
-                  {/* <a href="#item_edu"> */}
-                  <Link to={''}>
-                    Resume <i class="fa fa-check" aria-hidden="true"></i>
+                  </li>
+                  <li
+                    className={`${isAllWorkExperienceFieldsFilled && "active"}`}
+                  >
+                    {/* <a href="#item_Geog"> */}
+                    <Link to={''}>
+                      Experience <i class="fa fa-check" aria-hidden="true"></i>
+                    </Link>
                     {/* </a> */}
-                  </Link>
-                </li>
-                <li
-                  className={`${profileformData?.AvailableBy &&
-                    // isYes?.CurrentlyWorkingToggle &&
-                    // profileformData?.NoticePeriod &&
-                    // isYes?.NoticeBuyOutToggle &&
-                    "active"
-                    }`}
-                >
-                  {/* <a href="#item_Exp"> */}
-                  <Link to={''}>
-                    Availability <i class="fa fa-check" aria-hidden="true"></i>
+                  </li>
+                  <li
+                    className={`${spokenLanguageBadges.length &&
+                      rdnwBadges.length &&
+                      "active"
+                      }`}
+                  >
+                    {/* <a href="#item_Geog"> */}
+                    <Link to={''}>
+                      Language <i class="fa fa-check" aria-hidden="true"></i>
+                    </Link>
                     {/* </a> */}
-                  </Link>
-                </li>
-                <li
-                  className={`${profileformData?.ExpectedSalary && "active"}`}
-                >
-                  {/* <a href="#item_Target"> */}
-                  <Link to={''}>
-                    Expected Salary{" "}
-                    <i class="fa fa-check" aria-hidden="true"></i>
+                  </li>
+
+                  <li
+                    className={`${profileformData?.CurrentLocation && "active"}`}
+                  >
+                    {/* <a href="#item_Geog"> */}
+                    <Link to={''}>
+                      Geography <i class="fa fa-check" aria-hidden="true"></i>
+                    </Link>
                     {/* </a> */}
-                  </Link>
-                </li>
-                <li className={`${isAllEducationFieldsFilled && "active"}`}>
-                  {/* <a href="#item_lang"> */}
-                  <Link to={''}>
-                    Education <i class="fa fa-check" aria-hidden="true"></i>
-                  </Link>
-                  {/* </a> */}
-                </li>
-                <li
-                  className={`${isAllWorkExperienceFieldsFilled && "active"}`}
-                >
-                  {/* <a href="#item_Geog"> */}
-                  <Link to={''}>
-                    Experience <i class="fa fa-check" aria-hidden="true"></i>
-                  </Link>
-                  {/* </a> */}
-                </li>
-                <li
-                  className={`${spokenLanguageBadges.length &&
-                    rdnwBadges.length &&
-                    "active"
-                    }`}
-                >
-                  {/* <a href="#item_Geog"> */}
-                  <Link to={''}>
-                    Language <i class="fa fa-check" aria-hidden="true"></i>
-                  </Link>
-                  {/* </a> */}
-                </li>
+                  </li>
+                  <li className={`${selectedSkills.length > 0 && "active"}`}>
+                    {/* <a href="#item_Geog"> */}
+                    <Link to={''}>
+                      Skills <i class="fa fa-check" aria-hidden="true"></i>
+                    </Link>
+                    {/* </a> */}
+                  </li>
+                  <li
+                    className={
+                      Object.keys(selectedAnswers).length > 0 ? "active" : ""
+                    }
+                  >
+                    {/* <a href="#item_Geog"> */}
+                    <Link to={''}>
+                      Custom Questions{" "}
+                      <i class="fa fa-check" aria-hidden="true"></i>
+                    </Link>
+                    {/* </a> */}
+                  </li>
+                </ul>
+              </Col>
 
-                <li
-                  className={`${profileformData?.CurrentLocation && "active"}`}
-                >
-                  {/* <a href="#item_Geog"> */}
-                  <Link to={''}>
-                    Geography <i class="fa fa-check" aria-hidden="true"></i>
-                  </Link>
-                  {/* </a> */}
-                </li>
-                <li className={`${selectedSkills.length > 0 && "active"}`}>
-                  {/* <a href="#item_Geog"> */}
-                  <Link to={''}>
-                    Skills <i class="fa fa-check" aria-hidden="true"></i>
-                  </Link>
-                  {/* </a> */}
-                </li>
-                <li
-                  className={
-                    Object.keys(selectedAnswers).length > 0 ? "active" : ""
-                  }
-                >
-                  {/* <a href="#item_Geog"> */}
-                  <Link to={''}>
-                    Custom Questions{" "}
-                    <i class="fa fa-check" aria-hidden="true"></i>
-                  </Link>
-                  {/* </a> */}
-                </li>
-              </ul>
-            </Col>
+              {/* Center Column */}
+              <Col md={7} lg={8} className="jobMain_panel">
+                <div className="custom-card">
+                  <h6>Basic Details</h6>
 
-            {/* Center Column */}
-            <Col md={7} lg={8} className="jobMain_panel">
-              <div className="custom-card">
-                <h6>Basic Details</h6>
+                  <Row>
+                    <Col md={2}>
+                      <Form.Label>Name</Form.Label>
+                    </Col>
 
-                <Row>
-                  <Col md={2}>
-                    <Form.Label>Name</Form.Label>
-                  </Col>
-
-                  <Col md={8}>
-                    <Form.Control
-                      type="text"
-                      placeholder="Enter full name"
-                      size="sm"
-                      style={{ width: "350px" }}
-                      name="name"
-                      value={profileformData.name}
-                      onChange={handleProfileDetailsChange}
-                      onFocus={handleFocus}
-                      onBlur={handleBlur}
-                      isInvalid={touchedFields.name && !!errors.name}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                      {errors.name}
-                    </Form.Control.Feedback>
-                  </Col>
-                </Row>
-                <Row className="mb-3 mt-2">
-                  <Col md={2}>
-                    <Form.Label>Email ID</Form.Label>
-                  </Col>
-
-                  <Col>
-                    <Form.Control
-                      type="email"
-                      placeholder="email@mail.com"
-                      size="sm"
-                      style={{ width: "350px" }}
-                      name="email"
-                      value={profileformData.email}
-                      onChange={handleProfileDetailsChange}
-                      onFocus={handleFocus}
-                      onBlur={handleBlur}
-                      isInvalid={touchedFields.email && !!errors.email}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                      {errors.email}
-                    </Form.Control.Feedback>
-                  </Col>
-                </Row>
-
-                <Row className="mb-3 mt-2">
-                  <Col md={2}>
-                    <Form.Label>Confirm Email ID</Form.Label>
-                  </Col>
-
-                  <Col>
-                    <Form.Control
-                      type="email"
-                      placeholder="email@mail.com"
-                      size="sm"
-                      style={{ width: "350px" }}
-                      name="confirmEmail"
-                      value={profileformData.confirmEmail}
-                      onChange={handleProfileDetailsChange}
-                      onFocus={handleFocus}
-                      onBlur={handleBlur}
-                      isInvalid={
-                        touchedFields.confirmEmail && !!errors.confirmEmail
-                      }
-                    />
-                    <Form.Control.Feedback type="invalid">
-                      {errors.confirmEmail}
-                    </Form.Control.Feedback>
-                  </Col>
-                </Row>
-
-                <Row className="mb-3 mt-2">
-                  <Col md={2}>
-                    <Form.Label>Phone No.</Form.Label>
-                  </Col>
-
-                  <Col className="phone-input">
-                    <InputGroup className="mb-3" size="sm" style={{ maxWidth: "350px" }}>
-                      <DropdownButton
-                        variant="outline-secondary"
-                        title={countryCode}
-                        id="input-group-dropdown-1"
-                      >
-                        {countryCodes.map((code) => (
-                          <Dropdown.Item key={code} onClick={() => setCountryCode(code)}>
-                            {code}
-                          </Dropdown.Item>
-                        ))}
-                      </DropdownButton>
+                    <Col md={8}>
                       <Form.Control
                         type="text"
-                        placeholder="Phone No."
+                        placeholder="Enter full name"
                         size="sm"
-                        name="phone"
-                        value={profileformData.phone}
+                        style={{ width: "350px" }}
+                        name="name"
+                        value={profileformData.name}
                         onChange={handleProfileDetailsChange}
                         onFocus={handleFocus}
                         onBlur={handleBlur}
-                        isInvalid={touchedFields.phone && !!errors.phone}
-                        maxLength={10}
+                        isInvalid={touchedFields.name && !!errors.name}
                       />
                       <Form.Control.Feedback type="invalid">
-                        {errors.phone}
+                        {errors.name}
                       </Form.Control.Feedback>
-                    </InputGroup>
-                    {/* <Form.Control
+                    </Col>
+                  </Row>
+                  <Row className="mb-3 mt-2">
+                    <Col md={2}>
+                      <Form.Label>Email ID</Form.Label>
+                    </Col>
+
+                    <Col>
+                      <Form.Control
+                        type="email"
+                        placeholder="email@mail.com"
+                        size="sm"
+                        style={{ width: "350px" }}
+                        name="email"
+                        value={profileformData.email}
+                        onChange={handleProfileDetailsChange}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
+                        isInvalid={touchedFields.email && !!errors.email}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.email}
+                      </Form.Control.Feedback>
+                    </Col>
+                  </Row>
+
+                  <Row className="mb-3 mt-2">
+                    <Col md={2}>
+                      <Form.Label>Confirm Email ID</Form.Label>
+                    </Col>
+
+                    <Col>
+                      <Form.Control
+                        type="email"
+                        placeholder="email@mail.com"
+                        size="sm"
+                        style={{ width: "350px" }}
+                        name="confirmEmail"
+                        value={profileformData.confirmEmail}
+                        onChange={handleProfileDetailsChange}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
+                        isInvalid={
+                          touchedFields.confirmEmail && !!errors.confirmEmail
+                        }
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.confirmEmail}
+                      </Form.Control.Feedback>
+                    </Col>
+                  </Row>
+
+                  <Row className="mb-3 mt-2">
+                    <Col md={2}>
+                      <Form.Label>Phone No.</Form.Label>
+                    </Col>
+
+                    <Col className="phone-input">
+                      <InputGroup className="mb-3" size="sm" style={{ maxWidth: "350px" }}>
+                        <DropdownButton
+                          variant="outline-secondary"
+                          title={countryCode}
+                          id="input-group-dropdown-1"
+                        >
+                          {countryCodes.map((code) => (
+                            <Dropdown.Item key={code} onClick={() => setCountryCode(code)}>
+                              {code}
+                            </Dropdown.Item>
+                          ))}
+                        </DropdownButton>
+                        <Form.Control
+                          type="text"
+                          placeholder="Phone No."
+                          size="sm"
+                          name="phone"
+                          value={profileformData.phone}
+                          onChange={handleProfileDetailsChange}
+                          onFocus={handleFocus}
+                          onBlur={handleBlur}
+                          isInvalid={touchedFields.phone && !!errors.phone}
+                          maxLength={10}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {errors.phone}
+                        </Form.Control.Feedback>
+                      </InputGroup>
+                      {/* <Form.Control
                       type="text"
                       placeholder="Phone No."
                       size="sm"
@@ -3532,162 +3533,162 @@ const ApplicationJobPostModal = ({
                       isInvalid={touchedFields.phone && !!errors.phone}
                     /> */}
 
-                  </Col>
-                </Row>
-              </div>
+                    </Col>
+                  </Row>
+                </div>
 
-              <div className="custom-card">
-                <h6>Resume</h6>
+                <div className="custom-card">
+                  <h6>Resume</h6>
 
-                <Row className="mb-3 mt-2">
-                  <Col md={2}>
-                    <Form.Label>Add Document</Form.Label>
-                  </Col>
+                  <Row className="mb-3 mt-2">
+                    <Col md={2}>
+                      <Form.Label>Add Document</Form.Label>
+                    </Col>
 
-                  <Col md={5}>
-                    {!ResumeFile && (
-                      <div
-                        className="cmp_uploder file-upload-box"
-                        {...getRootProps()}
-                      >
-                        <div className="upload-content">
-                          <input {...getInputProps()} />
-                          <img src={uploadIcon} className="mx-2" />
-                          {/* <i className="fas fa-cloud-upload-alt upload-icon"></i> */}
-                          <h5>
-                            <strong className="text-primary">
-                              Click to upload
-                            </strong>{" "}
-                            or drag & drop
-                          </h5>
-                          {/* <small className="text-muted mb-0">
+                    <Col md={5}>
+                      {!ResumeFile && (
+                        <div
+                          className="cmp_uploder file-upload-box"
+                          {...getRootProps()}
+                        >
+                          <div className="upload-content">
+                            <input {...getInputProps()} />
+                            <img src={uploadIcon} className="mx-2" />
+                            {/* <i className="fas fa-cloud-upload-alt upload-icon"></i> */}
+                            <h5>
+                              <strong className="text-primary">
+                                Click to upload
+                              </strong>{" "}
+                              or drag & drop
+                            </h5>
+                            {/* <small className="text-muted mb-0">
                             PDF or Doc. Should be less than 2 MB
                           </small> */}
-                        </div>
-                        <small className="text-muted mb-0">
-                          PDF or Doc. Should be less than 2 MB
-                        </small>
-                      </div>
-                    )}
-                    {!ResumeFile && (
-                      <p className="error">{errors.ResumeFile}</p>
-                    )}
-
-                    {error && (
-                      <Alert variant="danger" className="mt-2">
-                        {error}
-                      </Alert>
-                    )}
-
-                    {/* Display Selected File Details and Upload Button */}
-                    {ResumeFile && (
-                      <>
-                        <div className="selected_logo">
-                          <strong className="strong-label ms-2">{ResumeFile?.name || ResumeFileName}</strong>
-
-                          <div className="d-flex">
-                            <Button
-                              variant="link"
-                              className=" me-2"
-                              onClick={handleDeleteImage}
-                            >
-                              <img src={imgpTrash} />
-                            </Button>
                           </div>
+                          <small className="text-muted mb-0">
+                            PDF or Doc. Should be less than 2 MB
+                          </small>
                         </div>
-                        <small className="text-muted mb-0">
-                          PDF or Doc. Should be less than 2 MB
-                        </small>
-                      </>
-                    )}
-                  </Col>
-                </Row>
-              </div>
+                      )}
+                      {!ResumeFile && (
+                        <p className="error">{errors.ResumeFile}</p>
+                      )}
 
-              <div className="custom-card">
-                <h6>Availability</h6>
-                <Row className="mb-3 mt-2">
-                  <Col md={2}>
-                    <Form.Label>Available by</Form.Label>
-                  </Col>
+                      {error && (
+                        <Alert variant="danger" className="mt-2">
+                          {error}
+                        </Alert>
+                      )}
 
-                  <Col>
-                    <Form.Control
-                      name="AvailableBy"
-                      type="date"
-                      placeholder="DD/MM/YYYY"
-                      style={{ width: "350px" }}
-                      value={profileformData?.AvailableBy}
-                      onChange={handleProfileDetailsChange}
-                      isInvalid={!!errors.AvailableBy}
-                      className="form-control-sm"
-                      min={new Date().toISOString().split("T")[0]}
-                    />
-                    <small className="text-muted mb-4">
-                      Consider you notice period before providing this information
-                    </small>
-                  </Col>
-                  <Form.Control.Feedback type="invalid">
-                    {errors.AvailableBy}
-                  </Form.Control.Feedback>
-                </Row>
+                      {/* Display Selected File Details and Upload Button */}
+                      {ResumeFile && (
+                        <>
+                          <div className="selected_logo">
+                            <strong className="strong-label ms-2">{ResumeFile?.name || ResumeFileName}</strong>
 
-                <Row className="mb-3 mt-2">
-                  <Col md={2}>
-                    <Form.Label>Currently Working?</Form.Label>
-                  </Col>
+                            <div className="d-flex">
+                              <Button
+                                variant="link"
+                                className=" me-2"
+                                onClick={handleDeleteImage}
+                              >
+                                <img src={imgpTrash} />
+                              </Button>
+                            </div>
+                          </div>
+                          <small className="text-muted mb-0">
+                            PDF or Doc. Should be less than 2 MB
+                          </small>
+                        </>
+                      )}
+                    </Col>
+                  </Row>
+                </div>
 
-                  <Col>
-                    <Row className="align-items-center">
-                      {/* Left Label for "No" */}
-                      <Col xs="auto">
-                        <Form.Label
-                          className="mb-0"
-                          style={{
-                            color: isYes?.CurrentlyWorkingToggle
-                              ? "grey"
-                              : "black",
-                          }}
-                        >
-                          {!isYes?.CurrentlyWorkingToggle ? "No" : "No"}
-                        </Form.Label>
-                      </Col>
+                <div className="custom-card">
+                  <h6>Availability</h6>
+                  <Row className="mb-3 mt-2">
+                    <Col md={2}>
+                      <Form.Label>Available by</Form.Label>
+                    </Col>
 
-                      <Col xs="auto">
-                        <Form.Check
-                          type="switch"
-                          id="custom-switch"
-                          checked={isYes?.CurrentlyWorkingToggle}
-                          onChange={() =>
-                            handleSwitchChange("CurrentlyWorkingToggle")
-                          }
-                        />
-                      </Col>
+                    <Col>
+                      <Form.Control
+                        name="AvailableBy"
+                        type="date"
+                        placeholder="DD/MM/YYYY"
+                        style={{ width: "350px" }}
+                        value={profileformData?.AvailableBy}
+                        onChange={handleProfileDetailsChange}
+                        isInvalid={!!errors.AvailableBy}
+                        className="form-control-sm"
+                        min={new Date().toISOString().split("T")[0]}
+                      />
+                      <small className="text-muted mb-4">
+                        Consider you notice period before providing this information
+                      </small>
+                    </Col>
+                    <Form.Control.Feedback type="invalid">
+                      {errors.AvailableBy}
+                    </Form.Control.Feedback>
+                  </Row>
 
-                      <Col xs="auto">
-                        <Form.Label
-                          className="mb-0"
-                          style={{
-                            color: isYes?.CurrentlyWorkingToggle
-                              ? "black"
-                              : "grey",
-                          }}
-                        >
-                          {isYes?.CurrentlyWorkingToggle ? "Yes" : "Yes"}
-                        </Form.Label>
-                      </Col>
-                    </Row>
-                  </Col>
-                </Row>
-                {isYes?.CurrentlyWorkingToggle && (
-                  <>
-                    <Row className="mb-3 mt-2">
-                      <Col md={2}>
-                        <Form.Label>Notice Period</Form.Label>
-                      </Col>
+                  <Row className="mb-3 mt-2">
+                    <Col md={2}>
+                      <Form.Label>Currently Working?</Form.Label>
+                    </Col>
 
-                      <Col>
-                        {/* <Form.Select
+                    <Col>
+                      <Row className="align-items-center">
+                        {/* Left Label for "No" */}
+                        <Col xs="auto">
+                          <Form.Label
+                            className="mb-0"
+                            style={{
+                              color: isYes?.CurrentlyWorkingToggle
+                                ? "grey"
+                                : "black",
+                            }}
+                          >
+                            {!isYes?.CurrentlyWorkingToggle ? "No" : "No"}
+                          </Form.Label>
+                        </Col>
+
+                        <Col xs="auto">
+                          <Form.Check
+                            type="switch"
+                            id="custom-switch"
+                            checked={isYes?.CurrentlyWorkingToggle}
+                            onChange={() =>
+                              handleSwitchChange("CurrentlyWorkingToggle")
+                            }
+                          />
+                        </Col>
+
+                        <Col xs="auto">
+                          <Form.Label
+                            className="mb-0"
+                            style={{
+                              color: isYes?.CurrentlyWorkingToggle
+                                ? "black"
+                                : "grey",
+                            }}
+                          >
+                            {isYes?.CurrentlyWorkingToggle ? "Yes" : "Yes"}
+                          </Form.Label>
+                        </Col>
+                      </Row>
+                    </Col>
+                  </Row>
+                  {isYes?.CurrentlyWorkingToggle && (
+                    <>
+                      <Row className="mb-3 mt-2">
+                        <Col md={2}>
+                          <Form.Label>Notice Period</Form.Label>
+                        </Col>
+
+                        <Col>
+                          {/* <Form.Select
                           placeholder="Notice Period"
                           size="sm"
                           style={{ width: "350px" }}
@@ -3703,109 +3704,109 @@ const ApplicationJobPostModal = ({
                           <option value='More than 90'>More than 90 Days</option>
                         </Form.Select> */}
 
-                        <div className="mw-230 relative" ref={dropdownRef}>
-                          <FormControl
-                            placeholder="Notice Period"
-                            size="sm"
-                            style={{ width: "350px" }}
-                            name="NoticePeriod"
-                            value={profileformData?.NoticePeriod || ""}
-                            onClick={() => {
-                              // setShowDropdown((prev) => !prev)
-                              setShowDropdown(prev => ({
-                                ...prev,
-                                ["NoticePeriod"]: !prev["NoticePeriod"]
-                              }));
-                            }}
-                            onBlur={() => setTimeout(() => {
-                              setShowDropdown(prev => ({
-                                ...prev,
-                                ["NoticePeriod"]: false
-                              }));
-                            }, 150)}
-                            isInvalid={!!errors?.NoticePeriod}
-                            readOnly
-                          />
-                          {showDropdown.NoticePeriod && (
-                            <div className="ctm_dropdown ct_scrollbar" style={{
-                              position: "absolute",
-                              background: "#fff",
-                              zIndex: 10,
-                              width: "38%",
-                              border: "1px solid #ccc",
-                              maxHeight: "150px",
-                              overflowY: "auto"
-                            }}>
-                              <ul className="m-0 p-0 list-unstyled">
-                                {noticeOptions.map((option, index) => (
-                                  <li
-                                    key={index}
-                                    style={{ padding: "8px 12px", cursor: "pointer" }}
-                                    onClick={() => handleSelect('NoticePeriod', option)}
-                                  >
-                                    {option}
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
-                        </div>
-                      </Col>
-                      <Form.Control.Feedback type="invalid">
-                        {errors.NoticePeriod}
-                      </Form.Control.Feedback>
-                    </Row>
-                    <Row className="mb-3 mt-2">
-                      <Col md={2}>
-                        <Form.Label>Notice Buyout Available</Form.Label>
-                      </Col>
-
-                      <Col>
-                        <Row className="align-items-center">
-                          <Col xs="auto">
-                            <Form.Label
-                              className="mb-0"
-                              style={{
-                                color: isYes?.NoticeBuyOutToggle ? "grey" : "black",
+                          <div className="mw-230 relative" ref={dropdownRef}>
+                            <FormControl
+                              placeholder="Notice Period"
+                              size="sm"
+                              style={{ width: "350px" }}
+                              name="NoticePeriod"
+                              value={profileformData?.NoticePeriod || ""}
+                              onClick={() => {
+                                // setShowDropdown((prev) => !prev)
+                                setShowDropdown(prev => ({
+                                  ...prev,
+                                  ["NoticePeriod"]: !prev["NoticePeriod"]
+                                }));
                               }}
-                            >
-                              {!isYes?.NoticeBuyOutToggle ? "No" : "No"}
-                            </Form.Label>
-                          </Col>
-
-                          <Col xs="auto">
-                            <Form.Check
-                              type="switch"
-                              id="custom-switch"
-                              checked={isYes?.NoticeBuyOutToggle}
-                              onChange={() =>
-                                handleSwitchChange("NoticeBuyOutToggle")
-                              }
+                              onBlur={() => setTimeout(() => {
+                                setShowDropdown(prev => ({
+                                  ...prev,
+                                  ["NoticePeriod"]: false
+                                }));
+                              }, 150)}
+                              isInvalid={!!errors?.NoticePeriod}
+                              readOnly
                             />
-                          </Col>
+                            {showDropdown.NoticePeriod && (
+                              <div className="ctm_dropdown ct_scrollbar" style={{
+                                position: "absolute",
+                                background: "#fff",
+                                zIndex: 10,
+                                width: "38%",
+                                border: "1px solid #ccc",
+                                maxHeight: "150px",
+                                overflowY: "auto"
+                              }}>
+                                <ul className="m-0 p-0 list-unstyled">
+                                  {noticeOptions.map((option, index) => (
+                                    <li
+                                      key={index}
+                                      style={{ padding: "8px 12px", cursor: "pointer" }}
+                                      onClick={() => handleSelect('NoticePeriod', option)}
+                                    >
+                                      {option}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                          </div>
+                        </Col>
+                        <Form.Control.Feedback type="invalid">
+                          {errors.NoticePeriod}
+                        </Form.Control.Feedback>
+                      </Row>
+                      <Row className="mb-3 mt-2">
+                        <Col md={2}>
+                          <Form.Label>Notice Buyout Available</Form.Label>
+                        </Col>
 
-                          <Col xs="auto">
-                            <Form.Label
-                              className="mb-0"
-                              style={{
-                                color: isYes?.NoticeBuyOutToggle ? "black" : "grey",
-                              }}
-                            >
-                              {isYes?.NoticeBuyOutToggle ? "Yes" : "Yes"}
-                            </Form.Label>
-                          </Col>
-                        </Row>
-                      </Col>
-                    </Row>
-                  </>
-                )}
-                <Row className="mb-3 mt-2">
-                  <Col md={2}>
-                    <Form.Label>Willing to Travel for Job?</Form.Label>
-                  </Col>
+                        <Col>
+                          <Row className="align-items-center">
+                            <Col xs="auto">
+                              <Form.Label
+                                className="mb-0"
+                                style={{
+                                  color: isYes?.NoticeBuyOutToggle ? "grey" : "black",
+                                }}
+                              >
+                                {!isYes?.NoticeBuyOutToggle ? "No" : "No"}
+                              </Form.Label>
+                            </Col>
 
-                  <Col>
-                    {/* <Row className="align-items-center">
+                            <Col xs="auto">
+                              <Form.Check
+                                type="switch"
+                                id="custom-switch"
+                                checked={isYes?.NoticeBuyOutToggle}
+                                onChange={() =>
+                                  handleSwitchChange("NoticeBuyOutToggle")
+                                }
+                              />
+                            </Col>
+
+                            <Col xs="auto">
+                              <Form.Label
+                                className="mb-0"
+                                style={{
+                                  color: isYes?.NoticeBuyOutToggle ? "black" : "grey",
+                                }}
+                              >
+                                {isYes?.NoticeBuyOutToggle ? "Yes" : "Yes"}
+                              </Form.Label>
+                            </Col>
+                          </Row>
+                        </Col>
+                      </Row>
+                    </>
+                  )}
+                  <Row className="mb-3 mt-2">
+                    <Col md={2}>
+                      <Form.Label>Willing to Travel for Job?</Form.Label>
+                    </Col>
+
+                    <Col>
+                      {/* <Row className="align-items-center">
                       <Col xs="auto">
                         <Form.Label
                           className="mb-0"
@@ -3839,61 +3840,61 @@ const ApplicationJobPostModal = ({
                         </Form.Label>
                       </Col>
                     </Row> */}
-                    <div className="d-flex justify-content-start">
-                      <Form.Check
-                        type="radio"
-                        label="Regularly"
-                        name="willing_to_travel_for_job"
-                        id="willingToTeavelJob1"
-                        className="me-3"
-                        value="Regularly"
-                        checked={profileformData.willing_to_travel_for_job == "Regularly"}
-                        onChange={handleWillingToTeavelJob}
-                      />
-                      <Form.Check
-                        type="radio"
-                        label="Sometimes"
-                        name="willing_to_travel_for_job"
-                        id="willingToTeavelJob2"
-                        className="ms-3"
-                        value="Sometimes"
-                        checked={profileformData.willing_to_travel_for_job == "Sometimes"}
-                        onChange={handleWillingToTeavelJob}
-                      />
-                      <Form.Check
-                        type="radio"
-                        label="Rarely"
-                        name="willing_to_travel_for_job"
-                        id="willingToTeavelJob3"
-                        className="ms-3"
-                        value="Rarely"
-                        checked={profileformData.willing_to_travel_for_job == "Rarely"}
-                        onChange={handleWillingToTeavelJob}
-                      />
-                      <Form.Check
-                        type="radio"
-                        label="Not Willing to Travel"
-                        name="willing_to_travel_for_job"
-                        id="willingToTeavelJob4"
-                        className="ms-3"
-                        value="Not Willing to Travel"
-                        checked={profileformData.willing_to_travel_for_job == "Not Willing to Travel"}
-                        onChange={handleWillingToTeavelJob}
-                      />
-                    </div>
-                  </Col>
-                </Row>
-              </div>
+                      <div className="d-flex justify-content-start">
+                        <Form.Check
+                          type="radio"
+                          label="Regularly"
+                          name="willing_to_travel_for_job"
+                          id="willingToTeavelJob1"
+                          className="me-3"
+                          value="Regularly"
+                          checked={profileformData.willing_to_travel_for_job == "Regularly"}
+                          onChange={handleWillingToTeavelJob}
+                        />
+                        <Form.Check
+                          type="radio"
+                          label="Sometimes"
+                          name="willing_to_travel_for_job"
+                          id="willingToTeavelJob2"
+                          className="ms-3"
+                          value="Sometimes"
+                          checked={profileformData.willing_to_travel_for_job == "Sometimes"}
+                          onChange={handleWillingToTeavelJob}
+                        />
+                        <Form.Check
+                          type="radio"
+                          label="Rarely"
+                          name="willing_to_travel_for_job"
+                          id="willingToTeavelJob3"
+                          className="ms-3"
+                          value="Rarely"
+                          checked={profileformData.willing_to_travel_for_job == "Rarely"}
+                          onChange={handleWillingToTeavelJob}
+                        />
+                        <Form.Check
+                          type="radio"
+                          label="Not Willing to Travel"
+                          name="willing_to_travel_for_job"
+                          id="willingToTeavelJob4"
+                          className="ms-3"
+                          value="Not Willing to Travel"
+                          checked={profileformData.willing_to_travel_for_job == "Not Willing to Travel"}
+                          onChange={handleWillingToTeavelJob}
+                        />
+                      </div>
+                    </Col>
+                  </Row>
+                </div>
 
-              <div className="custom-card">
-                <h6>Salary</h6>
-                <Row className="mb-3 d-flex align-items-center">
-                  {" "}
-                  <Col xs="auto">
-                    <Form.Label>Expected Salary</Form.Label>
-                  </Col>
-                  <Col>
-                    {/* <Form.Select
+                <div className="custom-card">
+                  <h6>Salary</h6>
+                  <Row className="mb-3 d-flex align-items-center">
+                    {" "}
+                    <Col xs="auto">
+                      <Form.Label>Expected Salary</Form.Label>
+                    </Col>
+                    <Col>
+                      {/* <Form.Select
                       className="form-control-sm mx-w350"
                       aria-label="Default select example"
                       name="ExpectedSalary"
@@ -3921,79 +3922,79 @@ const ApplicationJobPostModal = ({
                       <option value="Above 60 Lacs per Annum">Above 60 Lacs per Annum</option>
                     </Form.Select> */}
 
-                    <div className="mw-230 relative" ref={dropdownRef}>
-                      <FormControl
-                        placeholder="Expected Salary"
-                        size="sm"
-                        style={{ width: "350px" }}
-                        name="ExpectedSalary"
-                        value={profileformData?.ExpectedSalary || ""}
-                        onClick={() => {
-                          // setShowDropdown((prev) => !prev)
-                          setShowDropdown(prev => ({
-                            ...prev,
-                            ["ExpectedSalary"]: !prev["ExpectedSalary"]
-                          }));
-                        }}
-                        onBlur={() => setTimeout(() => {
-                          setShowDropdown(prev => ({
-                            ...prev,
-                            ["ExpectedSalary"]: false
-                          }));
-                        }, 150)}
-                        isInvalid={!!errors?.ExpectedSalary}
-                        readOnly
-                      />
-                      {showDropdown.ExpectedSalary && (
-                        <div className="ctm_dropdown ct_scrollbar" style={{
-                          position: "absolute",
-                          background: "#fff",
-                          zIndex: 10,
-                          width: "35%",
-                          border: "1px solid #ccc",
-                          maxHeight: "150px",
-                          overflowY: "auto"
-                        }}>
-                          <ul className="m-0 p-0 list-unstyled">
-                            {expectedSalaryOption.map((option, index) => (
-                              <li
-                                key={index}
-                                style={{ padding: "8px 12px", cursor: "pointer" }}
-                                onClick={() => handleSelect('ExpectedSalary', option)}
-                              >
-                                {option}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
-                    <Form.Control.Feedback type="invalid" className="error">
-                      {errors.ExpectedSalary}
-                    </Form.Control.Feedback>
-                  </Col>
-                </Row>
-              </div>
+                      <div className="mw-230 relative" ref={dropdownRef}>
+                        <FormControl
+                          placeholder="Expected Salary"
+                          size="sm"
+                          style={{ width: "350px" }}
+                          name="ExpectedSalary"
+                          value={profileformData?.ExpectedSalary || ""}
+                          onClick={() => {
+                            // setShowDropdown((prev) => !prev)
+                            setShowDropdown(prev => ({
+                              ...prev,
+                              ["ExpectedSalary"]: !prev["ExpectedSalary"]
+                            }));
+                          }}
+                          onBlur={() => setTimeout(() => {
+                            setShowDropdown(prev => ({
+                              ...prev,
+                              ["ExpectedSalary"]: false
+                            }));
+                          }, 150)}
+                          isInvalid={!!errors?.ExpectedSalary}
+                          readOnly
+                        />
+                        {showDropdown.ExpectedSalary && (
+                          <div className="ctm_dropdown ct_scrollbar" style={{
+                            position: "absolute",
+                            background: "#fff",
+                            zIndex: 10,
+                            width: "35%",
+                            border: "1px solid #ccc",
+                            maxHeight: "150px",
+                            overflowY: "auto"
+                          }}>
+                            <ul className="m-0 p-0 list-unstyled">
+                              {expectedSalaryOption.map((option, index) => (
+                                <li
+                                  key={index}
+                                  style={{ padding: "8px 12px", cursor: "pointer" }}
+                                  onClick={() => handleSelect('ExpectedSalary', option)}
+                                >
+                                  {option}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                      <Form.Control.Feedback type="invalid" className="error">
+                        {errors.ExpectedSalary}
+                      </Form.Control.Feedback>
+                    </Col>
+                  </Row>
+                </div>
 
-              <div className="custom-card">
-                <h6>Educational Qualification</h6>
-                <table className="mb-2 form_table">
-                  <thead>
-                    <tr>
-                      <td>Level</td>
-                      <td>Area of Education</td>
-                      <td>Grad. Year</td>
-                      <td>University</td>
-                      <td>Grade</td>
-                      <td>&nbsp;</td>
-                      <td>&nbsp;</td>
-                    </tr>
-                  </thead>
-                  {EducationRows.map((row, index) => (
-                    <tbody key={index}>
+                <div className="custom-card">
+                  <h6>Educational Qualification</h6>
+                  <table className="mb-2 form_table">
+                    <thead>
                       <tr>
-                        <td>
-                          {/* <Form.Select
+                        <td>Level</td>
+                        <td>Area of Education</td>
+                        <td>Grad. Year</td>
+                        <td>University</td>
+                        <td>Grade</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                      </tr>
+                    </thead>
+                    {EducationRows.map((row, index) => (
+                      <tbody key={index}>
+                        <tr>
+                          <td>
+                            {/* <Form.Select
                             name="level"
                             value={row.level}
                             onChange={(e) =>
@@ -4013,55 +4014,55 @@ const ApplicationJobPostModal = ({
                             <option value="Postdoctoral Research">Postdoctoral Research</option>
                           </Form.Select> */}
 
-                          <div className="mw-230 relative" ref={dropdownRef}>
-                            <FormControl
-                              placeholder="Level"
-                              size="sm"
-                              style={{ width: "350px" }}
-                              name="level"
-                              value={row.level || ""}
-                              onClick={() => {
-                                setShowDropdown(prev => ({
-                                  ...prev,
-                                  ["level"]: !prev["level"]
-                                }));
-                              }}
-                              onBlur={() => setTimeout(() => {
-                                setShowDropdown(prev => ({
-                                  ...prev,
-                                  ["level"]: false
-                                }));
-                              }, 150)}
-                              disabled={row.saved}
-                              readOnly
-                            />
-                            {showDropdown.level && (
-                              <div className="ctm_dropdown ct_scrollbar" style={{
-                                position: "absolute",
-                                background: "#fff",
-                                zIndex: 10,
-                                width: "100%",
-                                border: "1px solid #ccc",
-                                maxHeight: "150px",
-                                overflowY: "auto"
-                              }}>
-                                <ul className="m-0 p-0 list-unstyled">
-                                  {levelOption.map((option, i) => (
-                                    <li
-                                      key={i}
-                                      style={{ padding: "8px 12px", cursor: "pointer" }}
-                                      onClick={() => handleSelectLevel(index, option)}
-                                    >
-                                      {option}
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-                            )}
-                          </div>
-                        </td>
-                        <td>
-                          {/* <Form.Control
+                            <div className="mw-230 relative" ref={dropdownRef}>
+                              <FormControl
+                                placeholder="Level"
+                                size="sm"
+                                style={{ width: "350px" }}
+                                name="level"
+                                value={row.level || ""}
+                                onClick={() => {
+                                  setShowDropdown(prev => ({
+                                    ...prev,
+                                    ["level"]: !prev["level"]
+                                  }));
+                                }}
+                                onBlur={() => setTimeout(() => {
+                                  setShowDropdown(prev => ({
+                                    ...prev,
+                                    ["level"]: false
+                                  }));
+                                }, 150)}
+                                disabled={row.saved}
+                                readOnly
+                              />
+                              {showDropdown.level && (
+                                <div className="ctm_dropdown ct_scrollbar" style={{
+                                  position: "absolute",
+                                  background: "#fff",
+                                  zIndex: 10,
+                                  width: "100%",
+                                  border: "1px solid #ccc",
+                                  maxHeight: "150px",
+                                  overflowY: "auto"
+                                }}>
+                                  <ul className="m-0 p-0 list-unstyled">
+                                    {levelOption.map((option, i) => (
+                                      <li
+                                        key={i}
+                                        style={{ padding: "8px 12px", cursor: "pointer" }}
+                                        onClick={() => handleSelectLevel(index, option)}
+                                      >
+                                        {option}
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+                            </div>
+                          </td>
+                          <td>
+                            {/* <Form.Control
                             name="areaOfEducation"
                             type="text"
                             placeholder="Area of Education"
@@ -4073,7 +4074,7 @@ const ApplicationJobPostModal = ({
                             disabled={row.saved}
                           /> */}
 
-                          {/* <Dropdown show={true} >
+                            {/* <Dropdown show={true} >
                             <Dropdown.Menu className="w-100 dropdown_ctm">
 
                               <FormControl
@@ -4099,39 +4100,39 @@ const ApplicationJobPostModal = ({
                               </div>
                             </Dropdown.Menu>
                           </Dropdown> */}
-                          <div className="mw-230 relative">
+                            <div className="mw-230 relative">
 
-                            <FormControl
-                              // autoFocus
-                              name="areaOfEducation"
-                              placeholder="Area of Education"
-                              size="sm"
-                              value={row.areaOfEducation}
-                              disabled={row.saved}
-                              onChange={(e) => handleAreaOfEducation(index, e)}
-                              onBlur={(e) => handleClosecomboEdu(index, e)} // Close dropdown on blur
-                            />
-                            <div class={`${aresEducationOption.length ? 'ctm_dropdown ct_scrollbar' : ''}`}>
-                              {isOpen[index] && (
-                                <ul className="m-0">
-                                  {aresEducationOption.map((option, idx) => (
-                                    <li
-                                      key={idx}
-                                      onClick={(e) =>
-                                        handleSelectAreaEducation(index, option?.qualification_name)
-                                      }
-                                    >
-                                      {option?.qualification_name}
-                                    </li>
-                                  ))}
-                                </ul>
-                              )}
+                              <FormControl
+                                // autoFocus
+                                name="areaOfEducation"
+                                placeholder="Area of Education"
+                                size="sm"
+                                value={row.areaOfEducation}
+                                disabled={row.saved}
+                                onChange={(e) => handleAreaOfEducation(index, e)}
+                                onBlur={(e) => handleClosecomboEdu(index, e)} // Close dropdown on blur
+                              />
+                              <div class={`${aresEducationOption.length ? 'ctm_dropdown ct_scrollbar' : ''}`}>
+                                {isOpen[index] && (
+                                  <ul className="m-0">
+                                    {aresEducationOption.map((option, idx) => (
+                                      <li
+                                        key={idx}
+                                        onClick={(e) =>
+                                          handleSelectAreaEducation(index, option?.qualification_name)
+                                        }
+                                      >
+                                        {option?.qualification_name}
+                                      </li>
+                                    ))}
+                                  </ul>
+                                )}
+                              </div>
                             </div>
-                          </div>
 
-                        </td>
-                        <td>
-                          {/* <Form.Control
+                          </td>
+                          <td>
+                            {/* <Form.Control
                             name="gradYear"
                             type="date"
                             value={row.gradYear}
@@ -4140,103 +4141,103 @@ const ApplicationJobPostModal = ({
                             }
                             disabled={row.saved}
                           /> */}
-                          <Form.Group>
-                            <DatePicker
-                              name="gradYear"
-                              selected={row.gradYear}
-                              value={row.gradYear}
-                              onChange={(date) => handleGradYear(index, date)}
-                              showYearPicker
-                              dateFormat="yyyy"
-                              className="form-control"
-                              placeholderText="Select year"
-                              disabled={row.saved}
-                            />
-                          </Form.Group>
-                        </td>
-                        <td>
-                          <Form.Control
-                            name="university"
-                            type="text"
-                            placeholder="University"
-                            size="sm"
-                            value={row.university}
-                            onChange={(e) =>
-                              handleEducationQualificationChange(index, e)
-                            }
-                            disabled={row.saved}
-                          />
-                        </td>
-                        <td>
-                          <div className="mix-inputs">
+                            <Form.Group>
+                              <DatePicker
+                                name="gradYear"
+                                selected={row.gradYear}
+                                value={row.gradYear}
+                                onChange={(date) => handleGradYear(index, date)}
+                                showYearPicker
+                                dateFormat="yyyy"
+                                className="form-control"
+                                placeholderText="Select year"
+                                disabled={row.saved}
+                              />
+                            </Form.Group>
+                          </td>
+                          <td>
                             <Form.Control
-                              name="grade"
+                              name="university"
                               type="text"
-                              placeholder="grade"
+                              placeholder="University"
                               size="sm"
-                              value={row.grade}
+                              value={row.university}
                               onChange={(e) =>
                                 handleEducationQualificationChange(index, e)
                               }
                               disabled={row.saved}
                             />
-                            <Form.Select name="gpa" value={row.gpa} onChange={(e) => handleEducationQualificationChange(index, e)}>
-                              <option value="" hidden>GPA</option>
-                              <option value="4 Point GPA">4 Point GPA</option>
-                              <option value="10 Point GPA">10 Point GPA</option>
-                              <option value="GPA in %">GPA in %</option>
-                            </Form.Select>
-                          </div>
-                        </td>
-                        {!row.saved && (
+                          </td>
                           <td>
-                            <Button
-                              variant="link"
-                              className="p-1 font-sm mt-1 link-iconbtn"
-                              // onClick={handleButtonClick}
-                              onClick={() => saveQualificationData(row, index)}
+                            <div className="mix-inputs">
+                              <Form.Control
+                                name="grade"
+                                type="text"
+                                placeholder="grade"
+                                size="sm"
+                                value={row.grade}
+                                onChange={(e) =>
+                                  handleEducationQualificationChange(index, e)
+                                }
+                                disabled={row.saved}
+                              />
+                              <Form.Select name="gpa" value={row.gpa} onChange={(e) => handleEducationQualificationChange(index, e)}>
+                                <option value="" hidden>GPA</option>
+                                <option value="4 Point GPA">4 Point GPA</option>
+                                <option value="10 Point GPA">10 Point GPA</option>
+                                <option value="GPA in %">GPA in %</option>
+                              </Form.Select>
+                            </div>
+                          </td>
+                          {!row.saved && (
+                            <td>
+                              <Button
+                                variant="link"
+                                className="p-1 font-sm mt-1 link-iconbtn"
+                                // onClick={handleButtonClick}
+                                onClick={() => saveQualificationData(row, index)}
+                              >
+                                <img
+                                  src={saveIcon}
+                                  alt="Delete"
+                                  className="me-1"
+                                  style={{ width: "16px", height: "16px" }}
+                                />
+                                Save
+                              </Button>
+                            </td>
+                          )}
+                          {row.saved && (
+                            <td>
+                              <Button
+                                variant="link"
+                                className="p-1 font-sm mt-1 link-iconbtn"
+                                // onClick={handleButtonClick}
+                                onClick={() => handleEditRowEducation(row, index)}
+                              >
+                                <img
+                                  src={saveIcon}
+                                  alt="Delete"
+                                  style={{ width: "16px", height: "16px" }}
+                                />
+                                Edit
+                              </Button>
+                            </td>
+                          )}
+                          <td>
+                            <button
+                              type="button"
+                              className="btn-transpant"
+                              onClick={() => EducationdeleteRow(index)}
                             >
                               <img
-                                src={saveIcon}
+                                src={imgpTrash}
                                 alt="Delete"
-                                className="me-1"
-                                style={{ width: "16px", height: "16px" }}
+                                style={{ width: "20px", height: "20px" }}
                               />
-                              Save
-                            </Button>
+                            </button>
                           </td>
-                        )}
-                        {row.saved && (
-                          <td>
-                            <Button
-                              variant="link"
-                              className="p-1 font-sm mt-1 link-iconbtn"
-                              // onClick={handleButtonClick}
-                              onClick={() => handleEditRowEducation(row, index)}
-                            >
-                              <img
-                                src={saveIcon}
-                                alt="Delete"
-                                style={{ width: "16px", height: "16px" }}
-                              />
-                              Edit
-                            </Button>
-                          </td>
-                        )}
-                        <td>
-                          <button
-                            type="button"
-                            className="btn-transpant"
-                            onClick={() => EducationdeleteRow(index)}
-                          >
-                            <img
-                              src={imgpTrash}
-                              alt="Delete"
-                              style={{ width: "20px", height: "20px" }}
-                            />
-                          </button>
-                        </td>
-                        {/* <td>
+                          {/* <td>
                           {!row.saved && (
                             <Button
                               variant="link"
@@ -4248,25 +4249,25 @@ const ApplicationJobPostModal = ({
                           )}
                         </td> */}
 
-                      </tr>
-                    </tbody>
-                  ))}
-                </table>
+                        </tr>
+                      </tbody>
+                    ))}
+                  </table>
 
-                <Button onClick={EducationAddRow} variant="link">
-                  + Add
-                </Button>
-              </div>
+                  <Button onClick={EducationAddRow} variant="link">
+                    + Add
+                  </Button>
+                </div>
 
-              <div className="custom-card">
-                <h6>Work Experience</h6>
-                <div >
-                  <Row className="align-items-center bg-lightgray py-2">
-                    <Col xs="auto" className="text-center">
-                      <Form.Label>Total Work Experience</Form.Label>
-                    </Col>
-                    <Col>
-                      {/* <Form.Control
+                <div className="custom-card">
+                  <h6>Work Experience</h6>
+                  <div >
+                    <Row className="align-items-center bg-lightgray py-2">
+                      <Col xs="auto" className="text-center">
+                        <Form.Label>Total Work Experience</Form.Label>
+                      </Col>
+                      <Col>
+                        {/* <Form.Control
                           type="text"
                           placeholder=""
                           size="sm"
@@ -4276,7 +4277,7 @@ const ApplicationJobPostModal = ({
                           onChange={(e) => handleWorkExpeienceChange(index, e)}
                           disabled={row.savedWorkExp}
                         /> */}
-                      {/* <Form.Select
+                        {/* <Form.Select
                         className="form-control-sm mx-w350"
                         aria-label="Default select example"
                         name="TotalWorkExperience"
@@ -4302,281 +4303,281 @@ const ApplicationJobPostModal = ({
                         <option value="Above 40 Years">Above 40 Years</option>
                       </Form.Select> */}
 
-                      <div className="mw-230 relative" ref={dropdownRef}>
-                        <FormControl
-                          placeholder="Work Experience"
-                          className="form-control-sm mx-w350"
-                          aria-label="Default select example"
-                          name="TotalWorkExperience"
-                          value={totalWorkExperience}
-                          onClick={() => {
-                            setShowDropdown(prev => ({
-                              ...prev,
-                              ["TotalWorkExperience"]: !prev["TotalWorkExperience"]
-                            }));
-                          }}
-                          onBlur={() => setTimeout(() => {
-                            setShowDropdown(prev => ({
-                              ...prev,
-                              ["TotalWorkExperience"]: false
-                            }));
-                          }, 150)}
-                          isInvalid={!!errors.totalWorkExperience}
-                          readOnly
-                        />
-                        {showDropdown.TotalWorkExperience && (
-                          <div className="ctm_dropdown ct_scrollbar" style={{
-                            position: "absolute",
-                            background: "#fff",
-                            zIndex: 10,
-                            width: "37%",
-                            border: "1px solid #ccc",
-                            maxHeight: "150px",
-                            overflowY: "auto"
-                          }}>
-                            <ul className="m-0 p-0 list-unstyled">
-                              {totalWorkExperienceOption.map((option, i) => (
-                                <li
-                                  key={i}
-                                  style={{ padding: "8px 12px", cursor: "pointer" }}
-                                  onClick={() => handleTotalWorkExpeienceChange(option)}
-                                >
-                                  {option}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-                      </div>
-                    </Col>
-                  </Row>
-                  <table className="mb-2 form_table">
-                    <thead>
-                      <tr>
-                        <td>Role</td>
-                        <td>From</td>
-                        <td>To</td>
-                        <td>Company</td>
-                        <td>Industry</td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {WorkExpreienceRow.map((row, index) => (
-                        <>
-                          <tr>
-                            <td>
-                              <div className="mw-130 relative">
-                                <FormControl
-                                  // autoFocus
-                                  name="WorkRole"
-                                  placeholder="Role"
-                                  size="sm"
-                                  value={row.WorkRole}
-                                  disabled={row.savedWorkExp}
-                                  onChange={(e) => handleRolelist(index, e)}
-                                  onBlur={(e) => handleClosecomboExp(index, e)}
-                                />
-                                <div class={`${roleList.length ? 'ctm_dropdown ct_scrollbar' : ''}`}>
-                                  {isOpen[index] && (
-                                    <ul className="m-0">
-                                      {roleList.map((option, idx) => (
-                                        <li
-                                          key={idx}
-                                          onClick={(e) =>
-                                            handleWorkRole(index, option?.is_like_name)
-                                          }
-                                        >
-                                          {option?.is_like_name}
-                                        </li>
-                                      ))}
-                                    </ul>
-                                  )}
-                                </div>
-                              </div>
-
-                            </td>
-                            <td>
-                              <Form.Control
-                                placeholder="June 2019"
-                                size="sm"
-                                style={{ width: "150px" }}
-                                type="date"
-                                value={row?.WorkFrom}
-                                name="WorkFrom"
-                                onChange={(e) =>
-                                  handleWorkExpeienceChange(index, e)
-                                }
-                                disabled={row.savedWorkExp}
-                              />
-                            </td>
-                            <td>
-                              <Form.Control
-                                type="date"
-                                placeholder="May 2022"
-                                size="sm"
-                                style={{ width: "150px" }}
-                                value={row?.WorkTo}
-                                name="WorkTo"
-                                onChange={(e) =>
-                                  handleWorkExpeienceChange(index, e)
-                                }
-                                disabled={row.savedWorkExp}
-                              />
-                            </td>
-                            <td>
-                              <Form.Control
-                                type="text"
-                                placeholder="Company"
-                                size="sm"
-                                style={{ width: "150px" }}
-                                value={row?.WorkComapny}
-                                name="WorkComapny"
-                                onChange={(e) =>
-                                  handleWorkExpeienceChange(index, e)
-                                }
-                                disabled={row.savedWorkExp}
-                              />
-                            </td>
-                            <td>
-                              <div className="mw-130 relative">
-                                <FormControl
-                                  // autoFocus
-                                  name="WorkIndustry"
-                                  placeholder="Industry"
-                                  size="sm"
-                                  value={row.WorkIndustry}
-                                  disabled={row.savedWorkExp}
-                                  onChange={(e) => handleIndustries(index, e)}
-                                  onBlur={(e) => handleClosecomboExp(index, e)}
-                                />
-                                <div class={`${industriesList.length ? 'ctm_dropdown ct_scrollbar' : ''}`}>
-                                  {isOpen[index] && (
-                                    <ul className="m-0">
-                                      {industriesList.map((option, idx) => (
-                                        <li
-                                          key={idx}
-                                          onClick={(e) =>
-                                            handleSelectIndustries(index, option?.industry_name)
-                                          }
-                                        >
-                                          {option?.industry_name}
-                                        </li>
-                                      ))}
-                                    </ul>
-                                  )}
-                                </div>
-                              </div>
-                            </td>
-                            <td>
-                              <div className="d-flex align-items-center">
-                                {!row.savedWorkExp && !showNotesByIndex.includes(row?.id) && (
-                                  <Button
-                                    variant="link"
-                                    className="p-1 font-sm mt-1 link-iconbtn"
-                                    onClick={() => handleButtonClick(row?.id)}
+                        <div className="mw-230 relative" ref={dropdownRef}>
+                          <FormControl
+                            placeholder="Work Experience"
+                            className="form-control-sm mx-w350"
+                            aria-label="Default select example"
+                            name="TotalWorkExperience"
+                            value={totalWorkExperience}
+                            onClick={() => {
+                              setShowDropdown(prev => ({
+                                ...prev,
+                                ["TotalWorkExperience"]: !prev["TotalWorkExperience"]
+                              }));
+                            }}
+                            onBlur={() => setTimeout(() => {
+                              setShowDropdown(prev => ({
+                                ...prev,
+                                ["TotalWorkExperience"]: false
+                              }));
+                            }, 150)}
+                            isInvalid={!!errors.totalWorkExperience}
+                            readOnly
+                          />
+                          {showDropdown.TotalWorkExperience && (
+                            <div className="ctm_dropdown ct_scrollbar" style={{
+                              position: "absolute",
+                              background: "#fff",
+                              zIndex: 10,
+                              width: "37%",
+                              border: "1px solid #ccc",
+                              maxHeight: "150px",
+                              overflowY: "auto"
+                            }}>
+                              <ul className="m-0 p-0 list-unstyled">
+                                {totalWorkExperienceOption.map((option, i) => (
+                                  <li
+                                    key={i}
+                                    style={{ padding: "8px 12px", cursor: "pointer" }}
+                                    onClick={() => handleTotalWorkExpeienceChange(option)}
                                   >
-                                    <i className="far fa-file me-1 "></i>
-                                    Note
-                                  </Button>
-                                )}
-                                {!row.savedWorkExp && showNotesByIndex.includes(row?.id) && (
+                                    {option}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                        </div>
+                      </Col>
+                    </Row>
+                    <table className="mb-2 form_table">
+                      <thead>
+                        <tr>
+                          <td>Role</td>
+                          <td>From</td>
+                          <td>To</td>
+                          <td>Company</td>
+                          <td>Industry</td>
+                          <td></td>
+                          <td></td>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {WorkExpreienceRow.map((row, index) => (
+                          <>
+                            <tr>
+                              <td>
+                                <div className="mw-130 relative">
+                                  <FormControl
+                                    // autoFocus
+                                    name="WorkRole"
+                                    placeholder="Role"
+                                    size="sm"
+                                    value={row.WorkRole}
+                                    disabled={row.savedWorkExp}
+                                    onChange={(e) => handleRolelist(index, e)}
+                                    onBlur={(e) => handleClosecomboExp(index, e)}
+                                  />
+                                  <div class={`${roleList.length ? 'ctm_dropdown ct_scrollbar' : ''}`}>
+                                    {isOpen[index] && (
+                                      <ul className="m-0">
+                                        {roleList.map((option, idx) => (
+                                          <li
+                                            key={idx}
+                                            onClick={(e) =>
+                                              handleWorkRole(index, option?.is_like_name)
+                                            }
+                                          >
+                                            {option?.is_like_name}
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    )}
+                                  </div>
+                                </div>
+
+                              </td>
+                              <td>
+                                <Form.Control
+                                  placeholder="June 2019"
+                                  size="sm"
+                                  style={{ width: "150px" }}
+                                  type="date"
+                                  value={row?.WorkFrom}
+                                  name="WorkFrom"
+                                  onChange={(e) =>
+                                    handleWorkExpeienceChange(index, e)
+                                  }
+                                  disabled={row.savedWorkExp}
+                                />
+                              </td>
+                              <td>
+                                <Form.Control
+                                  type="date"
+                                  placeholder="May 2022"
+                                  size="sm"
+                                  style={{ width: "150px" }}
+                                  value={row?.WorkTo}
+                                  name="WorkTo"
+                                  onChange={(e) =>
+                                    handleWorkExpeienceChange(index, e)
+                                  }
+                                  disabled={row.savedWorkExp}
+                                />
+                              </td>
+                              <td>
+                                <Form.Control
+                                  type="text"
+                                  placeholder="Company"
+                                  size="sm"
+                                  style={{ width: "150px" }}
+                                  value={row?.WorkComapny}
+                                  name="WorkComapny"
+                                  onChange={(e) =>
+                                    handleWorkExpeienceChange(index, e)
+                                  }
+                                  disabled={row.savedWorkExp}
+                                />
+                              </td>
+                              <td>
+                                <div className="mw-130 relative">
+                                  <FormControl
+                                    // autoFocus
+                                    name="WorkIndustry"
+                                    placeholder="Industry"
+                                    size="sm"
+                                    value={row.WorkIndustry}
+                                    disabled={row.savedWorkExp}
+                                    onChange={(e) => handleIndustries(index, e)}
+                                    onBlur={(e) => handleClosecomboExp(index, e)}
+                                  />
+                                  <div class={`${industriesList.length ? 'ctm_dropdown ct_scrollbar' : ''}`}>
+                                    {isOpen[index] && (
+                                      <ul className="m-0">
+                                        {industriesList.map((option, idx) => (
+                                          <li
+                                            key={idx}
+                                            onClick={(e) =>
+                                              handleSelectIndustries(index, option?.industry_name)
+                                            }
+                                          >
+                                            {option?.industry_name}
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    )}
+                                  </div>
+                                </div>
+                              </td>
+                              <td>
+                                <div className="d-flex align-items-center">
+                                  {!row.savedWorkExp && !showNotesByIndex.includes(row?.id) && (
+                                    <Button
+                                      variant="link"
+                                      className="p-1 font-sm mt-1 link-iconbtn"
+                                      onClick={() => handleButtonClick(row?.id)}
+                                    >
+                                      <i className="far fa-file me-1 "></i>
+                                      Note
+                                    </Button>
+                                  )}
+                                  {!row.savedWorkExp && showNotesByIndex.includes(row?.id) && (
+                                    <Button
+                                      variant="link"
+                                      className="p-1 font-sm mt-1 link-iconbtn"
+                                      // onClick={handleButtonClick}
+                                      onClick={() => saveWorkExperienceData(row, index)}
+                                    >
+                                      <img
+                                        src={saveIcon}
+                                        className="me-1"
+                                        alt="Delete"
+                                        style={{ width: "16px", height: "16px" }}
+                                      />
+                                      Save
+                                    </Button>
+                                  )}
+
+                                  {row.savedWorkExp && (
+                                    <Button
+                                      variant="link"
+                                      className="p-1 font-sm mt-1 link-iconbtn"
+                                      onClick={() => handleButtonEdit(row, index)}
+                                    >
+                                      <svg className="me-1" width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M6.99998 12.3341H13M1 12.3341H2.11636C2.44248 12.3341 2.60554 12.3341 2.75899 12.2973C2.89504 12.2646 3.0251 12.2108 3.1444 12.1377C3.27895 12.0552 3.39425 11.9399 3.62486 11.7093L12 3.33414C12.5523 2.78185 12.5523 1.88642 12 1.33413C11.4477 0.781851 10.5523 0.781851 10 1.33414L1.62484 9.7093C1.39424 9.9399 1.27894 10.0552 1.19648 10.1898C1.12338 10.3091 1.0695 10.4391 1.03684 10.5752C1 10.7286 1 10.8917 1 11.2178V12.3341Z" stroke="#3538CD" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                                      </svg>
+                                      Edit
+                                    </Button>
+                                  )}
+
                                   <Button
                                     variant="link"
-                                    className="p-1 font-sm mt-1 link-iconbtn"
-                                    // onClick={handleButtonClick}
-                                    onClick={() => saveWorkExperienceData(row, index)}
+                                    className="p-1"
+                                    onClick={() => WorkExperienceDeleteRow(index, row?.id)}
                                   >
                                     <img
-                                      src={saveIcon}
-                                      className="me-1"
+                                      src={imgpTrash}
                                       alt="Delete"
-                                      style={{ width: "16px", height: "16px" }}
+                                      style={{ width: "20px", height: "20px" }}
                                     />
-                                    Save
                                   </Button>
-                                )}
-
-                                {row.savedWorkExp && (
-                                  <Button
-                                    variant="link"
-                                    className="p-1 font-sm mt-1 link-iconbtn"
-                                    onClick={() => handleButtonEdit(row, index)}
-                                  >
-                                    <svg className="me-1" width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                      <path d="M6.99998 12.3341H13M1 12.3341H2.11636C2.44248 12.3341 2.60554 12.3341 2.75899 12.2973C2.89504 12.2646 3.0251 12.2108 3.1444 12.1377C3.27895 12.0552 3.39425 11.9399 3.62486 11.7093L12 3.33414C12.5523 2.78185 12.5523 1.88642 12 1.33413C11.4477 0.781851 10.5523 0.781851 10 1.33414L1.62484 9.7093C1.39424 9.9399 1.27894 10.0552 1.19648 10.1898C1.12338 10.3091 1.0695 10.4391 1.03684 10.5752C1 10.7286 1 10.8917 1 11.2178V12.3341Z" stroke="#3538CD" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                    Edit
-                                  </Button>
-                                )}
-
-                                <Button
-                                  variant="link"
-                                  className="p-1"
-                                  onClick={() => WorkExperienceDeleteRow(index, row?.id)}
-                                >
-                                  <img
-                                    src={imgpTrash}
-                                    alt="Delete"
-                                    style={{ width: "20px", height: "20px" }}
-                                  />
-                                </Button>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td colSpan={7}>
-                              {!row.savedWorkExp && showNotesByIndex.includes(row?.id) && (
-                                <div className="abt-textbox">
-                                  <Form>
-                                    <Form.Group controlId="noteInput">
-                                      <Form.Label>
-                                        About your experience
-                                      </Form.Label>
-                                      <Form.Control
-                                        as="textarea"
-                                        rows={3}
-                                        value={row?.WorkNote}
-                                        name="WorkNote"
-                                        onChange={(e) =>
-                                          handleWorkExpeienceChange(index, e)
-                                        }
-                                        placeholder="Write your note here..."
-                                      />
-                                    </Form.Group>
-                                  </Form>
                                 </div>
-                              )}
-                              {row.savedWorkExp && row?.WorkNote && (
-                                <p style={{ marginTop: "5px" }}>{row.WorkNote}</p>
-                              )}
-                            </td>
-                          </tr>
-                        </>
-                      ))}
-                    </tbody>
-                  </table>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td colSpan={7}>
+                                {!row.savedWorkExp && showNotesByIndex.includes(row?.id) && (
+                                  <div className="abt-textbox">
+                                    <Form>
+                                      <Form.Group controlId="noteInput">
+                                        <Form.Label>
+                                          About your experience
+                                        </Form.Label>
+                                        <Form.Control
+                                          as="textarea"
+                                          rows={3}
+                                          value={row?.WorkNote}
+                                          name="WorkNote"
+                                          onChange={(e) =>
+                                            handleWorkExpeienceChange(index, e)
+                                          }
+                                          placeholder="Write your note here..."
+                                        />
+                                      </Form.Group>
+                                    </Form>
+                                  </div>
+                                )}
+                                {row.savedWorkExp && row?.WorkNote && (
+                                  <p style={{ marginTop: "5px" }}>{row.WorkNote}</p>
+                                )}
+                              </td>
+                            </tr>
+                          </>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <Button variant="link" onClick={WorkExpreienceAddRow}>
+                    + Add
+                  </Button>
                 </div>
-                <Button variant="link" onClick={WorkExpreienceAddRow}>
-                  + Add
-                </Button>
-              </div>
 
-              <div className="custom-card">
-                <h6 className="mb-0">Language</h6>
-                <p className="font-sm">Pick as many as possible</p>
+                <div className="custom-card">
+                  <h6 className="mb-0">Language</h6>
+                  <p className="font-sm">Pick as many as possible</p>
 
-                <Form.Group
-                  className="mb-3 row"
-                  controlId="exampleForm.ControlTextarea1"
-                >
-                  <Form.Label className="sm-label col-md-3">
-                    Spoken Language
-                  </Form.Label>
-                  <div className="col-md-9">
-                    {/* <div className="tagarea p-2"> */}
-                    {/* {jobPostData?.spoken_language?.map((item, index) => (
+                  <Form.Group
+                    className="mb-3 row"
+                    controlId="exampleForm.ControlTextarea1"
+                  >
+                    <Form.Label className="sm-label col-md-3">
+                      Spoken Language
+                    </Form.Label>
+                    <div className="col-md-9">
+                      {/* <div className="tagarea p-2"> */}
+                      {/* {jobPostData?.spoken_language?.map((item, index) => (
                         <Badge
                           key={index}
                           bg={
@@ -4625,69 +4626,69 @@ const ApplicationJobPostModal = ({
                           handleKeyPressForlanguages(e, "spoken");
                         }}
                       /> */}
-                    {/* </div> */}
+                      {/* </div> */}
 
-                    <div className="tagarea p-2 position-relative">
-                      {spokenLanguageBadges?.map((badge, index) => (
-                        <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
-                          {badge?.language_name}
-                          <button
-                            className="btn close_tag"
-                            style={{ cursor: "pointer" }}
-                            onClick={() =>
-                              handleRemoveSpokenLanguageBadge(index)
-                            }
-                          >
-                            <i className="fa fa-close ms-1"></i>
-                          </button>
-                        </Badge>
-                      ))}
-                      <div className="inline-dropdown-container position-relative d-inline-block">
-                        <Form.Control
-                          type="text"
-                          className="inline-input"
-                          placeholder="Enter text"
-                          ref={spokenRef}
-                          // value={row.areaOfEducation}
-                          // disabled={row.saved}
-                          onChange={(e) => handleWaSlanguages(e, "spoken")}
-                          onBlur={(e) => handleClosecomboLang(e, "spoken")}
-                        />
-                        {spokenLanguage?.length > 0 ? (
-                          <Dropdown show={true} >
-                            <Dropdown.Menu className="w-100 dropdown_ctm">
-                              <div class={`${spokenLanguage.length ? 'droplistmulti' : ''}`}>
-                                {spokenLanguage.map((option, idx) => (
-                                  <Dropdown.Item
-                                    key={idx}
-                                    onClick={(e) =>
-                                      handleSelectSpokenLang(option)
-                                    }
-                                  >
-                                    {option?.language_name}
-                                  </Dropdown.Item>
-                                ))}
-                              </div>
-                            </Dropdown.Menu>
-                          </Dropdown>
-                        ) : ('')}
+                      <div className="tagarea p-2 position-relative">
+                        {spokenLanguageBadges?.map((badge, index) => (
+                          <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
+                            {badge?.language_name}
+                            <button
+                              className="btn close_tag"
+                              style={{ cursor: "pointer" }}
+                              onClick={() =>
+                                handleRemoveSpokenLanguageBadge(index)
+                              }
+                            >
+                              <i className="fa fa-close ms-1"></i>
+                            </button>
+                          </Badge>
+                        ))}
+                        <div className="inline-dropdown-container position-relative d-inline-block">
+                          <Form.Control
+                            type="text"
+                            className="inline-input"
+                            placeholder="Enter text"
+                            ref={spokenRef}
+                            // value={row.areaOfEducation}
+                            // disabled={row.saved}
+                            onChange={(e) => handleWaSlanguages(e, "spoken")}
+                            onBlur={(e) => handleClosecomboLang(e, "spoken")}
+                          />
+                          {spokenLanguage?.length > 0 ? (
+                            <Dropdown show={true} >
+                              <Dropdown.Menu className="w-100 dropdown_ctm">
+                                <div class={`${spokenLanguage.length ? 'droplistmulti' : ''}`}>
+                                  {spokenLanguage.map((option, idx) => (
+                                    <Dropdown.Item
+                                      key={idx}
+                                      onClick={(e) =>
+                                        handleSelectSpokenLang(option)
+                                      }
+                                    >
+                                      {option?.language_name}
+                                    </Dropdown.Item>
+                                  ))}
+                                </div>
+                              </Dropdown.Menu>
+                            </Dropdown>
+                          ) : ('')}
+                        </div>
                       </div>
-                    </div>
 
-                    <span className="required_text">
-                      Select all spoken languages
-                    </span>
-                  </div>
-                </Form.Group>
-                <Form.Group
-                  className="mb-3 row"
-                  controlId="exampleForm.ControlTextarea1"
-                >
-                  <Form.Label className="sm-label col-md-3">
-                    Written and Reading Language
-                  </Form.Label>
-                  <div className="col-md-9">
-                    {/* <div className="tagarea p-2">
+                      <span className="required_text">
+                        Select all spoken languages
+                      </span>
+                    </div>
+                  </Form.Group>
+                  <Form.Group
+                    className="mb-3 row"
+                    controlId="exampleForm.ControlTextarea1"
+                  >
+                    <Form.Label className="sm-label col-md-3">
+                      Written and Reading Language
+                    </Form.Label>
+                    <div className="col-md-9">
+                      {/* <div className="tagarea p-2">
                       {jobPostData?.read_write_language?.map((item, index) => (
                         <Badge
                           key={index}
@@ -4738,69 +4739,69 @@ const ApplicationJobPostModal = ({
                         }}
                       />
                     </div> */}
-                    <div className="tagarea p-2 position-relative">
-                      {rdnwBadges.map((badge, index) => (
-                        <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
-                          {badge?.language_name}
-                          <button
-                            className="btn close_tag"
-                            style={{ cursor: "pointer" }}
-                            onClick={() =>
-                              handleRemoveReadAndWriteLanguageBadge(index)
-                            }
-                          >
-                            <i className="fa fa-close ms-1"></i>
-                          </button>
-                        </Badge>
-                      ))}
-                      <div className="inline-dropdown-container position-relative d-inline-block">
-                        <Form.Control
-                          type="text"
-                          className="inline-input"
-                          placeholder="Enter text"
-                          ref={writtenRef}
-                          // value={row.areaOfEducation}
-                          // disabled={row.saved}
-                          onChange={(e) => handleWaSlanguages(e, "rdnw")}
-                          onBlur={(e) => handleClosecomboLang(e, "rdnw")}
-                        />
-                        {writtenLanguage?.length > 0 ? (
-                          <Dropdown show={true} >
-                            <Dropdown.Menu className="w-100 dropdown_ctm">
-                              <div class={`${writtenLanguage.length ? 'droplistmulti' : ''}`}>
-                                {writtenLanguage.map((option, idx) => (
-                                  <Dropdown.Item
-                                    key={idx}
-                                    onClick={(e) =>
-                                      handleSelectWrittenLang(option)
-                                    }
-                                  >
-                                    {option?.language_name}
-                                  </Dropdown.Item>
-                                ))}
-                              </div>
-                            </Dropdown.Menu>
-                          </Dropdown>
-                        ) : ('')}
+                      <div className="tagarea p-2 position-relative">
+                        {rdnwBadges.map((badge, index) => (
+                          <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
+                            {badge?.language_name}
+                            <button
+                              className="btn close_tag"
+                              style={{ cursor: "pointer" }}
+                              onClick={() =>
+                                handleRemoveReadAndWriteLanguageBadge(index)
+                              }
+                            >
+                              <i className="fa fa-close ms-1"></i>
+                            </button>
+                          </Badge>
+                        ))}
+                        <div className="inline-dropdown-container position-relative d-inline-block">
+                          <Form.Control
+                            type="text"
+                            className="inline-input"
+                            placeholder="Enter text"
+                            ref={writtenRef}
+                            // value={row.areaOfEducation}
+                            // disabled={row.saved}
+                            onChange={(e) => handleWaSlanguages(e, "rdnw")}
+                            onBlur={(e) => handleClosecomboLang(e, "rdnw")}
+                          />
+                          {writtenLanguage?.length > 0 ? (
+                            <Dropdown show={true} >
+                              <Dropdown.Menu className="w-100 dropdown_ctm">
+                                <div class={`${writtenLanguage.length ? 'droplistmulti' : ''}`}>
+                                  {writtenLanguage.map((option, idx) => (
+                                    <Dropdown.Item
+                                      key={idx}
+                                      onClick={(e) =>
+                                        handleSelectWrittenLang(option)
+                                      }
+                                    >
+                                      {option?.language_name}
+                                    </Dropdown.Item>
+                                  ))}
+                                </div>
+                              </Dropdown.Menu>
+                            </Dropdown>
+                          ) : ('')}
+                        </div>
                       </div>
+                      <span className="required_text">
+                        Select all written and reading languages
+                      </span>
                     </div>
-                    <span className="required_text">
-                      Select all written and reading languages
-                    </span>
-                  </div>
-                </Form.Group>
-              </div>
+                  </Form.Group>
+                </div>
 
-              <div className="custom-card">
-                <h6>Geography</h6>
+                <div className="custom-card">
+                  <h6>Geography</h6>
 
-                <Row className="mb-3">
-                  <Col md="3">
-                    <Form.Label>Current Location</Form.Label>
-                  </Col>
+                  <Row className="mb-3">
+                    <Col md="3">
+                      <Form.Label>Current Location</Form.Label>
+                    </Col>
 
-                  <Col md={9}>
-                    {/* <Form.Control
+                    <Col md={9}>
+                      {/* <Form.Control
                       type="text"
                       placeholder="Current Location"
                       size="sm"
@@ -4810,7 +4811,7 @@ const ApplicationJobPostModal = ({
                       onChange={handleProfileDetailsChange}
                       isInvalid={!!errors.CurrentLocation}
                     /> */}
-                    {/* <Dropdown show={true} >
+                      {/* <Dropdown show={true} >
                       <Dropdown.Menu className="w-100 dropdown_cti">
                         <FormControl
                           // autoFocus
@@ -4835,116 +4836,116 @@ const ApplicationJobPostModal = ({
                         </div>
                       </Dropdown.Menu>
                     </Dropdown> */}
-                    <div className="w-100  mx-w350 relative">
-                      <FormControl
-                        // autoFocus
-                        placeholder="Current Location"
-                        size="sm"
-                        style={{ width: "350px" }}
-                        name="CurrentLocation"
-                        value={profileformData?.CurrentLocation}
-                        onChange={handleLocationAPIList}
-                        // setProfileFormData({ ...profileformData, ['CurrentLocation']: e.target.value })
-                        // }
-                        onBlur={(e) => handleDropDownCurrent(e)}
-                      />
-                      <div class={`${locationList.length ? 'ctm_dropdown ct_scrollbar' : ''}`}>
-                        <ul className="m-0">
-                          {locationList.map((option, idx) => (
-                            <li
-                              key={idx}
-                              onClick={(e) =>
-                                handleSelectGeographyLocaton(option?.location_name)
-                              }
-                            >
-                              {option?.location_name}
-                            </li>
-                          ))}
-                        </ul>
+                      <div className="w-100  mx-w350 relative">
+                        <FormControl
+                          // autoFocus
+                          placeholder="Current Location"
+                          size="sm"
+                          style={{ width: "350px" }}
+                          name="CurrentLocation"
+                          value={profileformData?.CurrentLocation}
+                          onChange={handleLocationAPIList}
+                          // setProfileFormData({ ...profileformData, ['CurrentLocation']: e.target.value })
+                          // }
+                          onBlur={(e) => handleDropDownCurrent(e)}
+                        />
+                        <div class={`${locationList.length ? 'ctm_dropdown ct_scrollbar' : ''}`}>
+                          <ul className="m-0">
+                            {locationList.map((option, idx) => (
+                              <li
+                                key={idx}
+                                onClick={(e) =>
+                                  handleSelectGeographyLocaton(option?.location_name)
+                                }
+                              >
+                                {option?.location_name}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
                       </div>
-                    </div>
-                  </Col>
+                    </Col>
 
-                  <Form.Control.Feedback type="invalid">
-                    {errors.CurrentLocation}
-                  </Form.Control.Feedback>
-                </Row>
+                    <Form.Control.Feedback type="invalid">
+                      {errors.CurrentLocation}
+                    </Form.Control.Feedback>
+                  </Row>
 
-                <Row className="mb-3">
-                  <Col md="3">
-                    <Form.Label>Willing to relocate to {jobPostData?.job_location?.location_name}</Form.Label>
-                  </Col>
-                  <Col md="9">
-                    <div className="d-flex justify-content-start">
-                      <Form.Check
-                        type="radio"
-                        label="Yes"
-                        name="relocationChoice"
-                        id="relocationChoice1"
-                        className="me-3"
-                        value="true"
-                        checked={profileformData.relocationChoice == true}
-                        onChange={handleProfileDetailsChange}
-                      />
-                      <Form.Check
-                        type="radio"
-                        label="No"
-                        name="relocationChoice"
-                        id="relocationChoice2"
-                        className="ms-3"
-                        value="false"
-                        checked={profileformData.relocationChoice == false}
-                        onChange={handleProfileDetailsChange}
-                      />
-                    </div>
+                  <Row className="mb-3">
+                    <Col md="3">
+                      <Form.Label>Willing to relocate to {jobPostData?.job_location?.location_name}</Form.Label>
+                    </Col>
+                    <Col md="9">
+                      <div className="d-flex justify-content-start">
+                        <Form.Check
+                          type="radio"
+                          label="Yes"
+                          name="relocationChoice"
+                          id="relocationChoice1"
+                          className="me-3"
+                          value="true"
+                          checked={profileformData.relocationChoice == true}
+                          onChange={handleProfileDetailsChange}
+                        />
+                        <Form.Check
+                          type="radio"
+                          label="No"
+                          name="relocationChoice"
+                          id="relocationChoice2"
+                          className="ms-3"
+                          value="false"
+                          checked={profileformData.relocationChoice == false}
+                          onChange={handleProfileDetailsChange}
+                        />
+                      </div>
 
-                    {errors.relocationChoice && (
-                      <p className="error">{errors.relocationChoice}</p>
-                    )}
-                  </Col>
-                </Row>
+                      {errors.relocationChoice && (
+                        <p className="error">{errors.relocationChoice}</p>
+                      )}
+                    </Col>
+                  </Row>
 
-                <Row className="mb-3">
-                  <Col md="3">
-                    <Form.Label>
-                      Require company assistance for relocation?
-                    </Form.Label>
-                  </Col>
-                  <Col md="9">
-                    <div className="d-flex justify-content-start">
-                      <Form.Check
-                        type="radio"
-                        label="Yes"
-                        name="requiredCompanyAssist"
-                        id="requiredCompanyAssist1"
-                        className="me-3"
-                        value="true"
-                        checked={profileformData.requiredCompanyAssist == true}
-                        onChange={handleProfileDetailsChange}
-                      />
-                      <Form.Check
-                        type="radio"
-                        label="No"
-                        name="requiredCompanyAssist"
-                        id="requiredCompanyAssist2"
-                        className="ms-3"
-                        value="false"
-                        checked={profileformData.requiredCompanyAssist == false}
-                        onChange={handleProfileDetailsChange}
-                      />
-                    </div>
-                    {errors.requiredCompanyAssist && (
-                      <p className="error">{errors.requiredCompanyAssist}</p>
-                    )}
-                  </Col>
-                </Row>
-              </div>
+                  <Row className="mb-3">
+                    <Col md="3">
+                      <Form.Label>
+                        Require company assistance for relocation?
+                      </Form.Label>
+                    </Col>
+                    <Col md="9">
+                      <div className="d-flex justify-content-start">
+                        <Form.Check
+                          type="radio"
+                          label="Yes"
+                          name="requiredCompanyAssist"
+                          id="requiredCompanyAssist1"
+                          className="me-3"
+                          value="true"
+                          checked={profileformData.requiredCompanyAssist == true}
+                          onChange={handleProfileDetailsChange}
+                        />
+                        <Form.Check
+                          type="radio"
+                          label="No"
+                          name="requiredCompanyAssist"
+                          id="requiredCompanyAssist2"
+                          className="ms-3"
+                          value="false"
+                          checked={profileformData.requiredCompanyAssist == false}
+                          onChange={handleProfileDetailsChange}
+                        />
+                      </div>
+                      {errors.requiredCompanyAssist && (
+                        <p className="error">{errors.requiredCompanyAssist}</p>
+                      )}
+                    </Col>
+                  </Row>
+                </div>
 
-              <div className="custom-card">
-                <h6>Skills</h6>
-                <p className="font-sm">Please identify the skills you hold</p>
+                <div className="custom-card">
+                  <h6>Skills</h6>
+                  <p className="font-sm">Please identify the skills you hold</p>
 
-                {/* {Object.keys(groupedSkills).map((groupName, index) => (
+                  {/* {Object.keys(groupedSkills).map((groupName, index) => (
                   <div key={index} className="row mb-3">
                     <strong className="col-md-3 strong-label">
                       {groupName}
@@ -4963,50 +4964,50 @@ const ApplicationJobPostModal = ({
                     </div>
                   </div>
                 ))} */}
-                {skillGroupData.map((groupName, index) => (
-                  <div key={index} className="row mb-3">
-                    <strong className="col-md-3 strong-label">
-                      {groupName?.skill_group_name}
-                    </strong>
-                    <div className="col-md-9">
-                      {groupName?.group_skill.map((skill, idx) => (
-                        <span
-                          key={idx}
-                          className={`skill-tag mb-2 mr-2 ${selectedSkills.includes(skill.uid) ? "selected" : ""
-                            }`}
-                          onClick={() => handleSkillSelect(skill, index, groupName?.skill_group_name)}
-                        >
-                          {skill?.skill_name}
-                        </span>
-                      ))}
+                  {skillGroupData.map((groupName, index) => (
+                    <div key={index} className="row mb-3">
+                      <strong className="col-md-3 strong-label">
+                        {groupName?.skill_group_name}
+                      </strong>
+                      <div className="col-md-9">
+                        {groupName?.group_skill.map((skill, idx) => (
+                          <span
+                            key={idx}
+                            className={`skill-tag mb-2 mr-2 ${selectedSkills.includes(skill.uid) ? "selected" : ""
+                              }`}
+                            onClick={() => handleSkillSelect(skill, index, groupName?.skill_group_name)}
+                          >
+                            {skill?.skill_name}
+                          </span>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                ))}
-                {errors?.selectedSkills && (
-                  <p className="error">{errors?.selectedSkills}</p>
-                )}
-              </div>
+                  ))}
+                  {errors?.selectedSkills && (
+                    <p className="error">{errors?.selectedSkills}</p>
+                  )}
+                </div>
 
-              <div className="custom-card mb-5">
-                <h6 className="mb-4">Additional Question from Company</h6>
-                {jobPostData?.question_job.map((item) => (
-                  <div key={item.id} className="mb-3">
-                    <h6 className="strong-label">{item?.question_title}</h6>
+                <div className="custom-card mb-5">
+                  <h6 className="mb-4">Additional Question from Company</h6>
+                  {jobPostData?.question_job.map((item) => (
+                    <div key={item.id} className="mb-3">
+                      <h6 className="strong-label">{item?.question_title}</h6>
 
-                    {item?.quiz_type === "MCQ" &&
-                      item?.question_option?.part1?.map((option, index) => (
-                        <Form.Check
-                          key={index}
-                          type="radio"
-                          label={option}
-                          name={`formHorizontalRadios-${item.id}`}
-                          id={`formHorizontalRadios-${item.id}-${index}`}
-                          className="mr-3"
-                          onChange={() => handleAnswerChange(item?.uid, option)}
-                        />
-                      ))}
+                      {item?.quiz_type === "MCQ" &&
+                        item?.question_option?.part1?.map((option, index) => (
+                          <Form.Check
+                            key={index}
+                            type="radio"
+                            label={option}
+                            name={`formHorizontalRadios-${item.id}`}
+                            id={`formHorizontalRadios-${item.id}-${index}`}
+                            className="mr-3"
+                            onChange={() => handleAnswerChange(item?.uid, option)}
+                          />
+                        ))}
 
-                    {/* {item?.quiz_type === "Text" && (
+                      {/* {item?.quiz_type === "Text" && (
                       <Form.Control
                         type="text"
                         placeholder="Enter your answer"
@@ -5025,301 +5026,299 @@ const ApplicationJobPostModal = ({
                           className="mr-3"
                         />
                       ))} */}
-                  </div>
-                ))}
-              </div>
-              {skillError && (
-                <div className="custom-card mb-5">
-                  <div className="toster">
-                    <img src={closeBtn} className='closebtn' onClick={() => setSkillError("")} />
-                    <span>{skillError}</span>
-                  </div>
+                    </div>
+                  ))}
                 </div>
-              )}
-            </Col>
-            {/* Right Column */}
-            <Col md={3} lg={2} className="jobpre_Rightpanel">
-              <div className="custom-card">
+                {skillError && (
+                  <div className="custom-card mb-5">
+                    <div className="toster">
+                      <img src={closeBtn} className='closebtn' onClick={() => setSkillError("")} />
+                      <span>{skillError}</span>
+                    </div>
+                  </div>
+                )}
+              </Col>
+              {/* Right Column */}
+              <Col md={3} lg={2} className="jobpre_Rightpanel">
                 <div className="custom-card">
-                  <h5>{profileformData?.name}</h5>
-                  <p>{profileformData?.email}</p>
-                  <p>{profileformData?.phone}</p>
-                  <p>{ResumeFile?.name}</p>
-                  <div className="ct_scrollbar pb-2 mt-3">
-                    <div className="user_bsinfo">
-                      <h6>Availability</h6>
+                  <div className="custom-card">
+                    <h5>{profileformData?.name}</h5>
+                    <p>{profileformData?.email}</p>
+                    <p>{profileformData?.phone}</p>
+                    <p>{ResumeFile?.name}</p>
+                    <div className="ct_scrollbar pb-2 mt-3">
+                      <div className="user_bsinfo">
+                        <h6>Availability</h6>
 
-                      {profileformData?.AvailableBy ? (
-                        <>
-                          <p>Can join {profileformData?.AvailableBy}</p>
-                          <p>
-                            Currently Working{" "}
-                            {isYes?.CurrentlyWorkingToggle ? "Yes" : "No"}
-                          </p>
-                          <p>
-                            {profileformData?.NoticePeriod && `Notice period ${profileformData?.NoticePeriod} notice
+                        {profileformData?.AvailableBy ? (
+                          <>
+                            <p>Can join {profileformData?.AvailableBy}</p>
+                            <p>
+                              Currently Working{" "}
+                              {isYes?.CurrentlyWorkingToggle ? "Yes" : "No"}
+                            </p>
+                            <p>
+                              {profileformData?.NoticePeriod && `Notice period ${profileformData?.NoticePeriod} notice
                             period`}
-                          </p>
-                          <p>
-                            Buyout option available{" "}
-                            {isYes?.NoticeBuyOutToggle ? "Yes" : "No"}
-                          </p>
-                          <p>
-                            Willing to travel for job{" "}
-                            {isYes?.willingToTeavelJob ? "Yes" : "No"}
-                          </p>
-                        </>
-                      ) : (
-                        <p className="error" style={{ color: "red" }}>
-                          Not defined
-                        </p>
-                      )}
-                    </div>
-                    <div className="user_bsinfo">
-                      {profileformData?.ExpectedSalary ? (
-                        <strong>
-                          <p>{profileformData?.ExpectedSalary} Per Annum</p>
-                        </strong>
-                      ) :
-                        (
-                          <p>
-                            <h6>Expected Salary</h6>
-                            <p className="error" style={{ color: "red" }}>
-                              Not defined
                             </p>
-                          </p>
-                        )}
-                    </div>
-
-                    <div className="user_bsinfo">
-                      <h6>Educational Qualification</h6>
-
-                      {isAllEducationFieldsFilled &&
-                        EducationRows.map((row, index) => (
-                          <div key={index}>
                             <p>
-                              {row.level} in {row.areaOfEducation}{" "}
+                              Buyout option available{" "}
+                              {isYes?.NoticeBuyOutToggle ? "Yes" : "No"}
                             </p>
-                          </div>
-                        ))}
-                      {EducationRows.length < 0 && (
-                        <p className="error" style={{ color: "red" }}>
-                          Not defined
-                        </p>
-                      )}
-                      {!isAllEducationFieldsFilled && (
-                        <p className="error" style={{ color: "red" }}> Not defined</p>
-                      )}
-                    </div>
-                    <div className="user_bsinfo">
-                      <h6>Work Experience</h6>
-                      {totalWorkExperience ? (<p>{totalWorkExperience}</p>) : (
-                        <p className="error" style={{ color: "red" }}> Not defined</p>
-                      )}
-                      {isAllWorkExperienceFieldsFilled &&
-                        WorkExpreienceRow.map((row, index) => (
-                          <div key={index}>
-                            <strong>
-                              {" "}
-                              <p>{row.TotalWorkExperience} Experience </p>
-                            </strong>
-                            <p>{row.WorkRole}</p>
-                            <p>{row.WorkFrom}</p>
-                            <p>{row.WorkTo}</p>
-                            <p>{row.WorkComapny}</p>
-                            <p>{row.WorkIndustry}</p>
-                            <p>{row.WorkNote}</p>
                             <p>
-                              Work Experience Duration{" "}
-                              {
-                                calculateWorkExperience(
-                                  row.WorkFrom,
-                                  row.WorkTo
-                                ).split(" ")[0]
-                              }{" "}
-                              years
+                              Willing to travel for job{" "}
+                              {isYes?.willingToTeavelJob ? "Yes" : "No"}
                             </p>
-                          </div>
-                        ))}
-                    </div>
-                    <div className="user_bsinfo">
-                      <h6>Language</h6>
-                      {selectedSpokenLanguageNames.length > 0 ||
-                        getSelectedWrittenLanguageName.length > 0 ? (
-                        <>
-
-                          {selectedSpokenLanguageNames.length > 0 && (
-                            <div className="lang_list">
-                              {selectedSpokenLanguageNames.map(
-                                (skillName, index) => (
-                                  <span key={index}>
-                                    {skillName}
-                                    {index <
-                                      selectedSpokenLanguageNames.length - 1 &&
-                                      ", "}
-                                  </span>
-                                )
-                              )}
-                            </div>
-                          )}
-                          {getSelectedWrittenLanguageName.length > 0 && (
-                            <div className="lang_list">
-                              {getSelectedWrittenLanguageName.map(
-                                (skillName, index) => (
-                                  <span key={index}>
-                                    {skillName}
-                                    {index <
-                                      getSelectedWrittenLanguageName.length - 1 &&
-                                      ", "}
-                                  </span>
-                                )
-                              )}
-                            </div>
-                          )}
-                        </>
-                      ) : (
-                        <p className="error" style={{ color: "red" }}>
-                          Not defined
-                        </p>
-                      )}
-
-                    </div>
-                    <div className="user_bsinfo">
-                      <h6>Geography</h6>
-
-                      {!profileformData?.CurrentLocation ||
-                        profileformData.relocationChoice === null ||
-                        profileformData.requiredCompanyAssist === null ? (
-                        <p className="error" style={{ color: "red" }}>
-                          Not defined
-                        </p>
-                      ) : (
-                        <>
-                          <p>
-                            Current Location {profileformData?.CurrentLocation}
-                          </p>
-                          <p>
-                            Willing to relocate{" "}
-                            {profileformData.relocationChoice === true
-                              ? "Yes"
-                              : "No"}
-                          </p>
-                          <p>
-                            Require company assistance for relocation{" "}
-                            {profileformData.requiredCompanyAssist === true
-                              ? "Yes"
-                              : "No"}
-                          </p>
-                        </>
-                      )}
-                    </div>
-                    <div className="user_bsinfo">
-                      <h6>Skills</h6>
-
-                      <div className="lang_list">
-                        {selectedSkillsNames.length > 0 ? (
-                          selectedSkillsNames.map((skillName, index) => (
-                            <span key={index}>
-                              {skillName}
-                              {index < selectedSkillsNames.length - 1 && ", "}{" "}
-
-                            </span>
-                          ))
+                          </>
                         ) : (
                           <p className="error" style={{ color: "red" }}>
                             Not defined
                           </p>
                         )}
                       </div>
-                    </div>
-                    <div className="user_bsinfo">
-                      <h6>Additional Questions from Company</h6>
-                      {jobPostData?.question_job.map((item) => (
-                        <div key={item.id} className="mb-3">
-                          <h6 className="strong-label">{item?.question_title}</h6>
-                          <strong className="strong-label">{" "}
-                            {selectedAnswers[item?.uid] || (
-                              <p className="error" style={{ color: "red" }}>Not defined</p>
-                            )}</strong>
+                      <div className="user_bsinfo">
+                        {profileformData?.ExpectedSalary ? (
+                          <strong>
+                            <p>{profileformData?.ExpectedSalary} Per Annum</p>
+                          </strong>
+                        ) :
+                          (
+                            <p>
+                              <h6>Expected Salary</h6>
+                              <p className="error" style={{ color: "red" }}>
+                                Not defined
+                              </p>
+                            </p>
+                          )}
+                      </div>
+
+                      <div className="user_bsinfo">
+                        <h6>Educational Qualification</h6>
+
+                        {isAllEducationFieldsFilled &&
+                          EducationRows.map((row, index) => (
+                            <div key={index}>
+                              <p>
+                                {row.level} in {row.areaOfEducation}{" "}
+                              </p>
+                            </div>
+                          ))}
+                        {EducationRows.length < 0 && (
+                          <p className="error" style={{ color: "red" }}>
+                            Not defined
+                          </p>
+                        )}
+                        {!isAllEducationFieldsFilled && (
+                          <p className="error" style={{ color: "red" }}> Not defined</p>
+                        )}
+                      </div>
+                      <div className="user_bsinfo">
+                        <h6>Work Experience</h6>
+                        {totalWorkExperience ? (<p>{totalWorkExperience}</p>) : (
+                          <p className="error" style={{ color: "red" }}> Not defined</p>
+                        )}
+                        {isAllWorkExperienceFieldsFilled &&
+                          WorkExpreienceRow.map((row, index) => (
+                            <div key={index}>
+                              <strong>
+                                {" "}
+                                <p>{row.TotalWorkExperience} Experience </p>
+                              </strong>
+                              <p>{row.WorkRole}</p>
+                              <p>{row.WorkFrom}</p>
+                              <p>{row.WorkTo}</p>
+                              <p>{row.WorkComapny}</p>
+                              <p>{row.WorkIndustry}</p>
+                              <p>{row.WorkNote}</p>
+                              <p>
+                                Work Experience Duration{" "}
+                                {
+                                  calculateWorkExperience(
+                                    row.WorkFrom,
+                                    row.WorkTo
+                                  ).split(" ")[0]
+                                }{" "}
+                                years
+                              </p>
+                            </div>
+                          ))}
+                      </div>
+                      <div className="user_bsinfo">
+                        <h6>Language</h6>
+                        {selectedSpokenLanguageNames.length > 0 ||
+                          getSelectedWrittenLanguageName.length > 0 ? (
+                          <>
+
+                            {selectedSpokenLanguageNames.length > 0 && (
+                              <div className="lang_list">
+                                {selectedSpokenLanguageNames.map(
+                                  (skillName, index) => (
+                                    <span key={index}>
+                                      {skillName}
+                                      {index <
+                                        selectedSpokenLanguageNames.length - 1 &&
+                                        ", "}
+                                    </span>
+                                  )
+                                )}
+                              </div>
+                            )}
+                            {getSelectedWrittenLanguageName.length > 0 && (
+                              <div className="lang_list">
+                                {getSelectedWrittenLanguageName.map(
+                                  (skillName, index) => (
+                                    <span key={index}>
+                                      {skillName}
+                                      {index <
+                                        getSelectedWrittenLanguageName.length - 1 &&
+                                        ", "}
+                                    </span>
+                                  )
+                                )}
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <p className="error" style={{ color: "red" }}>
+                            Not defined
+                          </p>
+                        )}
+
+                      </div>
+                      <div className="user_bsinfo">
+                        <h6>Geography</h6>
+
+                        {!profileformData?.CurrentLocation ||
+                          profileformData.relocationChoice === null ||
+                          profileformData.requiredCompanyAssist === null ? (
+                          <p className="error" style={{ color: "red" }}>
+                            Not defined
+                          </p>
+                        ) : (
+                          <>
+                            <p>
+                              Current Location {profileformData?.CurrentLocation}
+                            </p>
+                            <p>
+                              Willing to relocate{" "}
+                              {profileformData.relocationChoice === true
+                                ? "Yes"
+                                : "No"}
+                            </p>
+                            <p>
+                              Require company assistance for relocation{" "}
+                              {profileformData.requiredCompanyAssist === true
+                                ? "Yes"
+                                : "No"}
+                            </p>
+                          </>
+                        )}
+                      </div>
+                      <div className="user_bsinfo">
+                        <h6>Skills</h6>
+
+                        <div className="lang_list">
+                          {selectedSkillsNames.length > 0 ? (
+                            selectedSkillsNames.map((skillName, index) => (
+                              <span key={index}>
+                                {skillName}
+                                {index < selectedSkillsNames.length - 1 && ", "}{" "}
+
+                              </span>
+                            ))
+                          ) : (
+                            <p className="error" style={{ color: "red" }}>
+                              Not defined
+                            </p>
+                          )}
                         </div>
-                      ))}
+                      </div>
+                      <div className="user_bsinfo">
+                        <h6>Additional Questions from Company</h6>
+                        {jobPostData?.question_job.map((item) => (
+                          <div key={item.id} className="mb-3">
+                            <h6 className="strong-label">{item?.question_title}</h6>
+                            <strong className="strong-label">{" "}
+                              {selectedAnswers[item?.uid] || (
+                                <p className="error" style={{ color: "red" }}>Not defined</p>
+                              )}</strong>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </Col>
-          </Row>
-        </Container>
-
-        <div>
-          <Modal backdrop={false} aria-labelledby="contained-modal-title-vcenter zinde999"
-            centered show={showModal.showSaveAsDraft} onHide={handleCloseModals} className="model_sm alartmdl">
-            <Modal.Header closeButton>
-            </Modal.Header>
-            <Modal.Body className="text-center">
-              <Modal.Title>
-                Are you sure you want to exit<br /> without submitting?
-              </Modal.Title>
-              <p className="mdl_description">
-                Your details will be saved as a draft, and you can log in with{" "}<br />
-                {profileformData?.email} later to finish your application.
-              </p>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="light" onClick={handleCloseModals}>
-                Cancel
-              </Button>
-              <Button variant="primary" onClick={() => handleFormDetailsApi('Draft', '')}>
-                Save
-              </Button>
-            </Modal.Footer>
-          </Modal>
-        </div>
+              </Col>
+            </Row>
+          </Container>
 
 
-        <div>
-          <Modal backdrop={false} aria-labelledby="contained-modal-title-vcenter zinde999"
-            centered show={showModal.showSaveModal} onHide={handleCloseModals} className="model_sm alartmdl alart-submited">
-            <Modal.Header closeButton>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="light"
+            style={{ marginLeft: 150 }}
+            // disabled={validationEnable ? true : false}
+            hidden={validationEnable ? true : false}
+            onClick={() => handleSaveAsDraft()}
+          >
+            Save as Draft
+          </Button>
+          <Button
+            disabled={!validationEnable}
+            variant="primary"
+            onClick={() => handleSubmit()}
+          >
+            Submit
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
-            </Modal.Header>
-            <Modal.Body className="text-center">
-              <Modal.Title>
-                Your application has been successfully submitted.
-              </Modal.Title>
-              <p className="mdl_description">
-                You can view your progress and complete the next steps by logging
-                into LYWO with {profileformData?.email}.
-              </p>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="light" onClick={() => handleFormDetailsApi('Completed', '')}>
-                Return to Job
-              </Button>
-              <Button variant="primary" onClick={() => handleFormDetailsApi('Completed', 'test')}>Proceed to Behavioral Test</Button>
-            </Modal.Footer>
-          </Modal>
-        </div>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button
-          variant="light"
-          style={{ marginLeft: 150 }}
-          // disabled={validationEnable ? true : false}
-          hidden={validationEnable ? true : false}
-          onClick={() => handleSaveAsDraft()}
-        >
-          Save as Draft
-        </Button>
-        <Button
-          disabled={!validationEnable}
-          variant="primary"
-          onClick={() => handleSubmit()}
-        >
-          Submit
-        </Button>
-      </Modal.Footer>
-    </Modal>
+      <Modal backdrop={false} aria-labelledby="contained-modal-title-vcenter zinde999"
+        centered show={showModal.showSaveAsDraft} onHide={handleCloseModals} className="model_sm alartmdl">
+        <Modal.Header closeButton>
+        </Modal.Header>
+        <Modal.Body className="text-center">
+          <Modal.Title>
+            Are you sure you want to exit<br /> without submitting?
+          </Modal.Title>
+          <p className="mdl_description">
+            Your details will be saved as a draft, and you can log in with{" "}<br />
+            {profileformData?.email} later to finish your application.
+          </p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="light" onClick={handleCloseModals}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={() => handleFormDetailsApi('Draft', '')}>
+            Save
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal backdrop={false} aria-labelledby="contained-modal-title-vcenter zinde999"
+        centered show={showModal.showSaveModal} onHide={handleCloseModals} className="model_sm alartmdl alart-submited">
+        <Modal.Header closeButton>
+
+        </Modal.Header>
+        <Modal.Body className="text-center">
+          <Modal.Title>
+            Your application has been successfully submitted.
+          </Modal.Title>
+          <p className="mdl_description">
+            You can view your progress and complete the next steps by logging
+            into LYWO with {profileformData?.email}.
+          </p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="light" onClick={() => handleFormDetailsApi('Completed', '')}>
+            Return to Job
+          </Button>
+          <Button variant="primary" onClick={() => handleFormDetailsApi('Completed', 'test')}>Proceed to Behavioral Test</Button>
+        </Modal.Footer>
+      </Modal>
+    </>
   );
 };
 

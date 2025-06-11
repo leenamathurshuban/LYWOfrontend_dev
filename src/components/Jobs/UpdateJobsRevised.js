@@ -2835,7 +2835,7 @@ const UpdateJobsRevised = ({
                                                 )}
                                             </Accordion.Header>
                                             <Accordion.Body ref={(el) => (sectionRefs.current['5'] = el)}>
-                                                {isSpecificLanguareRequired && (
+                                                {!updateFormData?.no_specific_language_require && (
                                                     <Form className="row">
                                                         <Form.Group
                                                             className="mb-3 col-md-6"
@@ -3054,7 +3054,7 @@ const UpdateJobsRevised = ({
                                                 )}
                                             </Accordion.Header>
                                             <Accordion.Body ref={(el) => (sectionRefs.current['6'] = el)}>
-                                                {isHideLocation && (
+                                                {!updateFormData?.no_specific_location && (
                                                     <Form>
                                                         <Form.Group
                                                             className="mb-3"
@@ -4023,10 +4023,13 @@ const UpdateJobsRevised = ({
                                                     </span>
                                                 </>
                                             )}
+                                            {importantFlag.experience && (
+                                                <img src={flagFill} className="flag_icon" />
+                                            )}
                                         </li>
                                         <li>
                                             {updateFormData?.min_salary && updateFormData?.max_salary ? (
-                                                <>INR {updateFormData?.min_salary} - {updateFormData?.max_salary}</>
+                                                <>INR {updateFormData?.min_salary} - {updateFormData?.max_salary} {updateFormData.salary_type}</>
                                             ) : (
                                                 <>
                                                     Salary{" "}
@@ -4034,6 +4037,9 @@ const UpdateJobsRevised = ({
                                                         Not defined
                                                     </span>
                                                 </>
+                                            )}
+                                            {importantFlag.salary && (
+                                                <img src={flagFill} className="flag_icon" />
                                             )}
                                             {/* <span className="text-danger italic">
                                                 {updateFormData?.max_salary}
@@ -4045,6 +4051,9 @@ const UpdateJobsRevised = ({
                                                 <> Of {updateFormData?.minimum_education}</>
                                             ) : (
                                                 <><span className="text-danger italic">Not defined</span>{" "}</>
+                                            )}
+                                            {importantFlag.education && (
+                                                <img src={flagFill} className="flag_icon" />
                                             )}
                                             {/* Minimum Qualification{" "} */}
 
@@ -4076,6 +4085,9 @@ const UpdateJobsRevised = ({
                                             ) : (
                                                 <>By <span className="text-danger italic">Not defined</span></>
                                             )}
+                                            {importantFlag.targethiredate && (
+                                                <img src={flagFill} className="flag_icon" />
+                                            )}
 
                                         </li>
                                         <li>Needs to Travel Rarely </li>
@@ -4089,6 +4101,9 @@ const UpdateJobsRevised = ({
                                             ) : (
                                                 <span className="text-danger italic"> Not defined</span>
                                             )}
+                                            {importantFlag.language && (
+                                                <img src={flagFill} className="flag_icon" />
+                                            )}
                                         </li>
                                         <li>Must Read/Write in
                                             {rdnwBadges?.length > 0 ? (
@@ -4100,19 +4115,26 @@ const UpdateJobsRevised = ({
                                             ) : (
                                                 <span className="text-danger italic"> Not defined</span>
                                             )}
+                                            {importantFlag.language && (
+                                                <img src={flagFill} className="flag_icon" />
+                                            )}
                                             {/* {rdnwBadges?.map((lang, index) => (
                                             <>{lang?.language_name}{index !== rdnwBadges.length - 1 && ", "}</>
                                         ))} */}
                                         </li>
-                                        <li>Should be from
+                                        <li>
                                             {locationBadges?.length > 0 ? (
                                                 <>
+                                                    Should be from 
                                                     {locationBadges?.map((city, index) => (
                                                         <> {city?.location_name}{index !== locationBadges.length - 1 && ", "}</>
                                                     ))}
                                                 </>
                                             ) : (
                                                 <span className="text-danger italic"> Not defined</span>
+                                            )}
+                                            {importantFlag.geography && (
+                                                <img src={flagFill} className="flag_icon" />
                                             )}
                                             {/* {locationBadges?.map((city, index) => (
                                             <>{city?.location_name}{index !== locationBadges.length - 1 && ", "}</>
@@ -4150,7 +4172,7 @@ const UpdateJobsRevised = ({
                                                             {item?.heading}&nbsp;
                                                             {item?.markedImportant && (
                                                                 <i className={`fa-star ${item.markedImportant ? "fa important" : "far"}`}
-                                                                    onClick={(e) => handleStarClick(index, e)}
+                                                                    // onClick={(e) => handleStarClick(index, e)}
                                                                 ></i>
                                                             )}
                                                             {index !== behaviours.length - 1 && ", "}

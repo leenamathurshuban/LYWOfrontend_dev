@@ -2670,7 +2670,7 @@ const CreateJobsRevised = ({
                         )}
                       </Accordion.Header>
                       <Accordion.Body ref={(el) => (sectionRefs.current['5'] = el)}>
-                        {isSpecificLanguareRequired && (
+                        {(!isSpecificLanguareRequired || !updateFormData?.no_specific_language_require) && (
                           <Form className="row">
                             <Form.Group
                               className="mb-3 col-md-6"
@@ -2886,7 +2886,7 @@ const CreateJobsRevised = ({
                         )}
                       </Accordion.Header>
                       <Accordion.Body ref={(el) => (sectionRefs.current['6'] = el)}>
-                        {isHideLocation && (
+                        {!isHideLocation && (
                           <Form>
                             <Form.Group
                               className="mb-3"
@@ -3738,6 +3738,9 @@ const CreateJobsRevised = ({
                           </span>
                         </>
                       )}
+                      {importantFlag.experience && (
+                        <img src={flagFill} className="flag_icon" />
+                      )}
                     </li>
                     <li>
                       {updateFormData?.min_salary && updateFormData?.max_salary ? (
@@ -3750,6 +3753,9 @@ const CreateJobsRevised = ({
                           </span>
                         </>
                       )}
+                      {importantFlag.salary && (
+                        <img src={flagFill} className="flag_icon" />
+                      )}
                       {/* Salary{" "}
                       <span className="text-danger italic">
                         {updateFormData?.max_salary}
@@ -3761,6 +3767,9 @@ const CreateJobsRevised = ({
                         <> Of {updateFormData?.minimum_education}</>
                       ) : (
                         <><span className="text-danger italic">Not defined</span>{" "}</>
+                      )}
+                      {importantFlag.education && (
+                        <img src={flagFill} className="flag_icon" />
                       )}
                       {/* <span className="text-danger italic">{updateFormData?.minimum_education}</span>{" "} */}
                     </li>
@@ -3809,6 +3818,9 @@ const CreateJobsRevised = ({
                       ) : (
                         <span className="text-danger italic"> Not defined</span>
                       )}
+                      {importantFlag.language && (
+                        <img src={flagFill} className="flag_icon" />
+                      )}
                       {/* {spokenLanguageBadges?.map((lang, index) => (
                       <>{lang?.language_name}{index !== spokenLanguageBadges.length - 1 && ", "}</>
                     ))} */}
@@ -3823,19 +3835,26 @@ const CreateJobsRevised = ({
                       ) : (
                         <span className="text-danger italic"> Not defined</span>
                       )}
+                      {importantFlag.language && (
+                        <img src={flagFill} className="flag_icon" />
+                      )}
                       {/* {rdnwBadges?.map((lang, index) => (
                       <>{lang?.language_name}{index !== rdnwBadges.length - 1 && ", "}</>
                     ))} */}
                     </li>
-                    <li>Should be from
+                    <li>
                       {locationBadges?.length > 0 ? (
                         <>
+                          Should be from
                           {locationBadges?.map((city, index) => (
                             <> {city?.location_name}{index !== locationBadges.length - 1 && ", "}</>
                           ))}
                         </>
                       ) : (
                         <span className="text-danger italic"> Not defined</span>
+                      )}
+                      {importantFlag.geography && (
+                        <img src={flagFill} className="flag_icon" />
                       )}
                       {/* {locationBadges?.map((city, index) => (
                       <>{city?.location_name}{index !== locationBadges.length - 1 && ", "}</>
@@ -3873,7 +3892,7 @@ const CreateJobsRevised = ({
                               {item?.heading}&nbsp;
                               {item?.markedImportant && (
                                 <i className={`fa-star ${item.markedImportant ? "fa important" : "far"}`}
-                                  onClick={(e) => handleStarClick(index, e)}
+                                  // onClick={(e) => handleStarClick(index, e)}
                                 ></i>
                               )}
                               {index !== behaviours.length - 1 && ", "}
