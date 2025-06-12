@@ -2301,9 +2301,9 @@ const CreateJobsRevised = ({
                                     name="min_exp"
                                     onChange={(e) => {
                                       handleFormData(e);
-                                      handleMinInputChange(e);
+                                      // handleMinInputChange(e);
                                     }}
-                                    value={minValue}
+                                   value={updateFormData?.min_exp}
                                     placeholder="Min."
                                   />
                                 )}
@@ -2317,11 +2317,11 @@ const CreateJobsRevised = ({
                                     max={50}
                                     className="sm-fcontrol w-150"
                                     placeholder="Max."
-                                    value={maxValue}
+                                    value={updateFormData?.max_exp}
                                     name="max_exp"
                                     onChange={(e) => {
                                       handleFormData(e);
-                                      handleMaxInputChange(e);
+                                      // handleMaxInputChange(e);
                                     }}
                                   />
                                 )}
@@ -3313,7 +3313,7 @@ const CreateJobsRevised = ({
                       </Accordion.Header>
                       <Accordion.Body ref={(el) => (sectionRefs.current['9'] = el)}>
                         <div className="starttag_box ctmqus_panel mt-0">
-                          {!activeKeyAdd && (
+                          {/* {!activeKeyAdd && ( */}
                             <>
                               <div className="stagbox_head">
                                 <span className="border_box">
@@ -3354,7 +3354,9 @@ const CreateJobsRevised = ({
                                 ))}
                               </div>
                             </>
-                          )}
+                          {/* )} */}
+                          </div>
+                          <div className="starttag_box ctmqus_panel mt-0">
                           {activeKeyAdd &&
                             components.map((question, questionIndex) => (
                               <div key={questionIndex} className="mb-4">

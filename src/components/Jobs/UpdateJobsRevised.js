@@ -2452,12 +2452,12 @@ const UpdateJobsRevised = ({
                                                                     <Form.Control
                                                                         type="text"
                                                                         className="sm-fcontrol w-150"
-                                                                        name="min"
+                                                                        name="min_exp"
                                                                         onChange={(e) => {
-                                                                            // handleFormData(e);
-                                                                            handleMinInputChange(e);
+                                                                            handleFormData(e);
+                                                                            // handleMinInputChange(e);
                                                                         }}
-                                                                        value={range.min}
+                                                                        value={updateFormData?.min_exp}
                                                                         placeholder="Min."
                                                                     />
                                                                 )}
@@ -2471,11 +2471,11 @@ const UpdateJobsRevised = ({
                                                                         max={50}
                                                                         className="sm-fcontrol w-150"
                                                                         placeholder="Max."
-                                                                        value={range.max}
-                                                                        name="max"
+                                                                        value={updateFormData?.max_exp}
+                                                                        name="max_exp"
                                                                         onChange={(e) => {
-                                                                            // handleFormData(e);
-                                                                            handleMaxInputChange(e);
+                                                                            handleFormData(e);
+                                                                            // handleMaxInputChange(e);
                                                                         }}
                                                                     />
                                                                 )}
@@ -3566,48 +3566,50 @@ const UpdateJobsRevised = ({
                                             </Accordion.Header>
                                             <Accordion.Body ref={(el) => (sectionRefs.current['9'] = el)}>
                                                 <div className="starttag_box ctmqus_panel mt-0">
-                                                    {!activeKeyAdd && (
-                                                        <>
-                                                            <div className="stagbox_head">
-                                                                <span className="border_box">
-                                                                    How many companies have you changed in your
-                                                                    career?
-                                                                </span>
-                                                                <div class="d-flex ms-3">
-                                                                    <button type="button" class="icon-btn">
-                                                                        <i class="far fa-save"></i>
-                                                                    </button>
-                                                                    <button type="button" class="icon-btn">
-                                                                        <i class="far fa-star"></i>
-                                                                    </button>
-                                                                </div>
+                                                    {/* {!activeKeyAdd && ( */}
+                                                    <>
+                                                        <div className="stagbox_head">
+                                                            <span className="border_box">
+                                                                How many companies have you changed in your
+                                                                career?
+                                                            </span>
+                                                            <div class="d-flex ms-3">
+                                                                <button type="button" class="icon-btn">
+                                                                    <i class="far fa-save"></i>
+                                                                </button>
+                                                                <button type="button" class="icon-btn">
+                                                                    <i class="far fa-star"></i>
+                                                                </button>
                                                             </div>
-                                                            <h6 className="mt-3 hadding-xs">Answer Options</h6>
-                                                            <p className="mt-1">
-                                                                Select the preferred answer using the radio
-                                                                button.
-                                                            </p>
-                                                            <div className="cmt_questions">
-                                                                {["radio"].map((type) => (
-                                                                    <div key={`default-${type}`} className="mb-3">
-                                                                        <Form.Check // prettier-ignore
-                                                                            label="No"
-                                                                            name="group1"
-                                                                            type={type}
-                                                                            id={`default-${type}`}
-                                                                        />
+                                                        </div>
+                                                        <h6 className="mt-3 hadding-xs">Answer Options</h6>
+                                                        <p className="mt-1">
+                                                            Select the preferred answer using the radio
+                                                            button.
+                                                        </p>
+                                                        <div className="cmt_questions">
+                                                            {["radio"].map((type) => (
+                                                                <div key={`default-${type}`} className="mb-3">
+                                                                    <Form.Check // prettier-ignore
+                                                                        label="No"
+                                                                        name="group1"
+                                                                        type={type}
+                                                                        id={`default-${type}`}
+                                                                    />
 
-                                                                        <Form.Check
-                                                                            label="Yes"
-                                                                            name="group1"
-                                                                            type={type}
-                                                                            id={`default-${type}`}
-                                                                        />
-                                                                    </div>
-                                                                ))}
-                                                            </div>
-                                                        </>
-                                                    )}
+                                                                    <Form.Check
+                                                                        label="Yes"
+                                                                        name="group1"
+                                                                        type={type}
+                                                                        id={`default-${type}`}
+                                                                    />
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </>
+                                                    {/* )} */}
+                                                </div>
+                                                <div className="starttag_box ctmqus_panel mt-0">
                                                     {activeKeyAdd &&
                                                         components.map((question, questionIndex) => (
                                                             <div key={questionIndex} className="mb-4">
@@ -4125,7 +4127,7 @@ const UpdateJobsRevised = ({
                                         <li>
                                             {locationBadges?.length > 0 ? (
                                                 <>
-                                                    Should be from 
+                                                    Should be from
                                                     {locationBadges?.map((city, index) => (
                                                         <> {city?.location_name}{index !== locationBadges.length - 1 && ", "}</>
                                                     ))}
@@ -4172,7 +4174,7 @@ const UpdateJobsRevised = ({
                                                             {item?.heading}&nbsp;
                                                             {item?.markedImportant && (
                                                                 <i className={`fa-star ${item.markedImportant ? "fa important" : "far"}`}
-                                                                    // onClick={(e) => handleStarClick(index, e)}
+                                                                // onClick={(e) => handleStarClick(index, e)}
                                                                 ></i>
                                                             )}
                                                             {index !== behaviours.length - 1 && ", "}
@@ -4313,7 +4315,7 @@ const UpdateJobsRevised = ({
                         </Col>
                     </Row>
                 </Modal.Body>
-            </Modal>
+            </Modal >
             <Modal
                 show={selectedpersonality.modal_isOpen}
                 onHide={handleCloseModal}

@@ -21,6 +21,7 @@ import threeDots from "../../images/icons/dots-vertical_icon.svg";
 import DropD_check from "../../images/icons/DropD_check-circle.svg";
 import DropD_copy from "../../images/icons/DropD_copy-06.svg";
 import DropD_edit from "../../images/icons/DropD_edit-03.svg";
+import imgpTrash from "../../images/icons/trash-01.svg";
 import DropD_eye from "../../images/icons/DropD_eye.svg";
 import DropD_link from "../../images/icons/DropD_link-03.svg";
 import DropD_mail from "../../images/icons/DropD_mail-02.svg";
@@ -296,6 +297,13 @@ const JobsList = () => {
     }));
   }
 
+  const handleDeleteJob=async(uid)=>{
+    try {
+      // const res = await;
+    } catch (error) {
+      console.log(error);      
+    }
+  }
   useEffect(() => {
     if (modalText.sure) {
       handleCommonEvent(modalText.item, modalText.state)
@@ -617,6 +625,10 @@ const JobsList = () => {
                               <Dropdown.Item href={""} onClick={() => handleClone(item.uid)}>
                                 <img className="me-2" src={DropD_copy} alt="" />
                                 Clone
+                              </Dropdown.Item>
+                              <Dropdown.Item href={""} onClick={()=>handleDeleteJob(item?.uid)}>
+                                <img className="me-2" src={imgpTrash} alt="" />
+                                Delete
                               </Dropdown.Item>
                               {item.job_status == 'Active' && (
                                 <>
