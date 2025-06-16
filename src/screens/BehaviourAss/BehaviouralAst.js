@@ -175,6 +175,8 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                                     navigate(`/evaluation-quiz/${Val?.uid}`, { state: jobPostData })
                                 }
                             })
+                        }else{
+                            setShow(false)
                         }
                     }
                 } else {
@@ -203,10 +205,12 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                                     navigate(`/evaluation-quiz/${Val?.uid}`, { state: jobPostData })
                                 }
                             })
+                        }else{
+                            setShow(false)
                         }
-                        setTimeout(() => {
-                            window.location.reload();
-                        }, 1000)
+                        // setTimeout(() => {
+                        //     window.location.reload();
+                        // }, 1000)
                     }
                 }
             } catch (error) {

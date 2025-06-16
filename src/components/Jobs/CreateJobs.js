@@ -369,9 +369,9 @@ const CreateJobs = ({ show, handleClose }) => {
     setIsLikeDropdown(true);
   };
   const handleSelectedLikeItems = (item) => {
-    setIsLike(item.is_like_name);
-    setIsLikeUid((prevSelectedItems) => [...prevSelectedItems, item.uid]);
-    setIsLikeDropdown(false);
+    setIsLike(item.label);
+    setIsLikeUid((prevSelectedItems) => [...prevSelectedItems, item.value]);
+    // setIsLikeDropdown(false);
   };
   const handleEditorChange = (value) => {
     const wordCount = value.trim().split(/\s+/).length;
@@ -463,10 +463,12 @@ const CreateJobs = ({ show, handleClose }) => {
     setTravelOption(e.target.value);
   };
   const isLikeHandleApi = (query) => {
-    const url = `https://bittrend.shubansoftware.com/assets-api/islike-list-api/?search=${query}&page=1&limit=10`;
+    const url = `https://bittrend.shubansoftware.com/assets-api/islike-list-api/?search=${query}&page=1&limit=5000`;
     CreateJobIsLike(url)
       .then((res) => {
-        setIsLikeData(res.data.response);
+        // setIsLikeData(res.data.response);
+        const key = res?.data?.response?.map((val) => ({ value: val?.uid, label: val?.is_like_name, group_name: val?.group_name, id: val?.id }))
+        setIsLikeData(key)
         if (res?.data?.response.length > 0 && !isLikeDropdown) {
           setRestrictedRoleBadges((prevBadges) => [
             ...prevBadges,
@@ -605,6 +607,7 @@ const CreateJobs = ({ show, handleClose }) => {
   useEffect(() => {
     benifitsList();
     handleLocationApi("")
+    isLikeHandleApi("");
   }, []);
   // const handleLike = (e) => {
   //   setIsLike(e.target.value);
@@ -1080,7 +1083,7 @@ const CreateJobs = ({ show, handleClose }) => {
 
           <Form.Group className="col-md-6 mb-2 relative" controlId="isLike">
             <Form.Label>Is Like</Form.Label>
-            <Form.Control
+            {/* <Form.Control
               type="text"
               placeholder="Is Like"
               value={isLike}
@@ -1106,7 +1109,19 @@ const CreateJobs = ({ show, handleClose }) => {
             )}
             {isLikeDropdown && isLikeData.length === 0 && (
               <span className="error">Invalid key Search</span>
-            )}
+            )} */}
+            <Select
+              options={isLikeData}
+              isSearchable={true}
+              noOptionsMessage={() => "No results found"}
+              placeholder="Is Like"
+              filterOption={(option, inputValue) => {
+                if (!inputValue) return false; // hide all options until user types
+                return option.label.toLowerCase().includes(inputValue.toLowerCase());
+              }}
+              onChange={handleSelectedLikeItems}
+            />
+
           </Form.Group>
 
           <Form.Group className="col-md-6 mb-2" controlId="noOfPosition">
