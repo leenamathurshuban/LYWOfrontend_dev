@@ -41,10 +41,11 @@ import printer16 from "../../images/icons/printer-16x16.svg";
 import download16 from "../../images/icons/download-01-16x16.svg";
 import closeI from "../../images/icons/closeI-16x16.svg";
 import pauseCircle16 from "../../images/icons/pause-circle-16x16.svg";
-import { CloneJobGet, getJobDetailsApi, JobList, UpdateMultipleJobApi } from "../../services/provider";
+import { CloneJobGet, getJobDetailsApi, JobDeleteAPI, JobList, UpdateMultipleJobApi } from "../../services/provider";
 import { useNavigate } from "react-router-dom";
 import UpdateJobs from "../../components/Jobs/UpdateJobs";
 import { CustomPopup } from "../../components/CustomPopup";
+import { toast } from "react-toastify";
 
 const JobsList = () => {
   const [modal, setModal] = useState({
@@ -299,7 +300,13 @@ const JobsList = () => {
 
   const handleDeleteJob=async(uid)=>{
     try {
-      // const res = await;
+      const formData = new FormData();
+      formData.append("job_uids",JSON.stringify([uid]))
+      const res = await JobDeleteAPI(formData);
+      if(res?.data?.success){
+        toast.success(res?.data?.response)
+        JobListApi(SerachList)
+      }
     } catch (error) {
       console.log(error);      
     }

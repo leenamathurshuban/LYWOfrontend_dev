@@ -2598,12 +2598,15 @@ select.h-36.form-select {
       border-color: #c7d7fe;
       color: #3538cd;
 
-      &::before {
-        content: "\f00c";
-        font-family: "FontAwesome";
-        color: #3538cd;
-        margin-right: 5px;
-      }
+      // &::before {
+      //   content: "\f00c";
+      //   font-family: "FontAwesome";
+      //   color: #3538cd;
+      //   margin-right: 5px;
+      // }      
+    }
+    .fa-xmark{
+        font-size: 13px;
     }
 
     .badge.bg-light {

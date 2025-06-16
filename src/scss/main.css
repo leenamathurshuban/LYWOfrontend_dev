@@ -2264,11 +2264,8 @@ select.h-36.form-select {
   border-color: #c7d7fe;
   color: #3538cd;
 }
-.tagarea .badge-gray.active::before {
-  content: "\f00c";
-  font-family: "FontAwesome";
-  color: #3538cd;
-  margin-right: 5px;
+.tagarea .badge-gray .fa-xmark {
+  font-size: 13px;
 }
 .tagarea .badge-gray .badge.bg-light {
   border: solid 1px #D0D5DD;

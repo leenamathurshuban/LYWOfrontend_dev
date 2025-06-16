@@ -11,6 +11,7 @@ import {
   CreateJobForm,
   CreateJobIsLike,
   CreateJobLocation,
+  deleteBenifitAPI,
   GetBenifints,
   UpdateJobForm,
 } from "../../services/provider";
@@ -18,6 +19,7 @@ import CreateJobsRevised from "./CreateJobsRevised";
 import { removeToken } from "../../helpers/helper";
 import { CreateJobFormValidation } from "../../utils/validation";
 import { toast } from "react-toastify";
+import Select from 'react-select'
 
 const CreateJobs = ({ show, handleClose }) => {
   const [createFormData, setCreateFormData] = useState({
@@ -226,6 +228,15 @@ const CreateJobs = ({ show, handleClose }) => {
   const [modal, setModal] = useState({
     createJobRevisedModal: false,
   });
+  const jobTypeOptions = [
+    { value: "Full-Time", label: "Full-Time" },
+    { value: "Part-Time", label: "Part-Time" },
+    { value: "Contract", label: "Contract" },
+    { value: "Temporary", label: "Temporary" },
+    { value: "Volunteer", label: "Volunteer" },
+    { value: "Internship", lable: "Internship" },
+    { value: "Other", label: "Other" }
+  ]
   const jobTypeOption = [
     "Full -Time",
     "Part -Time",
@@ -236,9 +247,9 @@ const CreateJobs = ({ show, handleClose }) => {
     "Other"
   ]
   const workplaceOption = [
-    "On-site",
-    "Remote",
-    "Hybrid",
+    { value: "On-site", label: "On-site" },
+    { value: "Remote", label: "Remote" },
+    { value: "Hybrid", label: "Hybrid" },
   ]
   const [showDropdown, setShowDropdown] = useState({ jobType: false, workPlaceType: false });
   const MAX_FILE_SIZE = 5 * 1024 * 1024;
@@ -334,15 +345,15 @@ const CreateJobs = ({ show, handleClose }) => {
       ...newValue
     })
   };
-  const handleJobType = (key, value) => {
+  const handleJobType = (Val) => {
     setCreateFormData({
       ...createFormData,
-      [key]: value
+      ["jobType"]: Val?.value
     })
-    setShowDropdown({
-      ...showDropdown,
-      [key]: false
-    })
+    // setShowDropdown({
+    //   ...showDropdown,
+    //   [key]: false
+    // })
   }
   const handleUpdateFormData = (e) => {
     const { name, value } = e.target;
@@ -496,15 +507,18 @@ const CreateJobs = ({ show, handleClose }) => {
       });
   };
   const handleLocationApi = (locationQuery) => {
-    const url = `https://bittrend.shubansoftware.com/account-api/location-list-api/?page=1&limit=500&search=${locationQuery}`;
+    // const url = `https://bittrend.shubansoftware.com/account-api/location-list-api/?page=1&limit=500&search=${locationQuery}`;
+    const url = `https://bittrend.shubansoftware.com/account-api/location-list-api/?limit=5000&search=${locationQuery}`;
     CreateJobLocation(url)
       .then((res) => {
-        setLocationData(res.data.response);
+        // setLocationData(res.data.response);
         if (res.data.response.length > 0) {
           setLocationBadges((prevBadges) => [
             ...prevBadges,
             res?.data?.response[0],
           ]);
+          const key = res?.data?.response?.map((val) => ({ value: val?.uid, label: val?.location_name, state: val?.state_name, id: val?.id }))
+          setLocationData(key)
         }
       })
       .catch((error) => {
@@ -590,6 +604,7 @@ const CreateJobs = ({ show, handleClose }) => {
   }, [location]);
   useEffect(() => {
     benifitsList();
+    handleLocationApi("")
   }, []);
   // const handleLike = (e) => {
   //   setIsLike(e.target.value);
@@ -621,9 +636,12 @@ const CreateJobs = ({ show, handleClose }) => {
   };
 
   const handleLocationItems = (item) => {
-    setLocation(item?.location_name);
-    setLocationUid(item.uid);
+    // setLocation(item?.location_name);
+    // setLocationUid(item.uid);
+    setLocation(item?.label);
+    setLocationUid(item.value);
     setIsLocationDropdown(false);
+    // debugger
   };
 
   const handleCreateForm = async () => {
@@ -653,7 +671,7 @@ const CreateJobs = ({ show, handleClose }) => {
           setRestrictedRoleBadges([]);
         }
       } catch (error) {
-        if(error?.response?.data?.status==400){
+        if (error?.response?.data?.status == 400) {
           toast.warning(error?.response?.data?.response?.error?.[0])
         }
         console.log("create eroor------", error);
@@ -995,6 +1013,18 @@ const CreateJobs = ({ show, handleClose }) => {
       }
     }
   };
+  const handleDeleteBenifts = async (e, uid) => {
+    e.stopPropagation();
+    try {
+      const filterBenifits = benefitsData.filter((item) => item?.uid != uid)
+      setBenefitsData(filterBenifits)
+      const res = await deleteBenifitAPI(uid);
+      if (res?.data?.success) {
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
   const isNextButtonDisable = createFormData.jobTitle && createFormData.department &&
     createFormData.jobType && createFormData.noOfPosition && createFormData.workPlaceType
     && isLike && location;
@@ -1015,7 +1045,7 @@ const CreateJobs = ({ show, handleClose }) => {
       setIsLocationDropdown(false)
     }, 200);
   }
-
+  console.log(createFormData)
   return (
     <Offcanvas
       show={show}
@@ -1136,7 +1166,7 @@ const CreateJobs = ({ show, handleClose }) => {
 
           <Form.Group className="col-md-6 mb-2 relative" controlId="location">
             <Form.Label>Location</Form.Label>
-            <Form.Control
+            {/* <Form.Control
               type="text"
               placeholder="Location"
               value={location}
@@ -1159,7 +1189,19 @@ const CreateJobs = ({ show, handleClose }) => {
                   ))}
                 </ul>
               </div>
-            )}
+            )} */}
+            <Select
+              options={locationData}
+              isSearchable={true}
+              noOptionsMessage={() => "No results found"}
+              placeholder="search location"
+              filterOption={(option, inputValue) => {
+                if (!inputValue) return false; // hide all options until user types
+                return option.label.toLowerCase().includes(inputValue.toLowerCase());
+              }}
+              onChange={handleLocationItems}
+            />
+
 
             {isLocationDropdown && locationData.length === 0 && (
               <span className="error">Invalid key Search</span>
@@ -1319,7 +1361,7 @@ const CreateJobs = ({ show, handleClose }) => {
               <option value="Other">Other</option>
             </Form.Select> */}
             <div className="mw-230 relative">
-              <FormControl
+              {/* <FormControl
                 placeholder="Job Type"
                 className="form-control-sm mx-w350"
                 aria-label="Default select example"
@@ -1361,7 +1403,8 @@ const CreateJobs = ({ show, handleClose }) => {
                     ))}
                   </ul>
                 </div>
-              )}
+              )} */}
+              <Select defaultValue={createFormData.jobType} options={jobTypeOptions} onChange={handleJobType} />
             </div>
             <span style={{ color: "red" }}>{errors.jobType}</span>
           </Col>
@@ -1380,7 +1423,7 @@ const CreateJobs = ({ show, handleClose }) => {
               <option value="Work-from-home">Work from Home</option>
             </Form.Select> */}
             <div className="mw-230 relative">
-              <FormControl
+              {/* <FormControl
                 placeholder="Workplace Type"
                 className="form-control-sm mx-w350"
                 aria-label="Default select example"
@@ -1422,7 +1465,13 @@ const CreateJobs = ({ show, handleClose }) => {
                     ))}
                   </ul>
                 </div>
-              )}
+              )} */}
+              <Select defaultValue={createFormData.workPlaceType} options={workplaceOption} onChange={(val) => {
+                setCreateFormData({
+                  ...createFormData,
+                  ["workPlaceType"]: val?.value
+                })
+              }} />
             </div>
             <span style={{ color: "red" }}>{errors.workPlaceType}</span>
           </Col>
@@ -1439,7 +1488,11 @@ const CreateJobs = ({ show, handleClose }) => {
                   className={`badge-gray ${SelectBenefitsData.includes(item?.uid) ? "active" : ""
                     }`}
                 >
-                  {item.benefit_name}
+                  {item.benefit_name}&nbsp;&nbsp;&nbsp;
+                  <i
+                    className="fa fa-xmark text-primary me-1 remove-tag"
+                    onClick={(e) => handleDeleteBenifts(e, item?.uid)}
+                  ></i>
                 </span>
               ))}
               {addCustomeBenifits.map((item, index) => (

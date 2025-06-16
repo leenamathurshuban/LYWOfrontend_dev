@@ -190,6 +190,15 @@ export const UpdateMultipleJobApi = (data) => {
   );
   return UpdateMultipleJob;
 };
+
+export const JobDeleteAPI = (data) => {
+  const removeresult = client.deleteWithUpload(`${JobsUrl.jobDelete}`, data)
+  return removeresult;
+}
+export const deleteBenifitAPI=(id)=>{
+  const removeBenifit = client.deleteWithUpload(`${JobsUrl.deleteBenifits}${id}`)
+  return removeBenifit;
+}
 // Qualification List By Course Id
 
 export const getQualificationListApi = (url) => {
@@ -272,15 +281,15 @@ export const assetSapicreateJobGroupPostAPI = (data) => {
   const postResult = client.postWithToken(`${JobsUrl.assetSapicreateJobGroupPost}`, data)
   return postResult
 }
-export const postJobGroupParameterListByFetchAPI=(id,data)=>{
-  const resultFilter = client.postWithToken(`${JobsUrl.postJobGroupParameterListByFetch}${id}/?page=1&limit=10`,data)
+export const postJobGroupParameterListByFetchAPI = (id, data) => {
+  const resultFilter = client.postWithToken(`${JobsUrl.postJobGroupParameterListByFetch}${id}/?page=1&limit=10`, data)
   return resultFilter
 }
-export const getAssetDataDetailsAPI=(job_uid,applicant_uid)=>{
+export const getAssetDataDetailsAPI = (job_uid, applicant_uid) => {
   const resultAsset = client.get(`${ApplicationJobPostUrl.getApplicantAssetData}${job_uid}/applicant-uid/${applicant_uid}/`)
   return resultAsset
 }
-export const jobApplicantUpdateAPI=(data)=>{
-  const result = client.putWithUpload(`${JobsUrl.jobApplicantUpdateForList}`,data)
+export const jobApplicantUpdateAPI = (data) => {
+  const result = client.putWithUpload(`${JobsUrl.jobApplicantUpdateForList}`, data)
   return result
 }

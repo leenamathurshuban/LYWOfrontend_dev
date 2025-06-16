@@ -11,6 +11,7 @@ import {
   CreateJobForm,
   CreateJobIsLike,
   CreateJobLocation,
+  deleteBenifitAPI,
   GetBenifints,
   UpdateJobForm,
 } from "../../services/provider";
@@ -1010,6 +1011,18 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
       }
     }
   };
+  const handleDeleteBenifts = async (e, uid) => {
+    e.stopPropagation();
+    try {
+      const filterBenifits = benefitsData.filter((item) => item?.uid != uid)
+      setBenefitsData(filterBenifits)
+      const res = await deleteBenifitAPI(uid);
+      if (res?.data?.success) {
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const isNextButtonDisable = createFormData.jobTitle && createFormData.department &&
     createFormData.jobType && createFormData.noOfPosition && createFormData.workPlaceType
@@ -1456,7 +1469,11 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
                   className={`badge-gray ${SelectBenefitsData.includes(item?.uid) ? "active" : ""
                     }`}
                 >
-                  {item.benefit_name}
+                  {item.benefit_name}&nbsp;&nbsp;&nbsp;
+                  <i
+                    className="fa fa-xmark text-primary me-1 remove-tag"
+                    onClick={(e) => handleDeleteBenifts(e, item?.uid)}
+                  ></i>
                 </span>
               ))}
               {addCustomeBenifits?.map((item, index) => (

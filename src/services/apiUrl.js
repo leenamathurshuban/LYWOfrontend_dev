@@ -22,7 +22,7 @@ export const UsersUrl = {
 }
 
 export const JobsUrl = {
-  GetBenifitsList : "assets-api/benefits-list-api/?page=1&limit=10",
+  GetBenifitsList : "assets-api/benefits-list-api/?page=1&limit=20",
   addCustomBenifits : "assets-api/benefits-post-api/",
   CreateCustomBenifits : "assets-api/benefits-post-api/",
   createJobForm : "assets-api/job-post-api/",
@@ -36,7 +36,9 @@ export const JobsUrl = {
   getJobGroupParameterList:"assets-api/get-job-group-parameter-list-api/",
   assetSapicreateJobGroupPost:"assets-api/create-job-group-api/",
   postJobGroupParameterListByFetch:"assets-api/job-applicant-group-filter-api/",
-  jobApplicantUpdateForList:"assets-api/job-applicant-update-api/"
+  jobApplicantUpdateForList:"assets-api/job-applicant-update-api/",
+  jobDelete:"assets-api/job-delete-api/",
+  deleteBenifits:"assets-api/benefit-delete-api/"
 }
 
 export const SkillsUrl = {
