@@ -1515,7 +1515,8 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
         </Button>
         <Button
           variant="primary"
-          disabled={!isNextButtonDisable || addCustomeBenifits.length > 0}
+          // disabled={!isNextButtonDisable || addCustomeBenifits.length > 0}
+          disabled={!isNextButtonDisable}
           onClick={handleUpdateData}
         >
           Next

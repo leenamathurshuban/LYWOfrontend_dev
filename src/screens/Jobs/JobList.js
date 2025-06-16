@@ -130,7 +130,7 @@ const JobsList = () => {
     }
   }
 
-  const JobListApi = async (SerachList) => {    
+  const JobListApi = async (SerachList) => {
     setIsLoading(true);
 
     // Base API URL
@@ -149,7 +149,7 @@ const JobsList = () => {
       console.log("response  error-----", error);
     }
   };
-  const jobListAPIByFilter=async ()=>{
+  const jobListAPIByFilter = async () => {
     setIsLoading(true);
 
     // Base API URL
@@ -167,7 +167,7 @@ const JobsList = () => {
     } catch (error) {
       setIsLoading(false);
       console.log("response  error-----", error);
-    }    
+    }
   }
 
   useEffect(() => {
@@ -298,22 +298,24 @@ const JobsList = () => {
     }));
   }
 
-  const handleDeleteJob=async(uid)=>{
+  const handleDeleteJob = async (uid) => {
     try {
       const formData = new FormData();
-      formData.append("job_uids",JSON.stringify([uid]))
+      formData.append("job_uids", JSON.stringify([uid]))
       const res = await JobDeleteAPI(formData);
-      if(res?.data?.success){
+      if (res?.data?.success) {
         toast.success(res?.data?.response)
         JobListApi(SerachList)
       }
     } catch (error) {
-      console.log(error);      
+      console.log(error);
     }
   }
   useEffect(() => {
-    if (modalText.sure) {
+    if (modalText.sure && modalText.state != "Delete") {
       handleCommonEvent(modalText.item, modalText.state)
+    } else if (modalText.sure && modalText.state == "Delete") {
+      handleDeleteJob(modalText.item.uid)
     }
   }, [modalText.sure])
   useEffect(() => {
@@ -633,7 +635,18 @@ const JobsList = () => {
                                 <img className="me-2" src={DropD_copy} alt="" />
                                 Clone
                               </Dropdown.Item>
-                              <Dropdown.Item href={""} onClick={()=>handleDeleteJob(item?.uid)}>
+                              <Dropdown.Item href={""}
+                                // onClick={()=>handleDeleteJob(item?.uid)}
+                                onClick={() => {
+                                  setModalText({
+                                    showPopup: true,
+                                    heading: `Do you wish to Delete?`,
+                                    body: `The jobs will be marked as closed, halting new applications and application assessments.`,
+                                    state: 'Delete',
+                                    item: item
+                                  })
+                                }}
+                              >
                                 <img className="me-2" src={imgpTrash} alt="" />
                                 Delete
                               </Dropdown.Item>

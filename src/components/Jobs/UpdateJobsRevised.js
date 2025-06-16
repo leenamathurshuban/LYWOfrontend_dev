@@ -1882,7 +1882,7 @@ const UpdateJobsRevised = ({
     // console.log(skillGroupData, "group_skills")
     // console.log('======>selecting skills', SelectSkillsData)
     // // console.log("openStep", importantFlag)
-    // console.log('must have', mustHaveSkills)
+    console.log('must have', mustHaveSkills)
     // console.log(components.length)
     // console.log(IndustriesBadges)
     // console.log('neetu', createRevisedJobData)
@@ -3210,14 +3210,14 @@ const UpdateJobsRevised = ({
                                             }}>
                                                 Skills
                                                 <div className="head_actions">
-                                                    <span className="imprt_icon text-primery">
-                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                    <span className={`imprt_icon ${mustHaveSkills.length>=1 && 'text-primery'}`}>
+                                                        <i class={`${mustHaveSkills.length>=1 ? 'fa':'far'} fa-star`} aria-hidden="true"></i>
                                                     </span>
-                                                    <span className="imprt_icon">
-                                                        <i class="far fa-star" aria-hidden="true"></i>
+                                                    <span className={`imprt_icon ${mustHaveSkills.length>=2 && 'text-primery'}`}>
+                                                        <i class={`${mustHaveSkills.length>=2 ? 'fa':'far'} fa-star`} aria-hidden="true"></i>
                                                     </span>
-                                                    <span className="imprt_icon">
-                                                        <i class="far fa-star" aria-hidden="true"></i>
+                                                    <span className={`imprt_icon ${mustHaveSkills.length>=3 && 'text-primery'}`}>
+                                                        <i class={`${mustHaveSkills.length>=3 ? 'fa':'far'} fa-star`} aria-hidden="true"></i>
                                                     </span>
                                                     <span className="count ms-1">1 of 3</span>
                                                 </div>
@@ -3340,11 +3340,11 @@ const UpdateJobsRevised = ({
                                                 </div>
                                             </div>
                                         )} */}
-                                                {skillError && (
+                                                {/* {skillError && (
                                                     <p className="text-danger mt-1">
                                                         {skillError}
                                                     </p>
-                                                )}
+                                                )} */}
                                                 {skillGroupData?.length > 0 && (
                                                     skillGroupData?.map((Val, i) => (
                                                         <div className="starttag_box">

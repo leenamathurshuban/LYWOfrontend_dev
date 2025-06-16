@@ -1551,7 +1551,8 @@ const CreateJobs = ({ show, handleClose }) => {
         </Button>
         <Button
           variant="primary"
-          disabled={!isNextButtonDisable || addCustomeBenifits.length > 0}
+          // disabled={!isNextButtonDisable || addCustomeBenifits.length > 0}
+          disabled={!isNextButtonDisable}
           onClick={handleCreateForm}
         >
           Next
