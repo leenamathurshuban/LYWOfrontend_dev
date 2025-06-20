@@ -784,7 +784,7 @@ const UpdateJobsRevised = ({
             const response = await CreateJobQuestion(formData);
             if (response.data.status == 200) {
                 alert("Question Saved Successfully");
-                getJobDetails();
+                // getJobDetails();
             }
         } catch { }
     };
