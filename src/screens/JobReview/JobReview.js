@@ -37,7 +37,7 @@ import ExpandButton from "../../images/icons/expand-03-primery.svg";
 import ArrowBack from "../../images/icons/arrowBack.svg";
 import ArrowNext from "../../images/icons/arrowNext.svg";
 import { useParams } from "react-router-dom";
-import { ApplicationDeatilsApi, getAssetDataDetailsAPI, getJobAssignmentReview, getJobDetailsApi, getJobGroupParameterListAPI, getScreeningParameterDataAPI, jobApplicantUpdateAPI, postJobGroupParameterListByFetchAPI } from "../../services/provider";
+import { ApplicationDeatilsApi, getAssetDataDetailsAPI, getJobAssignmentReview, getJobDetailsApi, getJobGroupParameterListAPI, getScreeningParameterDataAPI, insightsListAPI, jobApplicantUpdateAPI, postJobGroupParameterListByFetchAPI } from "../../services/provider";
 import Evaluations from "./Evaluations";
 import Ratting from "../../components/Ratting";
 import CodeBlock from "../../components/CodeBlock";
@@ -50,6 +50,15 @@ import SideCard from "./Step/SideCard";
 import Step3 from "./Step/Step3";
 import Step4 from "./Step/Step4";
 import CandidateQuestionList from "./Step/CandidateQuestionList";
+import AvailabilityPieChart from "./GraphChart/AvailabilityPieChart";
+import PersonalityGraph from "./GraphChart/PersonalityGraph";
+import SalaryRangeGraph from "./GraphChart/SalaryRangeGraph";
+import ApplicantStatusGraph from "./GraphChart/ApplicantStatusGraph";
+import AreaEducationChart from "./GraphChart/AreasEducationChart";
+import EducationLevelGraph from "./GraphChart/EducationLevelGraph";
+import SkillGraphComponent from "./GraphChart/SkillsGraph";
+import IndustryExperienceChart from "./GraphChart/IndustryExperience";
+import ExperienceGraphComponent from "./GraphChart/ExperienceGraph";
 const JobReview = () => {
     const codeSnippet = `class WorkloadTracker:
     def __init__(self):
@@ -141,6 +150,7 @@ tracker.show_tasks()
     const [applicantPersonality, setApplicantPersonality] = useState();
     const [personalityData, setPersonalityData] = useState();
     const [reviewEventKey, setReviewEventKey] = useState('first')
+    const [InsightsGraphData, setInsightsGraphData] = useState({})
     const [payloadList, setPayloadList] = useState({
         roles: [],
         skills: [],
@@ -610,11 +620,22 @@ tracker.show_tasks()
             console.log(error)
         }
     }
+    const getInsightsGraphList = async () => {
+        try {
+            const res = await insightsListAPI(id)
+            if (res?.data?.success) {
+                setInsightsGraphData(res?.data?.response)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
     useEffect(() => {
         getScreeningAPI(id)
         getJobAssignmentReviewAPI(id)
         getJobDetails(id)
         getJobGroupParameterList()
+        getInsightsGraphList()
     }, [id])
     const getJobAssignmentReviewList = async (uid) => {
         try {
@@ -807,11 +828,11 @@ tracker.show_tasks()
     const handleStatusGroup = async (status, applicant_uid) => {
         try {
             const formData = new FormData();
-            if(Array.isArray(applicant_uid)){
-               formData.append('job_applicant_uid', JSON.stringify(selectedListUids)) 
-            }else{
+            if (Array.isArray(applicant_uid)) {
+                formData.append('job_applicant_uid', JSON.stringify(selectedListUids))
+            } else {
                 formData.append('job_applicant_uid', JSON.stringify([applicant_uid]))
-            }            
+            }
             formData.append('job_groups', JSON.stringify([paramUid]))
             formData.append('parameter_uid', groupParameterId)
             formData.append('job_applicant_status', status)
@@ -916,11 +937,11 @@ tracker.show_tasks()
                                                             </div>
                                                         </Col>
                                                         <Col md={6} className="d-flex justify-content-end align-items-center">
-                                                            <Button className="icon_btnlink" onClick={()=>handleStatusGroup('Active',selectedListUids)}><i className="fa fa-download me-2 text-primery"></i>Active</Button>
-                                                            <Button className="icon_btnlink" onClick={()=>handleStatusGroup('InActive',selectedListUids)}><i className="fa fa-download me-2 text-primery"></i>InActive</Button>
-                                                            <Button className="icon_btnlink" onClick={()=>handleStatusGroup('Select',selectedListUids)}><i className="far fa-check-circle me-2 text-primery"></i>Select</Button>
-                                                            <Button className="icon_btnlink" onClick={()=>handleStatusGroup('Reject',selectedListUids)}><i className="far fa-times-circle me-2 text-primery"></i>Reject</Button>
-                                                            <Button className="icon_btnlink" onClick={()=>handleStatusGroup('On Hold',selectedListUids)}><i className="fa fa-ban me-2 text-primery"></i>On Hold</Button>                                                            
+                                                            <Button className="icon_btnlink" onClick={() => handleStatusGroup('Active', selectedListUids)}><i className="fa fa-download me-2 text-primery"></i>Active</Button>
+                                                            <Button className="icon_btnlink" onClick={() => handleStatusGroup('InActive', selectedListUids)}><i className="fa fa-download me-2 text-primery"></i>InActive</Button>
+                                                            <Button className="icon_btnlink" onClick={() => handleStatusGroup('Select', selectedListUids)}><i className="far fa-check-circle me-2 text-primery"></i>Select</Button>
+                                                            <Button className="icon_btnlink" onClick={() => handleStatusGroup('Reject', selectedListUids)}><i className="far fa-times-circle me-2 text-primery"></i>Reject</Button>
+                                                            <Button className="icon_btnlink" onClick={() => handleStatusGroup('On Hold', selectedListUids)}><i className="fa fa-ban me-2 text-primery"></i>On Hold</Button>
                                                             <Button
                                                                 // className="btn btn-light-outline me-3"
                                                                 className="icon_btnlink"
@@ -1851,7 +1872,7 @@ tracker.show_tasks()
                                                 <li>Final Short List</li>
                                             </ul>
                                         </Col>
-                                    </Row>
+                                    </Row>                                    
                                     <Row>
                                         <Col md={12}>
                                             <Card className="shadow-sm border-0 grap_card mt-3 radius-sm">
@@ -1861,13 +1882,14 @@ tracker.show_tasks()
                                                         <button className="btn-icon"><img src={CopyBtn} alt="" /></button>
                                                     </div>
                                                     <div className="chart_warp">
-                                                        <img src={ApplicantStaChrt} alt="" />
+                                                        {/* <img src={ApplicantStaChrt} alt="" /> */}
+                                                        <ApplicantStatusGraph InsightsGraphData={InsightsGraphData} />
                                                     </div>
                                                 </Card.Body>
                                             </Card>
                                         </Col>
                                     </Row>
-                                    <Row>
+                                    <Row>                                        
                                         <Col md={6}>
                                             <Card className="shadow-sm border-0 grap_card mt-3 radius-sm">
                                                 <Card.Body>
@@ -1876,11 +1898,12 @@ tracker.show_tasks()
                                                         <button className="btn-icon"><img src={CopyBtn} alt="" /></button>
                                                     </div>
                                                     <div className="chart_warp">
-                                                        <img src={AvabCandite} alt="" />
+                                                        {/* <img src={AvabCandite} alt="" /> */}
+                                                        <AvailabilityPieChart InsightsGraphData={InsightsGraphData} />
                                                     </div>
                                                 </Card.Body>
                                             </Card>
-                                        </Col>
+                                        </Col>                                        
                                         <Col md={6}>
                                             <Card className="shadow-sm border-0 grap_card mt-3 radius-sm">
                                                 <Card.Body>
@@ -1889,12 +1912,13 @@ tracker.show_tasks()
                                                         <button className="btn-icon"><img src={CopyBtn} alt="" /></button>
                                                     </div>
                                                     <div className="chart_warp">
-                                                        <img src={SaleryRange} alt="" />
+                                                        {/* <img src={SaleryRange} alt="" /> */}
+                                                        <SalaryRangeGraph InsightsGraphData={InsightsGraphData} />
                                                     </div>
                                                 </Card.Body>
                                             </Card>
                                         </Col>
-                                    </Row>
+                                    </Row>                                    
                                     <Row>
                                         <Col md={12}>
                                             <Card className="shadow-sm border-0 grap_card mt-3 radius-sm">
@@ -1904,13 +1928,14 @@ tracker.show_tasks()
                                                         <button className="btn-icon"><img src={CopyBtn} alt="" /></button>
                                                     </div>
                                                     <div className="chart_warp">
-                                                        <img src={PersonalityGrp} alt="" />
+                                                        {/* <img src={PersonalityGrp} alt="" /> */}
+                                                        <PersonalityGraph InsightsGraphData={InsightsGraphData} />
                                                     </div>
                                                 </Card.Body>
                                             </Card>
                                         </Col>
                                     </Row>
-                                    <Row>
+                                    <Row>                                        
                                         <Col md={6}>
                                             <Card className="shadow-sm border-0 grap_card mt-3 radius-sm">
                                                 <Card.Body>
@@ -1919,7 +1944,8 @@ tracker.show_tasks()
                                                         <button className="btn-icon"><img src={CopyBtn} alt="" /></button>
                                                     </div>
                                                     <div className="chart_warp">
-                                                        <img src={AvabCandite} alt="" />
+                                                        {/* <img src={AvabCandite} alt="" /> */}
+                                                        <AreaEducationChart InsightsGraphData={InsightsGraphData} />
                                                     </div>
                                                 </Card.Body>
                                             </Card>
@@ -1932,7 +1958,54 @@ tracker.show_tasks()
                                                         <button className="btn-icon"><img src={CopyBtn} alt="" /></button>
                                                     </div>
                                                     <div className="chart_warp">
-                                                        <img src={SaleryRange} alt="" />
+                                                        {/* <img src={SaleryRange} alt="" /> */}
+                                                        <EducationLevelGraph InsightsGraphData={InsightsGraphData} />
+                                                    </div>
+                                                </Card.Body>
+                                            </Card>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col md={12}>
+                                            <Card className="shadow-sm border-0 grap_card mt-3 radius-sm">
+                                                <Card.Body>
+                                                    <div className="d-flex align-items-center justify-content-between">
+                                                        <Card.Title>Skills</Card.Title>
+                                                        <button className="btn-icon"><img src={CopyBtn} alt="" /></button>
+                                                    </div>
+                                                    <div className="chart_warp">
+                                                        {/* <img src={PersonalityGrp} alt="" /> */}
+                                                        <SkillGraphComponent InsightsGraphData={InsightsGraphData} />
+                                                    </div>
+                                                </Card.Body>
+                                            </Card>
+                                        </Col>
+                                    </Row>
+                                    <Row>                                        
+                                        <Col md={6}>
+                                            <Card className="shadow-sm border-0 grap_card mt-3 radius-sm">
+                                                <Card.Body>
+                                                    <div className="d-flex align-items-center justify-content-between">
+                                                        <Card.Title>Past Industry Experience </Card.Title>
+                                                        <button className="btn-icon"><img src={CopyBtn} alt="" /></button>
+                                                    </div>
+                                                    <div className="chart_warp">
+                                                        {/* <img src={AvabCandite} alt="" /> */}
+                                                        <IndustryExperienceChart InsightsGraphData={InsightsGraphData} />
+                                                    </div>
+                                                </Card.Body>
+                                            </Card>
+                                        </Col>
+                                        <Col md={6}>
+                                            <Card className="shadow-sm border-0 grap_card mt-3 radius-sm">
+                                                <Card.Body>
+                                                    <div className="d-flex align-items-center justify-content-between">
+                                                        <Card.Title>Experience</Card.Title>
+                                                        <button className="btn-icon"><img src={CopyBtn} alt="" /></button>
+                                                    </div>
+                                                    <div className="chart_warp">
+                                                        {/* <img src={SaleryRange} alt="" /> */}
+                                                        <ExperienceGraphComponent InsightsGraphData={InsightsGraphData} />
                                                     </div>
                                                 </Card.Body>
                                             </Card>

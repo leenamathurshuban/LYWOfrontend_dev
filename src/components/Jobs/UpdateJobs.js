@@ -732,6 +732,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
       // }
       else if (key === "skills" && SelectSkillsData.length > 0) {
         let skillID = SelectSkillsData?.map((item) => item?.uid) // Extract skill_name values
+          ?.filter((skill) => skill !== "")
         formdata.append("skills", JSON.stringify(skillID));
       } else if (key === "must_have_skills" && mustHaveSkills.length > 0) {
         let skillID = mustHaveSkills?.map((item) => item?.uid) // Extract skill_name values

@@ -924,15 +924,18 @@ const UpdateJobsRevised = ({
 
     const handleSaveSkillGroup = async () => {
         // setSkillGroupsData(null);
-        if (addSubSkill.length < 5 || addSubSkill.length > 12) {
-            setSkillError("There cannot be more than 12 Skills within a Skill Group and There have to be a minimum of 5 Skills within a Skill Group");
+        if (addSubSkill.length < 5) {
+            setSkillError("Add at least 6 individual skills within this skill Group")
+        } else if (addSubSkill.length > 12) {
+            setSkillError("There cannot be more than 12 Skills within a Skill Group");
         } else {
             const formdata = new FormData();
             formdata.append("skill_group_name", customValue);
-            let skillName = SelectSkillsData?.map((item) => item?.skill_name) // Extract skill_name values
-                ?.filter((skill) => skill !== "") // Filter out empty strings
-                ?.join(",");
-            formdata.append("skill_name", skillName);
+            // let skillName = SelectSkillsData?.map((item) => item?.skill_name) // Extract skill_name values
+            //     ?.filter((skill) => skill !== "") // Filter out empty strings
+            //     ?.join(",");
+            let skill_name = addSubSkill.map((val) => val?.skill_name).join(",")
+            formdata.append("skill_name", skill_name);
             try {
                 const response = await addSkillGroupPost(formdata);
                 if (response.data.status == 200) {
@@ -957,32 +960,62 @@ const UpdateJobsRevised = ({
             }
         }
     };
-    const handleBlur = async (value, item) => {
-        if (item?.group_skill?.length < 12) {
-            const formdata = new FormData();
-            formdata.append("skill_group", item?.uid);
-            formdata.append("skill_name", value);
+    // const handleBlur = async (value, item) => {
+    //     if (item?.group_skill?.length < 12) {
+    //         const formdata = new FormData();
+    //         formdata.append("skill_group", item?.uid);
+    //         formdata.append("skill_name", value);
 
-            try {
-                const response = await addSkill(formdata);
-                if (response.data.status == 200) {
-                    getSkillGroupDetails(item?.uid);
+    //         try {
+    //             const response = await addSkill(formdata);
+    //             if (response.data.status == 200) {
+    //                 getSkillGroupDetails(item?.uid);
+    //             }
+    //         } catch (error) {
+    //             console.log("error=-------", error);
+    //             if (
+    //                 error?.response?.status === 401 ||
+    //                 error?.response?.data?.detail?.includes(
+    //                     "Given token not valid for any token type"
+    //                 )
+    //             ) {
+    //                 //console.log("Token expired, redirecting to login");
+    //                 removeToken();
+    //                 navigate("/loginwithpassword");
+    //             }
+    //         }
+    //     } else {
+    //         setSkillError("There cannot be more than 12 Skills within a Skill Group and There have to be a minimum of 5 Skills within a Skill Group");
+    //     }
+    // };
+    const handleBlur = async (e, value, item) => {
+        if (e.key === "Enter") {
+            if (item?.group_skill?.length < 12) {
+                const formdata = new FormData();
+                formdata.append("skill_group", item?.uid);
+                formdata.append("skill_name", value);
+
+                try {
+                    const response = await addSkill(formdata);
+                    if (response.data.status == 200) {
+                        getSkillGroupDetails(item?.uid);
+                    }
+                } catch (error) {
+                    console.log("error=-------", error);
+                    if (
+                        error?.response?.status === 401 ||
+                        error?.response?.data?.detail?.includes(
+                            "Given token not valid for any token type"
+                        )
+                    ) {
+                        //console.log("Token expired, redirecting to login");
+                        removeToken();
+                        navigate("/loginwithpassword");
+                    }
                 }
-            } catch (error) {
-                console.log("error=-------", error);
-                if (
-                    error?.response?.status === 401 ||
-                    error?.response?.data?.detail?.includes(
-                        "Given token not valid for any token type"
-                    )
-                ) {
-                    //console.log("Token expired, redirecting to login");
-                    removeToken();
-                    navigate("/loginwithpassword");
-                }
+            } else {
+                setSkillError("There cannot be more than 12 Skills within a Skill Group and There have to be a minimum of 5 Skills within a Skill Group");
             }
-        } else {
-            setSkillError("There cannot be more than 12 Skills within a Skill Group and There have to be a minimum of 5 Skills within a Skill Group");
         }
     };
 
@@ -1057,32 +1090,55 @@ const UpdateJobsRevised = ({
         // );
         e.stopPropagation();
         setSkillError("")
-        setDynamicArray((prevArray) => {
-            const totalValues = getTotalValues(prevArray);
-            return prevArray.map((arr, i) => {
-                if (i === index && arr.length < 8 && totalValues < 12 && !arr.includes(benefititem)) {
-                    return [...arr, benefititem];
-                } else if (i === index && arr.includes(benefititem)) {
-                    return arr.filter((item2) => item2 !== benefititem);
-                }
-                //validation on skills
-                else if (i === index && totalValues < 12 && !arr.includes(benefititem)) {
-                    setSkillError(" A maximum of 70% or (N-3) which ever is lower can be selected from any Skill Group")
-                } else if (totalValues === 12) {
-                    setSkillError("There cannot be more than 12 Skills within a Skill Group and There have to be a minimum of 5 Skills within a Skill Group")
-                }//end validation
-                return arr;
-            });
-        });
+        // setDynamicArray((prevArray) => {
+        //     const totalValues = getTotalValues(prevArray);
+        //     return prevArray.map((arr, i) => {
+        //         if (i === index && arr.length < 8 && totalValues < 12 && !arr.includes(benefititem)) {
+        //             return [...arr, benefititem];
+        //         } else if (i === index && arr.includes(benefititem)) {
+        //             return arr.filter((item2) => item2 !== benefititem);
+        //         }
+        //         //validation on skills
+        //         else if (i === index && totalValues < 12 && !arr.includes(benefititem)) {
+        //             setSkillError(" A maximum of 70% or (N-3) which ever is lower can be selected from any Skill Group")
+        //         } else if (totalValues === 12) {
+        //             setSkillError("There cannot be more than 12 Skills within a Skill Group and There have to be a minimum of 5 Skills within a Skill Group")
+        //         }//end validation
+        //         return arr;
+        //     });
+        // });
         // setSelectSkillsData((prevState) =>
         //     !prevState.includes(benefititem) && prevState.length < 12
         //         ? [...prevState, benefititem]
         //         : prevState.filter((item2) => item2 !== benefititem)
-        // );
+        // );       
+        // setSelectSkillsData((prevState) => {
+        //     const exists = prevState.some(item => item.skill_name === benefititem.skill_name);
+        //     return exists
+        //         ? prevState.filter(item => item.skill_name !== benefititem.skill_name)
+        //         : [...prevState, benefititem];
+        // });
+        setSelectSkillsData((prevState) => {
+            const exists = prevState.some(item => item.skill_name === benefititem.skill_name);
+
+            if (exists) {
+                // Remove the item if it exists
+                return prevState.filter(item => item.skill_name !== benefititem.skill_name);
+            } else {
+                // Add only if length < 12
+                if (prevState.length < 12) {
+                    return [...prevState, benefititem];
+                } else {
+                    toast.warning('A Skill Group cannot contain more than 12 skills.')
+                    setSkillError('A Skill Group cannot contain more than 12 skills.')
+                    return prevState; // Do nothing if already 12 items
+                }
+            }
+        });
     };
-    useEffect(() => {
-        setSelectSkillsData(dynamicArray.flat())
-    }, [dynamicArray])
+    // useEffect(() => {
+    //     setSelectSkillsData([...SelectSkillsData,...dynamicArray.flat()])
+    // }, [dynamicArray])
 
     console.log('llllllllllllllllllllllllllllllllllll', dynamicArray.flat())
     const countSelectedItems = () => {
@@ -1341,12 +1397,30 @@ const UpdateJobsRevised = ({
             }
         }
     }
-    function handleMustHaveSkill(benefititem) {
-        setMustHaveSkills((prevState) =>
-            !prevState.includes(benefititem) && prevState.length < 3
-                ? [...prevState, benefititem]
-                : prevState.filter((item2) => JSON.stringify(item2) != JSON.stringify(benefititem))
-        );
+    function handleMustHaveSkill(e,benefititem) {
+        // setMustHaveSkills((prevState) =>
+        //     !prevState.includes(benefititem) && prevState.length < 3
+        //         ? [...prevState, benefititem]
+        //         : prevState.filter((item2) => JSON.stringify(item2) != JSON.stringify(benefititem))
+        // );
+        e.stopPropagation();
+        setMustHaveSkills((prevState) => {
+            const exists = prevState.some(item => item.skill_name === benefititem.skill_name);
+
+            if (exists) {
+                // Remove the item if it exists
+                return prevState.filter(item => item.skill_name !== benefititem.skill_name);
+            } else {
+                // Add only if length < 12
+                if (prevState.length < 3) {
+                    return [...prevState, benefititem];
+                } else {
+                    toast.warning('A Skill Group cannot contain more than 3 iimportant skills.')
+                    // setSkillError('A Skill Group cannot contain more than 12 skills.')
+                    return prevState; // Do nothing if already 12 items
+                }
+            }
+        });
     }
     const handleOpenStep = (index) => {
         if (!openStep.includes(index)) {
@@ -1890,6 +1964,9 @@ const UpdateJobsRevised = ({
     // console.log('=========>', dynamicArray)
     console.log('dada ji', currentStep, openStep[0])
     console.log(SelectSkillsData)
+    console.log(addSubSkill)
+    console.log(components)
+    console.log(addSubSkill.length)
     return (
         <>
             <Modal
@@ -2836,16 +2913,16 @@ const UpdateJobsRevised = ({
                                                 )}
                                             </Accordion.Header>
                                             <Accordion.Body ref={(el) => (sectionRefs.current['5'] = el)}>
-                                                {!updateFormData?.no_specific_language_require && (
-                                                    <Form className="row">
-                                                        <Form.Group
-                                                            className="mb-3 col-md-6"
-                                                            controlId="exampleForm.ControlTextarea1"
-                                                        >
-                                                            <Form.Label className="sm-label">
-                                                                Spoken Language
-                                                            </Form.Label>
-                                                            {/* <div className="tagarea p-2">
+                                                {/* {!updateFormData?.no_specific_language_require && ( */}
+                                                <Form className="row">
+                                                    <Form.Group
+                                                        className="mb-3 col-md-6"
+                                                        controlId="exampleForm.ControlTextarea1"
+                                                    >
+                                                        <Form.Label className="sm-label">
+                                                            Spoken Language
+                                                        </Form.Label>
+                                                        {/* <div className="tagarea p-2">
                                                         {spokenLanguageBadges.map((badge, index) => (
                                                             <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
                                                                 {badge?.language_name}
@@ -2872,64 +2949,64 @@ const UpdateJobsRevised = ({
                                                             }}
                                                         />
                                                     </div> */}
-                                                            <div className="tagarea p-2 position-relative">
-                                                                {spokenLanguageBadges?.map((badge, index) => (
-                                                                    <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
-                                                                        {badge?.language_name}
-                                                                        <button
-                                                                            className="btn close_tag"
-                                                                            style={{ cursor: "pointer" }}
-                                                                            onClick={() =>
-                                                                                handleRemoveSpokenLanguageBadge(index)
-                                                                            }
-                                                                        >
-                                                                            <i className="fa fa-close ms-1"></i>
-                                                                        </button>
-                                                                    </Badge>
-                                                                ))}
-                                                                <div className="inline-dropdown-container position-relative d-inline-block">
-                                                                    <Form.Control
-                                                                        type="text"
-                                                                        className="inline-input"
-                                                                        placeholder="Enter text"
-                                                                        ref={spokenRef}
-                                                                        // value={row.areaOfEducation}
-                                                                        // disabled={row.saved}
-                                                                        onChange={(e) => handleWaSlanguages(e, "spoken")}
-                                                                        onBlur={(e) => handleClosecomboLang(e, "spoken")}
-                                                                    />
-                                                                    {spokenLanguage?.length > 0 ? (
-                                                                        <Dropdown show={true} >
-                                                                            <Dropdown.Menu className="w-100 dropdown_ctm">
-                                                                                <div class={`${spokenLanguage.length ? 'droplistmulti' : ''}`}>
-                                                                                    {spokenLanguage.map((option, idx) => (
-                                                                                        <Dropdown.Item
-                                                                                            key={idx}
-                                                                                            onClick={(e) =>
-                                                                                                handleSelectSpokenLang(option)
-                                                                                            }
-                                                                                        >
-                                                                                            {option?.language_name}
-                                                                                        </Dropdown.Item>
-                                                                                    ))}
-                                                                                </div>
-                                                                            </Dropdown.Menu>
-                                                                        </Dropdown>
-                                                                    ) : ('')}
-                                                                </div>
+                                                        <div className="tagarea p-2 position-relative">
+                                                            {spokenLanguageBadges?.map((badge, index) => (
+                                                                <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
+                                                                    {badge?.language_name}
+                                                                    <button
+                                                                        className="btn close_tag"
+                                                                        style={{ cursor: "pointer" }}
+                                                                        onClick={() =>
+                                                                            handleRemoveSpokenLanguageBadge(index)
+                                                                        }
+                                                                    >
+                                                                        <i className="fa fa-close ms-1"></i>
+                                                                    </button>
+                                                                </Badge>
+                                                            ))}
+                                                            <div className="inline-dropdown-container position-relative d-inline-block">
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    className="inline-input"
+                                                                    placeholder="Enter text"
+                                                                    ref={spokenRef}
+                                                                    // value={row.areaOfEducation}
+                                                                    // disabled={row.saved}
+                                                                    onChange={(e) => handleWaSlanguages(e, "spoken")}
+                                                                    onBlur={(e) => handleClosecomboLang(e, "spoken")}
+                                                                />
+                                                                {spokenLanguage?.length > 0 ? (
+                                                                    <Dropdown show={true} >
+                                                                        <Dropdown.Menu className="w-100 dropdown_ctm">
+                                                                            <div class={`${spokenLanguage.length ? 'droplistmulti' : ''}`}>
+                                                                                {spokenLanguage.map((option, idx) => (
+                                                                                    <Dropdown.Item
+                                                                                        key={idx}
+                                                                                        onClick={(e) =>
+                                                                                            handleSelectSpokenLang(option)
+                                                                                        }
+                                                                                    >
+                                                                                        {option?.language_name}
+                                                                                    </Dropdown.Item>
+                                                                                ))}
+                                                                            </div>
+                                                                        </Dropdown.Menu>
+                                                                    </Dropdown>
+                                                                ) : ('')}
                                                             </div>
-                                                            <span className="required_text">
-                                                                Select all spoken languages
-                                                            </span>
-                                                        </Form.Group>
-                                                        <Form.Group
-                                                            className="mb-3 col-md-6"
-                                                            controlId="exampleForm.ControlTextarea1"
-                                                        >
-                                                            <Form.Label className="sm-label">
-                                                                Written and Reading Language
-                                                            </Form.Label>
-                                                            {/* <div className="tagarea p-2">
+                                                        </div>
+                                                        <span className="required_text">
+                                                            Select all spoken languages
+                                                        </span>
+                                                    </Form.Group>
+                                                    <Form.Group
+                                                        className="mb-3 col-md-6"
+                                                        controlId="exampleForm.ControlTextarea1"
+                                                    >
+                                                        <Form.Label className="sm-label">
+                                                            Written and Reading Language
+                                                        </Form.Label>
+                                                        {/* <div className="tagarea p-2">
                                                         {rdnwBadges.map((badge, index) => (
                                                             <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
                                                                 {badge?.language_name}
@@ -2957,58 +3034,58 @@ const UpdateJobsRevised = ({
                                                         />
                                                     </div> */}
 
-                                                            <div className="tagarea p-2 position-relative">
-                                                                {rdnwBadges.map((badge, index) => (
-                                                                    <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
-                                                                        {badge?.language_name}
-                                                                        <button
-                                                                            className="btn close_tag"
-                                                                            style={{ cursor: "pointer" }}
-                                                                            onClick={() =>
-                                                                                handleRemoveReadAndWriteLanguageBadge(index)
-                                                                            }
-                                                                        >
-                                                                            <i className="fa fa-close ms-1"></i>
-                                                                        </button>
-                                                                    </Badge>
-                                                                ))}
-                                                                <div className="inline-dropdown-container position-relative d-inline-block">
-                                                                    <Form.Control
-                                                                        type="text"
-                                                                        className="inline-input"
-                                                                        placeholder="Enter text"
-                                                                        ref={writtenRef}
-                                                                        // value={row.areaOfEducation}
-                                                                        // disabled={row.saved}
-                                                                        onChange={(e) => handleWaSlanguages(e, "rdnw")}
-                                                                        onBlur={(e) => handleClosecomboLang(e, "rdnw")}
-                                                                    />
-                                                                    {writtenLanguage?.length > 0 ? (
-                                                                        <Dropdown show={true} >
-                                                                            <Dropdown.Menu className="w-100 dropdown_ctm">
-                                                                                <div class={`${writtenLanguage.length ? 'droplistmulti' : ''}`}>
-                                                                                    {writtenLanguage.map((option, idx) => (
-                                                                                        <Dropdown.Item
-                                                                                            key={idx}
-                                                                                            onClick={(e) =>
-                                                                                                handleSelectWrittenLang(option)
-                                                                                            }
-                                                                                        >
-                                                                                            {option?.language_name}
-                                                                                        </Dropdown.Item>
-                                                                                    ))}
-                                                                                </div>
-                                                                            </Dropdown.Menu>
-                                                                        </Dropdown>
-                                                                    ) : ('')}
-                                                                </div>
+                                                        <div className="tagarea p-2 position-relative">
+                                                            {rdnwBadges.map((badge, index) => (
+                                                                <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
+                                                                    {badge?.language_name}
+                                                                    <button
+                                                                        className="btn close_tag"
+                                                                        style={{ cursor: "pointer" }}
+                                                                        onClick={() =>
+                                                                            handleRemoveReadAndWriteLanguageBadge(index)
+                                                                        }
+                                                                    >
+                                                                        <i className="fa fa-close ms-1"></i>
+                                                                    </button>
+                                                                </Badge>
+                                                            ))}
+                                                            <div className="inline-dropdown-container position-relative d-inline-block">
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    className="inline-input"
+                                                                    placeholder="Enter text"
+                                                                    ref={writtenRef}
+                                                                    // value={row.areaOfEducation}
+                                                                    // disabled={row.saved}
+                                                                    onChange={(e) => handleWaSlanguages(e, "rdnw")}
+                                                                    onBlur={(e) => handleClosecomboLang(e, "rdnw")}
+                                                                />
+                                                                {writtenLanguage?.length > 0 ? (
+                                                                    <Dropdown show={true} >
+                                                                        <Dropdown.Menu className="w-100 dropdown_ctm">
+                                                                            <div class={`${writtenLanguage.length ? 'droplistmulti' : ''}`}>
+                                                                                {writtenLanguage.map((option, idx) => (
+                                                                                    <Dropdown.Item
+                                                                                        key={idx}
+                                                                                        onClick={(e) =>
+                                                                                            handleSelectWrittenLang(option)
+                                                                                        }
+                                                                                    >
+                                                                                        {option?.language_name}
+                                                                                    </Dropdown.Item>
+                                                                                ))}
+                                                                            </div>
+                                                                        </Dropdown.Menu>
+                                                                    </Dropdown>
+                                                                ) : ('')}
                                                             </div>
-                                                            <span className="required_text">
-                                                                Select all written and reading languages
-                                                            </span>
-                                                        </Form.Group>
-                                                    </Form>
-                                                )}
+                                                        </div>
+                                                        <span className="required_text">
+                                                            Select all written and reading languages
+                                                        </span>
+                                                    </Form.Group>
+                                                </Form>
+                                                {/* )} */}
                                                 <div className="accordion_footer">
                                                     <Form>
                                                         {["checkbox"].map((type) => (
@@ -3055,16 +3132,16 @@ const UpdateJobsRevised = ({
                                                 )}
                                             </Accordion.Header>
                                             <Accordion.Body ref={(el) => (sectionRefs.current['6'] = el)}>
-                                                {!updateFormData?.no_specific_location && (
-                                                    <Form>
-                                                        <Form.Group
-                                                            className="mb-3"
-                                                            controlId="exampleForm.ControlTextarea1"
-                                                        >
-                                                            <Form.Label className="sm-label">
-                                                                Preferred States / Cities / Towns
-                                                            </Form.Label>
-                                                            {/* <div className="tagarea p-2">
+                                                {/* {!updateFormData?.no_specific_location && ( */}
+                                                <Form>
+                                                    <Form.Group
+                                                        className="mb-3"
+                                                        controlId="exampleForm.ControlTextarea1"
+                                                    >
+                                                        <Form.Label className="sm-label">
+                                                            Preferred States / Cities / Towns
+                                                        </Form.Label>
+                                                        {/* <div className="tagarea p-2">
                                                         {locationBadges.map((badge, index) => (
                                                             <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
                                                                 {badge?.location_name}
@@ -3087,57 +3164,57 @@ const UpdateJobsRevised = ({
                                                             onKeyDown={handleKeyPressForLocation}
                                                         />
                                                     </div> */}
-                                                            {/* <--------workingbaba-------? */}
-                                                            <div className="tagarea p-2 position-relative">
-                                                                {locationBadges.map((badge, index) => (
-                                                                    <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
-                                                                        {badge?.location_name}
-                                                                        <button
-                                                                            className="btn close_tag"
-                                                                            style={{ cursor: "pointer" }}
-                                                                            onClick={() => handleRemoveLocationBadge(index)}
-                                                                        >
-                                                                            <i className="fa fa-close ms-1"></i>
-                                                                        </button>
-                                                                    </Badge>
-                                                                ))}
-                                                                <div className="inline-dropdown-container position-relative d-inline-block">
-                                                                    <Form.Control
-                                                                        type="text"
-                                                                        className="inline-input"
-                                                                        placeholder="Enter text"
-                                                                        ref={locationRef}
-                                                                        // value={row.areaOfEducation}
-                                                                        // disabled={row.saved}
-                                                                        onChange={handleLocationAPIList}
-                                                                        onBlur={handleCloseComboLocation}
-                                                                    />
-                                                                    {locationList?.length > 0 ? (
-                                                                        <Dropdown show={true} >
-                                                                            <Dropdown.Menu className="w-100 dropdown_ctm">
-                                                                                <div class={`${locationList.length ? 'droplistmulti' : ''}`}>
-                                                                                    {locationList.map((option, idx) => (
-                                                                                        <Dropdown.Item
-                                                                                            key={idx}
-                                                                                            onClick={(e) =>
-                                                                                                handleSelectLocation(option)
-                                                                                            }
-                                                                                        >
-                                                                                            {option?.location_name}
-                                                                                        </Dropdown.Item>
-                                                                                    ))}
-                                                                                </div>
-                                                                            </Dropdown.Menu>
-                                                                        </Dropdown>
-                                                                    ) : ('')}
-                                                                </div>
+                                                        {/* <--------workingbaba-------? */}
+                                                        <div className="tagarea p-2 position-relative">
+                                                            {locationBadges.map((badge, index) => (
+                                                                <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
+                                                                    {badge?.location_name}
+                                                                    <button
+                                                                        className="btn close_tag"
+                                                                        style={{ cursor: "pointer" }}
+                                                                        onClick={() => handleRemoveLocationBadge(index)}
+                                                                    >
+                                                                        <i className="fa fa-close ms-1"></i>
+                                                                    </button>
+                                                                </Badge>
+                                                            ))}
+                                                            <div className="inline-dropdown-container position-relative d-inline-block">
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    className="inline-input"
+                                                                    placeholder="Enter text"
+                                                                    ref={locationRef}
+                                                                    // value={row.areaOfEducation}
+                                                                    // disabled={row.saved}
+                                                                    onChange={handleLocationAPIList}
+                                                                    onBlur={handleCloseComboLocation}
+                                                                />
+                                                                {locationList?.length > 0 ? (
+                                                                    <Dropdown show={true} >
+                                                                        <Dropdown.Menu className="w-100 dropdown_ctm">
+                                                                            <div class={`${locationList.length ? 'droplistmulti' : ''}`}>
+                                                                                {locationList.map((option, idx) => (
+                                                                                    <Dropdown.Item
+                                                                                        key={idx}
+                                                                                        onClick={(e) =>
+                                                                                            handleSelectLocation(option)
+                                                                                        }
+                                                                                    >
+                                                                                        {option?.location_name}
+                                                                                    </Dropdown.Item>
+                                                                                ))}
+                                                                            </div>
+                                                                        </Dropdown.Menu>
+                                                                    </Dropdown>
+                                                                ) : ('')}
                                                             </div>
-                                                            <span className="required_text">
-                                                                Select all relevant locations
-                                                            </span>
-                                                        </Form.Group>
-                                                    </Form>
-                                                )}
+                                                        </div>
+                                                        <span className="required_text">
+                                                            Select all relevant locations
+                                                        </span>
+                                                    </Form.Group>
+                                                </Form>
+                                                {/* )} */}
                                                 <div className="accordion_footer">
                                                     <Form>
                                                         {["checkbox"].map((type) => (
@@ -3210,14 +3287,14 @@ const UpdateJobsRevised = ({
                                             }}>
                                                 Skills
                                                 <div className="head_actions">
-                                                    <span className={`imprt_icon ${mustHaveSkills.length>=1 && 'text-primery'}`}>
-                                                        <i class={`${mustHaveSkills.length>=1 ? 'fa':'far'} fa-star`} aria-hidden="true"></i>
+                                                    <span className={`imprt_icon ${mustHaveSkills.length >= 1 && 'text-primery'}`}>
+                                                        <i class={`${mustHaveSkills.length >= 1 ? 'fa' : 'far'} fa-star`} aria-hidden="true"></i>
                                                     </span>
-                                                    <span className={`imprt_icon ${mustHaveSkills.length>=2 && 'text-primery'}`}>
-                                                        <i class={`${mustHaveSkills.length>=2 ? 'fa':'far'} fa-star`} aria-hidden="true"></i>
+                                                    <span className={`imprt_icon ${mustHaveSkills.length >= 2 && 'text-primery'}`}>
+                                                        <i class={`${mustHaveSkills.length >= 2 ? 'fa' : 'far'} fa-star`} aria-hidden="true"></i>
                                                     </span>
-                                                    <span className={`imprt_icon ${mustHaveSkills.length>=3 && 'text-primery'}`}>
-                                                        <i class={`${mustHaveSkills.length>=3 ? 'fa':'far'} fa-star`} aria-hidden="true"></i>
+                                                    <span className={`imprt_icon ${mustHaveSkills.length >= 3 && 'text-primery'}`}>
+                                                        <i class={`${mustHaveSkills.length >= 3 ? 'fa' : 'far'} fa-star`} aria-hidden="true"></i>
                                                     </span>
                                                     <span className="count ms-1">1 of 3</span>
                                                 </div>
@@ -3281,70 +3358,6 @@ const UpdateJobsRevised = ({
                                                         </button>{" "}
                                                     </Col>
                                                 </Row>
-                                                {/* {skillGroupData && (
-                                            <div className="starttag_box">
-                                                <div className="stagbox_head">
-                                                    <h6>{skillGroupData?.skill_group_name}</h6>
-                                                </div>
-                                                <div className="stag_list mt-2">
-                                                    {skillGroupData &&
-                                                        skillGroupData?.group_skill?.length > 0 &&
-                                                        skillGroupData?.group_skill?.map((skill, index) => (
-                                                            <span
-                                                                onClick={(e) => {
-                                                                    handleSelectedSkill(skill);
-                                                                }}
-                                                                className={`stag_item ${SelectSkillsData.includes(skill) ? "active" : ""
-                                                                    }`}
-                                                            >
-                                                                {skill.skill_name}
-                                                            </span>
-                                                        ))}
-
-                                                    {addSubSkill.map((item, index) => (
-                                                        <span
-                                                            onClick={(e) => {
-                                                                handleSelectedSkill(item);
-                                                            }}
-                                                            className={`stag_item ${SelectSkillsData.includes(item) ? "active" : ""
-                                                                }`}
-                                                        >
-                                                            <input
-                                                                onChange={(e) => {
-                                                                    const updatedSkills = addSubSkill.map(
-                                                                        (skill, i) =>
-                                                                            i === index
-                                                                                ? { ...skill, skill_name: e.target.value }
-                                                                                : skill
-                                                                    );
-                                                                    setAddSubSkill(updatedSkills);
-                                                                }}
-                                                                onBlur={() => handleBlur(item.skill_name, index)}
-                                                            />{" "}
-                                                            <i
-                                                                onClick={() => {
-                                                                    hadleDeleteCurrentSkill(index);
-                                                                }}
-                                                                className="fa fa-close ms-1 tag_remove"
-                                                            ></i>
-                                                        </span>
-                                                    ))}
-
-                                                    <button
-                                                        type="button"
-                                                        class="btn-light-gray btn btn-primary"
-                                                        onClick={handlesubSkillAdd}
-                                                    >
-                                                        <i class="fa fa-plus text-primary me-1"></i>Add Skill
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        )} */}
-                                                {/* {skillError && (
-                                                    <p className="text-danger mt-1">
-                                                        {skillError}
-                                                    </p>
-                                                )} */}
                                                 {skillGroupData?.length > 0 && (
                                                     skillGroupData?.map((Val, i) => (
                                                         <div className="starttag_box">
@@ -3362,8 +3375,8 @@ const UpdateJobsRevised = ({
                                                                                 }`}
                                                                         >
                                                                             {skill.skill_name}
-                                                                            <span className={`imprt_icon ${mustHaveSkills.some(item => JSON.stringify(item) === JSON.stringify(skill)) ? "text-primery" : ""} `} onClick={() => handleMustHaveSkill(skill)}>
-                                                                                <i class={`${mustHaveSkills.some(item => JSON.stringify(item) === JSON.stringify(skill)) ? "fa" : "far"}  fa-star`} aria-hidden="true"></i>
+                                                                            <span className={`imprt_icon ${mustHaveSkills.some(item => item?.skill_name === skill?.skill_name) ? "text-primery" : ""} `} onClick={(e) => handleMustHaveSkill(e,skill)}>
+                                                                                <i class={`${mustHaveSkills.some(item => item?.skill_name === skill?.skill_name) ? "fa" : "far"}  fa-star`} aria-hidden="true"></i>
                                                                             </span>
                                                                         </span>
                                                                     ))}
@@ -3386,7 +3399,8 @@ const UpdateJobsRevised = ({
                                                                                 );
                                                                                 setAddSubSkill(updatedSkills);
                                                                             }}
-                                                                            onBlur={() => handleBlur(item.skill_name, Val, index)}
+                                                                            // onBlur={() => handleBlur(item.skill_name, Val, index)}
+                                                                            onKeyDown={(e) => handleBlur(e, item.skill_name, Val, index)}
                                                                         />{" "}
                                                                         <i
                                                                             onClick={() => {
@@ -3396,14 +3410,6 @@ const UpdateJobsRevised = ({
                                                                         ></i>
                                                                     </span>
                                                                 ))}
-
-                                                                {/* <button
-                                                            type="button"
-                                                            class="btn-light-gray btn btn-primary"
-                                                            onClick={() => handlesubSkillAdd(Val?.uid)}
-                                                        >
-                                                            <i class="fa fa-plus text-primary me-1"></i>Add Skill
-                                                        </button> */}
                                                                 <Button
                                                                     className={`${addSubSkill.length > 0 && selectedIndex.includes(Val?.uid) ? 'smbtn-primary' : 'btn-light-gray'}`}
                                                                     onClick={() => handlesubSkillAdd(Val?.uid)}
@@ -3445,12 +3451,6 @@ const UpdateJobsRevised = ({
                                                                 </button>
                                                             </div>
                                                         </div>
-                                                        {/* {addSkillGroup && addSkillGroup[0] && (
-                                                    <p className="mt-1">
-                                                        Add at least 6 individual skills within this skill
-                                                        Group
-                                                    </p>
-                                                )} */}
                                                         {skillError && (
                                                             <p className="text-danger mt-1">
                                                                 {skillError}
@@ -3468,7 +3468,6 @@ const UpdateJobsRevised = ({
                                                                     <input
                                                                         className="border-0"
                                                                         onChange={(e) => {
-                                                                            // Create a new array with the updated item
                                                                             const updatedSkills = addSubSkill.map(
                                                                                 (skill, i) =>
                                                                                     i === index
@@ -3487,14 +3486,6 @@ const UpdateJobsRevised = ({
                                                                     ></i>
                                                                 </span>
                                                             ))}
-
-                                                            {/* <button
-                                                        type="button"
-                                                        class="btn-light-gray btn btn-primary"
-                                                        onClick={() => handlesubSkillAdd(i)}
-                                                    >
-                                                        <i class="fa fa-plus text-primary me-1"></i>Add Skill
-                                                    </button> */}
                                                             <Button
                                                                 className={`${addSubSkill.length > 0 && selectedIndex.includes(i) ? 'smbtn-primary' : 'btn-light-gray'}`}
                                                                 onClick={() => handlesubSkillAdd(i)}

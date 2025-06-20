@@ -1,4 +1,4 @@
-import { AuthUrl, CompanyUrl, UsersUrl, JobsUrl, SkillsUrl, ApplicationJobPostUrl, BehaviourUrl } from "./apiUrl";
+import { AuthUrl, CompanyUrl, UsersUrl, JobsUrl, SkillsUrl, ApplicationJobPostUrl, BehaviourUrl, GraphBarChartUrl } from "./apiUrl";
 import client from "./axiosInstance";
 
 //Login Api's
@@ -291,5 +291,9 @@ export const getAssetDataDetailsAPI = (job_uid, applicant_uid) => {
 }
 export const jobApplicantUpdateAPI = (data) => {
   const result = client.putWithUpload(`${JobsUrl.jobApplicantUpdateForList}`, data)
+  return result
+}
+export const insightsListAPI=(id)=>{
+  const result = client.getWithToken(`${GraphBarChartUrl.insightsBarList}${id}`)
   return result
 }

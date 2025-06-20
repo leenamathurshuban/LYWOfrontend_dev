@@ -20,6 +20,7 @@ import { removeToken } from "../../helpers/helper";
 import { CreateJobFormValidation } from "../../utils/validation";
 import { toast } from "react-toastify";
 import Select from 'react-select'
+import UpdateJobsRevised from "./UpdateJobsRevised";
 
 const CreateJobs = ({ show, handleClose }) => {
   const [createFormData, setCreateFormData] = useState({
@@ -733,12 +734,18 @@ const CreateJobs = ({ show, handleClose }) => {
         let uids = locationBadges.map((item) => item?.uid);
 
         formdata.append(key, JSON.stringify(uids));
-      } else if (key === "skills" && SelectSkillsData.length > 0) {
+      }else if(key==="min_salary"){
+        const salary_min = parseInt(updateFormData?.min_salary.replace(/,/g, ""), 10)
+        formdata.append("min_salary", salary_min);
+      }else if(key==="max_salary"){
+        const salary_max = parseInt(updateFormData?.max_salary.replace(/,/g, ""), 10)
+        formdata.append("max_salary", salary_max);
+      }else if (key === "skills" && SelectSkillsData.length > 0) {
         let skillID = SelectSkillsData?.map((item) => item?.uid) // Extract skill_name values
           ?.filter((skill) => skill !== "") // Filter out empty strings
-          ?.join(",");
+          // ?.join(",");
 
-        formdata.append("skill_name", skillID);
+        formdata.append("skills", JSON.stringify(skillID));
       } else if (key === "must_have_skills" && mustHaveSkills.length > 0) {
         let skillID = mustHaveSkills?.map((item) => item?.uid) // Extract skill_name values
         formdata.append("must_have_skills", JSON.stringify(skillID));
@@ -834,7 +841,7 @@ const CreateJobs = ({ show, handleClose }) => {
       const response = await UpdateJobForm(formdata, createUid);
 
       if (response.data.status == 200) {
-        alert("Job updated successfully!");
+        // alert("Job updated successfully!");
         setSelectSkillsData([]);
         setIsUpdated(true)
         setUpdateFormData({
@@ -922,6 +929,7 @@ const CreateJobs = ({ show, handleClose }) => {
 
           job_status: "",
         });
+        navigate(`/jobSummary/${response?.data?.response?.uid}`, { state: 'edit' })
       }
     } catch (error) {
       console.log("create eroor------", error);
@@ -1559,59 +1567,114 @@ const CreateJobs = ({ show, handleClose }) => {
         </Button>
       </div>
       {modal.createJobRevisedModal && (
-        <CreateJobsRevised
-          show={modal.createJobRevisedModal}
-          handleClose={() => handleJobModalClose("createJobRevisedModal")}
-          handleFormData={handleUpdateFormData}
-          handleCreateForm={handleUpdateForm}
-          setCreatedUid={setCreatedUid}
-          createUid={createUid}
-          setBadges={setBadges}
-          badges={badges}
-          minEdu={minEdu}
-          setMinEdu={setMinEdu}
-          setIsUpdated={setIsUpdated}
-          isUpdated={isUpdated}
-          setRestrictedRoleBadges={setRestrictedRoleBadges}
-          restrictedRoleBadges={restrictedRoleBadges}
-          IndustriesBadges={IndustriesBadges}
-          setIndustriesBadge={setIndustriesBadge}
-          isLike={isLike}
-          setIsLike={setIsLike}
-          isLikeData={isLikeData}
-          setIsLikeData={setIsLikeData}
-          handleLike={handleLike}
-          isLikeDropdown={isLikeDropdown}
-          handleSelectedLikeItems={handleSelectedLikeItems}
-          isHideRestrictedRoles={isHideRestrictedRoles}
-          setIsHideRestrictedRoles={setIsHideRestrictedRoles}
-          setIsHideIndustries={setIsHideIndustries}
-          ishideIndustries={ishideIndustries}
-          setIsDisabledTarget={setIsDisabledTarget}
-          isDisabledTarget={isDisabledTarget}
-          setIsSpecificLanguareRequired={setIsSpecificLanguareRequired}
-          isSpecificLanguareRequired={isSpecificLanguareRequired}
-          setSpokenLanguageBadges={setSpokenLanguageBadges}
-          spokenLanguageBadges={spokenLanguageBadges}
-          setrdnwBadges={setrdnwBadges}
-          rdnwBadges={rdnwBadges}
-          locationBadges={locationBadges}
-          setLocationBadges={setLocationBadges}
-          setIsHideLLocation={setIsHideLLocation}
-          isHideLocation={isHideLocation}
-          handleLocationApi={handleLocationApi}
-          createJobUid={createJobUid}
-          SelectSkillsData={SelectSkillsData}
-          setSelectSkillsData={setSelectSkillsData}
-          behaviours={behaviours}
-          setBehaviours={setBehaviours}
-          updateFormData={updateFormData}
-          setUpdateFormData={setUpdateFormData}
-          mustHaveSkills={mustHaveSkills}
-          setMustHaveSkills={setMustHaveSkills}
-          importantFlag={importantFlag}
-          setImportantFlag={setImportantFlag}
-        />
+        <>
+          {/* <CreateJobsRevised
+            show={modal.createJobRevisedModal}
+            handleClose={() => handleJobModalClose("createJobRevisedModal")}
+            handleFormData={handleUpdateFormData}
+            handleCreateForm={handleUpdateForm}
+            setCreatedUid={setCreatedUid}
+            createUid={createUid}
+            setBadges={setBadges}
+            badges={badges}
+            minEdu={minEdu}
+            setMinEdu={setMinEdu}
+            setIsUpdated={setIsUpdated}
+            isUpdated={isUpdated}
+            setRestrictedRoleBadges={setRestrictedRoleBadges}
+            restrictedRoleBadges={restrictedRoleBadges}
+            IndustriesBadges={IndustriesBadges}
+            setIndustriesBadge={setIndustriesBadge}
+            isLike={isLike}
+            setIsLike={setIsLike}
+            isLikeData={isLikeData}
+            setIsLikeData={setIsLikeData}
+            handleLike={handleLike}
+            isLikeDropdown={isLikeDropdown}
+            handleSelectedLikeItems={handleSelectedLikeItems}
+            isHideRestrictedRoles={isHideRestrictedRoles}
+            setIsHideRestrictedRoles={setIsHideRestrictedRoles}
+            setIsHideIndustries={setIsHideIndustries}
+            ishideIndustries={ishideIndustries}
+            setIsDisabledTarget={setIsDisabledTarget}
+            isDisabledTarget={isDisabledTarget}
+            setIsSpecificLanguareRequired={setIsSpecificLanguareRequired}
+            isSpecificLanguareRequired={isSpecificLanguareRequired}
+            setSpokenLanguageBadges={setSpokenLanguageBadges}
+            spokenLanguageBadges={spokenLanguageBadges}
+            setrdnwBadges={setrdnwBadges}
+            rdnwBadges={rdnwBadges}
+            locationBadges={locationBadges}
+            setLocationBadges={setLocationBadges}
+            setIsHideLLocation={setIsHideLLocation}
+            isHideLocation={isHideLocation}
+            handleLocationApi={handleLocationApi}
+            createJobUid={createJobUid}
+            SelectSkillsData={SelectSkillsData}
+            setSelectSkillsData={setSelectSkillsData}
+            behaviours={behaviours}
+            setBehaviours={setBehaviours}
+            updateFormData={updateFormData}
+            setUpdateFormData={setUpdateFormData}
+            mustHaveSkills={mustHaveSkills}
+            setMustHaveSkills={setMustHaveSkills}
+            importantFlag={importantFlag}
+            setImportantFlag={setImportantFlag}
+          /> */}
+          <UpdateJobsRevised
+            show={modal.createJobRevisedModal}
+            handleClose={() => handleJobModalClose("createJobRevisedModal")}
+            handleFormData={handleUpdateFormData}
+            handleCreateForm={handleUpdateForm}
+            setCreatedUid={setCreatedUid}
+            createUid={createUid}
+            setBadges={setBadges}
+            badges={badges}
+            minEdu={minEdu}
+            setMinEdu={setMinEdu}
+            setIsUpdated={setIsUpdated}
+            isUpdated={isUpdated}
+            setRestrictedRoleBadges={setRestrictedRoleBadges}
+            restrictedRoleBadges={restrictedRoleBadges}
+            IndustriesBadges={IndustriesBadges}
+            setIndustriesBadge={setIndustriesBadge}
+            isLike={isLike}
+            setIsLike={setIsLike}
+            isLikeData={isLikeData}
+            setIsLikeData={setIsLikeData}
+            handleLike={handleLike}
+            isLikeDropdown={isLikeDropdown}
+            handleSelectedLikeItems={handleSelectedLikeItems}
+            isHideRestrictedRoles={isHideRestrictedRoles}
+            setIsHideRestrictedRoles={setIsHideRestrictedRoles}
+            setIsHideIndustries={setIsHideIndustries}
+            ishideIndustries={ishideIndustries}
+            setIsDisabledTarget={setIsDisabledTarget}
+            isDisabledTarget={isDisabledTarget}
+            setIsSpecificLanguareRequired={setIsSpecificLanguareRequired}
+            isSpecificLanguareRequired={isSpecificLanguareRequired}
+            setSpokenLanguageBadges={setSpokenLanguageBadges}
+            spokenLanguageBadges={spokenLanguageBadges}
+            setrdnwBadges={setrdnwBadges}
+            rdnwBadges={rdnwBadges}
+            locationBadges={locationBadges}
+            setLocationBadges={setLocationBadges}
+            setIsHideLLocation={setIsHideLLocation}
+            isHideLocation={isHideLocation}
+            handleLocationApi={handleLocationApi}
+            createJobUid={createJobUid}
+            SelectSkillsData={SelectSkillsData}
+            setSelectSkillsData={setSelectSkillsData}
+            behaviours={behaviours}
+            setBehaviours={setBehaviours}
+            updateFormData={updateFormData}
+            setUpdateFormData={setUpdateFormData}
+            mustHaveSkills={mustHaveSkills}
+            setMustHaveSkills={setMustHaveSkills}
+            importantFlag={importantFlag}
+            setImportantFlag={setImportantFlag}
+          />
+        </>
       )}
     </Offcanvas>
   );
