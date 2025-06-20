@@ -1397,7 +1397,7 @@ const UpdateJobsRevised = ({
             }
         }
     }
-    function handleMustHaveSkill(e,benefititem) {
+    function handleMustHaveSkill(e, benefititem) {
         // setMustHaveSkills((prevState) =>
         //     !prevState.includes(benefititem) && prevState.length < 3
         //         ? [...prevState, benefititem]
@@ -3375,7 +3375,7 @@ const UpdateJobsRevised = ({
                                                                                 }`}
                                                                         >
                                                                             {skill.skill_name}
-                                                                            <span className={`imprt_icon ${mustHaveSkills.some(item => item?.skill_name === skill?.skill_name) ? "text-primery" : ""} `} onClick={(e) => handleMustHaveSkill(e,skill)}>
+                                                                            <span className={`imprt_icon ${mustHaveSkills.some(item => item?.skill_name === skill?.skill_name) ? "text-primery" : ""} `} onClick={(e) => handleMustHaveSkill(e, skill)}>
                                                                                 <i class={`${mustHaveSkills.some(item => item?.skill_name === skill?.skill_name) ? "fa" : "far"}  fa-star`} aria-hidden="true"></i>
                                                                             </span>
                                                                         </span>
@@ -3511,7 +3511,7 @@ const UpdateJobsRevised = ({
                                         <Accordion.Item eventKey="9" className="accd_child">
                                             <Accordion.Header onClick={() => {
                                                 handleOpenStep("9")
-                                                setComponents([]);
+                                                // setComponents([]);
                                                 setExpandCollapse([2, 3])
                                                 setActiveKeyAdd(false);
                                             }}>
@@ -3602,142 +3602,142 @@ const UpdateJobsRevised = ({
                                                     {/* )} */}
                                                 </div><br />
                                                 {/* <div className="starttag_box ctmqus_panel mt-0"> */}
-                                                {activeKeyAdd &&
-                                                    components.map((question, questionIndex) => (
-                                                        <>
-                                                            <div className="starttag_box ctmqus_panel mt-0">
-                                                                <div key={questionIndex} className="mb-4">
-                                                                    <div className="stagbox_head">
-                                                                        <span className="border_box">
-                                                                            <Form.Control
-                                                                                className="formControl_cstmQuestion"
-                                                                                placeholder="Your Question"
-                                                                                onChange={(e) =>
-                                                                                    handleQuestionTitleChange(
-                                                                                        questionIndex,
-                                                                                        e.target.value
-                                                                                    )
-                                                                                }
-                                                                                value={question.question_title}
-                                                                            />
-                                                                        </span>
-                                                                        {/* {questionIndex === 0 && ( */}
-                                                                        <div className="d-flex ms-3">
-                                                                            <Form.Select
-                                                                                onChange={(e) =>
-                                                                                    handleQuestionTypeChange(
-                                                                                        questionIndex,
-                                                                                        e.target.value
-                                                                                    )
-                                                                                }
-                                                                            >
-                                                                                <option value="single">MCQ Single</option>
-                                                                                <option value="multiple">
-                                                                                    MCQ Multiple
-                                                                                </option>
-                                                                            </Form.Select>
-                                                                            {/* <button type="button" className="icon-btn">
+                                                {/* {activeKeyAdd && */}
+                                                {components.map((question, questionIndex) => (
+                                                    <>
+                                                        <div className="starttag_box ctmqus_panel mt-0">
+                                                            <div key={questionIndex} className="mb-4">
+                                                                <div className="stagbox_head">
+                                                                    <span className="border_box">
+                                                                        <Form.Control
+                                                                            className="formControl_cstmQuestion"
+                                                                            placeholder="Your Question"
+                                                                            onChange={(e) =>
+                                                                                handleQuestionTitleChange(
+                                                                                    questionIndex,
+                                                                                    e.target.value
+                                                                                )
+                                                                            }
+                                                                            value={question.question_title}
+                                                                        />
+                                                                    </span>
+                                                                    {/* {questionIndex === 0 && ( */}
+                                                                    <div className="d-flex ms-3">
+                                                                        <Form.Select
+                                                                            onChange={(e) =>
+                                                                                handleQuestionTypeChange(
+                                                                                    questionIndex,
+                                                                                    e.target.value
+                                                                                )
+                                                                            }
+                                                                        >
+                                                                            <option value="single">MCQ Single</option>
+                                                                            <option value="multiple">
+                                                                                MCQ Multiple
+                                                                            </option>
+                                                                        </Form.Select>
+                                                                        {/* <button type="button" className="icon-btn">
                                                                                 <i className="far fa-star"></i>
                                                                             </button> */}
-                                                                        </div>
-                                                                        {/* )} */}
-                                                                        <div className="d-flex ms-3">
-                                                                            <button
-                                                                                type="button"
-                                                                                className="btn-transpant"
-                                                                                // onClick={() => EducationdeleteRow(index)}
-                                                                                onClick={() => handleDeleteRowQuestion(questionIndex)}
-                                                                            >
-                                                                                <img
-                                                                                    src={imgpTrash}
-                                                                                    alt="Delete"
-                                                                                    style={{ width: "20px", height: "20px" }}
-                                                                                />
-                                                                            </button>
-                                                                        </div>
                                                                     </div>
-                                                                    <h6 className="mt-3 hadding-xs">Answer Options</h6>
-                                                                    <p className="mt-1">
-                                                                        Select the preferred answer using the radio
-                                                                        button.
-                                                                    </p>
-                                                                    <div className="cmt_questions">
-                                                                        {question.question_option.part1.map(
-                                                                            (option, optionIndex) => (
-                                                                                <div
-                                                                                    key={`option-${optionIndex}`}
-                                                                                    className="mb-3"
-                                                                                >
-                                                                                    <Form.Check
-                                                                                        name={`question-${questionIndex}`} // Group radio buttons by question
-                                                                                        checked={question.questions_answer.includes(
-                                                                                            option
-                                                                                        )} // Check if the option is selected
-                                                                                        onChange={(e) =>
-                                                                                            handleAnswerChange(
-                                                                                                questionIndex,
-                                                                                                option,
-                                                                                                e.target.checked
-                                                                                            )
-                                                                                        }
-                                                                                        label={
-                                                                                            <div className="inputTypes">
-                                                                                                <Form.Control
-                                                                                                    type="text"
-                                                                                                    placeholder="Enter your text here"
-                                                                                                    className="formControl_cstmQuestion"
-                                                                                                    onChange={(e) =>
-                                                                                                        handleQuestionOptionChange(
-                                                                                                            questionIndex,
-                                                                                                            optionIndex,
-                                                                                                            e.target.value
-                                                                                                        )
-                                                                                                    }
-                                                                                                    value={option}
-                                                                                                />
-                                                                                                <i
-                                                                                                    className="fa fa-times"
-                                                                                                    onClick={() =>
-                                                                                                        handleDeleteOption(
-                                                                                                            questionIndex,
-                                                                                                            optionIndex
-                                                                                                        )
-                                                                                                    }
-                                                                                                ></i>
-                                                                                            </div>
-                                                                                        }
-                                                                                        type={
-                                                                                            questionType === "single"
-                                                                                                ? "radio"
-                                                                                                : "checkbox"
-                                                                                        }
-                                                                                        id={`option-${optionIndex}`}
-                                                                                        className="d-flex align-items-center"
-                                                                                    />
-                                                                                </div>
-                                                                            )
-                                                                        )}
+                                                                    {/* )} */}
+                                                                    <div className="d-flex ms-3">
+                                                                        <button
+                                                                            type="button"
+                                                                            className="btn-transpant"
+                                                                            // onClick={() => EducationdeleteRow(index)}
+                                                                            onClick={() => handleDeleteRowQuestion(questionIndex)}
+                                                                        >
+                                                                            <img
+                                                                                src={imgpTrash}
+                                                                                alt="Delete"
+                                                                                style={{ width: "20px", height: "20px" }}
+                                                                            />
+                                                                        </button>
                                                                     </div>
-                                                                    <button
-                                                                        type="button"
-                                                                        className="btn btn-lightgray me-3"
-                                                                        onClick={() => handleAddResponse(questionIndex)} // Add a new response option
-                                                                    >
-                                                                        <i className="fa fa-plus me-1"></i>
-                                                                        Add Response
-                                                                    </button>
-                                                                    <button
-                                                                        type="button"
-                                                                        onClick={handleSaveCustomQuestion} // Log all questions
-                                                                        className="btn btn-lightgray"
-                                                                    >
-                                                                        Save
-                                                                    </button>
                                                                 </div>
+                                                                <h6 className="mt-3 hadding-xs">Answer Options</h6>
+                                                                <p className="mt-1">
+                                                                    Select the preferred answer using the radio
+                                                                    button.
+                                                                </p>
+                                                                <div className="cmt_questions">
+                                                                    {question.question_option.part1.map(
+                                                                        (option, optionIndex) => (
+                                                                            <div
+                                                                                key={`option-${optionIndex}`}
+                                                                                className="mb-3"
+                                                                            >
+                                                                                <Form.Check
+                                                                                    name={`question-${questionIndex}`} // Group radio buttons by question
+                                                                                    checked={question.questions_answer.includes(
+                                                                                        option
+                                                                                    )} // Check if the option is selected
+                                                                                    onChange={(e) =>
+                                                                                        handleAnswerChange(
+                                                                                            questionIndex,
+                                                                                            option,
+                                                                                            e.target.checked
+                                                                                        )
+                                                                                    }
+                                                                                    label={
+                                                                                        <div className="inputTypes">
+                                                                                            <Form.Control
+                                                                                                type="text"
+                                                                                                placeholder="Enter your text here"
+                                                                                                className="formControl_cstmQuestion"
+                                                                                                onChange={(e) =>
+                                                                                                    handleQuestionOptionChange(
+                                                                                                        questionIndex,
+                                                                                                        optionIndex,
+                                                                                                        e.target.value
+                                                                                                    )
+                                                                                                }
+                                                                                                value={option}
+                                                                                            />
+                                                                                            <i
+                                                                                                className="fa fa-times"
+                                                                                                onClick={() =>
+                                                                                                    handleDeleteOption(
+                                                                                                        questionIndex,
+                                                                                                        optionIndex
+                                                                                                    )
+                                                                                                }
+                                                                                            ></i>
+                                                                                        </div>
+                                                                                    }
+                                                                                    type={
+                                                                                        questionType === "single"
+                                                                                            ? "radio"
+                                                                                            : "checkbox"
+                                                                                    }
+                                                                                    id={`option-${optionIndex}`}
+                                                                                    className="d-flex align-items-center"
+                                                                                />
+                                                                            </div>
+                                                                        )
+                                                                    )}
+                                                                </div>
+                                                                <button
+                                                                    type="button"
+                                                                    className="btn btn-lightgray me-3"
+                                                                    onClick={() => handleAddResponse(questionIndex)} // Add a new response option
+                                                                >
+                                                                    <i className="fa fa-plus me-1"></i>
+                                                                    Add Response
+                                                                </button>
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={handleSaveCustomQuestion} // Log all questions
+                                                                    className="btn btn-lightgray"
+                                                                >
+                                                                    Save
+                                                                </button>
                                                             </div>
-                                                            <br />
-                                                        </>
-                                                    ))}
+                                                        </div>
+                                                        <br />
+                                                    </>
+                                                ))}
                                                 {/* </div> */}
                                                 <div className="accordion_footer mt-3 justify-content-end">
                                                     <button type="button" class="btn btn-lightgray" onClick={handleNext}>
