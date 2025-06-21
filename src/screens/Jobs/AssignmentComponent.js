@@ -35,6 +35,7 @@ import {
     ApplicationFormDetailsApi,
     EvalationAssestDetails,
     EvalationAssestList,
+    getAssetDataDetailsAPI,
     PostQuizDataApi,
 } from "../../services/provider";
 import sectionIcon from "../../images/icons/sections_icon.svg";
@@ -581,10 +582,11 @@ const AssignmentComponent = (item) => {
     const applicantDetailAPI = async () => {
         try {
             const user = applcant?.user_login?.email?applcant?.user_login?.email:applcant?.applcant?.user;
-            const res = await ApplicationDeatilsApi(user)
-            if (res?.data?.success) {
+            // const res = await ApplicationDeatilsApi(user)
+             const res = await getAssetDataDetailsAPI(jobdetail?.state?.uid,applicantUid?.uid)
+            if (res?.success) {                
                 // setSelectedSectionAnswer(res?.data?.response?.asset_data)
-                res.data.response.asset_data.map((Val) => {
+                res?.response?.job?.asset_job?.map((Val) => {
                     if (Val?.asset_title === "Pre-interview round for creative director") {
                         Val?.section_asset.sort((a, b) => a.id - b.id).map((item, quesIndex) =>
                             item.question_section.map((Val, sectionIndex) => {
