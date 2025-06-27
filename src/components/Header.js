@@ -39,7 +39,7 @@ const Header = () => {
     navigate("/emailverify");
   };
   const handleCompanyDropdown = (e) => {
-    const { value } = e;
+    const { value } = e.target;
     setCompanyInfo(value)
     const filtercompany = userInfo?.company?.filter((val) => val?.company_name == value)
     setCompantUid(filtercompany[0]?.uid)
@@ -75,20 +75,20 @@ const Header = () => {
           <div className="org_name">
             <span className="orgshort_text">{logoname}</span>
             {/* <p>{userInfo?.default_company?.company_name}</p> */}
-            {/* <Form.Select
+            <Form.Select
               value={companyInfo}
               onChange={handleCompanyDropdown}
             >
               {userInfo?.company?.map((item) => (
                 <option value={item.company_name}>{item?.company_name}</option>
               ))}
-            </Form.Select> */}
-            <Select
+            </Form.Select>
+            {/* <Select
               options={userOption}
               value={userOption.find((opt)=>opt.value===companyInfo)}
               onChange={handleCompanyDropdown}
               className="react_selectbox"
-            />
+            /> */}
           </div>
         </Col>
         <Col md={4}>
