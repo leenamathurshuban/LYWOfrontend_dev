@@ -296,7 +296,7 @@ const CreateJobs = ({ show, handleClose }) => {
       isValid = false;
     }
 
-    if (!isLike) {
+    if (!isLikeUid.length) {
       newErrors.isLike = "isLike is required";
       isValid = false;
     }
@@ -304,7 +304,7 @@ const CreateJobs = ({ show, handleClose }) => {
       newErrors.department = "This Field is required";
       isValid = false;
     }
-    if (!location) {
+    if (!locationUid) {
       newErrors.location = "This Field is required";
       isValid = false;
     }
@@ -1039,7 +1039,7 @@ const CreateJobs = ({ show, handleClose }) => {
   }
   const isNextButtonDisable = createFormData.jobTitle && createFormData.department &&
     createFormData.jobType && createFormData.noOfPosition && createFormData.workPlaceType
-    && isLike && location;
+    && isLikeUid.length && locationUid;
 
   const handleCloseComboRole = (e) => {
     const { name, value } = e.target
