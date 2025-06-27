@@ -297,3 +297,7 @@ export const insightsListAPI=(id)=>{
   const result = client.getWithToken(`${GraphBarChartUrl.insightsBarList}${id}`)
   return result
 }
+export const dashboardListAPI=(id)=>{
+  const result = client.getWithToken(`${CompanyUrl.DashboardList}${id}`)
+  return result
+}

@@ -17,6 +17,7 @@ import {
     Tab,
     Table,
 } from "react-bootstrap";
+import Select from "react-select";
 import { EvalationAssestDetails, EvalationAssestList, UpdateJobForm } from '../../services/provider';
 import { removeToken } from '../../helpers/helper';
 import { useNavigate } from 'react-router-dom';
@@ -43,6 +44,11 @@ const Evaluations = ({ show, handleClose, assetJob, setAssetJob, localAssetJob, 
     const handleSelect = (key) => {
         setTabActive(key);
     };
+    const PassCriteriaOption = [
+        { value: "1", label: "One" },
+        { value: "2", label: "Two" },
+        { value: "3", label: "Three" },
+    ]
 
     const revaluationsListAPI = async (SerachQuestion) => {
         setIsLoading(true);
@@ -361,23 +367,37 @@ const Evaluations = ({ show, handleClose, assetJob, setAssetJob, localAssetJob, 
                                                     <td>
                                                         <div className="d-flex align-items-center">
                                                             <span>Pass Criteria</span>
-                                                            <Form.Select className="select-sm w-80 ms-2" value={item?.pass_criteria}>
+                                                            {/* <Form.Select className="select-sm w-80 ms-2" value={item?.pass_criteria}>
                                                                 <option value="" disabled hidden> 60%</option>
                                                                 <option value="1">One</option>
                                                                 <option value="2">Two</option>
                                                                 <option value="3">Three</option>
-                                                            </Form.Select>
+                                                            </Form.Select> */}
+                                                            <Select
+                                                                className="select-sm w-120 ms-2 react_selectbox"
+                                                                options={PassCriteriaOption}
+                                                                value={PassCriteriaOption.find((opt) => opt.value === item?.pass_criteria)}
+                                                                onChange={(e) => {                                                                
+                                                                }}                                                                 
+                                                            />
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div className="d-flex align-items-center">
                                                             <span>Duration</span>
-                                                            <Form.Select className="select-sm w-80 ms-2" value={item?.fixed_time}>
+                                                            {/* <Form.Select className="select-sm w-80 ms-2" value={item?.fixed_time}>
                                                                 <option value="" disabled hidden> 30mins</option>
                                                                 <option value="1">One</option>
                                                                 <option value="2">Two</option>
                                                                 <option value="3">Three</option>
-                                                            </Form.Select>
+                                                            </Form.Select> */}
+                                                            <Select
+                                                                className="select-sm w-120 ms-2 react_selectbox"
+                                                                options={PassCriteriaOption}
+                                                                value={PassCriteriaOption.find((opt) => opt.value === item?.fixed_time)}
+                                                                onChange={(e) => {                                                                
+                                                                }}                                                                 
+                                                            />
                                                         </div>
                                                     </td>
                                                     {item?.unSelect && (

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Col, Form, InputGroup, Dropdown } from "react-bootstrap";
+import Select from "react-select";
 import { useDispatch, useSelector } from "react-redux";
 import { logoMaker, removeToken } from "../helpers/helper";
 import UpdateDetailsIcon from "../images/icons/update-details-Hicon.svg";
@@ -15,11 +16,11 @@ import { setCompanyProfileDetails } from "../Slice/Login/LoginSlice";
 const Header = () => {
   const userInfo = useSelector((state) => state.login.loginUserInfo);
   const logoname = logoMaker(userInfo?.default_company?.company_name ?? "Infograins Techno");
-  const filtercompany = userInfo?.company?.filter((val)=>val?.company_name==userInfo?.default_company?.company_name)
-  const companyInfoFetch = useSelector((state)=>state.login.CompanyProfileDetails)
-  const [companyInfo, setCompanyInfo] = useState(companyInfoFetch?.company_name?companyInfoFetch?.company_name:userInfo?.default_company?.company_name)
-  const [compantUid,setCompantUid] = useState(companyInfoFetch?.uid?companyInfoFetch?.uid:filtercompany[0]?.uid)
-
+  const filtercompany = userInfo?.company?.filter((val) => val?.company_name == userInfo?.default_company?.company_name)
+  const companyInfoFetch = useSelector((state) => state.login.CompanyProfileDetails)
+  const [companyInfo, setCompanyInfo] = useState(companyInfoFetch?.company_name ? companyInfoFetch?.company_name : userInfo?.default_company?.company_name)
+  const [compantUid, setCompantUid] = useState(companyInfoFetch?.uid ? companyInfoFetch?.uid : filtercompany[0]?.uid)
+  const userOption = userInfo?.company?.map((item) => ({ value: item.company_name, label: item.company_name }))
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -38,17 +39,17 @@ const Header = () => {
     navigate("/emailverify");
   };
   const handleCompanyDropdown = (e) => {
-    const { value } = e.target;    
+    const { value } = e;
     setCompanyInfo(value)
-    const filtercompany = userInfo?.company?.filter((val)=>val?.company_name==value)
+    const filtercompany = userInfo?.company?.filter((val) => val?.company_name == value)
     setCompantUid(filtercompany[0]?.uid)
   }
-  useEffect(()=>{
+  useEffect(() => {
     GetCompanyDetails(compantUid)
-  },[companyInfo])  
-  const GetCompanyDetails = (uid) => {          
+  }, [companyInfo])
+  const GetCompanyDetails = (uid) => {
     GetcompanyDetailsApi(uid)
-      .then((res) => {        
+      .then((res) => {
         dispatch(setCompanyProfileDetails(res?.response));
       })
       .catch((error) => {
@@ -74,14 +75,20 @@ const Header = () => {
           <div className="org_name">
             <span className="orgshort_text">{logoname}</span>
             {/* <p>{userInfo?.default_company?.company_name}</p> */}
-            <Form.Select
+            {/* <Form.Select
               value={companyInfo}
               onChange={handleCompanyDropdown}
             >
               {userInfo?.company?.map((item) => (
                 <option value={item.company_name}>{item?.company_name}</option>
               ))}
-            </Form.Select>
+            </Form.Select> */}
+            <Select
+              options={userOption}
+              value={userOption.find((opt)=>opt.value===companyInfo)}
+              onChange={handleCompanyDropdown}
+              className="react_selectbox"
+            />
           </div>
         </Col>
         <Col md={4}>

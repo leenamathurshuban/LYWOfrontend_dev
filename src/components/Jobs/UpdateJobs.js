@@ -20,6 +20,7 @@ import { removeToken } from "../../helpers/helper";
 import UpdateJobsRevised from "./UpdateJobsRevised";
 import { CreateJobFormValidation } from "../../utils/validation";
 import { toast } from "react-toastify";
+import Select from 'react-select'
 
 const UpdateJobs = ({ show, handleClose, editData }) => {
   const { id } = useParams();
@@ -33,7 +34,8 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
 
   const [travelOption, setTravelOption] = useState(editData?.requires_travel);
 
-  const [isLike, setIsLike] = useState(editData?.is_like?.[0]?.is_like_name);
+  const [isLike, setIsLike] = useState("");
+  const [isLikeValue, setIsLikeValue] = useState(null)
   const [isLikeUid, setIsLikeUid] = useState(editData?.is_like?.map((Val) => Val?.uid));
   const [isLikeDropdown, setIsLikeDropdown] = useState(false);
   const [isLikeData, setIsLikeData] = useState([]);
@@ -46,7 +48,10 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
   const [isSpecificLanguareRequired, setIsSpecificLanguareRequired] =
     useState(true);
   const [department, setDepartment] = useState(editData?.department);
-  const [location, setLocation] = useState(editData?.job_location?.location_name);
+  const [location, setLocation] = useState("");
+  const [locationValue, setLocationValue] = useState(null)
+  const [jobTypeValue, setJobTypeValue] = useState(null)
+  const [workplaceTypeValue, setWorkPlaceTypeValue] = useState(null)
   const [description, setDescription] = useState(editData?.detailed_description);
   const [departmentUid, setDepartmentUid] = useState(editData?.department?.uid);
   const [locationUid, setLocationUid] = useState(editData?.job_location?.uid);
@@ -236,6 +241,15 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
   const [modal, setModal] = useState({
     createJobRevisedModal: false,
   });
+  const jobTypeOptions = [
+    { value: "Full-Time", label: "Full-Time" },
+    { value: "Part-Time", label: "Part-Time" },
+    { value: "Contract", label: "Contract" },
+    { value: "Temporary", label: "Temporary" },
+    { value: "Volunteer", label: "Volunteer" },
+    { value: "Internship", lable: "Internship" },
+    { value: "Other", label: "Other" }
+  ]
   const jobTypeOption = [
     "Full -Time",
     "Part -Time",
@@ -246,10 +260,15 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
     "Other"
   ]
   const workplaceOption = [
-    "On-site",
-    "Remote",
-    "Hybrid",
+    { value: "On-site", label: "On-site" },
+    { value: "Remote", label: "Remote" },
+    { value: "Hybrid", label: "Hybrid" },
   ]
+  // const workplaceOption = [
+  //   "On-site",
+  //   "Remote",
+  //   "Hybrid",
+  // ]
   const [showDropdown, setShowDropdown] = useState({ jobType: false, workPlaceType: false });
   const MAX_FILE_SIZE = 5 * 1024 * 1024;
   const MAX_DESCRIPTION_WORDS = 500;
@@ -294,7 +313,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
       isValid = false;
     }
 
-    if (!isLike) {
+    if (!isLikeValue) {
       newErrors.isLike = "isLike is required";
       isValid = false;
     }
@@ -302,7 +321,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
       newErrors.department = "This Field is required";
       isValid = false;
     }
-    if (!location) {
+    if (!locationValue) {
       newErrors.location = "This Field is required";
       isValid = false;
     }
@@ -344,15 +363,16 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
       ...newValue
     })
   };
-  const handleJobType = (key, value) => {
+  const handleJobType = (Val) => {
     setCreateFormData({
       ...createFormData,
-      [key]: value
+      ["jobType"]: Val?.value
     })
-    setShowDropdown({
-      ...showDropdown,
-      [key]: false
-    })
+    setJobTypeValue(Val)
+    // setShowDropdown({
+    //   ...showDropdown,
+    //   [key]: false
+    // })
   }
   const handleUpdateFormData = (e) => {
     const { name, value, checked } = e.target;
@@ -374,9 +394,11 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
     setIsLikeDropdown(true);
   };
   const handleSelectedLikeItems = (item) => {
-    setIsLike(item.is_like_name);
-    setIsLikeUid((prevSelectedItems) => [...prevSelectedItems, item.uid]);
-    setIsLikeDropdown(false);
+    // setIsLike(item.label);
+    setIsLikeValue(item)
+    // setIsLikeUid((prevSelectedItems) => [...prevSelectedItems, item.value]);
+    setIsLikeUid([item.value]);
+    // setIsLikeDropdown(false);
   };
   const handleEditorChange = (value) => {
     const wordCount = value.trim().split(/\s+/).length;
@@ -468,10 +490,12 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
     setTravelOption(e.target.value);
   };
   const isLikeHandleApi = (query) => {
-    const url = `https://bittrend.shubansoftware.com/assets-api/islike-list-api/?search=${query}&page=1&limit=10`;
+    const url = `https://bittrend.shubansoftware.com/assets-api/islike-list-api/?search=${query}&page=1&limit=5000`;
     CreateJobIsLike(url)
       .then((res) => {
-        setIsLikeData(res.data.response);
+        const key = res?.data?.response?.map((val) => ({ value: val?.uid, label: val?.is_like_name, group_name: val?.group_name, id: val?.id }))
+        setIsLikeData(key)
+        // setIsLikeData(res.data.response);
         if (res?.data?.response.length > 0 && !isLikeDropdown) {
           setRestrictedRoleBadges((prevBadges) => [
             ...prevBadges,
@@ -512,15 +536,18 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
       });
   };
   const handleLocationApi = (locationQuery) => {
-    const url = `https://bittrend.shubansoftware.com/account-api/location-list-api/?page=1&limit=500&search=${locationQuery}`;
+    // const url = `https://bittrend.shubansoftware.com/account-api/location-list-api/?page=1&limit=500&search=${locationQuery}`;
+    const url = `https://bittrend.shubansoftware.com/account-api/location-list-api/?limit=5000&search=${locationQuery}`;
     CreateJobLocation(url)
       .then((res) => {
-        setLocationData(res.data.response);
+        // setLocationData(res.data.response);
         if (res.data.response.length > 0) {
           setLocationBadges((prevBadges) => [
             ...prevBadges,
             res?.data?.response[0],
           ]);
+          const key = res?.data?.response?.map((val) => ({ value: val?.uid, label: val?.location_name, state: val?.state_name, id: val?.id }))
+          setLocationData(key)
         }
       })
       .catch((error) => {
@@ -599,7 +626,25 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
   }, [location]);
   useEffect(() => {
     benifitsList();
+    handleLocationApi("")
+    isLikeHandleApi("")
   }, []);
+  useEffect(() => {
+    const matched = isLikeData.find((opt) => opt.label === editData?.is_like?.[0]?.is_like_name);
+    if (matched) setIsLikeValue(matched);
+  }, [isLikeData])
+  useEffect(() => {
+    const matched = locationData.find((opt) => opt.label === editData?.job_location?.location_name);
+    if (matched) setLocationValue(matched);
+  }, [locationData])
+  useEffect(() => {
+    const matched = jobTypeOptions.find((opt) => opt.label === createFormData?.jobType);
+    if (matched) setJobTypeValue(matched)
+  }, [])
+  useEffect(() => {
+    const matched = workplaceOption.find((opt) => opt.label === createFormData.workPlaceType)
+    if (matched) setWorkPlaceTypeValue(matched)
+  }, [])
   // const handleLike = (e) => {
   //   setIsLike(e.target.value);
   //   setIsLikeDropdown(true);
@@ -630,8 +675,11 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
   };
 
   const handleLocationItems = (item) => {
-    setLocation(item?.location_name);
-    setLocationUid(item.uid);
+    // setLocation(item?.location_name);
+    // setLocationUid(item.uid);
+    // setLocation(item?.label);
+    setLocationValue(item)
+    setLocationUid(item.value);
     setIsLocationDropdown(false);
   };
 
@@ -1027,7 +1075,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
 
   const isNextButtonDisable = createFormData.jobTitle && createFormData.department &&
     createFormData.jobType && createFormData.noOfPosition && createFormData.workPlaceType
-    && isLike && location;
+    && isLikeValue && locationValue;
   const handleCloseComboRole = (e) => {
     const { name, value } = e.target
     setIsLike('')
@@ -1048,6 +1096,8 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
   console.log(createFormData, isLikeUid)
   console.log(SelectBenefitsData)
   console.log(addCustomeBenifits.length)
+  console.log(locationData)
+  console.log(locationValue)
   return (
     <Offcanvas
       show={show}
@@ -1082,7 +1132,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
 
           <Form.Group className="col-md-6 mb-2" controlId="isLike">
             <Form.Label>Is Like</Form.Label>
-            <Form.Control
+            {/* <Form.Control
               type="text"
               placeholder="Is Like"
               value={isLike}
@@ -1108,7 +1158,20 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
             )}
             {isLikeDropdown && isLikeData?.length === 0 && (
               <span className="error">Invalid key Search</span>
-            )}
+            )} */}
+            <Select
+              className="react_selectbox"
+              options={isLikeData}
+              value={isLikeValue}
+              isSearchable={true}
+              noOptionsMessage={() => "No results found"}
+              placeholder="Search"
+              filterOption={(option, inputValue) => {
+                if (!inputValue) return false; // hide all options until user types
+                return option.label.toLowerCase().includes(inputValue.toLowerCase());
+              }}              
+              onChange={handleSelectedLikeItems}
+            />
           </Form.Group>
 
           <Form.Group className="col-md-6 mb-2" controlId="noOfPosition">
@@ -1166,7 +1229,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
 
           <Form.Group className="col-md-6 mb-2" controlId="location">
             <Form.Label>Location</Form.Label>
-            <Form.Control
+            {/* <Form.Control
               type="text"
               placeholder="Location"
               value={location}
@@ -1189,7 +1252,20 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
                   ))}
                 </ul>
               </div>
-            )}
+            )} */}
+            <Select
+              className="react_selectbox"
+              options={locationData}
+              value={locationValue}
+              isSearchable={true}
+              noOptionsMessage={() => "No results found"}
+              placeholder="search location"
+              filterOption={(option, inputValue) => {
+                if (!inputValue) return false; // hide all options until user types
+                return option.label.toLowerCase().includes(inputValue.toLowerCase());
+              }}
+              onChange={handleLocationItems}
+            />
 
             {isLocationDropdown && locationData.length === 0 && (
               <span className="error">Invalid key Search</span>
@@ -1349,7 +1425,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
               <option value="Other">Other</option>
             </Form.Select> */}
             <div className="mw-230 relative">
-              <FormControl
+              {/* <FormControl
                 placeholder="Job Type"
                 className="form-control-sm mx-w350"
                 aria-label="Default select example"
@@ -1391,7 +1467,8 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
                     ))}
                   </ul>
                 </div>
-              )}
+              )} */}
+              <Select className="react_selectbox" value={jobTypeValue} options={jobTypeOptions} onChange={handleJobType} />
             </div>
             <span style={{ color: "red" }}>{errors.jobType}</span>
           </Col>
@@ -1411,7 +1488,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
             </Form.Select> */}
 
             <div className="mw-230 relative">
-              <FormControl
+              {/* <FormControl
                 placeholder="Workplace Type"
                 className="form-control-sm mx-w350"
                 aria-label="Default select example"
@@ -1453,7 +1530,14 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
                     ))}
                   </ul>
                 </div>
-              )}
+              )} */}
+              <Select className="react_selectbox" value={workplaceTypeValue} options={workplaceOption} onChange={(val) => {
+                setCreateFormData({
+                  ...createFormData,
+                  ["workPlaceType"]: val?.value
+                });
+                setWorkPlaceTypeValue(val)
+              }} />
             </div>
             <span style={{ color: "red" }}>{errors.workPlaceType}</span>
           </Col>

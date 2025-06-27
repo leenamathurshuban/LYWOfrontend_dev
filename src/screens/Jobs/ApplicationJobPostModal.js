@@ -1854,6 +1854,7 @@ import DatePicker from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css';
 import { ApplicantFormValidation } from "../../utils/validation";
 import { toast } from "react-toastify";
+import Select from "react-select";
 
 const ApplicationJobPostModal = ({
   show,
@@ -1894,54 +1895,54 @@ const ApplicationJobPostModal = ({
   const dropdownRef = useRef(null);
 
   const noticeOptions = [
-    "Less than 30 Days",
-    "30-60 Days",
-    "60-90 Days",
-    "More than 90 Days",
+    { value: "Less than 30 Days", label: "Less than 30 Days" },
+    { value: "30-60 Days", label: "30-60 Days" },
+    { value: "60-90 Days", label: "60-90 Days" },
+    { value: "More than 90 Days", label: "More than 90 Days" },
   ];
   const expectedSalaryOption = [
-    "Below 3 Lacs per Annum",
-    "3 - 5 Lacs per Annum",
-    "5 - 7 Lacs per Annum",
-    "7 - 10 Lacs per Annum",
-    "10 - 12 Lacs per Annum",
-    "12 - 15 Lacs per Annum",
-    "15 - 20 Lacs per Annum",
-    "20 - 25 Lacs per Annum",
-    "25 - 30 Lacs per Annum",
-    "30 - 35 Lacs per Annum",
-    "35 - 40 Lacs per Annum",
-    "40 - 45 Lacs per Annum",
-    "45 - 50 Lacs per Annum",
-    "50 - 55 Lacs per Annum",
-    "55 - 60 Lacs per Annum",
-    "Above 60 Lacs per Annum",
+    { value: "Below 3 Lacs per Annum", label: "Below 3 Lacs per Annum" },
+    { value: "3 - 5 Lacs per Annum", label: "3 - 5 Lacs per Annum" },
+    { value: "5 - 7 Lacs per Annum", label: "5 - 7 Lacs per Annum" },
+    { value: "7 - 10 Lacs per Annum", label: "7 - 10 Lacs per Annum" },
+    { value: "10 - 12 Lacs per Annum", label: "10 - 12 Lacs per Annum" },
+    { value: "12 - 15 Lacs per Annum", label: "12 - 15 Lacs per Annum" },
+    { value: "15 - 20 Lacs per Annum", label: "15 - 20 Lacs per Annum" },
+    { value: "20 - 25 Lacs per Annum", label: "20 - 25 Lacs per Annum" },
+    { value: "25 - 30 Lacs per Annum", label: "25 - 30 Lacs per Annum" },
+    { value: "30 - 35 Lacs per Annum", label: "30 - 35 Lacs per Annum" },
+    { value: "35 - 40 Lacs per Annum", label: "35 - 40 Lacs per Annum" },
+    { value: "40 - 45 Lacs per Annum", label: "40 - 45 Lacs per Annum" },
+    { value: "45 - 50 Lacs per Annum", label: "45 - 50 Lacs per Annum" },
+    { value: "50 - 55 Lacs per Annum", label: "50 - 55 Lacs per Annum" },
+    { value: "55 - 60 Lacs per Annum", label: "55 - 60 Lacs per Annum" },
+    { value: "Above 60 Lacs per Annum", label: "Above 60 Lacs per Annum" },
   ]
   const levelOption = [
-    "Below Secondary Education",
-    "Upper Secondary (Intermediate, High School, Grade 12)",
-    "Certification  / Vocational / Technical Training",
-    "Diploma / Associate Degree",
-    "Bachelor's Degree",
-    "Master's Degree",
-    "Professional Degree (e.g., MD, JD)",
-    "Doctoral Degree (Ph.D., Ed.D.)",
-    "Postdoctoral Research"
+    { value: "Below Secondary Education", label: "Below Secondary Education" },
+    { value: "Upper Secondary (Intermediate, High School, Grade 12)", label: "Upper Secondary (Intermediate, High School, Grade 12)" },
+    { value: "Certification  / Vocational / Technical Training", label: "Certification  / Vocational / Technical Training" },
+    { value: "Diploma / Associate Degree", label: "Diploma / Associate Degree" },
+    { value: "Bachelor's Degree", label: "Bachelor's Degree" },
+    { value: "Master's Degree", label: "Master's Degree" },
+    { value: "Professional Degree (e.g., MD, JD)", label: "Professional Degree (e.g., MD, JD)" },
+    { value: "Doctoral Degree (Ph.D., Ed.D.)", label: "Doctoral Degree (Ph.D., Ed.D.)" },
+    { value: "Postdoctoral Research", label: "Postdoctoral Research" },
   ]
   const totalWorkExperienceOption = [
-    "Fresher",
-    "Less than 1 Year",
-    "1 - 2 Years",
-    "2 - 4 Years",
-    "4 - 6 Years",
-    "6 - 9 Years",
-    "9 - 12 Years",
-    "12 - 15 Years",
-    "15 - 20 Years",
-    "20 - 25 Years",
-    "25 - 30 Years",
-    "30 - 40 Years",
-    "Above 40 Years",
+    { value: "Fresher", label: "Fresher" },
+    { value: "Less than 1 Year", label: "Less than 1 Year" },
+    { value: "1 - 2 Years", label: "1 - 2 Years" },
+    { value: "2 - 4 Years", label: "2 - 4 Years" },
+    { value: "4 - 6 Years", label: "4 - 6 Years" },
+    { value: "6 - 9 Years", label: "6 - 9 Years" },
+    { value: "9 - 12 Years", label: "9 - 12 Years" },
+    { value: "12 - 15 Years", label: "12 - 15 Years" },
+    { value: "15 - 20 Years", label: "15 - 20 Years" },
+    { value: "20 - 25 Years", label: "20 - 25 Years" },
+    { value: "25 - 30 Years", label: "25 - 30 Years" },
+    { value: "30 - 40 Years", label: "30 - 40 Years" },
+    { value: "Above 40 Years", label: "Above 40 Years" },
   ]
 
   const handleSelect = (key, value) => {
@@ -2171,49 +2172,87 @@ const ApplicationJobPostModal = ({
   }, [dynamicArray])
   console.log('AAAAAAAAAAAAAAAAAAAAAAA', selectedSkills)
 
-  const handleAreaOfEducation = async (index, e) => {
-    const { name, value } = e.target;
-    const newRows = [...EducationRows];
-    newRows[index]["areaOfEducation"] = value;
-    let search = newRows[index]["areaOfEducation"]
-    SetEducationRows(newRows);
-    setIsOpen((prev) => ({ ...prev, [index]: true }));
+  // const handleAreaOfEducation = async (index, e) => {
+  //   const { name, value } = e.target;
+  //   const newRows = [...EducationRows];
+  //   newRows[index]["areaOfEducation"] = value;
+  //   let search = newRows[index]["areaOfEducation"]
+  //   SetEducationRows(newRows);
+  //   setIsOpen((prev) => ({ ...prev, [index]: true }));
+  //   let url;
+
+  //   try {
+  //     if (value != "") {
+  //       url = `https://bittrend.shubansoftware.com/assets-api/education-qualification-list-by-course-api?page=1&limit=10&search=${search}`;
+  //       const response = await getQualificationListApi(url);
+  //       if (response?.data?.response.length > 0) {
+  //         setAreaEducationOption(response?.data?.response)
+  //         // setBadges((prevBadges) => [
+  //         //   ...prevBadges,
+  //         //   response?.data?.response[0],
+  //         // ]);
+  //         // setInputValue("");          
+  //       }
+  //     } else {
+  //       setAreaEducationOption([])
+  //     }
+
+  //   } catch (error) {
+  //     console.log("error response----->>>>>>", error);
+  //   }
+  // };
+  const getAreaOfEducationData = async () => {
     let url;
-
     try {
-      if (value != "") {
-        url = `https://bittrend.shubansoftware.com/assets-api/education-qualification-list-by-course-api?page=1&limit=10&search=${search}`;
-        const response = await getQualificationListApi(url);
-        if (response?.data?.response.length > 0) {
-          setAreaEducationOption(response?.data?.response)
-          // setBadges((prevBadges) => [
-          //   ...prevBadges,
-          //   response?.data?.response[0],
-          // ]);
-          // setInputValue("");          
-        }
-      } else {
-        setAreaEducationOption([])
+      url = `https://bittrend.shubansoftware.com/assets-api/education-qualification-list-by-course-api?limit=500`;
+      const response = await getQualificationListApi(url);
+      if (response?.data?.response.length > 0) {
+        const key = response?.data?.response?.map((val) => ({ value: val.uid, label: val.qualification_name }))
+        setAreaEducationOption(key)
       }
-
     } catch (error) {
       console.log("error response----->>>>>>", error);
     }
   };
-  const handleRolelist = (index, e) => {
-    const { name, value } = e.target;
-    const newWorkRow = [...WorkExpreienceRow];
-    newWorkRow[index]["WorkRole"] = value;
-    let search = newWorkRow[index]["WorkRole"]
-    setWorkExpreienceRow(newWorkRow);
-    setIsOpen((prev) => ({ ...prev, [index]: true }));
-    const url = `https://bittrend.shubansoftware.com/assets-api/islike-list-api/?search=${search}&page=1&limit=10`;
+  useEffect(() => {
+    getAreaOfEducationData()
+  }, [])
+  // const handleRolelist = (index, e) => {
+  //   const { name, value } = e.target;
+  //   const newWorkRow = [...WorkExpreienceRow];
+  //   newWorkRow[index]["WorkRole"] = value;
+  //   let search = newWorkRow[index]["WorkRole"]
+  //   setWorkExpreienceRow(newWorkRow);
+  //   setIsOpen((prev) => ({ ...prev, [index]: true }));
+  //   const url = `https://bittrend.shubansoftware.com/assets-api/islike-list-api/?search=${search}&page=1&limit=10`;
+  //   CreateJobIsLike(url)
+  //     .then((res) => {
+  //       if (res?.data?.success) {
+  //         if (value) {
+  //           setRoleList(res?.data?.response)
+  //         }
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       if (
+  //         error?.response?.status === 401 ||
+  //         error?.response?.data?.detail?.includes(
+  //           "Given token not valid for any token type"
+  //         )
+  //       ) {
+  //         //console.log("Token expired, redirecting to login");
+  //         removeToken();
+  //         navigate("/loginwithpassword");
+  //       }
+  //     });
+  // };
+  const getRolelistData = () => {
+    const url = `https://bittrend.shubansoftware.com/assets-api/islike-list-api/?limit=500`;
     CreateJobIsLike(url)
       .then((res) => {
         if (res?.data?.success) {
-          if (value) {
-            setRoleList(res?.data?.response)
-          }
+          const key = res?.data?.response?.map((val) => ({ value: val?.uid, label: val?.is_like_name }))
+          setRoleList(key)
         }
       })
       .catch((error) => {
@@ -2229,60 +2268,84 @@ const ApplicationJobPostModal = ({
         }
       });
   };
-  const handleIndustries = async (index, e) => {
-    const { name, value } = e.target;
-    const newWorkRow = [...WorkExpreienceRow];
-    newWorkRow[index]["WorkIndustry"] = value;
-    let search = newWorkRow[index]["WorkIndustry"]
-    setWorkExpreienceRow(newWorkRow);
-    setIsOpen((prev) => ({ ...prev, [index]: true }));
-    if (typeof search !== "string" || search.trim() === "") {
-      setIndustriesList([])
-      return;
-    }
+  useEffect(() => {
+    getRolelistData()
+  }, [])
+  // const handleIndustries = async (index, e) => {
+  //   const { name, value } = e.target;
+  //   const newWorkRow = [...WorkExpreienceRow];
+  //   newWorkRow[index]["WorkIndustry"] = value;
+  //   let search = newWorkRow[index]["WorkIndustry"]
+  //   setWorkExpreienceRow(newWorkRow);
+  //   setIsOpen((prev) => ({ ...prev, [index]: true }));
+  //   if (typeof search !== "string" || search.trim() === "") {
+  //     setIndustriesList([])
+  //     return;
+  //   }
 
+  //   try {
+  //     if (value != "") {
+  //       const response = await axios.get(
+  //         "https://bittrend.shubansoftware.com/account-api/industry-list-api/",
+  //         {
+  //           params: {
+  //             page: 1,
+  //             limit: 500,
+  //             search: search,
+  //           },
+  //         }
+  //       );
+  //       if (response?.data?.success) {
+  //         setIndustriesList(response.data.response)
+  //       }
+  //     } else {
+  //       setIndustriesList([])
+  //     }
+  //   } catch (err) {
+  //     console.error("Error fetching data:", err);
+  //   }
+  // };
+  const getIndustriesData = async () => {
     try {
-      if (value != "") {
-        const response = await axios.get(
-          "https://bittrend.shubansoftware.com/account-api/industry-list-api/",
-          {
-            params: {
-              page: 1,
-              limit: 500,
-              search: search,
-            },
-          }
-        );
-        if (response?.data?.success) {
-          setIndustriesList(response.data.response)
+      const response = await axios.get(
+        "https://bittrend.shubansoftware.com/account-api/industry-list-api/",
+        {
+          params: {
+            limit: 500
+          },
         }
-      } else {
-        setIndustriesList([])
+      );
+      if (response?.data?.success) {
+        const key = response.data.response.map((val) => ({ value: val.uid, label: val.industry_name }))
+        setIndustriesList(key)
       }
     } catch (err) {
       console.error("Error fetching data:", err);
     }
   };
+  useEffect(() => {
+    getIndustriesData()
+  }, [])
   const handleSelectAreaEducation = (index, value) => {
     const newRows = [...EducationRows];
     newRows[index]["areaOfEducation"] = value;
     SetEducationRows(newRows);
-    setAreaEducationOption([]);
-    setIsOpen((prev) => ({ ...prev, [index]: false }));
+    // setAreaEducationOption([]);
+    // setIsOpen((prev) => ({ ...prev, [index]: false }));
   }
   const handleWorkRole = (index, value) => {
     const newWorkRow = [...WorkExpreienceRow];
     newWorkRow[index]["WorkRole"] = value;
     setWorkExpreienceRow(newWorkRow);
-    setRoleList([])
-    setIsOpen((prev) => ({ ...prev, [index]: false }));
+    // setRoleList([])
+    // setIsOpen((prev) => ({ ...prev, [index]: false }));
   };
   const handleSelectIndustries = (index, value) => {
     const newWorkRow = [...WorkExpreienceRow];
     newWorkRow[index]["WorkIndustry"] = value;
     setWorkExpreienceRow(newWorkRow);
-    setIndustriesList([])
-    setIsOpen((prev) => ({ ...prev, [index]: false }));
+    // setIndustriesList([])
+    // setIsOpen((prev) => ({ ...prev, [index]: false }));
   }
 
   const handleKeyPressForlanguages = async (e, from) => {
@@ -2379,43 +2442,73 @@ const ApplicationJobPostModal = ({
     setWittenLanguage([])
   }
 
-  const handleLocationAPIList = (e) => {
-    const { name, value } = e.target;
-    setProfileFormData({ ...profileformData, [name]: e.target.value })
-    let url;
-    if (value != "") {
-      url = `https://bittrend.shubansoftware.com/account-api/location-list-api/?page=1&limit=500&search=${value}`;
-    }
+  // const handleLocationAPIList = (e) => {
+  //   const { name, value } = e.target;
+  //   setProfileFormData({ ...profileformData, [name]: e.target.value })
+  //   let url;
+  //   if (value != "") {
+  //     url = `https://bittrend.shubansoftware.com/account-api/location-list-api/?page=1&limit=500&search=${value}`;
+  //   }
+  //   try {
+  //     if (value != "") {
+  //       CreateJobLocation(url)
+  //         .then((res) => {
+  //           // setLocationData(res.data.response);
+  //           if (res.data.response.length > 0) {
+  //             setLocationList(res?.data?.response)
+  //             //   setLocationBadges((prevBadges) => [
+  //             //     ...prevBadges,
+  //             //     res?.data?.response[0],
+  //             //   ]);
+  //           }
+  //         })
+  //         .catch((error) => {
+  //           if (
+  //             error?.response?.status === 401 ||
+  //             error?.response?.data?.detail?.includes(
+  //               "Given token not valid for any token type"
+  //             )
+  //           ) {
+  //             //console.log("Token expired, redirecting to login");
+  //             //   removeToken();
+  //             //   navigate("/loginwithpassword");
+  //           }
+  //         });
+  //     }
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // };
+  const getLocationAPIList = () => {
+    let url = `https://bittrend.shubansoftware.com/account-api/location-list-api/?limit=5000`;
     try {
-      if (value != "") {
-        CreateJobLocation(url)
-          .then((res) => {
-            // setLocationData(res.data.response);
-            if (res.data.response.length > 0) {
-              setLocationList(res?.data?.response)
-              //   setLocationBadges((prevBadges) => [
-              //     ...prevBadges,
-              //     res?.data?.response[0],
-              //   ]);
-            }
-          })
-          .catch((error) => {
-            if (
-              error?.response?.status === 401 ||
-              error?.response?.data?.detail?.includes(
-                "Given token not valid for any token type"
-              )
-            ) {
-              //console.log("Token expired, redirecting to login");
-              //   removeToken();
-              //   navigate("/loginwithpassword");
-            }
-          });
-      }
+      CreateJobLocation(url)
+        .then((res) => {
+          if (res.data.response.length > 0) {
+            const key = res?.data?.response?.map((val)=>({value:val?.uid,label:val?.location_name}))
+            setLocationList(key)
+            
+          }
+        })
+        .catch((error) => {
+          if (
+            error?.response?.status === 401 ||
+            error?.response?.data?.detail?.includes(
+              "Given token not valid for any token type"
+            )
+          ) {
+            //console.log("Token expired, redirecting to login");
+            //   removeToken();
+            //   navigate("/loginwithpassword");
+          }
+        });
     } catch (error) {
       console.log(error)
     }
   };
+  useEffect(()=>{
+    getLocationAPIList()
+  },[])
   // useEffect(() => {
   //   if (profileformData?.CurrentLocation) {
   //     handleLocationAPIList()
@@ -2426,7 +2519,7 @@ const ApplicationJobPostModal = ({
       ...profileformData,
       ["CurrentLocation"]: value
     })
-    setLocationList([])
+    // setLocationList([])
   }
   const getSelectedSkillsNames = () => {
     const selectedSkillNames = [];
@@ -3705,7 +3798,7 @@ const ApplicationJobPostModal = ({
                         </Form.Select> */}
 
                           <div className="mw-230 relative" ref={dropdownRef}>
-                            <FormControl
+                            {/* <FormControl
                               placeholder="Notice Period"
                               size="sm"
                               style={{ width: "350px" }}
@@ -3749,7 +3842,14 @@ const ApplicationJobPostModal = ({
                                   ))}
                                 </ul>
                               </div>
-                            )}
+                            )} */}
+                            <Select
+                              className="react_selectbox"
+                              options={noticeOptions}
+                              value={noticeOptions.find((opt) => opt.value === profileformData?.NoticePeriod)}
+                              placeholder="Notice Period"
+                              onChange={(e) => handleSelect('NoticePeriod', e.value)}
+                              styles={{ container: (base) => ({ ...base, width: 350 }) }} />
                           </div>
                         </Col>
                         <Form.Control.Feedback type="invalid">
@@ -3923,7 +4023,7 @@ const ApplicationJobPostModal = ({
                     </Form.Select> */}
 
                       <div className="mw-230 relative" ref={dropdownRef}>
-                        <FormControl
+                        {/* <FormControl
                           placeholder="Expected Salary"
                           size="sm"
                           style={{ width: "350px" }}
@@ -3967,7 +4067,14 @@ const ApplicationJobPostModal = ({
                               ))}
                             </ul>
                           </div>
-                        )}
+                        )} */}
+                        <Select
+                          className="react_selectbox"
+                          options={expectedSalaryOption}
+                          value={expectedSalaryOption.find((opt) => opt.value === profileformData?.ExpectedSalary)}
+                          placeholder="Expected Salary"
+                          onChange={(e) => handleSelect('ExpectedSalary', e.value)}
+                          styles={{ container: (base) => ({ ...base, width: 350 }) }} />
                       </div>
                       <Form.Control.Feedback type="invalid" className="error">
                         {errors.ExpectedSalary}
@@ -4015,7 +4122,7 @@ const ApplicationJobPostModal = ({
                           </Form.Select> */}
 
                             <div className="mw-230 relative" ref={dropdownRef}>
-                              <FormControl
+                              {/* <FormControl
                                 placeholder="Level"
                                 size="sm"
                                 style={{ width: "350px" }}
@@ -4058,7 +4165,14 @@ const ApplicationJobPostModal = ({
                                     ))}
                                   </ul>
                                 </div>
-                              )}
+                              )} */}
+                              <Select
+                                className="react_selectbox"
+                                options={levelOption}
+                                value={levelOption.find((opt) => opt.value === row.level)}
+                                placeholder="Level"
+                                onChange={(e) => handleSelectLevel(index, e.value)}
+                                styles={{ container: (base) => ({ ...base, width: 350 }) }} />
                             </div>
                           </td>
                           <td>
@@ -4102,7 +4216,7 @@ const ApplicationJobPostModal = ({
                           </Dropdown> */}
                             <div className="mw-230 relative">
 
-                              <FormControl
+                              {/* <FormControl
                                 // autoFocus
                                 name="areaOfEducation"
                                 placeholder="Area of Education"
@@ -4127,7 +4241,21 @@ const ApplicationJobPostModal = ({
                                     ))}
                                   </ul>
                                 )}
-                              </div>
+                              </div> */}
+                              <Select
+                                className="react_selectbox"
+                                options={aresEducationOption}
+                                isSearchable={true}
+                                noOptionsMessage={() => "No results found"}
+                                value={aresEducationOption.find((opt) => opt.label === row.areaOfEducation)}
+                                disabled={row.saved}
+                                placeholder="Area of Education"
+                                filterOption={(option, inputValue) => {
+                                  if (!inputValue) return false; // hide all options until user types
+                                  return option.label.toLowerCase().includes(inputValue.toLowerCase());
+                                }}
+                                onChange={(e) => handleSelectAreaEducation(index, e.label)}
+                                styles={{ container: (base) => ({ ...base, width: 230 }) }} />
                             </div>
 
                           </td>
@@ -4304,7 +4432,7 @@ const ApplicationJobPostModal = ({
                       </Form.Select> */}
 
                         <div className="mw-230 relative" ref={dropdownRef}>
-                          <FormControl
+                          {/* <FormControl
                             placeholder="Work Experience"
                             className="form-control-sm mx-w350"
                             aria-label="Default select example"
@@ -4347,7 +4475,14 @@ const ApplicationJobPostModal = ({
                                 ))}
                               </ul>
                             </div>
-                          )}
+                          )} */}
+                          <Select
+                            className="react_selectbox"
+                            options={totalWorkExperienceOption}
+                            value={totalWorkExperienceOption.find((opt) => opt.value === totalWorkExperience)}
+                            placeholder="Work Experience"
+                            onChange={(e) => handleTotalWorkExpeienceChange(e.value)}
+                            styles={{ container: (base) => ({ ...base, width: 350 }) }} />
                         </div>
                       </Col>
                     </Row>
@@ -4369,7 +4504,7 @@ const ApplicationJobPostModal = ({
                             <tr>
                               <td>
                                 <div className="mw-130 relative">
-                                  <FormControl
+                                  {/* <FormControl
                                     // autoFocus
                                     name="WorkRole"
                                     placeholder="Role"
@@ -4394,7 +4529,21 @@ const ApplicationJobPostModal = ({
                                         ))}
                                       </ul>
                                     )}
-                                  </div>
+                                  </div> */}
+                                  <Select
+                                    className="react_selectbox"
+                                    options={roleList}
+                                    isSearchable={true}
+                                    noOptionsMessage={() => "No results found"}
+                                    value={roleList.find((opt) => opt.label === row.WorkRole)}
+                                    disabled={row.savedWorkExp}
+                                    placeholder="Role"
+                                    filterOption={(option, inputValue) => {
+                                      if (!inputValue) return false; // hide all options until user types
+                                      return option.label.toLowerCase().includes(inputValue.toLowerCase());
+                                    }}
+                                    onChange={(e) => handleWorkRole(index, e.label)}
+                                    styles={{ container: (base) => ({ ...base, width: 230 }) }} />
                                 </div>
 
                               </td>
@@ -4442,7 +4591,7 @@ const ApplicationJobPostModal = ({
                               </td>
                               <td>
                                 <div className="mw-130 relative">
-                                  <FormControl
+                                  {/* <FormControl
                                     // autoFocus
                                     name="WorkIndustry"
                                     placeholder="Industry"
@@ -4467,7 +4616,21 @@ const ApplicationJobPostModal = ({
                                         ))}
                                       </ul>
                                     )}
-                                  </div>
+                                  </div> */}
+                                  <Select
+                                    className="react_selectbox"
+                                    options={industriesList}
+                                    isSearchable={true}
+                                    noOptionsMessage={() => "No results found"}
+                                    value={industriesList.find((opt) => opt.label === row.WorkIndustry)}
+                                    disabled={row.savedWorkExp}
+                                    placeholder="Industry"
+                                    filterOption={(option, inputValue) => {
+                                      if (!inputValue) return false; // hide all options until user types
+                                      return option.label.toLowerCase().includes(inputValue.toLowerCase());
+                                    }}
+                                    onChange={(e) => handleSelectIndustries(index, e.label)}
+                                    styles={{ container: (base) => ({ ...base, width: 230 }) }} />
                                 </div>
                               </td>
                               <td>
@@ -4837,7 +5000,7 @@ const ApplicationJobPostModal = ({
                       </Dropdown.Menu>
                     </Dropdown> */}
                       <div className="w-100  mx-w350 relative">
-                        <FormControl
+                        {/* <FormControl
                           // autoFocus
                           placeholder="Current Location"
                           size="sm"
@@ -4862,7 +5025,20 @@ const ApplicationJobPostModal = ({
                               </li>
                             ))}
                           </ul>
-                        </div>
+                        </div> */}
+                        <Select
+                          className="react_selectbox"
+                          options={locationList}
+                          isSearchable={true}
+                          noOptionsMessage={() => "No results found"}
+                          value={locationList.find((opt) => opt.label === profileformData?.CurrentLocation)}
+                          placeholder="Current Location"
+                          filterOption={(option, inputValue) => {
+                            if (!inputValue) return false; // hide all options until user types
+                            return option.label.toLowerCase().includes(inputValue.toLowerCase());
+                          }}
+                          onChange={(e) => handleSelectGeographyLocaton(e.label)}
+                          styles={{ container: (base) => ({ ...base, width: 350 }) }} />
                       </div>
                     </Col>
 

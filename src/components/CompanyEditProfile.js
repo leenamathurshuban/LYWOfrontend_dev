@@ -959,6 +959,7 @@ import TextEditor from "./TextEditor";
 import { IndustrySelection, LocationSelection } from "../services/provider";
 import { useNavigate } from "react-router-dom";
 import { isBinaryFile } from "../utils/test";
+import Select from 'react-select';
 
 const CompanyEditProfile = ({ show, handleClose }) => {
   const companyProfileDetails = useSelector(
@@ -982,6 +983,8 @@ const CompanyEditProfile = ({ show, handleClose }) => {
   const [LocationSearchDropdown, setLocationSearchDropdown] = useState(false);
 
   const [selectedCompanyType, setSelectedCompanyType] = useState("");
+  const [companyTypeValue, setCompanyTypeValue] = useState(null);
+  const [companySizeValue, setCompanySizeValue] = useState(null);
   const [noOfEmploy, setnoOfEmploy] = useState("");
   const [searchLocationTerm, setLocationSearchTerm] = useState(""); //location state
 
@@ -1000,6 +1003,26 @@ const CompanyEditProfile = ({ show, handleClose }) => {
     location_name: "",
     locationUid: "",
   });
+  const companyTypeOption = [
+    { value: "Public-Company", label: "Public Company" },
+    { value: "Self-employed", label: "Self employed" },
+    { value: "Government-Agency", label: "Government Agency" },
+    { value: "Nonprofit", label: "Nonprofit" },
+    { value: "Sole-Proprietorship", label: "Sole Proprietorship" },
+    { value: "Privately-held", label: "Privately held" },
+    { value: "Partnership", label: "Partnership" },
+  ]
+  const companySizeOption = [
+    { value: "1-5-employees", label: "1 - 5 employees" },
+    { value: "6-10-employees", label: "6 - 10 employees" },
+    { value: "11-50-employees", label: "11 - 50 employees" },
+    { value: "51-200-employees", label: "51 - 200 employees" },
+    { value: "201-500-employees", label: "201 - 500 employees" },
+    { value: "501-1,000-employees", label: "501 - 1,000 employees" },
+    { value: "1,001-5,000-employees", label: "1,001 - 5,000 employees" },
+    { value: "5,001-10,000-employees", label: "5,001 - 10,000 employees" },
+    { value: "More-than-10000-employees", label: "More than 10000 employees" },
+  ]
 
   //console.log("logooo-----",companyProfileDetails?.logo)
   // cropping img state
@@ -1031,6 +1054,10 @@ const CompanyEditProfile = ({ show, handleClose }) => {
     setImageName(LogoName);
     setImage(companyProfileDetails?.logo ? `https://bittrend.shubansoftware.com${companyProfileDetails?.logo}` : "")
     setCroppedImage(companyProfileDetails?.logo ? `https://bittrend.shubansoftware.com${companyProfileDetails?.logo}` : "")
+    const matchType = companyTypeOption.find((opt) => opt.value === companyProfileDetails?.company_type)
+    if (matchType) setCompanyTypeValue(matchType)
+    const matchSize = companySizeOption.find((opt) => opt.value === companyProfileDetails?.number_of_employees)
+    if (matchSize) setCompanySizeValue(matchSize)
   }, [companyProfileDetails])
   const [isZoomedImg, setIsZoomedImg] = useState(false);
 
@@ -1325,18 +1352,18 @@ const CompanyEditProfile = ({ show, handleClose }) => {
 
   const handleIndustrySelect = (industryName) => {
     setSelectedIndustry({
-      industryName: industryName?.industry_name,
-      industryUid: industryName?.uid,
+      industryName: industryName?.label,
+      industryUid: industryName?.value,
     });
     setIds({
       ...ids,
-      industryName: industryName?.industry_name,
-      industryUid: industryName?.uid,
+      industryName: industryName?.label,
+      industryUid: industryName?.value,
     });
 
-    SetIndustrySearch(industryName?.industry_name);
-    setIndustrySearchDropdown(false);
-    setIndustries([]);
+    SetIndustrySearch(industryName?.label);
+    // setIndustrySearchDropdown(false);
+    // setIndustries([]);
   };
 
   const handleIndustrySearchChange = (e) => {
@@ -1344,11 +1371,32 @@ const CompanyEditProfile = ({ show, handleClose }) => {
     setIndustrySearchDropdown(true);
   };
 
-  const isHeadQuerterHandleApi = (LocationQuery) => {
-    const url = `https://bittrend.shubansoftware.com/account-api/location-list-api/?page=1&limit=500&search=${LocationQuery}`;
+  // const isHeadQuerterHandleApi = (LocationQuery) => {
+  //   const url = `https://bittrend.shubansoftware.com/account-api/location-list-api/?page=1&limit=500&search=${LocationQuery}`;
+  //   LocationSelection(url)
+  //     .then((res) => {
+  //       setLocation(res.data.response);
+  //     })
+  //     .catch((error) => {
+  //       if (
+  //         error?.response?.status === 401 ||
+  //         error?.response?.data?.detail?.includes(
+  //           "Given token not valid for any token type"
+  //         )
+  //       ) {
+  //         removeToken();
+  //         navigate("/loginwithpassword");
+  //       }
+  //     });
+  // };
+  const getHeadQuerterHandleApi = () => {
+    const url = `https://bittrend.shubansoftware.com/account-api/location-list-api/?limit=5000`;
     LocationSelection(url)
-      .then((res) => {
-        setLocation(res.data.response);
+      .then((res) => {        
+        if(res?.data?.success){
+          const key = res.data.response.map((opt)=>({value:opt.uid,label:opt.location_name}))
+          setLocation(key);
+        }        
       })
       .catch((error) => {
         if (
@@ -1362,29 +1410,32 @@ const CompanyEditProfile = ({ show, handleClose }) => {
         }
       });
   };
+  useEffect(()=>{
+    getHeadQuerterHandleApi()
+  },[])
 
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      isHeadQuerterHandleApi(searchLocationTerm);
-    }, 500);
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [searchLocationTerm]);
+  // useEffect(() => {
+  //   const timeoutId = setTimeout(() => {
+  //     isHeadQuerterHandleApi(searchLocationTerm);
+  //   }, 500);
+  //   return () => {
+  //     clearTimeout(timeoutId);
+  //   };
+  // }, [searchLocationTerm]);
 
   const handleLocationSelect = (LocationName) => {
     setSelectedLocation({
-      name: LocationName?.location_name,
-      uid: LocationName?.uid,
+      name: LocationName?.label,
+      uid: LocationName?.value,
     });
     setIds({
       ...ids,
-      locationUid: LocationName?.uid,
-      location_name: LocationName?.location_name,
+      locationUid: LocationName?.value,
+      location_name: LocationName?.label,
     });
-    setLocationSearchTerm(LocationName?.location_name);
-    setLocationSearchDropdown(false);
-    setLocation([]);
+    setLocationSearchTerm(LocationName?.label);
+    // setLocationSearchDropdown(false);
+    // setLocation([]);
   };
 
   const handleLocationSearchChange = (e) => {
@@ -1398,7 +1449,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
       setLocation([])
     }, 200);
   }
-  const handleCloseIndustryCombo=(e)=>{
+  const handleCloseIndustryCombo = (e) => {
     SetIndustrySearch("")
     setIndustrySearchDropdown(false)
     setTimeout(() => {
@@ -1521,22 +1572,46 @@ const CompanyEditProfile = ({ show, handleClose }) => {
   };
 
   const handleCompanyTypeChange = (e) => {
-    setSelectedCompanyType(e.target.value);
+    setSelectedCompanyType(e.value);
+    setCompanyTypeValue(e)
   };
 
   const handleNoOfTypeEmployChange = (e) => {
-    setnoOfEmploy(e.target.value);
+    setnoOfEmploy(e.value);
+    setCompanySizeValue(e)
   };
 
   useEffect(() => {
     setCompletionPercentage(calculateProfileCompletion());
   }, [companyProfileDetails]);
 
-  const isIndustryHandleApi = (query) => {
-    const url = `https://bittrend.shubansoftware.com/account-api/industry-list-api/?page=1&limit=500&search=${query}`;
+  // const isIndustryHandleApi = (query) => {
+  //   const url = `https://bittrend.shubansoftware.com/account-api/industry-list-api/?page=1&limit=500&search=${query}`;
+  //   IndustrySelection(url)
+  //     .then((res) => {
+  //       setIndustries(res.data.response);
+  //     })
+  //     .catch((error) => {
+  //       if (
+  //         error?.response?.status === 401 ||
+  //         error?.response?.data?.detail?.includes(
+  //           "Given token not valid for any token type"
+  //         )
+  //       ) {
+  //         //console.log("Token expired, redirecting to login");
+  //         removeToken();
+  //         navigate("/loginwithpassword");
+  //       }
+  //     });
+  // };
+  const getIndustryHandleApi = () => {
+    const url = `https://bittrend.shubansoftware.com/account-api/industry-list-api/?limit=500`;
     IndustrySelection(url)
       .then((res) => {
-        setIndustries(res.data.response);
+        if (res?.data?.success) {
+          const key = res.data.response.map((opt) => ({ value: opt.uid, label: opt.industry_name }))
+          setIndustries(key);
+        }
       })
       .catch((error) => {
         if (
@@ -1553,13 +1628,8 @@ const CompanyEditProfile = ({ show, handleClose }) => {
   };
 
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      isIndustryHandleApi(IndustrySearch);
-    }, 500);
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [IndustrySearch]);
+    getIndustryHandleApi()
+  }, [])
 
   // const filePath = companyProfileDetails?.logo;
 
@@ -1673,7 +1743,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                 </Form.Group>
                                 <Form.Group className="col-md-12 mb-3 relative">
                                   <Form.Label>Industry</Form.Label>
-                                  <Form.Control
+                                  {/* <Form.Control
                                     type="text"
                                     placeholder="Search for an industry.."
                                     value={IndustrySearch}
@@ -1710,21 +1780,34 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                       <p className="error">
                                         No data found
                                       </p>
-                                    )}
+                                    )} */}
+                                  <Select
+                                    options={industries}
+                                    value={industries.find((opt) => opt.label === IndustrySearch)}
+                                    isSearchable={true}
+                                    noOptionsMessage={() => "No results found"}
+                                    placeholder="Search for an industry.."
+                                    filterOption={(option, inputValue) => {
+                                      if (!inputValue) return false; // hide all options until user types
+                                      return option.label.toLowerCase().includes(inputValue.toLowerCase());
+                                    }}
+                                    onChange={handleIndustrySelect}
+                                    className="react_selectbox"
+                                  />
                                 </Form.Group>
 
                                 <Form.Group className="mb-3">
                                   <Form.Label>Company Type</Form.Label>
-                                  <Form.Select
+                                  {/* <Form.Select
                                     aria-label="Default select example"
                                     value={selectedCompanyType}
                                     onChange={handleCompanyTypeChange}
                                   >
                                     <option>
-                                      {/* {companyProfileDetails?.company_type
+                                      {companyProfileDetails?.company_type
                                         ? companyProfileDetails?.company_type
-                                        : "Company Type"} */}
-                                      {/* {selectedCompanyType} */}
+                                        : "Company Type"}
+                                      {selectedCompanyType}
                                     </option>
                                     <option value="Publice-Company">
                                       Public Company
@@ -1745,11 +1828,12 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                     <option value="Partnership">
                                       Partnership
                                     </option>
-                                  </Form.Select>
+                                  </Form.Select> */}
+                                  <Select value={companyTypeValue} options={companyTypeOption} onChange={handleCompanyTypeChange} className="react_selectbox" />
                                 </Form.Group>
                                 <Form.Group className="mb-3">
                                   <Form.Label>Company Size</Form.Label>
-                                  <Form.Select
+                                  {/* <Form.Select
                                     aria-label="Default select example"
                                     value={noOfEmploy}
                                     onChange={handleNoOfTypeEmployChange}
@@ -1789,12 +1873,13 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                     <option value="More-than-10000-employees">
                                       More than 10,000 employees
                                     </option>
-                                  </Form.Select>
+                                  </Form.Select> */}
+                                  <Select value={companySizeValue} options={companySizeOption} onChange={handleNoOfTypeEmployChange} className="react_selectbox" />
                                 </Form.Group>
 
                                 <Form.Group className="mb-3 relative">
                                   <Form.Label>Headquarter</Form.Label>
-                                  <Form.Control
+                                  {/* <Form.Control
                                     type="text"
                                     placeholder="Search for an Headquarter..."
                                     value={searchLocationTerm}
@@ -1827,7 +1912,20 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                   {LocationSearchDropdown &&
                                     Location.length === 0 && (
                                       <p className="error">Headquarter Not found </p>
-                                    )}
+                                    )} */}
+                                  <Select
+                                    options={Location}
+                                    value={Location.find((opt) => opt.label === searchLocationTerm)}
+                                    isSearchable={true}
+                                    noOptionsMessage={() => "No results found"}
+                                    placeholder="Search for an Headquarter..."
+                                    filterOption={(option, inputValue) => {
+                                      if (!inputValue) return false; // hide all options until user types
+                                      return option.label.toLowerCase().includes(inputValue.toLowerCase());
+                                    }}
+                                    className="react_selectbox"
+                                    onChange={handleLocationSelect}
+                                  />
                                 </Form.Group>
 
                                 <Form.Group className="mb-3">

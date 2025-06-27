@@ -16,6 +16,7 @@ import {
     Tab,
     Table,
 } from "react-bootstrap";
+import Select from "react-select";
 import Header from "../../components/Header";
 import Sidebar from "../../components/Sidebar";
 import faRingicon from "../../images/icons/Ring.svg";
@@ -88,8 +89,8 @@ const AssignmentComponent = (item) => {
     const [isLoading, setIsLoading] = useState(false);
     const [isAudioLoading, setIsAudioLoading] = useState(false);
     const [isVideoLoading, setIsVideoLoading] = useState(false);
-    const [isActiveSubmit,setIsActiveSubmit] = useState(false);
-    const [isSubmit,setIsSubmit] = useState(false);
+    const [isActiveSubmit, setIsActiveSubmit] = useState(false);
+    const [isSubmit, setIsSubmit] = useState(false);
 
     const [loadeMoreCount, setLoadeMoreCount] = useState(10);
     const isBinaryFile = (file) => {
@@ -284,7 +285,8 @@ const AssignmentComponent = (item) => {
     };
 
     const handleSelectChange = (e) => {
-        const sectionId = e.target.value;
+        // const sectionId = e.target.value;
+        const sectionId = e.value;
         setSelectedSection(sectionId);
 
         const sectionElement = document.getElementById(sectionId);
@@ -581,10 +583,10 @@ const AssignmentComponent = (item) => {
     };
     const applicantDetailAPI = async () => {
         try {
-            const user = applcant?.user_login?.email?applcant?.user_login?.email:applcant?.applcant?.user;
+            const user = applcant?.user_login?.email ? applcant?.user_login?.email : applcant?.applcant?.user;
             // const res = await ApplicationDeatilsApi(user)
-             const res = await getAssetDataDetailsAPI(jobdetail?.state?.uid,applicantUid?.uid)
-            if (res?.success) {                
+            const res = await getAssetDataDetailsAPI(jobdetail?.state?.uid, applicantUid?.uid)
+            if (res?.success) {
                 // setSelectedSectionAnswer(res?.data?.response?.asset_data)
                 res?.response?.job?.asset_job?.map((Val) => {
                     if (Val?.asset_title === "Pre-interview round for creative director") {
@@ -617,6 +619,7 @@ const AssignmentComponent = (item) => {
     useEffect(() => {
         applicantDetailAPI();
     }, [])
+    const optionEvl = EvaluationListDetails[0]?.section_asset?.map((opt)=>({value:opt.id,label:opt.section_title}))
 
     // const onTimeUp = () => {
     //     setShowQuiz(false)
@@ -734,7 +737,7 @@ const AssignmentComponent = (item) => {
                         <Row className="justify-content-center">
                             <Col md={3} lg={2} className="queLeft_panel pe-0">
                                 <div className="p-3">
-                                    <Form.Select
+                                    {/* <Form.Select
                                         aria-label="Default select example"
                                         className="h-36"
                                         onChange={handleSelectChange}
@@ -746,7 +749,13 @@ const AssignmentComponent = (item) => {
                                                 {item.section_title}
                                             </option>
                                         ))}
-                                    </Form.Select>
+                                    </Form.Select> */}
+                                    <Select
+                                        options={optionEvl}
+                                        value={optionEvl.find((opt)=>opt.value===sectionIcon)}
+                                        onChange={handleSelectChange}
+                                        className="h-36 react_selectbox"
+                                    />
                                 </div>
                                 <Nav variant="pills" className="flex-column">
                                     <Nav.Item>
@@ -1167,7 +1176,7 @@ const AssignmentComponent = (item) => {
 
                                                                 {item.quiz_type === "Arrange" && (
                                                                     <ul className="qus_crossed">
-                                                                        {/* {item.questions_answer.map(
+                                                                        {/* {(
                                       (answer, index) => (
                                         <li key={index}>
                                           <div className="crossd_answarp">

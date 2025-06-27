@@ -19,7 +19,7 @@ import CreateJobsRevised from "./CreateJobsRevised";
 import { removeToken } from "../../helpers/helper";
 import { CreateJobFormValidation } from "../../utils/validation";
 import { toast } from "react-toastify";
-import Select from 'react-select'
+import Select from 'react-select';
 import UpdateJobsRevised from "./UpdateJobsRevised";
 
 const CreateJobs = ({ show, handleClose }) => {
@@ -1119,14 +1119,15 @@ const CreateJobs = ({ show, handleClose }) => {
               <span className="error">Invalid key Search</span>
             )} */}
             <Select
+              className="react_selectbox"
               options={isLikeData}
               isSearchable={true}
               noOptionsMessage={() => "No results found"}
-              placeholder="Is Like"
+              placeholder="Search"
               filterOption={(option, inputValue) => {
                 if (!inputValue) return false; // hide all options until user types
                 return option.label.toLowerCase().includes(inputValue.toLowerCase());
-              }}
+              }}              
               onChange={handleSelectedLikeItems}
             />
 
@@ -1214,6 +1215,7 @@ const CreateJobs = ({ show, handleClose }) => {
               </div>
             )} */}
             <Select
+              className="react_selectbox"
               options={locationData}
               isSearchable={true}
               noOptionsMessage={() => "No results found"}
@@ -1221,7 +1223,7 @@ const CreateJobs = ({ show, handleClose }) => {
               filterOption={(option, inputValue) => {
                 if (!inputValue) return false; // hide all options until user types
                 return option.label.toLowerCase().includes(inputValue.toLowerCase());
-              }}
+              }}              
               onChange={handleLocationItems}
             />
 
@@ -1427,7 +1429,7 @@ const CreateJobs = ({ show, handleClose }) => {
                   </ul>
                 </div>
               )} */}
-              <Select defaultValue={createFormData.jobType} options={jobTypeOptions} onChange={handleJobType} />
+              <Select className="react_selectbox" defaultValue={createFormData.jobType} options={jobTypeOptions} onChange={handleJobType} />
             </div>
             <span style={{ color: "red" }}>{errors.jobType}</span>
           </Col>
@@ -1489,7 +1491,7 @@ const CreateJobs = ({ show, handleClose }) => {
                   </ul>
                 </div>
               )} */}
-              <Select defaultValue={createFormData.workPlaceType} options={workplaceOption} onChange={(val) => {
+              <Select className="react_selectbox" defaultValue={createFormData.workPlaceType} options={workplaceOption} onChange={(val) => {
                 setCreateFormData({
                   ...createFormData,
                   ["workPlaceType"]: val?.value

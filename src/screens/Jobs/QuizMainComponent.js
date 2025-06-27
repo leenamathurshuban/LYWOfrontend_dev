@@ -16,6 +16,7 @@ import {
   Tab,
   Table,
 } from "react-bootstrap";
+import Select from "react-select";
 import Header from "../../components/Header";
 import Sidebar from "../../components/Sidebar";
 import faRingicon from "../../images/icons/Ring.svg";
@@ -86,7 +87,7 @@ const QuizMainComponent = (item) => {
   const [questionId, setQuestionId] = useState()
   const [getKeyIndex, setGetKeyIndex] = useState();
   const [assestStatus, setAssetStatus] = useState({});
-  const [succees,setSuccess] = useState(false)
+  const [succees, setSuccess] = useState(false)
   const [answerUids, setAnswerUids] = useState({})
 
   //List state
@@ -383,9 +384,9 @@ const QuizMainComponent = (item) => {
   }
   const applicantDetailAPI = async () => {
     try {
-      const user = applcant.user_login.email?applcant.user_login.email:applcant?.applcant?.user;
+      const user = applcant.user_login.email ? applcant.user_login.email : applcant?.applcant?.user;
       // const res = await ApplicationDeatilsApi(user)
-      const res = await getAssetDataDetailsAPI(jobData?.state?.uid,applicantUid?.uid)
+      const res = await getAssetDataDetailsAPI(jobData?.state?.uid, applicantUid?.uid)
       if (res?.success) {
         // setSelectedSectionAnswer(res?.data?.response?.asset_data)
         // res?.data?.response?.asset_data[0].section_asset.sort((a, b) => a.id - b.id).map((item, quesIndex) =>
@@ -400,7 +401,7 @@ const QuizMainComponent = (item) => {
         //     }))
         //   })
         // )
-        
+
         res?.response?.job?.asset_job.map((Val) => {
           if (Val?.asset_title === "Technical round for EHS Manager") {
             Val?.section_asset.sort((a, b) => a.id - b.id).map((item, quesIndex) =>
@@ -454,12 +455,12 @@ const QuizMainComponent = (item) => {
     const secs = seconds % 60;
     return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
   };
-  const handleSubmit=()=>{
-    debugger
-    if(assestStatus?.asset_completion_status === 'Completed'){
+  const handleSubmit = () => {
+    if (assestStatus?.asset_completion_status === 'Completed') {
       setSuccess(true)
     }
   }
+  const optionEvl = EvaluationListDetails[0]?.section_asset?.map((opt)=>({value:opt.id,label:opt.section_title}))
   console.log(QuizData, EvaluationListDetails)
   // console.log(markReview)
   // console.log(QuizData[getKeyIndex], applcant)
@@ -556,7 +557,7 @@ const QuizMainComponent = (item) => {
             <Row className="justify-content-center">
               <Col md={3} lg={2} className="queLeft_panel pe-0">
                 <div className="p-3">
-                  <Form.Select
+                  {/* <Form.Select
                     aria-label="Default select example"
                     className="h-36"
                     onChange={handleSelectChange}
@@ -568,7 +569,13 @@ const QuizMainComponent = (item) => {
                         {item.section_title}
                       </option>
                     ))}
-                  </Form.Select>
+                  </Form.Select> */}
+                  <Select
+                    options={optionEvl}
+                    value={optionEvl.find((opt) => opt.value === sectionIcon)}
+                    onChange={handleSelectChange}
+                    className="h-36 react_selectbox"
+                  />
                 </div>
                 <Nav variant="pills" className="flex-column">
                   <Nav.Item>
@@ -841,7 +848,7 @@ const QuizMainComponent = (item) => {
                                   </>
                                 )}
 
-                                {item.quiz_type === "Arrange" && (
+                                {item?.quiz_type === "Arrange" && (
                                   <ul className="qus_crossed">
                                     {/* {item.questions_answer.map(
                                       (answer, index) => (

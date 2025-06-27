@@ -3,6 +3,7 @@ import {
     Container, Row, Col, Tab, Nav, Card, Form, Button, InputGroup, Table, Offcanvas, Accordion, Badge, Stack, ProgressBar,
     Dropdown
 } from "react-bootstrap";
+import Select from "react-select";
 import Header from "../../components/Header";
 import Sidebar from "../../components/Sidebar";
 import angleDown from "../../images/icons/angle-down-arrow.svg"
@@ -652,12 +653,14 @@ tracker.show_tasks()
         }
     }
     const handleTestJob = (e) => {
-        const { value } = e.target;
+        // const { value } = e.target;
+        const { value } = e;
         const filterData = assignmentReviewList.filter((item) => item?.uid === value);
         setJobTest(filterData)
     }
     const handleSectionWise = (e) => {
-        const { value } = e.target;
+        // const { value } = e.target;
+        const { value } = e;
         assignmentReviewList.map((Val) => {
             const filterData = Val?.section_asset?.filter((item) => item.uid === value);
             setSectionWiseData(filterData)
@@ -848,6 +851,13 @@ tracker.show_tasks()
     useEffect(() => {
         getAssetEvalutionData()
     }, [candidateDetails])
+    const assignmentListOption = assignmentReviewList.map((opt) => ({ value: opt.uid, label: opt.asset_title }))
+    const sectionAssetfun = (Arry) => {
+        if (Arry.length > 0) {
+            const matchSection = Arry.map((opt) => ({ value: opt.uid, label: opt.section_title }))
+            return matchSection
+        }
+    }
     // console.log(assignmentReviewList)
     // console.log('section', sectionWiseData)
     // console.log(questionWiseData)
@@ -1093,6 +1103,7 @@ tracker.show_tasks()
                                                                                         <option>{value}%</option>
                                                                                     ))}
                                                                                 </select>
+                                                                                {/* <Select className="select-transpant" options={Object.entries(item?.job_applicant_profile?.personality).map(([key, value]) => ({value:value,label:`${value}%`}))} /> */}
                                                                             </div>
                                                                         </td>
                                                                         <td>Invited</td>
@@ -1872,7 +1883,7 @@ tracker.show_tasks()
                                                 <li>Final Short List</li>
                                             </ul>
                                         </Col>
-                                    </Row>                                    
+                                    </Row>
                                     <Row>
                                         <Col md={12}>
                                             <Card className="shadow-sm border-0 grap_card mt-3 radius-sm">
@@ -1889,7 +1900,7 @@ tracker.show_tasks()
                                             </Card>
                                         </Col>
                                     </Row>
-                                    <Row>                                        
+                                    <Row>
                                         <Col md={6}>
                                             <Card className="shadow-sm border-0 grap_card mt-3 radius-sm">
                                                 <Card.Body>
@@ -1903,7 +1914,7 @@ tracker.show_tasks()
                                                     </div>
                                                 </Card.Body>
                                             </Card>
-                                        </Col>                                        
+                                        </Col>
                                         <Col md={6}>
                                             <Card className="shadow-sm border-0 grap_card mt-3 radius-sm">
                                                 <Card.Body>
@@ -1918,7 +1929,7 @@ tracker.show_tasks()
                                                 </Card.Body>
                                             </Card>
                                         </Col>
-                                    </Row>                                    
+                                    </Row>
                                     <Row>
                                         <Col md={12}>
                                             <Card className="shadow-sm border-0 grap_card mt-3 radius-sm">
@@ -1935,7 +1946,7 @@ tracker.show_tasks()
                                             </Card>
                                         </Col>
                                     </Row>
-                                    <Row>                                        
+                                    <Row>
                                         <Col md={6}>
                                             <Card className="shadow-sm border-0 grap_card mt-3 radius-sm">
                                                 <Card.Body>
@@ -1981,7 +1992,7 @@ tracker.show_tasks()
                                             </Card>
                                         </Col>
                                     </Row>
-                                    <Row>                                        
+                                    <Row>
                                         <Col md={6}>
                                             <Card className="shadow-sm border-0 grap_card mt-3 radius-sm">
                                                 <Card.Body>
@@ -2018,15 +2029,16 @@ tracker.show_tasks()
                                         <Card.Header>
                                             <Row>
                                                 <Col md={6}>
-                                                    <Form.Select className="select-md-transpant" onChange={handleTestJob}>
+                                                    {/* <Form.Select className="select-md-transpant" onChange={handleTestJob}>
                                                         {assignmentReviewList.map((Val) => (
                                                             <option value={Val?.uid} >{Val?.asset_title}</option>
-                                                        ))}
-                                                        {/* <option>Assignment 1 </option>
-                                                        <option value="1">One</option>
-                                                        <option value="2">Two</option>
-                                                        <option value="3">Three</option> */}
-                                                    </Form.Select>
+                                                        ))}                                                       
+                                                    </Form.Select> */}
+                                                    <Select
+                                                        options={assignmentListOption}
+                                                        onChange={handleTestJob}
+                                                        className="select-md-transpant react_selectbox"
+                                                    />
                                                 </Col>
                                                 <Col md={6} className="d-flex review_count justify-content-end align-items-center">
                                                     <p className="font-sm font-weight-600 m-0"><img src={userDark} alt="user" /> <strong className="font-weight-700">{questionWiseData?.user_answer_question?.filter(item => item?.score > 0)?.length}</strong> / {questionWiseData?.user_answer_question?.length} Completed</p>
@@ -2038,15 +2050,16 @@ tracker.show_tasks()
                                             <Row>
                                                 {assignmentReviewList.map((item, index) => (
                                                     <Col md={2} className="queslsit_panel pe-0">
-                                                        <Form.Select className="qs_dropdown" onChange={handleSectionWise}>
+                                                        {/* <Form.Select className="qs_dropdown" onChange={handleSectionWise}>
                                                             {item?.section_asset.map((cVal) => (
                                                                 <option value={cVal?.uid}>{cVal?.section_title}</option>
                                                             ))}
-
-                                                            {/* <option value="1">One</option>
-                                                        <option value="2">Two</option>
-                                                        <option value="3">Three</option> */}
-                                                        </Form.Select>
+                                                        </Form.Select> */}
+                                                        <Select
+                                                            options={sectionAssetfun(item?.section_asset)}
+                                                            onChange={handleSectionWise}
+                                                            className="qs_dropdown react_selectbox"
+                                                        />
                                                         <ul className="queslsit">
                                                             {sectionWiseData[0]?.question_section?.map((QuesItem, quesIndex) => (
                                                                 <li onClick={() => handleSectionQuestionbyuser(QuesItem)}>

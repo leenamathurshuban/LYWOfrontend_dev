@@ -10,8 +10,8 @@ export const CompanyUrl = {
   CompanyList : "account-api/company-list-api/?page=1&limit=10",
   Logout : "account-api/logout-user-api/",
   UpdateCompanyProfile : "account-api/update-company-api/",
-  CompanyUserList : "account-api/company-user-list-api/b6cadaab-69bc-4707-8656-2e8573e17547/?search=shivani"
-
+  CompanyUserList : "account-api/company-user-list-api/b6cadaab-69bc-4707-8656-2e8573e17547/?search=shivani",
+  DashboardList:"assets-api/dashboard-api/"
 }
 
 export const UsersUrl = {

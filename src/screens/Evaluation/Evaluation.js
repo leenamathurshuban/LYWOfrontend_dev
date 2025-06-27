@@ -16,6 +16,7 @@ import {
   Tab,
   Table,
 } from "react-bootstrap";
+import Select from "react-select";
 import Header from "../../components/Header";
 import Sidebar from "../../components/Sidebar";
 import faRingicon from "../../images/icons/Ring.svg";
@@ -67,6 +68,7 @@ const Evalation = () => {
   const [SerachList, setSerachList] = useState("");
   const [activeKeys, setActiveKeys] = useState(["0-0"]);
   const [selectedSection, setSelectedSection] = useState("");
+  const evalOption = EvaluationListDetails.length > 0 ? EvaluationListDetails[0].section_asset.map((opt) => ({ value: opt.id, label: opt.section_title })) : []
 
   const revaluationsListAPI = async (SerachQuestion) => {
     setIsLoading(true);
@@ -204,7 +206,8 @@ const Evalation = () => {
   };
 
   const handleSelectChange = (e) => {
-    const sectionId = e.target.value;
+    // const sectionId = e.target.value;
+    const sectionId = e.value;
     setSelectedSection(sectionId);
 
     const sectionElement = document.getElementById(sectionId);
@@ -441,7 +444,7 @@ const Evalation = () => {
                   </span>
                   <label>Mandatory</label>
                   {item.total_mandatory_questions ==
-                  item.total_number_of_question ? (
+                    item.total_number_of_question ? (
                     <h4>All</h4>
                   ) : (
                     `${item.total_mandatory_questions} / ${item.total_number_of_question}`
@@ -450,9 +453,8 @@ const Evalation = () => {
               </Col>
               <Col md={4}>
                 <div
-                  className={`inst_iconbox ${
-                    !item.fixed_time ? "disabled" : ""
-                  }`}
+                  className={`inst_iconbox ${!item.fixed_time ? "disabled" : ""
+                    }`}
                 >
                   <span className="inst_icon">
                     <img src={timerIcon} />
@@ -463,9 +465,8 @@ const Evalation = () => {
               </Col>
               <Col md={4}>
                 <div
-                  className={`inst_iconbox ${
-                    !item.is_negative_scoring ? "disabled" : ""
-                  }`}
+                  className={`inst_iconbox ${!item.is_negative_scoring ? "disabled" : ""
+                    }`}
                 >
                   <span className="inst_icon">
                     <img src={ngtscoringIcon} />
@@ -603,7 +604,7 @@ const Evalation = () => {
             <Row className="justify-content-center">
               <Col md={3} lg={2} className="queLeft_panel pe-0">
                 <div className="p-3">
-                  <Form.Select
+                  {/* <Form.Select
                     aria-label="Default select example"
                     className="h-36"
                     onChange={handleSelectChange}
@@ -615,7 +616,13 @@ const Evalation = () => {
                         {item.section_title}
                       </option>
                     ))}
-                  </Form.Select>
+                  </Form.Select> */}
+                  <Select
+                    className="h-36 react_selectbox"
+                    options={evalOption}
+                    value={evalOption.find((opt) => opt.value === selectedSection)}                    
+                    onChange={handleSelectChange}
+                  />
                 </div>
                 <Nav variant="pills" className="flex-column">
                   <Nav.Item>
@@ -704,7 +711,7 @@ const Evalation = () => {
                           className="quetions_list mt-4"
                           // activeKey={activeKeys}
                           activeKey={activeKeys.map(String)}
-                          // activeKey={activeKeys.map(item => item.toString())}
+                        // activeKey={activeKeys.map(item => item.toString())}
                         >
                           {item.question_section.map((item, sectionIndex) => (
                             <Accordion.Item
@@ -728,12 +735,12 @@ const Evalation = () => {
                                 </span>
                               </Accordion.Header>
                               <Accordion.Body>
-                                {item.quiz_type === "MCQ-Multi" && (
+                                {item?.quiz_type === "MCQ-Multi" && (
                                   <ul className="que_options">
-                                    {item.question_option.part1?.map(
+                                    {item?.question_option?.part1?.map(
                                       (option, index) => {
                                         const isChecked =
-                                          item.questions_answer.some(
+                                          item?.questions_answer?.some(
                                             (answer) =>
                                               answer.replace(/'/g, "") ===
                                               option
@@ -754,12 +761,12 @@ const Evalation = () => {
                                   </ul>
                                 )}
 
-                                {item.quiz_type === "MCQ" && (
+                                {item?.quiz_type === "MCQ" && (
                                   <ul className="que_options">
-                                    {item.question_option.part1?.map(
+                                    {item?.question_option?.part1?.map(
                                       (option, index) => {
                                         const isChecked =
-                                          item.questions_answer.some(
+                                          item?.questions_answer?.some(
                                             (answer) =>
                                               answer.replace(/'/g, "") ===
                                               option
@@ -780,9 +787,9 @@ const Evalation = () => {
                                   </ul>
                                 )}
 
-                                {item.quiz_type === "Match" && (
+                                {item?.quiz_type === "Match" && (
                                   <ol className="qus_crossed">
-                                    {item?.question_option.part1?.map(
+                                    {item?.question_option?.part1?.map(
                                       (data, index) => {
                                         const correctCapital =
                                           item?.questions_answer[index]
@@ -810,9 +817,9 @@ const Evalation = () => {
                                   </ol>
                                 )}
 
-                                {item.quiz_type === "Arrange" && (
+                                {item?.quiz_type === "Arrange" && (
                                   <ul className="qus_numbered">
-                                    {item.questions_answer.map(
+                                    {item?.questions_answer?.part1?.map(
                                       (answer, index) => (
                                         <li key={index}>
                                           <div className="crossd_answarp">
@@ -828,7 +835,7 @@ const Evalation = () => {
                                 )}
 
                                 {item.assignment_type ==
-                                "Text-Video-Mandatory" ? (
+                                  "Text-Video-Mandatory" ? (
                                   <>
                                     <div className="que_attachment me-2">
                                       <h6>

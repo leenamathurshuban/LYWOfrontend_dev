@@ -247,7 +247,7 @@
 
 // export default Dashboard;
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Breadcrumb,
   Button,
@@ -267,7 +267,7 @@ import Header from "../../components/Header";
 import Sidebar from "../../components/Sidebar";
 import { logoMaker, removeToken } from "../../helpers/helper";
 import { liwotextlogo } from "../../images/assest";
-import { GetcompanyDetailsApi } from "../../services/provider";
+import { dashboardListAPI, GetcompanyDetailsApi } from "../../services/provider";
 import { setCompanyProfileDetails } from "../../Slice/Login/LoginSlice";
 import logoIcon from "../../images/logo_icon.png";
 import applicationstIcon from "../../images/icons/application_stIcon.svg";
@@ -292,8 +292,9 @@ const Dashboard = () => {
   const [show, setShow] = useState(false);
   const [modal, setModal] = useState(false)
   const handleClose = () => setShow(false);
-  const handleModalClose =()=>setModal(false);
+  const handleModalClose = () => setModal(false);
   const handleShow = () => setShow(true);
+  const [dashboardList, setDashboardList] = useState({})
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -332,6 +333,21 @@ const Dashboard = () => {
       });
   };
 
+  const getDashboardListAPI = async () => {
+    try {
+      const res = await dashboardListAPI(companyInfo?.uid);
+      if (res?.data?.success) {
+        setDashboardList(res?.data?.response)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  useEffect(() => {
+    getDashboardListAPI()
+  }, [])
+
+  console.log(dashboardList)
   return (
     <>
       <Sidebar />
@@ -443,8 +459,8 @@ const Dashboard = () => {
                           <img src={activejobIcon} />
                         </span>
                         <div className="dbst_info">
-                          <h4><strong className="font-weight-600">4</strong> Active Jobs</h4>
-                          <p>20 Open Positions</p>
+                          <h4><strong className="font-weight-600">{dashboardList?.total_count_data?.active_jobs?.active_jobs_count}</strong> Active Jobs</h4>
+                          <p>{dashboardList?.total_count_data?.active_jobs?.open_position_count} Open Positions</p>
                         </div>
                       </div>
                     </Card.Body>
@@ -458,7 +474,7 @@ const Dashboard = () => {
                           <img src={applicationstIcon} />
                         </span>
                         <div className="dbst_info">
-                          <h4><strong className="font-weight-600">1500</strong> Applications</h4>
+                          <h4><strong className="font-weight-600">{dashboardList?.total_count_data?.application_count}</strong> Applications</h4>
                           <p>in last 7 days</p>
                         </div>
                       </div>
@@ -473,7 +489,7 @@ const Dashboard = () => {
                           <img src={shortlistedstIcon} />
                         </span>
                         <div className="dbst_info">
-                          <h4><strong className="font-weight-600">40</strong> Shortlisted</h4>
+                          <h4><strong className="font-weight-600">{dashboardList?.total_count_data?.application_shortlisted_count}</strong> Shortlisted</h4>
                           <p>in last 7 days</p>
                         </div>
                       </div>
@@ -633,8 +649,8 @@ const Dashboard = () => {
                       <img src={pendingrwstIcon} />
                     </span>
                     <div className="dbst_info">
-                      <h4>342 Pending Reviews</h4>
-                      <p>50 in last 7 days</p>
+                      <h4>{dashboardList?.total_count_data?.total_pending_review_count} Pending Reviews</h4>
+                      <p>{dashboardList?.total_count_data?.total_pending_review_seven_days} in last 7 days</p>
                     </div>
                   </div>
                   <InputGroup className="header_serach mt-3">
@@ -669,7 +685,14 @@ const Dashboard = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
+                      {dashboardList?.total_count_data?.pending_reviews?.map((item) => (
+                        <tr>
+                          <td>{item?.jobcompany__job_title}</td>
+                          <td className="text-end"><span className="badge-outline">{item?.pending_review} Pending</span></td>
+                        </tr>
+                      ))
+                      }
+                      {/* <tr>
                         <td>Full Stack Developer</td>
                         <td className="text-end"><span className="badge-outline">12 Pending</span></td>
                       </tr>
@@ -692,7 +715,7 @@ const Dashboard = () => {
                       <tr>
                         <td>Full Stack Developer</td>
                         <td className="text-end"><span className="badge-outline">22 Pending</span></td>
-                      </tr>
+                      </tr> */}
                     </tbody>
                   </table>
                 </Card.Body>
@@ -710,7 +733,14 @@ const Dashboard = () => {
                   </div>
                   <table className="mt-3 mb-0 table">
                     <tbody>
-                      <tr>
+                      {dashboardList?.total_count_data?.draft_jobs?.map((item) => (
+                        <tr>
+                          <td>{item?.job_title}</td>
+                          <td className="text-end"><span>{item?.created_at}</span></td>
+                        </tr>
+                      ))
+                      }
+                      {/* <tr>
                         <td>Full Stack Developer</td>
                         <td className="text-end"><span>01/05/2025</span></td>
                       </tr>
@@ -721,7 +751,7 @@ const Dashboard = () => {
                       <tr>
                         <td>Product Owner</td>
                         <td className="text-end"><span>01/05/2025</span></td>
-                      </tr>
+                      </tr> */}
                     </tbody>
                   </table>
                 </Card.Body>

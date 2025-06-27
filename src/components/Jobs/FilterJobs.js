@@ -8,6 +8,7 @@ import {
   Row,
   Modal,
 } from "react-bootstrap";
+import Select from "react-select";
 import {
   CreateJobDepartment,
   CreateJobLocation,
@@ -697,6 +698,7 @@ const FilterJobs = ({
                   {/* <option value="2">Two</option>
                   <option value="3">Three</option> */}
                 </Form.Select>
+                {/* <Select  /> */}
               </Col>
               <Col xs={8}>
                 <Form.Group controlId="exampleForm.ControlInput1">

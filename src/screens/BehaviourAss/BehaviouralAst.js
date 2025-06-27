@@ -10,6 +10,7 @@ import {
     Offcanvas,
     Row
 } from "react-bootstrap";
+import Select from "react-select";
 import cakeIQ from "../../images/icons/quiz/cake-IQ.svg";
 import coffieIQ from "../../images/icons/quiz/coffie-IQ.svg";
 import iceIQ from "../../images/icons/quiz/ice-crime-IQ.svg";
@@ -72,6 +73,14 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
     const [attemptLeastQuiz, setAttemptLeastQuiz] = useState([])
     const [complete, setComplete] = useState(false)
     const [language, setLanguage] = useState('english')
+    const langOption = [
+        { value: "english", label: "English" },
+        { value: "hindi", label: "Hindi" },
+        { value: "gujrati", label: "Gujrati" },
+        { value: "kannada", label: "Kannada" },
+        { value: "tamil", label: "Tamil" },
+        { value: "telugu", label: "Telugu" },
+    ]
     const allSelectionsMade = mostLeastLike.every(row => row.most !== "" && row.least !== "");
     const handleClose = () => {
         if (!quizMostLeastLike.length) {
@@ -175,7 +184,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                                     navigate(`/evaluation-quiz/${Val?.uid}`, { state: jobPostData })
                                 }
                             })
-                        }else{
+                        } else {
                             setShow(false)
                         }
                     }
@@ -205,7 +214,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                                     navigate(`/evaluation-quiz/${Val?.uid}`, { state: jobPostData })
                                 }
                             })
-                        }else{
+                        } else {
                             setShow(false)
                         }
                         // setTimeout(() => {
@@ -309,7 +318,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                         <span className="att_count">Attempted <strong>{runCounter()} / 28</strong></span>
                         <button type="button" onClick={() => setShowInstruction(true)} className="me-3 btn-light-outline-sm"><img src={infogray} />Instructions</button>
                         <button type="button" className="btn-light-outline-sm me-3 setlanguage"><img src={globgray} />
-                            <Form.Select
+                            {/* <Form.Select
                                 name="currency"
                                 aria-label="Default select example"
                                 className="sm-fselect"
@@ -325,7 +334,15 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                                 <option selected value="kannada">Kannada</option>
                                 <option selected value="tamil">Tamil</option>
                                 <option selected value="telugu">Telugu</option>
-                            </Form.Select>
+                            </Form.Select> */}
+                            <Select
+                                options={langOption}
+                                value={langOption.find((opt)=>opt.value===language)}
+                                onChange={(e) => {
+                                    setLanguage(e.value);
+                                }}
+                                className="sm-fselect react_selectbox"
+                            />
                         </button>
                     </div>
                 </Modal.Header>

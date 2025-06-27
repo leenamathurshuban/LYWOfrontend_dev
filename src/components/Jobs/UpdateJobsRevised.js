@@ -12,6 +12,7 @@ import {
     ProgressBar,
     Row,
 } from "react-bootstrap";
+import Select from "react-select";
 
 import RangeSlider from "../../components/RangeSilder";
 import Edit03 from "../../images/icons/edit-0303.svg";
@@ -143,7 +144,37 @@ const UpdateJobsRevised = ({
     const spokenRef = useRef()
     const writtenRef = useRef()
     const locationRef = useRef()
-    const [calculateRecommend, setCalculatedRecommend] = useState([])
+    const [calculateRecommend, setCalculatedRecommend] = useState([]);
+    const salaryRangeOption = [
+        { value: "Salary-range", label: "Salary Range" },
+        { value: "Min-salary", label: "Min. Salary" },
+        { value: "Max-salary", label: "ContrMax. Salaryact" },
+    ]
+    const salaryTypeOption = [
+        { value: "Per-Month", label: "Per Month" },
+        { value: "Per-Annum", label: "Per Annum" },
+    ]
+    const minimumEducationOption = [
+        { value: "Below Secondary Education", label: "Below Secondary Education" },
+        { value: "Upper Secondary (Intermediate, High School, Grade 12)", label: "Upper Secondary (Intermediate, High School, Grade 12)" },
+        { value: "Certification  / Vocational / Technical Training", label: "Certification  / Vocational / Technical Training" },
+        { value: "Diploma / Associate Degree", label: "Diploma / Associate Degree" },
+        { value: "Bachelor's Degree", label: "Bachelor's Degree" },
+        { value: "Master's Degree", label: "Master's Degree" },
+        { value: "Professional Degree (e.g., MD, JD)", label: "Professional Degree (e.g., MD, JD)" },
+        { value: "Doctoral Degree (Ph.D., Ed.D.)", label: "Doctoral Degree (Ph.D., Ed.D.)" },
+        { value: "Postdoctoral Research", label: "Postdoctoral Research" },
+    ]
+    const expRangeOption = [
+        { value: "Range", label: "Range" },
+        { value: "Min", label: "Min" },
+        { value: "Max", label: "Max" },
+    ]
+    const [salaryRangeValue, setSalaryRangeValue] = useState(null);
+    const [salaryTypeValue, setSalaryTypeValue] = useState(null);
+    const [minEducationValue, setMinEducationValue] = useState(null);
+    const [ExpRangeValue, setExpRangeValue] = useState(null);
+
     // const [importantFlag, setImportantFlag] = useState({
     //     salary: false,
     //     education: false,
@@ -344,7 +375,15 @@ const UpdateJobsRevised = ({
                 language: response?.data?.response?.is_language_imp,
                 geography: response?.data?.response?.is_geography_imp,
             })
-            // setSkillGroupsData(response?.data?.response?.skills)
+            const matchRange = salaryRangeOption.find((opt) => opt.value === response?.data?.response?.salary_price_type)
+            if (matchRange) setSalaryRangeValue(matchRange);
+            const matchType = salaryTypeOption.find((opt) => opt.value === response?.data?.response?.salary_type)
+            if (matchType) setSalaryTypeValue(matchType)
+            const matchMinEdu = minimumEducationOption.find((opt) => opt.value === response?.data?.response?.minimum_education)
+            if (matchMinEdu) setMinEducationValue(matchMinEdu)
+            const expMatch = expRangeOption.find((opt)=>opt.value=== response?.data?.response?.year_of_experience_type)
+            if(expMatch) setExpRangeValue(expMatch)
+                // setSkillGroupsData(response?.data?.response?.skills)
             const formated = response?.data?.response?.skills.reduce((acc, item) => {
                 const { skill_group } = item;
                 const groupKey = skill_group.skill_group_name;
@@ -2191,7 +2230,7 @@ const UpdateJobsRevised = ({
                                             <Accordion.Body ref={(el) => (sectionRefs.current['1'] = el)}>
                                                 <Row className="align-items-center mb-3">
                                                     <div className="form-group w-auto mb-0">
-                                                        <Form.Select
+                                                        {/* <Form.Select
                                                             name="salary_price_type"
                                                             aria-label="Default select example"
                                                             value={updateFormData?.salary_price_type}
@@ -2206,7 +2245,17 @@ const UpdateJobsRevised = ({
                                                             </option>
                                                             <option value="Min-salary">Min. Salary</option>
                                                             <option value="Max-salary">Max. Salary</option>
-                                                        </Form.Select>
+                                                        </Form.Select> */}
+                                                        <Select value={salaryRangeValue} options={salaryRangeOption} className="sm-fselect react_selectbox"
+                                                            onChange={(e) => {
+                                                                setUpdateFormData({
+                                                                    ...updateFormData,
+                                                                    ["salary_price_type"]: e.value,
+                                                                });
+                                                                setPriceRangeType(e.value);
+                                                                setSalaryRangeValue(e)
+                                                            }}
+                                                        />
                                                     </div>
                                                     {(priceRangeType === "Salary-range" ||
                                                         priceRangeType === "Min-salary") && (
@@ -2242,7 +2291,7 @@ const UpdateJobsRevised = ({
                                                             </div>
                                                         )}
                                                     <div className="form-group w-auto mb-0 pe-1">
-                                                        <Form.Select
+                                                        {/* <Form.Select
                                                             name="currency"
                                                             aria-label="Default select example"
                                                             className="sm-fselect"
@@ -2252,10 +2301,18 @@ const UpdateJobsRevised = ({
                                                             <option selected value="INR">
                                                                 INR
                                                             </option>
-                                                        </Form.Select>
+                                                        </Form.Select> */}
+                                                        <Select value={{ value: "INR", label: "INR" }} options={[{ value: "INR", label: "INR" }]} className="sm-fselect react_selectbox"
+                                                            onChange={(e) => {
+                                                                setUpdateFormData({
+                                                                    ...updateFormData,
+                                                                    ["currency"]: e.value,
+                                                                });
+                                                            }}
+                                                        />
                                                     </div>
                                                     <div className="form-group w-auto mb-0 ps-1">
-                                                        <Form.Select
+                                                        {/* <Form.Select
                                                             name="salary_type"
                                                             aria-label="Default select example"
                                                             className="sm-fselect"
@@ -2265,7 +2322,16 @@ const UpdateJobsRevised = ({
                                                             <option value="" disabled hidden>Select..</option>
                                                             <option value="Per-Month">Per Month</option>
                                                             <option value="Per-Annum">Per Anmum</option>
-                                                        </Form.Select>
+                                                        </Form.Select> */}
+                                                        <Select value={salaryTypeValue} options={salaryTypeOption} className="sm-fselect react_selectbox"
+                                                            onChange={(e) => {
+                                                                setUpdateFormData({
+                                                                    ...updateFormData,
+                                                                    ["salary_type"]: e.value,
+                                                                });
+                                                                setSalaryTypeValue(e)
+                                                            }}
+                                                        />
                                                     </div>
                                                 </Row>
                                                 <div className="accordion_footer">
@@ -2324,7 +2390,7 @@ const UpdateJobsRevised = ({
                                                         <Form.Label className="sm-label">
                                                             Minimum Education
                                                         </Form.Label>
-                                                        <Form.Select
+                                                        {/* <Form.Select
                                                             aria-label="Default select example"
                                                             className="sm-fselect"
                                                             name="minimum_education"
@@ -2334,16 +2400,7 @@ const UpdateJobsRevised = ({
                                                                 handleFormData(e);
                                                             }}
                                                         >
-                                                            <option value="" disabled hidden>Select...</option>
-                                                            {/* <option value="High school">High school</option>
-                                                    <option value="Bachelors Degree">
-                                                        Bachelors Degree
-                                                    </option>
-                                                    <option value="Master Degree">Master Degree</option>
-                                                    <option value="Diploma ">Diploma </option>
-                                                    <option value="PG Diploma">PG Diploma</option>
-                                                    <option value="PhD">PhD</option>
-                                                    <option value="Post Doctorate">Post Doctorate</option> */}
+                                                            <option value="" disabled hidden>Select...</option>                                                            
                                                             <option value="Below Secondary Education">Below Secondary Education</option>
                                                             <option value="Upper Secondary (Intermediate, High School, Grade 12)">Upper Secondary (Intermediate, High School, Grade 12)</option>
                                                             <option value="Certification  / Vocational / Technical Training">Certification  / Vocational / Technical Training</option>
@@ -2353,7 +2410,17 @@ const UpdateJobsRevised = ({
                                                             <option value="Professional Degree (e.g., MD, JD)">Professional Degree (e.g., MD, JD)</option>
                                                             <option value="Doctoral Degree (Ph.D., Ed.D.)">Doctoral Degree (Ph.D., Ed.D.)</option>
                                                             <option value="Postdoctoral Research">Postdoctoral Research</option>
-                                                        </Form.Select>
+                                                        </Form.Select> */}
+                                                        <Select value={minEducationValue} options={minimumEducationOption} className="sm-fselect react_selectbox"
+                                                            onChange={(e) => {
+                                                                setUpdateFormData({
+                                                                    ...updateFormData,
+                                                                    ["minimum_education"]: e.value,
+                                                                });
+                                                                setMinEdu(e.value);
+                                                                setMinEducationValue(e)
+                                                            }}
+                                                        />
                                                         <span className="required_text">
                                                             Select the minimum level of education that you would
                                                             require
@@ -2508,7 +2575,7 @@ const UpdateJobsRevised = ({
                                                         </Form.Label>
 
                                                         <Row className="gap-2 align-items-center mx-0">
-                                                            <Form.Select
+                                                            {/* <Form.Select
                                                                 name="year_of_experience_type"
                                                                 onChange={(e) => {
                                                                     handleFormData(e);
@@ -2523,7 +2590,17 @@ const UpdateJobsRevised = ({
                                                                 <option value="Min">Min</option>
 
                                                                 <option value="Max">Max</option>
-                                                            </Form.Select>
+                                                            </Form.Select> */}
+                                                            <Select value={ExpRangeValue} options={expRangeOption} className="sm-fselect w-150 react_selectbox"
+                                                                onChange={(e) => {
+                                                                    setUpdateFormData({
+                                                                        ...updateFormData,
+                                                                        ["year_of_experience_type"]: e.value,
+                                                                    });
+                                                                    setExpRangeTpe(e.value);
+                                                                    setExpRangeValue(e)
+                                                                }}
+                                                            />
 
                                                             {(expRangeType === "Range" ||
                                                                 expRangeType === "Min") && (
@@ -3623,7 +3700,7 @@ const UpdateJobsRevised = ({
                                                                     </span>
                                                                     {/* {questionIndex === 0 && ( */}
                                                                     <div className="d-flex ms-3">
-                                                                        <Form.Select
+                                                                        {/* <Form.Select
                                                                             onChange={(e) =>
                                                                                 handleQuestionTypeChange(
                                                                                     questionIndex,
@@ -3635,7 +3712,18 @@ const UpdateJobsRevised = ({
                                                                             <option value="multiple">
                                                                                 MCQ Multiple
                                                                             </option>
-                                                                        </Form.Select>
+                                                                        </Form.Select> */}
+                                                                        <Select
+                                                                            className="react_selectbox"
+                                                                            options={[{value:"single",label:"MCQ Single"},{value:"multiple",label:"MCQ Multiple"}]}
+                                                                            // value={{value:"single",label:"MCQ Single"}}
+                                                                            onChange={(e)=>{
+                                                                               handleQuestionTypeChange(
+                                                                                    questionIndex,
+                                                                                    e.value
+                                                                                ) 
+                                                                            }}
+                                                                         />
                                                                         {/* <button type="button" className="icon-btn">
                                                                                 <i className="far fa-star"></i>
                                                                             </button> */}
