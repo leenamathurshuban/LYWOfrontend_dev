@@ -370,8 +370,9 @@ const CreateJobs = ({ show, handleClose }) => {
     setIsLikeDropdown(true);
   };
   const handleSelectedLikeItems = (item) => {
-    setIsLike(item.label);
-    setIsLikeUid((prevSelectedItems) => [...prevSelectedItems, item.value]);
+    // setIsLike(item.label);
+    // setIsLikeUid((prevSelectedItems) => [...prevSelectedItems, item.value]);
+    setIsLikeUid([item.value]);
     // setIsLikeDropdown(false);
   };
   const handleEditorChange = (value) => {
@@ -642,7 +643,7 @@ const CreateJobs = ({ show, handleClose }) => {
   const handleLocationItems = (item) => {
     // setLocation(item?.location_name);
     // setLocationUid(item.uid);
-    setLocation(item?.label);
+    // setLocation(item?.label);
     setLocationUid(item.value);
     setIsLocationDropdown(false);
     // debugger
