@@ -1831,6 +1831,7 @@ import {
 import { useDropzone } from "react-dropzone";
 import imgpTrash from "../../images/icons/trash-01.svg";
 import saveIcon from "../../images/icons/save_pc .svg";
+import editIcon from "../../images/icons/edit-03.svg";
 import logoIcon from "../../images/logo_icon.png";
 import closeBtn from "../../images/icons/closeX.svg";
 import uploadIcon from "../../images/upload_gray.svg";
@@ -2485,9 +2486,9 @@ const ApplicationJobPostModal = ({
       CreateJobLocation(url)
         .then((res) => {
           if (res.data.response.length > 0) {
-            const key = res?.data?.response?.map((val)=>({value:val?.uid,label:val?.location_name}))
+            const key = res?.data?.response?.map((val) => ({ value: val?.uid, label: val?.location_name }))
             setLocationList(key)
-            
+
           }
         })
         .catch((error) => {
@@ -2506,9 +2507,9 @@ const ApplicationJobPostModal = ({
       console.log(error)
     }
   };
-  useEffect(()=>{
+  useEffect(() => {
     getLocationAPIList()
-  },[])
+  }, [])
   // useEffect(() => {
   //   if (profileformData?.CurrentLocation) {
   //     handleLocationAPIList()
@@ -3641,7 +3642,7 @@ const ApplicationJobPostModal = ({
                     <Col md={5}>
                       {!ResumeFile && (
                         <div
-                          className="cmp_uploder file-upload-box"
+                          className="cmp_uploder file-upload-box mw-350"
                           {...getRootProps()}
                         >
                           <div className="upload-content">
@@ -3676,7 +3677,7 @@ const ApplicationJobPostModal = ({
                       {/* Display Selected File Details and Upload Button */}
                       {ResumeFile && (
                         <>
-                          <div className="selected_logo">
+                          <div className="selected_logo mw-350">
                             <strong className="strong-label ms-2">{ResumeFile?.name || ResumeFileName}</strong>
 
                             <div className="d-flex">
@@ -3780,7 +3781,7 @@ const ApplicationJobPostModal = ({
                           <Form.Label>Notice Period</Form.Label>
                         </Col>
 
-                        <Col>
+                        <Col md={5}>
                           {/* <Form.Select
                           placeholder="Notice Period"
                           size="sm"
@@ -3990,10 +3991,10 @@ const ApplicationJobPostModal = ({
                   <h6>Salary</h6>
                   <Row className="mb-3 d-flex align-items-center">
                     {" "}
-                    <Col xs="auto">
+                    <Col md="2">
                       <Form.Label>Expected Salary</Form.Label>
                     </Col>
-                    <Col>
+                    <Col md={5}>
                       {/* <Form.Select
                       className="form-control-sm mx-w350"
                       aria-label="Default select example"
@@ -4100,7 +4101,7 @@ const ApplicationJobPostModal = ({
                     {EducationRows.map((row, index) => (
                       <tbody key={index}>
                         <tr>
-                          <td>
+                          <td className="tdata-1">
                             {/* <Form.Select
                             name="level"
                             value={row.level}
@@ -4121,7 +4122,7 @@ const ApplicationJobPostModal = ({
                             <option value="Postdoctoral Research">Postdoctoral Research</option>
                           </Form.Select> */}
 
-                            <div className="mw-230 relative" ref={dropdownRef}>
+                            <div className="relative" ref={dropdownRef}>
                               {/* <FormControl
                                 placeholder="Level"
                                 size="sm"
@@ -4172,10 +4173,10 @@ const ApplicationJobPostModal = ({
                                 value={levelOption.find((opt) => opt.value === row.level)}
                                 placeholder="Level"
                                 onChange={(e) => handleSelectLevel(index, e.value)}
-                                styles={{ container: (base) => ({ ...base, width: 350 }) }} />
+                                styles={{ container: (base) => ({ ...base, }) }} />
                             </div>
                           </td>
-                          <td>
+                          <td className="tdata-2">
                             {/* <Form.Control
                             name="areaOfEducation"
                             type="text"
@@ -4259,7 +4260,7 @@ const ApplicationJobPostModal = ({
                             </div>
 
                           </td>
-                          <td>
+                          <td className="tdata-3">
                             {/* <Form.Control
                             name="gradYear"
                             type="date"
@@ -4283,7 +4284,7 @@ const ApplicationJobPostModal = ({
                               />
                             </Form.Group>
                           </td>
-                          <td>
+                          <td className="tdata-4">
                             <Form.Control
                               name="university"
                               type="text"
@@ -4296,7 +4297,7 @@ const ApplicationJobPostModal = ({
                               disabled={row.saved}
                             />
                           </td>
-                          <td>
+                          <td className="tdata-5">
                             <div className="mix-inputs">
                               <Form.Control
                                 name="grade"
@@ -4327,7 +4328,7 @@ const ApplicationJobPostModal = ({
                               >
                                 <img
                                   src={saveIcon}
-                                  alt="Delete"
+                                  alt="Save"
                                   className="me-1"
                                   style={{ width: "16px", height: "16px" }}
                                 />
@@ -4344,8 +4345,8 @@ const ApplicationJobPostModal = ({
                                 onClick={() => handleEditRowEducation(row, index)}
                               >
                                 <img
-                                  src={saveIcon}
-                                  alt="Delete"
+                                  src={editIcon}
+                                  alt="Edit"
                                   style={{ width: "16px", height: "16px" }}
                                 />
                                 Edit
@@ -4391,10 +4392,10 @@ const ApplicationJobPostModal = ({
                   <h6>Work Experience</h6>
                   <div >
                     <Row className="align-items-center bg-lightgray py-2">
-                      <Col xs="auto" className="text-center">
+                      <Col md="2" className="text-center">
                         <Form.Label>Total Work Experience</Form.Label>
                       </Col>
-                      <Col>
+                      <Col md={5}>
                         {/* <Form.Control
                           type="text"
                           placeholder=""
@@ -4502,7 +4503,7 @@ const ApplicationJobPostModal = ({
                         {WorkExpreienceRow.map((row, index) => (
                           <>
                             <tr>
-                              <td>
+                              <td className="experince-td-1">
                                 <div className="mw-130 relative">
                                   {/* <FormControl
                                     // autoFocus
@@ -4547,7 +4548,7 @@ const ApplicationJobPostModal = ({
                                 </div>
 
                               </td>
-                              <td>
+                              <td className="experince-td-2">
                                 <Form.Control
                                   placeholder="June 2019"
                                   size="sm"
@@ -4561,7 +4562,7 @@ const ApplicationJobPostModal = ({
                                   disabled={row.savedWorkExp}
                                 />
                               </td>
-                              <td>
+                              <td className="experince-td-3">
                                 <Form.Control
                                   type="date"
                                   placeholder="May 2022"
@@ -4575,7 +4576,7 @@ const ApplicationJobPostModal = ({
                                   disabled={row.savedWorkExp}
                                 />
                               </td>
-                              <td>
+                              <td className="experince-td-4">
                                 <Form.Control
                                   type="text"
                                   placeholder="Company"
@@ -4589,7 +4590,7 @@ const ApplicationJobPostModal = ({
                                   disabled={row.savedWorkExp}
                                 />
                               </td>
-                              <td>
+                              <td className="experince-td-5">
                                 <div className="mw-130 relative">
                                   {/* <FormControl
                                     // autoFocus
@@ -4633,9 +4634,18 @@ const ApplicationJobPostModal = ({
                                     styles={{ container: (base) => ({ ...base, width: 230 }) }} />
                                 </div>
                               </td>
-                              <td>
+                              {/* <td className="experince-td-6">
                                 <div className="d-flex align-items-center">
-                                  {!row.savedWorkExp && !showNotesByIndex.includes(row?.id) && (
+                                 
+
+                                </div>
+
+                              </td> */}
+
+
+                              <td className="experince-td-6" colSpan={2}>
+                                 <div className="d-flex justify-content-between">
+                                   {!row.savedWorkExp && !showNotesByIndex.includes(row?.id) && (
                                     <Button
                                       variant="link"
                                       className="p-1 font-sm mt-1 link-iconbtn"
@@ -4645,48 +4655,53 @@ const ApplicationJobPostModal = ({
                                       Note
                                     </Button>
                                   )}
-                                  {!row.savedWorkExp && showNotesByIndex.includes(row?.id) && (
-                                    <Button
-                                      variant="link"
-                                      className="p-1 font-sm mt-1 link-iconbtn"
-                                      // onClick={handleButtonClick}
-                                      onClick={() => saveWorkExperienceData(row, index)}
-                                    >
-                                      <img
-                                        src={saveIcon}
-                                        className="me-1"
-                                        alt="Delete"
-                                        style={{ width: "16px", height: "16px" }}
-                                      />
-                                      Save
-                                    </Button>
-                                  )}
 
-                                  {row.savedWorkExp && (
-                                    <Button
-                                      variant="link"
-                                      className="p-1 font-sm mt-1 link-iconbtn"
-                                      onClick={() => handleButtonEdit(row, index)}
-                                    >
-                                      <svg className="me-1" width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M6.99998 12.3341H13M1 12.3341H2.11636C2.44248 12.3341 2.60554 12.3341 2.75899 12.2973C2.89504 12.2646 3.0251 12.2108 3.1444 12.1377C3.27895 12.0552 3.39425 11.9399 3.62486 11.7093L12 3.33414C12.5523 2.78185 12.5523 1.88642 12 1.33413C11.4477 0.781851 10.5523 0.781851 10 1.33414L1.62484 9.7093C1.39424 9.9399 1.27894 10.0552 1.19648 10.1898C1.12338 10.3091 1.0695 10.4391 1.03684 10.5752C1 10.7286 1 10.8917 1 11.2178V12.3341Z" stroke="#3538CD" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
-                                      </svg>
-                                      Edit
-                                    </Button>
-                                  )}
-
+                                {!row.savedWorkExp && showNotesByIndex.includes(row?.id) && (
                                   <Button
                                     variant="link"
-                                    className="p-1"
-                                    onClick={() => WorkExperienceDeleteRow(index, row?.id)}
+                                    className="p-1 font-sm mt-1 link-iconbtn"
+                                    // onClick={handleButtonClick}
+                                    onClick={() => saveWorkExperienceData(row, index)}
                                   >
                                     <img
-                                      src={imgpTrash}
+                                      src={saveIcon}
+                                      className="me-1"
                                       alt="Delete"
-                                      style={{ width: "20px", height: "20px" }}
+                                      style={{ width: "16px", height: "16px" }}
                                     />
+                                    Save
                                   </Button>
+                                )}
+
+
+
+                                {row.savedWorkExp && (
+                                  <Button
+                                    variant="link"
+                                    className="p-1 font-sm mt-1 link-iconbtn"
+                                    onClick={() => handleButtonEdit(row, index)}
+                                  >
+                                    <svg className="me-1" width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <path d="M6.99998 12.3341H13M1 12.3341H2.11636C2.44248 12.3341 2.60554 12.3341 2.75899 12.2973C2.89504 12.2646 3.0251 12.2108 3.1444 12.1377C3.27895 12.0552 3.39425 11.9399 3.62486 11.7093L12 3.33414C12.5523 2.78185 12.5523 1.88642 12 1.33413C11.4477 0.781851 10.5523 0.781851 10 1.33414L1.62484 9.7093C1.39424 9.9399 1.27894 10.0552 1.19648 10.1898C1.12338 10.3091 1.0695 10.4391 1.03684 10.5752C1 10.7286 1 10.8917 1 11.2178V12.3341Z" stroke="#3538CD" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    Edit
+                                  </Button>
+                                )}
+
+                                <Button
+                                  variant="link"
+                                  className="p-1"
+                                  onClick={() => WorkExperienceDeleteRow(index, row?.id)}
+                                >
+                                  <img
+                                    src={imgpTrash}
+                                    alt="Delete"
+                                    style={{ width: "20px", height: "20px" }}
+                                  />
+                                </Button>
+
                                 </div>
+
                               </td>
                             </tr>
                             <tr>
@@ -5027,7 +5042,7 @@ const ApplicationJobPostModal = ({
                           </ul>
                         </div> */}
                         <Select
-                          className="react_selectbox"
+                          className="react_selectbox location-w-icon"
                           options={locationList}
                           isSearchable={true}
                           noOptionsMessage={() => "No results found"}

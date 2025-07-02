@@ -603,7 +603,7 @@ const JobsList = () => {
                         <td>{item?.job_type}</td>
                         <td>{item?.workplace_type}</td>
                         <td>{item?.number_of_positions}</td>
-                        <td>-</td>
+                        <td>{item?.total_applicant_count}</td>
                         <td className="avgscore">-</td>
                         <td>{item?.posted_on ? item?.posted_on : '-'}</td>
                         <td>{item?.job_status}</td>

@@ -75,14 +75,18 @@ const Header = () => {
           <div className="org_name">
             <span className="orgshort_text">{logoname}</span>
             {/* <p>{userInfo?.default_company?.company_name}</p> */}
+
+            <div className="custom-select-wrapper">
             <Form.Select
               value={companyInfo}
               onChange={handleCompanyDropdown}
+              className="select-dropdown-custom-event"
             >
               {userInfo?.company?.map((item) => (
                 <option value={item.company_name}>{item?.company_name}</option>
               ))}
             </Form.Select>
+            </div>
             {/* <Select
               options={userOption}
               value={userOption.find((opt)=>opt.value===companyInfo)}

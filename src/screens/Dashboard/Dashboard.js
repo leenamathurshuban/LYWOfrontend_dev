@@ -677,6 +677,9 @@ const Dashboard = () => {
                       aria-describedby="basic-addon1"
                     />
                   </InputGroup>
+
+              <div className="table-list-scroll">
+
                   <table className="mt-3 mb-0 table">
                     <thead>
                       <tr>
@@ -718,6 +721,7 @@ const Dashboard = () => {
                       </tr> */}
                     </tbody>
                   </table>
+                  </div>
                 </Card.Body>
               </Card>
               <Card className="draft_jobs dbstatus_card mt-3">
@@ -731,6 +735,7 @@ const Dashboard = () => {
                       <a href="#" className="btn-link btn-sm py-0">View All</a>
                     </div>
                   </div>
+                    <div className="table-list-scroll">
                   <table className="mt-3 mb-0 table">
                     <tbody>
                       {dashboardList?.total_count_data?.draft_jobs?.map((item) => (
@@ -754,6 +759,7 @@ const Dashboard = () => {
                       </tr> */}
                     </tbody>
                   </table>
+                  </div>
                 </Card.Body>
               </Card>
             </Col>

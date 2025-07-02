@@ -1482,25 +1482,25 @@ const UpdateJobsRevised = ({
         if (openStep.length && sectionRefs.current[openStep[0]]) {
             //   const top = sectionRefs.current[openStep[0]].offsetTop;
             if (openStep[0] === '1' && !Array.isArray(currentStep)) {
-                setToolbarPosition(104);
+                setToolbarPosition(103);
             } else if (openStep[0] === '1' && Array.isArray(currentStep)) {
                 setToolbarPosition(307);
             } else if (openStep[0] === '2') {
-                setToolbarPosition(160);
+                setToolbarPosition(159);
             } else if (openStep[0] === '3') {
                 setToolbarPosition(216);
             } else if (openStep[0] === '4') {
                 setToolbarPosition(273);
             } else if (openStep[0] === '5') {
-                setToolbarPosition(328);
+                setToolbarPosition(329);
             } else if (openStep[0] === '6') {
                 setToolbarPosition(386);
             } else if (openStep[0] === '8' && !Array.isArray(currentStep)) {
-                setToolbarPosition(103);
+                setToolbarPosition(102);
             } else if (openStep[0] === '8' && Array.isArray(currentStep)) {
                 setToolbarPosition(224);
             } else if (openStep[0] === '9') {
-                setToolbarPosition(160);
+                setToolbarPosition(159);
             } else if (openStep[0] === '11' && !Array.isArray(currentStep)) {
                 setToolbarPosition(103);
             } else if (openStep[0] === '11' && Array.isArray(currentStep)) {
@@ -2033,9 +2033,26 @@ const UpdateJobsRevised = ({
                     </Modal.Title>
                     {/* ))} */}
 
-                    <button type="button" className="view-btnicon">
-                        <i className="fa fa-eye"></i>
+                    <ul className="expand-view-btn">
+                        <li>
+                            <button type="button" className="expand-btn">
+                       <i className="fa-solid fa-angles-up"></i>
                     </button>
+                    </li>
+                          <li> <button type="button" className="expand-btn">
+                       <i className="fa-solid fa-angles-down"></i>
+                    </button></li>
+                            <li>  <button type="button" className="view-btnicon">
+                        <i className="fa fa-eye"></i>
+                    </button></li>
+                    </ul>
+
+                     
+                    
+
+                  
+
+
                 </Modal.Header>
                 <Modal.Body className="p-0 bg-lightgray">
                     <Row className="justify-content-center">
@@ -2490,8 +2507,14 @@ const UpdateJobsRevised = ({
                                                                     // value={row.areaOfEducation}
                                                                     // disabled={row.saved}
                                                                     onChange={handleAreaOfEducation}
-                                                                    onBlur={handleClosecomboEdu} // Close dropdown on blur
+                                                                    onBlur={handleClosecomboEdu}
+                                                                    
+                                                                    // Close dropdown on blur
                                                                 />
+
+                                                                
+
+
                                                                 {aresEducationOption?.length > 0 ? (
                                                                     <Dropdown show={true} >
                                                                         <Dropdown.Menu className="w-100 dropdown_ctm">
@@ -2524,7 +2547,7 @@ const UpdateJobsRevised = ({
                                                                     name="higher_qualification_preferred"
                                                                     onChange={handleFormData}
                                                                     type={type}
-                                                                    id={`inline-${type}-1`}
+                                                                    id={`inline-${type}-3`}
                                                                     checked={updateFormData?.higher_qualification_preferred}
                                                                 />
                                                                 <Form.Check
@@ -2533,7 +2556,7 @@ const UpdateJobsRevised = ({
                                                                     name="other_areas_acceptable"
                                                                     onChange={handleFormData}
                                                                     type={type}
-                                                                    id={`inline-${type}-2`}
+                                                                    id={`inline-${type}-4`}
                                                                     checked={updateFormData?.other_areas_acceptable}
                                                                 />
                                                             </div>
@@ -2567,14 +2590,14 @@ const UpdateJobsRevised = ({
                                                     </span>
                                                 )}
                                             </Accordion.Header>
-                                            <Accordion.Body ref={(el) => (sectionRefs.current['3'] = el)}>
+                                            <Accordion.Body  className="custom-experince-box" ref={(el) => (sectionRefs.current['3'] = el)}>
                                                 <Form>
-                                                    <Form.Group className="mb-3">
+                                                    <Form.Group className="mb-3 ">
                                                         <Form.Label className="sm-label">
-                                                            Ideal Years of Experience
+                                                            Ideal Years of Experience 
                                                         </Form.Label>
 
-                                                        <Row className="gap-2 align-items-center mx-0">
+                                                        <Row className="gap-2 align-items-center mx-0 custom-range-input">
                                                             {/* <Form.Select
                                                                 name="year_of_experience_type"
                                                                 onChange={(e) => {
@@ -2641,7 +2664,9 @@ const UpdateJobsRevised = ({
                                                         maxValue={maxValue}
                                                         setMaxValue={setMaxValue}
                                                     /> */}
+                                                    <div className="custom-experince-range-slider">
                                                             <RangeSliderNew
+                                                               
                                                                 range={range}
                                                                 setRange={setRange}
                                                                 minExp={minValue}
@@ -2650,6 +2675,7 @@ const UpdateJobsRevised = ({
                                                                 maxExp={maxValue}
                                                                 setMaxExp={setMaxValue}
                                                             />
+                                                            </div>
                                                         </Row>
                                                     </Form.Group>
 
@@ -2856,7 +2882,7 @@ const UpdateJobsRevised = ({
                                                                         setIsHideIndustries(!ishideIndustries);
                                                                     }}
                                                                     checked={ishideIndustries ? true : false}
-                                                                    id={`inline-${type}-1`}
+                                                                    id={`inline-${type}-5`}
                                                                 />
 
                                                                 <Form.Check
@@ -2869,7 +2895,7 @@ const UpdateJobsRevised = ({
                                                                         setIsHideRestrictedRoles(!isHideRestrictedRoles);
                                                                     }}
                                                                     checked={isHideRestrictedRoles ? true : false}
-                                                                    id={`inline-${type}-2`}
+                                                                    id={`inline-${type}-6`}
                                                                 />
                                                             </div>
                                                         ))}
@@ -2939,7 +2965,7 @@ const UpdateJobsRevised = ({
                                                                     }}
                                                                     type={type}
                                                                     checked={isDisabledTarget ? true : false}
-                                                                    id={`inline-${type}-1`}
+                                                                    id={`inline-${type}-7`}
                                                                 />
                                                                 <Form.Check
                                                                     inline
@@ -2947,7 +2973,7 @@ const UpdateJobsRevised = ({
                                                                     onChange={handleFormData}
                                                                     name="explore_buy_out_option"
                                                                     type={type}
-                                                                    id={`inline-${type}-2`}
+                                                                    id={`inline-${type}-8`}
                                                                     checked={updateFormData?.explore_buy_out_option}
                                                                 />
                                                             </div>
@@ -3178,7 +3204,7 @@ const UpdateJobsRevised = ({
                                                                         );
                                                                         handleFormData(e);
                                                                     }}
-                                                                    id={`inline-${type}-1`}
+                                                                    id={`inline-${type}-9`}
                                                                     checked={updateFormData?.no_specific_language_require}
                                                                 />
                                                             </div>
@@ -3305,7 +3331,7 @@ const UpdateJobsRevised = ({
                                                                         handleFormData(e);
                                                                     }}
                                                                     type={type}
-                                                                    id={`inline-${type}-1`}
+                                                                    id={`inline-${type}-10`}
                                                                     checked={updateFormData?.no_specific_location}
                                                                 />
                                                                 <Form.Check
@@ -3314,7 +3340,7 @@ const UpdateJobsRevised = ({
                                                                     name="relocation_cost_covered"
                                                                     type={type}
                                                                     onChange={handleFormData}
-                                                                    id={`inline-${type}-2`}
+                                                                    id={`inline-${type}-11`}
                                                                     checked={updateFormData?.relocation_cost_covered}
                                                                 />
                                                             </div>

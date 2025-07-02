@@ -141,7 +141,7 @@ const JobSummary = () => {
                         </button>
                     )}
                 </Modal.Header>
-                <Modal.Body className="bg-lightgray px-4">
+                <Modal.Body className="bg-lightgray job-summary-profile px-4">
                     <div className="jobrvsd_head d-flex justify-content-between align-items-center">
                         <h6>Job Summary</h6>
                         <ul className="list-inline">

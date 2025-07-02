@@ -1230,7 +1230,7 @@ const CreateJobs = ({ show, handleClose }) => {
 
 
             {isLocationDropdown && locationData.length === 0 && (
-              <span className="error">Invalid key Search</span>
+              <span className="error-msg">Invalid key Search</span>
             )}
           </Form.Group>
           {["radio"].map((type) => (
@@ -1278,7 +1278,7 @@ const CreateJobs = ({ show, handleClose }) => {
               />
             </div>
           ))}
-          <span style={{ color: "red" }}>{errors.travelOption}</span>
+          <span className="error-msg" style={{ color: "red" }}>{errors.travelOption}</span>
           <Form.Group className="mb-2" controlId="jobDescription">
             <Form.Label>
               Job Description <span className="font-light">(Min 50 words)</span>
@@ -1432,7 +1432,7 @@ const CreateJobs = ({ show, handleClose }) => {
               )} */}
               <Select className="react_selectbox" defaultValue={createFormData.jobType} options={jobTypeOptions} onChange={handleJobType} />
             </div>
-            <span style={{ color: "red" }}>{errors.jobType}</span>
+            <span className="error-msg" style={{ color: "red" }}>{errors.jobType}</span>
           </Col>
 
           <Col md={6} className="mb-2">
@@ -1499,7 +1499,7 @@ const CreateJobs = ({ show, handleClose }) => {
                 })
               }} />
             </div>
-            <span style={{ color: "red" }}>{errors.workPlaceType}</span>
+            <span className="error-msg" style={{ color: "red" }}>{errors.workPlaceType}</span>
           </Col>
 
           <Form.Group className="mb-2" controlId="benefits">

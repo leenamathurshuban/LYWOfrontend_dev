@@ -38,7 +38,8 @@ export const JobsUrl = {
   postJobGroupParameterListByFetch:"assets-api/job-applicant-group-filter-api/",
   jobApplicantUpdateForList:"assets-api/job-applicant-update-api/",
   jobDelete:"assets-api/job-delete-api/",
-  deleteBenifits:"assets-api/benefit-delete-api/"
+  deleteBenifits:"assets-api/benefit-delete-api/",
+  getJobListByCompany:"assets-api/job-list-by-company-api/"
 }
 
 export const SkillsUrl = {

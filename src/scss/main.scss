@@ -683,7 +683,7 @@ ol.breadcrumb {
 .modal-header {
   box-shadow: 3px 0px 6px rgba(0, 0, 0, 0.1098039216);
   border: none;
-  padding: 22px 20px;
+  padding: 17px 20px;
   background-color: #fff;
   border-radius: 0;
   z-index: 999;
@@ -704,6 +704,7 @@ ol.breadcrumb {
     font-size: 18px;
     position: relative;
     text-transform: capitalize;
+    padding-right: 20px;
 
     .subtitle {
       color: #667085;
@@ -729,9 +730,33 @@ ol.breadcrumb {
     background-color: #fff;
     font-size: 12px;
     color: #344054;
-    position: absolute;
-    right: 85px;
+    position: relative;
+    right: 0;  
   }
+
+  .expand-view-btn {
+    padding-left: 0;
+    margin: 0 0 0 auto;
+    display: flex;
+    align-items: center;
+
+    li{
+      display: inline-flex;
+      padding-left: 10px;
+
+      button{
+        width: 32px;
+        height: 32px;
+        border: 1px solid #ddd;
+        background: transparent;
+        border-radius: 8px;
+      }
+    }
+
+
+
+
+}
 }
 .header_serach  {
   input.form-control{
@@ -1190,6 +1215,7 @@ button.btn-link-muted {
 .ql-toolbar.ql-snow {
   background-color: #f9fafb;
   border-radius: 8px 8px 0 0;
+  border-bottom: 0 !important;
 }
 
 .ql-container.ql-snow {
@@ -1405,8 +1431,8 @@ button.btn-link-muted {
     }
 
     .btn-close {
-      border: solid 2px #000;
-      font-size: 8px;
+      border: 0;
+      font-size: 10px;
       color: #000;
       opacity: 1;
       padding: 6px;
@@ -2394,13 +2420,13 @@ select.h-36.form-select {
       margin-left: 30%;
     }
 
-    .btn-close {
-      border: solid 2px #000;
-      font-size: 8px;
-      color: #000;
+    .btn-close {      
+      font-size: 20px;
+      color: #344054;
       opacity: 1;
-      padding: 6px;
+      padding: 0px;
       margin-left: 20px;
+      opacity: .7;
     }
   }
 
@@ -2779,6 +2805,22 @@ select.h-36.form-select {
         padding: 5px;
       }
 
+      &:hover{
+         border-color: #067647;
+        background-color: #f6fef9;
+
+        a{
+          color: #067647;
+        }
+
+        .fa {
+          color: #067647;
+          background-color: #f6fef9;
+          border-color: #067647;
+        }
+
+      }
+
       &.active {
         border-color: #067647;
         background-color: #f6fef9;
@@ -2830,6 +2872,8 @@ select.h-36.form-select {
     overflow: hidden;
     border: solid 1px #E0EAFF !important;
     background-color: #F5F8FF;
+    box-shadow: 0 1px 1px 0 #1018280D;
+
     .short_text {
       margin: 0;
       font-family: Inter;
@@ -2961,6 +3005,13 @@ select.h-36.form-select {
   }
 }
 
+// .accordion-body .inline-input {
+//     border: 1px solid #D0D5DD;
+//     min-width: 272px;
+//     padding-left: 40px;
+//     min-height: 36px;
+// }
+
 .btn-lightgray {
   background-color: #fff;
   border: solid 1px #d0d5dd;
@@ -3004,6 +3055,13 @@ select.h-36.form-select {
     font-size: 11px;
     color: #667085;
     line-height: 16px;
+
+    .fa-star{
+
+      color: #4c60e5;
+
+    }
+
   }
 
   ul {
@@ -3323,7 +3381,13 @@ select.h-36.form-select {
     &.active {
       border-color: #6172F3;
     }
+
+    .imprt_icon{
+      margin-left: 5px;
+    } 
   }
+
+
 }
 
 .text-primerylight {
@@ -3359,11 +3423,11 @@ select.h-36.form-select {
     right: 11px;
     top: 6px;
     border: solid 2px #4c60e5;
-    width: 18px;
-    height: 18px;
-    line-height: 16px;
+    width: 16px;
+    height: 16px;
+    line-height: 14px;
     text-align: center;
-    font-size: 12px;
+    font-size: 10px;
     border-radius: 50%;
     cursor: pointer;
   }
@@ -3627,6 +3691,7 @@ select.h-36.form-select {
       a {
         color: #344054;
         font-size: 12px;
+        font-weight: 600;
       }
     }
   }
@@ -3768,6 +3833,8 @@ select.h-36.form-select {
     font-size: 12px;
     font-weight: 500;
     line-height: 22px;
+    text-transform: capitalize;
+    display: flex;
 
     span {
       min-width: 135px;
@@ -7063,6 +7130,8 @@ button#input-group-dropdown-1 {
     border-left: 0;
     border-radius: 8px;
     padding-left: 5px;
+    border-top-right-radius: 8px !important;
+    border-bottom-right-radius: 8px !important;
   }
 }
 
@@ -7900,4 +7969,201 @@ button.btn-icon {
         font-weight: 500;
         border-radius: 8px;
     }
+}
+
+// custom by sk
+
+
+.accordion-body .form-check.form-check-inline input {
+    display: none;
+}
+
+.accordion-body .form-check.form-check-inline label {
+    position: relative;
+    cursor: pointer;
+}
+
+.accordion-body .form-check.form-check-inline label:before {
+    content: '';
+    -webkit-appearance: none;
+    background-color: transparent;
+    border: 2px solid #444CE7;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
+    padding: 8px;
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+    cursor: pointer;
+    margin-right: 5px;
+    border-radius: 4px;
+    margin-top: -3px;
+}
+
+.accordion-body .form-check.form-check-inline {
+    padding-left: 0;
+}
+
+.accordion-body .form-check.form-check-inline input:checked + label:after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 2px;
+    left: 7px;
+    width: 6px;
+    height: 10px;
+    border: solid #444CE7;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+
+
+.error-msg {
+    font-size: 12px;
+}
+
+.quizDev_model .modal-header .btn-close{
+    margin-left: 30px;
+    color: #6172F3;
+    font-size: 10px;
+  }
+
+.table-list-scroll {
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.jobrvsd_head {
+
+  h6{
+    font-size: 20px;
+    padding-left: 24px;
+    }
+}
+
+
+.job-summary-profile {
+
+  .card-body {
+    padding: 16px 24px;
+  }
+
+} 
+
+
+.perlitymth-body {
+    font-size: 12px;
+    max-height: 100px;
+    overflow-y: auto;
+}
+
+
+
+
+.custom-range-input {
+    display: flex;
+
+
+    .custom-experince-range-slider {
+
+      display: inline-flex;
+      width: 100%;
+      max-width: 400px;
+
+    }
+
+    div > div {
+
+      margin-top: 0 !important;
+      font-size: 12px;
+      
+    }
+
+}
+
+
+
+
+.custom-select-wrapper {
+  display: flex;
+  flex-direction: column;
+  
+
+
+  .select-dropdown-custom-event {
+
+    padding: 10px 30px 10px 10px !important;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    outline: none;
+    appearance: none; /* Remove default arrow */
+    background-color: #fff;
+    background-image: url("../images/icons/chevron-down.png");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px 16px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    transition: border 0.2s;
+
+      &:hover{
+        border-color: #888;
+      }
+
+      &:focus{
+        border-color: #007bff;
+        box-shadow: 0 0 0 2px rgba(0,123,255,0.2);
+      }
+
+      option{
+
+      // background-color: #f5f5f5;  /* Light grey background */
+        color: #000; 
+        padding: 10px 14px;
+      }
+
+  }
+
+
+}
+
+// job post css
+
+.tdata-5 {
+    width: 20%;
+}
+
+.tdata-1 {
+    width: 15%;
+}
+
+
+.experince-td-1 .css-g6xo37-container, 
+.experince-td-5 .css-g6xo37-container{
+  width: 185px;
+}
+
+.mw-350{
+  max-width: 350px;
+}
+
+
+.experince-td-2 input, .experince-td-3 input {
+    width: 130px !important;
+}
+
+
+.location-w-icon .css-hlgwow {
+    padding-left: 35px;
+    background: url(../images/icons/marker-pin-04.svg);
+    background-repeat: no-repeat ;
+    background-position: 4% center;
+}
+
+
+.link-iconbtn img {
+    margin-right: 4px;
+}
+
+.experince-td-6 {
+    width: 114px;
 }

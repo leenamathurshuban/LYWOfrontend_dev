@@ -79,6 +79,10 @@ export const JobList = (url) => {
   const JobList = client.getWithToken(url);
   return JobList;
 };
+export const JobListByCompany=(url)=>{
+  const jobList = client.getWithToken(url);
+  return jobList;
+}
 
 export const IndustrySelection = (url) => {
   const Industry = client.getWithToken(url);
