@@ -28,6 +28,9 @@ import closeBtn from "../../images/icons/closeX.svg";
 import logoIcon from "../../images/logo_icon.png";
 import pink_brb from "../../images/icons/pink_brb.svg";
 import choice_brb from "../../images/icons/choice_brb.svg";
+import choice_normal_3 from "../../images/icons/choice2normal.svg";
+import choice_normal_4 from "../../images/icons/choice1normal.svg";
+
 import stack2_brb from "../../images/icons/stack 2_brb.svg";
 import option_brb from "../../images/icons/option_brb.svg";
 import infogray from "../../images/icons/info_gray.svg";
@@ -271,13 +274,24 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                                     </Col>
                                     <Col md={3}>
                                         <div className="brb_cards most_like">
-                                            <span className="brb-cicon"><img src={choice_brb} /></span>
+                                            <span className="brb-cicon">
+
+                                                <img src={choice_normal_3} className='normal-choice'/>
+                                                <img src={choice_brb} className='hover-choice' />
+                                                
+                                                </span>
+
                                             <h6>Pick one "Most Like” you</h6>
                                         </div>
                                     </Col>
                                     <Col md={3}>
                                         <div className="brb_cards least_like">
-                                            <span className="brb-cicon"><img src={pink_brb} /></span>
+                                            <span className="brb-cicon">
+
+                                                <img src={pink_brb} className='hover-choice' />
+                                                  <img src={choice_normal_4} className='normal-choice'/>
+
+                                                </span>
                                             <h6>Pick one "Least Like” you</h6>
                                         </div>
                                     </Col>
@@ -372,9 +386,9 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                         </div>
                     )}
                     {quizMostLeastLike.flatMap(row => row.mostList).length === 10 && quizMostLeastLike.flatMap(row => row.leastList).length === 10 && (
-                        <div className="toster">
+                        <div className="toster right-track-tst">
                             <img src={closeBtn} className='closebtn' />
-                            <div className='d-flex align-items-center'>
+                            <div className='right-track-toast '>
                                 <h6>On the Right Track!</h6>
                                 <span>Don't overthink your choices.</span>
                             </div>
@@ -383,7 +397,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                     {quizMostLeastLike.flatMap(row => row.mostList).length === 20 && quizMostLeastLike.flatMap(row => row.leastList).length === 20 && (
                         <div className="toster">
                             <img src={closeBtn} className='closebtn' />
-                            <h6>Almost There</h6><br />
+                            <h6>Almost There</h6>
                             <span>Just a few more choices to go!</span>
                         </div>
                     )}
@@ -407,7 +421,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
             <Modal
                 show={popupShow}
                 onHide={handleClosePop}
-                className="confirmation_model"
+                className="confirmation_model behaviour-model"
                 aria-labelledby="contained-modal-title-vcenter"
                 centered
             >
@@ -435,14 +449,14 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                     </p>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="light" onClick={handleClosePop}>
+                    <Button className='button-30' variant="light" onClick={handleClosePop}>
                         {!quizMostLeastLike.length && 'Back'}
                         {quizMostLeastLike.length > 0 && (quizMostLeastLike.length > quizMostLeastLike.flatMap(row => row.mostList).length) &&
                             (quizMostLeastLike.length > quizMostLeastLike.flatMap(row => row.leastList).length) && 'Continue with Test'}
                         {complete && (quizMostLeastLike.length === quizMostLeastLike.flatMap(row => row.mostList).length) &&
                             (quizMostLeastLike.length === quizMostLeastLike.flatMap(row => row.leastList).length) && 'Return to Job'}
                     </Button>
-                    <Button variant="primary"
+                    <Button className='button-70' variant="primary"
                         onClick={handleSubmit}
                     >
                         {!quizMostLeastLike.length && 'Start Test'}

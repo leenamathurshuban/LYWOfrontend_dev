@@ -1107,10 +1107,26 @@ label.required.form-label {
         margin-right: 4px;
       }
 
+      .star-line-active {
+        display: none;
+      }
+
+
       &.active {
         color: #3538cd;
         background-color: #eef4ff;
         border-color: #c7d7fe;
+
+        .star-line-active {
+          display: block;
+
+        }
+
+        .star-line{
+          display: none;
+        }
+
+
       }
     }
   }
@@ -1777,6 +1793,7 @@ button.btn-link-muted {
     position: fixed;
     width: 100%;
     top: 0;
+    z-index: 9999;
 
     .btn-close {
       position: relative;
@@ -2435,7 +2452,7 @@ select.h-36.form-select {
   }
 
   &-title {
-    font-size: 18px;
+    font-size: 20px;
     color: #101828;
     font-weight: 600;
 
@@ -2869,7 +2886,7 @@ select.h-36.form-select {
   .accordion-item {
     margin-bottom: 8px;
     border-radius: 8px;
-    overflow: hidden;
+    // overflow: hidden;
     border: solid 1px #E0EAFF !important;
     background-color: #F5F8FF;
     box-shadow: 0 1px 1px 0 #1018280D;
@@ -4005,7 +4022,7 @@ select.h-36.form-select {
   z-index: 99999;
 
   &.lg-drawer {
-    width: 60%;
+    width: 65%;
     &::before{
       content: '';
       background-color: rgba(242, 244, 247, 0.8);
@@ -4146,15 +4163,25 @@ select.h-36.form-select {
 
   .individual {
     .brvbox-lg {
-      border: solid 1px #FECDCA;
+      border: solid 1px #AAF0C4;
     }
   }
+  
 
   .interpersonal {
     .brvbox-lg {
       border: solid 1px #C7D7FE;
     }
   }
+
+  .systematic {
+
+    .brvbox-lg {
+      border: 1px solid #FEDF89;
+    }
+
+  }
+
 
   .brvbox-lg {
     background-color: #fff;
@@ -4216,6 +4243,7 @@ select.h-36.form-select {
     border-radius: 8px;
     padding: 10px;
     position: relative;
+    height: 100%;
     .fa-star {
     position: absolute;
     right: 8px;
@@ -4393,11 +4421,12 @@ select.h-36.form-select {
     border-radius: 48px;
     padding: 50px 30px;
     text-align: center;
-    outline: solid 2px #fff;
+    // outline: solid 2px #fff;
 
     &:hover {
       outline: solid 2px #A4BCFD;
-    }
+      box-shadow: 0px 12px 16px -4px #10182814;
+    }  
 
     &.most_like:hover {
       outline: solid 4px #6172F3;
@@ -4408,7 +4437,7 @@ select.h-36.form-select {
     &.least_like:hover {
       outline: solid 4px #FEC84B;
       box-shadow: 0px 0px 80px 8px #DC680333 inset;
-      box-shadow: 0px 12px 16px -4px #10182814;
+     
       background-color: #FFFAEB;
     }
 
@@ -4421,10 +4450,29 @@ select.h-36.form-select {
     .brb_cards img {
       max-height: 100px;
     }
+
+  &:hover .normal-choice{
+    display: none;    
+  }
+
+  &:hover .hover-choice{
+    display: block;  
+  }
+
+  .hover-choice {
+    display: none;      
+  }
+
+
     .brb-cicon {
-      display: inline-block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       min-height: 120px;
     }
+
+   
+
   }
 
   .container {
@@ -4505,16 +4553,43 @@ select.h-36.form-select {
       .setlanguage {
         display: flex;
         align-items: center;
-        padding-right: 0;
+        padding: 0 0px 0px 10px;
+       
+        
         .sm-fselect {
           border: none;
-          padding: 0px 25px 0 8px;
-          min-height: 16px;
+          padding: 0;
+          min-height: 36px;
 
           option {
             padding: 10px !important;
             width: 100%;
           }
+
+          .css-13cymwt-control{
+            border: 0;
+
+            &:focus{
+              outline: 0;
+              border: 0;
+            }
+
+            &:focus-within{
+              outline: 0;
+            }
+
+            &:focus-visible{outline: 0;}
+
+
+
+            .css-1u9des2-indicatorSeparator{
+              width: 0;
+            }
+          }
+
+
+
+         
         }
       }
     }
@@ -4531,6 +4606,9 @@ select.h-36.form-select {
       strong {
         color: #000;
         margin-left: 5px;
+        font-size: 20px;
+        position: relative;
+        top: 2px;
       }
     }
   }
@@ -6514,7 +6592,11 @@ select.select-transpant {
   max-width: 525px;
   margin: auto;
   margin-top: 2rem;
-  position: relative;
+  position: absolute;
+  bottom: 12px;
+  left: 0;
+  right: 0;
+  z-index: 1;
 
   .closebtn {
     position: absolute;
@@ -6543,6 +6625,29 @@ select.select-transpant {
     }
   }
 }
+
+
+.toster.right-track-tst {
+    max-width: 350px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+
+    .right-track-toast h6 {
+    font-size: 20px;
+
+    span {
+      font-size: 16px;
+    }
+
+    }
+
+
+}
+
+
+
+.right-track-toast 
 
 .zindex9999 {
   z-index: 9999;
@@ -7260,6 +7365,28 @@ button#input-group-dropdown-1 {
     }
 }
 /* Custom switch styles */
+
+.usermanagement_table .form-switch{
+
+  input{
+     &:focus{
+        box-shadow: none;
+      }
+
+  }
+
+  .form-check-input:checked {
+      background: #C7D7FE;
+      border-color: #C7D7FE;
+
+      &:focus{
+        box-shadow: none;
+      }
+
+  }
+
+}
+
 .form-switch  {
 .form-check-input:checked {
   background-color: #444CE7;  /* green when checked */
@@ -8166,4 +8293,49 @@ button.btn-icon {
 
 .experince-td-6 {
     width: 114px;
+}
+
+// 
+
+.qzslider .slick-dots li.slick-active {
+    margin-bottom: 36px;
+
+     button {
+
+      height: 40px;
+      border-radius: 30px;
+      background: #98A2B3;
+    }
+
+
+}
+
+
+.instructions_dwr .btn-close, .helpme_drawer .btn-close {
+    font-size: 8px;
+    border: 1px solid #000000;
+    padding: 4px;
+    opacity: 1;
+    border-radius: 4px;
+    color: #000;
+}
+
+
+.button-30 {
+    max-width: 35%;
+}
+
+.button-70 {
+    max-width: 62%;
+    width: 100% !important;
+}
+
+
+.behaviour-model .modal-dialog.modal-dialog-centered {
+    max-width: 570px;
+}
+
+.next-btn-shadow {
+    padding: 8px 14px; 
+    box-shadow: 0 1px 2px 0 rgb(16 24 40 / 5%);
 }

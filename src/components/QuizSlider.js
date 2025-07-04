@@ -37,7 +37,7 @@ const QuizSlider = ({ mostLeastLike, setMostLeastLike }) => {
         appendDots: dots => (
             <ul className="slick-dots">
                 {dots.map((dot, index) => (
-                    <li key={index} className={`${index && 'slick-active'}`}>
+                    <li key={index} className={`${index && ''}`}>
                         <button
                             className={`h-3 w-3 rounded-full mx-1 ${mostLeastLike[index]?.most && mostLeastLike[index]?.least ? "quiz-completed" : "bg-gray-400"
                                 }`}
@@ -93,7 +93,7 @@ const QuizSlider = ({ mostLeastLike, setMostLeastLike }) => {
     };
 
     return (
-        <div className="qzslider"><span className='handraw'><img src={handDrawicon} />Hover over the cards below to begin.</span>
+        <div className="qzslider quiz-first-screen"><span className='handraw'><img src={handDrawicon} />Hover over the cards below to begin.</span>
             <Slider ref={sliderRef} {...options}>
                 {mostLeastLike.map((row, rowIndex) => (
                     <div key={row.id} className="item">

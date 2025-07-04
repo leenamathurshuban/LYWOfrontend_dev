@@ -2379,7 +2379,7 @@ const UpdateJobsRevised = ({
                                                     <button
                                                         // onClick={handleCreateForm}
                                                         type="button"
-                                                        class="btn btn-lightgray"
+                                                        class="btn btn-lightgray next-btn-shadow"
                                                         onClick={handleNext}
                                                     >
                                                         Next
@@ -2566,7 +2566,7 @@ const UpdateJobsRevised = ({
                                                         type="button"
                                                         // onClick={handleCreateForm}
                                                         onClick={handleNext}
-                                                        class="btn btn-lightgray"
+                                                        class="btn btn-lightgray next-btn-shadow"
                                                     >
                                                         Next
                                                     </button>
@@ -2904,7 +2904,7 @@ const UpdateJobsRevised = ({
                                                     <button
                                                         type="button"
                                                         // onClick={handleCreateForm}
-                                                        class="btn btn-lightgray"
+                                                        class="btn btn-lightgray next-btn-shadow"
                                                         onClick={handleNext}
                                                     >
                                                         Next
@@ -2982,7 +2982,7 @@ const UpdateJobsRevised = ({
                                                     <button
                                                         type="button"
                                                         // onClick={handleCreateForm}
-                                                        class="btn btn-lightgray"
+                                                        class="btn btn-lightgray next-btn-shadow"
                                                         onClick={handleNext}
                                                     >
                                                         Next
@@ -3213,7 +3213,7 @@ const UpdateJobsRevised = ({
                                                     <button
                                                         type="button"
                                                         // onClick={handleCreateForm}
-                                                        class="btn btn-lightgray"
+                                                        class="btn btn-lightgray next-btn-shadow"
                                                         onClick={handleNext}
                                                     >
                                                         Next
@@ -3349,7 +3349,7 @@ const UpdateJobsRevised = ({
                                                     <button
                                                         type="button"
                                                         // onClick={handleCreateForm}
-                                                        class="btn btn-lightgray"
+                                                        class="btn btn-lightgray next-btn-shadow"
                                                         onClick={handleNext}
                                                     >
                                                         Next
@@ -3602,7 +3602,7 @@ const UpdateJobsRevised = ({
                                                     <button
                                                         // onClick={handleCreateForm}
                                                         type="button"
-                                                        class="btn btn-lightgray"
+                                                        class="btn btn-lightgray next-btn-shadow"
                                                         onClick={handleNext}
                                                     >
                                                         Next
@@ -3628,7 +3628,7 @@ const UpdateJobsRevised = ({
                                                             // setActiveKey("9");
                                                             handleAddComponent(e);
                                                         }}
-                                                        class="btn btn-lightgray me-3"
+                                                        class="btn btn-lightgray"
                                                     >
                                                         <i className="fa fa-plus me-2"></i>
                                                         Add
@@ -3834,7 +3834,7 @@ const UpdateJobsRevised = ({
                                                                 </div>
                                                                 <button
                                                                     type="button"
-                                                                    className="btn btn-lightgray me-3"
+                                                                    className="btn btn-lightgray "
                                                                     onClick={() => handleAddResponse(questionIndex)} // Add a new response option
                                                                 >
                                                                     <i className="fa fa-plus me-1"></i>
@@ -3854,7 +3854,7 @@ const UpdateJobsRevised = ({
                                                 ))}
                                                 {/* </div> */}
                                                 <div className="accordion_footer mt-3 justify-content-end">
-                                                    <button type="button" class="btn btn-lightgray" onClick={handleNext}>
+                                                    <button type="button" class="btn btn-lightgray next-btn-shadow" onClick={handleNext}>
                                                         Next
                                                     </button>
                                                 </div>
@@ -3916,7 +3916,7 @@ const UpdateJobsRevised = ({
                                             </svg> */}
                                                     <small className="small_subtitle">Select <span className="text-primery">6 out of the 12</span> available options, Identify <span className="text-primery">2 most important ones</span></small>
                                                 </div>
-                                                <button type="button" className="btn btn-lightgray me-4" onClick={(e) => { e.stopPropagation(); setShowHelpChoose(true) }}>
+                                                <button type="button" className="btn btn-lightgray " onClick={(e) => { e.stopPropagation(); setShowHelpChoose(true) }}>
                                                     <svg
                                                         className="me-1"
                                                         width="20"

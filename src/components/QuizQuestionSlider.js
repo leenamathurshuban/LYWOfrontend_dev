@@ -278,31 +278,35 @@ const QuizQuestionSlider = ({ quizMostLeastLike, setQuizMostLeastLike, language,
     const [currentSlide, setCurrentSlide] = useState(0);
     const [isHovered, setIsHovered] = useState([]);
     const options = {
-        dots: true,
-        infinite: true,
-        speed: 700,
-        slidesToShow: 1,
-        // centerMode: true,
-        // centerPadding: "20px",
-        arrows: false,
-        vertical: true,
-        verticalSwiping: true,
-        focusOnSelect: true,
-        afterChange: (index) => setCurrentSlide(index),
-        appendDots: dots => (
-            <ul className="slick-dots">
-                {dots.map((dot, index) => (
-                    <li key={index} className={`${quizMostLeastLike[index] && 'slick-active'}`}>
-                        <button
-                            className={`h-3 w-3 rounded-full mx-1 ${quizMostLeastLike[index]?.most && quizMostLeastLike[index]?.least ? "quiz-completed" : "bg-gray-400"
-                                }`}
-                            onClick={() => sliderRef.current.slickGoTo(index)}
-                        ></button>
-                    </li>
-                ))}
-            </ul>
-        )
-    };
+    dots: true,
+    infinite: true,
+    speed: 700,
+    slidesToShow: 1,
+    arrows: false,
+    vertical: true,
+    verticalSwiping: true,
+    focusOnSelect: true,
+    afterChange: (index) => setCurrentSlide(index),  // update current slide
+    appendDots: dots => (
+        <ul className="slick-dots">
+            {dots.map((dot, index) => (
+                <li
+                    key={index}
+                    className={`${quizMostLeastLike[index] ? '' : ''} ${currentSlide === index ? 'slick-active' : ''}`}
+                >
+                    <button
+                        className={`h-3 w-3 rounded-full mx-1 ${
+                            quizMostLeastLike[index]?.most && quizMostLeastLike[index]?.least
+                                ? "quiz-completed"
+                                : "bg-gray-400"
+                        }`}
+                        onClick={() => sliderRef.current.slickGoTo(index)}
+                    ></button>
+                </li>
+            ))}
+        </ul>
+    )
+};
 
     console.log(language, counter)
     const handleClikcquiz = (rowIndex, option, type) => {

@@ -2058,7 +2058,7 @@ const CreateJobsRevised = ({
                           <button
                             onClick={handleNext}
                             type="button"
-                            class="btn btn-lightgray"
+                            class="btn btn-lightgray next-btn-shadow"
                           >
                             Next
                           </button>
@@ -2235,7 +2235,7 @@ const CreateJobsRevised = ({
                           <button
                             type="button"
                             onClick={handleNext}
-                            class="btn btn-lightgray"
+                            class="btn btn-lightgray next-btn-shadow"
                           >
                             Next
                           </button>
@@ -2563,7 +2563,7 @@ const CreateJobsRevised = ({
                           <button
                             type="button"
                             onClick={handleNext}
-                            class="btn btn-lightgray"
+                            class="btn btn-lightgray next-btn-shadow"
                           >
                             Next
                           </button>
@@ -2637,7 +2637,7 @@ const CreateJobsRevised = ({
                           <button
                             type="button"
                             onClick={handleNext}
-                            class="btn btn-lightgray"
+                            class="btn btn-lightgray next-btn-shadow"
                           >
                             Next
                           </button>
@@ -2865,7 +2865,7 @@ const CreateJobsRevised = ({
                           <button
                             type="button"
                             onClick={handleNext}
-                            class="btn btn-lightgray"
+                            class="btn btn-lightgray next-btn-shadow"
                           >
                             Next
                           </button>
@@ -2997,7 +2997,7 @@ const CreateJobsRevised = ({
                           <button
                             type="button"
                             onClick={handleNext}
-                            class="btn btn-lightgray"
+                            class="btn btn-lightgray next-btn-shadow"
                           >
                             Next
                           </button>
@@ -3256,7 +3256,7 @@ const CreateJobsRevised = ({
                           <button
                             onClick={handleNext}
                             type="button"
-                            class="btn btn-lightgray"
+                            class="btn btn-lightgray next-btn-shadow"
                           >
                             Next
                           </button>
@@ -3479,7 +3479,7 @@ const CreateJobsRevised = ({
                           ))}
                         {/* </div> */}
                         <div className="accordion_footer mt-3 justify-content-end">
-                          <button type="button" class="btn btn-lightgray" onClick={handleNext}>
+                          <button type="button" class="btn btn-lightgray next-btn-shadow" onClick={handleNext}>
                             Next
                           </button>
                         </div>

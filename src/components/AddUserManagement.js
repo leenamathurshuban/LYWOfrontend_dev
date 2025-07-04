@@ -12,7 +12,9 @@ import {
 } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { starIcon } from "../images/assest";
+import  starIcon from "../images/icons/star-05.svg";
+import  starIconActive from "../images/icons/star-fill-05.svg";
+
 import { getToken } from "../services/axiosInstance";
 import ActiveUsersSection from "./CompanyUsers/ActiveUsers";
 import AddUserguide from "./CompanyUsers/AddUserGuilde";
@@ -782,7 +784,12 @@ const AddUserManagement = () => {
                 className={activeItem === item.id ? "active" : ""}
                 onClick={() => handleItemClick(item.id)}
               >
-                <img src={starIcon} />
+                <img src={starIcon} className="star-line" />
+
+                <img src={starIconActive} className="star-line-active" />
+
+                
+              
                 {item.count} {item.label}
               </li>
             ))}
