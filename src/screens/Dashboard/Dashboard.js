@@ -397,12 +397,12 @@ const Dashboard = () => {
     if (searchTerm != "") {
       if (tableShow) {
         const searchData = dashboardList?.total_job_data?.filter(val =>
-          val.job_title.toLowerCase().includes(searchTerm.toLowerCase())
+          val?.job_title?.toLowerCase()?.includes(searchTerm?.toLowerCase())
         );
         setTotalData(searchData)
       } else {
         const searchData = dashboardList?.total_count_data?.hiring_pipeline?.filter(val =>
-          val.jobcompany__job_title.toLowerCase().includes(searchTerm.toLowerCase())
+          val?.job_title?.toLowerCase()?.includes(searchTerm?.toLowerCase())
         );
         setFirstTotalData(searchData)
       }
@@ -415,7 +415,7 @@ const Dashboard = () => {
   useEffect(()=>{
     if(searchJob!==""){
       const searchData = dashboardList?.total_count_data?.pending_reviews?.filter(Val=>
-        Val.jobcompany__job_title.toLowerCase().includes(searchJob.toLowerCase())
+        Val?.jobcompany__job_title?.toLowerCase()?.includes(searchJob?.toLowerCase())
       )
       setPendingReview(searchData)
     }else{
