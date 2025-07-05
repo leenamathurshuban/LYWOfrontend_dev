@@ -2398,7 +2398,7 @@ const UpdateJobsRevised = ({
                                                     <img src={simpleFlag} className="flag_icon" onClick={(e) => handleImportantFlag(e, '2')} />
                                                 )}
                                                 {!openStep.includes('2') && (
-                                                    <span className="acheade_right">{updateFormData?.minimum_education},{badges?.map((cv) => (<>{cv?.qualification_name}</>))}</span>
+                                                    <span className="acheade_right">{updateFormData?.minimum_education} {badges?.map((cv) => (<>{cv?.qualification_name}</>))}</span>
                                                 )}
                                             </Accordion.Header>
                                             <Accordion.Body ref={(el) => (sectionRefs.current['2'] = el)}>
@@ -3517,7 +3517,7 @@ const UpdateJobsRevised = ({
                                                                     className={`${addSubSkill.length > 0 && selectedIndex.includes(Val?.uid) ? 'smbtn-primary' : 'btn-light-gray'}`}
                                                                     onClick={() => handlesubSkillAdd(Val?.uid)}
                                                                 >
-                                                                    <i className="fa fa-plus text-primary me-1"></i>Add Skill
+                                                                    <i className="fa fa-plus text-primary  me-1"></i>Add Skill
                                                                 </Button>
                                                             </div>
                                                         </div>
@@ -3593,7 +3593,7 @@ const UpdateJobsRevised = ({
                                                                 className={`${addSubSkill.length > 0 && selectedIndex.includes(i) ? 'smbtn-primary' : 'btn-light-gray'}`}
                                                                 onClick={() => handlesubSkillAdd(i)}
                                                             >
-                                                                <i className="fa fa-plus text-primary me-1"></i>Add Skill
+                                                                <i className="fa fa-plus  me-1"></i>Add Skill
                                                             </Button>
                                                         </div>
                                                     </div>
@@ -3834,7 +3834,7 @@ const UpdateJobsRevised = ({
                                                                 </div>
                                                                 <button
                                                                     type="button"
-                                                                    className="btn btn-lightgray "
+                                                                    className="btn btn-lightgray me-3"
                                                                     onClick={() => handleAddResponse(questionIndex)} // Add a new response option
                                                                 >
                                                                     <i className="fa fa-plus me-1"></i>

@@ -1220,7 +1220,7 @@ const CreateJobs = ({ show, handleClose }) => {
               options={locationData}
               isSearchable={true}
               noOptionsMessage={() => "No results found"}
-              placeholder="search location"
+              placeholder="Search location"
               filterOption={(option, inputValue) => {
                 if (!inputValue) return false; // hide all options until user types
                 return option.label.toLowerCase().includes(inputValue.toLowerCase());
@@ -1507,7 +1507,7 @@ const CreateJobs = ({ show, handleClose }) => {
               Benefits <span className="font-light">(optional)</span>
             </Form.Label>
             <div className="tagarea">
-              {benefitsData.map((item) => (
+              {benefitsData.map((item) => ( 
                 <span
                   key={item}
                   onClick={() => handleBenifts(item)}
@@ -1549,7 +1549,7 @@ const CreateJobs = ({ show, handleClose }) => {
               //   addCustomeBenifits[addCustomeBenifits.length - 1].Label.trim() === ""
               // }
               >
-                <i className="fa fa-plus text-primary me-1"></i>Add Custom
+                <i className="fa fa-plus me-1"></i>Add Custom
               </Button>
             </div>
           </Form.Group>

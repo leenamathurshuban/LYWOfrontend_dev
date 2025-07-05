@@ -287,6 +287,8 @@ import leaderLarge from "../../images/icons/Leader-icon.svg";
 import InfluencerLarge from "../../images/icons/Influencer-icon.svg";
 import QuizSlider from "../../components/QuizSlider";
 import CreateJobs from "../../components/Jobs/CreateJobs";
+import usersgroupicon from "../../images/icons/users-dark.svg";
+import usersgroupwhite from "../../images/icons/users-01-w.svg";
 
 const Dashboard = () => {
   const [show, setShow] = useState(false);
@@ -642,7 +644,7 @@ const Dashboard = () => {
                 <Card.Body className="p-0 mt-3">
                   <div className="hiring_ppldata">
                     {tableShow ? (
-                      <table className="m-0 table table-striped elv_datatable">
+                      <table className="m-0 table table-striped elv_datatable table-bordered">
                         <thead>
                           <tr>
                             <th>Job</th>
@@ -767,22 +769,95 @@ const Dashboard = () => {
                         </tfoot>
                       </table>
                     ) : (
-                      <table className="m-0 table table-striped elv_datatable">
+                      <table className="m-0 table elv-thmnail-data-table">
                         <thead>
+
                           <tr>
-                            {keyColumn?.map(key => (
+                            {/*keyColumn?.map(key => (
                               <th key={key}>{key == "jobcompany__job_title" ? "Jobs" : key == "screening_count" ? "Screening" : key}</th>
-                            ))}
+                            ))*/}
+
+                            <th>Jobs </th>
+                              <th>Screening</th>
+                                <th>Evaluation 1</th>   
+                                  <th>Evaluation 2</th>
+                                    <th>Evaluation 3</th>
+                                      <th>Evaluation 4</th>
+                                        <th>Final Shortlist</th>
+
+
+
                           </tr>
+                          
                         </thead>
                         <tbody>
-                          {firstTotalData?.slice(0, countList)?.map((row, rowIndex) => (
+
+                          <tr>
+                            <td className="font-weight-600">Frontend Developer <br></br>
+
+                              <span>25 Openings</span>
+                            </td>
+                           
+                            <td className="screening-record"> <img src={usersgroupicon} alt="usericons"/>  250</td>
+                            <td className="evaluation-1-record"><img src={usersgroupicon} alt="usericons"/> 220</td>
+                            <td className="evaluation-2-record"><img src={usersgroupicon} alt="usericons"/> 180</td>
+                             <td className="evaluation-3-record">
+                           <img src={usersgroupicon} alt="usericons"/>   136
+                            </td>
+                            <td className="evaluation-4-record"><img src={usersgroupicon} alt="usericons"/> 91</td>
+                            <td className="final-shortlist"><img src={usersgroupwhite} alt="usericons"/>  24</td>
+
+                          </tr>
+
+
+                              <tr>
+                            <td className="font-weight-600">Frontend Developer <br></br>
+
+                              <span>25 Openings</span>
+                            </td>
+                           
+                            <td className="screening-record"> <img src={usersgroupicon} alt="usericons"/>  250</td>
+                            <td className="evaluation-1-record"><img src={usersgroupicon} alt="usericons"/> 220</td>
+                            <td className="evaluation-2-record disabled-eval"></td>
+                             <td className="evaluation-3-record disabled-eval">
+                           
+                            </td>
+                            <td className="evaluation-4-record disabled-eval"></td>
+                            <td className="final-shortlist"><img src={usersgroupwhite} alt="usericons"/>  24</td>
+
+                          </tr>
+
+
+
+
+                              <tr>
+                            <td className="font-weight-600">Frontend Developer <br></br>
+
+                              <span>25 Openings</span>
+                            </td>
+                           
+                            <td className="screening-record"> <img src={usersgroupicon} alt="usericons"/>  250</td>
+                            <td className="evaluation-1-record"><img src={usersgroupicon} alt="usericons"/> 220</td>
+                            <td className="evaluation-2-record"><img src={usersgroupicon} alt="usericons"/> 180</td>
+                             <td className="evaluation-3-record">
+                          
+                            </td>
+                            <td className="evaluation-4-record disabled-eval"></td>
+                            <td className="final-shortlist disabled-shortlist">  </td>
+
+                          </tr>
+
+
+                          {/*firstTotalData?.slice(0, countList)?.map((row, rowIndex) => (
                             <tr key={rowIndex}>
                               {keyColumn.map(col => (
                                 <td key={col}>{row[col] ?? ''}</td>
                               ))}
                             </tr>
-                          ))}
+                          ))*/}
+
+
+
                         </tbody>
                         <tfoot>
                           {countList < firstTotalData?.length && (
