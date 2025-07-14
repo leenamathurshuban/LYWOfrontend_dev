@@ -383,14 +383,19 @@ const QuizQuestionSlider = ({ quizMostLeastLike, setQuizMostLeastLike, language,
     console.log(quizMostLeastLike)
 
     return (
-        <div className="qzslider">
+        <div className="qzslider quiz-question-slider">
             {/* <span className='handraw'><img src={handDrawicon} />Hover over the cards below to begin.</span> */}
+           
+           <div className="text-center mb-4 desktop-hide">
+                                <p className="mostlike">Pick one <strong>"Most Like”</strong>  you and <br></br> one <strong>"Least Like”</strong> you</p>
+                            </div>
+
             <Slider ref={sliderRef} {...options}>
                 {quizMostLeastLike?.map((row, rowIndex) => (
                     <div key={row?.id} className="item">
                         <Row>
                             {row.behaviour_options.map((option, index) => (
-                                <Col md={3}>
+                                <Col md={3} className='col-6' >
                                     <div key={option}
                                         className={`quiz_card ${row.most === option?.option_name ? "info-select" : ""} ${row.least === option?.option_name ? "info-warring" : ""} `}
                                         onMouseEnter={() => setIsHovered([option?.option_name])}
@@ -413,13 +418,15 @@ const QuizQuestionSlider = ({ quizMostLeastLike, setQuizMostLeastLike, language,
                                     </div>
                                 </Col>
                             ))}
-                            <Col md={12} className="text-center mt-4">
+                            <Col md={12} className="text-center mt-4 mobile-hide">
                                 <p className="mostlike">Pick one <strong>"Most Like”</strong> you and one <strong>"Least Like”</strong> you</p>
                             </Col>
                         </Row>
                     </div>
                 ))}
             </Slider>
+
+            
         </div>
     );
 };

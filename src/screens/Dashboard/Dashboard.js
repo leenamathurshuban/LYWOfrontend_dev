@@ -300,14 +300,14 @@ const Dashboard = () => {
   const [firstTotalData, setFirstTotalData] = useState([])
   const [TotalData, setTotalData] = useState([])
   const [JobData, setJobData] = useState([]);
-  const [pendingReview,setPendingReview] = useState([])
+  const [pendingReview, setPendingReview] = useState([])
   const [visibleCount, setVisibleCount] = useState(10);
   const [countList, setCountList] = useState(10);
   const [VisiblejobData, setJVisiblejobData] = useState(dashboardList?.total_job_data?.slice(0, 10));
   const [VisiblejobList, setJVisiblejobList] = useState(dashboardList?.total_count_data?.hiring_pipeline?.slice(0, 10));
   const [tableShow, setTableShow] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchJob,setSearchJob] = useState("");
+  const [searchJob, setSearchJob] = useState("");
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -414,16 +414,16 @@ const Dashboard = () => {
     }
   }, [searchTerm])
 
-  useEffect(()=>{
-    if(searchJob!==""){
-      const searchData = dashboardList?.total_count_data?.pending_reviews?.filter(Val=>
+  useEffect(() => {
+    if (searchJob !== "") {
+      const searchData = dashboardList?.total_count_data?.pending_reviews?.filter(Val =>
         Val?.jobcompany__job_title?.toLowerCase()?.includes(searchJob?.toLowerCase())
       )
       setPendingReview(searchData)
-    }else{
+    } else {
       setPendingReview(dashboardList?.total_count_data?.pending_reviews)
     }
-  },[searchJob])
+  }, [searchJob])
 
   const keyColumn = Array.from(
     new Set(dashboardList?.total_count_data?.hiring_pipeline?.flatMap(item => Object.keys(item)))
@@ -773,90 +773,115 @@ const Dashboard = () => {
                         <thead>
 
                           <tr>
-                            {/*keyColumn?.map(key => (
-                              <th key={key}>{key == "jobcompany__job_title" ? "Jobs" : key == "screening_count" ? "Screening" : key}</th>
-                            ))*/}
+                            {keyColumn?.map(key => (
+                              <th key={key}>{key == "jobcompany__Job_title" ? "Jobs" : key == "screening_count" ? "Screening" : key}</th>
+                            ))}
 
-                            <th>Jobs </th>
+                            {/* <th>Jobs </th>
                               <th>Screening</th>
                                 <th>Evaluation 1</th>   
                                   <th>Evaluation 2</th>
                                     <th>Evaluation 3</th>
                                       <th>Evaluation 4</th>
-                                        <th>Final Shortlist</th>
+                                        <th>Final Shortlist</th> */}
 
 
 
                           </tr>
-                          
+
                         </thead>
                         <tbody>
+
+                          {/* <tr>
+                            <td className="font-weight-600">Frontend Developer <br></br>
+
+                              <span>25 Openings</span>
+                            </td>
+
+                            <td className="screening-record"> <img src={usersgroupicon} alt="usericons" />  250</td>
+                            <td className="evaluation-1-record"><img src={usersgroupicon} alt="usericons" /> 220</td>
+                            <td className="evaluation-2-record"><img src={usersgroupicon} alt="usericons" /> 180</td>
+                            <td className="evaluation-3-record">
+                              <img src={usersgroupicon} alt="usericons" />   136
+                            </td>
+                            <td className="evaluation-4-record"><img src={usersgroupicon} alt="usericons" /> 91</td>
+                            <td className="final-shortlist"><img src={usersgroupwhite} alt="usericons" />  24</td>
+
+                          </tr>
+
 
                           <tr>
                             <td className="font-weight-600">Frontend Developer <br></br>
 
                               <span>25 Openings</span>
                             </td>
-                           
-                            <td className="screening-record"> <img src={usersgroupicon} alt="usericons"/>  250</td>
-                            <td className="evaluation-1-record"><img src={usersgroupicon} alt="usericons"/> 220</td>
-                            <td className="evaluation-2-record"><img src={usersgroupicon} alt="usericons"/> 180</td>
-                             <td className="evaluation-3-record">
-                           <img src={usersgroupicon} alt="usericons"/>   136
-                            </td>
-                            <td className="evaluation-4-record"><img src={usersgroupicon} alt="usericons"/> 91</td>
-                            <td className="final-shortlist"><img src={usersgroupwhite} alt="usericons"/>  24</td>
 
-                          </tr>
-
-
-                              <tr>
-                            <td className="font-weight-600">Frontend Developer <br></br>
-
-                              <span>25 Openings</span>
-                            </td>
-                           
-                            <td className="screening-record"> <img src={usersgroupicon} alt="usericons"/>  250</td>
-                            <td className="evaluation-1-record"><img src={usersgroupicon} alt="usericons"/> 220</td>
+                            <td className="screening-record"> <img src={usersgroupicon} alt="usericons" />  250</td>
+                            <td className="evaluation-1-record"><img src={usersgroupicon} alt="usericons" /> 220</td>
                             <td className="evaluation-2-record disabled-eval"></td>
-                             <td className="evaluation-3-record disabled-eval">
-                           
+                            <td className="evaluation-3-record disabled-eval">
+
                             </td>
                             <td className="evaluation-4-record disabled-eval"></td>
-                            <td className="final-shortlist"><img src={usersgroupwhite} alt="usericons"/>  24</td>
+                            <td className="final-shortlist"><img src={usersgroupwhite} alt="usericons" />  24</td>
 
                           </tr>
 
 
 
 
-                              <tr>
+                          <tr>
                             <td className="font-weight-600">Frontend Developer <br></br>
 
                               <span>25 Openings</span>
                             </td>
-                           
-                            <td className="screening-record"> <img src={usersgroupicon} alt="usericons"/>  250</td>
-                            <td className="evaluation-1-record"><img src={usersgroupicon} alt="usericons"/> 220</td>
-                            <td className="evaluation-2-record"><img src={usersgroupicon} alt="usericons"/> 180</td>
-                             <td className="evaluation-3-record">
-                          
+
+                            <td className="screening-record"> <img src={usersgroupicon} alt="usericons" />  250</td>
+                            <td className="evaluation-1-record"><img src={usersgroupicon} alt="usericons" /> 220</td>
+                            <td className="evaluation-2-record"><img src={usersgroupicon} alt="usericons" /> 180</td>
+                            <td className="evaluation-3-record">
+
                             </td>
                             <td className="evaluation-4-record disabled-eval"></td>
                             <td className="final-shortlist disabled-shortlist">  </td>
 
-                          </tr>
-
-
-                          {/*firstTotalData?.slice(0, countList)?.map((row, rowIndex) => (
+                          </tr> */}
+                          {/* {firstTotalData?.slice(0, countList)?.map((row, rowIndex) => (
                             <tr key={rowIndex}>
                               {keyColumn.map(col => (
                                 <td key={col}>{row[col] ?? ''}</td>
                               ))}
                             </tr>
-                          ))*/}
+                          ))} */}
+                          {firstTotalData?.slice(0, countList)?.map((row, rowIndex) => (
+                            <tr key={rowIndex}>
+                              {keyColumn.map(col => (
 
+                                  <td className={`${col=="job_title" ? "font-weight-600 height-50":"screening-record"} `}>
+                                  
+                                  
+                                  {row[col] ?? ''}
+                                           
+                                   <br></br>
 
+                                
+                                 
+
+                                    {col=="screening-record" && <span>25 Openings</span>}
+                                  
+                                  </td>                                
+                              ))}
+                              {/* <td className="font-weight-600">Frontend Developer <br></br>
+
+                                <span>25 Openings</span>
+                              </td>
+
+                  
+                           
+                              <td className="final-shortlist"><img src={usersgroupwhite} alt="usericons" />  24</td> */}
+
+                            </tr>
+                          ))}
 
                         </tbody>
                         <tfoot>
@@ -918,7 +943,7 @@ const Dashboard = () => {
                       placeholder="Search"
                       aria-label="Search"
                       aria-describedby="basic-addon1"
-                      onChange={(e)=>setSearchJob(e.target.value)}
+                      onChange={(e) => setSearchJob(e.target.value)}
                     />
                   </InputGroup>
 

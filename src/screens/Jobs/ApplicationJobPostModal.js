@@ -3941,7 +3941,7 @@ const ApplicationJobPostModal = ({
                         </Form.Label>
                       </Col>
                     </Row> */}
-                      <div className="d-flex justify-content-start">
+                      <div className="d-flex justify-content-start d-m-col-2">
                         <Form.Check
                           type="radio"
                           label="Regularly"
@@ -4084,7 +4084,7 @@ const ApplicationJobPostModal = ({
                   </Row>
                 </div>
 
-                <div className="custom-card">
+                <div className="custom-card table-responsive">
                   <h6>Educational Qualification</h6>
                   <table className="mb-2 form_table">
                     <thead>
@@ -4388,7 +4388,7 @@ const ApplicationJobPostModal = ({
                   </Button>
                 </div>
 
-                <div className="custom-card">
+                <div className="custom-card table-responsive">
                   <h6>Work Experience</h6>
                   <div >
                     <Row className="align-items-center bg-lightgray py-2">

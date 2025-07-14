@@ -83,7 +83,7 @@ const AboutLywoModal = ({show, handleClose}) => {
         </ul>
         <h6 className="mt-5">Benefits of this Process</h6>
         <Row>
-          <Col md={3}>
+          <Col md={3} className="col-6" >
             <div className="bnft_probox">
               <img src={StreamlinedEfficiency} />
               <h6>Streamlined Efficiency</h6>
@@ -93,7 +93,7 @@ const AboutLywoModal = ({show, handleClose}) => {
               </p>
             </div>
           </Col>
-          <Col md={3}>
+          <Col md={3} className="col-6">
             <div className="bnft_probox">
               <img src={Convenience01} />
               <h6>Convenience at Its Best</h6>
@@ -103,7 +103,7 @@ const AboutLywoModal = ({show, handleClose}) => {
               </p>
             </div>
           </Col>
-          <Col md={3}>
+          <Col md={3} className="col-6" >
             <div className="bnft_probox">
               <img src={Showcase_01} />
               <h6>Showcase Your Best Self</h6>
@@ -113,7 +113,7 @@ const AboutLywoModal = ({show, handleClose}) => {
               </p>
             </div>
           </Col>
-          <Col md={3}>
+          <Col md={3} className="col-6" >
             <div className="bnft_probox">
               <img src={Transparent01} />
               <h6>Transparent Process</h6>

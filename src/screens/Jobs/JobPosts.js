@@ -14,12 +14,19 @@ import {
 } from "react-bootstrap";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import Doc from "../../images/DocumentIcon.png";
+import brifcase from "../../images/icons/briefcase-01.svg";
+import linechart from "../../images/icons/line-chart-up-06.svg";
+import Message from "../../images/icons/message-dots-circle.svg";
+import share2 from "../../images/icons/share-08.svg";
+import  Download2 from "../../images/icons/download-01.svg"
+
 import Download from "../../images/icons/download-12x12.svg";
 import Global from "../../images/Global.png";
 import HomeIcon from "../../images/icons/HomeIcon.png";
 import UserIcon from "../../images/icons/UserIcon.png";
 import Logo from "../../images/logo_icon.png";
 import Share from "../../images/icons/share-07.svg";
+import closebtn from "../../images/icons/Tag-close X.svg";
 import InfoCircle from "../../images/icons/info-circle16x16.svg";
 import {
   ApplicationDeatilsApi,
@@ -476,19 +483,28 @@ const JobPosts = () => {
   console.log(jobPostData?.asset_job)
   const handleShareModal = () => {
     return (
-      <Modal show={showModal} onHide={toggleModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>
-            <strong>Share</strong>
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body ref={containerRef}>
+       <Modal show={showModal} onHide={toggleModal}  aria-labelledby="contained-modal-title-vcenter" centered  >
+       
+
+        {/* <Modal.Header closeButton>
+        
+      </Modal.Header> */}
+
+       <Modal.Body className="sharing-model" ref={containerRef} closeButton>
+       
+       
+       
           <Row>
             <Col md={12}>
+               <Modal.Title >
+            Share
+          </Modal.Title>
               <p>Enter email addresses below to share the job details.</p>
 
-              <p>Share this job post via your preferred platform!</p>
-              <p>Add Email IDs</p>
+              {/* <p>Share this job post via your preferred platform!</p> */}
+
+              <div className="shaing-email">
+              <p className="font-12">Add Email IDs</p>
               <Form.Group>
                 <InputGroup>
                   <div
@@ -503,29 +519,17 @@ const JobPosts = () => {
                       <div
                         key={index}
                         className="email-tag"
-                        style={{
-                          backgroundColor: "#007bff",
-                          color: "white",
-                          borderRadius: "20px",
-                          padding: "5px 10px",
-                          marginRight: "5px",
-                          marginBottom: "5px",
-                          display: "flex",
-                          alignItems: "center",
-                        }}
+                       
                       >
                         <span>{email}</span>
                         <Button
                           variant="link"
                           onClick={() => removeEmail(email)}
-                          style={{
-                            color: "white",
-                            marginLeft: "5px",
-                            padding: "0",
-                            fontSize: "14px",
+                          style={{                          
+                            marginLeft: "5px",                         
                           }}
                         >
-                          x
+                          <img src={closebtn} alt="close-btn"/>
                         </Button>
                       </div>
                     ))}
@@ -535,13 +539,13 @@ const JobPosts = () => {
                         variant="link"
                         onClick={toggleShowMore}
                         style={{
-                          color: "#007bff",
+                          color: "#4C60E5",
                           padding: "0",
-                          fontSize: "14px",
-                          marginBottom: "5px",
+                          fontSize: "12px",
+                          marginBottom: "0px",
                         }}
                       >
-                        +{emailList.length - 2} more
+                        + {emailList.length - 2} more
                       </Button>
                     )}
 
@@ -550,29 +554,20 @@ const JobPosts = () => {
                         <div
                           key={index + 2}
                           className="email-tag"
-                          style={{
-                            backgroundColor: "#007bff",
-                            color: "white",
-                            borderRadius: "20px",
-                            padding: "5px 10px",
-                            marginRight: "5px",
-                            marginBottom: "5px",
-                            display: "flex",
-                            alignItems: "center",
-                          }}
+                          // style={{
+                          //   marginLeft: "4px",
+                          // }}
+                          
                         >
                           <span>{email}</span>
                           <Button
                             variant="link"
                             onClick={() => removeEmail(email)}
-                            style={{
-                              color: "white",
-                              marginLeft: "5px",
-                              padding: "0",
-                              fontSize: "14px",
+                            style={{                              
+                              marginLeft: "5px",                          
                             }}
                           >
-                            x
+                             <img src={closebtn} alt="close-btn"/>
                           </Button>
                         </div>
                       ))}
@@ -582,10 +577,10 @@ const JobPosts = () => {
                         variant="link"
                         onClick={toggleShowMore}
                         style={{
-                          color: "#007bff",
+                          color: "#4C60E5",
                           padding: "0",
-                          fontSize: "14px",
-                          marginBottom: "5px",
+                          fontSize: "12px",
+                          marginBottom: "0px",
                         }}
                       >
                         Show Less
@@ -604,11 +599,13 @@ const JobPosts = () => {
                         boxShadow: "none",
                         outline: "none",
                         flex: 1,
+                        marginLeft: "4px",
                       }}
                     />
                   </div>
                 </InputGroup>
               </Form.Group>
+              <br></br>
               <p>Sharing link</p>
 
               <InputGroup>
@@ -617,6 +614,9 @@ const JobPosts = () => {
                   value={link}
                   onChange={(e) => setLink(e.target.value)}
                   readOnly
+                  style={{
+                    border: "0",
+                  }}
                 />
                 <OverlayTrigger placement="top" overlay={renderTooltip}>
                   <div
@@ -625,11 +625,8 @@ const JobPosts = () => {
                       cursor: "pointer",
                       padding: "8px",
                       backgroundColor: "#fff",
-                      borderRadius: "5px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      border: "1px solid #e5e5e5",
+                      fontSize: "12px",
+                     
                     }}
                   >
                     <i
@@ -639,11 +636,25 @@ const JobPosts = () => {
                   </div>
                 </OverlayTrigger>
               </InputGroup>
+
+<div className="d-flex w-desktop-100 gap-3 ">
+
+                 <Button variant="light" onClick={toggleModal}>
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+          // onClick={handleCloseModals}
+          >
+            Share
+          </Button>
+</div>
+              </div>
             </Col>
           </Row>
         </Modal.Body>
 
-        <Modal.Footer>
+        {/* <Modal.Footer>
           <Button variant="light" onClick={toggleModal}>
             Cancel
           </Button>
@@ -653,7 +664,7 @@ const JobPosts = () => {
           >
             Share
           </Button>
-        </Modal.Footer>
+        </Modal.Footer> */}
       </Modal>
     );
   };
@@ -834,6 +845,8 @@ const JobPosts = () => {
   // }, [assignmentId])
   console.log('dauuuuuuuu++++++>', buttonText)
   return (
+    
+<>
     <Container fluid className="applicat_flow">
       {isLoading && (
         <div className="loader-overlay">
@@ -841,13 +854,13 @@ const JobPosts = () => {
         </div>
       )}
       <Row className="page_header">
-        <Col className="d-flex align-items-center">
+        <Col md={10} className="d-flex align-items-center col-10">
           <img src={Logo} alt="Logo Icon" />
           <h6 className="mx-3 pagetitle">
             Job Application <strong>{jobPostData?.job_title}</strong>
           </h6>
         </Col>
-        <Col className="d-flex justify-content-md-end">
+        <Col md={2} className="d-flex justify-content-md-end col-2">
           {buttonText === "Apply Now" && <img src={Logout} alt="Logout Icon" />}
 
           {buttonText === "Continue" && <img src={HomeIcon} alt="Home Icon" />}
@@ -894,22 +907,22 @@ const JobPosts = () => {
               </ul>
             </Col>
             <Col className="app_rightinfo">
-              <div className="d-flex flex-wrap align-items-center">
+              <div className="d-flex flex-wrap align-items-center mobile-btn-hide">
                 <button
                   type="button"
-                  className="btn-link"
+                  className="btn-link share-btn"
                   onClick={toggleModal}
                 >
                   <img src={Share} alt="Global" />
                 </button>
 
-                <button type="button" className="btn-link">
+                <button type="button" className="btn-link download-btn">
                   <img src={Download} alt="Global" />
                 </button>
-                <button type="button" className="btn-link">
+                <button type="button" className="btn-link file-btn">
                   <i className="far fa-file"></i>
                 </button>
-                <div className="d-flex gap-3 ms-3">
+                <div className="d-flex w-mobile-100 gap-3 ms-3">
                   <Button variant="light" disabled={jobPostErrorMsg}>
                     Not for Me
                   </Button>
@@ -927,7 +940,7 @@ const JobPosts = () => {
           </Row>
 
           <Row>
-            <Col md={8}>
+            <Col md={8} className="mb-3" >
               <div className="card">
                 <div className="card-body">
                   <h5 className="card-title">Job Description</h5>
@@ -938,7 +951,7 @@ const JobPosts = () => {
               </div>
             </Col>
 
-            <Col md={4}>
+            <Col md={4} className="mb-3" >
               <div className="card jobdetails">
                 <div className="card-body">
                   <h5 className="card-title">Job Details</h5>
@@ -955,15 +968,15 @@ const JobPosts = () => {
                       </ul>
                     );
                   })}
-                </div>
+                </div> 
               </div>
             </Col>
-            <Col className="mt-3 mb-3">
+            <Col className="mb-3">
               <div className="card">
                 <div className="card-body">
                   <h5 className="card-title">About the Company</h5>
 
-                  <Row className="appcaint_head">
+                  <Row className="appcaint_head pb-0">
                     <img
                       src={
                         jobPostData?.job_company?.logo
@@ -980,7 +993,7 @@ const JobPosts = () => {
                         </strong>
                         {jobPostData?.job_company?.location?.location_name}
                       </p>
-                      <ul className="localist mt-1">
+                      <ul className="localist mobile-col-1 mt-1">
                         <li>
                           <img src={GlobSmall} />
                           {jobPostData?.job_company?.website_url}
@@ -993,7 +1006,8 @@ const JobPosts = () => {
                           Over {jobPostData?.job_company?.number_of_employees}
                         </li>
                       </ul>
-
+              </Col>
+              <Col className="app_leftinfo col-12 p-0 mt-2">
                       <p className="card-text">
                         {jobPostData?.detailed_description}
                       </p>
@@ -1252,6 +1266,18 @@ const JobPosts = () => {
         EvaluationListDetails={EvaluationListDetails} setEvaluationListDetails={setEvaluationListDetails}
         errorMessage={errorMessage} setErrorMessage={setErrorMessage} /> */}
     </Container>
+
+<div className="job-post-footer">
+<ul className="mobile-footer">
+<li className="active"><button ><img src={brifcase} alt="Work"/></button></li>
+<li><button  onClick={() => handleBtns(buttonText)}><img src={linechart} alt="Line cahrt"/></button></li>
+<li><button  onClick={toggleModal} ><img src={share2} alt="Share" width={25}/></button></li>
+<li><button><img src={Download2} alt="Download" width={25} /></button></li>
+<li><button><img src={Message} alt="Chat"/></button></li>
+</ul>
+</div>
+</>
+
   );
 };
 export default JobPosts;

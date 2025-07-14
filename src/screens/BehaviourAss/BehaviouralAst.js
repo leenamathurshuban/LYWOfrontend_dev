@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
     Breadcrumb,
     Button,
@@ -31,6 +31,10 @@ import choice_brb from "../../images/icons/choice_brb.svg";
 import choice_normal_3 from "../../images/icons/choice2normal.svg";
 import choice_normal_4 from "../../images/icons/choice1normal.svg";
 
+import langicon from "../../images/icons/globe-01.svg";
+import helpicon from "../../images/icons/help-circle.svg";
+import gridicon from "../../images/icons/grid-01.svg";
+
 import stack2_brb from "../../images/icons/stack 2_brb.svg";
 import option_brb from "../../images/icons/option_brb.svg";
 import infogray from "../../images/icons/info_gray.svg";
@@ -57,6 +61,10 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
             setPopupShow(false);
         }
     }
+
+     const [active, setActive] = useState(false);
+  const popupRef = useRef(null);
+
     const handleShow = () => setShow(true);
     const navigate = useNavigate();
     // let applicantId = JSON.parse(localStorage.getItem('applicantData'))
@@ -130,6 +138,18 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
         if (attemptQuiz.length && attemptLeastQuiz.length) {
             getQuizQuestion()
         }
+
+         const handleClickOutside = (event) => {
+      if (popupRef.current && !popupRef.current.contains(event.target) && !event.target.closest('.language-btn')) {
+        setActive(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+
     }, [attemptQuiz, attemptLeastQuiz])
     const handleSubmitAll = () => {
         if (allSelectionsMade) {
@@ -258,21 +278,21 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                             <Col md={12} className="bg-white rounded p-3"><h5>Behavioural Assessment for {jobPostData?.job_title}</h5></Col>
                         </Row>
                         <Row className="mt-3">
-                            <Col md={12} className="bg-white rounded p-5 shadow-md border">
+                            <Col md={12} className="behaivr-model-ass bg-white rounded p-5 shadow-md border">
                                 <Row>
-                                    <Col md={3}>
+                                    <Col md={3} className='col-6' >
                                         <div className="brb_cards">
                                             <span className="brb-cicon"><img src={stack2_brb} /></span>
                                             <h6>28 Sets</h6>
                                         </div>
                                     </Col>
-                                    <Col md={3}>
+                                    <Col md={3} className='col-6'>
                                         <div className="brb_cards">
                                             <span className="brb-cicon"><img src={option_brb} /></span>
                                             <h6>4 Options</h6>
                                         </div>
                                     </Col>
-                                    <Col md={3}>
+                                    <Col md={3} className='col-6'>
                                         <div className="brb_cards most_like">
                                             <span className="brb-cicon">
 
@@ -284,7 +304,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                                             <h6>Pick one "Most Like” you</h6>
                                         </div>
                                     </Col>
-                                    <Col md={3}>
+                                    <Col md={3} className='col-6' >
                                         <div className="brb_cards least_like">
                                             <span className="brb-cicon">
 
@@ -329,7 +349,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                     <img src={logoIcon} className="me-4" />
                     <Modal.Title>Behavioural Assessment</Modal.Title>
                     <div className="score_panel">
-                        <span className="att_count">Attempted <strong>{runCounter()} / 28</strong></span>
+                        <span className="att_count"> <span>Attempted </span>  <strong>{runCounter()} / 28</strong></span>
                         <button type="button" onClick={() => setShowInstruction(true)} className="me-3 btn-light-outline-sm"><img src={infogray} />Instructions</button>
                         <button type="button" className="btn-light-outline-sm me-3 setlanguage"><img src={globgray} />
                             {/* <Form.Select
@@ -404,6 +424,88 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
 
                 </Modal.Body>
                 <Modal.Footer>
+
+
+                   
+
+                     <div className='job-post-footer behavvoior-footer-menu'>
+                <div className='mobile-footer lang-help-btn'>
+                    <div className='language-btn'>
+                            <img src={langicon} className='lng'/> <br></br>
+
+                            Language
+                    </div>
+
+
+                     <div className='language-btn' onClick={() => setActive(true)}  >
+                            <img src={gridicon} className='lng'/> <br></br>
+
+                            Question
+                    </div>
+
+                     <div onClick={() => setShowInstruction(true)} className='language-btn'>
+                            <img src={helpicon} className='lng'/> <br></br>
+
+                            Instructions
+                    </div>
+                </div>
+            </div>
+
+
+            <div  className={`question-popop ${active ? 'active' : ''}`}
+        ref={popupRef} >
+                <div className='d-flex justify-content-between'>
+                    <div className='range-progress'>
+<strong className="font-20">50%</strong> Complete
+                    </div>
+                    <div className='attempted'>
+                            <span className="att_count"> <span>Attempted </span>  <strong className="font-20">{runCounter()} / 28</strong></span>
+                    </div>
+                </div>
+
+                    <div className='slick-mumber-dot'>
+                        <ul className='number-dot-pagination'>
+                            <li className='complete' >1</li>
+                             <li className='complete'>2</li>
+                              <li className='complete'>3</li>
+                               <li className='complete'>4</li>
+                                <li>5</li>
+                                 <li>6</li>
+                                  <li>7</li>
+                                   <li>8</li>
+                                    <li>9</li>
+
+                                     <li>10</li>
+
+                                        <li>11</li>
+                             <li>12</li>
+                              <li>13</li>
+                               <li>14</li>
+                                <li>15</li>
+                                 <li>16</li>
+                                  <li>17</li>
+                                   <li>18</li>
+                                    <li>19</li>
+
+                                     <li>20</li>
+
+
+                                       <li>21</li>
+                             <li>22</li>
+                              <li>23</li>
+                               <li>24</li>
+                                <li>25</li>
+                                 <li>26</li>
+                                  <li>27</li>
+                                   <li>28</li>
+                                    
+                                    </ul>
+                    </div>
+
+            </div>
+
+
+
                     {allSelectionsMade && (
                         <Button variant="primary" onClick={handleSubmitAll}>
                             Submit
@@ -417,6 +519,15 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                         )}
                 </Modal.Footer>
             </Modal>
+
+
+
+             {/* question progress modal */}
+           
+
+
+{/* modal  */}
+         
 
             <Modal
                 show={popupShow}
@@ -479,7 +590,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                 </Offcanvas.Header>
                 <Offcanvas.Body>
                     <Row className='mt-3'>
-                        <Col md={4}>
+                        <Col md={4} className='mobile-hide' >
                             <div className="ints_card normal">
                                 <span className="itns_icon">
                                     <img src={iceIQ} />
@@ -491,7 +602,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                                 </div>
                             </div>
                         </Col>
-                        <Col md={4}>
+                        <Col md={4} className='col-6' >
                             <div className="ints_card hover">
                                 <span className="itns_icon">
                                     <img src={iceIQ} />
@@ -507,7 +618,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                                 </div>
                             </div>
                         </Col>
-                        <Col md={4}>
+                        <Col md={4} className='col-6' >
                             <div className="ints_card hover lelike">
                                 <span className="itns_icon">
                                     <img src={iceIQ} />
@@ -523,7 +634,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                                 </div>
                             </div>
                         </Col>
-                        <Col md={4} className='mt-6'>
+                        <Col md={4} className='mt-6 col-6'>
                             <div className="ints_card hover lelike_select">
                                 <span className="itns_icon">
                                     <img src={iceIQ} />
@@ -539,7 +650,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                                 </div>
                             </div>
                         </Col>
-                        <Col md={4} className='mt-6'>
+                        <Col md={4} className='mt-6 col-6'>
                             <div className="ints_card hover mlike_select">
                                 <span className="itns_icon">
                                     <img src={iceIQ} />
@@ -567,6 +678,9 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                     </ul>
                 </Offcanvas.Body>
             </Offcanvas>
+
+
+           
         </>
     )
 }

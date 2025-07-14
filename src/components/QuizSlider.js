@@ -94,12 +94,17 @@ const QuizSlider = ({ mostLeastLike, setMostLeastLike }) => {
 
     return (
         <div className="qzslider quiz-first-screen"><span className='handraw'><img src={handDrawicon} />Hover over the cards below to begin.</span>
+
+              <div className="text-center mb-4 desktop-hide">
+                                <p className="mostlike">Pick one <strong>"Most Like”</strong>  you and <br></br> one <strong>"Least Like”</strong> you</p>
+                            </div>
+
             <Slider ref={sliderRef} {...options}>
                 {mostLeastLike.map((row, rowIndex) => (
                     <div key={row.id} className="item">
-                        <Row>
+                        <Row className='m-order-2'>
                             {row.options.map(option => (
-                                <Col md={3}>
+                                <Col md={3} className='col-6' >
                                     <div key={option}
                                         className={`quiz_card ${row.most === option?.name ? "info-select" : ""} ${row.least === option?.name ? "info-warring" : ""} `}
                                         onMouseEnter={() => setIsHovered([option?.name])}
@@ -134,7 +139,12 @@ const QuizSlider = ({ mostLeastLike, setMostLeastLike }) => {
                                     </div>
                                 </Col>
                             ))}
-                            <Col md={12} className="text-center mt-4">
+</Row>
+
+                             <Row className='m-order-1'>
+
+
+                            <Col md={12} className="text-center mt-4 mobile-hide">
                                 <p className="mostlike">Pick one <strong>"Most Like”</strong> you and one <strong>"Least Like”</strong> you</p>
                             </Col>
                         </Row>
