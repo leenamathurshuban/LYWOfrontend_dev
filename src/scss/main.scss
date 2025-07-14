@@ -334,7 +334,7 @@ fieldset:disabled .btn {
     display: flex;
     align-items: center;
 
-    span {
+    .orgshort_text {
       background-color: #eef4ff;
       border: solid 1px #a4bcfd;
       font-size: 16px;
@@ -356,6 +356,20 @@ fieldset:disabled .btn {
         height: 40px;
         object-fit: contain;
       }
+    }
+
+
+    .css-13cymwt-control, .css-t3ipsp-control{
+      border: none;   
+      font-size: 14px;
+      font-weight: 600;
+      min-width: 200px;
+      text-transform: capitalize;
+
+      .css-1u9des2-indicatorSeparator{
+        display: none;
+      }
+
     }
 
     p {
@@ -404,6 +418,7 @@ fieldset:disabled .btn {
 .header_right {
   display: flex;
   justify-content: end;
+  align-items: center;
 
   .dropdown-item {
     color: #344054;
@@ -746,7 +761,7 @@ ol.breadcrumb {
 
   .expand-view-btn {
     padding-left: 0;
-    margin: 0 0 0 auto;
+    margin: 0 10px 0 auto;
     display: flex;
     align-items: center;
 
@@ -2458,7 +2473,7 @@ select.h-36.form-select {
     }
 
     .btn-close {
-      font-size: 20px;
+      font-size: 14px;
       color: #344054;
       opacity: 1;
       padding: 0px;
@@ -3926,6 +3941,8 @@ select.h-36.form-select {
 .customq_list {
   margin: 10px 0 0 0;
   padding: 0;
+  max-height: 70px;
+  overflow-y: auto;
 
   li {
     line-height: 16px;
@@ -5153,7 +5170,7 @@ select.h-36.form-select {
       display: flex;
 
       li {
-        margin-right: 20px;
+        margin-right: 10px;
         font-size: 12px;
         font-weight: 600;
         color: #344054;
@@ -8847,7 +8864,7 @@ button.btn-icon {
     bottom: 0;
     left: 0;
     right: 0;
-    min-height: 320px;
+    min-height: 350px;
     padding: 15px 25px;
     background: #F5F8FF;
     border: 1px solid #E0EAFF;
@@ -8892,6 +8909,113 @@ button.btn-icon {
       }
   }
 
+}
+
+
+.instruction-open {
+    position: relative;
+
+    &::before{
+      content: "";
+      position: absolute;
+      background: #F2F4F7CC;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1111;
+      opacity: .8;
+    }
+}
+
+// 
+
+
+.invite-people-box {
+    position: fixed;
+    max-width: 800px;
+    top: 0;
+    right: 0;
+    width: 100%;
+    bottom: 0;
+    z-index: 1111;
+    background: #ffff;
+
+
+    ul#noanim-tab-example {
+    display: flex;
+    flex-wrap: wrap;
+
+
+
+
+
+
+    li {
+    flex: 0 0 33.3%;
+    text-align: center;
+    justify-content: center;
+    display: inline-flex; 
+
+
+    button {
+    color: #667085;
+    width: 100%;
+
+    &:hover{
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 2px solid #3538CD;
+    width: 100%;
+    color: #3538CD;
+    }
+
+
+
+    &.active{
+
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 2px solid #3538CD;
+    width: 100%;
+    color: #3538CD;
+
+    }
+
+
+    }
+
+
+
+  
+  }
+
+    }
+
+
+}
+
+#noanim-tab-example-tab-Link{
+  background: url(../images/icons/link-03.svg);
+  background-repeat: no-repeat;
+  background-position: 68% center;
+}
+#noanim-tab-example-tab-QRCode{
+  background: url(../images/icons/qr-code-02.svg);
+  background-repeat: no-repeat;
+  background-position: 72% center;
+}
+#noanim-tab-example-tab-Main{
+  background: url(../images/icons/mail-02.svg);
+  background-repeat: no-repeat;
+  background-position: 68% center;
+}
+
+
+.maw-350{
+  max-width: 350px;
 }
 
 
@@ -9396,9 +9520,9 @@ button.me-3.btn-light-outline-sm, .setlanguage {
 }
 
 .offcanvas.offcanvas-end {
-    top: 0px;
+    top: 80px;
 }
-
+ 
 .question-popop.active {
     transform: translateY(0px);
     
@@ -9406,5 +9530,13 @@ button.me-3.btn-light-outline-sm, .setlanguage {
 
 
 }
+
+
+@media screen and (min-width:1200px){
+  .table-responsive{
+    overflow: visible;
+  }
+}
+
 
 

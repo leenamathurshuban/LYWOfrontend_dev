@@ -431,6 +431,15 @@ const Dashboard = () => {
   const totalPendingReviews = dashboardList?.total_count_data?.pending_reviews
     ?.reduce((sum, item) => sum + item.pending_review, 0);
 
+  const checkStatus = (item) => {    
+    const found = dashboardList?.total_count_data?.hiring_pipeline?.find((Val) =>Val?.job_title == item?.job_title);
+    if (found) {
+      if (found.final_shortlist > 0) return "Final Shortlist";;
+      if (found.screening_count > 0) return "Screening";
+    }
+    return null;
+  }
+
   console.log(dashboardList)
   return (
     <>
@@ -663,7 +672,7 @@ const Dashboard = () => {
                               <td>{item?.department}</td>
                               <td>10 days</td>
                               <td>{item?.total_applicant_count}</td>
-                              <td><span className="badge-primery">status</span></td>
+                              <td><span className="badge-primery">{checkStatus(item)}</span></td>
                             </tr>
                           ))}
 
@@ -857,19 +866,11 @@ const Dashboard = () => {
                             <tr key={rowIndex}>
                               {keyColumn.map(col => (
 
-                                  <td className={`${col=="job_title" ? "font-weight-600 height-50":"screening-record"} `}>
-                                  
-                                  
+                                <td className={`${col == "job_title" ? "font-weight-600 height-50" : "screening-record"} `}>
                                   {row[col] ?? ''}
-                                           
-                                   <br></br>
-
-                                
-                                 
-
-                                    {col=="screening-record" && <span>25 Openings</span>}
-                                  
-                                  </td>                                
+                                  <br></br>
+                                  {col == "screening-record" && <span>25 Openings</span>}
+                                </td>
                               ))}
                               {/* <td className="font-weight-600">Frontend Developer <br></br>
 

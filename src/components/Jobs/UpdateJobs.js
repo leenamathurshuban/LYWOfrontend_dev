@@ -656,6 +656,22 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
   //   setIsLikeDropdown(false);
   // };
 
+// custom style react select box
+
+ const customStyles = {
+  option: (provided, state) => ({
+    ...provided,
+    backgroundColor: state.isSelected
+      ? "#deebff"
+      : state.isFocused
+      ? "#deebff" // Color on hover
+      : "inherit",
+    color: state.isSelected ? "#000" : "black",
+    cursor: "pointer", // Optional: improves UX on hover
+  }),
+};
+
+
   const hasSelectedAndImportant = behaviours.some((item) => (item?.isSelected || item?.markedImportant));
 
   const handleDepartment = (e) => {
@@ -1171,6 +1187,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
                 return option.label.toLowerCase().includes(inputValue.toLowerCase());
               }}              
               onChange={handleSelectedLikeItems}
+              styles={customStyles}
             />
           </Form.Group>
 
@@ -1265,6 +1282,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
                 return option.label.toLowerCase().includes(inputValue.toLowerCase());
               }}
               onChange={handleLocationItems}
+              styles={customStyles}
             />
 
             {isLocationDropdown && locationData.length === 0 && (
@@ -1468,7 +1486,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
                   </ul>
                 </div>
               )} */}
-              <Select className="react_selectbox" value={jobTypeValue} options={jobTypeOptions} onChange={handleJobType} />
+              <Select className="react_selectbox" value={jobTypeValue} options={jobTypeOptions} onChange={handleJobType} styles={customStyles} />
             </div>
             <span style={{ color: "red" }}>{errors.jobType}</span>
           </Col>
@@ -1531,7 +1549,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
                   </ul>
                 </div>
               )} */}
-              <Select className="react_selectbox" value={workplaceTypeValue} options={workplaceOption} onChange={(val) => {
+              <Select styles={customStyles} className="react_selectbox" value={workplaceTypeValue} options={workplaceOption} onChange={(val) => {
                 setCreateFormData({
                   ...createFormData,
                   ["workPlaceType"]: val?.value

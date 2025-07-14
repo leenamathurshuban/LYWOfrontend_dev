@@ -622,6 +622,22 @@ const CreateJobs = ({ show, handleClose }) => {
   //   setIsLikeDropdown(false);
   // };
 
+
+  // custom style react select box
+
+ const customStyles = {
+  option: (provided, state) => ({
+    ...provided,
+    backgroundColor: state.isSelected
+      ? "#deebff"
+      : state.isFocused
+      ? "#deebff" // Color on hover
+      : "inherit",
+    color: state.isSelected ? "#000" : "black",
+    cursor: "pointer", // Optional: improves UX on hover
+  }),
+};
+
   const hasSelectedAndImportant = behaviours.some((item) => (item?.isSelected || item?.markedImportant));
 
   // const handleDepartment = (e) => {
@@ -984,6 +1000,8 @@ const CreateJobs = ({ show, handleClose }) => {
 
   };
 
+
+
   const handleClearCustomInput = (index) => {
     setCustomValue("")
     if (index !== '') {
@@ -1057,6 +1075,8 @@ const CreateJobs = ({ show, handleClose }) => {
       setIsLocationDropdown(false)
     }, 200);
   }
+
+
   console.log(createFormData)
   return (
     <Offcanvas
@@ -1130,6 +1150,7 @@ const CreateJobs = ({ show, handleClose }) => {
                 return option.label.toLowerCase().includes(inputValue.toLowerCase());
               }}              
               onChange={handleSelectedLikeItems}
+              styles={customStyles}
             />
 
           </Form.Group>
@@ -1226,6 +1247,7 @@ const CreateJobs = ({ show, handleClose }) => {
                 return option.label.toLowerCase().includes(inputValue.toLowerCase());
               }}              
               onChange={handleLocationItems}
+              styles={customStyles}
             />
 
 
@@ -1430,7 +1452,7 @@ const CreateJobs = ({ show, handleClose }) => {
                   </ul>
                 </div>
               )} */}
-              <Select className="react_selectbox" defaultValue={createFormData.jobType} options={jobTypeOptions} onChange={handleJobType} />
+              <Select className="react_selectbox" defaultValue={createFormData.jobType} options={jobTypeOptions} onChange={handleJobType} styles={customStyles} />
             </div>
             <span className="error-msg" style={{ color: "red" }}>{errors.jobType}</span>
           </Col>
@@ -1492,7 +1514,7 @@ const CreateJobs = ({ show, handleClose }) => {
                   </ul>
                 </div>
               )} */}
-              <Select className="react_selectbox" defaultValue={createFormData.workPlaceType} options={workplaceOption} onChange={(val) => {
+              <Select styles={customStyles} className="react_selectbox" defaultValue={createFormData.workPlaceType} options={workplaceOption} onChange={(val) => {
                 setCreateFormData({
                   ...createFormData,
                   ["workPlaceType"]: val?.value

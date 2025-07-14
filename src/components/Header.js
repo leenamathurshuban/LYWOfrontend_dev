@@ -38,12 +38,48 @@ const Header = () => {
     // sessionStorage.removeItem('applicantData');
     navigate("/emailverify");
   };
-  const handleCompanyDropdown = (e) => {
-    const { value } = e.target;
-    setCompanyInfo(value)
-    const filtercompany = userInfo?.company?.filter((val) => val?.company_name == value)
-    setCompantUid(filtercompany[0]?.uid)
-  }
+
+
+  // const handleCompanyDropdown = (e) => {
+  //   const { value } = e.target;
+  //   setCompanyInfo(value)
+  //   const filtercompany = userInfo?.company?.filter((val) => val?.company_name == value)
+  //   setCompantUid(filtercompany[0]?.uid)
+  // }
+
+
+  const handleCompanyDropdown = (selectedOption) => {
+  if (!selectedOption) return; // safeguard
+  const { value } = selectedOption;
+  setCompanyInfo(value);
+
+  const filtercompany = userInfo?.company?.filter((val) => val?.company_name === value);
+  setCompantUid(filtercompany[0]?.uid);
+};
+
+
+
+  // custom style react select box
+
+ const customStyles = {
+  option: (provided, state) => ({
+    ...provided,
+    backgroundColor: state.isSelected
+      ? "#deebff"
+      : state.isFocused
+      ? "#deebff" // Color on hover
+      : "inherit",
+    color: state.isSelected ? "#000" : "black",
+    cursor: "pointer", // Optional: improves UX on hover
+  }),
+};
+
+
+  
+
+
+
+
   useEffect(() => {
     GetCompanyDetails(compantUid)
   }, [companyInfo])
@@ -76,7 +112,7 @@ const Header = () => {
             <span className="orgshort_text">{logoname}</span>
             {/* <p>{userInfo?.default_company?.company_name}</p> */}
 
-            <div className="custom-select-wrapper">
+            {/* <div className="custom-select-wrapper">
             <Form.Select
               value={companyInfo}
               onChange={handleCompanyDropdown}
@@ -86,13 +122,14 @@ const Header = () => {
                 <option value={item.company_name}>{item?.company_name}</option>
               ))}
             </Form.Select>
-            </div>
-            {/* <Select
+            </div> */}
+            <Select
               options={userOption}
               value={userOption.find((opt)=>opt.value===companyInfo)}
               onChange={handleCompanyDropdown}
               className="react_selectbox"
-            /> */}
+              styles={customStyles}
+            />
           </div>
         </Col>
         <Col md={4}>

@@ -472,6 +472,27 @@ const UpdateJobsRevised = ({
     //     }
     // };
 
+
+    
+  // custom style react select box
+
+ const customStyles = {
+  option: (provided, state) => ({
+    ...provided,
+    backgroundColor: state.isSelected
+      ? "#deebff"
+      : state.isFocused
+      ? "#deebff" // Color on hover
+      : "inherit",
+    color: state.isSelected ? "#000" : "black",
+    cursor: "pointer", // Optional: improves UX on hover
+  }),
+};
+
+
+
+
+
     const handleKeyPressForlanguages = async (e, from) => {
         if (e.key === "Enter" && inputValue.trim()) {
             e.preventDefault();
@@ -2263,7 +2284,7 @@ const UpdateJobsRevised = ({
                                                             <option value="Min-salary">Min. Salary</option>
                                                             <option value="Max-salary">Max. Salary</option>
                                                         </Form.Select> */}
-                                                        <Select value={salaryRangeValue} options={salaryRangeOption} className="sm-fselect react_selectbox"
+                                                        <Select styles={customStyles} value={salaryRangeValue} options={salaryRangeOption} className="sm-fselect react_selectbox"
                                                             onChange={(e) => {
                                                                 setUpdateFormData({
                                                                     ...updateFormData,
@@ -2319,7 +2340,7 @@ const UpdateJobsRevised = ({
                                                                 INR
                                                             </option>
                                                         </Form.Select> */}
-                                                        <Select value={{ value: "INR", label: "INR" }} options={[{ value: "INR", label: "INR" }]} className="sm-fselect react_selectbox"
+                                                        <Select styles={customStyles} value={{ value: "INR", label: "INR" }} options={[{ value: "INR", label: "INR" }]} className="sm-fselect react_selectbox"
                                                             onChange={(e) => {
                                                                 setUpdateFormData({
                                                                     ...updateFormData,
@@ -2340,7 +2361,7 @@ const UpdateJobsRevised = ({
                                                             <option value="Per-Month">Per Month</option>
                                                             <option value="Per-Annum">Per Anmum</option>
                                                         </Form.Select> */}
-                                                        <Select value={salaryTypeValue} options={salaryTypeOption} className="sm-fselect react_selectbox"
+                                                        <Select styles={customStyles} value={salaryTypeValue} options={salaryTypeOption} className="sm-fselect react_selectbox"
                                                             onChange={(e) => {
                                                                 setUpdateFormData({
                                                                     ...updateFormData,
@@ -2428,7 +2449,7 @@ const UpdateJobsRevised = ({
                                                             <option value="Doctoral Degree (Ph.D., Ed.D.)">Doctoral Degree (Ph.D., Ed.D.)</option>
                                                             <option value="Postdoctoral Research">Postdoctoral Research</option>
                                                         </Form.Select> */}
-                                                        <Select value={minEducationValue} options={minimumEducationOption} className="sm-fselect react_selectbox"
+                                                        <Select styles={customStyles} value={minEducationValue} options={minimumEducationOption} className="sm-fselect react_selectbox"
                                                             onChange={(e) => {
                                                                 setUpdateFormData({
                                                                     ...updateFormData,
@@ -2614,7 +2635,7 @@ const UpdateJobsRevised = ({
 
                                                                 <option value="Max">Max</option>
                                                             </Form.Select> */}
-                                                            <Select value={ExpRangeValue} options={expRangeOption} className="sm-fselect w-150 react_selectbox"
+                                                            <Select styles={customStyles} value={ExpRangeValue} options={expRangeOption} className="sm-fselect w-150 react_selectbox"
                                                                 onChange={(e) => {
                                                                     setUpdateFormData({
                                                                         ...updateFormData,
@@ -3741,6 +3762,7 @@ const UpdateJobsRevised = ({
                                                                         </Form.Select> */}
                                                                         <Select
                                                                             className="react_selectbox"
+                                                                            styles={customStyles}
                                                                             options={[{value:"single",label:"MCQ Single"},{value:"multiple",label:"MCQ Multiple"}]}
                                                                             // value={{value:"single",label:"MCQ Single"}}
                                                                             onChange={(e)=>{

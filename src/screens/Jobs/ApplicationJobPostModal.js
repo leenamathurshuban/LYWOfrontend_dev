@@ -2349,6 +2349,22 @@ const ApplicationJobPostModal = ({
     // setIsOpen((prev) => ({ ...prev, [index]: false }));
   }
 
+  // custom style react select box
+
+ const customStyles = {
+  option: (provided, state) => ({
+    ...provided,
+    backgroundColor: state.isSelected
+      ? "#deebff"
+      : state.isFocused
+      ? "#deebff" // Color on hover
+      : "inherit",
+    color: state.isSelected ? "#000" : "black",
+    cursor: "pointer", // Optional: improves UX on hover
+  }),
+};
+
+
   const handleKeyPressForlanguages = async (e, from) => {
     if (e.key === "Enter" && inputValue.trim()) {
       e.preventDefault();
@@ -3845,12 +3861,12 @@ const ApplicationJobPostModal = ({
                               </div>
                             )} */}
                             <Select
-                              className="react_selectbox"
+                              className="react_selectbox maw-350"
                               options={noticeOptions}
                               value={noticeOptions.find((opt) => opt.value === profileformData?.NoticePeriod)}
                               placeholder="Notice Period"
                               onChange={(e) => handleSelect('NoticePeriod', e.value)}
-                              styles={{ container: (base) => ({ ...base, width: 350 }) }} />
+                              styles={customStyles} />
                           </div>
                         </Col>
                         <Form.Control.Feedback type="invalid">
@@ -4070,12 +4086,12 @@ const ApplicationJobPostModal = ({
                           </div>
                         )} */}
                         <Select
-                          className="react_selectbox"
+                          className="react_selectbox maw-350"
                           options={expectedSalaryOption}
                           value={expectedSalaryOption.find((opt) => opt.value === profileformData?.ExpectedSalary)}
                           placeholder="Expected Salary"
-                          onChange={(e) => handleSelect('ExpectedSalary', e.value)}
-                          styles={{ container: (base) => ({ ...base, width: 350 }) }} />
+                          onChange={(e) => handleSelect('ExpectedSalary', e.value)}                         
+                          styles={customStyles} />
                       </div>
                       <Form.Control.Feedback type="invalid" className="error">
                         {errors.ExpectedSalary}
@@ -4168,12 +4184,12 @@ const ApplicationJobPostModal = ({
                                 </div>
                               )} */}
                               <Select
-                                className="react_selectbox"
+                                className="react_selectbox maw-350"
                                 options={levelOption}
                                 value={levelOption.find((opt) => opt.value === row.level)}
                                 placeholder="Level"
                                 onChange={(e) => handleSelectLevel(index, e.value)}
-                                styles={{ container: (base) => ({ ...base, }) }} />
+                                styles={customStyles} />
                             </div>
                           </td>
                           <td className="tdata-2">
@@ -4244,7 +4260,7 @@ const ApplicationJobPostModal = ({
                                 )}
                               </div> */}
                               <Select
-                                className="react_selectbox"
+                                className="react_selectbox maw-350"
                                 options={aresEducationOption}
                                 isSearchable={true}
                                 noOptionsMessage={() => "No results found"}
@@ -4256,7 +4272,7 @@ const ApplicationJobPostModal = ({
                                   return option.label.toLowerCase().includes(inputValue.toLowerCase());
                                 }}
                                 onChange={(e) => handleSelectAreaEducation(index, e.label)}
-                                styles={{ container: (base) => ({ ...base, width: 230 }) }} />
+                                styles={customStyles} />
                             </div>
 
                           </td>
@@ -4478,12 +4494,12 @@ const ApplicationJobPostModal = ({
                             </div>
                           )} */}
                           <Select
-                            className="react_selectbox"
+                            className="react_selectbox maw-350"
                             options={totalWorkExperienceOption}
                             value={totalWorkExperienceOption.find((opt) => opt.value === totalWorkExperience)}
                             placeholder="Work Experience"
                             onChange={(e) => handleTotalWorkExpeienceChange(e.value)}
-                            styles={{ container: (base) => ({ ...base, width: 350 }) }} />
+                            styles={customStyles} />
                         </div>
                       </Col>
                     </Row>
@@ -4532,7 +4548,7 @@ const ApplicationJobPostModal = ({
                                     )}
                                   </div> */}
                                   <Select
-                                    className="react_selectbox"
+                                    className="react_selectbox maw-350"
                                     options={roleList}
                                     isSearchable={true}
                                     noOptionsMessage={() => "No results found"}
@@ -4544,7 +4560,7 @@ const ApplicationJobPostModal = ({
                                       return option.label.toLowerCase().includes(inputValue.toLowerCase());
                                     }}
                                     onChange={(e) => handleWorkRole(index, e.label)}
-                                    styles={{ container: (base) => ({ ...base, width: 230 }) }} />
+                                    styles={customStyles} />
                                 </div>
 
                               </td>
@@ -4619,7 +4635,7 @@ const ApplicationJobPostModal = ({
                                     )}
                                   </div> */}
                                   <Select
-                                    className="react_selectbox"
+                                    className="react_selectbox maw-350"
                                     options={industriesList}
                                     isSearchable={true}
                                     noOptionsMessage={() => "No results found"}
@@ -4631,7 +4647,7 @@ const ApplicationJobPostModal = ({
                                       return option.label.toLowerCase().includes(inputValue.toLowerCase());
                                     }}
                                     onChange={(e) => handleSelectIndustries(index, e.label)}
-                                    styles={{ container: (base) => ({ ...base, width: 230 }) }} />
+                                    styles={customStyles} />
                                 </div>
                               </td>
                               {/* <td className="experince-td-6">
@@ -5042,7 +5058,7 @@ const ApplicationJobPostModal = ({
                           </ul>
                         </div> */}
                         <Select
-                          className="react_selectbox location-w-icon"
+                          className="react_selectbox location-w-icon maw-350"
                           options={locationList}
                           isSearchable={true}
                           noOptionsMessage={() => "No results found"}
@@ -5053,7 +5069,7 @@ const ApplicationJobPostModal = ({
                             return option.label.toLowerCase().includes(inputValue.toLowerCase());
                           }}
                           onChange={(e) => handleSelectGeographyLocaton(e.label)}
-                          styles={{ container: (base) => ({ ...base, width: 350 }) }} />
+                          styles={customStyles} />
                       </div>
                     </Col>
 
