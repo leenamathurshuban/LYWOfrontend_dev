@@ -609,7 +609,7 @@ const Dashboard = () => {
               <Card className="border-0 hiring_pipeline mt-4">
                 <Card.Header>
                   <Row>
-                    <Col md={6} className="d-flex align-items-center">
+                    <Col md={6} className="d-flex align-items-center col-8 hiring-rcrd">
                       <h4 className="title-md m-0">Hiring Pipeline</h4>
                       <InputGroup className="defult_serachbox">
                         <Button id="basic-addon1">
@@ -638,7 +638,7 @@ const Dashboard = () => {
                         />
                       </InputGroup>
                     </Col>
-                    <Col md={6} className="justify-content-end d-flex align-items-center">
+                    <Col md={6} className="justify-content-end d-flex align-items-center col-4">
                       <button className={`gray_iconbtn me-2 ${!tableShow && "active"}`} onClick={() => {
                         setTableShow(false);
                         setSearchTerm("")
@@ -651,7 +651,7 @@ const Dashboard = () => {
                   </Row>
                 </Card.Header>
                 <Card.Body className="p-0 mt-3">
-                  <div className="hiring_ppldata">
+                  <div className="hiring_ppldata table-responsive">
                     {tableShow ? (
                       <table className="m-0 table table-striped elv_datatable table-bordered">
                         <thead>

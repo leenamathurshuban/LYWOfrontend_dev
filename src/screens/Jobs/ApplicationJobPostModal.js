@@ -1827,6 +1827,7 @@ import {
   InputGroup,
   Modal,
   Row,
+  Table,
 } from "react-bootstrap";
 import { useDropzone } from "react-dropzone";
 import imgpTrash from "../../images/icons/trash-01.svg";
@@ -2265,7 +2266,7 @@ const ApplicationJobPostModal = ({
         ) {
           //console.log("Token expired, redirecting to login");
           removeToken();
-          navigate("/loginwithpassword");
+          // navigate("/loginwithpassword");
         }
       });
   };
@@ -2351,18 +2352,18 @@ const ApplicationJobPostModal = ({
 
   // custom style react select box
 
- const customStyles = {
-  option: (provided, state) => ({
-    ...provided,
-    backgroundColor: state.isSelected
-      ? "#deebff"
-      : state.isFocused
-      ? "#deebff" // Color on hover
-      : "inherit",
-    color: state.isSelected ? "#000" : "black",
-    cursor: "pointer", // Optional: improves UX on hover
-  }),
-};
+  const customStyles = {
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isSelected
+        ? "#deebff"
+        : state.isFocused
+          ? "#deebff" // Color on hover
+          : "inherit",
+      color: state.isSelected ? "#000" : "black",
+      cursor: "pointer", // Optional: improves UX on hover
+    }),
+  };
 
 
   const handleKeyPressForlanguages = async (e, from) => {
@@ -3397,15 +3398,18 @@ const ApplicationJobPostModal = ({
         // className="cmprofile_mdl quizDev_model jobpost_view"
         className="cmprofile_mdl quizDev_model jobpost_view ps-0"
       >
-        <Modal.Header closeButton>
-          <img src={logoIcon} className="me-4" />
-          <div className="modal-title h4">
-            Job Application <strong className="font-weight500">{jobPostData?.job_title}</strong>
-            <p className="subtitle m-0">
-              {jobPostData?.job_location?.location_name},{jobPostData?.job_type} ,{" "}
-              {jobPostData?.workplace_type}
-            </p>
+        <Modal.Header className="justify-content-between" closeButton>
+
+          <div className="modal-title  d-flex align-items-center h4">
+            <img src={logoIcon} className="me-4" />
+            <div className=""> Job Application <strong className="font-weight500">{jobPostData?.job_title}</strong>
+              <p className="subtitle m-0">
+                {jobPostData?.job_location?.location_name},{jobPostData?.job_type} ,{" "}
+                {jobPostData?.workplace_type}
+              </p>
+            </div>
           </div>
+
         </Modal.Header>
         <Modal.Body className="p-0 bg-lightgray">
           <Container fluid>
@@ -3523,7 +3527,7 @@ const ApplicationJobPostModal = ({
                 <div className="custom-card">
                   <h6>Basic Details</h6>
 
-                  <Row>
+                  <Row className="mb-3 mt-2">
                     <Col md={2}>
                       <Form.Label>Name</Form.Label>
                     </Col>
@@ -4090,7 +4094,7 @@ const ApplicationJobPostModal = ({
                           options={expectedSalaryOption}
                           value={expectedSalaryOption.find((opt) => opt.value === profileformData?.ExpectedSalary)}
                           placeholder="Expected Salary"
-                          onChange={(e) => handleSelect('ExpectedSalary', e.value)}                         
+                          onChange={(e) => handleSelect('ExpectedSalary', e.value)}
                           styles={customStyles} />
                       </div>
                       <Form.Control.Feedback type="invalid" className="error">
@@ -4102,23 +4106,24 @@ const ApplicationJobPostModal = ({
 
                 <div className="custom-card table-responsive">
                   <h6>Educational Qualification</h6>
-                  <table className="mb-2 form_table">
-                    <thead>
-                      <tr>
-                        <td>Level</td>
-                        <td>Area of Education</td>
-                        <td>Grad. Year</td>
-                        <td>University</td>
-                        <td>Grade</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                      </tr>
-                    </thead>
-                    {EducationRows.map((row, index) => (
-                      <tbody key={index}>
+                  <div className="desktop-table">
+                    <table className="mb-2 form_table">
+                      <thead>
                         <tr>
-                          <td className="tdata-1">
-                            {/* <Form.Select
+                          <td>Level</td>
+                          <td>Area of Education</td>
+                          <td>Grad. Year</td>
+                          <td>University</td>
+                          <td>Grade</td>
+                          <td>&nbsp;</td>
+                          <td>&nbsp;</td>
+                        </tr>
+                      </thead>
+                      {EducationRows.map((row, index) => (
+                        <tbody key={index}>
+                          <tr>
+                            <td className="tdata-1">
+                              {/* <Form.Select
                             name="level"
                             value={row.level}
                             onChange={(e) =>
@@ -4138,8 +4143,8 @@ const ApplicationJobPostModal = ({
                             <option value="Postdoctoral Research">Postdoctoral Research</option>
                           </Form.Select> */}
 
-                            <div className="relative" ref={dropdownRef}>
-                              {/* <FormControl
+                              <div className="relative" ref={dropdownRef}>
+                                {/* <FormControl
                                 placeholder="Level"
                                 size="sm"
                                 style={{ width: "350px" }}
@@ -4183,17 +4188,17 @@ const ApplicationJobPostModal = ({
                                   </ul>
                                 </div>
                               )} */}
-                              <Select
-                                className="react_selectbox maw-350"
-                                options={levelOption}
-                                value={levelOption.find((opt) => opt.value === row.level)}
-                                placeholder="Level"
-                                onChange={(e) => handleSelectLevel(index, e.value)}
-                                styles={customStyles} />
-                            </div>
-                          </td>
-                          <td className="tdata-2">
-                            {/* <Form.Control
+                                <Select
+                                  className="react_selectbox maw-350"
+                                  options={levelOption}
+                                  value={levelOption.find((opt) => opt.value === row.level)}
+                                  placeholder="Level"
+                                  onChange={(e) => handleSelectLevel(index, e.value)}
+                                  styles={customStyles} />
+                              </div>
+                            </td>
+                            <td className="tdata-2">
+                              {/* <Form.Control
                             name="areaOfEducation"
                             type="text"
                             placeholder="Area of Education"
@@ -4205,7 +4210,7 @@ const ApplicationJobPostModal = ({
                             disabled={row.saved}
                           /> */}
 
-                            {/* <Dropdown show={true} >
+                              {/* <Dropdown show={true} >
                             <Dropdown.Menu className="w-100 dropdown_ctm">
 
                               <FormControl
@@ -4231,9 +4236,9 @@ const ApplicationJobPostModal = ({
                               </div>
                             </Dropdown.Menu>
                           </Dropdown> */}
-                            <div className="mw-230 relative">
+                              <div className="mw-230 relative">
 
-                              {/* <FormControl
+                                {/* <FormControl
                                 // autoFocus
                                 name="areaOfEducation"
                                 placeholder="Area of Education"
@@ -4259,25 +4264,25 @@ const ApplicationJobPostModal = ({
                                   </ul>
                                 )}
                               </div> */}
-                              <Select
-                                className="react_selectbox maw-350"
-                                options={aresEducationOption}
-                                isSearchable={true}
-                                noOptionsMessage={() => "No results found"}
-                                value={aresEducationOption.find((opt) => opt.label === row.areaOfEducation)}
-                                disabled={row.saved}
-                                placeholder="Area of Education"
-                                filterOption={(option, inputValue) => {
-                                  if (!inputValue) return false; // hide all options until user types
-                                  return option.label.toLowerCase().includes(inputValue.toLowerCase());
-                                }}
-                                onChange={(e) => handleSelectAreaEducation(index, e.label)}
-                                styles={customStyles} />
-                            </div>
+                                <Select
+                                  className="react_selectbox maw-350"
+                                  options={aresEducationOption}
+                                  isSearchable={true}
+                                  noOptionsMessage={() => "No results found"}
+                                  value={aresEducationOption.find((opt) => opt.label === row.areaOfEducation)}
+                                  disabled={row.saved}
+                                  placeholder="Area of Education"
+                                  filterOption={(option, inputValue) => {
+                                    if (!inputValue) return false; // hide all options until user types
+                                    return option.label.toLowerCase().includes(inputValue.toLowerCase());
+                                  }}
+                                  onChange={(e) => handleSelectAreaEducation(index, e.label)}
+                                  styles={customStyles} />
+                              </div>
 
-                          </td>
-                          <td className="tdata-3">
-                            {/* <Form.Control
+                            </td>
+                            <td className="tdata-3">
+                              {/* <Form.Control
                             name="gradYear"
                             type="date"
                             value={row.gradYear}
@@ -4286,56 +4291,228 @@ const ApplicationJobPostModal = ({
                             }
                             disabled={row.saved}
                           /> */}
-                            <Form.Group>
-                              <DatePicker
-                                name="gradYear"
-                                selected={row.gradYear}
-                                value={row.gradYear}
-                                onChange={(date) => handleGradYear(index, date)}
-                                showYearPicker
-                                dateFormat="yyyy"
-                                className="form-control"
-                                placeholderText="Select year"
-                                disabled={row.saved}
-                              />
-                            </Form.Group>
-                          </td>
-                          <td className="tdata-4">
-                            <Form.Control
-                              name="university"
-                              type="text"
-                              placeholder="University"
-                              size="sm"
-                              value={row.university}
-                              onChange={(e) =>
-                                handleEducationQualificationChange(index, e)
-                              }
-                              disabled={row.saved}
-                            />
-                          </td>
-                          <td className="tdata-5">
-                            <div className="mix-inputs">
+                              <Form.Group>
+                                <DatePicker
+                                  name="gradYear"
+                                  selected={row.gradYear}
+                                  value={row.gradYear}
+                                  onChange={(date) => handleGradYear(index, date)}
+                                  showYearPicker
+                                  dateFormat="yyyy"
+                                  className="form-control"
+                                  placeholderText="Select year"
+                                  disabled={row.saved}
+                                />
+                              </Form.Group>
+                            </td>
+                            <td className="tdata-4">
                               <Form.Control
-                                name="grade"
+                                name="university"
                                 type="text"
-                                placeholder="grade"
+                                placeholder="University"
                                 size="sm"
-                                value={row.grade}
+                                value={row.university}
                                 onChange={(e) =>
                                   handleEducationQualificationChange(index, e)
                                 }
                                 disabled={row.saved}
                               />
-                              <Form.Select name="gpa" value={row.gpa} onChange={(e) => handleEducationQualificationChange(index, e)}>
-                                <option value="" hidden>GPA</option>
-                                <option value="4 Point GPA">4 Point GPA</option>
-                                <option value="10 Point GPA">10 Point GPA</option>
-                                <option value="GPA in %">GPA in %</option>
-                              </Form.Select>
-                            </div>
-                          </td>
-                          {!row.saved && (
+                            </td>
+                            <td className="tdata-5">
+                              <div className="mix-inputs">
+                                <Form.Control
+                                  name="grade"
+                                  type="text"
+                                  placeholder="grade"
+                                  size="sm"
+                                  value={row.grade}
+                                  onChange={(e) =>
+                                    handleEducationQualificationChange(index, e)
+                                  }
+                                  disabled={row.saved}
+                                />
+                                <Form.Select name="gpa" value={row.gpa} onChange={(e) => handleEducationQualificationChange(index, e)}>
+                                  <option value="" hidden>GPA</option>
+                                  <option value="4 Point GPA">4 Point GPA</option>
+                                  <option value="10 Point GPA">10 Point GPA</option>
+                                  <option value="GPA in %">GPA in %</option>
+                                </Form.Select>
+                              </div>
+                            </td>
+                            {!row.saved && (
+                              <td>
+                                <Button
+                                  variant="link"
+                                  className="p-1 font-sm mt-1 link-iconbtn"
+                                  // onClick={handleButtonClick}
+                                  onClick={() => saveQualificationData(row, index)}
+                                >
+                                  <img
+                                    src={saveIcon}
+                                    alt="Save"
+                                    className="me-1"
+                                    style={{ width: "16px", height: "16px" }}
+                                  />
+                                  Save
+                                </Button>
+                              </td>
+                            )}
+                            {row.saved && (
+                              <td>
+                                <Button
+                                  variant="link"
+                                  className="p-1 font-sm mt-1 link-iconbtn"
+                                  // onClick={handleButtonClick}
+                                  onClick={() => handleEditRowEducation(row, index)}
+                                >
+                                  <img
+                                    src={editIcon}
+                                    alt="Edit"
+                                    style={{ width: "16px", height: "16px" }}
+                                  />
+                                  Edit
+                                </Button>
+                              </td>
+                            )}
                             <td>
+                              <button
+                                type="button"
+                                className="btn-transpant"
+                                onClick={() => EducationdeleteRow(index)}
+                              >
+                                <img
+                                  src={imgpTrash}
+                                  alt="Delete"
+                                  style={{ width: "20px", height: "20px" }}
+                                />
+                              </button>
+                            </td>
+                            {/* <td>
+                          {!row.saved && (
+                            <Button
+                              variant="link"
+                              className="p-1 mt-1 font-sm"
+                              onClick={() => saveQualificationData(row, index)}
+                            >
+                              Save
+                            </Button>
+                          )}
+                        </td> */}
+
+                          </tr>
+                        </tbody>
+                      ))}
+                    </table>
+
+                    <Button onClick={EducationAddRow} variant="link">
+                      + Add
+                    </Button>
+
+                  </div>
+
+                  {EducationRows.map((row, index) => (
+                    <div className="mobile-table" key={index} >
+
+                      <div className="row">
+                        <div className="col-12 form-input-mobile">
+                          <label class="form-label">Level</label>
+                          <div className="relative" ref={dropdownRef}>
+
+                            <Select
+                              className="react_selectbox maw-350"
+                              options={levelOption}
+                              value={levelOption.find((opt) => opt.value === row.level)}
+                              placeholder="Level"
+                              onChange={(e) => handleSelectLevel(index, e.value)}
+                              styles={customStyles} />
+
+                          </div>
+                        </div>
+                        <div className="col-12 form-input-mobile">
+                          <label class="form-label">Area of Education</label>
+
+                          <div className="mw-230 relative">
+
+
+                            <Select
+                              className="react_selectbox maw-350"
+                              options={aresEducationOption}
+                              isSearchable={true}
+                              noOptionsMessage={() => "No results found"}
+                              value={aresEducationOption.find((opt) => opt.label === row.areaOfEducation)}
+                              disabled={row.saved}
+                              placeholder="Area of Education"
+                              filterOption={(option, inputValue) => {
+                                if (!inputValue) return false; // hide all options until user types
+                                return option.label.toLowerCase().includes(inputValue.toLowerCase());
+                              }}
+                              onChange={(e) => handleSelectAreaEducation(index, e.label)}
+                              styles={customStyles} />
+                          </div>
+                        </div>
+                        
+                        <div className="col-12 form-input-mobile">
+                          <label class="form-label">University</label>
+                          <Form.Control
+                            name="university"
+                            type="text"
+                            placeholder="University"
+                            size="sm"
+                            value={row.university}
+                            onChange={(e) =>
+                              handleEducationQualificationChange(index, e)
+                            }
+                            disabled={row.saved}
+                          />
+                        </div>
+
+                        <div className="col-6 form-input-mobile">
+                          <label class="form-label">Grad. Year</label>
+                          <Form.Group>
+                            <DatePicker
+                              name="gradYear"
+                              selected={row.gradYear}
+                              value={row.gradYear}
+                              onChange={(date) => handleGradYear(index, date)}
+                              showYearPicker
+                              dateFormat="yyyy"
+                              className="form-control"
+                              placeholderText="Select year"
+                              disabled={row.saved}
+                            />
+                          </Form.Group>
+                        </div>
+
+
+                        <div className="col-6 form-input-mobile">
+                          <label class="form-label">Grade</label>
+                          <div className="mix-inputs">
+                            <Form.Control
+                              name="grade"
+                              type="text"
+                              placeholder="grade"
+                              size="sm"
+                              value={row.grade}
+                              onChange={(e) =>
+                                handleEducationQualificationChange(index, e)
+                              }
+                              disabled={row.saved}
+                            />
+                            <Form.Select name="gpa" value={row.gpa} onChange={(e) => handleEducationQualificationChange(index, e)}>
+                              <option value="" hidden>GPA</option>
+                              <option value="4 Point GPA">4 Point GPA</option>
+                              <option value="10 Point GPA">10 Point GPA</option>
+                              <option value="GPA in %">GPA in %</option>
+                            </Form.Select>
+                          </div>
+
+                        </div>
+
+                        <div className="col-12 form-input-mobile">
+                       
+                          <div className="d-flex justify-content-between">
+                          {!row.saved && (
+                            <div>
                               <Button
                                 variant="link"
                                 className="p-1 font-sm mt-1 link-iconbtn"
@@ -4350,7 +4527,7 @@ const ApplicationJobPostModal = ({
                                 />
                                 Save
                               </Button>
-                            </td>
+                            </div>
                           )}
                           {row.saved && (
                             <td>
@@ -4369,7 +4546,7 @@ const ApplicationJobPostModal = ({
                               </Button>
                             </td>
                           )}
-                          <td>
+                          <div>
                             <button
                               type="button"
                               className="btn-transpant"
@@ -4381,34 +4558,39 @@ const ApplicationJobPostModal = ({
                                 style={{ width: "20px", height: "20px" }}
                               />
                             </button>
-                          </td>
-                          {/* <td>
-                          {!row.saved && (
-                            <Button
-                              variant="link"
-                              className="p-1 mt-1 font-sm"
-                              onClick={() => saveQualificationData(row, index)}
-                            >
-                              Save
-                            </Button>
-                          )}
-                        </td> */}
+                          </div>
 
-                        </tr>
-                      </tbody>
-                    ))}
-                  </table>
+                          </div>
+                         
+                        </div>
 
-                  <Button onClick={EducationAddRow} variant="link">
-                    + Add
-                  </Button>
+
+                      </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                      <div className="actions">
+
+                      </div>
+                    </div>
+                  ))}
                 </div>
 
                 <div className="custom-card table-responsive">
                   <h6>Work Experience</h6>
                   <div >
                     <Row className="align-items-center bg-lightgray py-2">
-                      <Col md="2" className="text-center">
+                      <Col md="2" >
                         <Form.Label>Total Work Experience</Form.Label>
                       </Col>
                       <Col md={5}>
@@ -4503,6 +4685,8 @@ const ApplicationJobPostModal = ({
                         </div>
                       </Col>
                     </Row>
+
+                    <div className="desktop-table">
                     <table className="mb-2 form_table">
                       <thead>
                         <tr>
@@ -4660,8 +4844,8 @@ const ApplicationJobPostModal = ({
 
 
                               <td className="experince-td-6" colSpan={2}>
-                                 <div className="d-flex justify-content-between">
-                                   {!row.savedWorkExp && !showNotesByIndex.includes(row?.id) && (
+                                <div className="d-flex justify-content-between">
+                                  {!row.savedWorkExp && !showNotesByIndex.includes(row?.id) && (
                                     <Button
                                       variant="link"
                                       className="p-1 font-sm mt-1 link-iconbtn"
@@ -4672,49 +4856,49 @@ const ApplicationJobPostModal = ({
                                     </Button>
                                   )}
 
-                                {!row.savedWorkExp && showNotesByIndex.includes(row?.id) && (
+                                  {!row.savedWorkExp && showNotesByIndex.includes(row?.id) && (
+                                    <Button
+                                      variant="link"
+                                      className="p-1 font-sm mt-1 link-iconbtn"
+                                      // onClick={handleButtonClick}
+                                      onClick={() => saveWorkExperienceData(row, index)}
+                                    >
+                                      <img
+                                        src={saveIcon}
+                                        className="me-1"
+                                        alt="Delete"
+                                        style={{ width: "16px", height: "16px" }}
+                                      />
+                                      Save
+                                    </Button>
+                                  )}
+
+
+
+                                  {row.savedWorkExp && (
+                                    <Button
+                                      variant="link"
+                                      className="p-1 font-sm mt-1 link-iconbtn"
+                                      onClick={() => handleButtonEdit(row, index)}
+                                    >
+                                      <svg className="me-1" width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M6.99998 12.3341H13M1 12.3341H2.11636C2.44248 12.3341 2.60554 12.3341 2.75899 12.2973C2.89504 12.2646 3.0251 12.2108 3.1444 12.1377C3.27895 12.0552 3.39425 11.9399 3.62486 11.7093L12 3.33414C12.5523 2.78185 12.5523 1.88642 12 1.33413C11.4477 0.781851 10.5523 0.781851 10 1.33414L1.62484 9.7093C1.39424 9.9399 1.27894 10.0552 1.19648 10.1898C1.12338 10.3091 1.0695 10.4391 1.03684 10.5752C1 10.7286 1 10.8917 1 11.2178V12.3341Z" stroke="#3538CD" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                                      </svg>
+                                      Edit
+                                    </Button>
+                                  )}
+
                                   <Button
                                     variant="link"
-                                    className="p-1 font-sm mt-1 link-iconbtn"
-                                    // onClick={handleButtonClick}
-                                    onClick={() => saveWorkExperienceData(row, index)}
+                                    className="p-1"
+                                    onClick={() => WorkExperienceDeleteRow(index, row?.id)}
                                   >
                                     <img
-                                      src={saveIcon}
-                                      className="me-1"
+                                      src={imgpTrash}
                                       alt="Delete"
-                                      style={{ width: "16px", height: "16px" }}
+                                      style={{ width: "20px", height: "20px" }}
                                     />
-                                    Save
                                   </Button>
-                                )}
-
-
-
-                                {row.savedWorkExp && (
-                                  <Button
-                                    variant="link"
-                                    className="p-1 font-sm mt-1 link-iconbtn"
-                                    onClick={() => handleButtonEdit(row, index)}
-                                  >
-                                    <svg className="me-1" width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                      <path d="M6.99998 12.3341H13M1 12.3341H2.11636C2.44248 12.3341 2.60554 12.3341 2.75899 12.2973C2.89504 12.2646 3.0251 12.2108 3.1444 12.1377C3.27895 12.0552 3.39425 11.9399 3.62486 11.7093L12 3.33414C12.5523 2.78185 12.5523 1.88642 12 1.33413C11.4477 0.781851 10.5523 0.781851 10 1.33414L1.62484 9.7093C1.39424 9.9399 1.27894 10.0552 1.19648 10.1898C1.12338 10.3091 1.0695 10.4391 1.03684 10.5752C1 10.7286 1 10.8917 1 11.2178V12.3341Z" stroke="#3538CD" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                    Edit
-                                  </Button>
-                                )}
-
-                                <Button
-                                  variant="link"
-                                  className="p-1"
-                                  onClick={() => WorkExperienceDeleteRow(index, row?.id)}
-                                >
-                                  <img
-                                    src={imgpTrash}
-                                    alt="Delete"
-                                    style={{ width: "20px", height: "20px" }}
-                                  />
-                                </Button>
 
                                 </div>
 
@@ -4752,8 +4936,201 @@ const ApplicationJobPostModal = ({
                         ))}
                       </tbody>
                     </table>
+                    </div>
+
+                    <div className="mobile-table">
+                       {WorkExpreienceRow.map((row, index) => (
+                      <div className="row">
+                        
+                         <div className="col-12 form-input-mobile">
+                          <label class="form-label">Role</label>
+                         <div className="mw-130 relative">
+                                  
+                                  <Select
+                                    className="react_selectbox maw-350"
+                                    options={roleList}
+                                    isSearchable={true}
+                                    noOptionsMessage={() => "No results found"}
+                                    value={roleList.find((opt) => opt.label === row.WorkRole)}
+                                    disabled={row.savedWorkExp}
+                                    placeholder="Role"
+                                    filterOption={(option, inputValue) => {
+                                      if (!inputValue) return false; // hide all options until user types
+                                      return option.label.toLowerCase().includes(inputValue.toLowerCase());
+                                    }}
+                                    onChange={(e) => handleWorkRole(index, e.label)}
+                                    styles={customStyles} />
+                                </div>
+                          </div>
+
+                          <div className="col-6 form-input-mobile">
+                          <label class="form-label">From</label>
+                                      <Form.Control
+                                  placeholder="June 2019"
+                                  size="sm"
+                                  style={{ width: "" }}
+                                  type="date"
+                                  value={row?.WorkFrom}
+                                  name="WorkFrom"
+                                  onChange={(e) =>
+                                    handleWorkExpeienceChange(index, e)
+                                  }
+                                  disabled={row.savedWorkExp}
+                                />
+                          </div>
+
+                          <div className="col-6 form-input-mobile">
+                          <label class="form-label">To</label>
+<Form.Control
+                                  type="date"
+                                  placeholder="May 2022"
+                                  size="sm"
+                                  style={{ width: "" }}
+                                  value={row?.WorkTo}
+                                  name="WorkTo"
+                                  onChange={(e) =>
+                                    handleWorkExpeienceChange(index, e)
+                                  }
+                                  disabled={row.savedWorkExp}
+                                />
+                          </div>
+
+                          <div className="col-12 form-input-mobile">
+                          <label class="form-label">Company</label>
+<Form.Control
+                                  type="text"
+                                  placeholder="Company"
+                                  size="sm"
+                                  style={{ width: "" }}
+                                  value={row?.WorkComapny}
+                                  name="WorkComapny"
+                                  onChange={(e) =>
+                                    handleWorkExpeienceChange(index, e)
+                                  }
+                                  disabled={row.savedWorkExp}
+                                />
+                          </div>
+                          <div className="col-12 form-input-mobile">
+                          <label class="form-label">Industry</label>
+                                  <Select
+                                    className="react_selectbox maw-350"
+                                    options={industriesList}
+                                    isSearchable={true}
+                                    noOptionsMessage={() => "No results found"}
+                                    value={industriesList.find((opt) => opt.label === row.WorkIndustry)}
+                                    disabled={row.savedWorkExp}
+                                    placeholder="Industry"
+                                    filterOption={(option, inputValue) => {
+                                      if (!inputValue) return false; // hide all options until user types
+                                      return option.label.toLowerCase().includes(inputValue.toLowerCase());
+                                    }}
+                                    onChange={(e) => handleSelectIndustries(index, e.label)}
+                                    styles={customStyles} />
+                          </div>
+
+                      
+
+                          <div className="col-12">
+                            <Table width={100}>
+                              <tr>
+                              <td className="experince-td-6" colSpan={2}>
+                                <div className="d-flex justify-content-between">
+                                  {!row.savedWorkExp && !showNotesByIndex.includes(row?.id) && (
+                                    <Button
+                                      variant="link"
+                                      className="p-1 font-sm mt-1 link-iconbtn"
+                                      onClick={() => handleButtonClick(row?.id)}
+                                    >
+                                      <i className="far fa-file me-1 "></i>
+                                      Note
+                                    </Button>
+                                  )}
+
+                                  {!row.savedWorkExp && showNotesByIndex.includes(row?.id) && (
+                                    <Button
+                                      variant="link"
+                                      className="p-1 font-sm mt-1 link-iconbtn"
+                                      // onClick={handleButtonClick}
+                                      onClick={() => saveWorkExperienceData(row, index)}
+                                    >
+                                      <img
+                                        src={saveIcon}
+                                        className="me-1"
+                                        alt="Delete"
+                                        style={{ width: "16px", height: "16px" }}
+                                      />
+                                      Save
+                                    </Button>
+                                  )}
+
+
+
+                                  {row.savedWorkExp && (
+                                    <Button
+                                      variant="link"
+                                      className="p-1 font-sm mt-1 link-iconbtn"
+                                      onClick={() => handleButtonEdit(row, index)}
+                                    >
+                                      <svg className="me-1" width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M6.99998 12.3341H13M1 12.3341H2.11636C2.44248 12.3341 2.60554 12.3341 2.75899 12.2973C2.89504 12.2646 3.0251 12.2108 3.1444 12.1377C3.27895 12.0552 3.39425 11.9399 3.62486 11.7093L12 3.33414C12.5523 2.78185 12.5523 1.88642 12 1.33413C11.4477 0.781851 10.5523 0.781851 10 1.33414L1.62484 9.7093C1.39424 9.9399 1.27894 10.0552 1.19648 10.1898C1.12338 10.3091 1.0695 10.4391 1.03684 10.5752C1 10.7286 1 10.8917 1 11.2178V12.3341Z" stroke="#3538CD" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                                      </svg>
+                                      Edit
+                                    </Button>
+                                  )}
+
+                                  <Button
+                                    variant="link"
+                                    className="p-1"
+                                    onClick={() => WorkExperienceDeleteRow(index, row?.id)}
+                                  >
+                                    <img
+                                      src={imgpTrash}
+                                      alt="Delete"
+                                      style={{ width: "20px", height: "20px" }}
+                                    />
+                                  </Button>
+
+                                </div>
+
+                              </td>
+                            </tr>
+                            <tr>
+                              <td colSpan={7}>
+                                {!row.savedWorkExp && showNotesByIndex.includes(row?.id) && (
+                                  <div className="abt-textbox">
+                                    <Form>
+                                      <Form.Group controlId="noteInput">
+                                        <Form.Label>
+                                          About your experience
+                                        </Form.Label>
+                                        <Form.Control
+                                          as="textarea"
+                                          rows={3}
+                                          value={row?.WorkNote}
+                                          name="WorkNote"
+                                          onChange={(e) =>
+                                            handleWorkExpeienceChange(index, e)
+                                          }
+                                          placeholder="Write your note here..."
+                                        />
+                                      </Form.Group>
+                                    </Form>
+                                  </div>
+                                )}
+                                {row.savedWorkExp && row?.WorkNote && (
+                                  <p style={{ marginTop: "5px" }}>{row.WorkNote}</p>
+                                )}
+                              </td>
+                              </tr>
+                              </Table>
+                          </div>
+                        </div>
+                            ))}
+                    </div>
+                    
+
                   </div>
-                  <Button variant="link" onClick={WorkExpreienceAddRow}>
+                  <Button className="btn-mobile-m" variant="link" onClick={WorkExpreienceAddRow}>
                     + Add
                   </Button>
                 </div>
@@ -5185,6 +5562,9 @@ const ApplicationJobPostModal = ({
                             onClick={() => handleSkillSelect(skill, index, groupName?.skill_group_name)}
                           >
                             {skill?.skill_name}
+
+                            <span className="imprt_icon ms-2"><i class="far fa-star" aria-hidden="true"></i></span>
+
                           </span>
                         ))}
                       </div>
@@ -5464,7 +5844,7 @@ const ApplicationJobPostModal = ({
         <Modal.Footer>
           <Button
             variant="light"
-            style={{ marginLeft: 150 }}
+            // style={{ marginLeft: 150 }}
             // disabled={validationEnable ? true : false}
             hidden={validationEnable ? true : false}
             onClick={() => handleSaveAsDraft()}

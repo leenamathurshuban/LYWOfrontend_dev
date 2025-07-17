@@ -676,7 +676,7 @@ ol.breadcrumb {
 }
 .modal-header .expand-view-btn {
   padding-left: 0;
-  margin: 0 10px 0 auto;
+  margin: 0 30px 0 auto;
   display: flex;
   align-items: center;
 }
@@ -1550,12 +1550,18 @@ button.btn-link-muted svg {
   margin: 0;
   padding: 0;
   display: flex;
+  position: relative;
+  top: -4px;
 }
 .score_panel ul li {
   list-style: none;
   margin-left: 10px;
   text-align: center;
   position: relative;
+}
+.score_panel ul li:last-child {
+  display: inline-flex;
+  align-items: center;
 }
 .score_panel ul li .text-muted {
   position: absolute;
@@ -1811,7 +1817,7 @@ select.h-36.form-select {
 }
 .quetions_list .accordion-item {
   border: solid 1px #f2f4f7;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
+  box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.0588235294);
   margin-top: 15px;
   border-radius: 8px;
   background-color: #fff;
@@ -2171,7 +2177,7 @@ select.h-36.form-select {
 }
 .offcanvas .react_selectbox .css-13cymwt-control {
   font-size: 12px;
-  min-height: 36px;
+  min-height: 37px;
 }
 .offcanvas .form-label {
   font-size: 12px;
@@ -4677,11 +4683,15 @@ select.h-36.form-select {
   margin: 4px 4px 4px 0;
   display: inline-block;
   cursor: pointer;
+  text-transform: capitalize;
 }
 .jobpost_view .skill-tag.selected {
   border-color: #6172F3;
   background-color: #F5F8FF;
   color: #1D2939;
+}
+.jobpost_view .skill-tag.selected span {
+  color: #6172F3;
 }
 .jobpost_view .modal-footer {
   position: fixed;
@@ -7100,14 +7110,13 @@ button.btn-icon {
 }
 
 .quizDev_model .modal-header .btn-close {
-  margin-left: 30px;
+  margin-left: 0px;
   color: #6172F3;
   font-size: 10px;
   --bs-btn-close-bg: url("../images/icons/x-close.svg");
-  padding: 0;
-  width: 20px;
-  height: 20px;
-  background-size: 20px;
+  width: 30px;
+  height: 30px;
+  background-size: 22px;
   background-repeat: no-repeat;
   opacity: 1;
 }
@@ -7497,39 +7506,39 @@ button.btn-icon {
   opacity: 0.8;
 }
 
-.invite-people-box {
-  position: fixed;
+.invite-people-modal {
   max-width: 800px;
   top: 0;
   right: 0;
-  width: 100%;
+  width: 100% !important;
   bottom: 0;
   z-index: 1111;
   background: white;
 }
-.invite-people-box ul#noanim-tab-example {
+.invite-people-modal ul#noanim-tab-example {
   display: flex;
   flex-wrap: wrap;
 }
-.invite-people-box ul#noanim-tab-example li {
+.invite-people-modal ul#noanim-tab-example li {
   flex: 0 0 33.3%;
   text-align: center;
   justify-content: center;
   display: inline-flex;
 }
-.invite-people-box ul#noanim-tab-example li button {
+.invite-people-modal ul#noanim-tab-example li button {
   color: #667085;
   width: 100%;
+  padding-right: 30px;
 }
-.invite-people-box ul#noanim-tab-example li button:hover {
-  border-top: 0;
-  border-left: 0;
-  border-right: 0;
-  border-bottom: 2px solid #3538CD;
+.invite-people-modal ul#noanim-tab-example li button:hover, .invite-people-modal ul#noanim-tab-example li button:focus, .invite-people-modal ul#noanim-tab-example li button:focus-within, .invite-people-modal ul#noanim-tab-example li button:focus-visible {
+  border-top: 0 !important;
+  border-left: 0 !important;
+  border-right: 0 !important;
+  border-bottom: 2px solid #3538CD !important;
   width: 100%;
   color: #3538CD;
 }
-.invite-people-box ul#noanim-tab-example li button.active {
+.invite-people-modal ul#noanim-tab-example li button.active {
   border-top: 0;
   border-left: 0;
   border-right: 0;
@@ -7659,6 +7668,11 @@ button.btn-icon {
   }
   .jobMain_panel .custom-card .form-control-sm {
     width: 100% !important;
+    min-height: 37px;
+    height: 37px;
+  }
+  .form-select {
+    min-height: 37px;
   }
   .cmprofile_mdl.quizDev_model .modal-dialog.modal-lg {
     margin: 0;
@@ -7911,15 +7925,85 @@ button.btn-icon {
   .instructions_dwr .ints_card .quiz-btns {
     padding: 0 15px;
   }
-  .offcanvas.offcanvas-end {
-    top: 80px;
-  }
   .question-popop.active {
     transform: translateY(0px);
+  }
+  .applicat_flow .app_leftinfo.col {
+    flex: 0 0 91%;
+  }
+  .alart-submited .modal-footer .btn {
+    width: auto !important;
+    min-width: auto;
+    flex: 0 0 47%;
+  }
+  .authinfo_slider {
+    padding: 40px 10px 0;
+  }
+  .jobMain_panel {
+    margin-left: 0;
+    margin-right: 0;
+    padding: 15px 20px;
+    box-sizing: border-box;
+    width: 100%;
+    position: relative;
+  }
+  .applicant_info {
+    max-width: 100%;
+  }
+  .applicant_info li {
+    padding: 8px 4px;
+  }
+  .helpme_drawer.lg-drawer {
+    width: 100%;
+    max-width: 80%;
+  }
+  .quizDev_model .modal-header .btn-close {
+    right: 0;
+  }
+  .modal-header .expand-view-btn {
+    margin: 0;
+  }
+  .authinfo_slider h2 {
+    font-size: 1.5rem;
+    line-height: normal;
+    margin-bottom: 12px;
+  }
+  .desktop-table {
+    display: none;
+  }
+  .form-input-mobile {
+    margin: 8px 0;
+  }
+  .form-input-mobile label {
+    margin-bottom: 4px;
+  }
+  .form-input-mobile .react-datepicker__input-container input {
+    width: 100%;
+  }
+  .form-control {
+    min-height: 37px;
+  }
+  .invite-people-modal ul#noanim-tab-example li {
+    flex: 0 0 33%;
+  }
+  #noanim-tab-example-tab-Main {
+    background-position: 90% center;
+    background-size: 20px;
+  }
+  #noanim-tab-example-tab-QRCode {
+    background-position: 90% center;
+    background-size: 18px;
+  }
+  #noanim-tab-example-tab-Link {
+    background-position: 80% center;
+    background-size: 18px;
   }
 }
 @media screen and (min-width: 1200px) {
   .table-responsive {
     overflow: visible;
+  }
+  .mobile-table {
+    display: none;
   }
 }/*# sourceMappingURL=main.css.map */

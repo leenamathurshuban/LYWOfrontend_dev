@@ -415,10 +415,11 @@ const QuizMainComponent = (item) => {
                   [`${item?.id}-${Val?.id}`]: Val.user_answer_question[0]?.uid
                 }))
               })
-            )
-            setAssetStatus(Val?.assets_applicant_asset_completion[0])
-            localStorage.setItem("assestQuiz", Val?.assets_applicant_asset_completion[0]?.asset_completion_status)
-            if (Val?.assets_applicant_asset_completion[0]?.asset_completion_status == 'Completed') {
+            )            
+            const filterTest = Val?.assets_applicant_asset_completion?.find((item) => item?.completion_asset?.uid == id)
+            setAssetStatus(filterTest)
+            localStorage.setItem("assestQuiz", filterTest?.asset_completion_status)
+            if (filterTest?.asset_completion_status == 'Completed') {
               setShow(false)
               setSuccess(true)
             }
@@ -460,7 +461,7 @@ const QuizMainComponent = (item) => {
       setSuccess(true)
     }
   }
-  const optionEvl = EvaluationListDetails[0]?.section_asset?.map((opt)=>({value:opt.id,label:opt.section_title}))
+  const optionEvl = EvaluationListDetails[0]?.section_asset?.map((opt) => ({ value: opt.id, label: opt.section_title }))
   console.log(QuizData, EvaluationListDetails)
   // console.log(markReview)
   // console.log(QuizData[getKeyIndex], applcant)
@@ -572,7 +573,7 @@ const QuizMainComponent = (item) => {
                   </Form.Select> */}
                   <Select
                     options={optionEvl}
-                    value={optionEvl.find((opt) => opt.value === sectionIcon)}
+                    value={optionEvl?.find((opt) => opt?.value === sectionIcon)}
                     onChange={handleSelectChange}
                     className="h-36 react_selectbox"
                   />

@@ -457,7 +457,7 @@ const JobsList = () => {
                   More filters
                 </Button>
               </div>
-              <div className="elv_datatable joblist_data">
+              <div className="elv_datatable joblist_data table-responsive">
                 <Table striped className="m-0">
                   <thead>
                     <tr>

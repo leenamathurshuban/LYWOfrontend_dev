@@ -371,7 +371,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                             </Form.Select> */}
                             <Select
                                 options={langOption}
-                                value={langOption.find((opt)=>opt.value===language)}
+                                value={langOption?.find((opt)=>opt?.value===language)}
                                 onChange={(e) => {
                                     setLanguage(e.value);
                                 }}

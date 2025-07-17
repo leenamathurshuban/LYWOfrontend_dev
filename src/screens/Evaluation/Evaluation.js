@@ -536,7 +536,7 @@ const Evalation = () => {
         size="lg"
         className="cmprofile_mdl quizDev_model"
       >
-        <Modal.Header closeButton>
+        <Modal.Header className="model-close-eval" closeButton>
           <Col md={4}>
             <Modal.Title>
               <img src={logoIcon} className="me-4" />

@@ -121,6 +121,7 @@ const AssignmentComponent = (item) => {
     const [questionId, setQuestionId] = useState()
     const [getKeyIndex, setGetKeyIndex] = useState();
     const [assestStatus, setAssetStatus] = useState({});
+    const [succees, setSuccess] = useState(false)
     const [answerUids, setAnswerUids] = useState({})
     const [descriptionError, setDescriptionError] = useState("");
     const [fileName, setFileName] = useState({});
@@ -604,10 +605,12 @@ const AssignmentComponent = (item) => {
                                 }))
                             })
                         )
-                        setAssetStatus(Val?.assets_applicant_asset_completion[0])
-                        localStorage.setItem("preAssestQuiz", Val?.assets_applicant_asset_completion[0]?.asset_completion_status)
-                        if (Val?.assets_applicant_asset_completion[0]?.asset_completion_status == 'Completed') {
+                        const filterTest = Val?.assets_applicant_asset_completion?.find((item)=>item?.completion_asset?.uid==id)                        
+                        setAssetStatus(filterTest)
+                        localStorage.setItem("preAssestQuiz",filterTest?.asset_completion_status)
+                        if (filterTest?.asset_completion_status == 'Completed') {
                             setShow(false)
+                            setSuccess(true)
                         }
                     }
                 })
@@ -619,8 +622,12 @@ const AssignmentComponent = (item) => {
     useEffect(() => {
         applicantDetailAPI();
     }, [])
-    const optionEvl = EvaluationListDetails[0]?.section_asset?.map((opt)=>({value:opt.id,label:opt.section_title}))
-
+    const optionEvl = EvaluationListDetails[0]?.section_asset?.map((opt) => ({ value: opt.id, label: opt.section_title }))
+    const handleSubmit = () => {
+        if (assestStatus?.asset_completion_status === 'Completed') {
+            setSuccess(true)
+        }
+    }
     // const onTimeUp = () => {
     //     setShowQuiz(false)
     // };
@@ -752,7 +759,7 @@ const AssignmentComponent = (item) => {
                                     </Form.Select> */}
                                     <Select
                                         options={optionEvl}
-                                        value={optionEvl.find((opt)=>opt.value===sectionIcon)}
+                                        value={optionEvl?.find((opt) => opt?.value === sectionIcon)}
                                         onChange={handleSelectChange}
                                         className="h-36 react_selectbox"
                                     />
@@ -1439,10 +1446,15 @@ const AssignmentComponent = (item) => {
                         </Row>
                     </Tab.Container>
                 </Modal.Body>
+                <Modal.Footer className="quiz-modelfooter">
+                    <Button variant="primary" onClick={handleSubmit}>
+                        Submit
+                    </Button>
+                </Modal.Footer>
             </Modal>
             {/* <------------Complete Quiz--------------------------------- */}
             <Modal
-                show={assestStatus?.asset_completion_status === 'Completed' ? true : false}
+                show={succees}
                 onHide={handleClose}
                 animation={false}
                 size="lg"

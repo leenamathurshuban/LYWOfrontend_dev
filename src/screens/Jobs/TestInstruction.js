@@ -202,8 +202,8 @@ const TestInstruction = ({ showinstruction, handleInstructionClose, handleStartQ
                                     etc: skills selected in the formation of the test] as part of the
                                     recruitment assessment procedure.
                                 </p>
-                                {EvaluationListDetails.map((item) => (
-                                    <Row>
+                                {EvaluationListDetails.map((item,index) => (
+                                    <Row key={index}>
                                         <Col md={12} className="mb-4">
                                             <h6>Important Instructions:</h6>
                                         </Col>
