@@ -16,3 +16,16 @@ export const isBinaryFile = (file) => {
 
     return binaryMimeTypes.includes(file.type);
   };
+
+  export const calculateDays = (date) => {
+    const pastDate = new Date(date);
+    const currentDate = new Date();
+
+    // Get the difference in milliseconds
+    const diffInMs = currentDate - pastDate;
+
+    // Convert milliseconds to days
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+    return diffInDays;
+  };

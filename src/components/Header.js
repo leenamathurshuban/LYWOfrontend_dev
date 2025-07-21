@@ -107,7 +107,7 @@ const Header = () => {
   return (
     <header className="main_header">
       <div className="header-wrapper row">
-        <Col className="col-6"  md={4}>
+        <Col className="col-4"  md={4}>
           <div className="org_name">
             <span className="orgshort_text">{logoname}</span>
             {/* <p>{userInfo?.default_company?.company_name}</p> */}
@@ -132,7 +132,7 @@ const Header = () => {
             />
           </div>
         </Col>
-        <Col className="col-6  d-sm-block"  md={4}>
+        <Col className="col-4  d-sm-block"  md={4}>
           <InputGroup className="header_serach">
             <InputGroup.Text id="basic-addon1">
               <svg
@@ -158,7 +158,7 @@ const Header = () => {
             />
           </InputGroup>
         </Col>
-        <Col className="col-6"  md={4}>
+        <Col className="col-4"  md={4}>
           <div className="header_right">
             <button type="button" className="hed_notifaction">
               <svg

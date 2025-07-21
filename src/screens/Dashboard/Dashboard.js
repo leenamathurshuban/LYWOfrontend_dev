@@ -289,6 +289,7 @@ import QuizSlider from "../../components/QuizSlider";
 import CreateJobs from "../../components/Jobs/CreateJobs";
 import usersgroupicon from "../../images/icons/users-dark.svg";
 import usersgroupwhite from "../../images/icons/users-01-w.svg";
+import { calculateDays } from "../../utils/test";
 
 const Dashboard = () => {
   const [show, setShow] = useState(false);
@@ -425,14 +426,26 @@ const Dashboard = () => {
     }
   }, [searchJob])
 
-  const keyColumn = Array.from(
+  const reorderFields = (fields) => {
+    const fixedStart = 'job_title';
+    const fixedMiddle = 'screening_count';
+    const fixedEnd = 'final_shortlist';
+    const dynamic = fields.filter(
+      field => ![fixedStart, fixedMiddle, fixedEnd].includes(field)
+    );
+    return [fixedStart, fixedMiddle, ...dynamic, fixedEnd];
+  };
+
+  const keyArray = Array.from(
     new Set(dashboardList?.total_count_data?.hiring_pipeline?.flatMap(item => Object.keys(item)))
   );
+  const keyColumn = reorderFields(keyArray)
+
   const totalPendingReviews = dashboardList?.total_count_data?.pending_reviews
     ?.reduce((sum, item) => sum + item.pending_review, 0);
 
-  const checkStatus = (item) => {    
-    const found = dashboardList?.total_count_data?.hiring_pipeline?.find((Val) =>Val?.job_title == item?.job_title);
+  const checkStatus = (item) => {
+    const found = dashboardList?.total_count_data?.hiring_pipeline?.find((Val) => Val?.job_title == item?.job_title);
     if (found) {
       if (found.final_shortlist > 0) return "Final Shortlist";;
       if (found.screening_count > 0) return "Screening";
@@ -441,6 +454,7 @@ const Dashboard = () => {
   }
 
   console.log(dashboardList)
+  console.log(keyColumn)
   return (
     <>
       <Sidebar />
@@ -670,7 +684,7 @@ const Dashboard = () => {
                               <td className="font-weight-600">{item?.job_title}<span className="count">({item?.total_applicant_count})</span></td>
                               <td>{item?.job_location?.location_name ? item?.job_location?.location_name : '-'}</td>
                               <td>{item?.department}</td>
-                              <td>10 days</td>
+                              <td>{calculateDays(item?.created_at)} days</td>
                               <td>{item?.total_applicant_count}</td>
                               <td><span className="badge-primery">{checkStatus(item)}</span></td>
                             </tr>
@@ -783,9 +797,8 @@ const Dashboard = () => {
 
                           <tr>
                             {keyColumn?.map(key => (
-                              <th key={key}>{key == "jobcompany__Job_title" ? "Jobs" : key == "screening_count" ? "Screening" : key}</th>
+                              <th key={key}>{key == "job_title" ? "Jobs" : key == "screening_count" ? "Screening" : key=="final_shortlist"?"Final Shortlist":key}</th>
                             ))}
-
                             {/* <th>Jobs </th>
                               <th>Screening</th>
                                 <th>Evaluation 1</th>   
@@ -794,10 +807,7 @@ const Dashboard = () => {
                                       <th>Evaluation 4</th>
                                         <th>Final Shortlist</th> */}
 
-
-
                           </tr>
-
                         </thead>
                         <tbody>
 
@@ -865,22 +875,16 @@ const Dashboard = () => {
                           {firstTotalData?.slice(0, countList)?.map((row, rowIndex) => (
                             <tr key={rowIndex}>
                               {keyColumn.map(col => (
-
-                                <td className={`${col == "job_title" ? "font-weight-600 height-50" : "screening-record"} `}>
+                                <td className={`${col == "job_title" ? "font-weight-600 height-50":col=="final_shortlist"? "final-shortlist":"screening-record"} `}>
                                   {row[col] ?? ''}
                                   <br></br>
-                                  {col == "screening-record" && <span>25 Openings</span>}
+                                  {col == "job_title" && <span>25 Openings</span>}
                                 </td>
                               ))}
                               {/* <td className="font-weight-600">Frontend Developer <br></br>
-
                                 <span>25 Openings</span>
-                              </td>
-
-                  
-                           
+                              </td>                  
                               <td className="final-shortlist"><img src={usersgroupwhite} alt="usericons" />  24</td> */}
-
                             </tr>
                           ))}
 

@@ -4,7 +4,7 @@ import {
     Cell
 } from 'recharts';
 
-const data = [
+const dataAll = [
     { name: 'Pioneer', value: 72 },
     { name: 'Influencer', value: 45 },
     { name: 'Team Player', value: 83, highlight: true },
@@ -22,8 +22,15 @@ const data = [
     { name: 'Mediator', value: 19 },
 ];
 
-const PersonalityGraph = ({InsightsGraphData}) => {
-    console.log(InsightsGraphData)
+const PersonalityGraph = ({InsightsGraphData,personalityAll}) => {
+    console.log("---------------->",InsightsGraphData,personalityAll)
+    const data =InsightsGraphData?.personality_data? personalityAll?.map((item)=>({
+        ...item,
+        name:item?.behaviours_name,
+        value:InsightsGraphData?.personality_data[item?.behaviour_type_name]
+
+    })):[]
+    // debugger
     return (
         <ResponsiveContainer width="100%" height={350}>
             <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 50 }}>
@@ -32,7 +39,7 @@ const PersonalityGraph = ({InsightsGraphData}) => {
                     dataKey="name"
                     interval={0}
                     tick={({ x, y, payload, index }) => {
-                        const value = data[index]?.value;
+                        const value = data[index]?.personality_percentage;
                         return (
                             <g transform={`translate(${x},${y + 10})`}>
                                 <text x={0} y={0} dy={14} textAnchor="middle" fill="#666" fontSize="12">
@@ -62,7 +69,7 @@ const PersonalityGraph = ({InsightsGraphData}) => {
                         // formatter={(value) => `${value}%`}
                     /> */}
                     {
-                        data.map((entry, index) => (
+                        data?.map((entry, index) => (
                             <Cell
                                 key={`cell-${index}`}
                                 fill={entry.highlight ? '#f9a825' : '#82caff'}

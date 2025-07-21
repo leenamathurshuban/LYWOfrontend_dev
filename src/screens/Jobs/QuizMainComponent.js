@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Offcanvas from 'react-bootstrap/Offcanvas';
 import {
   Accordion,
   Button,
@@ -31,6 +32,12 @@ import mcqIcon from "../../images/icons/mcq_icon.png";
 import quizIcon from "../../images/icons/quiz_icon.svg";
 import clock from "../../images/icons/clock.svg";
 import logoIcon from "../../images/logo_icon.png";
+
+import Headericn from "../../images/icons/flex-align-top.svg";
+import gridicn from "../../images/icons/question.svg";
+import instructionicn from "../../images/icons/help-circle.svg";
+import saveicn from "../../images/icons/save-s01.svg";
+
 import {
   ApplicationDeatilsApi,
   ApplicationFormDetailsApi,
@@ -57,12 +64,20 @@ import { removeToken } from "../../helpers/helper";
 import TestInstruction from "./TestInstruction";
 import DragDrop from "../../images/icons/dragdrop-bullet.svg";
 
+
 const QuizMainComponent = (item) => {
+
   const { id } = useParams();
   const jobData = useLocation();
-  const [show, setShow] = useState(true);
+
+  //const [show, setShow] = useState(true);
   const [showQuiz, setShowQuiz] = useState(false);
+
+
+
   const handleInstructionShow = () => setShow(true);
+
+
   const navigate = useNavigate();
   const applcant = JSON.parse(localStorage.getItem("applicantProfileData"))
   const applicantUid = JSON.parse(localStorage.getItem("applicantData"))
@@ -77,7 +92,22 @@ const QuizMainComponent = (item) => {
     setShowQuiz(true)
   }
   const handleShow = () => setShow(true);
+
+  // offcanvas
+
+  const [show, setShow] = useState(false);
+  const [showInstruction, setShowInstruction] = useState(false);
+  const [showHeader, setshowHeader] = useState(false);
+
+  const [showSave, setshowSave] = useState(false);
+
+
+  // 
+
   const [isLoading, setIsLoading] = useState(false);
+
+
+
 
   const [loadeMoreCount, setLoadeMoreCount] = useState(10);
 
@@ -90,6 +120,8 @@ const QuizMainComponent = (item) => {
   const [succees, setSuccess] = useState(false)
   const [answerUids, setAnswerUids] = useState({})
 
+
+
   //List state
   const [activeTab, setActiveTab] = useState("viewAll");
   const [EvaluationList, setEvaluationList] = useState([]);
@@ -98,6 +130,31 @@ const QuizMainComponent = (item) => {
   const [activeKeys, setActiveKeys] = useState(["0-0"]);
   const [selectedSection, setSelectedSection] = useState("");
   const [timeLeft, setTimeLeft] = useState(1800);
+
+
+  // offcanvas
+
+  const questionClose = () => setShow(false);
+  const questionShow = () => setShow(true);
+
+
+
+  const instructionShow = () => setShowInstruction(true);
+  const instructionClose = () => setShowInstruction(false);
+
+
+  const HeaderShow = () => setshowHeader(true);
+  const HeaderClose = () => setshowHeader(false);
+
+  const SaveShow = () => setshowSave(true);
+  const SaveClose = () => setshowSave(false);
+
+
+
+
+  // ----
+
+
   // const [selectedSectionAnswer, setSelectedSectionAnswer] = useState([])
 
   const revaluationsListAPI = async (SerachQuestion) => {
@@ -415,7 +472,7 @@ const QuizMainComponent = (item) => {
                   [`${item?.id}-${Val?.id}`]: Val.user_answer_question[0]?.uid
                 }))
               })
-            )            
+            )
             const filterTest = Val?.assets_applicant_asset_completion?.find((item) => item?.completion_asset?.uid == id)
             setAssetStatus(filterTest)
             localStorage.setItem("assestQuiz", filterTest?.asset_completion_status)
@@ -1070,7 +1127,7 @@ const QuizMainComponent = (item) => {
                   )}
                 </div>
               </Col>
-              <Col md={3} lg={2} className="queRight_panel">
+              <Col md={3} lg={2} className="queRight_panel mobile-hide">
                 <h5>Instructions</h5>
                 <ul className="bullet_list mb-0">
                   {EvaluationListDetails.map((list, quesIndex) => (
@@ -1124,6 +1181,237 @@ const QuizMainComponent = (item) => {
               </Col>
             </Row>
           </Tab.Container>
+
+
+          {/* mobile component  */}
+
+          <Offcanvas className="question-popup p-0" show={show} onHide={questionClose} placement="bottom" >
+            <Offcanvas.Body>
+              <div className="question-book slick-mumber-dot">
+                <p>Section 1</p>
+                <ul className='number-dot-pagination'>
+                  <li className='complete' >1</li>
+                  <li className='complete'>2</li>
+                  <li className='complete'>3</li>
+                  <li className='complete'>4</li>
+                  <li>5</li>
+                  <li>6</li>
+                  <li>7</li>
+                  <li>8</li>
+                  <li>9</li>
+
+                  <li>10</li>
+
+                  <li>11</li>
+                  <li>12</li>
+                  <li>13</li>
+                  <li>14</li>
+                  <li>15</li>
+                  <li>16</li>
+                  <li>17</li>
+                  <li>18</li>
+                  <li>19</li>
+
+                  <li>20</li>
+
+
+                  <li>21</li>
+                  <li>22</li>
+                  <li>23</li>
+                  <li>24</li>
+                  <li>25</li>
+                  <li>26</li>
+                  <li>27</li>
+                  <li>28</li>
+
+                </ul>
+
+
+                <p>Section 2</p>
+                <ul className='number-dot-pagination'>
+                  <li className='complete' >1</li>
+                  <li className='complete'>2</li>
+                  <li className='complete'>3</li>
+                  <li className='complete'>4</li>
+                  <li>5</li>
+                  <li>6</li>
+                  <li>7</li>
+                  <li>8</li>
+                  <li>9</li>
+
+                  <li>10</li>
+
+                  <li>11</li>
+                  <li>12</li>
+                  <li>13</li>
+                  <li>14</li>
+                  <li>15</li>
+                  <li>16</li>
+                  <li>17</li>
+                  <li>18</li>
+                  <li>19</li>
+
+                  <li>20</li>
+
+
+                  <li>21</li>
+                  <li>22</li>
+                  <li>23</li>
+                  <li>24</li>
+                  <li>25</li>
+                  <li>26</li>
+                  <li>27</li>
+                  <li>28</li>
+
+                </ul>
+              </div>
+            </Offcanvas.Body>
+          </Offcanvas>
+
+
+          {/* New Instruction Offcanvas */}
+          <Offcanvas
+            className="instruction-popup queRight_panel p-0"
+            show={showInstruction}
+            onHide={instructionClose}
+            placement="bottom"
+          >
+            <Offcanvas.Body>
+              <div className="instruction-book">
+                <h5>Instructions</h5>
+                <ul className="bullet_list mb-0">
+                  {EvaluationListDetails.map((list, quesIndex) => (
+                    <>
+                      <li>Total {list?.total_number_of_question} Questions.</li>
+                      <li>Total Duration {list?.fixed_time}.</li>
+                      <li>The countdown timer in the top right corner of screen will display the remaining time for the quiz. When the timer reaches zero, the quiz will end by itself.</li>
+                      <li>The questions palette displayed on the right side of the screen will show the status of each question using one of the following symbols:</li>
+                    </>
+                  ))}
+                </ul>
+                <Nav variant="pills" className="flex-column">
+                  <Nav.Item>
+                    <Nav.Link
+                    //href="#qes_section02"
+                    // eventKey="second"
+                    >
+                      {EvaluationListDetails[0]?.section_asset?.map(
+                        (item, sectionIndex) => (
+                          <>
+                            <ul className="qs_stutslist">
+                              {item.question_section.map(
+                                (quesItem, quesIndex) => (
+                                  <li
+                                    key={quesItem.id}
+                                    style={{ cursor: "pointer" }}
+                                    onClick={() =>
+                                      handleListItemClick(
+                                        // `${sectionIndex}-${quesIndex}`
+                                        `${item?.id}-${quesItem?.id}`
+                                      )
+                                    }
+                                  >
+                                    <span className={handleAnsweredQuizActive(item?.id, quesItem?.id)}>
+                                      {" "}
+                                      {quesIndex + 1}
+                                      {markReview[`${item?.id}-${quesItem?.id}`]?.length ? (<span className="dot"></span>) : ''}
+                                    </span>
+
+                                    {QuizData[`${item?.id}-${quesItem?.id}`]?.length ? 'Answered Question' : "Pending Question"}
+                                  </li>
+                                )
+                              )}
+                            </ul>
+                          </>
+                        )
+                      )}
+                    </Nav.Link>
+                  </Nav.Item>
+                </Nav>
+              </div>
+            </Offcanvas.Body>
+          </Offcanvas>
+
+          {/* header */}
+
+
+          <Offcanvas
+            className="instruction-popup "
+            show={showHeader}
+            onHide={HeaderClose}
+            placement="bottom"
+          >
+            <Offcanvas.Body>
+              <div class="que_head"><div class="d-flex justify-content-between mb-2"><h6> Chemical Competence questionnaire</h6><span>Questions<strong class="font-weight-600 ms-1">2</strong></span></div><p class="text-sm">This section contains questions related to chemical processes required for the job. Please answer all questions to increase your chance of being shortlisted. Please ensure that you have a piece of paper and a calculator as some questions might require you to do some very basic math.</p><strong class="qus_number">1</strong></div>
+            </Offcanvas.Body>
+          </Offcanvas>
+
+
+          {/* SAVE & EXIT */}
+
+
+          <Modal
+            className="instruction-popup "
+            show={showSave}
+            onHide={SaveClose} 
+            centered           
+          >
+            <Modal.Body>
+              <Modal.Header closeButton>
+                
+              </Modal.Header>
+              <Modal.Body className="text-center">
+                <h6 className="mb-2">Are you sure you want to exit?</h6>
+                <p>We recommend completing the quiz in a single session.</p>
+              </Modal.Body>
+              <Modal.Footer className="justify-content-center">
+                <Button variant="light" onClick={SaveClose}>
+                  Continue with Test
+                </Button>
+                <Button variant="primary" onClick={handleClose}>
+                  Save & Exit
+                </Button>
+              </Modal.Footer>
+            </Modal.Body>
+          </Modal >
+
+
+
+
+
+          <ul className="mobile-footer-quiz">
+            <li>
+              <button onClick={HeaderShow}>
+                <img src={Headericn} className="img-fluid" alt="Header icon" />
+                <p>
+                  Header</p>
+              </button>
+            </li>
+
+            <li>
+              <button onClick={questionShow}>
+                <img src={gridicn} className="img-fluid" alt="Question icon" />
+                <p>  Question</p>
+              </button>
+            </li>
+
+
+            <li>
+              <button onClick={instructionShow}>
+                <img src={instructionicn} className="img-fluid" alt="Header icon" />
+                <p>    Instructions </p>
+              </button>
+            </li>
+
+            <li>
+              <button onClick={SaveShow}>
+                <img src={saveicn} className="img-fluid" alt="Header icon" />
+                <p>      Save & Exit </p>
+              </button>
+            </li>
+
+          </ul>
+
         </Modal.Body>
         <Modal.Footer className="quiz-modelfooter">
           <Button variant="primary" onClick={handleSubmit}>
@@ -1158,6 +1446,9 @@ const QuizMainComponent = (item) => {
           </Button>
         </Modal.Footer>
       </Modal>
+
+
+
     </>
   )
 }

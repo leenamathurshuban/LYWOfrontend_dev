@@ -60,6 +60,7 @@ import EducationLevelGraph from "./GraphChart/EducationLevelGraph";
 import SkillGraphComponent from "./GraphChart/SkillsGraph";
 import IndustryExperienceChart from "./GraphChart/IndustryExperience";
 import ExperienceGraphComponent from "./GraphChart/ExperienceGraph";
+import CustomerChartComponent from "./GraphChart/CustomerChart";
 const JobReview = () => {
     const codeSnippet = `class WorkloadTracker:
     def __init__(self):
@@ -151,6 +152,7 @@ tracker.show_tasks()
     const [applicantPersonality, setApplicantPersonality] = useState();
     const [personalityData, setPersonalityData] = useState();
     const [reviewEventKey, setReviewEventKey] = useState('first')
+    const [personalityAll, setPersonalityAll] = useState()
     const [InsightsGraphData, setInsightsGraphData] = useState({})
     const [payloadList, setPayloadList] = useState({
         roles: [],
@@ -458,6 +460,15 @@ tracker.show_tasks()
         try {
             const response = await getJobDetailsApi(url);
             if (response?.data?.success) {
+                const personalityKeys = Object.keys(response?.data?.response?.calculation_job[0].all_fetched_personality_data);
+                const updatedBehaviourResponse = BehaviourResponse.map(item => ({
+                    ...item,
+                    personality_percentage: response?.data?.response?.calculation_job[0].all_fetched_personality_data[item.behaviour_type_name] || 0 // Default to 0 if no match
+                }));
+                const matchedBehaviours = updatedBehaviourResponse.filter(item =>
+                    personalityKeys.includes(item.behaviour_type_name)
+                );
+                setPersonalityAll(matchedBehaviours)                
                 if (Array.isArray(response?.data?.response?.asset_job)) {
                     setAssetJob(response?.data?.response?.asset_job)
                     const allSections = response.data.response.asset_job.map((item) => ({
@@ -1940,7 +1951,7 @@ tracker.show_tasks()
                                                     </div>
                                                     <div className="chart_warp">
                                                         {/* <img src={PersonalityGrp} alt="" /> */}
-                                                        <PersonalityGraph InsightsGraphData={InsightsGraphData} />
+                                                        <PersonalityGraph InsightsGraphData={InsightsGraphData} personalityAll={personalityAll} />
                                                     </div>
                                                 </Card.Body>
                                             </Card>
@@ -2021,6 +2032,23 @@ tracker.show_tasks()
                                                 </Card.Body>
                                             </Card>
                                         </Col>
+                                    </Row>
+                                    <Row>
+                                        {InsightsGraphData?.custom_question_data?.map((item,index) => (
+                                            <Col md={6}>
+                                                <Card className="shadow-sm border-0 grap_card mt-3 radius-sm">
+                                                    <Card.Body>
+                                                        <div className="d-flex align-items-center justify-content-between">
+                                                            <Card.Title>{index==0 && "Custom Questions"}</Card.Title>
+                                                            <button className="btn-icon"><img src={CopyBtn} alt="" /></button>
+                                                        </div>
+                                                        <div className="chart_warp">
+                                                            <CustomerChartComponent InsightsGraphData={item} index={index} />
+                                                        </div>
+                                                    </Card.Body>
+                                                </Card>
+                                            </Col>
+                                        ))}
                                     </Row>
                                 </Tab.Pane>
                                 {/* <Tab.Pane eventKey="second">Second tab content</Tab.Pane> */}

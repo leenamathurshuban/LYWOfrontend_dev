@@ -40,7 +40,7 @@ import mandatoryIcon from "../../images/icons/mandatory_icon.svg";
 import timerIcon from "../../images/icons/timer_icon.svg";
 import saveProssIcon from "../../images/icons/save_progress.svg";
 import ngtscoringIcon from "../../images/icons/negative_scoring.svg";
-import belltedArrow from "../../images/icons/bullt_arrow.svg";
+import belltedArrow from "../../images/icons/circle-bullt-hd.png";
 import attachmentPin from "../../images/icons/attachment_pin.svg";
 import videoRecoder from "../../images/icons/video-recorder.svg";
 import CollapsedButton from "../../images/icons/CollapsedButton.svg";

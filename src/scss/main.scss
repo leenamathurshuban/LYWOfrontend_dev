@@ -1830,6 +1830,15 @@ button.btn-link-muted {
   min-height: 36px;
 }
 
+
+.jobapplymodel{
+   .btn-close {
+      position: relative;
+      right: 0px !important;
+    }
+}
+
+
 .quizDev_model {
   .modal-header {
     position: fixed;
@@ -2068,7 +2077,7 @@ select.h-36.form-select {
       display: flex;
       justify-content: space-between;
       width: 100%;
-      font-size: 12px;
+      font-size: 14px;
       color: #1d2939;
       border-radius: 8px !important;
       padding: 10px 12px;
@@ -2135,7 +2144,7 @@ select.h-36.form-select {
 
     .accordion-body {
       padding-top: 5px;
-      padding-bottom: 0;
+      // padding-bottom: 0;
     }
 
     .accordion_footer {
@@ -2179,8 +2188,9 @@ select.h-36.form-select {
   }
 
   .form-check-input:checked {
-    background-color: #17b26a;
-    border-color: #17b26a;
+   --bs-form-check-bg-image: url('../images/icons/check-tick-circle.svg') !important;
+   background-size: 18px !important;
+   border: 0;
   }
 }
 
@@ -2306,7 +2316,8 @@ select.h-36.form-select {
     img {
       position: relative;
       width: 125px;
-      left: -10px;
+      left: 20px;
+      object-fit: contain;
     }
 
     img.dragicon {
@@ -2468,6 +2479,7 @@ select.h-36.form-select {
 }
 
 .offcanvas {
+  z-index: 1111;
   &-header {
     border-bottom: solid 1px #eaecf0;
     padding-left: 30px;
@@ -2696,6 +2708,8 @@ select.h-36.form-select {
     position: relative;
     cursor: pointer;
 
+
+
     &:focus-visible {
       outline: 1px solid #3538cd;
     }
@@ -2720,6 +2734,7 @@ select.h-36.form-select {
 
     .fa-xmark {
       font-size: 12px;
+      display: none;
     }
 
     .badge.bg-light {
@@ -3528,6 +3543,9 @@ select.h-36.form-select {
     cursor: pointer;
   }
 }
+
+
+
 
 .ql-editor img {
   max-width: 100%;
@@ -5426,7 +5444,7 @@ select.h-36.form-select {
 
     .form-control-sm {
       font-size: 12px;
-      min-height: 34px;
+      min-height: 37px;
     }
 
     .form-label {
@@ -7231,6 +7249,7 @@ select.select-transpant {
   backdrop-filter: blur(1px);
   -webkit-backdrop-filter: blur(1px);
   opacity: 1 !important;
+  z-index: 1111;
 }
 
 .min-w-120 {
@@ -9034,11 +9053,126 @@ button.btn-icon {
 }
 
 
+// 
+
+.verify-box-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+
+    .verify-btn {
+
+      width: 90px;
+      border: 0;
+      background: transparent;
+      color: #3538CD;
+      font-size: 12px;
+      line-height: 18px;
+      font-weight: 600;
+}
+
+
+}
+
+
+.verify-people-modal {
+    z-index: 1111;
+    height: 50vh !important;
+
+   .btn {
+    width: 48%;
+}
+
+}
+
+
+.fs-14{
+  font-size: 14px;
+}
+
+
+.mobile-footer-quiz {
+    padding-left: 0;
+    display: flex;
+    align-items: center;
+    margin: 0;
+    justify-content: space-between; 
+    width: 100%;
+    flex-wrap: wrap;
+    border-top: 2px solid var(--20-black, #EAECF0);
+    position: fixed;
+    bottom: 0;
+    z-index: 11;
+    padding: 8px 16px;
+    background: #fff;
+
+
+    li{
+      display: inline-flex;
+      flex-direction: column;
+      flex: 0 0 25%;
+
+      button{
+        border: 0;
+        background: transparent;
+
+        img{
+          width: 24px;
+          height: 24px;
+          object-fit: contain;
+
+        }
+
+
+        p{
+          margin-bottom: 0;
+          font-size: 10px;
+          color: #667085;
+          font-weight: 600;
+          line-height: 18px;
+        }
+
+
+      }
+
+    }
+
+
+
+}
+
+
+.question-popup {
+    height: auto !important;
+
+    .offcanvas-body{
+      padding: 15px 26px;
+    }
+}
+
+
+.instruction-popup.queRight_panel {
+    height: auto;
+    width: 100%;
+}
+
+.instruction-popup .modal-header {
+    padding: 0;
+    box-shadow: none !important;
+}
+
+
+
 
 
 // responsive
 
 @media screen and (max-width:767px) {
+
+  .text-center-xs{
+    text-align: center;
+  }
 
   .page_header {
     padding: 14px 10px;
@@ -9550,9 +9684,9 @@ button.me-3.btn-light-outline-sm, .setlanguage {
 }
 
 
-.applicat_flow .app_leftinfo.col {
-    flex: 0 0 91%;
-}
+// .applicat_flow .app_leftinfo.col {
+//     flex: 0 0 91%;
+// }
 
 
 .alart-submited .modal-footer .btn {
@@ -9655,6 +9789,39 @@ button.me-3.btn-light-outline-sm, .setlanguage {
     background-size: 18px;
 }
 
+.appcaint .jobdetails .list li p{
+  word-break: break-word;
+}
+
+
+// quiz page Ui
+
+
+ .quizDev_model .queLeft_panel{
+  position: relative;
+  display: none;
+
+}
+
+
+.quiz_progress {
+    display: none !important;
+}
+
+.quiz_headright {
+    padding-right: 0;
+}
+
+.quiz-modelfooter{
+  display: none;
+}
+
+
+
+.que_mainsection {
+    padding: 15px 14px 0 45px;
+}
+
 
 }
 
@@ -9668,6 +9835,13 @@ button.me-3.btn-light-outline-sm, .setlanguage {
     display: none;
   }
 
+  .verify-box-mobile .verify-btn{
+    display: none;
+  }
+
+ .mobile-footer-quiz{
+  display: none;
+ } 
 
 }
 
