@@ -4,33 +4,16 @@ import {
     Cell
 } from 'recharts';
 
-const dataAll = [
-    { name: 'Pioneer', value: 72 },
-    { name: 'Influencer', value: 45 },
-    { name: 'Team Player', value: 83, highlight: true },
-    { name: 'Logical Thinker', value: 83, highlight: true },
-    { name: 'Persuader', value: 22 },
-    { name: 'Achiever', value: 52 },
-    { name: 'Perfectionist', value: 13 },
-    { name: 'Collaborator', value: 25 },
-    { name: 'Assessor', value: 8 },
-    { name: 'Implementor', value: 42 },
-    { name: 'Motivator', value: 70 },
-    { name: 'Leader', value: 37 },
-    { name: 'Administrator', value: 11 },
-    { name: 'Mediator', value: 27 },
-    { name: 'Mediator', value: 19 },
-];
-
 const PersonalityGraph = ({InsightsGraphData,personalityAll}) => {
-    console.log("---------------->",InsightsGraphData,personalityAll)
     const data =InsightsGraphData?.personality_data? personalityAll?.map((item)=>({
         ...item,
         name:item?.behaviours_name,
         value:InsightsGraphData?.personality_data[item?.behaviour_type_name]
 
     })):[]
-    // debugger
+    const topTwo = [...new Set(data)] // remove duplicates if any
+    .sort((a, b) => b?.personality_percentage - a?.personality_percentage)             // sort descending
+    .slice(0, 2)?.flatMap(group=>group?.personality_percentage);
     return (
         <ResponsiveContainer width="100%" height={350}>
             <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 50 }}>
@@ -72,7 +55,7 @@ const PersonalityGraph = ({InsightsGraphData,personalityAll}) => {
                         data?.map((entry, index) => (
                             <Cell
                                 key={`cell-${index}`}
-                                fill={entry.highlight ? '#f9a825' : '#82caff'}
+                                fill={topTwo?.includes(entry?.personality_percentage) ? '#f9a825' : '#82caff'}
                             />
                         ))
                     }

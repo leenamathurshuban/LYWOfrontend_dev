@@ -258,6 +258,7 @@ import {
   Row,
   InputGroup,
   Form,
+  Spinner,
 } from "react-bootstrap";
 import FileUploader from "../../components/FileUploader";
 import { useDispatch, useSelector } from "react-redux";
@@ -309,6 +310,7 @@ const Dashboard = () => {
   const [tableShow, setTableShow] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchJob, setSearchJob] = useState("");
+  const [isLoading,setIsLoading] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -349,15 +351,18 @@ const Dashboard = () => {
 
   const getDashboardListAPI = async () => {
     try {
+      setIsLoading(true);
       const res = await dashboardListAPI(companyInfo?.uid);
-      if (res?.data?.success) {
+      if (res?.data?.success) {        
         setDashboardList(res?.data?.response)
         setFirstTotalData(res?.data?.response?.total_count_data?.hiring_pipeline)
         setTotalData(res?.data?.response?.total_job_data);
         setPendingReview(res?.data?.response?.total_count_data?.pending_reviews)
+        setIsLoading(false);
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
+      setIsLoading(false)
     }
   }
   const JobListApi = async () => {
@@ -370,9 +375,12 @@ const Dashboard = () => {
     }
   };
   useEffect(() => {
-    getDashboardListAPI()
+    // getDashboardListAPI()
     JobListApi()
   }, [])
+  useEffect(() => {
+    getDashboardListAPI()
+  }, [companyInfo])
 
   useEffect(() => {
     setJVisiblejobData(dashboardList?.total_job_data?.slice(0, 10));
@@ -439,19 +447,38 @@ const Dashboard = () => {
   const keyArray = Array.from(
     new Set(dashboardList?.total_count_data?.hiring_pipeline?.flatMap(item => Object.keys(item)))
   );
-  const keyColumn = reorderFields(keyArray)
+  const keyColumn = reorderFields(keyArray)?.filter((item) => item != "job_uid")
 
   const totalPendingReviews = dashboardList?.total_count_data?.pending_reviews
     ?.reduce((sum, item) => sum + item.pending_review, 0);
 
-  const checkStatus = (item) => {
-    const found = dashboardList?.total_count_data?.hiring_pipeline?.find((Val) => Val?.job_title == item?.job_title);
-    if (found) {
-      if (found.final_shortlist > 0) return "Final Shortlist";;
-      if (found.screening_count > 0) return "Screening";
-    }
-    return null;
+  function formatLabel(key) {
+    return key
+      .replace(/([a-z])([A-Z])/g, '$1 $2')       // handle camelCase
+      .replace(/([a-zA-Z])(\d+)/g, '$1 $2')      // insert space before number
+      .replace(/^./, str => str.toUpperCase());  // capitalize first letter
   }
+
+  const getDynamicStatus = (obj, keyOrder) => {
+    const objt = dashboardList?.total_count_data?.hiring_pipeline?.find((Val) => Val?.job_uid == obj?.uid);
+    if (objt) {
+      const startIndex = keyOrder.indexOf('screening_count');
+      const endIndex = keyOrder.indexOf('final_shortlist');
+
+      const dynamicKeys = keyOrder.slice(startIndex + 1, endIndex); // only dynamic keys
+
+      if (objt?.final_shortlist > 0) return <span className="badge-sucess">Final Shortlist</span>;
+
+      for (let i = dynamicKeys.length - 1; i >= 0; i--) {
+        const key = dynamicKeys[i];
+        if (objt?.[key] > 0) return <span className="badge-primery">{formatLabel(key)}</span>;
+      }
+
+      if (objt?.screening_count > 0) return <span className="badge-warning">Screening</span>;
+
+      return null;
+    }
+  };
 
   console.log(dashboardList)
   console.log(keyColumn)
@@ -459,6 +486,11 @@ const Dashboard = () => {
     <>
       <Sidebar />
       <Header />
+      {isLoading && (
+        <div className="loader-overlay">
+          <Spinner animation="border" role="status" className="ml-3" />
+        </div>
+      )}
       <div className="page-body">
         <Container fluid className="pt-3">
           <Row>
@@ -686,7 +718,7 @@ const Dashboard = () => {
                               <td>{item?.department}</td>
                               <td>{calculateDays(item?.created_at)} days</td>
                               <td>{item?.total_applicant_count}</td>
-                              <td><span className="badge-primery">{checkStatus(item)}</span></td>
+                              <td>{getDynamicStatus(item, keyColumn)}</td>
                             </tr>
                           ))}
 
@@ -797,7 +829,7 @@ const Dashboard = () => {
 
                           <tr>
                             {keyColumn?.map(key => (
-                              <th key={key}>{key == "job_title" ? "Jobs" : key == "screening_count" ? "Screening" : key=="final_shortlist"?"Final Shortlist":key}</th>
+                              <th key={key}>{key == "job_title" ? "Jobs" : key == "screening_count" ? "Screening" : key == "final_shortlist" ? "Final Shortlist" : formatLabel(key)}</th>
                             ))}
                             {/* <th>Jobs </th>
                               <th>Screening</th>
@@ -875,7 +907,7 @@ const Dashboard = () => {
                           {firstTotalData?.slice(0, countList)?.map((row, rowIndex) => (
                             <tr key={rowIndex}>
                               {keyColumn.map(col => (
-                                <td className={`${col == "job_title" ? "font-weight-600 height-50":col=="final_shortlist"? "final-shortlist":"screening-record"} `}>
+                                <td className={`${col == "job_title" ? "font-weight-600 height-50" : col == "final_shortlist" ? "final-shortlist" : "screening-record"} `}>
                                   {row[col] ?? ''}
                                   <br></br>
                                   {col == "job_title" && <span>25 Openings</span>}

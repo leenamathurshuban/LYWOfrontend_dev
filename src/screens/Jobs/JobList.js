@@ -46,6 +46,7 @@ import { useNavigate } from "react-router-dom";
 import UpdateJobs from "../../components/Jobs/UpdateJobs";
 import { CustomPopup } from "../../components/CustomPopup";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 const JobsList = () => {
   const [modal, setModal] = useState({
@@ -83,6 +84,7 @@ const JobsList = () => {
     department: "",
     posted_on: "",
   });
+  const companyInfo = useSelector((state) => state.login.CompanyProfileDetails);
 
   const handleShow = (modalName) => {
     setModal((prevModals) => ({
@@ -130,11 +132,32 @@ const JobsList = () => {
     }
   }
 
-  const JobListApi = async (SerachList) => {
+  // const JobListApi = async (SerachList) => {
+  //   setIsLoading(true);
+
+  //   // Base API URL
+  //   let url = `https://bittrend.shubansoftware.com/assets-api/job-list-api/?page=1&limit=2000&search=${SerachList}`
+  //   try {
+  //     const response = await JobList(url);
+  //     setIsLoading(false);
+
+  //     setJobData({
+  //       jobs: response?.data?.response || [],
+  //       total_active_job_count: response?.data?.total_active_job_count || 0
+  //     });
+
+  //   } catch (error) {
+  //     setIsLoading(false);
+  //     console.log("response  error-----", error);
+  //   }
+  // };
+
+  const JobListbyCompanyApi = async (SerachList) => {
     setIsLoading(true);
 
     // Base API URL
-    let url = `https://bittrend.shubansoftware.com/assets-api/job-list-api/?page=1&limit=2000&search=${SerachList}`
+    // let url = `https://bittrend.shubansoftware.com/assets-api/job-list-api/?page=1&limit=2000&search=${SerachList}`
+    let url = `https://bittrend.shubansoftware.com/assets-api/job-list-by-company-api/${companyInfo?.uid}/`
     try {
       const response = await JobList(url);
       setIsLoading(false);
@@ -176,8 +199,12 @@ const JobsList = () => {
   }, [jobData.jobs]);
 
   useEffect(() => {
-    JobListApi();
+    // JobListApi();
+    JobListbyCompanyApi()
   }, []);
+  useEffect(()=>{
+    JobListbyCompanyApi()
+  },[companyInfo])
 
   useEffect(() => {
     if (SerachList || !modal.MoreFilterModal) {
@@ -186,7 +213,8 @@ const JobsList = () => {
       ).length;
       setFilterAppliedCount(count);
       const debounceTimer = setTimeout(() => {
-        JobListApi(SerachList);
+        // JobListApi(SerachList);
+        JobListbyCompanyApi(SerachList)
       }, 500);
 
       return () => clearTimeout(debounceTimer);
@@ -218,7 +246,8 @@ const JobsList = () => {
   const handleClone = async (id) => {
     const res = await CloneJobGet(id)
     if (res.data.success) {
-      JobListApi(SerachList)
+      // JobListApi(SerachList)
+      JobListbyCompanyApi(SerachList)
     }
   }
 
@@ -245,7 +274,8 @@ const JobsList = () => {
     formData.append('job_status', status)
     const res = await UpdateMultipleJobApi(formData)
     if (res.data.success) {
-      JobListApi(SerachList)
+      // JobListApi(SerachList)
+      JobListbyCompanyApi(SerachList)
       setActiveIds([])
     }
   }
@@ -256,7 +286,8 @@ const JobsList = () => {
     formData.append('job_status', status)
     const res = await UpdateMultipleJobApi(formData)
     if (res.data.success) {
-      JobListApi(SerachList)
+      // JobListApi(SerachList)
+      JobListbyCompanyApi(SerachList)
       setCloseIds([])
     }
   }
@@ -269,7 +300,8 @@ const JobsList = () => {
     formData.append('job_status', status)
     const res = await UpdateMultipleJobApi(formData)
     if (res.data.success) {
-      JobListApi(SerachList)
+      // JobListApi(SerachList)
+      JobListbyCompanyApi(SerachList)
     }
   }
 
@@ -305,7 +337,8 @@ const JobsList = () => {
       const res = await JobDeleteAPI(formData);
       if (res?.data?.success) {
         toast.success(res?.data?.response)
-        JobListApi(SerachList)
+        // JobListApi(SerachList)
+        JobListbyCompanyApi(SerachList)
       }
     } catch (error) {
       console.log(error);

@@ -8748,6 +8748,38 @@ button.btn-icon {
   text-transform: capitalize;
 }
 
+.Process-popup{
+  .back-btn {
+    border: none;
+    background: transparent;
+    color: #344054;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+
+    i{
+      font-size: 20px;
+      margin-right: 15px;
+      color: #667085;
+    }
+
+}
+
+
+.instruction-book {
+    display: flex;
+    flex-direction: column;
+    height: 90%;
+    justify-content: space-between;
+}
+
+
+
+
+}
+
+
+
 .job-post-footer{
   display: none;
 
@@ -8779,8 +8811,12 @@ button.btn-icon {
 
         border: 0;
         background: transparent;
-        width: 100%;
-        height: 40px;
+        width: 100%;       
+        height: auto;
+        font-size: 10px;
+        line-height: 18px;
+        padding: 5px 0px;
+        font-weight: 600;
 
       }
 
@@ -8792,6 +8828,7 @@ button.btn-icon {
       button{
         background: #081DA5;
         border-radius: 8px;
+        color: #fff;
 
         img{
          filter: brightness(0) invert(1);
@@ -9822,6 +9859,15 @@ button.me-3.btn-light-outline-sm, .setlanguage {
     padding: 15px 14px 0 45px;
 }
 
+
+.applicat_flow {
+    padding-bottom: 60px;
+}
+
+
+.appcaint_head .app_rightinfo{
+  flex: 0 0 100%;
+}
 
 }
 
