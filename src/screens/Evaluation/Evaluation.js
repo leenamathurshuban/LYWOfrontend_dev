@@ -534,7 +534,7 @@ const Evalation = () => {
         onHide={handleClose}
         animation={false}
         size="lg"
-        className="cmprofile_mdl quizDev_model"
+        className="cmprofile_mdl quizDev_model quiz-model-mobile"
       >
         <Modal.Header className="model-close-eval" closeButton>
           <Col md={4}>

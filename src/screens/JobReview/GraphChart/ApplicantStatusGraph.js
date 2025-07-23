@@ -6,52 +6,9 @@ import {
     YAxis,
     Tooltip,
     Legend,
-    LabelList,
     ResponsiveContainer,
+    Cell,
 } from "recharts";
-
-const data = [
-    {
-        name: "Job Application",
-        Excellent: 30,
-        Good: 50,
-        Average: 30,
-        BelowAverage: 20,
-        Incomplete: 52,
-    },
-    {
-        name: "Behaviour",
-        Excellent: 25,
-        Good: 45,
-        Average: 30,
-        BelowAverage: 20,
-        Incomplete: 21,
-    },
-    {
-        name: "Quiz 1",
-        Excellent: 22,
-        Good: 40,
-        Average: 25,
-        BelowAverage: 20,
-        Incomplete: 27,
-    },
-    {
-        name: "Assignment 1",
-        Excellent: 20,
-        Good: 30,
-        Average: 20,
-        BelowAverage: 15,
-        Incomplete: 17,
-    },
-    {
-        name: "Final list",
-        Excellent: 20,
-        Good: 0,
-        Average: 0,
-        BelowAverage: 0,
-        Incomplete: 0,
-    },
-];
 
 const COLORS = {
     excellent: "#69D3A7",
@@ -62,10 +19,15 @@ const COLORS = {
 };
 
 const ApplicantStatusGraph = ({ InsightsGraphData }) => {
-    const convertedData = InsightsGraphData?.applicant_status ? Object.entries(InsightsGraphData?.applicant_status).map(([key, value]) => ({
-        name: key,
-        ...value,
-    })) : [];
+    const colorKeys = Object.keys(COLORS);
+
+    const convertedData = InsightsGraphData?.applicant_status
+        ? Object.entries(InsightsGraphData?.applicant_status).map(([key, value]) => ({
+              name: key,
+              ...value,
+          }))
+        : [];
+
     return (
         <div style={{ width: "100%", height: 400 }}>
             <ResponsiveContainer>
@@ -75,18 +37,49 @@ const ApplicantStatusGraph = ({ InsightsGraphData }) => {
                     margin={{ top: 20, right: 20, left: 20, bottom: 20 }}
                     barCategoryGap={20}
                 >
-                    {/* <XAxis type="number" /> */}
-                    <XAxis type="number" tickCount={11} interval={0} tick={{ fontSize: 12 }} domain={[0, 200]} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}`} />
-                    <YAxis type="category" dataKey="name" axisLine={false} />
-                    <Tooltip />
-                    <Legend
-                        verticalAlign="bottom"
-                        iconType="circle"
-                        wrapperStyle={{ paddingTop: 20 }}
+                    <XAxis type="number" tick={{ fontSize: 12 }} domain={[0, 200]} tickLine={false} axisLine={false} />
+                    <YAxis
+                        type="category"
+                        dataKey="name"
+                        width={240}
+                        tickLine={false}
+                        axisLine={false}
+                        tick={({ x, y, payload }) => (
+                            <text
+                                x={x - 250}
+                                y={y + 5}
+                                textAnchor="start"
+                                fill="#444"
+                                fontSize={12}
+                                fontWeight={600}
+                            >
+                                {payload.value
+                                    .split('_')
+                                    .join(' ')
+                                    .replace(/\b\w/g, (char) => char.toUpperCase())}
+                            </text>
+                        )}
                     />
-                    {Object.keys(COLORS).map((key) => (
+                    <Tooltip />
+                    <Legend verticalAlign="bottom" iconType="circle" wrapperStyle={{ paddingTop: 20 }} />
+
+                    {colorKeys.map((key) => (
                         <Bar key={key} dataKey={key} stackId="a" fill={COLORS[key]}>
-                            {/* <LabelList dataKey={key} position="inside" fill="#fff" /> */}
+                            {convertedData.map((entry, index) => {
+                                const presentKeys = colorKeys.filter(k => entry[k] > 0);
+                                const barIndex = presentKeys.indexOf(key);
+
+                                const isOnly = presentKeys.length === 1;
+                                const isFirst = barIndex === 0;
+                                const isLast = barIndex === presentKeys.length - 1;
+
+                                let radius = [0, 0, 0, 0];
+                                if (isOnly) radius = [10, 10, 10, 10];
+                                else if (isFirst) radius = [10, 0, 0, 10];
+                                else if (isLast) radius = [0, 10, 10, 0];
+
+                                return <Cell key={`cell-${index}`} radius={radius} />;
+                            })}
                         </Bar>
                     ))}
                 </BarChart>
@@ -96,4 +89,3 @@ const ApplicantStatusGraph = ({ InsightsGraphData }) => {
 };
 
 export default ApplicantStatusGraph;
-

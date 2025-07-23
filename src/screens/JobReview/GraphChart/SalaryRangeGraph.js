@@ -66,7 +66,7 @@ const SalaryRangeGraph = ({ InsightsGraphData }) => {
                             );
                         }}
                         axisLine={false} />
-                    <YAxis label={{ value: "Number of Applicants", angle: -90, position: "insideLeft" }} domain={[0, 250]} ticks={[0, 50, 100, 150, 200, 250]} axisLine={false} />
+                    <YAxis label={{ value: "Number of Applicants", angle: -90, position: "insideLeft",  }} domain={[0, 250]} ticks={[0, 50, 100, 150, 200, 250]} axisLine={false} />
                     <Tooltip />
                     <Bar
                         dataKey="applicants"

@@ -1865,6 +1865,23 @@ select.h-36.form-select {
   width: 15px;
 }
 
+.quiz-model-mobile .form-check-input[type=radio]:checked {
+  --bs-form-check-bg-image: url("../images/icons/check-tick-circle.svg") !important;
+  background-size: 18px !important;
+  border: 0;
+}
+
+.form-check-input:checked[type=checkbox] {
+  --bs-form-check-bg-image:url("../images/icons/Checkbox-base.svg");
+  border: 0;
+}
+
+.form-check-input[type=radio]:checked {
+  --bs-form-check-bg-image: url("../images/icons/radio-checkbox-base.svg") !important;
+  background-size: 18px !important;
+  border: 0;
+}
+
 .que_options {
   margin: 0;
   padding: 0;
@@ -1877,11 +1894,6 @@ select.h-36.form-select {
   font-size: 13px;
   font-weight: 400;
   margin-left: 5px;
-}
-.que_options .form-check-input:checked {
-  --bs-form-check-bg-image: url("../images/icons/check-tick-circle.svg") !important;
-  background-size: 18px !important;
-  border: 0;
 }
 
 .qus_numbered {
@@ -2132,9 +2144,6 @@ select.h-36.form-select {
   border-color: #d0d5dd;
 }
 
-.offcanvas {
-  z-index: 1111;
-}
 .offcanvas-header {
   border-bottom: solid 1px #eaecf0;
   padding-left: 30px;
@@ -5777,12 +5786,12 @@ select.select-transpant:hover, select.select-transpant:focus, select.select-tran
 .aplcnt_view .aplcnt_info ul li:first-child::before {
   content: inherit;
 }
-.aplcnt_view .aplcnt_cv {
+.aplcnt_view .aplcnt_cv a {
   font-size: 13px;
   font-weight: 600;
   color: #344054;
 }
-.aplcnt_view .aplcnt_cv i {
+.aplcnt_view .aplcnt_cv a i {
   color: #4C60E5;
   font-size: 14px;
   margin-right: 5px;
@@ -6143,7 +6152,7 @@ select.select-transpant:hover, select.select-transpant:focus, select.select-tran
   backdrop-filter: blur(1px);
   -webkit-backdrop-filter: blur(1px);
   opacity: 1 !important;
-  z-index: 1111;
+  z-index: 111;
 }
 
 .min-w-120 {
@@ -7688,6 +7697,55 @@ button.btn-icon {
   box-shadow: none !important;
 }
 
+.recharts-default-legend {
+  text-align: right !important;
+  text-transform: capitalize;
+}
+.recharts-default-legend .recharts-legend-item-text {
+  color: #000 !important;
+  font-size: 12px;
+}
+
+.recharts-default-tooltip {
+  text-transform: capitalize;
+  font-size: 14px;
+}
+
+path.recharts-rectangle.recharts-tooltip-cursor {
+  fill: #f5f5f5;
+}
+
+.avialable-candinate-chart .recharts-default-legend {
+  width: 240px;
+}
+.avialable-candinate-chart .recharts-default-legend li {
+  position: relative;
+  text-align: left;
+  padding-left: 30px;
+  line-height: 35px;
+}
+.avialable-candinate-chart .recharts-default-legend li svg {
+  position: absolute;
+  top: 10px;
+  left: 0;
+}
+.avialable-candinate-chart .recharts-default-legend li .recharts-legend-item-text > span {
+  width: 100%;
+  display: inline-flex;
+  justify-content: space-between;
+}
+.avialable-candinate-chart .recharts-default-legend li .left-value {
+  font-weight: 400;
+}
+
+.experience-chart .recharts-text.recharts-label {
+  transform: rotate(-90deg) translate(-40%, -38%);
+}
+
+.area-ofeducation-chart .recharts-default-legend {
+  max-width: 300px;
+}
+
 @media screen and (max-width: 767px) {
   .text-center-xs {
     text-align: center;
@@ -7801,9 +7859,7 @@ button.btn-icon {
   }
   .jobpre_Rightpanel {
     position: relative;
-    right: 0;
-    height: auto;
-    width: 100%;
+    display: none;
   }
   .jobMain_panel .custom-card {
     margin-bottom: 15px !important;
@@ -8135,6 +8191,7 @@ button.btn-icon {
   }
   .que_mainsection {
     padding: 15px 14px 0 45px;
+    margin-bottom: 80px;
   }
   .applicat_flow {
     padding-bottom: 60px;

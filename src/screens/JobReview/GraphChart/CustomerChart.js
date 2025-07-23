@@ -80,7 +80,7 @@ const CustomerChartComponent = ({ InsightsGraphData,index }) => {
                             const item = convertedData.find(d => d.name === value);
                             return (
                                 <span style={{ color: "#2e3a59", fontWeight: "bold", fontSize: "12px" }}>
-                                    {value} — {item?.value}
+                                 <span className="left-value">{value}</span>    <span className="right-value"> {item?.value}</span>
                                 </span>
                             );
                         }}

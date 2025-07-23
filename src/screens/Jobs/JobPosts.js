@@ -19,6 +19,8 @@ import linechart from "../../images/icons/line-chart-up-06.svg";
 import Message from "../../images/icons/message-dots-circle.svg";
 import share2 from "../../images/icons/share-08.svg";
 import Download2 from "../../images/icons/download-01.svg"
+import logoIcon from "../../images/logo_icon.png";
+import Phone from "../../images/icons/phone.svg"
 
 import Download from "../../images/icons/download-12x12.svg";
 import Global from "../../images/Global.png";
@@ -686,31 +688,33 @@ const JobPosts = () => {
           animation={false}
           size="lg"
           backdrop={false}
-          className="aplcnt_view quizDev_model"
+          className="aplcnt_view quizDev_model jobapplymodel"
         >
-          <Modal.Header closeButton>
-            <Modal.Title>Profile Details</Modal.Title>
+          <Modal.Header className="d-flex justify-content-between profile-user-application"  closeButton>
+            <Modal.Title><img src={logoIcon} className="me-4" />  Profile Details</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             {viewDetailData && (
               <>
                 <Row className="justify-content-center">
                   <Col md={8}>
-                    <Row>
-                      <Col md={12} className="d-flex justify-content-between">
+                  
+                      <div className="d-flex justify-content-between ps-3 pe-3">
                         <div className="aplcnt_info">
                           <h5>{viewDetailData?.user?.username}</h5>
                           <ul>
                             <li><i class="far fa-envelope me-2" aria-hidden="true"></i>{viewDetailData?.user?.email}</li>
                             <li>
-                              <i class="fa fa-phone me-2" aria-hidden="true"></i>
+                             <img src={Phone} className="img-fluid me-2" />
                               {viewDetailData?.user?.phone_number}
                             </li>
                           </ul>
-                        </div>
+                          </div>
+                         
                         <div className="aplcnt_cv"><Link to={`https://bittrend.shubansoftware.com${viewDetailData?.resume}`} target="_blank" ><i class="fa fa-paperclip" aria-hidden="true"></i>{"https://bittrend.shubansoftware.com" + viewDetailData?.resume}</Link></div>
-                      </Col>
-                    </Row>
+                      
+                        </div>
+                     
                     <div className="aplcnt_details">
                       <ul>
                         <li><span>Availability</span> <strong>{viewDetailData?.availble_by}</strong></li>

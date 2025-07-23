@@ -308,14 +308,14 @@ const AreaEducationChart = ({ InsightsGraphData }) => {
                         verticalAlign="middle"
                         wrapperStyle={{
                             overflowY: "auto",
-                            maxHeight: legendHeight
+                            maxHeight: 250
                         }}
                         iconType="circle"
                         formatter={(value) => {
                             const item = data.find(d => d.name === value);
                             return (
-                                <span style={{ color: "#2e3a59", fontWeight: "bold",fontSize:"10px" }}>
-                                    {value} — {item?.value}
+                                <span style={{ color: "#2e3a59", fontWeight: "500",fontSize:"12px" }}>
+                                  <span className="left0-value">{value} </span>  <span className="right-value"> {item?.value}</span> 
                                 </span>
                             );
                         }}

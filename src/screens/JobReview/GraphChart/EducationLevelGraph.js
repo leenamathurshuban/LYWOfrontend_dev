@@ -122,7 +122,30 @@ const EducationLevelGraph = ({ InsightsGraphData }) => {
                             ticks={[0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200]}
                             axisLine={false}
                         />
-                        <YAxis type="category" dataKey="name" axisLine={false} />
+     <YAxis
+                            type="category"
+                            dataKey="name"
+                            width={140}
+                            tickLine={false}
+                            axisLine={false}
+                            tick={({ x, y, payload }) => (
+                                <text
+                                    x={x - 220}
+                                    y={y + 5}
+                                    textAnchor="start"
+                                    fill="#444"
+                                    fontSize={12}
+                                    fontWeight={600}
+                                >
+                                    {payload.value
+                                        .split('_')
+                                        .join(' ')
+                                        .replace(/\b\w/g, (char) => char.toUpperCase())}
+                                </text>
+                            )}
+                        />
+
+                        {/* <YAxis type="category" dataKey="name" axisLine={false} /> */}
                         <Tooltip formatter={(value) => `${value}/200`} />
                         <Bar dataKey="value" radius={[10, 10, 10, 10]} isAnimationActive={false}>
                             {convertedData.map((entry, index) => (

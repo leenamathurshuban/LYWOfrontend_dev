@@ -187,8 +187,8 @@ const AvailabilityPieChart = ({ InsightsGraphData }) => {
                         formatter={(value) => {
                             const item = convertedData.find(d => d.name === value);
                             return (
-                                <span style={{ color: "#2e3a59", fontWeight: "bold", fontSize: "12px" }}>
-                                    {value} — {item?.value}
+                                <span style={{ color: "#2e3a59", fontWeight: "600", fontSize: "14px" }}>
+                                 <span className="left-value">  {value} </span>  <span className="right-value">  {item?.value} </span>
                                 </span>
                             );
                         }}

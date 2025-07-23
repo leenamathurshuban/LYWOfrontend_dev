@@ -1919,7 +1919,7 @@ tracker.show_tasks()
                                                         <Card.Title>Availability Of candidates</Card.Title>
                                                         <button className="btn-icon"><img src={CopyBtn} alt="" /></button>
                                                     </div>
-                                                    <div className="chart_warp">
+                                                    <div className="chart_warp avialable-candinate-chart">
                                                         {/* <img src={AvabCandite} alt="" /> */}
                                                         <AvailabilityPieChart InsightsGraphData={InsightsGraphData} />
                                                     </div>
@@ -1933,7 +1933,7 @@ tracker.show_tasks()
                                                         <Card.Title>Salary Range  (₹ LPA)</Card.Title>
                                                         <button className="btn-icon"><img src={CopyBtn} alt="" /></button>
                                                     </div>
-                                                    <div className="chart_warp">
+                                                    <div className="chart_warp salary-range-chart">
                                                         {/* <img src={SaleryRange} alt="" /> */}
                                                         <SalaryRangeGraph InsightsGraphData={InsightsGraphData} />
                                                     </div>
@@ -1959,7 +1959,7 @@ tracker.show_tasks()
                                     </Row>
                                     <Row>
                                         <Col md={6}>
-                                            <Card className="shadow-sm border-0 grap_card mt-3 radius-sm">
+                                            <Card className="avialable-candinate-chart shadow-sm border-0 grap_card mt-3 radius-sm area-ofeducation-chart">
                                                 <Card.Body>
                                                     <div className="d-flex align-items-center justify-content-between">
                                                         <Card.Title>Areas Of Education</Card.Title>
@@ -2005,7 +2005,7 @@ tracker.show_tasks()
                                     </Row>
                                     <Row>
                                         <Col md={6}>
-                                            <Card className="shadow-sm border-0 grap_card mt-3 radius-sm">
+                                            <Card className="shadow-sm border-0 grap_card mt-3 radius-sm avialable-candinate-chart ">
                                                 <Card.Body>
                                                     <div className="d-flex align-items-center justify-content-between">
                                                         <Card.Title>Past Industry Experience </Card.Title>
@@ -2019,7 +2019,7 @@ tracker.show_tasks()
                                             </Card>
                                         </Col>
                                         <Col md={6}>
-                                            <Card className="shadow-sm border-0 grap_card mt-3 radius-sm">
+                                            <Card className="shadow-sm border-0 grap_card mt-3 radius-sm experience-chart">
                                                 <Card.Body>
                                                     <div className="d-flex align-items-center justify-content-between">
                                                         <Card.Title>Experience</Card.Title>
@@ -2036,7 +2036,7 @@ tracker.show_tasks()
                                     <Row>
                                         {InsightsGraphData?.custom_question_data?.map((item,index) => (
                                             <Col md={6}>
-                                                <Card className="shadow-sm border-0 grap_card mt-3 radius-sm">
+                                                <Card className="shadow-sm border-0 grap_card mt-3 radius-sm avialable-candinate-chart">
                                                     <Card.Body>
                                                         <div className="d-flex align-items-center justify-content-between">
                                                             <Card.Title>{index==0 && "Custom Questions"}</Card.Title>
