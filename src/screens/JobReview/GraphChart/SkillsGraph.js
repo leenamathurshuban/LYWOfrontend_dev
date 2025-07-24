@@ -43,55 +43,64 @@ const SkillGraphComponent = ({ InsightsGraphData }) => {
         name: convertKeyToLabel(val?.skill_name),
         value: val?.applicant_skill_count,
     })) : [];
+
+    const topTwo = [...new Set(convertedData)] // remove duplicates if any
+        .sort((a, b) => b?.value - a?.value)             // sort descending
+        .slice(0, 4)?.flatMap(group => group?.value);
     console.log(InsightsGraphData)
     return (
-        <ResponsiveContainer width="100%" height={350}>
-            <BarChart data={convertedData} margin={{ top: 20, right: 30, left: 20, bottom: 50 }}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis
-                    dataKey="name"
-                    interval={0}
-                    tick={({ x, y, payload, index }) => {
-                        const value = convertedData[index]?.value;
-                        return (
-                            <g transform={`translate(${x},${y + 10})`}>
-                                <text x={0} y={0} dy={14} textAnchor="middle" fill="#666" fontSize="10">
-                                    {payload.value}
-                                </text>
-                                <text x={0} y={14} dy={14} textAnchor="middle" fill="#999" fontSize="10">
-                                    {value}%
-                                </text>
-                            </g>
-                        );
-                    }}
-                    axisLine={false}
-                />
-                <YAxis domain={[0, 250]} ticks={[0, 50, 100, 150, 200, 250]} tickFormatter={(value) => `${value}%`} axisLine={false} />
-                <Tooltip />
-                <Bar
-                    dataKey="value"
-                    radius={[10, 10, 0, 0]}
-                    fill="#82caff"
-                    // Dynamic fill color
-                    isAnimationActive={false}
-                    barSize={15}
-                >
-                    {/* <LabelList
+        <div style={{ width: '100%', overflowX: 'auto' }}>
+            <div style={{ minWidth: `${convertedData.length * 100}px` }}>
+                <ResponsiveContainer width="100%" height={350}>
+                    <BarChart data={convertedData} margin={{ top: 20, right: 30, left: 20, bottom: 50 }}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis
+                            dataKey="name"
+                            interval={0}
+
+                            tick={({ x, y, payload, index }) => {
+                                const value = convertedData[index]?.value;
+                                return (
+                                    <g transform={`translate(${x},${y + 10})`}>
+                                        <text x={0} y={0} dy={14} textAnchor="middle" fill="#666" fontSize="10">
+                                            {payload.value}
+                                        </text>
+                                        <text x={0} y={14} dy={14} textAnchor="middle" fill="#999" fontSize="10">
+                                            {value}%
+                                        </text>
+                                    </g>
+                                );
+                            }}
+                            axisLine={false}
+                        />
+                        <YAxis tick={{ fontSize: 12 }} domain={[0, 250]} ticks={[0, 50, 100, 150, 200, 250]} tickFormatter={(value) => `${value}%`} axisLine={false} />
+                        <Tooltip />
+                        <Bar
+                            dataKey="value"
+                            radius={[10, 10, 0, 0]}
+                            fill="#82caff"
+                            // Dynamic fill color
+                            isAnimationActive={false}
+                            barSize={15}
+                        >
+                            {/* <LabelList
                         dataKey="value"
                         position="insideBottom"
                         // formatter={(value) => `${value}%`}
                     /> */}
-                    {
-                        convertedData.map((entry, index) => (
-                            <Cell
-                                key={`cell-${index}`}
-                                fill={entry.name=="Document Management" || entry.name==="Time Management" ? '#f9a825' : '#82caff'}
-                            />
-                        ))
-                    }
-                </Bar>
-            </BarChart>
-        </ResponsiveContainer>
+                            {
+                                convertedData.map((entry, index) => (
+                                    <Cell
+                                        key={`cell-${index}`}
+                                        fill={topTwo.includes(entry?.value) ? '#f9a825' : '#82caff'}
+                                    />
+                                ))
+                            }
+                        </Bar>
+                    </BarChart>
+                </ResponsiveContainer>
+            </div>
+        </div>
     );
 };
 

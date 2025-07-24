@@ -538,7 +538,7 @@ const QuizMainComponent = (item) => {
         onHide={handleClose}
         animation={false}
         size="lg"
-        className="cmprofile_mdl quizDev_model"
+        className="cmprofile_mdl quizDev_model quiz-model-input"
       >
         <Modal.Header closeButton>
           <Col md={4}>

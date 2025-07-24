@@ -46,7 +46,7 @@ const JobSummary = () => {
         setShow(false)
     };
 
-     const handleInviteClose = () => setInviteModalShow(false);
+    const handleInviteClose = () => setInviteModalShow(false);
     const handleInviteShow = () => setInviteModalShow(true);
 
     const GetCompanyDetails = () => {
@@ -395,116 +395,125 @@ const JobSummary = () => {
                                 </Row>
                             </Card.Body>
                         </Card>
-                        <Offcanvas 
+                        <Offcanvas
 
-                    show={inviteModalShow}
-                    onHide={handleInviteClose}
-                    placement="end" 
+                            show={inviteModalShow}
+                            onHide={handleInviteClose}
+                            placement="end"
 
-                    className="invite-people-modal"
+                            className="invite-people-modal"
 
-                >
+                        >
 
-            <Offcanvas.Header className='justify-content-between' closeButton>
-          <Offcanvas.Title>  {data?.job_title} </Offcanvas.Title>
-        </Offcanvas.Header>
+                            <Offcanvas.Header className='justify-content-between' closeButton>
+                                <Offcanvas.Title style={{ 'textTransform': 'capitalize' }} >  {data?.job_title} </Offcanvas.Title>
 
+                                <Form.Check // prettier-ignore
+                                    type="switch"
+                                    id="custom-switch"
+                                    label="Receive Applications"
+                                    className='ms-auto me-2'
+                                    style={{'fontSize':'14px', 'fontWeight': '600', 'lineHeight' : '20px'  }}
 
-          <Offcanvas.Body>
-            
-            <Tabs
-      defaultActiveKey="Link"
-      transition={false}
-      id="noanim-tab-example"
-      className="mb-3"
-    >
-      <Tab className='link-tab' eventKey="Link" title="Link">
-        <div className='sharing-link'>
-<Form>
-      <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-        <Form.Label>Link</Form.Label>
-        <div className='d-flex'>
-        <Form.Control type="email" placeholder="name@example.com" value="Lorem ipsum dolor sit amet, consectetur adipiscing elit nam tempor est at consectetur sollicitudin" />
-      <Button style={{width: '150px'}} className='ms-3' variant="primary">Copy Link</Button>
-     </div>
-      </Form.Group>
+                                />
+                            </Offcanvas.Header>
 
 
-     <Form.Check aria-label="option 1" label="Shorten Link" />
+                            <Offcanvas.Body>
 
-    </Form>
-
-            </div>
-      </Tab>
-      <Tab className='Qr-code-tab' eventKey="QRCode" title="QRCode">
-        <img src={Qrcode} className='img-fluid' alt='Qr code'/> <br></br>
-        <Button width="150" className='mt-3' variant="primary">Copy QR Code</Button>
-      </Tab>
-      <Tab className='main-tab' eventKey="Main" title="Main" >
-        <Form>
-        <Form.Group className="mb-3" controlId="formRecipients">
-          <Form.Label><strong>Recipients</strong></Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter recipient emails"
-            value={recipients}
-            onChange={(e) => setRecipients(e.target.value)}
-          />
-        </Form.Group>
-
-        <Form.Group className="mb-2" controlId="for mMessage">
-          <Form.Label><strong>Message</strong></Form.Label>
-
-          <div
-            className="border p-2 mb-2"
-            style={{
-              borderRadius: "6px",
-              borderColor: "#ccc",
-              display: "flex",
-              gap: "10px",
-            }}
-          >
-            <FaBold />
-            <FaItalic />
-            <FaUnderline />
-            <FaLink />
-            <FaUnlink />
-          </div>
-
-          <Form.Control
-            as="textarea"
-            rows={10}
-            placeholder="Write your message here..."
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-          />
-        </Form.Group>
-
-        <div className="d-flex gap-2 mt-2 mb-3">
-          <Button variant="outline-secondary">
-            <FaLink className="me-1" />
-            Insert Link
-          </Button>
-          <Button variant="outline-secondary">
-            <FaQrcode className="me-1" />
-            Insert QR
-          </Button>
-        </div>
-
-        <Button variant="primary" type="submit">
-          Send Mail
-        </Button>
-      </Form>
-
-      
-      </Tab>
-    </Tabs>
-            
-            </Offcanvas.Body>
+                                <Tabs
+                                    defaultActiveKey="Link"
+                                    transition={false}
+                                    id="noanim-tab-example"
+                                    className="mb-3"
+                                >
+                                    <Tab className='link-tab' eventKey="Link" title="Link">
+                                        <div className='sharing-link'>
+                                            <Form>
+                                                <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                                                    <Form.Label>Link</Form.Label>
+                                                    <div className='d-flex'>
+                                                        <Form.Control type="email" placeholder="name@example.com" value="Lorem ipsum dolor sit amet, consectetur adipiscing elit nam tempor est at consectetur sollicitudin" />
+                                                        <Button style={{ width: '150px' }} className='ms-3' variant="primary">Copy Link</Button>
+                                                    </div>
+                                                </Form.Group>
 
 
+                                                <Form.Check aria-label="option 1" label="Shorten Link" />
 
-        </Offcanvas>
+                                            </Form>
+
+                                        </div>
+                                    </Tab>
+                                    <Tab className='Qr-code-tab' eventKey="QRCode" title="QRCode">
+                                        <img src={Qrcode} className='img-fluid' alt='Qr code' /> <br></br>
+                                        <Button width="150" className='mt-3' variant="primary">Copy QR Code</Button>
+                                    </Tab>
+                                    <Tab className='main-tab' eventKey="Main" title="Main" >
+                                        <Form>
+                                            <Form.Group className="mb-3" controlId="formRecipients">
+                                                <Form.Label><strong>Recipients</strong></Form.Label>
+                                                <Form.Control
+                                                    type="text"
+                                                    placeholder="Enter recipient emails"
+                                                    value={recipients}
+                                                    onChange={(e) => setRecipients(e.target.value)}
+                                                />
+                                            </Form.Group>
+
+                                            <Form.Group className="mb-2" controlId="for mMessage">
+                                                <Form.Label><strong>Message</strong></Form.Label>
+
+                                                <div
+                                                    className="border p-2 mb-2"
+                                                    style={{
+                                                        borderRadius: "6px",
+                                                        borderColor: "#ccc",
+                                                        display: "flex",
+                                                        gap: "10px",
+                                                    }}
+                                                >
+                                                    <FaBold />
+                                                    <FaItalic />
+                                                    <FaUnderline />
+                                                    <FaLink />
+                                                    <FaUnlink />
+                                                </div>
+
+                                                <Form.Control
+                                                    as="textarea"
+                                                    rows={10}
+                                                    placeholder="Write your message here..."
+                                                    value={message}
+                                                    onChange={(e) => setMessage(e.target.value)}
+                                                />
+                                            </Form.Group>
+
+                                            <div className="d-flex gap-2 mt-2 mb-3">
+                                                <Button variant="outline-secondary">
+                                                    <FaLink className="me-1" />
+                                                    Insert Link
+                                                </Button>
+                                                <Button variant="outline-secondary">
+                                                    <FaQrcode className="me-1" />
+                                                    Insert QR
+                                                </Button>
+                                            </div>
+
+                                            <Button variant="primary" type="submit">
+                                                Send Mail
+                                            </Button>
+                                        </Form>
+
+
+                                    </Tab>
+                                </Tabs>
+
+                            </Offcanvas.Body>
+
+
+
+                        </Offcanvas>
 
                     </Modal.Body>
                     {/* {location.state && ( */}

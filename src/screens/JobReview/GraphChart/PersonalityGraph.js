@@ -36,7 +36,7 @@ const PersonalityGraph = ({InsightsGraphData,personalityAll}) => {
                     }}
                     axisLine={false}
                 />
-                <YAxis domain={[0, 100]} ticks={[0, 20, 40, 60, 80, 100]} tickFormatter={(value) => `${value}%`} axisLine={false} />
+                <YAxis domain={[0, 100]} ticks={[0, 20, 40, 60, 80, 100]} tick={{fontSize:12}} tickFormatter={(value) => `${value}%`} axisLine={false} />
                 <Tooltip />
                 <Bar
                     dataKey="value"

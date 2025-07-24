@@ -1499,11 +1499,13 @@ const CompanyEditProfile = ({ show, handleClose }) => {
       // }
 
       // if (industries.length > 0) {
-      data.append("industry", industries[0]?.uid);
+      // data.append("industry", industries[0]?.uid);
+      data.append("industry", ids?.industryUid);
       // }
 
       // if (Location.length > 0) {
-      data.append("location", Location[0]?.uid);
+      // data.append("location", Location[0]?.uid);
+      data.append("location", ids?.locationUid);
       // }
 
       // if (!imageFile || checkEditImage) {
@@ -1530,11 +1532,12 @@ const CompanyEditProfile = ({ show, handleClose }) => {
           },
         }
       );
-      if (response === 200) {
+      if (response?.data?.success) {
         setCompanyUpdateError((prevState) => ({
           ...prevState,
           websiteError: "",
         }));
+        toast.success("Company Profile has been updated successfully!")
       }
     } catch (error) {
       // console.log("erooor------>>>", error);

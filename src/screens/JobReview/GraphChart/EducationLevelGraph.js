@@ -119,30 +119,55 @@ const EducationLevelGraph = ({ InsightsGraphData }) => {
                         <XAxis
                             type="number"
                             domain={[0, 200]}
+                            tick={{fontSize:12}}
                             ticks={[0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200]}
                             axisLine={false}
                         />
-     <YAxis
+                         <YAxis
                             type="category"
                             dataKey="name"
                             width={140}
                             tickLine={false}
                             axisLine={false}
-                            tick={({ x, y, payload }) => (
-                                <text
-                                    x={x - 220}
-                                    y={y + 5}
-                                    textAnchor="start"
-                                    fill="#444"
-                                    fontSize={12}
-                                    fontWeight={600}
-                                >
-                                    {payload.value
-                                        .split('_')
-                                        .join(' ')
-                                        .replace(/\b\w/g, (char) => char.toUpperCase())}
-                                </text>
-                            )}
+                            tick={({ x, y, payload }) => {
+                                const words = payload.value
+                                    .split('_')
+                                    .join(' ')
+                                    .replace(/\b\w/g, (char) => char.toUpperCase())
+                                    .split(' ');
+
+                                const lines = [];
+                                let currentLine = words[0];
+
+                                for (let i = 1; i < words.length; i++) {
+                                    const testLine = currentLine + ' ' + words[i];
+                                    // Estimate text width using approx char width (you can tweak 7)
+                                    if (testLine.length * 7 < 200) {
+                                        currentLine = testLine;
+                                    } else {
+                                        lines.push(currentLine);
+                                        currentLine = words[i];
+                                    }
+                                }
+                                lines.push(currentLine);
+
+                                return (
+                                    <text
+                                        x={x - 200}
+                                        y={y}
+                                        textAnchor="start"
+                                        fill="#444"
+                                        fontSize={12}
+                                        // fontWeight={600}
+                                    >
+                                        {lines.map((line, index) => (
+                                            <tspan key={index} x={x - 220} dy={index === 0 ? 5 : 15}>
+                                                {line}
+                                            </tspan>
+                                        ))}
+                                    </text>
+                                );
+                            }}
                         />
 
                         {/* <YAxis type="category" dataKey="name" axisLine={false} /> */}
@@ -151,7 +176,21 @@ const EducationLevelGraph = ({ InsightsGraphData }) => {
                             {convertedData.map((entry, index) => (
                                 <cell key={`cell-${index}`} fill={entry.fill}  />
                             ))}
-                            <LabelList dataKey="value" position="right" formatter={(val) => `${val}/200`} />
+                            <LabelList
+                                dataKey="value"
+                                position="right"
+                                content={({ x, y, value }) => (
+                                    <text
+                                    x={x + 400}  // adjust to push label further right
+                                    y={y + 12}   // adjust vertical centering
+                                    fontSize={12} // smaller font size
+                                    fill="#444"
+                                    textAnchor="end"
+                                    >
+                                    {`${value}/200`}
+                                    </text>
+                                )}
+                                />
                         </Bar>
                     </BarChart>
                 </ResponsiveContainer>

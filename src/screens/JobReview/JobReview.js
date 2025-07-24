@@ -890,7 +890,7 @@ tracker.show_tasks()
                 <Container fluid className="bg-white">
                     <Row>
                         <Col md={6} className="d-flex justify-content-between align-items-center">
-                            <h6 class="my-3 pagetitle"><i class="fa fa-suitcase text-primery me-2"></i>{jobDetails?.job_title}<img src={angleDown} className="ms-2 w-14" /></h6>
+                            <h6 class="my-3 ps-4 pagetitle" style={{'textTransform':"capitalize"}} ><i class="fa fa-suitcase text-primery me-2"></i>{jobDetails?.job_title}<img src={angleDown} className="ms-2 w-14" /></h6>
                         </Col>
                         <Col md={6} className="d-flex justify-content-end align-items-center">
                             <button type="button" onClick={handleShow} className="icon_btnlink btn btn-primary"><img src={EvaluaBtn} className="me-1" />Evaluations</button>
@@ -1927,7 +1927,7 @@ tracker.show_tasks()
                                             </Card>
                                         </Col>
                                         <Col md={6}>
-                                            <Card className="shadow-sm border-0 grap_card mt-3 radius-sm">
+                                            <Card className="shadow-sm border-0 grap_card mt-3 radius-sm experience-chart">
                                                 <Card.Body>
                                                     <div className="d-flex align-items-center justify-content-between">
                                                         <Card.Title>Salary Range  (₹ LPA)</Card.Title>

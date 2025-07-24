@@ -325,14 +325,16 @@ fieldset:disabled .btn {
   -o-object-fit: contain;
      object-fit: contain;
 }
-.header-wrapper.row .org_name .css-13cymwt-control, .header-wrapper.row .org_name .css-t3ipsp-control {
+.header-wrapper.row .org_name .css-13cymwt-control,
+.header-wrapper.row .org_name .css-t3ipsp-control {
   border: none;
   font-size: 14px;
   font-weight: 600;
   min-width: 200px;
   text-transform: capitalize;
 }
-.header-wrapper.row .org_name .css-13cymwt-control .css-1u9des2-indicatorSeparator, .header-wrapper.row .org_name .css-t3ipsp-control .css-1u9des2-indicatorSeparator {
+.header-wrapper.row .org_name .css-13cymwt-control .css-1u9des2-indicatorSeparator,
+.header-wrapper.row .org_name .css-t3ipsp-control .css-1u9des2-indicatorSeparator {
   display: none;
 }
 .header-wrapper.row .org_name p {
@@ -1413,9 +1415,10 @@ button.btn-link-muted svg {
   font-weight: 600;
   display: inline-block;
   cursor: pointer;
+  background: #fff;
 }
 .head_filterlist li.active {
-  background-color: #f9fafb;
+  background-color: #F9FAFB;
 }
 .head_filterlist li:last-child {
   border: none;
@@ -1871,12 +1874,11 @@ select.h-36.form-select {
   border: 0;
 }
 
-.form-check-input:checked[type=checkbox] {
-  --bs-form-check-bg-image:url("../images/icons/Checkbox-base.svg");
+.quiz-model-input .form-check-input:checked[type=checkbox] {
+  --bs-form-check-bg-image: url("../images/icons/Checkbox-base.svg");
   border: 0;
 }
-
-.form-check-input[type=radio]:checked {
+.quiz-model-input .form-check-input[type=radio]:checked {
   --bs-form-check-bg-image: url("../images/icons/radio-checkbox-base.svg") !important;
   background-size: 18px !important;
   border: 0;
@@ -2629,6 +2631,7 @@ select.h-36.form-select {
   color: #1D2939;
   margin-right: 30px;
   font-weight: 500;
+  text-align: right;
 }
 .jobMain_panel .accordion-body p {
   font-size: 12px;
@@ -6361,6 +6364,8 @@ button#input-group-dropdown-1 {
   position: relative;
   outline: none;
   transition: all 0.2s ease-in-out;
+  margin-right: 2px;
+  margin-top: 0;
 }
 .custom-checkbox .form-check-input[type=checkbox]:checked {
   background-color: #EEF4FF;
@@ -6782,9 +6787,6 @@ button#input-group-dropdown-1 {
 
 .insights_tab .head_filterlist {
   box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.0509803922);
-}
-.insights_tab .head_filterlist li.active {
-  background-color: #f3f3f3;
 }
 .insights_tab .card-title {
   font-family: Inter;
@@ -7914,10 +7916,12 @@ path.recharts-rectangle.recharts-tooltip-cursor {
     font-size: 14px;
     font-weight: 600;
   }
-  .beharquiz_mdl .modal-dialog.modal-lg, .beharlasmnt_mdl .modal-dialog.modal-lg {
+  .beharquiz_mdl .modal-dialog.modal-lg,
+  .beharlasmnt_mdl .modal-dialog.modal-lg {
     margin: 0 !important;
   }
-  button.me-3.btn-light-outline-sm, .setlanguage {
+  button.me-3.btn-light-outline-sm,
+  .setlanguage {
     display: none !important;
   }
   .beharquiz_mdl .modal-header .att_count strong {
@@ -7955,10 +7959,12 @@ path.recharts-rectangle.recharts-tooltip-cursor {
     padding: 5px 10px;
     opacity: 1;
   }
-  .mlike-sugg, .lelike-sugg {
+  .mlike-sugg,
+  .lelike-sugg {
     display: none;
   }
-  .quiz_card .btn-down, .quiz_card .btn-up {
+  .quiz_card .btn-down,
+  .quiz_card .btn-up {
     padding: 8px 0;
     font-size: 16px;
   }
@@ -7969,31 +7975,43 @@ path.recharts-rectangle.recharts-tooltip-cursor {
     font-size: 16px;
     transform: translateY(0px);
   }
-  .quiz_card:hover img, .quiz_card.info-warring img, .quiz_card.info-select img {
+  .quiz_card:hover img,
+  .quiz_card.info-warring img,
+  .quiz_card.info-select img {
     transform: translateY(0);
   }
-  .quiz_card.info-select:hover .mlike-sugg_active, .quiz_card.info-warring:hover .lelike-sugg_active {
+  .quiz_card.info-select:hover .mlike-sugg_active,
+  .quiz_card.info-warring:hover .lelike-sugg_active {
     display: none;
   }
-  .quiz_card .btn-up, .instructions_dwr .ints_card .quiz-btns .btn-up {
+  .quiz_card .btn-up,
+  .instructions_dwr .ints_card .quiz-btns .btn-up {
     background: transparent;
     border: 2px solid #8098F9;
     color: #2D3282;
   }
-  .quiz_card .btn-down, .instructions_dwr .ints_card .quiz-btns .btn-down {
+  .quiz_card .btn-down,
+  .instructions_dwr .ints_card .quiz-btns .btn-down {
     border: 2px solid #FEC84B;
     background: transparent;
     color: #7A2E0E;
   }
-  .quiz_card.info-warring .btn-down, .quiz_card.info-select .btn-down, .instructions_dwr .ints_card.lelike_select .btn-down, .instructions_dwr .ints_card.mlike_select .btn-down {
+  .quiz_card.info-warring .btn-down,
+  .quiz_card.info-select .btn-down,
+  .instructions_dwr .ints_card.lelike_select .btn-down,
+  .instructions_dwr .ints_card.mlike_select .btn-down {
     border: 0;
     background: #FEC84B;
   }
-  .quiz_card.info-warring .btn-up, .quiz_card.info-select .btn-up, .instructions_dwr .ints_card.mlike_select .btn-up, .instructions_dwr .ints_card.lelike_select .btn-up {
+  .quiz_card.info-warring .btn-up,
+  .quiz_card.info-select .btn-up,
+  .instructions_dwr .ints_card.mlike_select .btn-up,
+  .instructions_dwr .ints_card.lelike_select .btn-up {
     background: #8098F9;
     border: 0;
   }
-  .quiz_card.info-select h4, .quiz_card.info-warring h4 {
+  .quiz_card.info-select h4,
+  .quiz_card.info-warring h4 {
     font-size: 16px;
     transform: translateY(0);
   }
@@ -8092,7 +8110,8 @@ path.recharts-rectangle.recharts-tooltip-cursor {
     position: relative;
     border: solid 2px #fff;
   }
-  .instructions_dwr .ints_card .quiz-btns .btn-down, .instructions_dwr .ints_card .quiz-btns .btn-up {
+  .instructions_dwr .ints_card .quiz-btns .btn-down,
+  .instructions_dwr .ints_card .quiz-btns .btn-up {
     font-size: 16px;
     height: 40px;
     padding: 0 10px;
