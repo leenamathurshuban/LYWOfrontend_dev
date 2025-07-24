@@ -37,7 +37,7 @@ const ApplicantStatusGraph = ({ InsightsGraphData }) => {
                     margin={{ top: 20, right: 20, left: 20, bottom: 20 }}
                     barCategoryGap={20}
                 >
-                    <XAxis type="number" tick={{ fontSize: 12 }} domain={[0, 200]} tickLine={false} axisLine={false} />
+                    <XAxis type="number" tick={{ fontSize: 12 }} ticks={[0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200]} domain={[0, 200]} tickLine={false} axisLine={false} />
                     <YAxis
                         type="category"
                         dataKey="name"
