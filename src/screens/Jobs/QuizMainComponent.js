@@ -67,6 +67,8 @@ import DragDrop from "../../images/icons/dragdrop-bullet.svg";
 
 const QuizMainComponent = (item) => {
 
+  
+
   const { id } = useParams();
   const jobData = useLocation();
 
@@ -96,10 +98,17 @@ const QuizMainComponent = (item) => {
   // offcanvas
 
   const [show, setShow] = useState(false);
+
+
+   const [showQuestion, setShowQuestion] = useState(false);
+  
   const [showInstruction, setShowInstruction] = useState(false);
   const [showHeader, setshowHeader] = useState(false);
 
   const [showSave, setshowSave] = useState(false);
+
+
+  
 
 
   // 
@@ -134,8 +143,8 @@ const QuizMainComponent = (item) => {
 
   // offcanvas
 
-  const questionClose = () => setShow(false);
-  const questionShow = () => setShow(true);
+  const questionClose = () => setShowQuestion(false);
+  const questionShow = () => setShowQuestion(true);
 
 
 
@@ -1185,7 +1194,7 @@ const QuizMainComponent = (item) => {
 
           {/* mobile component  */}
 
-          <Offcanvas className="question-popup p-0" show={show} onHide={questionClose} placement="bottom" >
+          <Offcanvas className="question-popup p-0" show={showQuestion} onHide={questionClose} placement="bottom" >
             <Offcanvas.Body>
               <div className="question-book slick-mumber-dot">
                 <p>Section 1</p>

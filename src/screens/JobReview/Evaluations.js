@@ -353,6 +353,8 @@ const Evaluations = ({ show, handleClose, assetJob, setAssetJob, localAssetJob, 
                                         {assetJob.length > 0 ? (
                                             assetJob.map((item, index) => (
                                                 <tr>
+                                                    <td></td>
+
                                                     {item?.unSelect && (
                                                         <td style={{ cursor: "pointer" }}>
                                                             <img src={DragDrop} alt="" draggable
@@ -374,7 +376,7 @@ const Evaluations = ({ show, handleClose, assetJob, setAssetJob, localAssetJob, 
                                                                 <option value="3">Three</option>
                                                             </Form.Select> */}
                                                             <Select
-                                                                className="select-sm w-120 ms-2 react_selectbox"
+                                                                className=" w-120 ms-2 react_selectbox"
                                                                 options={PassCriteriaOption}
                                                                 value={PassCriteriaOption.find((opt) => opt.value === item?.pass_criteria)}
                                                                 onChange={(e) => {                                                                
@@ -392,7 +394,7 @@ const Evaluations = ({ show, handleClose, assetJob, setAssetJob, localAssetJob, 
                                                                 <option value="3">Three</option>
                                                             </Form.Select> */}
                                                             <Select
-                                                                className="select-sm w-120 ms-2 react_selectbox"
+                                                                className=" w-120 ms-2 react_selectbox"
                                                                 options={PassCriteriaOption}
                                                                 value={PassCriteriaOption.find((opt) => opt.value === item?.fixed_time)}
                                                                 onChange={(e) => {                                                                
@@ -404,7 +406,15 @@ const Evaluations = ({ show, handleClose, assetJob, setAssetJob, localAssetJob, 
                                                         <td>
                                                             <button type="button" className="btn-transpant" onClick={() => handleDeleteRow(item)}><img src={deleteDark} alt="" /></button>
                                                         </td>
-                                                    )}
+                                                    )}  
+
+                                                   
+                                                        <td>
+                                                <button type="button" className="btn-transpant"><img src={deleteDark} alt="" /></button>
+                                            </td>
+                                                    
+
+
                                                 </tr>
                                             )))
                                             : (

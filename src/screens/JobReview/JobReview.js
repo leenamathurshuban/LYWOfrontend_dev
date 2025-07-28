@@ -61,6 +61,8 @@ import SkillGraphComponent from "./GraphChart/SkillsGraph";
 import IndustryExperienceChart from "./GraphChart/IndustryExperience";
 import ExperienceGraphComponent from "./GraphChart/ExperienceGraph";
 import CustomerChartComponent from "./GraphChart/CustomerChart";
+import AssetOverAllGraphComponent from "./GraphChart/AssetOverallGraph";
+import { transformOverallAndSectionData } from "../../utils/assetgraphLogic";
 const JobReview = () => {
     const codeSnippet = `class WorkloadTracker:
     def __init__(self):
@@ -154,6 +156,8 @@ tracker.show_tasks()
     const [reviewEventKey, setReviewEventKey] = useState('first')
     const [personalityAll, setPersonalityAll] = useState()
     const [InsightsGraphData, setInsightsGraphData] = useState({})
+    const [mode, setMode] = useState(false); // 'overall' | 'section'
+    const [ids,setIds] = useState([])
     const [payloadList, setPayloadList] = useState({
         roles: [],
         skills: [],
@@ -468,7 +472,7 @@ tracker.show_tasks()
                 const matchedBehaviours = updatedBehaviourResponse.filter(item =>
                     personalityKeys.includes(item.behaviour_type_name)
                 );
-                setPersonalityAll(matchedBehaviours)                
+                setPersonalityAll(matchedBehaviours)
                 if (Array.isArray(response?.data?.response?.asset_job)) {
                     setAssetJob(response?.data?.response?.asset_job)
                     const allSections = response.data.response.asset_job.map((item) => ({
@@ -869,6 +873,15 @@ tracker.show_tasks()
             return matchSection
         }
     }
+    const handleSwitchgraph=(index)=>{
+        if(!ids.includes(index)){
+            setIds([...ids,index])
+        }else{
+            const filter = ids.filter((cv)=>cv!=index)
+            setIds(filter)
+        }
+    }
+    const AssetGraphData = transformOverallAndSectionData(InsightsGraphData?.asset_data?.length > 0 ? InsightsGraphData?.asset_data : [])
     // console.log(assignmentReviewList)
     // console.log('section', sectionWiseData)
     // console.log(questionWiseData)
@@ -876,6 +889,7 @@ tracker.show_tasks()
     console.log(groupParameterList)
     console.log(groupParameterId)
     console.log(ListData)
+    console.log(mode)
     return (
         <>
             <Sidebar />
@@ -890,7 +904,7 @@ tracker.show_tasks()
                 <Container fluid className="bg-white">
                     <Row>
                         <Col md={6} className="d-flex justify-content-between align-items-center">
-                            <h6 class="my-3 ps-4 pagetitle" style={{'textTransform':"capitalize"}} ><i class="fa fa-suitcase text-primery me-2"></i>{jobDetails?.job_title}<img src={angleDown} className="ms-2 w-14" /></h6>
+                            <h6 class="my-3 ps-4 pagetitle" style={{ 'textTransform': "capitalize" }} ><i class="fa fa-suitcase text-primery me-2"></i>{jobDetails?.job_title}<img src={angleDown} className="ms-2 w-14" /></h6>
                         </Col>
                         <Col md={6} className="d-flex justify-content-end align-items-center">
                             <button type="button" onClick={handleShow} className="icon_btnlink btn btn-primary"><img src={EvaluaBtn} className="me-1" />Evaluations</button>
@@ -1659,11 +1673,11 @@ tracker.show_tasks()
                                                         </Card>
                                                     </Col>
                                                 ))}
-                                                <Col md={3}>
+                                                <Col md="auto flex-fill">
                                                     <Card className="status_cardpanel">
                                                         <Card.Body className="text-center d-flex align-items-center justify-content-center flex-column">
-                                                            <button type="button" className="btn btn-light-primery" onClick={handleShow}><i className="fa fa-plus me-2"></i>Add Evaluation</button>
-                                                            <button type="button" className="btn btn-white mt-2"><i className="fa fa-plus me-2"></i>Finalise Selection</button>
+                                                            <button type="button" className="btn btn-light-primery w-100" onClick={handleShow}><i className="fa fa-plus me-2"></i>Add Evaluation</button>
+                                                            <button type="button" className="btn btn-white mt-2 w-100"><i className="fa fa-plus me-2"></i>Finalise Selection</button>
                                                         </Card.Body>
                                                     </Card>
                                                 </Col>
@@ -2034,16 +2048,73 @@ tracker.show_tasks()
                                         </Col>
                                     </Row>
                                     <Row>
-                                        {InsightsGraphData?.custom_question_data?.map((item,index) => (
+                                        {InsightsGraphData?.custom_question_data?.map((item, index) => (
                                             <Col md={6}>
                                                 <Card className="shadow-sm border-0 grap_card mt-3 radius-sm avialable-candinate-chart">
                                                     <Card.Body>
                                                         <div className="d-flex align-items-center justify-content-between">
-                                                            <Card.Title>{index==0 && "Custom Questions"}</Card.Title>
+                                                            <Card.Title>{index == 0 && "Custom Questions"}</Card.Title>
                                                             <button className="btn-icon"><img src={CopyBtn} alt="" /></button>
                                                         </div>
                                                         <div className="chart_warp">
                                                             <CustomerChartComponent InsightsGraphData={item} index={index} />
+                                                        </div>
+                                                    </Card.Body>
+                                                </Card>
+                                            </Col>
+                                        ))}
+                                    </Row>
+                                    <Row>
+                                        {AssetGraphData?.map((item, index) => (
+                                            <Col md={6}>
+                                                <Card className="shadow-sm border-0 grap_card mt-3 radius-sm experience-chart">
+                                                    <Card.Body>
+                                                        
+                                                            
+                                                                <Row className="align-items-center">
+                                                                    <Col md="6">
+                                                                      {item?.title}
+                                                                       
+                                                                    </Col>
+
+                                                                    <Col md="6">
+                                                                    <div className="d-flex justify-content-between align-items-center">
+                                                                     <Form.Label
+                                                                            className="mb-0"
+                                                                            style={{ color: ids.includes(index) ? "grey" : "black", }}
+                                                                        >
+                                                                            {!ids.includes(index) ? "Over all Score" : "Over all Score"}
+                                                                        </Form.Label>
+
+                                                                        <Form.Check
+                                                                            type="switch"
+                                                                            id="custom-switch"
+                                                                            // checked={isYes?.CurrentlyWorkingToggle}
+                                                                            // onChange={() => setMode(!mode)}
+                                                                            onChange={()=>handleSwitchgraph(index)}
+                                                                        />
+
+                                                                         <Form.Label
+                                                                            className="mb-0"
+                                                                            style={{ color: ids.includes(index) ? "black" : "grey", }}
+                                                                        >
+                                                                            {ids.includes(index) ? "Section wise Scores" : "Section wise Scores"}
+                                                                        </Form.Label>
+
+                                                                        <button className="btn-icon"><img src={CopyBtn} alt="" /></button>
+                                                                   </div>
+                                                                    </Col>
+
+                                                                   
+                                                                </Row>
+                                                            
+                                                        
+                                                        <div className="chart_warp">
+                                                            <AssetOverAllGraphComponent
+                                                                key={index}
+                                                                overallData={item.overallData}
+                                                                sectionWiseData={item.sectionWiseData}
+                                                                sectionNames={item.sectionNames} idsMode={ids.includes(index)} />
                                                         </div>
                                                     </Card.Body>
                                                 </Card>

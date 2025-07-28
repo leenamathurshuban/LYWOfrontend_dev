@@ -609,7 +609,7 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, jobDetails
                                                     </Col>
                                                 ))}
                                             </div>
-                                            <div className="educational-card">
+                                            <div className="educational-card job-list-skill">
                                                 <div className="custom-card">
                                                     <div className='ctm-cardheader'>
                                                         <h6>{selectedGroup?.heading}</h6>
@@ -646,7 +646,7 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, jobDetails
                                                                     </span>
                                                                 ))}
                                                                 {item?.name === '' && (
-                                                                    <p>-------------------or------------------</p>
+                                                                    <p className='spacing-or-line mb-0' >OR</p>
                                                                 )}
                                                                 {item?.date && (
                                                                     <Form.Control

@@ -2263,7 +2263,7 @@ select.h-36.form-select {
 .filter_item .filter_itemlist .form-check-input {
   border-color: #d0d5dd;
   position: relative;
-  top: -1px;
+  top: 4px;
   border-radius: 4px;
 }
 .filter_item .filter_itemlist .form-check-label {
@@ -2985,6 +2985,7 @@ select.h-36.form-select {
 }
 .starttag_box .stagbox_head h6 {
   font-size: 13px;
+  text-transform: capitalize;
 }
 
 .stag_list .stag_item {
@@ -6366,6 +6367,7 @@ button#input-group-dropdown-1 {
   transition: all 0.2s ease-in-out;
   margin-right: 2px;
   margin-top: 0;
+  top: 0px;
 }
 .custom-checkbox .form-check-input[type=checkbox]:checked {
   background-color: #EEF4FF;
@@ -7741,11 +7743,68 @@ path.recharts-rectangle.recharts-tooltip-cursor {
 }
 
 .experience-chart .recharts-text.recharts-label {
-  transform: rotate(-90deg) translate(-40%, -38%);
+  transform: rotate(-90deg) translate(-35%, -38%);
+  font-size: 12px;
 }
 
 .area-ofeducation-chart .recharts-default-legend {
   max-width: 300px;
+}
+
+.creategroup_drawer {
+  max-width: 70%;
+  width: 100% !important;
+}
+.creategroup_drawer .btn-close {
+  border: 1px solid #666;
+  padding: 4px;
+  font-size: 8px;
+  border-radius: 4px;
+}
+.creategroup_drawer .form-check-input:checked[type=checkbox] {
+  --bs-form-check-bg-image: url("../images/icons/Checkbox-base.svg");
+  border: 0;
+}
+.creategroup_drawer .spacing-or-line {
+  max-width: 260px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 14px;
+  position: relative;
+}
+.creategroup_drawer .spacing-or-line::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 0;
+  height: 1px;
+  background: #D7D7D7;
+  width: 102px;
+}
+.creategroup_drawer .spacing-or-line::after {
+  content: "";
+  position: absolute;
+  top: 10px;
+  right: 0;
+  height: 1px;
+  background: #D7D7D7;
+  width: 102px;
+}
+
+.starttag_box:has(.spacing-or-line) {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.stagbox_head + .stag_list .spacing-or-line {
+  border: none;
+}
+
+/* Remove parent box styling */
+.stagbox_head + .stag_list {
+  border: none;
+  background: transparent;
 }
 
 @media screen and (max-width: 767px) {

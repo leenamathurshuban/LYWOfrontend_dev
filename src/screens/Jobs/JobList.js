@@ -619,15 +619,15 @@ const JobsList = () => {
                   <tbody>
                     {VisiblejobData.map((item) => (
                       <tr>
-                        <td>
+                        <td >
                           <Form.Check
                             className="custom-checkbox me-2_5"
-                            name="group1"
+                            name="group1" 
                             type="checkbox"
                             onChange={() => handleMultiple(item)}
                             checked={activeIds.includes(item.uid) || closeIds.includes(item.uid)}
                           />
-                          <span className="font-weight-600" onClick={() => navigate(`/JobReview/${item?.uid}`)} style={{ cursor: "pointer" }}>
+                          <span className="font-weight-600" onClick={() => navigate(`/JobReview/${item?.uid}`)} style={{ cursor: "pointer", textTransform:"capitalize" }}>
                             {item?.job_title}
                           </span>
                         </td>
