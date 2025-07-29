@@ -185,7 +185,7 @@ const InstructionAssignment = ({ showinstruction, handleInstructionClose, handle
                 animation={false}
                 size="lg"
                 backdrop={false}
-                className="beharlasmnt_mdl dddddd"
+                className="beharlasmnt_mdl dddddd assignment-model"
             >
                 <Modal.Header closeButton>
                     <img src={logoIcon} className="me-4" />
@@ -208,19 +208,19 @@ const InstructionAssignment = ({ showinstruction, handleInstructionClose, handle
                                         <Col md={12} className="mb-3">
                                             <h6>Important Instructions:</h6>
                                         </Col>
-                                        <Col md={2} className="quiz_infocrd">
+                                        <Col md={2} className="quiz_infocrd col-6">
                                             <span className="infocrd_icon"><img src={AIIcons} /></span>
                                             <h6>AI not Allowed</h6>
                                         </Col>
-                                        <Col md={2} className="quiz_infocrd">
+                                        <Col md={2} className="quiz_infocrd col-6">
                                             <span className="infocrd_icon"><img src={sectionIcon} /></span>
                                             <h6>5 Sections</h6>
                                         </Col>
-                                        <Col md={2} className="quiz_infocrd">
+                                        <Col md={2} className="quiz_infocrd col-6">
                                             <span className="infocrd_icon"><img src={questionIcon} /></span>
                                             <h6>50 Questions</h6>
                                         </Col>
-                                        <Col md={2} className="quiz_infocrd">
+                                        <Col md={2} className="quiz_infocrd col-6">
                                             <span className="infocrd_icon"><img src={mandatoryIcon} /></span>
                                             <h6>No Mandatory</h6>
                                         </Col>
@@ -232,7 +232,7 @@ const InstructionAssignment = ({ showinstruction, handleInstructionClose, handle
                                             <span className="infocrd_icon"><img src={ngtscoringIcon} /></span>
                                             <h6> Negative Scoring</h6>
                                         </Col> */}
-                                        <Col md={2} className="quiz_infocrd">
+                                        <Col md={2} className="quiz_infocrd col-12">
                                             <span className="infocrd_icon"><img src={saveProssIcon} /></span>
                                             <h6> No Save and Return</h6>
                                         </Col>

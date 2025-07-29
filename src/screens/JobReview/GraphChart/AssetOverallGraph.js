@@ -113,16 +113,18 @@ export default function AssetOverAllGraphComponent({ key,overallData, sectionWis
                     </BarChart>
                 )}
             </ResponsiveContainer> */}
+            
 
             <ResponsiveContainer width="100%" height="100%">
                 {!idsMode ? (
+                    
                     <BarChart data={overallData} barCategoryGap="40%" barSize={15}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis tick={{fontSize:12}} dataKey="range" />
                         <YAxis tick={{fontSize:12}} label={{ value: "Number of Applicants", angle: -90, position: "insideLeft" }} ticks={[0, 50, 100, 150, 200, 250]} />
                         <Tooltip />
                         <Legend />
-                        <Bar tick={{fontSize:12}} dataKey="applicants" fill="#ffba3a" name="Overall Score" radius={[4, 4, 0, 0]} />
+                        <Bar tick={{fontSize:12}} dataKey="applicants" fill="#ffba3a" name="Overall Score" radius={[4, 4, 0, 0]}   />
                     </BarChart>
                 ) : (
                     <BarChart data={sectionWiseData} barCategoryGap="40%" barSize={10}>

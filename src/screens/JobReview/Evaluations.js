@@ -22,6 +22,7 @@ import { EvalationAssestDetails, EvalationAssestList, UpdateJobForm } from '../.
 import { removeToken } from '../../helpers/helper';
 import { useNavigate } from 'react-router-dom';
 import fileIcon from "../../images/icons/file_icon.svg";
+import Dragdropicon from "../../images/icons/dragdrop-bullet.svg"
 import quizIcon from "../../images/icons/quiz_icon.svg";
 import faRingicon from "../../images/icons/Ring.svg";
 import threeDots from "../../images/icons/dots-vertical_icon.svg";
@@ -353,7 +354,11 @@ const Evaluations = ({ show, handleClose, assetJob, setAssetJob, localAssetJob, 
                                         {assetJob.length > 0 ? (
                                             assetJob.map((item, index) => (
                                                 <tr>
-                                                    <td></td>
+                                                    <td>
+                                                        <button className='drag-icon' style={{border: '0', marginRight: '4px'}} >
+                                                            <img src={Dragdropicon} className='img-fluid' alt='Dragdropicon' />
+                                                        </button>
+                                                    </td>
 
                                                     {item?.unSelect && (
                                                         <td style={{ cursor: "pointer" }}>
@@ -379,8 +384,8 @@ const Evaluations = ({ show, handleClose, assetJob, setAssetJob, localAssetJob, 
                                                                 className=" w-120 ms-2 react_selectbox"
                                                                 options={PassCriteriaOption}
                                                                 value={PassCriteriaOption.find((opt) => opt.value === item?.pass_criteria)}
-                                                                onChange={(e) => {                                                                
-                                                                }}                                                                 
+                                                                onChange={(e) => {
+                                                                }}
                                                             />
                                                         </div>
                                                     </td>
@@ -397,8 +402,8 @@ const Evaluations = ({ show, handleClose, assetJob, setAssetJob, localAssetJob, 
                                                                 className=" w-120 ms-2 react_selectbox"
                                                                 options={PassCriteriaOption}
                                                                 value={PassCriteriaOption.find((opt) => opt.value === item?.fixed_time)}
-                                                                onChange={(e) => {                                                                
-                                                                }}                                                                 
+                                                                onChange={(e) => {
+                                                                }}
                                                             />
                                                         </div>
                                                     </td>
@@ -406,13 +411,13 @@ const Evaluations = ({ show, handleClose, assetJob, setAssetJob, localAssetJob, 
                                                         <td>
                                                             <button type="button" className="btn-transpant" onClick={() => handleDeleteRow(item)}><img src={deleteDark} alt="" /></button>
                                                         </td>
-                                                    )}  
+                                                    )}
 
-                                                   
-                                                        <td>
-                                                <button type="button" className="btn-transpant"><img src={deleteDark} alt="" /></button>
-                                            </td>
-                                                    
+
+                                                    <td>
+                                                        <button type="button" className="btn-transpant"><img src={deleteDark} alt="" /></button>
+                                                    </td>
+
 
 
                                                 </tr>

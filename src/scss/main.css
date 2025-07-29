@@ -7807,6 +7807,26 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   background: transparent;
 }
 
+.assets-chart .recharts-legend-item {
+  border: 1px solid #ccc;
+  line-height: 10px;
+  padding: 4px 6px 6px;
+  border-radius: 30px;
+  font-weight: 500;
+}
+.assets-chart .recharts-legend-item svg {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.mobile-menu-active .instruction-popup {
+  z-index: 1111;
+}
+.mobile-menu-active .modal-backdrop.show {
+  z-index: 1111;
+}
+
 @media screen and (max-width: 767px) {
   .text-center-xs {
     text-align: center;
@@ -8277,6 +8297,18 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   .appcaint_head .app_rightinfo {
     flex: 0 0 100%;
   }
+  .assignment-model h5 {
+    font-size: 20px;
+  }
+  .assignment-model .bg-white.rounded.p-5.shadow-md.col-md-12 {
+    padding: 1.5rem !important;
+  }
+  .assignment-model .quiz_infocrd {
+    margin-top: 30px;
+  }
+  .custome_file.file_attcbtn {
+    flex-direction: column;
+  }
 }
 @media screen and (min-width: 1200px) {
   .table-responsive {
@@ -8286,9 +8318,6 @@ path.recharts-rectangle.recharts-tooltip-cursor {
     display: none;
   }
   .verify-box-mobile .verify-btn {
-    display: none;
-  }
-  .mobile-footer-quiz {
     display: none;
   }
 }/*# sourceMappingURL=main.css.map */

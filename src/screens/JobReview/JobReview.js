@@ -2063,11 +2063,10 @@ tracker.show_tasks()
                                                 </Card>
                                             </Col>
                                         ))}
-                                    </Row>
-                                    <Row>
-                                        {AssetGraphData?.map((item, index) => (
+
+                                          {AssetGraphData?.map((item, index) => (
                                             <Col md={6}>
-                                                <Card className="shadow-sm border-0 grap_card mt-3 radius-sm experience-chart">
+                                                <Card className="shadow-sm border-0 grap_card mt-3 radius-sm experience-chart assets-chart">
                                                     <Card.Body>
                                                         
                                                             
@@ -2121,6 +2120,9 @@ tracker.show_tasks()
                                             </Col>
                                         ))}
                                     </Row>
+                                    {/* <Row>
+                                      
+                                    </Row> */}
                                 </Tab.Pane>
                                 {/* <Tab.Pane eventKey="second">Second tab content</Tab.Pane> */}
                                 <Tab.Pane eventKey="third">

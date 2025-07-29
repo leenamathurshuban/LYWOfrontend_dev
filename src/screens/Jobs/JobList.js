@@ -156,7 +156,7 @@ const JobsList = () => {
     setIsLoading(true);
 
     // Base API URL
-    //  let url = `https://bittrend.shubansoftware.com/assets-api/job-list-api/?page=1&limit=2000&search=${SerachList}`
+      // let url = `https://bittrend.shubansoftware.com/assets-api/job-list-api/?page=1&limit=2000&search=${SerachList}`
     let url = `https://bittrend.shubansoftware.com/assets-api/job-list-by-company-api/${companyInfo?.uid}/`
     try {
       const response = await JobList(url);

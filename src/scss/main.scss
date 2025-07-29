@@ -9375,6 +9375,40 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   
 }
 
+.assets-chart{
+
+  .recharts-legend-item {
+    border: 1px solid #ccc;
+    line-height: 10px;
+    padding: 4px 6px 6px;
+    border-radius: 30px;
+    font-weight: 500;
+
+    svg{
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+}
+
+}
+
+
+.mobile-menu-active{
+
+  .instruction-popup{
+    z-index: 1111;
+  }
+
+  .modal-backdrop.show {
+    z-index: 1111;
+}
+
+
+} 
+
+
+
 // responsive
 
 @media screen and (max-width:767px) {
@@ -10059,6 +10093,31 @@ path.recharts-rectangle.recharts-tooltip-cursor {
     flex: 0 0 100%;
   }
 
+
+.assignment-model {
+
+  h5{
+    font-size: 20px;
+  }
+
+  .bg-white.rounded.p-5.shadow-md.col-md-12 {
+    padding: 1.5rem !important;
+
+    
+  }
+
+  .quiz_infocrd{
+    margin-top: 30px;
+  }
+
+
+}
+
+
+.custome_file.file_attcbtn{
+  flex-direction: column;
+}
+
 }
 
 
@@ -10075,8 +10134,8 @@ path.recharts-rectangle.recharts-tooltip-cursor {
     display: none;
   }
 
-  .mobile-footer-quiz {
-    display: none;
-  }
+  // .mobile-footer-quiz {
+  //   display: none;
+  // }
 
 }

@@ -126,7 +126,7 @@ const EducationLevelGraph = ({ InsightsGraphData }) => {
                          <YAxis
                             type="category"
                             dataKey="name"
-                            width={140}
+                            width={230}
                             tickLine={false}
                             axisLine={false}
                             tick={({ x, y, payload }) => {
@@ -142,7 +142,7 @@ const EducationLevelGraph = ({ InsightsGraphData }) => {
                                 for (let i = 1; i < words.length; i++) {
                                     const testLine = currentLine + ' ' + words[i];
                                     // Estimate text width using approx char width (you can tweak 7)
-                                    if (testLine.length * 7 < 200) {
+                                    if (testLine.length * 7 < 380) {
                                         currentLine = testLine;
                                     } else {
                                         lines.push(currentLine);
@@ -161,7 +161,7 @@ const EducationLevelGraph = ({ InsightsGraphData }) => {
                                         // fontWeight={600}
                                     >
                                         {lines.map((line, index) => (
-                                            <tspan key={index} x={x - 220} dy={index === 0 ? 5 : 15}>
+                                            <tspan key={index} x={x - 320} dy={index === 0 ? 5 : 15}>
                                                 {line}
                                             </tspan>
                                         ))}
