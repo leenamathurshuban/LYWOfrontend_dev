@@ -7820,10 +7820,11 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   border-radius: 50%;
 }
 
-.mobile-menu-active .instruction-popup {
+.mobile-menu-active .instruction-popup, .mobile-menu-active .question-popup {
   z-index: 1111;
+  transition: 0.5s;
 }
-.mobile-menu-active .modal-backdrop.show {
+.mobile-menu-active .offcanvas-backdrop, .mobile-menu-active .modal-backdrop {
   z-index: 1111;
 }
 
@@ -8276,7 +8277,6 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   }
   .quizDev_model .queLeft_panel {
     position: relative;
-    display: none;
   }
   .quiz_progress {
     display: none !important;
@@ -8318,6 +8318,9 @@ path.recharts-rectangle.recharts-tooltip-cursor {
     display: none;
   }
   .verify-box-mobile .verify-btn {
+    display: none;
+  }
+  .mobile-footer-quiz {
     display: none;
   }
 }/*# sourceMappingURL=main.css.map */

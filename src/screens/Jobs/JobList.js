@@ -156,8 +156,8 @@ const JobsList = () => {
     setIsLoading(true);
 
     // Base API URL
-      // let url = `https://bittrend.shubansoftware.com/assets-api/job-list-api/?page=1&limit=2000&search=${SerachList}`
-    let url = `https://bittrend.shubansoftware.com/assets-api/job-list-by-company-api/${companyInfo?.uid}/`
+    // let url = `https://bittrend.shubansoftware.com/assets-api/job-list-api/?page=1&limit=2000&search=${SerachList}`
+    let url = `https://bittrend.shubansoftware.com/assets-api/job-list-by-company-api/${companyInfo?.uid}/?page=1&limit=2000&search=${SerachList}`
     try {
       const response = await JobList(url);
       setIsLoading(false);
@@ -200,11 +200,11 @@ const JobsList = () => {
 
   useEffect(() => {
     // JobListApi();
-    JobListbyCompanyApi()
+    JobListbyCompanyApi("")
   }, []);
-  useEffect(()=>{
-    JobListbyCompanyApi()
-  },[companyInfo])
+  useEffect(() => {
+    JobListbyCompanyApi("")
+  }, [companyInfo])
 
   useEffect(() => {
     if (SerachList || !modal.MoreFilterModal) {
@@ -622,12 +622,12 @@ const JobsList = () => {
                         <td >
                           <Form.Check
                             className="custom-checkbox me-2_5"
-                            name="group1" 
+                            name="group1"
                             type="checkbox"
                             onChange={() => handleMultiple(item)}
                             checked={activeIds.includes(item.uid) || closeIds.includes(item.uid)}
                           />
-                          <span className="font-weight-600" onClick={() => navigate(`/JobReview/${item?.uid}`)} style={{ cursor: "pointer", textTransform:"capitalize" }}>
+                          <span className="font-weight-600" onClick={() => navigate(`/JobReview/${item?.uid}`)} style={{ cursor: "pointer", textTransform: "capitalize" }}>
                             {item?.job_title}
                           </span>
                         </td>

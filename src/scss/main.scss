@@ -9396,13 +9396,20 @@ path.recharts-rectangle.recharts-tooltip-cursor {
 
 .mobile-menu-active{
 
-  .instruction-popup{
+  .instruction-popup, .question-popup{
+    z-index: 1111;
+    transition: .5s;
+  }
+
+  .offcanvas-backdrop, .modal-backdrop{
     z-index: 1111;
   }
 
-  .modal-backdrop.show {
-    z-index: 1111;
-}
+
+
+//   .modal-backdrop.show {
+//     z-index: 1111;
+// }
 
 
 } 
@@ -10059,7 +10066,7 @@ path.recharts-rectangle.recharts-tooltip-cursor {
 
   .quizDev_model .queLeft_panel {
     position: relative;
-    display: none;
+    // display: none;
 
   }
 
@@ -10134,8 +10141,8 @@ path.recharts-rectangle.recharts-tooltip-cursor {
     display: none;
   }
 
-  // .mobile-footer-quiz {
-  //   display: none;
-  // }
+  .mobile-footer-quiz {
+    display: none;
+  }
 
 }

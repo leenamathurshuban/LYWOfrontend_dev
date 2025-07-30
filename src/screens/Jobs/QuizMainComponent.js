@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import {
   Accordion,
@@ -67,7 +67,7 @@ import DragDrop from "../../images/icons/dragdrop-bullet.svg";
 
 const QuizMainComponent = (item) => {
 
-  
+
 
   const { id } = useParams();
   const jobData = useLocation();
@@ -97,18 +97,26 @@ const QuizMainComponent = (item) => {
 
   // offcanvas
 
+
   const [show, setShow] = useState(false);
 
 
-   const [showQuestion, setShowQuestion] = useState(false);
-  
+  const [showBackdrop, setShowBackdrop] = useState(false);
+  const [isBodyClassActive, setIsBodyClassActive] = useState(false);
+
+  const modalRef = useRef(null);
+  const mobileFooterRef = useRef(null);
+
+
+  const [showQuestion, setShowQuestion] = useState(false);
+
   const [showInstruction, setShowInstruction] = useState(false);
   const [showHeader, setshowHeader] = useState(false);
 
   const [showSave, setshowSave] = useState(false);
 
 
-  
+
 
 
   // 
@@ -159,6 +167,29 @@ const QuizMainComponent = (item) => {
   const SaveClose = () => setshowSave(false);
 
 
+
+  // 
+
+  const handleClickOutside = (event) => {
+    // Check if click is outside both modal and footer buttons
+    if (
+      modalRef.current &&
+      !modalRef.current.contains(event.target) &&
+      (mobileFooterRef.current && !mobileFooterRef.current.contains(event.target))
+    ) {
+      // Keep the modal open but add backdrop
+      document.body.classList.add('mobile-menu-active');
+      setShowBackdrop(true);
+    }
+  };
+
+  if (isBodyClassActive) {
+    document.addEventListener('mousedown', handleClickOutside);
+    document.body.classList.add('mobile-menu-active');
+  } else {
+    document.body.classList.remove('mobile-menu-active');
+    document.removeEventListener('mousedown', handleClickOutside);
+  }
 
 
   // ----
@@ -622,7 +653,7 @@ const QuizMainComponent = (item) => {
         <Modal.Body className="p-0">
           <Tab.Container id="left-tabs-example" defaultActiveKey="first">
             <Row className="justify-content-center">
-              <Col md={3} lg={2} className="queLeft_panel pe-0">
+              <Col md={3} lg={2} className="queLeft_panel mobile-hide pe-0">
                 <div className="p-3">
                   {/* <Form.Select
                     aria-label="Default select example"
@@ -1194,7 +1225,14 @@ const QuizMainComponent = (item) => {
 
           {/* mobile component  */}
 
-          <Offcanvas className="question-popup p-0" show={showQuestion} onHide={questionClose} placement="bottom" >
+          <Offcanvas
+            className="question-popup p-0"
+            show={showQuestion}
+            onHide={() => {
+              setIsBodyClassActive(false);
+              questionClose();
+            }}
+            placement="bottom" >
             <Offcanvas.Body>
               <div className="question-book slick-mumber-dot">
                 <p>Section 1</p>
@@ -1282,7 +1320,10 @@ const QuizMainComponent = (item) => {
           <Offcanvas
             className="instruction-popup queRight_panel p-0"
             show={showInstruction}
-            onHide={instructionClose}
+            onHide={() => {
+              setIsBodyClassActive(false);
+              instructionClose();
+            }}
             placement="bottom"
           >
             <Offcanvas.Body>
@@ -1347,7 +1388,11 @@ const QuizMainComponent = (item) => {
           <Offcanvas
             className="instruction-popup "
             show={showHeader}
-            onHide={HeaderClose}
+            onHide={() => {
+              setIsBodyClassActive(false);
+              HeaderClose();
+            }}
+
             placement="bottom"
           >
             <Offcanvas.Body>
@@ -1362,12 +1407,15 @@ const QuizMainComponent = (item) => {
           <Modal
             className="instruction-popup "
             show={showSave}
-            onHide={SaveClose} 
-            centered           
+            onHide={() => {
+              setIsBodyClassActive(false);
+              SaveClose();
+            }}
+            centered
           >
             <Modal.Body>
               <Modal.Header closeButton>
-                
+
               </Modal.Header>
               <Modal.Body className="text-center">
                 <h6 className="mb-2">Are you sure you want to exit?</h6>
@@ -1390,7 +1438,10 @@ const QuizMainComponent = (item) => {
 
           <ul className="mobile-footer-quiz">
             <li>
-              <button onClick={HeaderShow}>
+              <button className="mobile-btn-footer" onClick={() => {
+                HeaderShow();
+                setIsBodyClassActive(!isBodyClassActive); // Toggle the state
+              }}>
                 <img src={Headericn} className="img-fluid" alt="Header icon" />
                 <p>
                   Header</p>
@@ -1398,7 +1449,10 @@ const QuizMainComponent = (item) => {
             </li>
 
             <li>
-              <button onClick={questionShow}>
+              <button className="mobile-btn-footer" onClick={() => {
+                questionShow();
+                setIsBodyClassActive(!isBodyClassActive);
+              }}>
                 <img src={gridicn} className="img-fluid" alt="Question icon" />
                 <p>  Question</p>
               </button>
@@ -1406,14 +1460,20 @@ const QuizMainComponent = (item) => {
 
 
             <li>
-              <button onClick={instructionShow}>
+              <button className="mobile-btn-footer" onClick={() => {
+                instructionShow();
+                setIsBodyClassActive(!isBodyClassActive);
+              }}>
                 <img src={instructionicn} className="img-fluid" alt="Header icon" />
                 <p>    Instructions </p>
               </button>
             </li>
 
             <li>
-              <button onClick={SaveShow}>
+              <button className="mobile-btn-footer" onClick={() => {
+                SaveShow();
+                setIsBodyClassActive(!isBodyClassActive);
+              }}>
                 <img src={saveicn} className="img-fluid" alt="Header icon" />
                 <p>      Save & Exit </p>
               </button>

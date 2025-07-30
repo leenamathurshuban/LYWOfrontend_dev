@@ -278,7 +278,7 @@ const AreaEducationChart = ({ InsightsGraphData }) => {
     const legendHeight = Math.min(500, dataLength * 22); // 22px per item
 
     return (
-        <div style={{ width: "100%", height: 330 }}>
+        <div style={{ width: "100%", height: 400 }}>
             <ResponsiveContainer>
                 <PieChart>
                     <Pie

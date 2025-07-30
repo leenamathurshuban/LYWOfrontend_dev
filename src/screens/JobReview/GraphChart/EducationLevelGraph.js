@@ -108,7 +108,7 @@ const EducationLevelGraph = ({ InsightsGraphData }) => {
     })) : [];
     return (
         <>
-            <div style={{ width: "100%", height: 330 }}>
+            <div style={{ width: "100%", height: 400 }}>
                 <ResponsiveContainer>
                     <BarChart
                         layout="vertical"
@@ -181,7 +181,7 @@ const EducationLevelGraph = ({ InsightsGraphData }) => {
                                 position="right"
                                 content={({ x, y, value }) => (
                                     <text
-                                    x={x + 400}  // adjust to push label further right
+                                    x={x + 300}  // adjust to push label further right
                                     y={y + 12}   // adjust vertical centering
                                     fontSize={12} // smaller font size
                                     fill="#444"

@@ -138,7 +138,11 @@ const AssignmentComponent = (item) => {
 
     // 
     // Add this state and effect to your component
+    const [showBackdrop, setShowBackdrop] = useState(false);
     const [isBodyClassActive, setIsBodyClassActive] = useState(false);
+
+    const modalRef = useRef(null);
+    const mobileFooterRef = useRef(null);
 
     const [showQuestion, setShowQuestion] = useState(false);
 
@@ -217,19 +221,26 @@ const AssignmentComponent = (item) => {
 
     // 
 
-    useEffect(() => {
-        if (isBodyClassActive) {
+    const handleClickOutside = (event) => {
+        // Check if click is outside both modal and footer buttons
+        if (
+            modalRef.current &&
+            !modalRef.current.contains(event.target) &&
+            (mobileFooterRef.current && !mobileFooterRef.current.contains(event.target))
+        ) {
+            // Keep the modal open but add backdrop
             document.body.classList.add('mobile-menu-active');
-        } else {
-            document.body.classList.remove('mobile-menu-active');
+            setShowBackdrop(true);
         }
+    };
 
-        // Cleanup on unmount
-        return () => {
-            document.body.classList.remove('mobile-menu-active');
-        };
-    }, [isBodyClassActive]);
-
+    if (isBodyClassActive) {
+        document.addEventListener('mousedown', handleClickOutside);
+        document.body.classList.add('mobile-menu-active');
+    } else {
+        document.body.classList.remove('mobile-menu-active');
+        document.removeEventListener('mousedown', handleClickOutside);
+    }
 
 
     // 
@@ -802,7 +813,7 @@ const AssignmentComponent = (item) => {
                 <Modal.Body className="p-0">
                     <Tab.Container id="left-tabs-example" defaultActiveKey="first">
                         <Row className="justify-content-center">
-                            <Col md={3} lg={2} className="queLeft_panel pe-0">
+                            <Col md={3} lg={2} className="queLeft_panel mobile-hide pe-0">
                                 <div className="p-3">
                                     {/* <Form.Select
                                         aria-label="Default select example"
@@ -985,7 +996,7 @@ const AssignmentComponent = (item) => {
                                                                             >
                                                                                 <img className="cloud_icon" src={cloudUpload} />
                                                                                 <strong className="text-primery">Click to upload</strong>
-                                                                                {fileName[`${Val?.id}-${item?.id}`] ? '' : QuizData[`${Val?.id}-${item?.id}-file`] ? '' : 'or drag and drop'}
+                                                                                <span className="ms-2">{fileName[`${Val?.id}-${item?.id}`] ? '' : QuizData[`${Val?.id}-${item?.id}-file`] ? '' : 'or drag and drop'}</span>
                                                                             </label>
                                                                             <input
                                                                                 type="file"
@@ -1057,7 +1068,7 @@ const AssignmentComponent = (item) => {
                                                                             htmlFor={`file-upload[${quesIndex}-${sectionIndex}]`}
                                                                         >
                                                                             <img className="cloud_icon" src={cloudUpload} />
-                                                                            <strong className="text-primery">Click to upload</strong> or drag and drop
+                                                                            <strong className="text-primery me-2">Click to upload</strong>
                                                                             {fileName[`${Val?.id}-${item?.id}`] ? '' : QuizData[`${Val?.id}-${item?.id}-file`] ? '' : 'or drag and drop'}
                                                                         </label>
                                                                         <input
@@ -1510,86 +1521,87 @@ const AssignmentComponent = (item) => {
                     {/* mobile modal */}
                     {/* mobile component  */}
 
-                    <Offcanvas className="question-popup p-0" show={showQuestion} onHide={questionClose} placement="bottom" >
-                        <Offcanvas.Body>
-                            <div className="question-book slick-mumber-dot">
-                                <p>Section 1</p>
-                                <ul className='number-dot-pagination'>
-                                    <li className='complete' >1</li>
-                                    <li className='complete'>2</li>
-                                    <li className='complete'>3</li>
-                                    <li className='complete'>4</li>
-                                    <li>5</li>
-                                    <li>6</li>
-                                    <li>7</li>
-                                    <li>8</li>
-                                    <li>9</li>
-
-                                    <li>10</li>
-
-                                    <li>11</li>
-                                    <li>12</li>
-                                    <li>13</li>
-                                    <li>14</li>
-                                    <li>15</li>
-                                    <li>16</li>
-                                    <li>17</li>
-                                    <li>18</li>
-                                    <li>19</li>
-
-                                    <li>20</li>
-
-
-                                    <li>21</li>
-                                    <li>22</li>
-                                    <li>23</li>
-                                    <li>24</li>
-                                    <li>25</li>
-                                    <li>26</li>
-                                    <li>27</li>
-                                    <li>28</li>
-
-                                </ul>
-
-
-                                <p>Section 2</p>
-                                <ul className='number-dot-pagination'>
-                                    <li className='complete' >1</li>
-                                    <li className='complete'>2</li>
-                                    <li className='complete'>3</li>
-                                    <li className='complete'>4</li>
-                                    <li>5</li>
-                                    <li>6</li>
-                                    <li>7</li>
-                                    <li>8</li>
-                                    <li>9</li>
-
-                                    <li>10</li>
-
-                                    <li>11</li>
-                                    <li>12</li>
-                                    <li>13</li>
-                                    <li>14</li>
-                                    <li>15</li>
-                                    <li>16</li>
-                                    <li>17</li>
-                                    <li>18</li>
-                                    <li>19</li>
-
-                                    <li>20</li>
-
-
-                                    <li>21</li>
-                                    <li>22</li>
-                                    <li>23</li>
-                                    <li>24</li>
-                                    <li>25</li>
-                                    <li>26</li>
-                                    <li>27</li>
-                                    <li>28</li>
-
-                                </ul>
+                    <Offcanvas
+                        className="question-popup p-0"
+                        show={showQuestion}
+                        onHide={() => {
+                            setIsBodyClassActive(false);
+                            questionClose();
+                        }}
+                        placement="bottom" >
+                        <Offcanvas.Body className="queLeft_panel">
+                            <div className="p-3 ">
+                                {/* <Form.Select
+                                        aria-label="Default select example"
+                                        className="h-36"
+                                        onChange={handleSelectChange}
+                                        value={selectedSection}
+                                    >
+                                        <option value="" disabled hidden>Show All</option>
+                                        {EvaluationListDetails[0]?.section_asset?.map((item) => (
+                                            <option key={item.id} value={item.id}>
+                                                {item.section_title}
+                                            </option>
+                                        ))}
+                                    </Form.Select> */}
+                                <Select
+                                    options={optionEvl}
+                                    value={optionEvl?.find((opt) => opt?.value === sectionIcon)}
+                                    onChange={handleSelectChange}
+                                    className="h-36 react_selectbox"
+                                />
                             </div>
+                            <Nav variant="pills" className="flex-column">
+                                <Nav.Item>
+                                    <Nav.Link
+                                    //href="#qes_section02"
+                                    // eventKey="second"
+                                    >
+                                        {EvaluationListDetails[0]?.section_asset?.map(
+                                            (item, sectionIndex) => (
+                                                <>
+                                                    <h5>{item.section_title}</h5>
+                                                    <p>
+                                                        {item.total_number_of_question} Q’s{" "}
+                                                        {item.total_questions_point} points ~
+                                                        {item.total_question_time}
+                                                        {item?.section_pass_criteria
+                                                            ? item?.section_pass_criteria
+                                                            : null}
+                                                    </p>
+
+                                                    <ul className="qs_numlist">
+                                                        {item.question_section.map(
+                                                            (quesItem, quesIndex) => (
+                                                                <li
+                                                                    key={quesItem.id}
+                                                                    style={{ cursor: "pointer" }}
+                                                                    // onClick={() =>
+                                                                    //   handleListItemClick(quesItem.id)
+
+                                                                    // }
+                                                                    onClick={() =>
+                                                                        handleListItemClick(
+                                                                            // `${sectionIndex}-${quesIndex}`
+                                                                            `${quesIndex}-${sectionIndex}`
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    <span className={handleAnsweredQuizActive(item?.id, quesItem?.id)}>
+                                                                        {markReview[`${item?.id}-${quesItem?.id}`]?.length ? (<span className="dot"></span>) : ''}
+                                                                        {/* <span className="dot"></span> */}
+                                                                        {quesIndex + 1}
+                                                                    </span>
+                                                                </li>
+                                                            )
+                                                        )}
+                                                    </ul>
+                                                </>
+                                            )
+                                        )}
+                                    </Nav.Link>
+                                </Nav.Item>
+                            </Nav>
                         </Offcanvas.Body>
                     </Offcanvas>
 
@@ -1598,11 +1610,14 @@ const AssignmentComponent = (item) => {
                     <Offcanvas
                         className="instruction-popup queRight_panel p-0"
                         show={showInstruction}
-                        onHide={instructionClose}
+                        onHide={() => {
+                            setIsBodyClassActive(false);
+                            instructionClose();
+                        }}
                         placement="bottom"
                     >
                         <Offcanvas.Body>
-                            <div className="instruction-book">
+                            <div className="queRight_panel-mobile">
                                 <h5>Instructions</h5>
                                 <ul className="bullet_list mb-0">
                                     {EvaluationListDetails.map((list, quesIndex) => (
@@ -1663,11 +1678,14 @@ const AssignmentComponent = (item) => {
                     <Offcanvas
                         className="instruction-popup "
                         show={showHeader}
-                        onHide={HeaderClose}
+                        onHide={() => {
+                            setIsBodyClassActive(false);
+                            HeaderClose();
+                        }}
                         placement="bottom"
                     >
                         <Offcanvas.Body>
-                            <div class="que_head"><div class="d-flex justify-content-between mb-2"><h6> Chemical Competence questionnaire</h6><span>Questions<strong class="font-weight-600 ms-1">2</strong></span></div><p class="text-sm">This section contains questions related to chemical processes required for the job. Please answer all questions to increase your chance of being shortlisted. Please ensure that you have a piece of paper and a calculator as some questions might require you to do some very basic math.</p><strong class="qus_number">1</strong></div>
+                            <div class="que_head"><div class="d-flex justify-content-between mb-2"><h6> Process specific</h6><span>Questions<strong class="font-weight-600 ms-1">3</strong></span></div><p class="text-sm">This section contains questions related to process you typically follow. We wish to understand your better.</p><strong class="qus_number">1</strong></div>
                         </Offcanvas.Body>
                     </Offcanvas>
 
@@ -1678,23 +1696,27 @@ const AssignmentComponent = (item) => {
                     <Modal
                         className="instruction-popup "
                         show={showSave}
-                        onHide={SaveClose}
+                        onHide={() => {
+                            setIsBodyClassActive(false);
+                            SaveClose();
+                        }}
                         centered
                     >
                         <Modal.Body>
                             <Modal.Header closeButton>
-
+                                <img src={logoIcon} className="me-4" />
+                                <Modal.Title>Quiz for {jobdetail?.job_title}</Modal.Title>
                             </Modal.Header>
-                            <Modal.Body className="text-center">
-                                <h6 className="mb-2">Are you sure you want to exit?</h6>
-                                <p>We recommend completing the quiz in a single session.</p>
+                            <Modal.Body>
+                                <div className="bg-white p-2 rounded text-center">
+                                    <h5 className="mb-3">You have submitted the evaluation on {assestStatus?.asset_completion_date}.</h5>
+                                    <p className="disc-text">Thank you for your time and efforts. The Quiz for {jobdetail?.job_title} will be used to evaluate your readiness for the job position. The next round of recruitment process will open for you based on your performance.</p>
+                                    
+                                </div>
                             </Modal.Body>
-                            <Modal.Footer className="justify-content-center">
-                                <Button variant="light" onClick={SaveClose}>
-                                    Continue with Test
-                                </Button>
+                            <Modal.Footer className="justify-content-center" >
                                 <Button variant="primary" onClick={handleClose}>
-                                    Save & Exit
+                                    Return to Job
                                 </Button>
                             </Modal.Footer>
                         </Modal.Body>
@@ -1744,9 +1766,21 @@ const AssignmentComponent = (item) => {
                             </button>
                         </li>
 
+
+                        {/* <li>
+                            <button className="mobile-btn-footer" onClick={() => {
+                                handleSubmit();
+                                setIsBodyClassActive(!isBodyClassActive);
+                            }}>
+                                <img src={saveicn} className="img-fluid" alt="Header icon" />
+                                <p>      Save & Exit </p>
+                            </button>
+                        </li> */}
+
                     </ul>
                 </Modal.Body>
                 <Modal.Footer className="quiz-modelfooter">
+                    <Button variant="Light" className="btn-outline-secondary me-3" style={{padding: "8px 16px"}} >Save as Draft</Button>
                     <Button variant="primary" onClick={handleSubmit}>
                         Submit
                     </Button>
@@ -1769,8 +1803,7 @@ const AssignmentComponent = (item) => {
                     <div className="bg-white p-5 rounded text-center">
                         <h5 className="mb-3">You have submitted the evaluation on {assestStatus?.asset_completion_date}.</h5>
                         <p className="disc-text">Thank you for your time and efforts. The Quiz for {jobdetail?.job_title} will be used to evaluate your readiness for the job position. The next round of recruitment process will open for you based on your performance.</p>
-                        <Row className="mt-5 justify-content-center">
-                        </Row>
+                     
                     </div>
                 </Modal.Body>
                 <Modal.Footer>

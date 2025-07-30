@@ -35,7 +35,7 @@ import {
 } from "../../services/provider";
 import sectionIcon from "../../images/icons/stack-1-dark.svg";
 import questionIcon from "../../images/icons/dotpoints-02-dark.svg";
-import mandatoryIcon from "../../images/icons/mandatory_icon.svg";
+import mandatoryIcon from "../../images/icons/not-mandotary.png";
 import timerIcon from "../../images/icons/timer-default-dark.svg";
 import saveProssIcon from "../../images/icons/no-save-ret-dark.svg";
 import ngtscoringIcon from "../../images/icons/no-dark.svg";
