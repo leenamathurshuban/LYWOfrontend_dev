@@ -119,18 +119,18 @@ export default function AssetOverAllGraphComponent({ key,overallData, sectionWis
                 {!idsMode ? (
                     
                     <BarChart data={overallData} barCategoryGap="40%" barSize={15}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis tick={{fontSize:12}} dataKey="range" />
-                        <YAxis tick={{fontSize:12}} label={{ value: "Number of Applicants", angle: -90, position: "insideLeft" }} ticks={[0, 50, 100, 150, 200, 250]} />
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                        <XAxis tick={{fontSize:12}} dataKey="range" axisLine={false} tickLine={false} />
+                        <YAxis tick={{fontSize:10}} label={{ value: "Number of Applicants", angle: -90, position: "insideLeft" }} ticks={[0, 50, 100, 150, 200, 250]} axisLine={false} tickLine={false} />
                         <Tooltip />
                         <Legend />
                         <Bar tick={{fontSize:12}} dataKey="applicants" fill="#ffba3a" name="Overall Score" radius={[4, 4, 0, 0]}   />
                     </BarChart>
                 ) : (
                     <BarChart data={sectionWiseData} barCategoryGap="40%" barSize={10}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis tick={{fontSize:12}} dataKey="range" />
-                        <YAxis  label={{ value: "Number of Applicants", angle: -90, position: "insideLeft" }} ticks={[0, 50, 100, 150, 200, 250]} tick={{fontSize:10}} />
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                        <XAxis tick={{fontSize:12}} dataKey="range" axisLine={false} tickLine={false} />
+                        <YAxis  label={{ value: "Number of Applicants", angle: -90, position: "insideLeft" }} ticks={[0, 50, 100, 150, 200, 250]} tick={{fontSize:10}} axisLine={false} tickLine={false} />
                         <Tooltip />
                         <Legend />
                         {sectionNames?.map((section, idx) => (

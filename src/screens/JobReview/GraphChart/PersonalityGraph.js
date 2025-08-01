@@ -17,7 +17,7 @@ const PersonalityGraph = ({InsightsGraphData,personalityAll}) => {
     return (
         <ResponsiveContainer width="100%" height={350}>
             <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 50 }}>
-                <CartesianGrid strokeDasharray="3 3" />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} />
                 <XAxis
                     dataKey="name"
                     interval={0}
@@ -35,8 +35,9 @@ const PersonalityGraph = ({InsightsGraphData,personalityAll}) => {
                         );
                     }}
                     axisLine={false}
+                    tickLine={false}
                 />
-                <YAxis domain={[0, 100]} ticks={[0, 20, 40, 60, 80, 100]} tick={{fontSize:12}} tickFormatter={(value) => `${value}%`} axisLine={false} />
+                <YAxis domain={[0, 100]} ticks={[0, 20, 40, 60, 80, 100]} tick={{fontSize:12}} tickFormatter={(value) => `${value}%`} axisLine={false} tickLine={false} />
                 <Tooltip />
                 <Bar
                     dataKey="value"

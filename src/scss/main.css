@@ -1424,6 +1424,59 @@ button.btn-link-muted svg {
   border: none;
 }
 
+.head-insight-filters {
+  display: flex;
+  justify-content: space-between;
+}
+.head-insight-filters .head_sortlist {
+  margin-bottom: 0;
+  padding-left: 0;
+  display: flex;
+}
+.head-insight-filters .head_sortlist li {
+  display: inline-flex;
+  padding: 0 4px;
+}
+.head-insight-filters .head_sortlist li > button, .head-insight-filters .head_sortlist li .dropdown-toggle {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #D0D5DD;
+  box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.0509803922);
+  border-radius: 6px;
+  background: #fff;
+}
+.head-insight-filters .head_sortlist li:last-child {
+  padding-right: 0;
+}
+.head-insight-filters .head_sortlist li .btn-action-reorder {
+  padding: 0;
+  border: 1px solid #D0D5DD !important;
+  background: #F2F4F7;
+}
+.head-insight-filters .reorder-doprodown-custom {
+  top: 50px;
+  inset: auto !important;
+}
+.head-insight-filters .reorder-doprodown-custom:before {
+  content: "";
+  position: absolute;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid #fff;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  top: -15px;
+  right: 6px;
+}
+.head-insight-filters .reorder-doprodown-custom .btn-primary {
+  display: flex;
+  max-width: 90%;
+  width: 100%;
+  justify-content: center;
+}
+
 .font-weight-600 {
   font-weight: 600;
 }
@@ -1477,13 +1530,12 @@ button.btn-link-muted svg {
 }
 
 .action_dropdown .dropdown-menu.show {
-  inset: inherit !important;
   border: none;
   box-shadow: 0 2px 7px rgba(0, 0, 0, 0.14);
   font-size: 12px;
   transform: inherit !important;
   right: 15px !important;
-  top: 30px !important;
+  top: 45px !important;
 }
 .action_dropdown .dropdown-menu.show .dropdown-item {
   color: #344054;
@@ -2005,7 +2057,7 @@ select.h-36.form-select {
 }
 .qus_crossed li img {
   position: relative;
-  width: 125px;
+  width: 56px;
   left: 20px;
   -o-object-fit: contain;
      object-fit: contain;

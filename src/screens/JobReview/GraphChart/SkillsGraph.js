@@ -53,7 +53,7 @@ const SkillGraphComponent = ({ InsightsGraphData }) => {
             <div style={{ minWidth: `${convertedData.length * 100}px` }}>
                 <ResponsiveContainer width="100%" height={350}>
                     <BarChart data={convertedData} margin={{ top: 20, right: 30, left: 20, bottom: 50 }}>
-                        <CartesianGrid strokeDasharray="3 3" />
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} />
                         <XAxis
                             dataKey="name"
                             interval={0}
@@ -72,8 +72,9 @@ const SkillGraphComponent = ({ InsightsGraphData }) => {
                                 );
                             }}
                             axisLine={false}
+                            tickLine={false}
                         />
-                        <YAxis tick={{ fontSize: 12 }} domain={[0, 250]} ticks={[0, 50, 100, 150, 200, 250]} tickFormatter={(value) => `${value}%`} axisLine={false} />
+                        <YAxis tick={{ fontSize: 12 }} domain={[0, 250]} ticks={[0, 50, 100, 150, 200, 250]} tickFormatter={(value) => `${value}%`} axisLine={false} tickLine={false} />
                         <Tooltip />
                         <Bar
                             dataKey="value"

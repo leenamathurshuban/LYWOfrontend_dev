@@ -57,7 +57,7 @@ import attachmentPin from "../../images/icons/attachment_pin.svg";
 import videoRecoder from "../../images/icons/video-recorder.svg";
 import CollapsedButton from "../../images/icons/CollapsedButton.svg";
 import NotAllowed from "../../images/icons/NotAllowed.svg";
-import matchIcon from "../../images/icons/match-icon.svg";
+import matchIcon from "../../images/icons/match-icon.png";
 
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { removeToken } from "../../helpers/helper";
@@ -882,7 +882,7 @@ const QuizMainComponent = (item) => {
                                         </ol>
                                       </Col>
                                       <Col>
-                                        <ul className="qus_crossed" style={{ listStyle: "none" }}>
+                                        <ul className="qus_crossed" >
                                           {QuizData[`${Val?.id}-${item?.id}`]?.flat()?.length ? QuizData[`${Val?.id}-${item?.id}`]?.flat()?.map(
                                             (data, index) => {
                                               const correctCapital =
@@ -891,7 +891,7 @@ const QuizMainComponent = (item) => {
                                                   ?.replace("'", "");
 
                                               return (
-                                                <li key={index}>
+                                                <li key={index} style={{ listStyle: "none" }}>
                                                   <div className="crossd_answarp">
                                                     {droppedIndex.includes(index) && droppedIndex.length <= 2 && (<img src={matchIcon} />)}
                                                     {droppedIndex.length > 2 && (<img src={matchIcon} />)}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
     Container, Row, Col, Tab, Nav, Card, Form, Button, InputGroup, Table, Offcanvas, Accordion, Badge, Stack, ProgressBar,
-    Dropdown
+    Dropdown, OverlayTrigger, Tooltip
 } from "react-bootstrap";
 import Select from "react-select";
 import Header from "../../components/Header";
@@ -12,6 +12,7 @@ import AutomatBtn from "../../images/icons/automations_icon.svg"
 import stopBtn from "../../images/icons/pause-circle-16x16.svg"
 import gridView from "../../images/icons/grid_icon.svg"
 import listView from "../../images/icons/list_icon.svg"
+import Dragableicn from "../../images/icons/dragable-six-dots.svg"
 import ApplicantStaChrt from "../../images/icons/Applicant_Status_chart.svg"
 import AvabCandite from "../../images/icons/aval_candi_grap.svg"
 import SaleryRange from "../../images/icons/salery_ranggrap.svg"
@@ -37,6 +38,14 @@ import ArrowDownDark from "../../images/icons/arrow-narrow-down-dark.svg";
 import ExpandButton from "../../images/icons/expand-03-primery.svg";
 import ArrowBack from "../../images/icons/arrowBack.svg";
 import ArrowNext from "../../images/icons/arrowNext.svg";
+
+
+import sorticn from "../../images/icons/switch-vertical-01.svg";
+import printicn from "../../images/icons/printer.svg";
+import downloadicn from "../../images/icons/download-b.svg";
+
+
+
 import { useParams } from "react-router-dom";
 import { ApplicationDeatilsApi, getAssetDataDetailsAPI, getJobAssignmentReview, getJobDetailsApi, getJobGroupParameterListAPI, getScreeningParameterDataAPI, insightsListAPI, jobApplicantUpdateAPI, postJobGroupParameterListByFetchAPI } from "../../services/provider";
 import Evaluations from "./Evaluations";
@@ -157,7 +166,7 @@ tracker.show_tasks()
     const [personalityAll, setPersonalityAll] = useState()
     const [InsightsGraphData, setInsightsGraphData] = useState({})
     const [mode, setMode] = useState(false); // 'overall' | 'section'
-    const [ids,setIds] = useState([])
+    const [ids, setIds] = useState([])
     const [payloadList, setPayloadList] = useState({
         roles: [],
         skills: [],
@@ -459,6 +468,9 @@ tracker.show_tasks()
         }
     }
 
+
+
+
     const getJobDetails = async (id) => {
         const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-api/${id}/`;
         try {
@@ -646,6 +658,15 @@ tracker.show_tasks()
             console.log(error)
         }
     }
+    // 
+    const renderTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props}>
+            Reorder widgets
+        </Tooltip>
+    );
+
+
+    // 
     useEffect(() => {
         getScreeningAPI(id)
         getJobAssignmentReviewAPI(id)
@@ -873,11 +894,11 @@ tracker.show_tasks()
             return matchSection
         }
     }
-    const handleSwitchgraph=(index)=>{
-        if(!ids.includes(index)){
-            setIds([...ids,index])
-        }else{
-            const filter = ids.filter((cv)=>cv!=index)
+    const handleSwitchgraph = (index) => {
+        if (!ids.includes(index)) {
+            setIds([...ids, index])
+        } else {
+            const filter = ids.filter((cv) => cv != index)
             setIds(filter)
         }
     }
@@ -1899,15 +1920,104 @@ tracker.show_tasks()
                                 <Tab.Pane eventKey="second" className="insights_tab">
                                     <Row>
                                         <Col md={12}>
-                                            <ul className="head_filterlist">
-                                                <li className="active">All Candidates</li>
-                                                <li>Quiz 1</li>
-                                                <li>Quiz 2</li>
-                                                <li>Assignment 1</li>
-                                                <li>Assignment 2</li>
-                                                <li>Final Short List</li>
-                                            </ul>
+                                            <div className="head-insight-filters">
+                                                <ul className="head_filterlist">
+                                                    <li className="active">All Candidates</li>
+                                                    <li>Quiz 1</li>
+                                                    <li>Quiz 2</li>
+                                                    <li>Assignment 1</li>
+                                                    <li>Assignment 2</li>
+                                                    <li>Final Short List</li>
+                                                </ul>
+
+                                                <ul className="head_sortlist">
+                                                    <li>
+                                                        <OverlayTrigger
+                                                            placement="left"
+                                                            delay={{ show: 250, hide: 400 }}
+                                                            overlay={renderTooltip}
+                                                        >
+                                                            <Dropdown className="action_dropdown">
+                                                                <Dropdown.Toggle
+                                                                    variant="success"
+                                                                    id="dropdown-basic"
+                                                                    className="btn-transpant btn-action-reorder"
+                                                                >
+                                                                    
+                                                                    
+                                                             <img src={sorticn} className="img-fluid" alt="Sort Icon" />
+
+
+                                                           
+
+                                                             </Dropdown.Toggle>
+                                                            
+                                                               
+                                                                <Dropdown.Menu className="reorder-doprodown-custom" >
+                                                                    <Dropdown.Item >
+                                                                       <img src={Dragableicn} className="imglfluid me-2" alt="Drag icon"/>
+                                                                        Applicant Status
+                                                                    </Dropdown.Item>
+
+                                                                       <Dropdown.Item >
+                                                                       <img src={Dragableicn} className="imglfluid me-2" alt="Drag icon"/>
+                                                                        Salary & Availability
+                                                                    </Dropdown.Item>
+
+                                                                       <Dropdown.Item >
+                                                                       <img src={Dragableicn} className="imglfluid me-2" alt="Drag icon"/>
+                                                                        Personality
+                                                                    </Dropdown.Item>
+
+                                                                       <Dropdown.Item >
+                                                                       <img src={Dragableicn} className="imglfluid me-2" alt="Drag icon"/>
+                                                                        Education
+                                                                    </Dropdown.Item>
+
+                                                                       <Dropdown.Item >
+                                                                       <img src={Dragableicn} className="imglfluid me-2" alt="Drag icon"/>
+                                                                        Skills
+                                                                    </Dropdown.Item>
+
+                                                                       <Dropdown.Item >
+                                                                       <img src={Dragableicn} className="imglfluid me-2" alt="Drag icon"/>
+                                                                        Experience
+                                                                    </Dropdown.Item>
+
+                                                                       <Dropdown.Item >
+                                                                       <img src={Dragableicn} className="imglfluid me-2" alt="Drag icon"/>
+                                                                        Custom Questions 
+                                                                    </Dropdown.Item>
+
+
+                                                                    <Dropdown.Item >
+                                                                       <img src={Dragableicn} className="imglfluid me-2" alt="Drag icon"/>
+                                                                        Assignments
+                                                                    </Dropdown.Item>
+
+
+                                                                    <button className="btn btn-md btn-primary mt-3 ms-auto me-auto">Apply</button>
+
+                                                                   
+
+
+
+                                                                    
+                                                                   
+                                                                </Dropdown.Menu>
+                                                            </Dropdown>
+                                                        </OverlayTrigger>
+                                                    </li>
+                                                    <li><button> <img src={printicn} className="img-fluid" alt="Print icon" />       </button></li>
+
+                                                    <li><button> <img src={downloadicn} className="img-fluid" alt="Download icon" />     </button></li>
+
+                                                </ul>
+                                            </div>
                                         </Col>
+
+
+
                                     </Row>
                                     <Row>
                                         <Col md={12}>
@@ -2064,50 +2174,50 @@ tracker.show_tasks()
                                             </Col>
                                         ))}
 
-                                          {AssetGraphData?.map((item, index) => (
+                                        {AssetGraphData?.map((item, index) => (
                                             <Col md={6}>
                                                 <Card className="shadow-sm border-0 grap_card mt-3 radius-sm experience-chart assets-chart">
                                                     <Card.Body>
-                                                        
-                                                            
-                                                                <Row className="align-items-center">
-                                                                    <Col md="6">
-                                                                      {item?.title}
-                                                                       
-                                                                    </Col>
 
-                                                                    <Col md="6">
-                                                                    <div className="d-flex justify-content-between align-items-center">
-                                                                     <Form.Label
-                                                                            className="mb-0"
-                                                                            style={{ color: ids.includes(index) ? "grey" : "black", }}
-                                                                        >
-                                                                            {!ids.includes(index) ? "Over all Score" : "Over all Score"}
-                                                                        </Form.Label>
 
-                                                                        <Form.Check
-                                                                            type="switch"
-                                                                            id="custom-switch"
-                                                                            // checked={isYes?.CurrentlyWorkingToggle}
-                                                                            // onChange={() => setMode(!mode)}
-                                                                            onChange={()=>handleSwitchgraph(index)}
-                                                                        />
+                                                        <Row className="align-items-center">
+                                                            <Col md="6">
+                                                                {item?.title}
 
-                                                                         <Form.Label
-                                                                            className="mb-0"
-                                                                            style={{ color: ids.includes(index) ? "black" : "grey", }}
-                                                                        >
-                                                                            {ids.includes(index) ? "Section wise Scores" : "Section wise Scores"}
-                                                                        </Form.Label>
+                                                            </Col>
 
-                                                                        <button className="btn-icon"><img src={CopyBtn} alt="" /></button>
-                                                                   </div>
-                                                                    </Col>
+                                                            <Col md="6">
+                                                                <div className="d-flex justify-content-between align-items-center">
+                                                                    <Form.Label
+                                                                        className="mb-0"
+                                                                        style={{ color: ids.includes(index) ? "grey" : "black", }}
+                                                                    >
+                                                                        {!ids.includes(index) ? "Over all Score" : "Over all Score"}
+                                                                    </Form.Label>
 
-                                                                   
-                                                                </Row>
-                                                            
-                                                        
+                                                                    <Form.Check
+                                                                        type="switch"
+                                                                        id="custom-switch"
+                                                                        // checked={isYes?.CurrentlyWorkingToggle}
+                                                                        // onChange={() => setMode(!mode)}
+                                                                        onChange={() => handleSwitchgraph(index)}
+                                                                    />
+
+                                                                    <Form.Label
+                                                                        className="mb-0"
+                                                                        style={{ color: ids.includes(index) ? "black" : "grey", }}
+                                                                    >
+                                                                        {ids.includes(index) ? "Section wise Scores" : "Section wise Scores"}
+                                                                    </Form.Label>
+
+                                                                    <button className="btn-icon"><img src={CopyBtn} alt="" /></button>
+                                                                </div>
+                                                            </Col>
+
+
+                                                        </Row>
+
+
                                                         <div className="chart_warp">
                                                             <AssetOverAllGraphComponent
                                                                 key={index}
@@ -2433,9 +2543,9 @@ tracker.show_tasks()
                         </Row>
                     </Tab.Container>
                 </Container>
-            </div>
+            </div >
             {/*======MORE FILTER======*/}
-            <Offcanvas
+            < Offcanvas
                 show={show}
                 onHide={handleClose}
                 backdrop={false}
@@ -2593,7 +2703,7 @@ tracker.show_tasks()
                         Apply
                     </Button>
                 </div>
-            </Offcanvas>
+            </Offcanvas >
 
             {/*======New Group======
             <Offcanvas
