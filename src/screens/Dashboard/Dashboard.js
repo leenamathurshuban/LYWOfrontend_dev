@@ -713,9 +713,9 @@ const Dashboard = () => {
                         <tbody>
                           {TotalData?.slice(0, visibleCount)?.map((item, index) => (
                             <tr>
-                              <td className="font-weight-600">{item?.job_title}<span className="count">({item?.total_applicant_count})</span></td>
+                              <td className="font-weight-600" style={{textTransform: 'capitalize'}} >{item?.job_title}<span className="count">({item?.total_applicant_count})</span></td>
                               <td>{item?.job_location?.location_name ? item?.job_location?.location_name : '-'}</td>
-                              <td>{item?.department}</td>
+                              <td style={{textTransform: 'capitalize'}} >{item?.department}</td>
                               <td>{calculateDays(item?.created_at)} days</td>
                               <td>{item?.total_applicant_count}</td>
                               <td>{getDynamicStatus(item, keyColumn)}</td>

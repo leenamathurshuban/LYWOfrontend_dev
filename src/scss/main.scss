@@ -9484,6 +9484,47 @@ path.recharts-rectangle.recharts-tooltip-cursor {
 } 
 
 
+.chat-module{
+
+    .card-title{
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 24px;
+        margin-bottom: 0;
+
+    }
+
+    .chat-tabs{
+      width: 100%;
+      justify-content: space-evenly;
+
+      li{
+        flex: 0 0 33.3%;
+        max-width: 33.3%;
+        display: inline-flex;
+        justify-content: center;
+
+        button{
+          border-left: 0;
+          border-top: 0;
+          border-right: 0;
+          font-size: 12px;
+          line-height: 18px;
+          color: #667085;
+          font-weight: 400;
+          width: 100%;
+        }
+        .active{
+          border-bottom: 2px solid #3538CD;
+          font-weight: 500;
+          color: #3538CD;
+        }
+       
+      }
+    }
+}
+
+
 
 // responsive
 

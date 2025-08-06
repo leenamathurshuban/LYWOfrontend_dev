@@ -123,18 +123,28 @@ tracker.show_tasks()
     };
     const [show, setShow] = useState(false);
     const [FilterApplicantShow, setFilterApplicantShow] = useState(false);
+
     const [reviewModal, setReviewModal] = useState(false);
+
+    const [answerModal, setAnswerModal] = useState(false);
+
+    const [selectedUser, setSelectedUser] = useState(null);
+
     const [groupModal, setGroupModal] = useState(false);
     const [groupParameterId, setGroupParameterId] = useState();
     const [paramUid, setParamUid] = useState()
     const [groupTitleName, setGroupTitleName] = useState("");
     const [candidateQuestionShow, setCandidateQuestionShow] = useState(false);
     const [candidateQuestionList, setCandidateQuestionList] = useState([])
+
     const handleReviewClose = () => {
         setReviewModal(false);
         setCandidateEmail('')
         setCandidateQuestionShow(false)
     };
+
+    const handleAnswerClose = () => setAnswerModal(false);
+
     const handleClose = () => setShow(false);
     const handleCloseGrpMdl = () => {
         setGroupModal(false)
@@ -165,7 +175,9 @@ tracker.show_tasks()
     const [reviewEventKey, setReviewEventKey] = useState('first')
     const [personalityAll, setPersonalityAll] = useState()
     const [InsightsGraphData, setInsightsGraphData] = useState({})
+
     const [mode, setMode] = useState(false); // 'overall' | 'section'
+
     const [ids, setIds] = useState([])
     const [payloadList, setPayloadList] = useState({
         roles: [],
@@ -707,10 +719,12 @@ tracker.show_tasks()
         setQuestionWiseData(obj)
         setQuestionWiseDuplicate(obj)
     }
+
     const handleReviewModal = (data) => {
         // setPopupData(data)
         setCurrentId(data?.id)
     }
+
     const handleEvaluated = () => {
         const duplicate = questionWiseDuplicate;
         const originalObject = duplicate;
@@ -720,6 +734,7 @@ tracker.show_tasks()
         };
         setQuestionWiseData(filteredData)
     }
+
     const handlePending = () => {
         const duplicate = questionWiseDuplicate;
         const originalObject = duplicate;
@@ -729,10 +744,10 @@ tracker.show_tasks()
         };
         setQuestionWiseData(filteredData)
     }
+
     const handleAllEvaiPend = () => {
         setQuestionWiseData(questionWiseDuplicate)
     }
-
 
     const getCurrentIndex = () => questionWiseData?.user_answer_question?.findIndex(item => item.id === currentId);
 
@@ -1943,67 +1958,67 @@ tracker.show_tasks()
                                                                     id="dropdown-basic"
                                                                     className="btn-transpant btn-action-reorder"
                                                                 >
-                                                                    
-                                                                    
-                                                             <img src={sorticn} className="img-fluid" alt="Sort Icon" />
 
 
-                                                           
+                                                                    <img src={sorticn} className="img-fluid" alt="Sort Icon" />
 
-                                                             </Dropdown.Toggle>
-                                                            
-                                                               
+
+
+
+                                                                </Dropdown.Toggle>
+
+
                                                                 <Dropdown.Menu className="reorder-doprodown-custom" >
                                                                     <Dropdown.Item >
-                                                                       <img src={Dragableicn} className="imglfluid me-2" alt="Drag icon"/>
+                                                                        <img src={Dragableicn} className="imglfluid me-2" alt="Drag icon" />
                                                                         Applicant Status
                                                                     </Dropdown.Item>
 
-                                                                       <Dropdown.Item >
-                                                                       <img src={Dragableicn} className="imglfluid me-2" alt="Drag icon"/>
+                                                                    <Dropdown.Item >
+                                                                        <img src={Dragableicn} className="imglfluid me-2" alt="Drag icon" />
                                                                         Salary & Availability
                                                                     </Dropdown.Item>
 
-                                                                       <Dropdown.Item >
-                                                                       <img src={Dragableicn} className="imglfluid me-2" alt="Drag icon"/>
+                                                                    <Dropdown.Item >
+                                                                        <img src={Dragableicn} className="imglfluid me-2" alt="Drag icon" />
                                                                         Personality
                                                                     </Dropdown.Item>
 
-                                                                       <Dropdown.Item >
-                                                                       <img src={Dragableicn} className="imglfluid me-2" alt="Drag icon"/>
+                                                                    <Dropdown.Item >
+                                                                        <img src={Dragableicn} className="imglfluid me-2" alt="Drag icon" />
                                                                         Education
                                                                     </Dropdown.Item>
 
-                                                                       <Dropdown.Item >
-                                                                       <img src={Dragableicn} className="imglfluid me-2" alt="Drag icon"/>
+                                                                    <Dropdown.Item >
+                                                                        <img src={Dragableicn} className="imglfluid me-2" alt="Drag icon" />
                                                                         Skills
                                                                     </Dropdown.Item>
 
-                                                                       <Dropdown.Item >
-                                                                       <img src={Dragableicn} className="imglfluid me-2" alt="Drag icon"/>
+                                                                    <Dropdown.Item >
+                                                                        <img src={Dragableicn} className="imglfluid me-2" alt="Drag icon" />
                                                                         Experience
                                                                     </Dropdown.Item>
 
-                                                                       <Dropdown.Item >
-                                                                       <img src={Dragableicn} className="imglfluid me-2" alt="Drag icon"/>
-                                                                        Custom Questions 
+                                                                    <Dropdown.Item >
+                                                                        <img src={Dragableicn} className="imglfluid me-2" alt="Drag icon" />
+                                                                        Custom Questions
                                                                     </Dropdown.Item>
 
 
                                                                     <Dropdown.Item >
-                                                                       <img src={Dragableicn} className="imglfluid me-2" alt="Drag icon"/>
+                                                                        <img src={Dragableicn} className="imglfluid me-2" alt="Drag icon" />
                                                                         Assignments
                                                                     </Dropdown.Item>
 
 
                                                                     <button className="btn btn-md btn-primary mt-3 ms-auto me-auto">Apply</button>
 
-                                                                   
 
 
 
-                                                                    
-                                                                   
+
+
+
                                                                 </Dropdown.Menu>
                                                             </Dropdown>
                                                         </OverlayTrigger>
@@ -2452,14 +2467,33 @@ tracker.show_tasks()
                                                         </Row>
                                                         <div className="all_anslist">
                                                             {questionWiseData?.user_answer_question?.map((user, index) => (
-                                                                <Card className="ans_card">
+                                                                <Card className="ans_card"  >
                                                                     <Card.Header className="p-0 pb-2 d-flex align-items-center justify-content-between">
-                                                                        <Card.Title>{user?.applicant?.user?.username}</Card.Title>
+
+                                                                        <Card.Title>
+                                                                            {user?.applicant?.user?.username}
+                                                                        </Card.Title>
+
                                                                         <div className="d-flex">
+
                                                                             <Ratting rating={rating} setRating={setRating} ID={user?.uid} getJobAssignmentReviewList={getJobAssignmentReviewList} questionWiseData={questionWiseData} />
-                                                                            <button onClick={() => handleReviewModal(user)} type="button" className="btn-transpant ms-4">
+
+                                                                            {/* <button onClick={() => handleReviewModal(user)} type="button" className="btn-transpant ms-4">
                                                                                 <img src={ExpandButton} alt="" />
-                                                                            </button>
+                                                                            </button> */}
+
+
+
+                                                                            <button
+                                                                                onClick={() => {
+                                                                                    setSelectedUser(user);
+                                                                                    setAnswerModal(true);  // New
+                                                                                }}
+                                                                                type="button" className="btn-transpant ms-4"
+                                                                                >
+                                                                                <img src={ExpandButton} alt="Expand" />
+                                                                                </button>
+
                                                                         </div>
                                                                     </Card.Header>
                                                                     <Card.Body className="px-0">
@@ -2484,6 +2518,9 @@ tracker.show_tasks()
                                                                     </Card.Body>
                                                                 </Card>
                                                             ))}
+
+
+
                                                             {/* <Card className="ans_card">
                                                                 <Card.Header className="p-0 pb-2 d-flex align-items-center justify-content-between">
                                                                     <Card.Title>Sndeep Kattamuri</Card.Title>
@@ -3171,9 +3208,12 @@ tracker.show_tasks()
                 getJobGroupParameterMethod={getFilterApplicantListBycandidateReview}
             />
             {/*======Answer======*/}
-            {/* <Offcanvas
-                show={reviewModal}
-                onHide={handleReviewClose}
+            <Offcanvas
+               show={answerModal}
+                onHide={() => {
+                    setAnswerModal(false);
+                    setSelectedUser(null);
+                }}
                 backdrop={false}
                 placement="end"
                 className="ansexp_drawer lg-drawer shadow-md border-0"
@@ -3183,6 +3223,7 @@ tracker.show_tasks()
                         Answer
                     </Offcanvas.Title>
                 </Offcanvas.Header>
+
                 <Offcanvas.Body className="ansexp_warp">
                     <div className="que_head">
                         <p class="text-sm">{questionWiseData?.question_title}</p>
@@ -3219,7 +3260,7 @@ tracker.show_tasks()
                         </Card.Body>
                     </Card>
                 </Offcanvas.Body>
-            </Offcanvas> */}
+            </Offcanvas>
             {/*======Applicant Profile======*/}
             <Offcanvas
                 show={reviewModal}

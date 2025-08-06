@@ -632,7 +632,7 @@ const JobsList = () => {
                           </span>
                         </td>
                         <td>{item?.job_location?.location_name}</td>
-                        <td>{item?.department}</td>
+                        <td style={{textTransform: 'capitalize'}} >{item?.department}</td>
                         <td>{item?.job_type}</td>
                         <td>{item?.workplace_type}</td>
                         <td>{item?.number_of_positions}</td>

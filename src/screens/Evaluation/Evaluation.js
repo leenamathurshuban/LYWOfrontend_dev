@@ -149,6 +149,9 @@ const Evalation = () => {
     }
   };
 
+
+
+
   const getPosition = (answer) => {
     const cleanAnswer = answer.replace(/['"]/g, " ").trim();
     const position =
@@ -215,6 +218,24 @@ const Evalation = () => {
       sectionElement.scrollIntoView({ behavior: "smooth" });
     }
   };
+
+
+    // custom style react select box
+
+ const customStyles = {
+  option: (provided, state) => ({
+    ...provided,
+    backgroundColor: state.isSelected
+      ? "#deebff"
+      : state.isFocused
+      ? "#deebff" // Color on hover
+      : "inherit",
+    color: state.isSelected ? "#000" : "black",
+    cursor: "pointer", // Optional: improves UX on hover
+  }),
+};
+
+
 
   const EvaluationTable = () => {
     return (
@@ -618,10 +639,12 @@ const Evalation = () => {
                     ))}
                   </Form.Select> */}
                   <Select
-                    className="h-36 react_selectbox"
+                    className="h-36 react_selectbox react_selectbox"
                     options={evalOption}
                     value={evalOption.find((opt) => opt.value === selectedSection)}                    
                     onChange={handleSelectChange}
+                    styles={customStyles}
+
                   />
                 </div>
                 <Nav variant="pills" className="flex-column">

@@ -24,6 +24,7 @@ import JobReview from "../screens/JobReview/JobReview";
 import JobReviewTest from "../screens/JobReview/JobReviewfirst";
 import QuizMainComponent from "../screens/Jobs/QuizMainComponent";
 import AssignmentComponent from "../screens/Jobs/AssignmentComponent";
+import GlobalChat from "../components/Chats/GlobalChat";
 
 
 export const router = createBrowserRouter([
@@ -137,6 +138,12 @@ export const router = createBrowserRouter([
       <ProtectedRoute element={<HelpChoose />} allowAuthenticated={false} />
     ),
   },
+    {
+    path: "/chats",
+    element: (
+      <ProtectedRoute element={<GlobalChat />} allowAuthenticated={false} />
+    ),
+  },  
   {
     path: "/Behavioural-Assessment",
     element: <Protected element={<BehaviouralAst />} allowAuthenticated={false} />,  // Only allow authenticated users here
