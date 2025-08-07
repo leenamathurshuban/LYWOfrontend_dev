@@ -1437,7 +1437,8 @@ button.btn-link-muted svg {
   display: inline-flex;
   padding: 0 4px;
 }
-.head-insight-filters .head_sortlist li > button, .head-insight-filters .head_sortlist li .dropdown-toggle {
+.head-insight-filters .head_sortlist li > button,
+.head-insight-filters .head_sortlist li .dropdown-toggle {
   width: 32px;
   height: 32px;
   display: flex;
@@ -7872,12 +7873,205 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   border-radius: 50%;
 }
 
-.mobile-menu-active .instruction-popup, .mobile-menu-active .question-popup {
+.mobile-menu-active .instruction-popup,
+.mobile-menu-active .question-popup {
   z-index: 1111;
   transition: 0.5s;
 }
-.mobile-menu-active .offcanvas-backdrop, .mobile-menu-active .modal-backdrop {
+.mobile-menu-active .offcanvas-backdrop,
+.mobile-menu-active .modal-backdrop {
   z-index: 1111;
+}
+
+.chat-module .card-header {
+  border-bottom: 0 !important;
+  padding-bottom: 0;
+}
+.chat-module .css-1u9des2-indicatorSeparator {
+  display: none;
+}
+.chat-module .card-title.h5 {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  margin-bottom: 0;
+}
+.chat-module .chat-tabs {
+  width: 100%;
+  justify-content: space-evenly;
+}
+.chat-module .chat-tabs li {
+  flex: 0 0 33.3%;
+  max-width: 33.3%;
+  display: inline-flex;
+  justify-content: center;
+}
+.chat-module .chat-tabs li button {
+  border-left: 0;
+  border-top: 0;
+  border-right: 0;
+  font-size: 12px;
+  line-height: 18px;
+  color: #667085;
+  font-weight: 400;
+  width: 100%;
+}
+.chat-module .chat-tabs li .active {
+  border-bottom: 2px solid #3538CD;
+  font-weight: 500;
+  color: #3538CD;
+}
+.chat-module .job-chat-form-card {
+  height: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.chat-module .job-chat-form-card .active {
+  border: 1px solid #D7E2FF !important;
+  background: #F5F8FF;
+  border-radius: 8px !important;
+}
+.chat-module .job-chat-form-card .card {
+  position: relative;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  cursor: pointer;
+  border-radius: 0;
+}
+.chat-module .job-chat-form-card .card .card-title {
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: #101828;
+}
+.chat-module .job-chat-form-card .card .fs-12 {
+  font-size: 12px;
+  line-height: 18px;
+}
+.chat-module .job-chat-form-card .card .fs-10 {
+  font-size: 10px;
+  line-height: 18px;
+  margin-bottom: 0;
+}
+.chat-module .job-chat-form-card .card .badge {
+  position: absolute;
+  right: 15px;
+  bottom: 14px;
+  background: #F9FAFB;
+  border: 1px solid #EAECF0;
+}
+.chat-module .tab-content {
+  height: 100%;
+}
+.chat-module .tab-content .tab-pane {
+  height: 100%;
+}
+.chat-module .tab-content .tab-pane .applicant-chats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  overflow-y: auto;
+}
+.chat-module .tab-content .filter-chats button {
+  width: 130px;
+}
+
+.chat-box-global .card-header .card-title {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.chat-box-global .card-header .card-text {
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+}
+.chat-box-global .card-body .message-chat-body {
+  background: #F2F4F7;
+  padding: 15px;
+  position: relative;
+  height: 100%;
+  max-height: 90vh;
+}
+.chat-box-global .card-body .message-chat-body .card {
+  border: 0;
+  max-width: 70%;
+}
+.chat-box-global .card-body .message-chat-body .date-msg {
+  text-align: center;
+  position: relative;
+  margin-bottom: 10px;
+  font-size: 10px;
+  font-weight: 400;
+}
+.chat-box-global .card-body .message-chat-body .date-msg:before {
+  content: "";
+  position: absolute;
+  bottom: 7px;
+  background: #989BA1;
+  height: 1px;
+  width: 100%;
+  left: 0;
+}
+.chat-box-global .card-body .message-chat-body .date-msg small {
+  background: #F2F4F7;
+  padding: 0 15px;
+  position: relative;
+}
+.chat-box-global .card-body .message-chat-body .card-body {
+  border: 0;
+}
+.chat-box-global .card-body .message-chat-body .card-body .card-text {
+  margin-bottom: 0;
+  font-size: 12px;
+}
+.chat-box-global .card-body .chat-form {
+  position: absolute;
+  bottom: 30px;
+  left: 30px;
+  right: 30px;
+}
+.chat-box-global .card-body .chat-form .input-group {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+}
+.chat-box-global .card-body .chat-form .input-group input {
+  max-width: 90%;
+  width: 100%;
+  border-radius: 8px !important;
+  box-shadow: 0px 2px 4px -2px rgba(16, 24, 40, 0.0588235294);
+  box-shadow: 0px 4px 8px -2px rgba(16, 24, 40, 0.1019607843);
+  border: 0 !important;
+  font-size: 12px !important;
+  padding-right: 50px;
+}
+.chat-box-global .card-body .chat-form .input-group button {
+  border-radius: 8px !important;
+}
+.chat-box-global .card-body .chat-form .input-group .attachment {
+  position: absolute;
+  right: 12%;
+  bottom: 10px;
+  border: 0;
+  background: transparent;
+  z-index: 11;
+}
+.chat-box-global .bg-sender {
+  background: #E0EAFF;
+  color: #344054;
+}
+.chat-box-global .bg-sender .card-text {
+  color: #344054 !important;
+}
+
+.new-filter-chat .form-check-input {
+  position: relative;
+  top: 3px !important;
 }
 
 @media screen and (max-width: 767px) {
