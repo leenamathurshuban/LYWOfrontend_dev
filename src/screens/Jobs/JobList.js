@@ -176,8 +176,8 @@ const JobsList = () => {
     setIsLoading(true);
 
     // Base API URL
-    let url = `https://bittrend.shubansoftware.com/assets-api/job-list-api/?page=1&limit=2000&job_type=${filtersList.job_type}&workplace_type=${filtersList.workplace_type}&job_location=${filtersList.job_location}&department=${filtersList.department}&job_status=${filtersList.job_status}&targate_hire_date=${filtersList.targate_hire_date}&posted_on=${filtersList.posted_on}`;
-
+    // let url = `https://bittrend.shubansoftware.com/assets-api/job-list-api/?page=1&limit=2000&job_type=${filtersList.job_type}&workplace_type=${filtersList.workplace_type}&job_location=${filtersList.job_location}&department=${filtersList.department}&job_status=${filtersList.job_status}&targate_hire_date=${filtersList.targate_hire_date}&posted_on=${filtersList.posted_on}`;
+    let url = `https://bittrend.shubansoftware.com/assets-api/job-list-by-company-api/${companyInfo?.uid}/?page=1&limit=2000&search=${SerachList}&job_type=${filtersList.job_type}&workplace_type=${filtersList.workplace_type}&job_location=${filtersList.job_location}&department=${filtersList.department}&job_status=${filtersList.job_status}&targate_hire_date=${filtersList.targate_hire_date}&posted_on=${filtersList.posted_on}`
     try {
       const response = await JobList(url);
       setIsLoading(false);

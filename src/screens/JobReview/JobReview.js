@@ -39,6 +39,11 @@ import ExpandButton from "../../images/icons/expand-03-primery.svg";
 import ArrowBack from "../../images/icons/arrowBack.svg";
 import ArrowNext from "../../images/icons/arrowNext.svg";
 
+import Barchart from "../../images/icons/bar-chart-07.svg";
+import Folder from "../../images/icons/folder.svg";
+import Messagedot from "../../images/icons/message-dots-circle-b.svg";
+import Review from "../../images/icons/review.svg";
+
 
 import sorticn from "../../images/icons/switch-vertical-01.svg";
 import printicn from "../../images/icons/printer.svg";
@@ -72,6 +77,9 @@ import ExperienceGraphComponent from "./GraphChart/ExperienceGraph";
 import CustomerChartComponent from "./GraphChart/CustomerChart";
 import AssetOverAllGraphComponent from "./GraphChart/AssetOverallGraph";
 import { transformOverallAndSectionData } from "../../utils/assetgraphLogic";
+
+import CandidateChat from "../../components/Chats/CandidateChat";
+
 const JobReview = () => {
     const codeSnippet = `class WorkloadTracker:
     def __init__(self):
@@ -955,13 +963,16 @@ tracker.show_tasks()
                             <Col md={6}>
                                 <Nav variant="pills" className="tab-underline">
                                     <Nav.Item>
-                                        <Nav.Link eventKey="first"><i class="far fa-folder"></i>Applications</Nav.Link>
+                                        <Nav.Link eventKey="first"><img src={Folder} className="img-fluid" alt="folder"/>  &nbsp;Applications</Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item>
-                                        <Nav.Link eventKey="second"><i class="fa fa-bar-chart"></i>Insights</Nav.Link>
+                                        <Nav.Link eventKey="second"><img src={Barchart} className="img-fluid" alt="folder"/> &nbsp; Insights</Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item>
-                                        <Nav.Link eventKey="third"><i class="far fa-commenting"></i>Review</Nav.Link>
+                                        <Nav.Link eventKey="third"><img src={Review} className="img-fluid" alt="folder"/>&nbsp;  Review</Nav.Link>
+                                    </Nav.Item>
+                                      <Nav.Item>
+                                        <Nav.Link eventKey="forth"><img src={Messagedot} className="img-fluid" alt="folder"/> &nbsp;  Chat</Nav.Link>
                                     </Nav.Item>
                                 </Nav>
 
@@ -2482,6 +2493,9 @@ tracker.show_tasks()
                                                                                 <img src={ExpandButton} alt="" />
                                                                             </button> */}
 
+                                                                            {/* reviewModal */}
+
+
 
 
                                                                             <button
@@ -2490,9 +2504,9 @@ tracker.show_tasks()
                                                                                     setAnswerModal(true);  // New
                                                                                 }}
                                                                                 type="button" className="btn-transpant ms-4"
-                                                                                >
+                                                                            >
                                                                                 <img src={ExpandButton} alt="Expand" />
-                                                                                </button>
+                                                                            </button>
 
                                                                         </div>
                                                                     </Card.Header>
@@ -2576,6 +2590,18 @@ tracker.show_tasks()
                                         </Card.Body>
                                     </Card>
                                 </Tab.Pane>
+
+                                 <Tab.Pane eventKey="forth">
+                                    <Card className="rounded border-0 review_card">
+                                        <div className="p-3 tab-content">
+                                        <div className="row g-0 "  >
+                                      <CandidateChat/>
+                                      </div>
+                                      </div>
+                                    </Card>
+                                </Tab.Pane>
+
+
                             </Tab.Content>
                         </Row>
                     </Tab.Container>
@@ -3209,7 +3235,7 @@ tracker.show_tasks()
             />
             {/*======Answer======*/}
             <Offcanvas
-               show={answerModal}
+                show={answerModal}
                 onHide={() => {
                     setAnswerModal(false);
                     setSelectedUser(null);

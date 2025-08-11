@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import {
   Breadcrumb,
   Button,
@@ -15,24 +16,19 @@ import {
   Accordion
 } from "react-bootstrap";
 
-
-
 import Select from "react-select";
-import Header from "../../components/Header";
-import Sidebar from "../../components/Sidebar";
+
 import Sendicon from "../../images/icons/send-01.svg"
 import attachcon from "../../images/icons/paperclip.svg"
 import filter from "../../images/icons/filter-lines.svg"
 
-export default function GlobalChat() {
+export default function CandidateChat() {
 
-  const [selectedJobIndex, setSelectedJobIndex] = useState(null);
-
+    
   const [show, filterShow] = useState(false);
 
   const handleClose = () => filterShow(false);
   const handleShow = () => filterShow(true);
-
 
   // custom style react select box
 
@@ -49,25 +45,22 @@ export default function GlobalChat() {
     }),
   };
 
-  const options = [
+      const options = [
     { value: 'Recentfirst', label: 'Recent First' },
     { value: 'Oldestfirst', label: 'Oldest First' },
 
   ]
+    
 
-  const jobs = [
-    { title: 'Figma Designer (10)', company: 'Cloudsportre', location: 'Remote - Future', status: 'Active' },
-    { title: 'UI Designer (5)', company: 'Cloudsportre', location: 'Remote - Future', status: 'Active' },
-    { title: 'Finance Manager (12)', company: 'Cloudsportre', location: 'Remote - Future', status: 'Active' },
-    { title: 'Python Developer (6)', company: 'Cloudsportre', location: 'Remote - Future', status: 'Active' },
-    { title: 'Senior React Developer (2)', company: 'Cloudsportre', location: 'Remote - Future', status: 'Active' },
-  ];
 
   const candidates = [
     { name: 'Alice Johnson', time: '3 days ago' },
     { name: 'Sandeep Kattamuri', time: '1 day ago' },
     { name: 'Alice Johnson', time: '5 hours ago' },
     { name: 'Sandeep Kattamuri', time: '1 day ago' },
+    { name: 'John Smith', time: '1 day ago' },
+    { name: 'Viarl Kattamuri', time: '2 day ago' },
+    { name: 'David Kattamuri', time: '1 day ago' },
   ];
 
   const [message, setMessage] = useState('');
@@ -93,168 +86,11 @@ export default function GlobalChat() {
     }
   };
 
-
-
-
   return (
     <>
-      <Header />
-      <Sidebar />
+    {/* Middle Sidebar - Candidates */}
 
-      <div className="page-body">
-        <Container fluid className="pt-3">
-          <Row className="g-0 shadow-sm" style={{ height: 'calc(100vh - 120px)' }}>
-            {/* Left Sidebar - Jobs */}
-            <Col md={3} className="" style={{background:"#F9FAFB", borderRight: "2px solid #F2F4F7", borderTopLeftRadius: "12px", borderBottomLeftRadius: "12px"}} >
-              <Card className="h-100 border-0 chat-module">
-                <Card.Header className="border-bottom d-flex justify-content-between align-items-center" style={{padding:"16px", paddingBottom: "0"}} >
-                  <Card.Title>Job List</Card.Title>
-
-                  <Select
-                    options={options}
-                    //value={userOption.find((opt)=>opt.value===companyInfo)}
-                    // onChange={handleCompanyDropdown}
-                    className="react_selectbox"
-                    styles={customStyles}
-                  />
-
-                </Card.Header>
-                <Card.Body className="">
-
-                  <Tabs
-                    defaultActiveKey="home"
-                    id="uncontrolled-tab-example"
-                    className="mb-3 chat-tabs"
-                  >
-                    <Tab eventKey="home" title="All">
-                         <div className='filter-chats'>
-                      <InputGroup className="header_serach mb-3">
-                        <InputGroup.Text id="basic-addon1">
-                          <svg
-                            width="18"
-                            height="18"
-                            viewBox="0 0 18 18"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M16.5 16.5L11.5001 11.5M13.1667 7.33333C13.1667 10.555 10.555 13.1667 7.33333 13.1667C4.11167 13.1667 1.5 10.555 1.5 7.33333C1.5 4.11167 4.11167 1.5 7.33333 1.5C10.555 1.5 13.1667 4.11167 13.1667 7.33333Z"
-                              stroke="#667085"
-                              stroke-width="1.66667"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </svg>
-                        </InputGroup.Text>
-                        <Form.Control
-                          placeholder="Search"
-                          aria-label="Search"
-                          aria-describedby="basic-addon1"
-                        />
-                      </InputGroup>
-</div>
-                      <div className='job-chat-form-card'>
-                        {jobs.map((job, index) => (
-                          <Card key={index}
-                            className={`mb-2 cursor-pointer ${selectedJobIndex === index ? 'active' : ''}`}
-                            onClick={() => setSelectedJobIndex(index)}
-                          >
-                            <Card.Body>
-                              <Card.Title className="">{job.title}</Card.Title>
-                              <Card.Text className="text-muted fs-12 mb-1">
-                                {job.company}
-                              </Card.Text>
-                              <Card.Text className="text-muted fs-10 ">
-                                {job.location}
-                              </Card.Text>
-                              <span className="badge">
-                                {job.status}
-                              </span>
-                            </Card.Body>
-                          </Card>
-                        ))}
-
-                      </div>
-
-
-                    </Tab>
-                    <Tab eventKey="profile" title="Active">
-                      <div className='filter-chats'>
-                        <InputGroup className="header_serach">
-                          <InputGroup.Text id="basic-addon1">
-                            <svg
-                              width="18"
-                              height="18"
-                              viewBox="0 0 18 18"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M16.5 16.5L11.5001 11.5M13.1667 7.33333C13.1667 10.555 10.555 13.1667 7.33333 13.1667C4.11167 13.1667 1.5 10.555 1.5 7.33333C1.5 4.11167 4.11167 1.5 7.33333 1.5C10.555 1.5 13.1667 4.11167 13.1667 7.33333Z"
-                                stroke="#667085"
-                                stroke-width="1.66667"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              />
-                            </svg>
-                          </InputGroup.Text>
-                          <Form.Control
-                            placeholder="Search"
-                            aria-label="Search"
-                            aria-describedby="basic-addon1"
-                          />
-                        </InputGroup>
-                      </div>
-
-                      <div className='applicant-chats'>
-                        <p>
-                          There are no Active for this job yet!
-                        </p>
-                      </div>
-
-                    </Tab>
-                    <Tab eventKey="contact" title="Inactive" >
-                      <div className='filter-chats'>
-                        <InputGroup className="header_serach">
-                          <InputGroup.Text id="basic-addon1">
-                            <svg
-                              width="18"
-                              height="18"
-                              viewBox="0 0 18 18"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M16.5 16.5L11.5001 11.5M13.1667 7.33333C13.1667 10.555 10.555 13.1667 7.33333 13.1667C4.11167 13.1667 1.5 10.555 1.5 7.33333C1.5 4.11167 4.11167 1.5 7.33333 1.5C10.555 1.5 13.1667 4.11167 13.1667 7.33333Z"
-                                stroke="#667085"
-                                stroke-width="1.66667"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              />
-                            </svg>
-                          </InputGroup.Text>
-                          <Form.Control
-                            placeholder="Search"
-                            aria-label="Search"
-                            aria-describedby="basic-addon1"
-                          />
-                        </InputGroup>
-                      </div>
-
-                      <div className='applicant-chats'>
-                        <p>
-                          There are no Inactive  job yet!
-                        </p>
-                      </div>
-
-                    </Tab>
-                  </Tabs>
-
-                </Card.Body>
-              </Card>
-            </Col>
-
-            {/* Middle Sidebar - Candidates */}
+           {/* Middle Sidebar - Candidates */}
             <Col md={3} className="bg-white " style={{borderRight: "2px solid #F2F4F7"}}>
               <Card className="h-100 border-0 chat-module">
                 <Card.Header className="border-bottom d-flex justify-content-between align-items-center" style={{padding:"16px", paddingBottom: "0"}} >
@@ -327,9 +163,9 @@ export default function GlobalChat() {
                         </Button>
                       </div>
 
-                      <div className='job-chat-form-card mt-2'>
+                      <div className='job-chat-form-card'>
                         {candidates.map((candidates, index) => (
-                          <Card key={index} className=" cursor-pointer ">
+                          <Card key={index} className="mb-2 cursor-pointer ">
                             <Card.Body>
                               <Card.Title className="">{candidates.name}</Card.Title>
 
@@ -474,7 +310,7 @@ export default function GlobalChat() {
 
             {/* Chat Area */}
 
-            <Col md={6} className="d-flex flex-column bg-light" style={{borderTopRightRadius: "12px", borderBottomRightRadius: "12px"}} >
+            <Col md={9} className="d-flex flex-column bg-light">
               <Card className="border-0 flex-grow-1 chat-box-global">
                 <Card.Header className="border-bottom" style={{padding: "16px"}} >
                   <Card.Title>Alice Johnson</Card.Title>
@@ -537,11 +373,8 @@ export default function GlobalChat() {
               </Card>
             </Col>
 
-          </Row>
-        </Container>
-      </div>
 
-      {/* filter */}
+                 {/* filter */}
       <Offcanvas show={show} onHide={handleClose} placement='end' >
 
         <Offcanvas.Header className='d-flex justify-content-between' closeButton>
@@ -659,5 +492,5 @@ export default function GlobalChat() {
       </Offcanvas>
 
     </>
-  );
+  )
 }

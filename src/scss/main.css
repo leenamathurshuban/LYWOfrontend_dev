@@ -1,5 +1,11 @@
 @charset "UTF-8";
 @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+html {
+  zoom: 0.9; /* Sets zoom level to 80% */
+  /* Alternatively, you can use: */
+  /* transform: scale(0.8); */
+}
+
 html,
 .modal {
   scroll-behavior: smooth;
@@ -59,6 +65,10 @@ a {
   z-index: 1;
   inset-block-start: 2.5rem;
   inset-inline-start: 1.5rem;
+}
+
+.offcanvas-backdrop {
+  height: 100%;
 }
 
 .font-weight500 {
@@ -566,7 +576,7 @@ ol.breadcrumb {
 
 .model_sidebar {
   width: 11%;
-  height: 100vh;
+  height: 100%;
   border-right: solid 1px #eaecf0;
   padding: 0;
   position: fixed;
@@ -967,6 +977,7 @@ label.required.form-label {
   border-bottom: solid 1px #eaecf0;
   max-height: 100px;
   overflow-y: auto;
+  word-break: break-all;
 }
 
 .rects-panel.bottom-fixed {
@@ -1479,7 +1490,7 @@ button.btn-link-muted svg {
 }
 
 .font-weight-600 {
-  font-weight: 600;
+  font-weight: 600 !important;
 }
 
 .elv_datatable {
@@ -3273,7 +3284,7 @@ select.h-36.form-select {
   .modal-lg,
   .modal-xl {
     max-width: 100%;
-    height: 100vh;
+    height: 100%;
     background-color: #fff;
     margin: 0;
     padding: 0;
@@ -4869,6 +4880,7 @@ select.h-36.form-select {
   color: #101828;
   border-bottom: solid 2px #6172F3;
   background-color: transparent;
+  filter: brightness(0) saturate(100%);
 }
 
 .status_cardpanel {
@@ -6441,13 +6453,6 @@ button#input-group-dropdown-1 {
 .usermanagement_table .form-switch input:focus {
   box-shadow: none;
 }
-.usermanagement_table .form-switch .form-check-input:checked {
-  background: #C7D7FE;
-  border-color: #C7D7FE;
-}
-.usermanagement_table .form-switch .form-check-input:checked:focus {
-  box-shadow: none;
-}
 
 .form-switch .form-check-input:checked {
   background-color: #444CE7;
@@ -6946,7 +6951,7 @@ button.btn-icon {
   color: #475467;
 }
 .pending_reviews .table tr td {
-  padding: 12px 15px;
+  padding: 12px 5px;
   border-bottom: solid 1px #EAECF0;
   font-family: Inter;
   font-weight: 500;
@@ -7344,7 +7349,7 @@ button.btn-icon {
   border: 0;
 }
 .elv-thmnail-data-table td {
-  font-weight: 500 !important;
+  font-weight: 500;
   color: #1D2939 !important;
 }
 .elv-thmnail-data-table td span {
@@ -7939,6 +7944,9 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   cursor: pointer;
   border-radius: 0;
 }
+.chat-module .job-chat-form-card .card:hover {
+  background: #F9FAFB;
+}
 .chat-module .job-chat-form-card .card .card-title {
   font-size: 12px;
   line-height: 18px;
@@ -7996,6 +8004,7 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   position: relative;
   height: 100%;
   max-height: 90vh;
+  border-radius: 8px;
 }
 .chat-box-global .card-body .message-chat-body .card {
   border: 0;
@@ -8007,6 +8016,7 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   margin-bottom: 10px;
   font-size: 10px;
   font-weight: 400;
+  color: #667085;
 }
 .chat-box-global .card-body .message-chat-body .date-msg:before {
   content: "";
@@ -8016,6 +8026,7 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   height: 1px;
   width: 100%;
   left: 0;
+  opacity: 0.2;
 }
 .chat-box-global .card-body .message-chat-body .date-msg small {
   background: #F2F4F7;
@@ -8072,6 +8083,15 @@ path.recharts-rectangle.recharts-tooltip-cursor {
 .new-filter-chat .form-check-input {
   position: relative;
   top: 3px !important;
+}
+
+.openings-count {
+  display: block;
+  width: 100%;
+}
+
+.dashboard-table tr td:first-child {
+  color: #101828;
 }
 
 @media screen and (max-width: 767px) {

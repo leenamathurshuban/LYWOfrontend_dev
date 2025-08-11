@@ -978,6 +978,22 @@ const CompanyEditProfile = ({ show, handleClose }) => {
   const [description, setDescription] = useState("");
   const [website, setWebsite] = useState("");
 
+
+    // custom style react select box
+
+  const customStyles = {
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isSelected
+        ? "#deebff"
+        : state.isFocused
+          ? "#deebff" // Color on hover
+          : "inherit",
+      color: state.isSelected ? "#000" : "black",
+      cursor: "pointer", // Optional: improves UX on hover
+    }),
+  };
+
   const [IndustrySearch, SetIndustrySearch] = useState("");
   const [IndustrySearchDropdown, setIndustrySearchDropdown] = useState(false);
   const [LocationSearchDropdown, setLocationSearchDropdown] = useState(false);
@@ -1796,6 +1812,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                     }}
                                     onChange={handleIndustrySelect}
                                     className="react_selectbox"
+                                     styles={customStyles}
                                   />
                                 </Form.Group>
 
@@ -1832,7 +1849,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                       Partnership
                                     </option>
                                   </Form.Select> */}
-                                  <Select value={companyTypeValue} options={companyTypeOption} onChange={handleCompanyTypeChange} className="react_selectbox" />
+                                  <Select value={companyTypeValue} options={companyTypeOption} onChange={handleCompanyTypeChange} className="react_selectbox"  styles={customStyles} />
                                 </Form.Group>
                                 <Form.Group className="mb-3">
                                   <Form.Label>Company Size</Form.Label>
@@ -1877,7 +1894,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                       More than 10,000 employees
                                     </option>
                                   </Form.Select> */}
-                                  <Select value={companySizeValue} options={companySizeOption} onChange={handleNoOfTypeEmployChange} className="react_selectbox" />
+                                  <Select value={companySizeValue} options={companySizeOption} onChange={handleNoOfTypeEmployChange} className="react_selectbox"  styles={customStyles} />
                                 </Form.Group>
 
                                 <Form.Group className="mb-3 relative">
@@ -1928,6 +1945,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                     }}
                                     className="react_selectbox"
                                     onChange={handleLocationSelect}
+                                     styles={customStyles}
                                   />
                                 </Form.Group>
 
