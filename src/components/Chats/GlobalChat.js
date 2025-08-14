@@ -105,9 +105,9 @@ export default function GlobalChat() {
         <Container fluid className="pt-3">
           <Row className="g-0 shadow-sm" style={{ height: 'calc(100vh - 120px)' }}>
             {/* Left Sidebar - Jobs */}
-            <Col md={3} className="" style={{background:"#F9FAFB", borderRight: "2px solid #F2F4F7", borderTopLeftRadius: "12px", borderBottomLeftRadius: "12px"}} >
+            <Col md={3} className="" style={{ background: "#F9FAFB", borderRight: "2px solid #F2F4F7", borderTopLeftRadius: "12px", borderBottomLeftRadius: "12px" }} >
               <Card className="h-100 border-0 chat-module">
-                <Card.Header className="border-bottom d-flex justify-content-between align-items-center" style={{padding:"16px", paddingBottom: "0"}} >
+                <Card.Header className="border-bottom d-flex justify-content-between align-items-center" style={{ padding: "16px", paddingBottom: "0" }} >
                   <Card.Title>Job List</Card.Title>
 
                   <Select
@@ -127,32 +127,32 @@ export default function GlobalChat() {
                     className="mb-3 chat-tabs"
                   >
                     <Tab eventKey="home" title="All">
-                         <div className='filter-chats'>
-                      <InputGroup className="header_serach mb-3">
-                        <InputGroup.Text id="basic-addon1">
-                          <svg
-                            width="18"
-                            height="18"
-                            viewBox="0 0 18 18"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M16.5 16.5L11.5001 11.5M13.1667 7.33333C13.1667 10.555 10.555 13.1667 7.33333 13.1667C4.11167 13.1667 1.5 10.555 1.5 7.33333C1.5 4.11167 4.11167 1.5 7.33333 1.5C10.555 1.5 13.1667 4.11167 13.1667 7.33333Z"
-                              stroke="#667085"
-                              stroke-width="1.66667"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </svg>
-                        </InputGroup.Text>
-                        <Form.Control
-                          placeholder="Search"
-                          aria-label="Search"
-                          aria-describedby="basic-addon1"
-                        />
-                      </InputGroup>
-</div>
+                      <div className='filter-chats'>
+                        <InputGroup className="header_serach mb-3">
+                          <InputGroup.Text id="basic-addon1">
+                            <svg
+                              width="18"
+                              height="18"
+                              viewBox="0 0 18 18"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M16.5 16.5L11.5001 11.5M13.1667 7.33333C13.1667 10.555 10.555 13.1667 7.33333 13.1667C4.11167 13.1667 1.5 10.555 1.5 7.33333C1.5 4.11167 4.11167 1.5 7.33333 1.5C10.555 1.5 13.1667 4.11167 13.1667 7.33333Z"
+                                stroke="#667085"
+                                stroke-width="1.66667"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                          </InputGroup.Text>
+                          <Form.Control
+                            placeholder="Search"
+                            aria-label="Search"
+                            aria-describedby="basic-addon1"
+                          />
+                        </InputGroup>
+                      </div>
                       <div className='job-chat-form-card'>
                         {jobs.map((job, index) => (
                           <Card key={index}
@@ -255,9 +255,9 @@ export default function GlobalChat() {
             </Col>
 
             {/* Middle Sidebar - Candidates */}
-            <Col md={3} className="bg-white " style={{borderRight: "2px solid #F2F4F7"}}>
+            <Col md={3} className="bg-white " style={{ borderRight: "2px solid #F2F4F7" }}>
               <Card className="h-100 border-0 chat-module">
-                <Card.Header className="border-bottom d-flex justify-content-between align-items-center" style={{padding:"16px", paddingBottom: "0"}} >
+                <Card.Header className="border-bottom d-flex justify-content-between align-items-center" style={{ padding: "16px", paddingBottom: "0" }} >
                   <Card.Title>Candidates</Card.Title>
 
                   <Select
@@ -336,7 +336,7 @@ export default function GlobalChat() {
                               <Card.Text className="text-muted fs-10 ">
                                 {candidates.time}
                               </Card.Text>
-                              <span className="badge bg-primary-outline" style={{color: "#3538CD", background: "#EEF4FF", border: "1px solid #C7D7FE"}} >
+                              <span className="badge bg-primary-outline" style={{ color: "#3538CD", background: "#EEF4FF", border: "1px solid #C7D7FE" }} >
                                 {/* {job.status} */}
                                 1
                               </span>
@@ -474,9 +474,9 @@ export default function GlobalChat() {
 
             {/* Chat Area */}
 
-            <Col md={6} className="d-flex flex-column bg-light" style={{borderTopRightRadius: "12px", borderBottomRightRadius: "12px"}} >
+            <Col md={6} className="d-flex flex-column bg-light" style={{ borderTopRightRadius: "12px", borderBottomRightRadius: "12px" }} >
               <Card className="border-0 flex-grow-1 chat-box-global">
-                <Card.Header className="border-bottom" style={{padding: "16px"}} >
+                <Card.Header className="border-bottom" style={{ padding: "16px" }} >
                   <Card.Title>Alice Johnson</Card.Title>
                   <Card.Text className="text-muted small">
                     Assignment for Figma Designer  <span className='text-warning'> • Incomplete </span>
@@ -522,7 +522,7 @@ export default function GlobalChat() {
                           placeholder="Your Message here"
                         />
                         <label for="fileattached">
-                          <input type='file' id="fileattached" hidden />
+                          <input type='file' id="fileattached" />
                           <button className='attachment' > <img src={attachcon} className='img-fluid' alt='attach' /> </button>
                         </label>
 

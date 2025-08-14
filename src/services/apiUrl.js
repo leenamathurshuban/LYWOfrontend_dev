@@ -63,6 +63,7 @@ export const ApplicationJobPostUrl = {
   WorkExperience:"assets-api/applicant-work-experience-post-api/",
   ApplicationFormDetails : "assets-api/applicant-update-api/",
   getApplicantAssetData:"assets-api/get-job-applicant-asset-data-api/job-uid/",
+  chatsPost:"assets-api/chat-post-api/"
 }
 
 export const GraphBarChartUrl = {

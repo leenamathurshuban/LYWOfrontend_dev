@@ -716,7 +716,9 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
       formdata.append("detailed_description", descriptionWithoutTags);
       formdata.append("job_type", createFormData.jobType);
       formdata.append("workplace_type", createFormData.workPlaceType);
-      formdata.append("job_benefits", JSON.stringify(SelectBenefitsData));
+      if(SelectBenefitsData?.length){
+        formdata.append("job_benefits", JSON.stringify(SelectBenefitsData));
+      }      
       try {
         const response = await UpdateJobForm(formdata, id ? id : editData?.uid);
         if (response.data.status == 200) {
@@ -786,6 +788,10 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
         let uids = locationBadges?.map((item) => item?.uid);
 
         formdata.append(key, JSON.stringify(uids));
+      }else if(key==="min_salary"){
+        formdata.append("",parseInt(updateFormData[key].replace(/,/g, ""), 10))
+      }else if(key==="max_salary"){
+        formdata.append("",parseInt(updateFormData[key].replace(/,/g, ""), 10))
       }
       // else if (key === "skills" && SelectSkillsData.length > 0) {
       //   let skillID = SelectSkillsData?.map((item) => item?.uid) // Extract skill_name values
@@ -1114,6 +1120,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
   console.log(addCustomeBenifits.length)
   console.log(locationData)
   console.log(locationValue)
+  console.log(benefitsData.length)
   return (
     <Offcanvas
       show={show}

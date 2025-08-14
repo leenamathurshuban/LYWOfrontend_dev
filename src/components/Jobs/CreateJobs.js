@@ -682,7 +682,9 @@ const CreateJobs = ({ show, handleClose }) => {
       formdata.append("detailed_description", descriptionWithoutTags);
       formdata.append("job_type", createFormData.jobType);
       formdata.append("workplace_type", createFormData.workPlaceType);
-      formdata.append("job_benefits", JSON.stringify(selectedUids));
+      if(selectedUids?.length){
+        formdata.append("job_benefits", JSON.stringify(selectedUids));
+      }
       try {
         const response = await CreateJobForm(formdata);
         if (response.data.status == 200) {

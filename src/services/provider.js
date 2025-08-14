@@ -301,3 +301,7 @@ export const dashboardListAPI=(id)=>{
   const result = client.getWithToken(`${CompanyUrl.DashboardList}${id}`)
   return result
 }
+export const chatPostAPI=(data)=>{
+  const result = client.postWithToken(`${ApplicationJobPostUrl.chatsPost}`,data)
+  return result
+}

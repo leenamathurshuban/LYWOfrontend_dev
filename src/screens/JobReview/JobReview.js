@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
     Container, Row, Col, Tab, Nav, Card, Form, Button, InputGroup, Table, Offcanvas, Accordion, Badge, Stack, ProgressBar,
-    Dropdown, OverlayTrigger, Tooltip
+    Dropdown, OverlayTrigger, Tooltip, Tabs,
+    FormGroup
 } from "react-bootstrap";
 import Select from "react-select";
+import ReactQuill from "react-quill";
 import Header from "../../components/Header";
 import Sidebar from "../../components/Sidebar";
 import angleDown from "../../images/icons/angle-down-arrow.svg"
@@ -43,6 +45,11 @@ import Barchart from "../../images/icons/bar-chart-07.svg";
 import Folder from "../../images/icons/folder.svg";
 import Messagedot from "../../images/icons/message-dots-circle-b.svg";
 import Review from "../../images/icons/review.svg";
+
+import list from "../../images/icons/list.svg";
+import trash from "../../images/icons/trash-light.svg";
+
+
 
 
 import sorticn from "../../images/icons/switch-vertical-01.svg";
@@ -130,13 +137,150 @@ tracker.show_tasks()
         return 'unknown';
     };
     const [show, setShow] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(0);
+    const [expandedGroup, setExpandedGroup] = useState(null);
     const [FilterApplicantShow, setFilterApplicantShow] = useState(false);
+    const [descriptionError, setDescriptionError] = useState("");
+
+    const [isLikeUid, setIsLikeUid] = useState([]);
+
+    const [errorMessage, setErrorMessage] = useState("");
+    const [fileUrl, setFileUrl] = useState(null);
+
+    const MAX_DESCRIPTION_WORDS = 500;
+    const MAX_FILE_SIZE = 5 * 1024 * 1024;
+
+    const [fileName, setFileName] = useState("");
+
+    const [description, setDescription] = useState("");
+
+    const handleWrapperClick = () => {
+        if (quillRef.current) {
+            quillRef.current.focus(); // Focus the editor manually
+        }
+    };
+
+    const handleSelectedLikeItems = (item) => {
+        // setIsLike(item.label);
+        // setIsLikeUid((prevSelectedItems) => [...prevSelectedItems, item.value]);
+        setIsLikeUid([item.value]);
+        // setIsLikeDropdown(false);
+    };
+
+    const customStyles = {
+        option: (provided, state) => ({
+            ...provided,
+            backgroundColor: state.isSelected
+                ? "#deebff"
+                : state.isFocused
+                    ? "#deebff" // Color on hover
+                    : "inherit",
+            color: state.isSelected ? "#000" : "black",
+            cursor: "pointer", // Optional: improves UX on hover
+        }),
+    };
+
+    const [errors, setErrors] = useState({
+        jobTitle: "",
+        isLike: "",
+        noOfPosition: "",
+        department: "",
+        location: "",
+        travelOption: "",
+        description: "",
+        jobType: "",
+        workPlaceType: "",
+        detailed_description: ""
+    });
+
+    const handleEditorChange = (value) => {
+        const wordCount = value.trim().split(/\s+/).length;
+
+        if (wordCount <= MAX_DESCRIPTION_WORDS) {
+            setDescription(value);
+            setDescriptionError("");
+        } else {
+            setDescriptionError(
+                `You have reached the maximum limit of ${MAX_DESCRIPTION_WORDS} words.`
+            );
+        }
+    };
+    const handleFileUpload = (e) => {
+        const file = e.target.files[0];
+
+        if (!file) return;
+
+        // Check if the file size exceeds 5MB
+        if (file.size > MAX_FILE_SIZE) {
+            setErrorMessage(
+                "Attachement failed. The attachment exceeds the allowed file size."
+            );
+            return; // Exit early if the file is too large
+        } else {
+            setErrorMessage(""); // Clear error message if file is valid
+        }
+
+        // Set the file name to display it
+        setFileName(file.name);
+
+        if (file.type.startsWith("image/")) {
+            // Handle Image Upload
+            // const reader = new FileReader();
+            // reader.onloadend = () => {
+            //   // Insert image into Quill editor
+            //   const quill = quillRef.current.getEditor();
+            //   const range = quill.getSelection();
+            //   if (range) {
+            //     quill.insertEmbed(range.index, "image", reader.result);
+            //   }
+            // };
+            // reader.readAsDataURL(file);
+            const uploadSimulation = setInterval(() => {
+                setUploadProgress((prevProgress) => {
+                    if (prevProgress >= 100) {
+                        clearInterval(uploadSimulation);
+                        return 100;
+                    }
+                    return prevProgress + 10; // Increment progress
+                });
+            }, 300);
+        } else if (file.type === "application/pdf") {
+            // Handle PDF Upload
+            const fileUrl = URL.createObjectURL(file);
+            setFileUrl(fileUrl);
+            // Optionally, insert PDF link into the editor
+            const quill = quillRef.current.getEditor();
+            const range = quill.getSelection();
+            if (range) {
+                quill.insertEmbed(range.index, "link", fileUrl);
+            }
+            const uploadSimulation = setInterval(() => {
+                setUploadProgress((prevProgress) => {
+                    if (prevProgress >= 100) {
+                        clearInterval(uploadSimulation);
+                        return 100;
+                    }
+                    return prevProgress + 10; // Increment progress
+                });
+            }, 300);
+        } else {
+            alert("Please upload a valid image or PDF file.");
+        }
+    };
+    const fileInputRef = useRef(null);
+    const removeFileValue = () => {
+        fileInputRef.current.value = "";
+        setUploadProgress(0)
+        setFileName("")
+    }
 
     const [reviewModal, setReviewModal] = useState(false);
 
     const [answerModal, setAnswerModal] = useState(false);
 
     const [selectedUser, setSelectedUser] = useState(null);
+
+    const quillRef = useRef(null);
 
     const [groupModal, setGroupModal] = useState(false);
     const [groupParameterId, setGroupParameterId] = useState();
@@ -160,6 +304,13 @@ tracker.show_tasks()
     }
 
     const handleShow = () => setShow(true);
+
+    const [showInstruction, setShowInstruction] = useState(false)
+
+    const handleInstructionModel = () => setShowInstruction(false);
+
+
+
     const { id } = useParams();
     const [jobDetails, setJobDetails] = useState({})
     const [assetJob, setAssetJob] = useState([]);
@@ -952,7 +1103,7 @@ tracker.show_tasks()
                         </Col>
                         <Col md={6} className="d-flex justify-content-end align-items-center">
                             <button type="button" onClick={handleShow} className="icon_btnlink btn btn-primary"><img src={EvaluaBtn} className="me-1" />Evaluations</button>
-                            <button type="button" className="icon_btnlink btn btn-primary"><img src={AutomatBtn} className="me-1" />Automations</button>
+                            <button type="button" onClick={() => setShowInstruction(true)} className="icon_btnlink btn btn-primary"><img src={AutomatBtn} className="me-1" />Automations</button>
                             <button type="button" className="icon_btnlink btn btn-primary"><img src={stopBtn} className="me-1" />Stop Applications</button>
                         </Col>
                     </Row>
@@ -963,16 +1114,16 @@ tracker.show_tasks()
                             <Col md={6}>
                                 <Nav variant="pills" className="tab-underline">
                                     <Nav.Item>
-                                        <Nav.Link eventKey="first"><img src={Folder} className="img-fluid" alt="folder"/>  &nbsp;Applications</Nav.Link>
+                                        <Nav.Link eventKey="first"><img src={Folder} className="img-fluid" alt="folder" />  &nbsp;Applications</Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item>
-                                        <Nav.Link eventKey="second"><img src={Barchart} className="img-fluid" alt="folder"/> &nbsp; Insights</Nav.Link>
+                                        <Nav.Link eventKey="second"><img src={Barchart} className="img-fluid" alt="folder" /> &nbsp; Insights</Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item>
-                                        <Nav.Link eventKey="third"><img src={Review} className="img-fluid" alt="folder"/>&nbsp;  Review</Nav.Link>
+                                        <Nav.Link eventKey="third"><img src={Review} className="img-fluid" alt="folder" />&nbsp;  Review</Nav.Link>
                                     </Nav.Item>
-                                      <Nav.Item>
-                                        <Nav.Link eventKey="forth"><img src={Messagedot} className="img-fluid" alt="folder"/> &nbsp;  Chat</Nav.Link>
+                                    <Nav.Item>
+                                        <Nav.Link eventKey="forth"><img src={Messagedot} className="img-fluid" alt="folder" /> &nbsp;Chat</Nav.Link>
                                     </Nav.Item>
                                 </Nav>
 
@@ -985,7 +1136,7 @@ tracker.show_tasks()
                         <Row >
                             <Tab.Content className="p-3">
                                 <Tab.Pane eventKey="first">
-                                    <Row className="hori_scroll">
+                                    <Row className="hori_scroll evalutaion-page-tab-scroller">
                                         {ListShow && ListData?.length > 0 ? (
                                             <Card className="shadow-sm border-0 evaluations_data mt-4 rounded overflow-hidden">
                                                 <Card.Header className="py-2">
@@ -1624,11 +1775,14 @@ tracker.show_tasks()
                                         ) : (
                                             <>
                                                 {groupParameterList.map((paraName, paraIndex) => (
-                                                    <Col md={2}>
+                                                    <Col
+                                                        md={2}
+                                                        key={paraName.uid}
+                                                        className={expandedGroup === paraName.uid ? 'expanded-col' : ''} >
                                                         <Card className="status_cardpanel">
                                                             <div className="card-header">
                                                                 <h5>{paraName?.parameter_name} <span className="count">{paraName?.parameter_applicant_count}</span></h5>
-                                                                <button type="button"><i class="fa fa-ellipsis-h"></i></button>
+                                                                {/* <button type="button"><i class="fa fa-ellipsis-h"></i></button> */}
                                                             </div>
                                                             <Card.Body>
                                                                 {/* {paraName?.parameter_name === "Screening" ? (
@@ -1670,34 +1824,58 @@ tracker.show_tasks()
                                                                     setGroupModal(true)
                                                                     setGroupParameterId(paraName?.uid)
                                                                 }} className="btn btn-link mb-3"><i className="fa fa-plus me-2"></i>Create a New Group</button>
-                                                                {paraName?.groups_parameter?.sort((a, b) => a.id - b.id)?.map((groupItem) => (
-                                                                    <>
-                                                                        <div className={`sts_databox ${groupItem?.group_name.toLowerCase()}`}>
-                                                                            <div className="d-flex justify-content-between">
-                                                                                <h6>{groupItem?.group_name}<span className="count">{groupItem?.group_wise_applicant_count}</span></h6>
-                                                                            </div>
-                                                                            <div className="d-flex justify-content-between align-items-end">
-                                                                                <Form>
-                                                                                    <Form.Check
-                                                                                        type="switch"
-                                                                                        id="custom-switch"
-                                                                                        label="Auto-Remind"
-                                                                                    />
-                                                                                </Form>
-                                                                                {/* <button className="button" class="btn-transpant" onClick={() => {
+                                                                <div className="eval-vertical-scrool">
+                                                                    {paraName?.groups_parameter?.sort((a, b) => a.id - b.id)?.map((groupItem) => (
+                                                                        <>
+
+                                                                            <div className={`sts_databox ${groupItem?.group_name.toLowerCase()}`}
+                                                                            >
+                                                                                <div className="d-flex justify-content-between">
+                                                                                    <h6
+                                                                                        onClick={() => setExpandedGroup(prev =>
+                                                                                            prev === paraName.uid ? null : paraName.uid
+                                                                                        )}>{groupItem?.group_name}<span className="count">{groupItem?.group_wise_applicant_count}</span></h6>
+
+                                                                                    <span className="badge bg-outline-success">25 pending</span>
+                                                                                </div>
+                                                                                <div className="remind-checkbox ">
+                                                                                    <div className="d-flex justify-content-between align-items-end">
+                                                                                        <Form>
+                                                                                            <Form.Check
+                                                                                                type="switch"
+                                                                                                id="custom-switch"
+                                                                                                label="Auto-Remind"
+                                                                                            />
+                                                                                        </Form>
+                                                                                        {/* <button className="button" class="btn-transpant" onClick={() => {
                                                                                     handleListData(groupItem);
                                                                                     setGroupParameterId(paraName?.uid)
                                                                                     setGroupTitleName(groupItem?.group_name)
                                                                                     setParamUid(groupItem?.uid)
                                                                                 }}><i class="fa fa-list-ul" aria-hidden="true"></i></button> */}
-                                                                                <button className="button" class="btn-transpant" onClick={() =>
-                                                                                    // handleListData(groupItem)
-                                                                                    fetchListAPIByKey(paraName?.uid, groupItem?.group_name, groupItem?.uid)
-                                                                                }><i class="fa fa-list-ul" aria-hidden="true"></i></button>
+                                                                                        <div className="right-cols">
+                                                                                            <button className="button" class="btn-transpant me-2">
+                                                                                                <img src={trash} className="img-fluid" alt="Trash" />
+                                                                                            </button>
+
+                                                                                            <button className="button" class="btn-transpant" onClick={() =>
+                                                                                                // handleListData(groupItem)
+                                                                                                fetchListAPIByKey(paraName?.uid, groupItem?.group_name, groupItem?.uid)
+                                                                                            }>
+                                                                                                {/* <i class="fa fa-list-ul" aria-hidden="true"></i> */}
+                                                                                                <img src={list} className="img-fluid" alt="Trash" />
+
+
+                                                                                            </button>
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                </div>
                                                                             </div>
-                                                                        </div>
-                                                                    </>
-                                                                ))}
+                                                                        </>
+
+                                                                    ))}
+                                                                </div>
                                                                 {/* <div className="sts_databox excellent">
                                                         <h6>Excellent<span className="count">40</span></h6>
                                                     </div>
@@ -1720,7 +1898,7 @@ tracker.show_tasks()
                                                         </Card>
                                                     </Col>
                                                 ))}
-                                                <Col md="auto flex-fill">
+                                                <Col md="auto flex-fill col-md-2 last-row-flex-001">
                                                     <Card className="status_cardpanel">
                                                         <Card.Body className="text-center d-flex align-items-center justify-content-center flex-column">
                                                             <button type="button" className="btn btn-light-primery w-100" onClick={handleShow}><i className="fa fa-plus me-2"></i>Add Evaluation</button>
@@ -2591,13 +2769,13 @@ tracker.show_tasks()
                                     </Card>
                                 </Tab.Pane>
 
-                                 <Tab.Pane eventKey="forth">
+                                <Tab.Pane eventKey="forth">
                                     <Card className="rounded border-0 review_card">
                                         <div className="p-3 tab-content">
-                                        <div className="row g-0 "  >
-                                      <CandidateChat/>
-                                      </div>
-                                      </div>
+                                            <div className="row g-0 "  >
+                                                <CandidateChat />
+                                            </div>
+                                        </div>
                                     </Card>
                                 </Tab.Pane>
 
@@ -2768,86 +2946,352 @@ tracker.show_tasks()
                 </div>
             </Offcanvas >
 
-            {/*======New Group======
+            {/* ======Automation Group====== */}
+
             <Offcanvas
-                show={show}
-                onHide={handleClose}
-                backdrop={false}
+                show={showInstruction}
+                onHide={handleInstructionModel}
+                backdrop={true}
                 placement="end"
-                className="newgroup_drawer lg-drawer shadow-md border-0"
+                className="lg-drawer automate-drawer shadow-md border-0"
             >
                 <Offcanvas.Header closeButton>
                     <Offcanvas.Title>
-                        <span className="font-weight-400">New Group</span> - Screening
+                        Automation Settings
                     </Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body className="filter_warp">
-                    <Form className="row">
-                        <Form.Group className="col-md-12 mb-2" controlId="jobTitle">
-                            <Form.Label>Group Title</Form.Label>
-                            <Form.Control
-                            type="text"
-                            placeholder="Group Title"
-                            name="grouptitle"
-                            />
-                        
-                        </Form.Group>
-                        <Form.Group className="col-md-12 mb-2" controlId="jobTitle">
-                            <Form.Label>Add Filters</Form.Label>
-                            <Form.Control
-                            type="text"
-                            placeholder="Type here to search"
-                            name="typehere"
-                            />
-                            <div className="taglist">
-                                <span className="tag-gary">Education <i className="fa fa-times"></i></span>
-                                <span className="tag-gary">Experience <i className="fa fa-times"></i></span>
-                                <span className="tag-gary">Target Hire <i className="fa fa-times"></i></span>
-                                <span className="tag-gary">Preferred locations <i className="fa fa-times"></i></span>
-                            </div>
-                        </Form.Group>
-                        <Col md={12}>
-                            <Form.Label>Filters</Form.Label>
-                            <div className="border-1 p-3 rounded">
-                                <Row>
-                                    <Form.Group className="col-md-6 mb-2" controlId="jobTitle">
-                                        <Form.Label>Education</Form.Label>
-                                        <Form.Select aria-label="Default select example">
-                                            <option>Select Education</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
-                                        </Form.Select>
-                                    </Form.Group>
-                                    <Form.Group className="col-md-6 mb-2" controlId="jobTitle">
-                                        <Form.Label>Target hire date</Form.Label>
-                                        <Form.Control
-                                        type="date"
-                                        placeholder="05/10/2024"
-                                        name="targetdate"
+                    <p style={{ fontSize: "12px", lineHeight: "18px" }} >Nullam fringilla placerat diam vel lacinia. Integer malesuada turpis vitae ipsum imperdiet laoreet. Ut ut tempor urna, vitae egestas arcu. Maecenas a leo in lectus aliquam suscipit sit amet eget mauris. Aenean ac euismod nunc.</p>
+
+                    <div className="automation-setting-box">
+                        <Accordion defaultActiveKey="0">
+                            <Accordion.Item eventKey="0">
+                                <Accordion.Header>Auto Reminder</Accordion.Header>
+                                <Accordion.Body className="pt-0">
+                                    <div className="autoremider-body">
+                                        <Tabs
+                                            defaultActiveKey="Application"
+                                            id="automation-tab-example"
+                                            className="mb-3"
+                                        >
+                                            <Tab eventKey="Application" title="Application">
+                                                <Form.Group className="mb-2">
+                                                    <Form.Label>
+                                                        Reminder Interval
+                                                    </Form.Label>
+                                                    <div className="row gap-0">
+                                                        <div className="col-md-2">
+                                                            <Form.Control
+                                                                type="text"
+                                                                id="inputText5"
+                                                                aria-describedby="passwordHelpBlock"
+                                                                placeholder="Every 1"
+                                                            />
+                                                        </div>
+                                                        <div className="col-md-2">
+                                                            <Select
+                                                                className="react_selectbox"
+                                                                options={[
+                                                                    { value: 'day', label: 'Day' },
+                                                                    { value: 'Night', label: 'Night' }
+                                                                ]}
+                                                                defaultValue={{ value: 'day', label: 'Day' }}
+                                                                isSearchable={false}
+                                                                onChange={(selectedOption) => console.log(selectedOption)}
+                                                                styles={customStyles}
+                                                            />
+                                                        </div>
+                                                        <div className="col-md-2">
+                                                            <Select
+                                                                className="react_selectbox"
+                                                                options={[
+                                                                    { value: 'untilcompleted', label: 'Until Completed' },
+                                                                    { value: 'completed', label: 'Completed' }
+                                                                ]}
+                                                                defaultValue={{ value: 'untilcompleted', label: 'Until Completed' }}
+                                                                isSearchable={false}
+                                                                onChange={(selectedOption) => console.log(selectedOption)}
+                                                                // onChange={handleSelectedLikeItems}
+                                                                styles={customStyles}
+                                                            />
+                                                        </div>
+                                                        <div className="col-md-2 d-flex align-items-center">
+
+                                                            <Form.Check // prettier-ignore
+                                                                type="switch"
+                                                                id="custom-switch"
+                                                                label="Auto Remind"
+                                                                className="mt-1"
+                                                            />
+                                                        </div>
+
+
+
+
+
+
+
+
+                                                    </div>
+                                                </Form.Group>
+
+                                                <Form.Group className="mb-2" controlId="jobDescription">
+                                                    <Form.Label>
+                                                        Message Template
+                                                    </Form.Label>
+
+                                                    <div className="texteditor_warp" onClick={handleWrapperClick}>
+                                                            <ReactQuill
+                                                                value={description}
+                                                                onChange={handleEditorChange}
+                                                                theme="snow"
+                                                                ref={quillRef}
+                                                                className="custom-quill"
+                                                                modules={{
+                                                                    toolbar: [["bold", "italic", "underline"], ["link"]],
+                                                                }}
+                                                            />
+
+
+                                                    </div>
+
+                                                    <div className="d-flex justify-content-between custom-checkbox mt-3">
+                                                        <Form.Check // prettier-ignore
+                                                            type="checkbox"
+                                                            id={`default-checkbox`}
+                                                            label={`Do not prompt me to edit emails every time i enable automation. `}
+                                                        />
+
+                                                        <Button variant="primary" style={{ color: '#fff' }}  >Save Template</Button>
+                                                    </div>
+
+                                                    {descriptionError && (
+                                                        <div className="error">{descriptionError}</div>
+                                                    )}
+                                                    {errors.detailed_description && (
+                                                        <div className="error">{errors.detailed_description}</div>
+                                                    )}
+                                                </Form.Group>
+
+                                            </Tab>
+                                            <Tab eventKey="Behaviour" title="Behaviour">
+                                                Tab content for Behaviour
+                                            </Tab>
+                                            <Tab eventKey="Testquiz" title="Test Quiz" >
+                                                Tab content for Test Quiz
+                                            </Tab>
+                                            <Tab eventKey="Assignment" title="Assignment" >
+                                                Tab content for Assignment
+                                            </Tab>
+                                        </Tabs>
+                                    </div>
+
+
+                                </Accordion.Body>
+                            </Accordion.Item>
+                            <Accordion.Item eventKey="1">
+                                <Accordion.Header>Auto Short List  <Form className="ms-3">
+                                    <Form.Check
+                                        type="switch"
+                                        id="auto-switch"
+                                        label="Enable auto shortlist throughout the pipeline"
+                                    />
+                                </Form> </Accordion.Header>
+                                <Accordion.Body className="pt-0">
+                                    <div className="autoremider-body">
+                                        <Tabs
+                                            defaultActiveKey="Application"
+                                            id="automation-tab-example"
+                                            className="mb-3"
+                                        >
+                                            <Tab eventKey="Application" title="Application">
+
+                                                <Form.Group className="mb-2" controlId="jobDescription">
+                                                    <Form.Label>
+                                                        Message Template
+                                                    </Form.Label>
+
+                                                    <div className="texteditor_warp" onClick={handleWrapperClick}>
+                                                        <ReactQuill
+                                                            value={description}
+                                                            onChange={handleEditorChange}
+                                                            theme="snow"
+                                                            ref={quillRef}
+                                                            modules={{
+                                                                toolbar: [["bold", "italic", "underline"], ["link"]],
+                                                            }}
+                                                        />
+
+
+                                                    </div>
+
+                                                    <div className="d-flex justify-content-between custom-checkbox mt-3">
+                                                        <Form.Check // prettier-ignore
+                                                            type="checkbox"
+                                                            id={`default-checkbox`}
+                                                            label={`Do not prompt me to edit emails every time i enable automation. `}
+                                                        />
+
+                                                        <Button variant="primary" style={{ color: '#fff' }}  >Save Template</Button>
+                                                    </div>
+
+                                                    {descriptionError && (
+                                                        <div className="error">{descriptionError}</div>
+                                                    )}
+                                                    {errors.detailed_description && (
+                                                        <div className="error">{errors.detailed_description}</div>
+                                                    )}
+                                                </Form.Group>
+
+                                            </Tab>
+                                            <Tab eventKey="Behaviour" title="Behaviour">
+                                                Tab content for Behaviour
+                                            </Tab>
+                                            <Tab eventKey="Testquiz" title="Test Quiz" >
+                                                Tab content for Test Quiz
+                                            </Tab>
+                                            <Tab eventKey="Assignment" title="Assignment" >
+                                                Tab content for Assignment
+                                            </Tab>
+                                        </Tabs>
+                                    </div>
+
+                                </Accordion.Body>
+                            </Accordion.Item>
+
+                            <Accordion.Item eventKey="2">
+                                <Accordion.Header>Rejected candidates response </Accordion.Header>
+                                <Accordion.Body className="pt-0">
+                                    <div className="autoremider-body">
+                                        <Form.Check // prettier-ignore
+                                            type="switch"
+                                            id="custom-switch-2"
+                                            label="Enable auto reject throughout the pipeline (Poor Group only)"
                                         />
-                                    
-                                    </Form.Group>
-                                    <Form.Group className="col-md-12 mb-2" controlId="jobTitle">
-                                        <Form.Label>Experience</Form.Label>
-                                    </Form.Group>
-                                </Row>
-                            </div>
-                        </Col>
-                    </Form>
+
+                                        <Form.Check // prettier-ignore
+                                            type="switch"
+                                            id="custom-switch-3"
+                                            label="Auto Reject Candidates who have not been selected once the job application is closed "
+                                        />
+                                        <Tabs
+                                            defaultActiveKey="Application"
+                                            id="automation-tab-example"
+                                            className="mb-3"
+                                        >
+                                            <Tab eventKey="Application" title="Application">
+                                            
+
+                                                <Form.Group className="mb-2" controlId="jobDescription">
+                                                    <Form.Label>
+                                                        Message Template
+                                                    </Form.Label>
+
+                                                    <div className="texteditor_warp" onClick={handleWrapperClick}>
+                                                        <ReactQuill
+                                                            value={description}
+                                                            onChange={handleEditorChange}
+                                                            theme="snow"
+                                                            ref={quillRef}
+                                                            modules={{
+                                                                toolbar: [["bold", "italic", "underline"], ["link"]],
+                                                            }}
+                                                        />
+
+
+                                                    </div>
+
+                                                    <div className="d-flex justify-content-between custom-checkbox mt-3">
+                                                        <Form.Check // prettier-ignore
+                                                            type="checkbox"
+                                                            id={`default-checkbox`}
+                                                            label={`Do not prompt me to edit emails every time i enable automation. `}
+                                                        />
+
+                                                        <Button variant="primary" style={{ color: '#fff' }}  >Save Template</Button>
+                                                    </div>
+
+                                                    {descriptionError && (
+                                                        <div className="error">{descriptionError}</div>
+                                                    )}
+                                                    {errors.detailed_description && (
+                                                        <div className="error">{errors.detailed_description}</div>
+                                                    )}
+                                                </Form.Group>
+
+                                            </Tab>
+                                            <Tab eventKey="Behaviour" title="Behaviour">
+                                                Tab content for Behaviour
+                                            </Tab>
+                                            <Tab eventKey="Testquiz" title="Test Quiz" >
+                                                Tab content for Test Quiz
+                                            </Tab>
+                                            <Tab eventKey="Assignment" title="Assignment" >
+                                                Tab content for Assignment
+                                            </Tab>
+                                        </Tabs>
+                                    </div>
+                                </Accordion.Body>
+                            </Accordion.Item>
+
+                            <Accordion.Item eventKey="3">
+                                <Accordion.Header>Auto Short List</Accordion.Header>
+                                <Accordion.Body className="pt-0">
+                                    <div className="autoremider-body">
+                                        <Form.Check // prettier-ignore
+                                            type="switch"
+                                            id="custom-switch-3"
+                                            label="Send Auto Response to user who have been shortlised"
+                                        />
+
+                                       
+                                        
+                                                <Form.Group className="mb-2" controlId="jobDescription">
+                                                    <Form.Label>
+                                                        Message Template
+                                                    </Form.Label>
+
+                                                    <div className="texteditor_warp" onClick={handleWrapperClick}>
+                                                        <ReactQuill
+                                                            value={description}
+                                                            onChange={handleEditorChange}
+                                                            theme="snow"
+                                                            ref={quillRef}
+                                                            modules={{
+                                                                toolbar: [["bold", "italic", "underline"], ["link"]],
+                                                            }}
+                                                        />
+
+
+                                                    </div>
+
+                                                    <div className="d-flex justify-content-between custom-checkbox mt-3">
+                                                        <Form.Check // prettier-ignore
+                                                            type="checkbox"
+                                                            id={`default-checkbox`}
+                                                            label={`Do not prompt me to edit emails every time i enable automation. `}
+                                                        />
+
+                                                        <Button variant="primary" style={{ color: '#fff' }}  >Save Template</Button>
+                                                    </div>
+
+                                                    {descriptionError && (
+                                                        <div className="error">{descriptionError}</div>
+                                                    )}
+                                                    {errors.detailed_description && (
+                                                        <div className="error">{errors.detailed_description}</div>
+                                                    )}
+                                                </Form.Group>
+                                    </div>
+                                </Accordion.Body>
+                            </Accordion.Item>
+                        </Accordion>
+                    </div>
+
+
                 </Offcanvas.Body>
-                <div className="offcanvas-footer text-end">
-                    <Button
-                        variant="light"
-                        className="me-3"
-                    >
-                        Clear All
-                    </Button>
-                    <Button onClick={handleClose} variant="primary">
-                        Create Group
-                    </Button>
-                </div>
-            </Offcanvas>*/}
+
+            </Offcanvas>
 
             {/*======Evaluations======*/}
             {/* <Offcanvas

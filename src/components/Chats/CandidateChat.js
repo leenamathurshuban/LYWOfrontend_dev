@@ -163,7 +163,7 @@ export default function CandidateChat() {
                         </Button>
                       </div>
 
-                      <div className='job-chat-form-card'>
+                      <div className='job-chat-form-card mt-2'>
                         {candidates.map((candidates, index) => (
                           <Card key={index} className="mb-2 cursor-pointer ">
                             <Card.Body>

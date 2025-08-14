@@ -1212,7 +1212,7 @@ const JobPosts = () => {
               }
             })}
 
-            {!behaviourAssModel && !modalOpen.showFirstModal && (
+            {!behaviourAssModel && !modalOpen.showFirstModal && !modalOpen.showChatModal && (
               <div className="livechat">
                 <div className="chat_icon">
                   <img src={Chat} onClick={() => handleShowModal("chatModal")} />
@@ -1262,6 +1262,8 @@ const JobPosts = () => {
         <ChatModal
           show={modalOpen.showChatModal}
           handleClose={handleCloseModals}
+          status={buttonText}
+          jobData={jobPostData}
         />
 
         <AboutLywoModal

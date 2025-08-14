@@ -9,6 +9,7 @@ import {
     FormControl,
     InputGroup,
     Modal,
+    ModalHeader,
     ProgressBar,
     Row,
 } from "react-bootstrap";
@@ -27,6 +28,10 @@ import AchieverIcn from "../../images/icons/Achiever-icon.svg";
 import LeaderIcn from "../../images/icons/Leader-icon.svg";
 import InfluencerIcn from "../../images/icons/Influencer-icon.svg";
 import PioneerIcn from "../../images/icons/Pioneer-icon.svg";
+import Flag1 from "../../images/icons/Flag.svg";
+import FlagExchange from "../../images/icons/flagexchange.svg";
+import ImportantFlag from "../../images/icons/ImportanceFlag2.svg"
+
 import {
     getJobDetailsApi,
     getQualificationListApi,
@@ -46,6 +51,11 @@ import HelpChoose from "../../screens/HelpmeChoose/HelpChoose";
 import RangeSliderNew from "../SliderRange";
 import imgpTrash from "../../images/icons/trash-01.svg";
 import { toast } from "react-toastify";
+import McqSingleIcon from '../../images/icons/mcq_icon.png';
+import McqMultipleIcon from '../../images/icons/mcq-multi.svg';
+import ArrangeIcon from '../../images/icons/order.png';
+import MatchIcon from '../../images/icons/match.png';
+import CustomQuestionsBuilder from "./CustomQuestion";
 
 const UpdateJobsRevised = ({
     show,
@@ -100,6 +110,11 @@ const UpdateJobsRevised = ({
     importantFlag,
     setImportantFlag
 }) => {
+
+    const [showModal, requiremodelShow] = useState(false);
+
+    const requireClose = () => requiremodelShow(false);
+    const requireShow = () => requiremodelShow(true);
     const [createRevisedJobData, setCreateRevisedJobData] = useState(null);
     const [components, setComponents] = useState([]);
     const [inputValue, setInputValue] = useState("");
@@ -366,7 +381,22 @@ const UpdateJobsRevised = ({
             setSelectSkillsData(response?.data?.response?.skills)
             setMustHaveSkills(response?.data?.response?.must_have_skills)
             setSkillGroupDataExist(response?.data?.response?.skills)
-            setComponents(response?.data?.response?.question_job)
+            if (response?.data?.response?.question_job?.length) {
+                setComponents(response?.data?.response?.question_job)
+            } else {
+                setComponents([
+                    {
+                        job_question: createJobUid, // pass job uid
+                        question_title: "",
+                        quiz_type: "single",
+                        question_option: {
+                            part1: [""], // Start with an empty array for new questions
+                        },
+                        questions_answer: [],
+                        is_mandatory: "True", // pass True or False value
+                    }
+                ])
+            }
             setImportantFlag({
                 salary: response?.data?.response?.is_salary_imp,
                 education: response?.data?.response?.is_education_imp,
@@ -381,9 +411,9 @@ const UpdateJobsRevised = ({
             if (matchType) setSalaryTypeValue(matchType)
             const matchMinEdu = minimumEducationOption.find((opt) => opt.value === response?.data?.response?.minimum_education)
             if (matchMinEdu) setMinEducationValue(matchMinEdu)
-            const expMatch = expRangeOption.find((opt)=>opt.value=== response?.data?.response?.year_of_experience_type)
-            if(expMatch) setExpRangeValue(expMatch)
-                // setSkillGroupsData(response?.data?.response?.skills)
+            const expMatch = expRangeOption.find((opt) => opt.value === response?.data?.response?.year_of_experience_type)
+            if (expMatch) setExpRangeValue(expMatch)
+            // setSkillGroupsData(response?.data?.response?.skills)
             const formated = response?.data?.response?.skills.reduce((acc, item) => {
                 const { skill_group } = item;
                 const groupKey = skill_group.skill_group_name;
@@ -473,26 +503,77 @@ const UpdateJobsRevised = ({
     // };
 
 
-    
-  // custom style react select box
 
- const customStyles = {
-  option: (provided, state) => ({
-    ...provided,
-    backgroundColor: state.isSelected
-      ? "#deebff"
-      : state.isFocused
-      ? "#deebff" // Color on hover
-      : "inherit",
-    color: state.isSelected ? "#000" : "black",
-    cursor: "pointer", // Optional: improves UX on hover
-  }),
-};
+    // custom style react select box
 
+    const customStyles = {
+        option: (provided, state) => ({
+            ...provided,
+            backgroundColor: state.isSelected
+                ? "#deebff"
+                : state.isFocused
+                    ? "#deebff" // Color on hover
+                    : "inherit",
+            color: state.isSelected ? "#000" : "black",
+            cursor: "pointer", // Optional: improves UX on hover
+        }),
+    };
 
+    const customStyles2 = {
+        option: (provided, state) => ({
+            ...provided,
+            display: 'flex',
+            alignItems: 'center',
+            padding: '8px 12px',
+            backgroundColor: state.isSelected
+                ? "#F2F4F7"
+                : state.isFocused
+                    ? "#F2F4F7" // Color on hover
+                    : "inherit",
+            color: state.isSelected ? "rgb(0 0 0 / 50%)" : "rgb(0 0 0 / 50%)",
+            cursor: "pointer",
 
-
-
+        }),
+        // Add other custom styles as needed
+    };
+    const options = [
+        {
+            value: "single",
+            label: (
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <img src={McqSingleIcon} alt="MCQ Single" style={{ width: '20px', marginRight: '8px' }} />
+                    <span className="auto-hide"> MCQ Single</span>
+                </div>
+            )
+        },
+        {
+            value: "multiple",
+            label: (
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <img src={McqMultipleIcon} alt="MCQ Multiple" style={{ width: '20px', marginRight: '8px' }} />
+                    <span className="auto-hide"> MCQ Multiple </span>
+                </div>
+            )
+        },
+        {
+            value: "Arrange",
+            label: (
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <img src={ArrangeIcon} alt="Arrange" style={{ width: '20px', marginRight: '8px' }} />
+                    <span className="auto-hide">    Arrange </span>
+                </div>
+            )
+        },
+        {
+            value: "Match",
+            label: (
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <img src={MatchIcon} alt="Match" style={{ width: '20px', marginRight: '8px' }} />
+                    <span className="auto-hide">    Match </span>
+                </div>
+            )
+        }
+    ];
     const handleKeyPressForlanguages = async (e, from) => {
         if (e.key === "Enter" && inputValue.trim()) {
             e.preventDefault();
@@ -890,7 +971,7 @@ const UpdateJobsRevised = ({
             const newQuestion = {
                 job_question: createJobUid, // pass job uid
                 question_title: "",
-                quiz_type: "MCQ",
+                quiz_type: "single",
                 question_option: {
                     part1: [""], // Start with an empty array for new questions
                 },
@@ -900,7 +981,8 @@ const UpdateJobsRevised = ({
 
             setComponents([...components, newQuestion]);
         } else {
-            alert('You can add only five Custom Question')
+            // alert('You can add only five Custom Question')
+            toast.info('You can add only five Custom Question')
         }
     };
 
@@ -1503,25 +1585,25 @@ const UpdateJobsRevised = ({
         if (openStep.length && sectionRefs.current[openStep[0]]) {
             //   const top = sectionRefs.current[openStep[0]].offsetTop;
             if (openStep[0] === '1' && !Array.isArray(currentStep)) {
-                setToolbarPosition(103);
+                setToolbarPosition(85);
             } else if (openStep[0] === '1' && Array.isArray(currentStep)) {
-                setToolbarPosition(307);
+                setToolbarPosition(245);
             } else if (openStep[0] === '2') {
-                setToolbarPosition(159);
+                setToolbarPosition(142);
             } else if (openStep[0] === '3') {
-                setToolbarPosition(216);
+                setToolbarPosition(198);
             } else if (openStep[0] === '4') {
-                setToolbarPosition(273);
+                setToolbarPosition(255);
             } else if (openStep[0] === '5') {
-                setToolbarPosition(329);
+                setToolbarPosition(312);
             } else if (openStep[0] === '6') {
-                setToolbarPosition(386);
+                setToolbarPosition(368);
             } else if (openStep[0] === '8' && !Array.isArray(currentStep)) {
                 setToolbarPosition(102);
             } else if (openStep[0] === '8' && Array.isArray(currentStep)) {
-                setToolbarPosition(224);
+                setToolbarPosition(204);
             } else if (openStep[0] === '9') {
-                setToolbarPosition(159);
+                setToolbarPosition(177);
             } else if (openStep[0] === '11' && !Array.isArray(currentStep)) {
                 setToolbarPosition(103);
             } else if (openStep[0] === '11' && Array.isArray(currentStep)) {
@@ -1802,6 +1884,18 @@ const UpdateJobsRevised = ({
         } else if (index == "8") {
             const length = skillGroupData.length
             setDynamicArray(Array.from({ length }, () => []));
+            setSelectSkillsData([])
+        } else if (index == "9") {
+            const cleared = components.map(q => ({
+                ...q,
+                question_title: "",
+                question_option: {
+                    part1: [""]
+                },
+                questions_answer: [],
+                is_mandatory: "True",
+            }));
+            setComponents(cleared);
         } else if (index == "11") {
             const updatedArray = behaviours.map((item) => ({
                 ...item,
@@ -1953,7 +2047,7 @@ const UpdateJobsRevised = ({
     };
     useEffect(() => {
         if (Array.isArray(currentStep)) {
-            setToolbarPosition(307)
+            setToolbarPosition(245)
         }
     }, [])
     const handleClosecomboEdu = (e) => {
@@ -2008,6 +2102,14 @@ const UpdateJobsRevised = ({
         if (!cleaned) return "";
         return new Intl.NumberFormat("en-US").format(Number(cleaned));
     };
+    const handleRemoveSkillGroup = (cv) => {
+        const filterData = skillGroupData.filter((Val) => Val?.uid != cv?.uid)
+        setSkillGroupsData(filterData)
+    }
+    const handleRefreshSkillGroup = (cv) => {
+        const removeIds = cv?.group_skill?.map(item => item.uid);
+        setSelectSkillsData(prev => prev.filter(item => !removeIds.includes(item.uid)));
+    }
 
     // console.log(behaviours)
 
@@ -2023,10 +2125,11 @@ const UpdateJobsRevised = ({
     console.log('==========>update======>', updateFormData)
     // console.log('=========>', dynamicArray)
     console.log('dada ji', currentStep, openStep[0])
-    console.log(SelectSkillsData)
+    console.log('mahesh=====', SelectSkillsData)
     console.log(addSubSkill)
     console.log(components)
     console.log(addSubSkill.length)
+    console.log(skillGroupData)
     return (
         <>
             <Modal
@@ -2057,23 +2160,16 @@ const UpdateJobsRevised = ({
                     <ul className="expand-view-btn">
                         <li>
                             <button type="button" className="expand-btn">
-                       <i className="fa-solid fa-angles-up"></i>
-                    </button>
-                    </li>
-                          <li> <button type="button" className="expand-btn">
-                       <i className="fa-solid fa-angles-down"></i>
-                    </button></li>
-                            <li>  <button type="button" className="view-btnicon">
-                        <i className="fa fa-eye"></i>
-                    </button></li>
+                                <i className="fa-solid fa-angles-up"></i>
+                            </button>
+                        </li>
+                        <li> <button type="button" className="expand-btn">
+                            <i className="fa-solid fa-angles-down"></i>
+                        </button></li>
+                        <li>  <button type="button" className="view-btnicon">
+                            <i className="fa fa-eye"></i>
+                        </button></li>
                     </ul>
-
-                     
-                    
-
-                  
-
-
                 </Modal.Header>
                 <Modal.Body className="p-0 bg-lightgray">
                     <Row className="justify-content-center">
@@ -2197,7 +2293,7 @@ const UpdateJobsRevised = ({
                                     <>
                                         <Accordion.Item eventKey="0">
                                             <Accordion.Header className="bg-lightblue" onClick={() => setOpenStep([])}>Requirements</Accordion.Header>
-                                            {currentStep !== "0" && (<p className="short_text">Define your ideal hire in detail here. Use flags to indicate the importance as needed. All fields are mandatory</p>)}
+                                            {/* {currentStep !== "0" && (<p className="short_text">Define your ideal hire in detail here. Use flags to indicate the importance as needed. All fields are mandatory</p>)} */}
                                             <Accordion.Body>
                                                 <p>
                                                     Use this section to define your ideal hire in more detail.
@@ -2214,8 +2310,8 @@ const UpdateJobsRevised = ({
                                                 </p>
                                                 <ul className="applicant_info">
                                                     <li>
-                                                        <h6>Applicant Name</h6>
-                                                        <strong>Match</strong>
+                                                        <h6>
+                                                            <strong>Applicant Name</strong> Match </h6>
                                                     </li>
                                                     <li>
                                                         <p>James Winslow</p>
@@ -2242,20 +2338,20 @@ const UpdateJobsRevised = ({
                                                     {!openStep.includes("1") && <small className="text-muted">{updateFormData?.display_salary && <i>Don’t Display</i>} {updateFormData?.non_negotiable_salary && <i>Non Negotiable</i>}</small>}
                                                 </span>
                                                 {/* <svg
-                                            className="flag_icon"
-                                            width="16"
-                                            height="16"
-                                            viewBox="0 0 16 16"
-                                            fill={importantFlag.salary?"#f97066":'none'}
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                d="M9.33366 4.66667H13.0939C13.3921 4.66667 13.5412 4.66667 13.6284 4.72936C13.7045 4.78406 13.754 4.86826 13.7649 4.96133C13.7774 5.068 13.705 5.19834 13.5601 5.45901L12.6627 7.07432C12.6102 7.16886 12.584 7.21613 12.5737 7.26618C12.5646 7.31049 12.5646 7.35618 12.5737 7.40048C12.584 7.45054 12.6102 7.49781 12.6627 7.59234L13.5601 9.20766C13.7049 9.46833 13.7774 9.59867 13.7649 9.70534C13.754 9.79841 13.7045 9.8826 13.6284 9.93731C13.5412 10 13.3921 10 13.0939 10H8.40033C8.02696 10 7.84027 10 7.69766 9.92734C7.57222 9.86342 7.47024 9.76144 7.40632 9.63599C7.33366 9.49339 7.33366 9.3067 7.33366 8.93333V7.33333M2.66699 14L2.66699 2.66667M2.66699 7.33333H8.26699C8.64036 7.33333 8.82704 7.33333 8.96965 7.26067C9.09509 7.19676 9.19708 7.09477 9.261 6.96933C9.33366 6.82672 9.33366 6.64004 9.33366 6.26667V3.06667C9.33366 2.6933 9.33366 2.50661 9.261 2.36401C9.19708 2.23856 9.09509 2.13658 8.96965 2.07266C8.82704 2 8.64036 2 8.26699 2H3.73366C3.36029 2 3.17361 2 3.031 2.07266C2.90556 2.13658 2.80357 2.23856 2.73965 2.36401C2.66699 2.50661 2.66699 2.6933 2.66699 3.06667V7.33333Z"
-                                                stroke="#98A2B3"
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                            />
-                                        </svg> */}
+                                                className="flag_icon"
+                                                width="16"
+                                                height="16"
+                                                viewBox="0 0 16 16"
+                                                fill={importantFlag.salary?"#f97066":'none'}
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path
+                                                    d="M9.33366 4.66667H13.0939C13.3921 4.66667 13.5412 4.66667 13.6284 4.72936C13.7045 4.78406 13.754 4.86826 13.7649 4.96133C13.7774 5.068 13.705 5.19834 13.5601 5.45901L12.6627 7.07432C12.6102 7.16886 12.584 7.21613 12.5737 7.26618C12.5646 7.31049 12.5646 7.35618 12.5737 7.40048C12.584 7.45054 12.6102 7.49781 12.6627 7.59234L13.5601 9.20766C13.7049 9.46833 13.7774 9.59867 13.7649 9.70534C13.754 9.79841 13.7045 9.8826 13.6284 9.93731C13.5412 10 13.3921 10 13.0939 10H8.40033C8.02696 10 7.84027 10 7.69766 9.92734C7.57222 9.86342 7.47024 9.76144 7.40632 9.63599C7.33366 9.49339 7.33366 9.3067 7.33366 8.93333V7.33333M2.66699 14L2.66699 2.66667M2.66699 7.33333H8.26699C8.64036 7.33333 8.82704 7.33333 8.96965 7.26067C9.09509 7.19676 9.19708 7.09477 9.261 6.96933C9.33366 6.82672 9.33366 6.64004 9.33366 6.26667V3.06667C9.33366 2.6933 9.33366 2.50661 9.261 2.36401C9.19708 2.23856 9.09509 2.13658 8.96965 2.07266C8.82704 2 8.64036 2 8.26699 2H3.73366C3.36029 2 3.17361 2 3.031 2.07266C2.90556 2.13658 2.80357 2.23856 2.73965 2.36401C2.66699 2.50661 2.66699 2.6933 2.66699 3.06667V7.33333Z"
+                                                    stroke="#98A2B3"
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                />
+                                            </svg> */}
                                                 {importantFlag.salary ? (
                                                     <img src={flagFill} className="flag_icon" onClick={(e) => removeImportantFlag(e, '1')} />
                                                 ) : (
@@ -2269,21 +2365,21 @@ const UpdateJobsRevised = ({
                                                 <Row className="align-items-center mb-3">
                                                     <div className="form-group w-auto mb-0">
                                                         {/* <Form.Select
-                                                            name="salary_price_type"
-                                                            aria-label="Default select example"
-                                                            value={updateFormData?.salary_price_type}
-                                                            onChange={(e) => {
-                                                                handleFormData(e);
-                                                                setPriceRangeType(e.target.value);
-                                                            }}
-                                                            className="sm-fselect"
-                                                        >
-                                                            <option selected value="Salary-range">
-                                                                Salary Range
-                                                            </option>
-                                                            <option value="Min-salary">Min. Salary</option>
-                                                            <option value="Max-salary">Max. Salary</option>
-                                                        </Form.Select> */}
+                                                                name="salary_price_type"
+                                                                aria-label="Default select example"
+                                                                value={updateFormData?.salary_price_type}
+                                                                onChange={(e) => {
+                                                                    handleFormData(e);
+                                                                    setPriceRangeType(e.target.value);
+                                                                }}
+                                                                className="sm-fselect"
+                                                            >
+                                                                <option selected value="Salary-range">
+                                                                    Salary Range
+                                                                </option>
+                                                                <option value="Min-salary">Min. Salary</option>
+                                                                <option value="Max-salary">Max. Salary</option>
+                                                            </Form.Select> */}
                                                         <Select styles={customStyles} value={salaryRangeValue} options={salaryRangeOption} className="sm-fselect react_selectbox"
                                                             onChange={(e) => {
                                                                 setUpdateFormData({
@@ -2330,16 +2426,16 @@ const UpdateJobsRevised = ({
                                                         )}
                                                     <div className="form-group w-auto mb-0 pe-1">
                                                         {/* <Form.Select
-                                                            name="currency"
-                                                            aria-label="Default select example"
-                                                            className="sm-fselect"
-                                                            onChange={handleFormData}
-                                                            value={updateFormData?.currency}
-                                                        >
-                                                            <option selected value="INR">
-                                                                INR
-                                                            </option>
-                                                        </Form.Select> */}
+                                                                name="currency"
+                                                                aria-label="Default select example"
+                                                                className="sm-fselect"
+                                                                onChange={handleFormData}
+                                                                value={updateFormData?.currency}
+                                                            >
+                                                                <option selected value="INR">
+                                                                    INR
+                                                                </option>
+                                                            </Form.Select> */}
                                                         <Select styles={customStyles} value={{ value: "INR", label: "INR" }} options={[{ value: "INR", label: "INR" }]} className="sm-fselect react_selectbox"
                                                             onChange={(e) => {
                                                                 setUpdateFormData({
@@ -2351,16 +2447,16 @@ const UpdateJobsRevised = ({
                                                     </div>
                                                     <div className="form-group w-auto mb-0 ps-1">
                                                         {/* <Form.Select
-                                                            name="salary_type"
-                                                            aria-label="Default select example"
-                                                            className="sm-fselect"
-                                                            onChange={handleFormData}
-                                                            value={updateFormData?.salary_type}
-                                                        >
-                                                            <option value="" disabled hidden>Select..</option>
-                                                            <option value="Per-Month">Per Month</option>
-                                                            <option value="Per-Annum">Per Anmum</option>
-                                                        </Form.Select> */}
+                                                                name="salary_type"
+                                                                aria-label="Default select example"
+                                                                className="sm-fselect"
+                                                                onChange={handleFormData}
+                                                                value={updateFormData?.salary_type}
+                                                            >
+                                                                <option value="" disabled hidden>Select..</option>
+                                                                <option value="Per-Month">Per Month</option>
+                                                                <option value="Per-Annum">Per Anmum</option>
+                                                            </Form.Select> */}
                                                         <Select styles={customStyles} value={salaryTypeValue} options={salaryTypeOption} className="sm-fselect react_selectbox"
                                                             onChange={(e) => {
                                                                 setUpdateFormData({
@@ -2401,7 +2497,8 @@ const UpdateJobsRevised = ({
                                                         // onClick={handleCreateForm}
                                                         type="button"
                                                         class="btn btn-lightgray next-btn-shadow"
-                                                        onClick={handleNext}
+                                                        // onClick={handleNext}
+                                                        onClick={requireShow}
                                                     >
                                                         Next
                                                     </button>
@@ -2429,26 +2526,26 @@ const UpdateJobsRevised = ({
                                                             Minimum Education
                                                         </Form.Label>
                                                         {/* <Form.Select
-                                                            aria-label="Default select example"
-                                                            className="sm-fselect"
-                                                            name="minimum_education"
-                                                            value={updateFormData?.minimum_education}
-                                                            onChange={(e) => {
-                                                                setMinEdu(e.target.value);
-                                                                handleFormData(e);
-                                                            }}
-                                                        >
-                                                            <option value="" disabled hidden>Select...</option>                                                            
-                                                            <option value="Below Secondary Education">Below Secondary Education</option>
-                                                            <option value="Upper Secondary (Intermediate, High School, Grade 12)">Upper Secondary (Intermediate, High School, Grade 12)</option>
-                                                            <option value="Certification  / Vocational / Technical Training">Certification  / Vocational / Technical Training</option>
-                                                            <option value="Diploma / Associate Degree">Diploma / Associate Degree</option>
-                                                            <option value="Bachelor's Degree">Bachelor's Degree</option>
-                                                            <option value="Master's Degree">Master's Degree</option>
-                                                            <option value="Professional Degree (e.g., MD, JD)">Professional Degree (e.g., MD, JD)</option>
-                                                            <option value="Doctoral Degree (Ph.D., Ed.D.)">Doctoral Degree (Ph.D., Ed.D.)</option>
-                                                            <option value="Postdoctoral Research">Postdoctoral Research</option>
-                                                        </Form.Select> */}
+                                                                aria-label="Default select example"
+                                                                className="sm-fselect"
+                                                                name="minimum_education"
+                                                                value={updateFormData?.minimum_education}
+                                                                onChange={(e) => {
+                                                                    setMinEdu(e.target.value);
+                                                                    handleFormData(e);
+                                                                }}
+                                                            >
+                                                                <option value="" disabled hidden>Select...</option>                                                            
+                                                                <option value="Below Secondary Education">Below Secondary Education</option>
+                                                                <option value="Upper Secondary (Intermediate, High School, Grade 12)">Upper Secondary (Intermediate, High School, Grade 12)</option>
+                                                                <option value="Certification  / Vocational / Technical Training">Certification  / Vocational / Technical Training</option>
+                                                                <option value="Diploma / Associate Degree">Diploma / Associate Degree</option>
+                                                                <option value="Bachelor's Degree">Bachelor's Degree</option>
+                                                                <option value="Master's Degree">Master's Degree</option>
+                                                                <option value="Professional Degree (e.g., MD, JD)">Professional Degree (e.g., MD, JD)</option>
+                                                                <option value="Doctoral Degree (Ph.D., Ed.D.)">Doctoral Degree (Ph.D., Ed.D.)</option>
+                                                                <option value="Postdoctoral Research">Postdoctoral Research</option>
+                                                            </Form.Select> */}
                                                         <Select styles={customStyles} value={minEducationValue} options={minimumEducationOption} className="sm-fselect react_selectbox"
                                                             onChange={(e) => {
                                                                 setUpdateFormData({
@@ -2465,39 +2562,39 @@ const UpdateJobsRevised = ({
                                                         </span>
                                                     </Form.Group>
                                                     {/* <Form.Group
-                                                className="mb-3"
-                                                controlId="exampleForm.ControlTextarea1"
-                                            >
-                                                <Form.Label className="sm-label">
-                                                    Areas of Education
-                                                </Form.Label>
-                                                <div className="tagarea p-2">
-                                                    {badges.map((badge, index) => (
-                                                        <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
-                                                            {badge?.qualification_name}
-                                                            <button
-                                                                className="btn close_tag"
-                                                                style={{ cursor: "pointer" }}
-                                                                onClick={() => handleRemoveBadge(index)}
-                                                            >
-                                                                <i className="fa fa-close ms-1"></i>
-                                                            </button>
-                                                        </Badge>
-                                                    ))}
-                                                    <Form.Control
-                                                        type="text"
-                                                        className="inline-input"
-                                                        placeholder="Enter text"
-                                                        onChange={(e) => {
-                                                            setInputValue(e?.target?.value);
-                                                        }}
-                                                        onKeyDown={handleKeyPress}
-                                                    />
-                                                </div>
-                                                <span className="required_text">
-                                                    Select all relevant areas of education
-                                                </span>
-                                            </Form.Group> */}
+                                                    className="mb-3"
+                                                    controlId="exampleForm.ControlTextarea1"
+                                                >
+                                                    <Form.Label className="sm-label">
+                                                        Areas of Education
+                                                    </Form.Label>
+                                                    <div className="tagarea p-2">
+                                                        {badges.map((badge, index) => (
+                                                            <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
+                                                                {badge?.qualification_name}
+                                                                <button
+                                                                    className="btn close_tag"
+                                                                    style={{ cursor: "pointer" }}
+                                                                    onClick={() => handleRemoveBadge(index)}
+                                                                >
+                                                                    <i className="fa fa-close ms-1"></i>
+                                                                </button>
+                                                            </Badge>
+                                                        ))}
+                                                        <Form.Control
+                                                            type="text"
+                                                            className="inline-input"
+                                                            placeholder="Enter text"
+                                                            onChange={(e) => {
+                                                                setInputValue(e?.target?.value);
+                                                            }}
+                                                            onKeyDown={handleKeyPress}
+                                                        />
+                                                    </div>
+                                                    <span className="required_text">
+                                                        Select all relevant areas of education
+                                                    </span>
+                                                </Form.Group> */}
                                                     {/* <-------------------> */}
                                                     <Form.Group
                                                         className="mb-3"
@@ -2529,13 +2626,8 @@ const UpdateJobsRevised = ({
                                                                     // disabled={row.saved}
                                                                     onChange={handleAreaOfEducation}
                                                                     onBlur={handleClosecomboEdu}
-                                                                    
-                                                                    // Close dropdown on blur
+                                                                // Close dropdown on blur
                                                                 />
-
-                                                                
-
-
                                                                 {aresEducationOption?.length > 0 ? (
                                                                     <Dropdown show={true} >
                                                                         <Dropdown.Menu className="w-100 dropdown_ctm">
@@ -2611,30 +2703,30 @@ const UpdateJobsRevised = ({
                                                     </span>
                                                 )}
                                             </Accordion.Header>
-                                            <Accordion.Body  className="custom-experince-box" ref={(el) => (sectionRefs.current['3'] = el)}>
+                                            <Accordion.Body className="custom-experince-box" ref={(el) => (sectionRefs.current['3'] = el)}>
                                                 <Form>
                                                     <Form.Group className="mb-3 ">
                                                         <Form.Label className="sm-label">
-                                                            Ideal Years of Experience 
+                                                            Ideal Years of Experience
                                                         </Form.Label>
 
                                                         <Row className="gap-2 align-items-center mx-0 custom-range-input">
                                                             {/* <Form.Select
-                                                                name="year_of_experience_type"
-                                                                onChange={(e) => {
-                                                                    handleFormData(e);
-                                                                    setExpRangeTpe(e.target.value);
-                                                                }}
-                                                                value={updateFormData?.year_of_experience_type}
-                                                                aria-label="Default select example"
-                                                                className="sm-fselect w-150"
-                                                            >
-                                                                <option value="Range">Range</option>
-
-                                                                <option value="Min">Min</option>
-
-                                                                <option value="Max">Max</option>
-                                                            </Form.Select> */}
+                                                                    name="year_of_experience_type"
+                                                                    onChange={(e) => {
+                                                                        handleFormData(e);
+                                                                        setExpRangeTpe(e.target.value);
+                                                                    }}
+                                                                    value={updateFormData?.year_of_experience_type}
+                                                                    aria-label="Default select example"
+                                                                    className="sm-fselect w-150"
+                                                                >
+                                                                    <option value="Range">Range</option>
+    
+                                                                    <option value="Min">Min</option>
+    
+                                                                    <option value="Max">Max</option>
+                                                                </Form.Select> */}
                                                             <Select styles={customStyles} value={ExpRangeValue} options={expRangeOption} className="sm-fselect w-150 react_selectbox"
                                                                 onChange={(e) => {
                                                                     setUpdateFormData({
@@ -2679,24 +2771,24 @@ const UpdateJobsRevised = ({
                                                                     />
                                                                 )}
                                                             {/* <RangeSlider
-                                                        minValue={minValue}
-                                                        setMinValue={setMinValue}
-                                                        displayMaxValue={displayMaxValue}
-                                                        maxValue={maxValue}
-                                                        setMaxValue={setMaxValue}
-                                                    /> */}
-                                                    <div className="custom-experince-range-slider">
-                                                            <RangeSliderNew
-                                                               
-                                                                range={range}
-                                                                setRange={setRange}
-                                                                minExp={minValue}
-                                                                setMinExp={setMinValue}
-                                                                displayMaxValue={displayMaxValue}
-                                                                maxExp={maxValue}
-                                                                setMaxExp={setMaxValue}
-                                                            />
-                                                            </div>
+                                                            minValue={minValue}
+                                                            setMinValue={setMinValue}
+                                                            displayMaxValue={displayMaxValue}
+                                                            maxValue={maxValue}
+                                                            setMaxValue={setMaxValue}
+                                                        /> */}
+                                                            {/* <div className="custom-experince-range-slider">
+                                                                <RangeSliderNew
+
+                                                                    range={range}
+                                                                    setRange={setRange}
+                                                                    minExp={minValue}
+                                                                    setMinExp={setMinValue}
+                                                                    displayMaxValue={displayMaxValue}
+                                                                    maxExp={maxValue}
+                                                                    setMaxExp={setMaxValue}
+                                                                />
+                                                            </div> */}
                                                         </Row>
                                                     </Form.Group>
 
@@ -2710,30 +2802,30 @@ const UpdateJobsRevised = ({
                                                             </Form.Label>
 
                                                             {/* <div className="tagarea p-2">
-                                                        {IndustriesBadges.map((badge, index) => (
-                                                            <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
-                                                                {badge?.industry_name}
-
-                                                                <button
-                                                                    className="btn close_tag"
-                                                                    onClick={() =>
-                                                                        handleRemoveIndustriesBadge(index)
-                                                                    }
-                                                                >
-                                                                    <i className="fa fa-close ms-1"></i>
-                                                                </button>
-                                                            </Badge>
-                                                        ))}
-                                                        <Form.Control
-                                                            type="text"
-                                                            className="inline-input"
-                                                            placeholder="Enter text"
-                                                            onChange={(e) => {
-                                                                setInputValue(e?.target?.value);
-                                                            }}
-                                                            onKeyDown={handleKeyPressForIndustries}
-                                                        />
-                                                    </div> */}
+                                                            {IndustriesBadges.map((badge, index) => (
+                                                                <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
+                                                                    {badge?.industry_name}
+    
+                                                                    <button
+                                                                        className="btn close_tag"
+                                                                        onClick={() =>
+                                                                            handleRemoveIndustriesBadge(index)
+                                                                        }
+                                                                    >
+                                                                        <i className="fa fa-close ms-1"></i>
+                                                                    </button>
+                                                                </Badge>
+                                                            ))}
+                                                            <Form.Control
+                                                                type="text"
+                                                                className="inline-input"
+                                                                placeholder="Enter text"
+                                                                onChange={(e) => {
+                                                                    setInputValue(e?.target?.value);
+                                                                }}
+                                                                onKeyDown={handleKeyPressForIndustries}
+                                                            />
+                                                        </div> */}
                                                             <div className="tagarea p-2 position-relative">
                                                                 {IndustriesBadges?.map((badge, index) => (
                                                                     <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
@@ -2795,46 +2887,46 @@ const UpdateJobsRevised = ({
                                                             </Form.Label>
 
                                                             {/* <div className="tagarea p-2">
-                                                        {restrictedRoleBadges.map((badge, index) => (
-                                                            <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
-                                                                {badge?.is_like_name}
-
-                                                                <button
-                                                                    className="btn close_tag"
-                                                                    style={{ cursor: "pointer" }}
-                                                                    onClick={() => handleRemoveRoleBadge(index)}
-                                                                >
-                                                                    <i className="fa fa-close ms-1"></i>
-                                                                </button>
-                                                            </Badge>
-                                                        ))}
-
-                                                        <Form.Control
-                                                            type="text"
-                                                            className="inline-input"
-                                                            placeholder="Enter text"
-                                                            onChange={(e) => {
-                                                                setInputValue(e?.target?.value);
-                                                                handleLike(e);
-                                                            }}
-                                                        />
-                                                        {isLikeDropdown && isLikeData.length > 0 && (
-                                                            <div className="ctm_dropdown ct_scrollbar">
-                                                                <ul>
-                                                                    {isLikeData.map((item) => (
-                                                                        <li
-                                                                            key={item.is_like_name}
-                                                                            onClick={() =>
-                                                                                handleSelectedLikeItems(item)
-                                                                            }
-                                                                        >
-                                                                            {item.is_like_name}
-                                                                        </li>
-                                                                    ))}
-                                                                </ul>
-                                                            </div>
-                                                        )}
-                                                    </div> */}
+                                                            {restrictedRoleBadges.map((badge, index) => (
+                                                                <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
+                                                                    {badge?.is_like_name}
+    
+                                                                    <button
+                                                                        className="btn close_tag"
+                                                                        style={{ cursor: "pointer" }}
+                                                                        onClick={() => handleRemoveRoleBadge(index)}
+                                                                    >
+                                                                        <i className="fa fa-close ms-1"></i>
+                                                                    </button>
+                                                                </Badge>
+                                                            ))}
+    
+                                                            <Form.Control
+                                                                type="text"
+                                                                className="inline-input"
+                                                                placeholder="Enter text"
+                                                                onChange={(e) => {
+                                                                    setInputValue(e?.target?.value);
+                                                                    handleLike(e);
+                                                                }}
+                                                            />
+                                                            {isLikeDropdown && isLikeData.length > 0 && (
+                                                                <div className="ctm_dropdown ct_scrollbar">
+                                                                    <ul>
+                                                                        {isLikeData.map((item) => (
+                                                                            <li
+                                                                                key={item.is_like_name}
+                                                                                onClick={() =>
+                                                                                    handleSelectedLikeItems(item)
+                                                                                }
+                                                                            >
+                                                                                {item.is_like_name}
+                                                                            </li>
+                                                                        ))}
+                                                                    </ul>
+                                                                </div>
+                                                            )}
+                                                        </div> */}
                                                             <div className="tagarea p-2 position-relative">
                                                                 {restrictedRoleBadges?.map((badge, index) => (
                                                                     <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
@@ -3047,32 +3139,32 @@ const UpdateJobsRevised = ({
                                                             Spoken Language
                                                         </Form.Label>
                                                         {/* <div className="tagarea p-2">
-                                                        {spokenLanguageBadges.map((badge, index) => (
-                                                            <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
-                                                                {badge?.language_name}
-                                                                <button
-                                                                    className="btn close_tag"
-                                                                    style={{ cursor: "pointer" }}
-                                                                    onClick={() =>
-                                                                        handleRemoveSpokenLanguageBadge(index)
-                                                                    }
-                                                                >
-                                                                    <i className="fa fa-close ms-1"></i>
-                                                                </button>
-                                                            </Badge>
-                                                        ))}
-                                                        <Form.Control
-                                                            type="text"
-                                                            className="inline-input"
-                                                            placeholder="Enter text"
-                                                            onChange={(e) => {
-                                                                setInputValue(e?.target?.value);
-                                                            }}
-                                                            onKeyDown={(e) => {
-                                                                handleKeyPressForlanguages(e, "spoken");
-                                                            }}
-                                                        />
-                                                    </div> */}
+                                                            {spokenLanguageBadges.map((badge, index) => (
+                                                                <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
+                                                                    {badge?.language_name}
+                                                                    <button
+                                                                        className="btn close_tag"
+                                                                        style={{ cursor: "pointer" }}
+                                                                        onClick={() =>
+                                                                            handleRemoveSpokenLanguageBadge(index)
+                                                                        }
+                                                                    >
+                                                                        <i className="fa fa-close ms-1"></i>
+                                                                    </button>
+                                                                </Badge>
+                                                            ))}
+                                                            <Form.Control
+                                                                type="text"
+                                                                className="inline-input"
+                                                                placeholder="Enter text"
+                                                                onChange={(e) => {
+                                                                    setInputValue(e?.target?.value);
+                                                                }}
+                                                                onKeyDown={(e) => {
+                                                                    handleKeyPressForlanguages(e, "spoken");
+                                                                }}
+                                                            />
+                                                        </div> */}
                                                         <div className="tagarea p-2 position-relative">
                                                             {spokenLanguageBadges?.map((badge, index) => (
                                                                 <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
@@ -3131,32 +3223,32 @@ const UpdateJobsRevised = ({
                                                             Written and Reading Language
                                                         </Form.Label>
                                                         {/* <div className="tagarea p-2">
-                                                        {rdnwBadges.map((badge, index) => (
-                                                            <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
-                                                                {badge?.language_name}
-                                                                <button
-                                                                    className="btn close_tag"
-                                                                    style={{ cursor: "pointer" }}
-                                                                    onClick={() =>
-                                                                        handleRemoveReadAndWriteLanguageBadge(index)
-                                                                    }
-                                                                >
-                                                                    <i className="fa fa-close ms-1"></i>
-                                                                </button>
-                                                            </Badge>
-                                                        ))}
-                                                        <Form.Control
-                                                            type="text"
-                                                            className="inline-input"
-                                                            placeholder="Enter text"
-                                                            onChange={(e) => {
-                                                                setInputValue(e?.target?.value);
-                                                            }}
-                                                            onKeyDown={(e) => {
-                                                                handleKeyPressForlanguages(e, "rdnw");
-                                                            }}
-                                                        />
-                                                    </div> */}
+                                                            {rdnwBadges.map((badge, index) => (
+                                                                <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
+                                                                    {badge?.language_name}
+                                                                    <button
+                                                                        className="btn close_tag"
+                                                                        style={{ cursor: "pointer" }}
+                                                                        onClick={() =>
+                                                                            handleRemoveReadAndWriteLanguageBadge(index)
+                                                                        }
+                                                                    >
+                                                                        <i className="fa fa-close ms-1"></i>
+                                                                    </button>
+                                                                </Badge>
+                                                            ))}
+                                                            <Form.Control
+                                                                type="text"
+                                                                className="inline-input"
+                                                                placeholder="Enter text"
+                                                                onChange={(e) => {
+                                                                    setInputValue(e?.target?.value);
+                                                                }}
+                                                                onKeyDown={(e) => {
+                                                                    handleKeyPressForlanguages(e, "rdnw");
+                                                                }}
+                                                            />
+                                                        </div> */}
 
                                                         <div className="tagarea p-2 position-relative">
                                                             {rdnwBadges.map((badge, index) => (
@@ -3266,28 +3358,28 @@ const UpdateJobsRevised = ({
                                                             Preferred States / Cities / Towns
                                                         </Form.Label>
                                                         {/* <div className="tagarea p-2">
-                                                        {locationBadges.map((badge, index) => (
-                                                            <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
-                                                                {badge?.location_name}
-                                                                <button
-                                                                    className="btn close_tag"
-                                                                    style={{ cursor: "pointer" }}
-                                                                    onClick={() => handleRemoveLocationBadge(index)}
-                                                                >
-                                                                    <i className="fa fa-close ms-1"></i>
-                                                                </button>
-                                                            </Badge>
-                                                        ))}
-                                                        <Form.Control
-                                                            type="text"
-                                                            className="inline-input"
-                                                            placeholder="Enter text"
-                                                            onChange={(e) => {
-                                                                setInputValue(e?.target?.value);
-                                                            }}
-                                                            onKeyDown={handleKeyPressForLocation}
-                                                        />
-                                                    </div> */}
+                                                            {locationBadges.map((badge, index) => (
+                                                                <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
+                                                                    {badge?.location_name}
+                                                                    <button
+                                                                        className="btn close_tag"
+                                                                        style={{ cursor: "pointer" }}
+                                                                        onClick={() => handleRemoveLocationBadge(index)}
+                                                                    >
+                                                                        <i className="fa fa-close ms-1"></i>
+                                                                    </button>
+                                                                </Badge>
+                                                            ))}
+                                                            <Form.Control
+                                                                type="text"
+                                                                className="inline-input"
+                                                                placeholder="Enter text"
+                                                                onChange={(e) => {
+                                                                    setInputValue(e?.target?.value);
+                                                                }}
+                                                                onKeyDown={handleKeyPressForLocation}
+                                                            />
+                                                        </div> */}
                                                         {/* <--------workingbaba-------? */}
                                                         <div className="tagarea p-2 position-relative">
                                                             {locationBadges.map((badge, index) => (
@@ -3409,7 +3501,10 @@ const UpdateJobsRevised = ({
                                                 handleOpenStep("8")
                                                 setExpandCollapse([2, 3])
                                             }}>
-                                                Skills
+                                                <span>
+                                                    Skills
+                                                    <small className="small_subtitle" > Pick up to 12 Skills across various Skill Groups. Optionally, you can pick 3 Skills are Important for the role.</small>
+                                                </span>
                                                 <div className="head_actions">
                                                     <span className={`imprt_icon ${mustHaveSkills.length >= 1 && 'text-primery'}`}>
                                                         <i class={`${mustHaveSkills.length >= 1 ? 'fa' : 'far'} fa-star`} aria-hidden="true"></i>
@@ -3422,6 +3517,8 @@ const UpdateJobsRevised = ({
                                                     </span>
                                                     <span className="count ms-1">1 of 3</span>
                                                 </div>
+
+
                                             </Accordion.Header>
                                             <Accordion.Body ref={(el) => (sectionRefs.current['8'] = el)}>
                                                 <Row className="skills_seraching">
@@ -3485,8 +3582,14 @@ const UpdateJobsRevised = ({
                                                 {skillGroupData?.length > 0 && (
                                                     skillGroupData?.map((Val, i) => (
                                                         <div className="starttag_box">
-                                                            <div className="stagbox_head">
-                                                                <h6>{Val?.skill_group_name}</h6>
+                                                            <div className="d-flex justify-content-between">
+                                                                <div className="stagbox_head">
+                                                                    <h6>{Val?.skill_group_name}</h6>
+                                                                </div>
+                                                                <div className="group-save-refresh">
+                                                                    <button className="refesh-btn" onClick={() => handleRefreshSkillGroup(Val)}><i class="fa fa-undo"></i></button>
+                                                                    <button className="close-btn" onClick={() => handleRemoveSkillGroup(Val)}><i class="fa-solid fa-xmark"></i></button>
+                                                                </div>
                                                             </div>
                                                             <div className="stag_list mt-2">
                                                                 {Val?.group_skill?.length > 0 &&
@@ -3654,80 +3757,10 @@ const UpdateJobsRevised = ({
                                                         <i className="fa fa-plus me-2"></i>
                                                         Add
                                                     </button>
-                                                    {/* <div
-                                                    class="btn btn-lightgray p-3"
-                                                    onClick={(e) => {
-                                                        setActiveKey(activeKey === "9" ? null : "9");
-                                                        setComponents([]);
-                                                        setActiveKeyAdd(false);
-                                                    }}
-                                                >
-                                                    <svg
-                                                        className="flag_icon2"
-                                                        width="16"
-                                                        height="16"
-                                                        viewBox="0 0 16 16"
-                                                        fill="none"
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                    >
-                                                        <path
-                                                            d="M9.33366 4.66667H13.0939C13.3921 4.66667 13.5412 4.66667 13.6284 4.72936C13.7045 4.78406 13.754 4.86826 13.7649 4.96133C13.7774 5.068 13.705 5.19834 13.5601 5.45901L12.6627 7.07432C12.6102 7.16886 12.584 7.21613 12.5737 7.26618C12.5646 7.31049 12.5646 7.35618 12.5737 7.40048C12.584 7.45054 12.6102 7.49781 12.6627 7.59234L13.5601 9.20766C13.7049 9.46833 13.7774 9.59867 13.7649 9.70534C13.754 9.79841 13.7045 9.8826 13.6284 9.93731C13.5412 10 13.3921 10 13.0939 10H8.40033C8.02696 10 7.84027 10 7.69766 9.92734C7.57222 9.86342 7.47024 9.76144 7.40632 9.63599C7.33366 9.49339 7.33366 9.3067 7.33366 8.93333V7.33333M2.66699 14L2.66699 2.66667M2.66699 7.33333H8.26699C8.64036 7.33333 8.82704 7.33333 8.96965 7.26067C9.09509 7.19676 9.19708 7.09477 9.261 6.96933C9.33366 6.82672 9.33366 6.64004 9.33366 6.26667V3.06667C9.33366 2.6933 9.33366 2.50661 9.261 2.36401C9.19708 2.23856 9.09509 2.13658 8.96965 2.07266C8.82704 2 8.64036 2 8.26699 2H3.73366C3.36029 2 3.17361 2 3.031 2.07266C2.90556 2.13658 2.80357 2.23856 2.73965 2.36401C2.66699 2.50661 2.66699 2.6933 2.66699 3.06667V7.33333Z"
-                                                            stroke="#98A2B3"
-                                                            stroke-linecap="round"
-                                                            stroke-linejoin="round"
-                                                        />
-                                                    </svg>
-                                                </div> */}
                                                 </div>
                                             </Accordion.Header>
                                             <Accordion.Body ref={(el) => (sectionRefs.current['9'] = el)}>
-                                                <div className="starttag_box ctmqus_panel mt-0">
-                                                    {/* {!activeKeyAdd && ( */}
-                                                    <>
-                                                        <div className="stagbox_head">
-                                                            <span className="border_box">
-                                                                How many companies have you changed in your
-                                                                career?
-                                                            </span>
-                                                            <div class="d-flex ms-3">
-                                                                <button type="button" class="icon-btn">
-                                                                    <i class="far fa-save"></i>
-                                                                </button>
-                                                                <button type="button" class="icon-btn">
-                                                                    <i class="far fa-star"></i>
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                        <h6 className="mt-3 hadding-xs">Answer Options</h6>
-                                                        <p className="mt-1">
-                                                            Select the preferred answer using the radio
-                                                            button.
-                                                        </p>
-                                                        <div className="cmt_questions">
-                                                            {["radio"].map((type) => (
-                                                                <div key={`default-${type}`} className="mb-3">
-                                                                    <Form.Check // prettier-ignore
-                                                                        label="No"
-                                                                        name="group1"
-                                                                        type={type}
-                                                                        id={`default-${type}`}
-                                                                    />
-
-                                                                    <Form.Check
-                                                                        label="Yes"
-                                                                        name="group1"
-                                                                        type={type}
-                                                                        id={`default-${type}`}
-                                                                    />
-                                                                </div>
-                                                            ))}
-                                                        </div>
-                                                    </>
-                                                    {/* )} */}
-                                                </div><br />
-                                                {/* <div className="starttag_box ctmqus_panel mt-0"> */}
-                                                {/* {activeKeyAdd && */}
-                                                {components.map((question, questionIndex) => (
+                                                {/* {components.map((question, questionIndex) => (
                                                     <>
                                                         <div className="starttag_box ctmqus_panel mt-0">
                                                             <div key={questionIndex} className="mb-4">
@@ -3744,39 +3777,28 @@ const UpdateJobsRevised = ({
                                                                             }
                                                                             value={question.question_title}
                                                                         />
-                                                                    </span>
-                                                                    {/* {questionIndex === 0 && ( */}
+                                                                    </span>                                                                    
                                                                     <div className="d-flex ms-3">
-                                                                        {/* <Form.Select
-                                                                            onChange={(e) =>
-                                                                                handleQuestionTypeChange(
-                                                                                    questionIndex,
-                                                                                    e.target.value
-                                                                                )
-                                                                            }
-                                                                        >
-                                                                            <option value="single">MCQ Single</option>
-                                                                            <option value="multiple">
-                                                                                MCQ Multiple
-                                                                            </option>
-                                                                        </Form.Select> */}
                                                                         <Select
-                                                                            className="react_selectbox"
-                                                                            styles={customStyles}
-                                                                            options={[{value:"single",label:"MCQ Single"},{value:"multiple",label:"MCQ Multiple"}]}
-                                                                            // value={{value:"single",label:"MCQ Single"}}
-                                                                            onChange={(e)=>{
-                                                                               handleQuestionTypeChange(
-                                                                                    questionIndex,
-                                                                                    e.value
-                                                                                ) 
+                                                                            className="react_selectbox react-select-mcq-change"
+                                                                            classNamePrefix="select"
+                                                                            styles={customStyles2}
+                                                                            value={{
+                                                                                value: "single",
+                                                                                label: (
+                                                                                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                                                        <img src={McqSingleIcon} alt="MCQ Single" style={{ width: '20px', marginRight: '8px' }} />
+                                                                                        <span className="auto-hide"> MCQ Single</span>
+                                                                                    </div>
+                                                                                )
                                                                             }}
-                                                                         />
-                                                                        {/* <button type="button" className="icon-btn">
-                                                                                <i className="far fa-star"></i>
-                                                                            </button> */}
-                                                                    </div>
-                                                                    {/* )} */}
+                                                                            options={options}
+                                                                            formatOptionLabel={({ label }) => label}
+                                                                            onChange={(e) => {
+                                                                                handleQuestionTypeChange(questionIndex, e.value);
+                                                                            }}
+                                                                        />
+                                                                    </div>                                                                    
                                                                     <div className="d-flex ms-3">
                                                                         <button
                                                                             type="button"
@@ -3873,8 +3895,12 @@ const UpdateJobsRevised = ({
                                                         </div>
                                                         <br />
                                                     </>
-                                                ))}
-                                                {/* </div> */}
+                                                ))}                                                 */}
+                                                <CustomQuestionsBuilder
+                                                    components={components}
+                                                    setComponents={setComponents}
+                                                    handleSaveCustomQuestion={handleSaveCustomQuestion}
+                                                />
                                                 <div className="accordion_footer mt-3 justify-content-end">
                                                     <button type="button" class="btn btn-lightgray next-btn-shadow" onClick={handleNext}>
                                                         Next
@@ -3922,20 +3948,20 @@ const UpdateJobsRevised = ({
                                                 <div>
                                                     Behaviour Assessment{" "}
                                                     {/* <svg
-                                                className="flag_icon"
-                                                width="16"
-                                                height="16"
-                                                viewBox="0 0 16 16"
-                                                fill="none"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                            >
-                                                <path
-                                                    d="M9.33366 4.66667H13.0939C13.3921 4.66667 13.5412 4.66667 13.6284 4.72936C13.7045 4.78406 13.754 4.86826 13.7649 4.96133C13.7774 5.068 13.705 5.19834 13.5601 5.45901L12.6627 7.07432C12.6102 7.16886 12.584 7.21613 12.5737 7.26618C12.5646 7.31049 12.5646 7.35618 12.5737 7.40048C12.584 7.45054 12.6102 7.49781 12.6627 7.59234L13.5601 9.20766C13.7049 9.46833 13.7774 9.59867 13.7649 9.70534C13.754 9.79841 13.7045 9.8826 13.6284 9.93731C13.5412 10 13.3921 10 13.0939 10H8.40033C8.02696 10 7.84027 10 7.69766 9.92734C7.57222 9.86342 7.47024 9.76144 7.40632 9.63599C7.33366 9.49339 7.33366 9.3067 7.33366 8.93333V7.33333M2.66699 14L2.66699 2.66667M2.66699 7.33333H8.26699C8.64036 7.33333 8.82704 7.33333 8.96965 7.26067C9.09509 7.19676 9.19708 7.09477 9.261 6.96933C9.33366 6.82672 9.33366 6.64004 9.33366 6.26667V3.06667C9.33366 2.6933 9.33366 2.50661 9.261 2.36401C9.19708 2.23856 9.09509 2.13658 8.96965 2.07266C8.82704 2 8.64036 2 8.26699 2H3.73366C3.36029 2 3.17361 2 3.031 2.07266C2.90556 2.13658 2.80357 2.23856 2.73965 2.36401C2.66699 2.50661 2.66699 2.6933 2.66699 3.06667V7.33333Z"
-                                                    stroke="#98A2B3"
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                />
-                                            </svg> */}
+                                                    className="flag_icon"
+                                                    width="16"
+                                                    height="16"
+                                                    viewBox="0 0 16 16"
+                                                    fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                    <path
+                                                        d="M9.33366 4.66667H13.0939C13.3921 4.66667 13.5412 4.66667 13.6284 4.72936C13.7045 4.78406 13.754 4.86826 13.7649 4.96133C13.7774 5.068 13.705 5.19834 13.5601 5.45901L12.6627 7.07432C12.6102 7.16886 12.584 7.21613 12.5737 7.26618C12.5646 7.31049 12.5646 7.35618 12.5737 7.40048C12.584 7.45054 12.6102 7.49781 12.6627 7.59234L13.5601 9.20766C13.7049 9.46833 13.7774 9.59867 13.7649 9.70534C13.754 9.79841 13.7045 9.8826 13.6284 9.93731C13.5412 10 13.3921 10 13.0939 10H8.40033C8.02696 10 7.84027 10 7.69766 9.92734C7.57222 9.86342 7.47024 9.76144 7.40632 9.63599C7.33366 9.49339 7.33366 9.3067 7.33366 8.93333V7.33333M2.66699 14L2.66699 2.66667M2.66699 7.33333H8.26699C8.64036 7.33333 8.82704 7.33333 8.96965 7.26067C9.09509 7.19676 9.19708 7.09477 9.261 6.96933C9.33366 6.82672 9.33366 6.64004 9.33366 6.26667V3.06667C9.33366 2.6933 9.33366 2.50661 9.261 2.36401C9.19708 2.23856 9.09509 2.13658 8.96965 2.07266C8.82704 2 8.64036 2 8.26699 2H3.73366C3.36029 2 3.17361 2 3.031 2.07266C2.90556 2.13658 2.80357 2.23856 2.73965 2.36401C2.66699 2.50661 2.66699 2.6933 2.66699 3.06667V7.33333Z"
+                                                        stroke="#98A2B3"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                    />
+                                                </svg> */}
                                                     <small className="small_subtitle">Select <span className="text-primery">6 out of the 12</span> available options, Identify <span className="text-primery">2 most important ones</span></small>
                                                 </div>
                                                 <button type="button" className="btn btn-lightgray " onClick={(e) => { e.stopPropagation(); setShowHelpChoose(true) }}>
@@ -4003,7 +4029,7 @@ const UpdateJobsRevised = ({
                                                                 selections are made
                                                             </span>
                                                         </Col>}
-                                                        {createRevisedJobData?.calculation_job.length > 0 && personalityData.length > 0 && personalityData?.sort((a, b) => b?.personality_percentage - a?.personality_percentage).map((item, index) => (<Col key={index} md={3}>
+                                                        {createRevisedJobData?.calculation_job?.length > 0 && personalityData?.length > 0 && personalityData?.sort((a, b) => b?.personality_percentage - a?.personality_percentage).map((item, index) => (<Col key={index} md={3}>
                                                             <div onClick={() => handleCardClick(item)} className="perlitymth-card">
                                                                 <div className="perlitymth-head">
                                                                     <span className="prtmth_icon"><img src={LeaderIcn} /></span>
@@ -4020,15 +4046,15 @@ const UpdateJobsRevised = ({
                                                     </Row>
                                                 </div>
                                                 {/* <div class="d-flex justify-content-center align-items-center col-md-12 mt-3">
-                                            <button
-                                                onClick={handleCreateForm}
-                                                type="button"
-                                                // disabled={createRevisedJobData?.calculation_job.length > 0}
-                                                class="btn-md btn btn-primary"
-                                            >
-                                                Review And Post
-                                            </button>
-                                        </div> */}
+                                                <button
+                                                    onClick={handleCreateForm}
+                                                    type="button"
+                                                    // disabled={createRevisedJobData?.calculation_job.length > 0}
+                                                    class="btn-md btn btn-primary"
+                                                >
+                                                    Review And Post
+                                                </button>
+                                            </div> */}
                                             </Accordion.Body>
                                         </Accordion.Item>
                                     </>
@@ -4090,11 +4116,11 @@ const UpdateJobsRevised = ({
                                                     <Link href={''} onClick={(e) => handleRefreshData(e, openStep?.[0])}><i className="fa fa-undo"></i></Link>
                                                 </li>
                                                 <li>
-                                                    <Link href={''} onClick={() => setActiveKeyAdd(true)}><i className="fa fa-plus"></i></Link>
+                                                    <Link href={''} onClick={(e) => { setActiveKeyAdd(true); handleAddComponent(e); }}><i className="fa fa-plus"></i></Link>
                                                 </li>
-                                                <li className="active">
-                                                    <Link href={''} onClick={() => setActiveKeyAdd(false)}><i className="fas fa-times"></i></Link>
-                                                </li>
+                                                {/* <li className="active">
+                                                        <Link href={''} onClick={() => setActiveKeyAdd(false)}><i className="fas fa-times"></i></Link>
+                                                    </li> */}
                                             </>
                                         )}
                                         {openStep[0] === '11' && (
@@ -4147,7 +4173,7 @@ const UpdateJobsRevised = ({
                                     <ul>
                                         <li>
                                             {/* {updateFormData?.min_exp}-
-                                            {updateFormData?.max_exp} Years Experience{" "} */}
+                                                {updateFormData?.max_exp} Years Experience{" "} */}
                                             {updateFormData?.min_exp && updateFormData?.max_exp ? (
                                                 <>{updateFormData?.min_exp}-{updateFormData?.max_exp} Years Experience</>
                                             ) : (
@@ -4177,8 +4203,8 @@ const UpdateJobsRevised = ({
                                                 <img src={flagFill} className="flag_icon" />
                                             )}
                                             {/* <span className="text-danger italic">
-                                                {updateFormData?.max_salary}
-                                            </span>{" "} */}
+                                                    {updateFormData?.max_salary}
+                                                </span>{" "} */}
                                         </li>
                                         <li>
                                             Minimum Qualification
@@ -4254,8 +4280,8 @@ const UpdateJobsRevised = ({
                                                 <img src={flagFill} className="flag_icon" />
                                             )}
                                             {/* {rdnwBadges?.map((lang, index) => (
-                                            <>{lang?.language_name}{index !== rdnwBadges.length - 1 && ", "}</>
-                                        ))} */}
+                                                <>{lang?.language_name}{index !== rdnwBadges.length - 1 && ", "}</>
+                                            ))} */}
                                         </li>
                                         <li>
                                             {locationBadges?.length > 0 ? (
@@ -4272,8 +4298,8 @@ const UpdateJobsRevised = ({
                                                 <img src={flagFill} className="flag_icon" />
                                             )}
                                             {/* {locationBadges?.map((city, index) => (
-                                            <>{city?.location_name}{index !== locationBadges.length - 1 && ", "}</>
-                                        ))} */}
+                                                <>{city?.location_name}{index !== locationBadges.length - 1 && ", "}</>
+                                            ))} */}
                                         </li>
                                     </ul>
                                 </div>
@@ -4291,8 +4317,8 @@ const UpdateJobsRevised = ({
                                                 <span className="text-danger italic"> None defined</span>
                                             )}
                                             {/* {SelectSkillsData?.map((skill, index) => (
-                                                <>{skill?.skill_name}{index !== SelectSkillsData.length - 1 && ", "}</>
-                                            ))} */}
+                                                    <>{skill?.skill_name}{index !== SelectSkillsData.length - 1 && ", "}</>
+                                                ))} */}
                                         </li>
                                     </ul>
                                 </div>
@@ -4333,44 +4359,44 @@ const UpdateJobsRevised = ({
                                     <h6>Description</h6>
                                     <ul>
                                         {/* <li>Job details-{createRevisedJobData?.job_title}</li>
-                                        <li>{createRevisedJobData?.job_company?.company_name} </li>
-                                        <li>
-                                            Area: {locationBadges?.map((city, index) => (
-                                                <>{city?.location_name}{index !== locationBadges.length - 1 && ", "}</>
-                                            ))}
-                                        </li>
-                                        <li>
-                                            Experience: {updateFormData?.min_exp}-
-                                            {updateFormData?.max_exp} Years
-                                        </li>
-                                        <li>Role: {restrictedRoleBadges?.map((Val, index) => (
-                                            <>{Val?.is_like_name}{index !== restrictedRoleBadges.length - 1 && ", "}</>
-                                        ))}</li>
-                                        <li>
-                                            Industry type: {IndustriesBadges?.map((Val, index) => (
-                                                <>{Val?.industry_name}{index !== IndustriesBadges.length - 1 && ", "}</>
-                                            ))}
-                                        </li>
-                                        <li>Employment: {`${createRevisedJobData?.job_type}/Contract`}</li> */}
+                                            <li>{createRevisedJobData?.job_company?.company_name} </li>
+                                            <li>
+                                                Area: {locationBadges?.map((city, index) => (
+                                                    <>{city?.location_name}{index !== locationBadges.length - 1 && ", "}</>
+                                                ))}
+                                            </li>
+                                            <li>
+                                                Experience: {updateFormData?.min_exp}-
+                                                {updateFormData?.max_exp} Years
+                                            </li>
+                                            <li>Role: {restrictedRoleBadges?.map((Val, index) => (
+                                                <>{Val?.is_like_name}{index !== restrictedRoleBadges.length - 1 && ", "}</>
+                                            ))}</li>
+                                            <li>
+                                                Industry type: {IndustriesBadges?.map((Val, index) => (
+                                                    <>{Val?.industry_name}{index !== IndustriesBadges.length - 1 && ", "}</>
+                                                ))}
+                                            </li>
+                                            <li>Employment: {`${createRevisedJobData?.job_type}/Contract`}</li> */}
                                         <li>{createRevisedJobData?.detailed_description?.replace(/&nbsp;/g, ' ')}</li>
                                     </ul>
                                 </div>
                                 {/* <div className="user_bsinfo">
-                                    <h6>Key Responsibilities</h6>
-                                    <ul>
-                                        <li>
-                                            Collecting plant data and providing design feedback to team
-                                        </li>
-                                        <li>
-                                            Performing material balance, energy balance for the plant
-                                            along with utility calculations.
-                                        </li>
-                                        <li>
-                                            Determining sizes and specifications for equipment and
-                                            instruments before procurement.
-                                        </li>
-                                    </ul>
-                                </div> */}
+                                        <h6>Key Responsibilities</h6>
+                                        <ul>
+                                            <li>
+                                                Collecting plant data and providing design feedback to team
+                                            </li>
+                                            <li>
+                                                Performing material balance, energy balance for the plant
+                                                along with utility calculations.
+                                            </li>
+                                            <li>
+                                                Determining sizes and specifications for equipment and
+                                                instruments before procurement.
+                                            </li>
+                                        </ul>
+                                    </div> */}
                             </div>
                             <div className="recomed_panel">
                                 <div className="recomed_head">
@@ -4509,6 +4535,72 @@ const UpdateJobsRevised = ({
                 helpChooseOption={helpChooseOption} setHelpChooseOption={setHelpChooseOption}
                 setBehaviours={setBehaviours}
             />
+
+            {/* customised requiremnt model */}
+
+            <Modal
+                show={showModal}
+                onHide={requireClose}
+                className="Job-requiremnt-model"
+                backdrop="true"
+                keyboard={false}
+                aria-labelledby="contained-modal-title-vcenter"
+                centered >
+                <ModalHeader  >
+                    <div className="colum">
+                        <h6><strong>Did you know...</strong></h6>
+                        <h6>you can customise the requirements</h6>
+
+                    </div>
+                </ModalHeader>
+                <Modal.Body >
+                    <div className="job-model-require">
+                        <div className="row mt-2">
+                            <div className="col-12">
+                                <ul className="require-list">
+                                    <li><img src={Flag1} className="img-fluid" alt="flag" />All data you provide will be used for measuring the suitability of the application to your requirements and will be given equal importance</li>
+                                    <li><img src={ImportantFlag} className="img-fluid" alt="flag" />Up to 2 requirements can be marked as important and they will be given a slight extra weight-age while evaluating the applications received.</li>
+                                </ul>
+                            </div>
+                            <div className="col-md-6">
+                                <div className="lw-toolbar pos-relative d-flex align-items-center gap-3">
+                                    <ul>
+                                        <li>
+                                            <Link href={''}><i className="fa fa-undo"></i></Link>
+                                        </li>
+                                        <li className={handleLightClass()}>
+                                            <Link href={''} onClick={(e) => removeImportantFlag(e, openStep?.[0])}>
+                                                <img src={simpleFlag} className="flag_icon" />
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link href={''} >
+                                                {handleOutline()}
+                                            </Link>
+                                        </li>
+                                    </ul>
+                                    <p>Use the options in the floating panel to make the selections</p>
+                                </div>
+                            </div>
+                            <div className="col-md-6">
+                                <div className="flag-exchange-box text-center  flex-column d-flex align-items-center justify-content-center gap-2 h-100">
+                                    <img src={FlagExchange} className="img-fluid" alt="Flagexchange" />
+                                    <p>You can also click the flag in the top-right corner of the card to customize.</p>
+                                </div>
+                            </div>
+                            <div className="col-12 mt-4">
+                                <Button className="w-100" variant="primary" onClick={() => {
+                                    requiremodelShow(false);
+                                    handleNext()
+                                }}>OK</Button >
+                            </div>
+                        </div>
+                    </div>
+
+                </Modal.Body>
+
+            </Modal>
+
         </>
     );
 };
