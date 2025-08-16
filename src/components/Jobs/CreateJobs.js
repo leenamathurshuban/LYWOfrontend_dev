@@ -625,18 +625,18 @@ const CreateJobs = ({ show, handleClose }) => {
 
   // custom style react select box
 
- const customStyles = {
-  option: (provided, state) => ({
-    ...provided,
-    backgroundColor: state.isSelected
-      ? "#deebff"
-      : state.isFocused
-      ? "#deebff" // Color on hover
-      : "inherit",
-    color: state.isSelected ? "#000" : "black",
-    cursor: "pointer", // Optional: improves UX on hover
-  }),
-};
+  const customStyles = {
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isSelected
+        ? "#deebff"
+        : state.isFocused
+          ? "#deebff" // Color on hover
+          : "inherit",
+      color: state.isSelected ? "#000" : "black",
+      cursor: "pointer", // Optional: improves UX on hover
+    }),
+  };
 
   const hasSelectedAndImportant = behaviours.some((item) => (item?.isSelected || item?.markedImportant));
 
@@ -670,7 +670,7 @@ const CreateJobs = ({ show, handleClose }) => {
     if (CheckValidation()) {
       const textWithHtmlTags = description;
       const descriptionWithoutTags = textWithHtmlTags.replace(/<[^>]*>/g, "");
-      const selectedUids = getSelectedBenefitUids();
+      // const selectedUids = getSelectedBenefitUids();
 
       const formdata = new FormData();
       formdata.append("job_title", createFormData.jobTitle);
@@ -682,8 +682,8 @@ const CreateJobs = ({ show, handleClose }) => {
       formdata.append("detailed_description", descriptionWithoutTags);
       formdata.append("job_type", createFormData.jobType);
       formdata.append("workplace_type", createFormData.workPlaceType);
-      if(selectedUids?.length){
-        formdata.append("job_benefits", JSON.stringify(selectedUids));
+      if (SelectBenefitsData?.length) {
+        formdata.append("job_benefits", JSON.stringify(SelectBenefitsData));
       }
       try {
         const response = await CreateJobForm(formdata);
@@ -753,16 +753,16 @@ const CreateJobs = ({ show, handleClose }) => {
         let uids = locationBadges.map((item) => item?.uid);
 
         formdata.append(key, JSON.stringify(uids));
-      }else if(key==="min_salary"){
+      } else if (key === "min_salary") {
         const salary_min = parseInt(updateFormData?.min_salary.replace(/,/g, ""), 10)
         formdata.append("min_salary", salary_min);
-      }else if(key==="max_salary"){
+      } else if (key === "max_salary") {
         const salary_max = parseInt(updateFormData?.max_salary.replace(/,/g, ""), 10)
         formdata.append("max_salary", salary_max);
-      }else if (key === "skills" && SelectSkillsData.length > 0) {
+      } else if (key === "skills" && SelectSkillsData.length > 0) {
         let skillID = SelectSkillsData?.map((item) => item?.uid) // Extract skill_name values
           ?.filter((skill) => skill !== "") // Filter out empty strings
-          // ?.join(",");
+        // ?.join(",");
 
         formdata.append("skills", JSON.stringify(skillID));
       } else if (key === "must_have_skills" && mustHaveSkills.length > 0) {
@@ -1150,7 +1150,7 @@ const CreateJobs = ({ show, handleClose }) => {
               filterOption={(option, inputValue) => {
                 if (!inputValue) return false; // hide all options until user types
                 return option.label.toLowerCase().includes(inputValue.toLowerCase());
-              }}              
+              }}
               onChange={handleSelectedLikeItems}
               styles={customStyles}
             />
@@ -1247,7 +1247,7 @@ const CreateJobs = ({ show, handleClose }) => {
               filterOption={(option, inputValue) => {
                 if (!inputValue) return false; // hide all options until user types
                 return option.label.toLowerCase().includes(inputValue.toLowerCase());
-              }}              
+              }}
               onChange={handleLocationItems}
               styles={customStyles}
             />
@@ -1315,7 +1315,7 @@ const CreateJobs = ({ show, handleClose }) => {
                 theme="snow"
                 ref={quillRef}
                 modules={{
-                  toolbar: [["bold", "italic", "underline"], ["link"]],
+                  toolbar: [["bold", "italic", "underline", "strike"], ["link"],],
                 }}
               />
 
@@ -1531,7 +1531,7 @@ const CreateJobs = ({ show, handleClose }) => {
               Benefits <span className="font-light">(optional)</span>
             </Form.Label>
             <div className="tagarea">
-              {benefitsData.map((item) => ( 
+              {benefitsData.map((item) => (
                 <span
                   key={item}
                   onClick={() => handleBenifts(item)}
@@ -1705,6 +1705,7 @@ const CreateJobs = ({ show, handleClose }) => {
       )}
     </Offcanvas>
   );
+
 };
 
 export default CreateJobs;

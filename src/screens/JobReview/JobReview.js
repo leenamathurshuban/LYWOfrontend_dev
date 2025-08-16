@@ -58,6 +58,9 @@ import downloadicn from "../../images/icons/download-b.svg";
 
 
 
+
+
+
 import { useParams } from "react-router-dom";
 import { ApplicationDeatilsApi, getAssetDataDetailsAPI, getJobAssignmentReview, getJobDetailsApi, getJobGroupParameterListAPI, getScreeningParameterDataAPI, insightsListAPI, jobApplicantUpdateAPI, postJobGroupParameterListByFetchAPI } from "../../services/provider";
 import Evaluations from "./Evaluations";
@@ -124,6 +127,27 @@ tracker.show_tasks()
 
   `;
 
+    const CustomToolbar = () => (
+  <div id="toolbar">
+    <button className="ql-bold">
+      
+    </button>
+    <button className="ql-italic">
+      
+    </button>
+    <button className="ql-underline">
+      
+    </button>
+    <button className="ql-strike">
+    
+    </button>
+       <button className="ql-link">
+    
+    </button>
+  </div>
+);
+
+
     const getFileType = (url) => {
         const extension = url?.split('.')?.pop()?.toLowerCase();
 
@@ -141,6 +165,12 @@ tracker.show_tasks()
     const [expandedGroup, setExpandedGroup] = useState(null);
     const [FilterApplicantShow, setFilterApplicantShow] = useState(false);
     const [descriptionError, setDescriptionError] = useState("");
+
+    const [activeAccordion, setActiveAccordion] = useState('0');
+
+    const handleSaveTemplate = () => {
+    setActiveAccordion('1'); // This will open the second accordion (eventKey="1")
+  };
 
     const [isLikeUid, setIsLikeUid] = useState([]);
 
@@ -205,6 +235,49 @@ tracker.show_tasks()
             );
         }
     };
+
+
+        const handleEditorChange1 = (value) => {
+        const wordCount = value.trim().split(/\s+/).length;
+
+        if (wordCount <= MAX_DESCRIPTION_WORDS) {
+            setDescription(value);
+            setDescriptionError("");
+        } else {
+            setDescriptionError(
+                `You have reached the maximum limit of ${MAX_DESCRIPTION_WORDS} words.`
+            );
+        }
+    };
+
+
+        const handleEditorChange2 = (value) => {
+        const wordCount = value.trim().split(/\s+/).length;
+
+        if (wordCount <= MAX_DESCRIPTION_WORDS) {
+            setDescription(value);
+            setDescriptionError("");
+        } else {
+            setDescriptionError(
+                `You have reached the maximum limit of ${MAX_DESCRIPTION_WORDS} words.`
+            );
+        }
+    };
+
+
+        const handleEditorChange3 = (value) => {
+        const wordCount = value.trim().split(/\s+/).length;
+
+        if (wordCount <= MAX_DESCRIPTION_WORDS) {
+            setDescription(value);
+            setDescriptionError("");
+        } else {
+            setDescriptionError(
+                `You have reached the maximum limit of ${MAX_DESCRIPTION_WORDS} words.`
+            );
+        }
+    };
+
     const handleFileUpload = (e) => {
         const file = e.target.files[0];
 
@@ -1823,8 +1896,8 @@ tracker.show_tasks()
                                                                 <button type="button" onClick={() => {
                                                                     setGroupModal(true)
                                                                     setGroupParameterId(paraName?.uid)
-                                                                }} className="btn btn-link mb-3"><i className="fa fa-plus me-2"></i>Create a New Group</button>
-                                                                <div className="eval-vertical-scrool">
+                                                                }} className="btn btn-link mb-3 create-group-card ms-auto me-auto"><i className="fa fa-plus "></i> <span className="ms-2">  Create a New Group </span></button>
+                                                                <div className="eval-vertical-scrool ct_scrollbar ">
                                                                     {paraName?.groups_parameter?.sort((a, b) => a.id - b.id)?.map((groupItem) => (
                                                                         <>
 
@@ -3022,6 +3095,7 @@ tracker.show_tasks()
                                                                 id="custom-switch"
                                                                 label="Auto Remind"
                                                                 className="mt-1"
+
                                                             />
                                                         </div>
 
@@ -3048,7 +3122,7 @@ tracker.show_tasks()
                                                                 ref={quillRef}
                                                                 className="custom-quill"
                                                                 modules={{
-                                                                    toolbar: [["bold", "italic", "underline"], ["link"]],
+                                                                    toolbar: [["bold", "italic", "underline", "strike"], ["link"]],
                                                                 }}
                                                             />
 
@@ -3062,10 +3136,10 @@ tracker.show_tasks()
                                                             label={`Do not prompt me to edit emails every time i enable automation. `}
                                                         />
 
-                                                        <Button variant="primary" style={{ color: '#fff' }}  >Save Template</Button>
+                                                        <Button variant="primary" style={{ color: '#fff' }}  onClick={handleSaveTemplate}  >Save Template</Button>
                                                     </div>
 
-                                                    {descriptionError && (
+                                                    {descriptionError && ( 
                                                         <div className="error">{descriptionError}</div>
                                                     )}
                                                     {errors.detailed_description && (
@@ -3114,11 +3188,11 @@ tracker.show_tasks()
                                                     <div className="texteditor_warp" onClick={handleWrapperClick}>
                                                         <ReactQuill
                                                             value={description}
-                                                            onChange={handleEditorChange}
+                                                            onChange={handleEditorChange1}
                                                             theme="snow"
                                                             ref={quillRef}
                                                             modules={{
-                                                                toolbar: [["bold", "italic", "underline"], ["link"]],
+                                                                toolbar: [["bold", "italic", "underline", "strike"], ["link"]],
                                                             }}
                                                         />
 
@@ -3132,7 +3206,7 @@ tracker.show_tasks()
                                                             label={`Do not prompt me to edit emails every time i enable automation. `}
                                                         />
 
-                                                        <Button variant="primary" style={{ color: '#fff' }}  >Save Template</Button>
+                                                        <Button variant="primary" style={{ color: '#fff' }}   >Save Template</Button>
                                                     </div>
 
                                                     {descriptionError && (
@@ -3190,11 +3264,11 @@ tracker.show_tasks()
                                                     <div className="texteditor_warp" onClick={handleWrapperClick}>
                                                         <ReactQuill
                                                             value={description}
-                                                            onChange={handleEditorChange}
+                                                            onChange={handleEditorChange2}
                                                             theme="snow"
                                                             ref={quillRef}
                                                             modules={{
-                                                                toolbar: [["bold", "italic", "underline"], ["link"]],
+                                                                toolbar: [["bold", "italic", "underline", "strike"], ["link"]],
                                                             }}
                                                         />
 
@@ -3254,11 +3328,11 @@ tracker.show_tasks()
                                                     <div className="texteditor_warp" onClick={handleWrapperClick}>
                                                         <ReactQuill
                                                             value={description}
-                                                            onChange={handleEditorChange}
+                                                            onChange={handleEditorChange3}
                                                             theme="snow"
                                                             ref={quillRef}
                                                             modules={{
-                                                                toolbar: [["bold", "italic", "underline"], ["link"]],
+                                                                toolbar: [["bold", "italic", "underline", "strike"], ["link"]],
                                                             }}
                                                         />
 
@@ -3684,7 +3758,7 @@ tracker.show_tasks()
                     setAnswerModal(false);
                     setSelectedUser(null);
                 }}
-                backdrop={false}
+                backdrop={true}
                 placement="end"
                 className="ansexp_drawer lg-drawer shadow-md border-0"
             >

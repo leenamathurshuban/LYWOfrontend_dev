@@ -704,7 +704,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
     if (CheckValidation()) {
       const textWithHtmlTags = description;
       const descriptionWithoutTags = textWithHtmlTags.replace(/<[^>]*>/g, "");
-      // const selectedUids = getSelectedBenefitUids();
+      // const selectedUids = getSelectedBenefitUids()
 
       const formdata = new FormData();
       formdata.append("job_title", createFormData.jobTitle);
@@ -788,10 +788,6 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
         let uids = locationBadges?.map((item) => item?.uid);
 
         formdata.append(key, JSON.stringify(uids));
-      }else if(key==="min_salary"){
-        formdata.append("",parseInt(updateFormData[key].replace(/,/g, ""), 10))
-      }else if(key==="max_salary"){
-        formdata.append("",parseInt(updateFormData[key].replace(/,/g, ""), 10))
       }
       // else if (key === "skills" && SelectSkillsData.length > 0) {
       //   let skillID = SelectSkillsData?.map((item) => item?.uid) // Extract skill_name values

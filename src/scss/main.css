@@ -20,6 +20,20 @@ body {
   background-color: #F2F4F7;
   scroll-behavior: smooth;
 }
+body::-webkit-scrollbar {
+  width: 6px;
+}
+body::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgb(213, 213, 213);
+  border-radius: 8px;
+}
+body::-webkit-scrollbar-thumb {
+  background: #D0D5DD;
+  border-radius: 8px;
+}
+body::-webkit-scrollbar-thumb:hover {
+  background: #D0D5DD;
+}
 
 * {
   margin: 0;
@@ -630,7 +644,7 @@ ol.breadcrumb {
   top: 0;
   right: 0;
   width: 24%;
-  height: 100vh;
+  height: 100%;
   padding-top: 80px;
   z-index: 99;
   background-color: #ffffff;
@@ -791,7 +805,7 @@ ol.breadcrumb {
 }
 .cmprofile_mdl .modal-body {
   padding: 1.15rem;
-  min-height: 100vh;
+  min-height: 101vh;
   background-color: #F2F4F7;
 }
 
@@ -1079,11 +1093,12 @@ button.btn-link-muted svg {
 .btn-light {
   background-color: #fff !important;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 12px;
   text-transform: capitalize;
   font-weight: 600;
   padding: 8px 15px;
   color: #344054;
+  line-height: 18px;
   border-color: #D0D5DD;
 }
 
@@ -2368,14 +2383,21 @@ select.h-36.form-select {
 }
 
 .smbtn-primary {
-  background-color: #4C60E5 !important;
+  background-color: #F9FAFB !important;
   font-size: 12px;
   text-transform: capitalize;
   font-weight: 500;
   padding: 5px 12px;
-  color: #fff;
-  border-color: #4C60E5;
+  color: #344054;
+  border-color: #F9FAFB;
   border-radius: 40px;
+  border: 1px solid #EAECF0;
+}
+.smbtn-primary i {
+  color: #6172F3;
+}
+.smbtn-primary:hover {
+  color: #344054;
 }
 
 .text-primary {
@@ -2582,17 +2604,17 @@ select.h-36.form-select {
   background-color: #f6fef9;
   border-color: #067647;
 }
-.jobpre_leftpanel .checklist li.active {
+.jobpre_leftpanel .checklist li.active, .jobpre_leftpanel .checklist li.completed {
   border-color: #067647;
   background-color: #f6fef9;
 }
-.jobpre_leftpanel .checklist li.active a {
+.jobpre_leftpanel .checklist li.active a, .jobpre_leftpanel .checklist li.completed a {
   color: #067647;
 }
-.jobpre_leftpanel .checklist li.active .fa {
-  color: #067647;
-  background-color: #f6fef9;
-  border-color: #067647;
+.jobpre_leftpanel .checklist li.active .fa, .jobpre_leftpanel .checklist li.completed .fa {
+  color: #17B26A;
+  background-color: hsla(152, 77%, 39%, 0.28);
+  border-color: #17B26A;
 }
 .jobpre_leftpanel .checklist li .fa {
   width: 13px;
@@ -2625,6 +2647,13 @@ select.h-36.form-select {
   border: solid 1px #E0EAFF !important;
   background-color: #F5F8FF;
   box-shadow: 0 1px 1px 0 rgba(16, 24, 40, 0.0509803922);
+}
+.jobMain_panel .accordion-item .accordion-button {
+  border-radius: 8px !important;
+}
+.jobMain_panel .accordion-item .accordion-button[aria-expanded=true] {
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
 }
 .jobMain_panel .accordion-item .short_text {
   margin: 0;
@@ -2715,6 +2744,13 @@ select.h-36.form-select {
 .jobMain_panel .accd_child .accordion-button:not(.collapsed) {
   background-color: white;
   box-shadow: inset 0 calc(-1 * var(--bs-accordion-border-width)) 0 #eaecf0;
+}
+.jobMain_panel .accd_child .accordion-button {
+  border-radius: 8px;
+}
+.jobMain_panel .accd_child .accordion-button[aria-expanded=true] {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 .jobMain_panel .accd_child .accordion-button::after {
   content: inherit;
@@ -3126,7 +3162,6 @@ select.h-36.form-select {
   border: none;
   padding: 2px 4px;
   font-size: 14px;
-  margin-left: 5px;
   color: #667085;
 }
 
@@ -3317,6 +3352,7 @@ select.h-36.form-select {
 }
 .texteditor_warp {
   position: relative;
+  background: #fff;
 }
 .texteditor_warp .custome_file {
   border-bottom: none;
@@ -4693,9 +4729,11 @@ select.h-36.form-select {
 .btn-outline-dark {
   border-color: #D0D5DD;
   color: #344054;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
   padding: 8px 12px;
+  line-height: 18px;
+  box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.0509803922);
 }
 
 .jobMain_panel .custom-card {
@@ -4868,7 +4906,30 @@ select.h-36.form-select {
 
 .form-check-input:checked[type=radio] {
   --bs-form-check-bg-image: url("../images/icons/Check-center.svg");
-  background-size: 8px;
+  background-size: 7px;
+}
+
+.green-tick-check .form-check-input:focus {
+  box-shadow: none;
+  border-color: #dee2e6;
+}
+.green-tick-check .form-check-input:checked {
+  background-color: hsla(152, 77%, 39%, 0.28);
+  border-color: #17B26A;
+  border: 1px solid #17B26A;
+}
+.green-tick-check .form-check-input:checked:focus {
+  box-shadow: none;
+}
+.green-tick-check .form-check-input:checked[type=radio] {
+  --bs-form-check-bg-image: url("../images/icons/green-radio.svg");
+  background-size: 100%;
+  border: 0;
+}
+.green-tick-check .form-check-input:checked[type=checkbox] {
+  --bs-form-check-bg-image: url("../images/icons/green-check.svg");
+  background-size: 100%;
+  border: 0;
 }
 
 .mix-inputs {
@@ -4909,7 +4970,7 @@ select.h-36.form-select {
 }
 
 .last-row-flex-001 {
-  flex: 0 0 auto !important;
+  min-width: 16%;
 }
 
 .expanded-col {
@@ -4921,6 +4982,12 @@ select.h-36.form-select {
 .expanded-col .remind-checkbox {
   display: block !important;
 }
+.expanded-col .bg-outline-success {
+  display: block !important;
+}
+.expanded-col .create-group-card span {
+  display: block !important;
+}
 .expanded-col .sts_databox::after {
   height: 68px !important;
 }
@@ -4930,6 +4997,7 @@ select.h-36.form-select {
   border: none;
   border-radius: 8px;
   height: 100%;
+  /* width */
 }
 .status_cardpanel .card-header {
   display: flex;
@@ -4966,6 +5034,12 @@ select.h-36.form-select {
   cursor: pointer;
   margin-bottom: 15px;
   padding-left: 20px;
+}
+.status_cardpanel .sts_databox .bg-outline-success {
+  background: #ECFDF3;
+  border: 1px solid #ABEFC6;
+  color: #067647;
+  display: none;
 }
 .status_cardpanel .sts_databox h6 {
   font-size: 12px;
@@ -5095,11 +5169,21 @@ select.h-36.form-select {
   max-height: calc(100vh - 270px);
   overflow-y: auto;
   scrollbar-width: thin;
+  scrollbar-color: #D0D5DD transparent;
 }
 .status_cardpanel .btn-link {
   font-size: 12px;
   color: #475467;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.status_cardpanel .btn-link i {
+  font-size: 16px;
+}
+.status_cardpanel .btn-link span {
+  display: none;
 }
 .status_cardpanel .sts_databoxlg {
   border: 1px solid #FEF6EE;
@@ -5238,6 +5322,7 @@ select.h-36.form-select {
   flex-wrap: nowrap;
   overflow-x: auto;
   scrollbar-width: thin;
+  scrollbar-color: #D0D5DD transparent;
 }
 
 .btn-light-primery {
@@ -8206,11 +8291,18 @@ path.recharts-rectangle.recharts-tooltip-cursor {
 }
 .automation-setting-box .accordion-item button {
   border: 0;
-  border-radius: 8px;
+  border-radius: 8px !important;
   color: #344054;
   font-weight: 500;
   font-size: 16px;
   line-height: 24px;
+  background: #FCFCFD;
+}
+.automation-setting-box .accordion-item button::after {
+  background-image: url("../images/icons/down-circle.svg");
+}
+.automation-setting-box .accordion-item button:focus {
+  box-shadow: none;
 }
 .automation-setting-box .accordion-item .accordion-button:not(.collapsed) {
   background: transparent !important;
@@ -8220,11 +8312,53 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   box-shadow: 0px 2px 4px -2px rgba(16, 24, 40, 0.0588235294);
   box-shadow: 0px 4px 8px -2px rgba(16, 24, 40, 0.1019607843);
 }
+.automation-setting-box .accordion-item .autoremider-body .form-check {
+  margin: 10px 0;
+}
+.automation-setting-box .accordion-item .autoremider-body .form-check #default-checkbox {
+  top: 3px;
+}
+.automation-setting-box .accordion-item .autoremider-body .nav-tabs .nav-item button {
+  background: transparent;
+  border-radius: 0 !important;
+  color: #667085;
+  font-family: Inter;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+}
+.automation-setting-box .accordion-item .autoremider-body .nav-tabs .nav-item .active {
+  border-bottom: 2px solid #3538CD !important;
+  color: #3538CD;
+}
+.automation-setting-box .btn.btn-primary {
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 600;
+  opacity: 1;
+  gap: 8px;
+  border-radius: 8px;
+  border-width: 1px;
+  padding-top: 8px;
+  padding-right: 12px;
+  padding-bottom: 8px;
+  padding-left: 12px;
+  width: 122px;
+  height: 38px;
+}
+.automation-setting-box .custom-quill .ql-container {
+  height: 266px !important;
+  /* Set desired height */
+}
+.automation-setting-box .custom-quill .ql-editor {
+  min-height: 266px;
+  /* Makes sure typing area is tall enough */
+}
 
 .fade.modal-backdrop.show {
   width: 100%;
   height: 100%;
-  z-index: 1111;
+  z-index: 111;
 }
 
 .Job-requiremnt-model {
@@ -8289,6 +8423,77 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   width: 20px !important;
   -o-object-fit: contain;
      object-fit: contain;
+}
+
+.ql-toolbar.ql-snow .ql-formats {
+  margin-right: 0 !important;
+}
+
+.ql-strike,
+.ql-bold,
+.ql-italic,
+.ql-underline,
+.ql-link {
+  position: relative;
+}
+.ql-strike svg,
+.ql-bold svg,
+.ql-italic svg,
+.ql-underline svg,
+.ql-link svg {
+  display: none;
+}
+.ql-strike::before,
+.ql-bold::before,
+.ql-italic::before,
+.ql-underline::before,
+.ql-link::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-repeat: no-repeat !important;
+  background-position: center center !important;
+}
+
+.ql-strike:before {
+  background: url("../images/icons/type-strikethrough-01.svg");
+}
+
+.ql-bold:before {
+  background: url("../images/icons/bold-01.svg");
+}
+
+.ql-italic:before {
+  background: url("../images/icons/italic-01.svg");
+}
+
+.ql-underline:before {
+  background: url("../images/icons/underline-01.svg");
+}
+
+.ql-link:before {
+  background: url("../images/icons/link-02.svg");
+}
+
+.model-confirmations {
+  padding-left: 0 !important;
+  z-index: 1111;
+}
+.model-confirmations .modal-dialog {
+  max-width: 450px;
+}
+.model-confirmations .modal-header {
+  border-top-left-radius: 8px !important;
+  border-top-right-radius: 8px !important;
+  box-shadow: none;
+  padding-bottom: 0;
+}
+
+.cmt_questions .form-control {
+  min-height: 34px;
 }
 
 @media screen and (max-width: 767px) {

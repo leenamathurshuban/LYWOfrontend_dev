@@ -372,38 +372,39 @@ const HelpChoose = ({
     const handleSubmit = async () => {
         // const selectedBehaviourUids = behaviours.filter((val) => totalItem.includes(val.heading)).map((val) => val.uid);
         // const importantBehaviourUids = behaviours.filter((val) => important.includes(val.heading)).map((val) => val.uid);        
-        const transformed = Object.entries(helpChooseOption).reduce((acc, [categoryKey, behaviours]) => {
-            acc[categoryKey] = Object.values(behaviours).filter(values => values.isSelected);
-            return acc;
-        }, {});
-        const transformedStart = Object.entries(helpChooseOption).reduce((acc, [categoryKey, behaviours]) => {
-            acc[categoryKey] = Object.values(behaviours).filter(values => values.markedImportant);
-            return acc;
-        }, {});
-        const selectedBehaviourUids = Object.values(transformed).flat().map((val) => val?.uid);
-        const importantBehaviourUids = Object.values(transformedStart).flat().map((val) => val?.uid);
+        // const transformed = Object.entries(helpChooseOption).reduce((acc, [categoryKey, behaviours]) => {
+        //     acc[categoryKey] = Object.values(behaviours).filter(values => values.isSelected);
+        //     return acc;
+        // }, {});
+        // const transformedStart = Object.entries(helpChooseOption).reduce((acc, [categoryKey, behaviours]) => {
+        //     acc[categoryKey] = Object.values(behaviours).filter(values => values.markedImportant);
+        //     return acc;
+        // }, {});
+        // const selectedBehaviourUids = Object.values(transformed).flat().map((val) => val?.uid);
+        // const importantBehaviourUids = Object.values(transformedStart).flat().map((val) => val?.uid);
 
-        const formdata = new FormData();
-        formdata.append(
-            "selected_behaviour",
-            JSON.stringify(selectedBehaviourUids)
-        );
-        formdata.append(
-            "important_behaviour",
-            JSON.stringify(importantBehaviourUids)
-        );
-        const response = await UpdateJobForm(formdata, createUid);
-        if (response?.data?.success) {
-            setShow(false)
-            setIsUpdated(true)
-            setIsIndex([])
-            setImportant([])
-            setSelectedItem([])
-            setSelectedItem1([])
-            setSelectedItem2([])
-            setSelectedItem3([])
-            setTotalItem([])
-        }
+        // const formdata = new FormData();
+        // formdata.append(
+        //     "selected_behaviour",
+        //     JSON.stringify(selectedBehaviourUids)
+        // );
+        // formdata.append(
+        //     "important_behaviour",
+        //     JSON.stringify(importantBehaviourUids)
+        // );
+        // const response = await UpdateJobForm(formdata, createUid);
+        // if (response?.data?.success) {
+        //     setShow(false)
+        //     setIsUpdated(true)
+        //     setIsIndex([])
+        //     setImportant([])
+        //     setSelectedItem([])
+        //     setSelectedItem1([])
+        //     setSelectedItem2([])
+        //     setSelectedItem3([])
+        //     setTotalItem([])
+        // }
+        handleClose()
     }
     console.log(totalItem)
     console.log(important)

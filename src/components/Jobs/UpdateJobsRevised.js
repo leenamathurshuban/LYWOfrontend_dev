@@ -42,6 +42,7 @@ import {
     getSkillList,
     CreateJobIsLike,
     CreateJobLocation,
+    UpdateJobForm,
 } from "../../services/provider";
 import { removeToken } from "../../helpers/helper";
 import { Link, useNavigate } from "react-router-dom";
@@ -2110,6 +2111,66 @@ const UpdateJobsRevised = ({
         const removeIds = cv?.group_skill?.map(item => item.uid);
         setSelectSkillsData(prev => prev.filter(item => !removeIds.includes(item.uid)));
     }
+    // <---------------------Logic for before submit form get personality data------------------->
+    const getPersonalityData = async () => {
+        const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-api/${createJobUid}/`;
+        try {
+            const response = await getJobDetailsApi(url);
+            setCreateRevisedJobData(response.data.response);
+            if (response?.data?.response?.calculation_job.length > 0) {
+                const personalityKeys = Object.keys(response?.data?.response?.calculation_job[0].personality_data);
+                const updatedBehaviourResponse = behaviourResponse.map(item => ({
+                    ...item,
+                    personality_percentage: response?.data?.response?.calculation_job[0].personality_data[item.behaviour_type_name] || 0 // Default to 0 if no match
+                }));
+                const matchedBehaviours = updatedBehaviourResponse.filter(item =>
+                    personalityKeys.includes(item.behaviour_type_name)
+                );                
+                setPersonalityData(matchedBehaviours)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+    const updateAndgetPersonality = async () => {
+        try {
+            const formdata = new FormData();
+            let selectedBehaviourUids = [];
+            let importantBehaviourUids = [];
+
+            behaviours.forEach((item) => {
+                if (item?.isSelected) {
+                    selectedBehaviourUids.push(item.uid);
+                }
+                if (item?.markedImportant) {
+                    importantBehaviourUids.push(item.uid);
+                }
+            });
+            formdata.append(
+                "selected_behaviour",
+                JSON.stringify(selectedBehaviourUids)
+            );
+            formdata.append(
+                "important_behaviour",
+                JSON.stringify(importantBehaviourUids)
+            );
+            const response = await UpdateJobForm(formdata, createUid);
+            if (response.data.success) {
+                getPersonalityData()
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    const { selectedCount, markedImportantCount } = countSelectedItems()
+    useEffect(() => {
+        if (selectedCount == 6 && markedImportantCount == 2) {
+            updateAndgetPersonality();
+        }
+    }, [selectedCount, markedImportantCount])
+    // <--------------------------------End of Personality Match------------->
+
 
     // console.log(behaviours)
 
@@ -2272,7 +2333,7 @@ const UpdateJobsRevised = ({
                             </ul>
                             <h6>Personality</h6>
                             <ul className="checklist">
-                                <li className={`${behaviours.length == 12 && 'active'}`}
+                                <li className={`${selectedCount == 6 && markedImportantCount == 2 && 'active'}`}
                                     onClick={() => {
                                         setCurrentStep(["10", "11"])
                                         handleOpenStep("11")

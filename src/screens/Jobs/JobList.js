@@ -442,7 +442,8 @@ const JobsList = () => {
                         heading: `Do you wish to Proceed?`,
                         body: `You will no longer receive new applications for the ${activeIds?.length} selected jobs.`,
                         state: 'Application-Stopped',
-                        item: {}
+                        item: {},
+                        sure: false
                       })
                     }
                     // handleMultipleStopApp('Application-Stopped')
@@ -454,7 +455,8 @@ const JobsList = () => {
                         heading: `Do you wish to Proceed?`,
                         body: `The ${activeIds?.length} selected jobs will be marked as closed, halting new applications and application assessments.`,
                         state: 'closed',
-                        item: {}
+                        item: {},
+                        sure: false
                       })
                     }
                     // handleMultipleCloseApp('closed')
@@ -632,7 +634,7 @@ const JobsList = () => {
                           </span>
                         </td>
                         <td>{item?.job_location?.location_name}</td>
-                        <td style={{textTransform: 'capitalize'}} >{item?.department}</td>
+                        <td style={{ textTransform: 'capitalize' }} >{item?.department}</td>
                         <td>{item?.job_type}</td>
                         <td>{item?.workplace_type}</td>
                         <td>{item?.number_of_positions}</td>
@@ -676,7 +678,8 @@ const JobsList = () => {
                                     heading: `Do you wish to Delete?`,
                                     body: `The jobs will be marked as closed, halting new applications and application assessments.`,
                                     state: 'Delete',
-                                    item: item
+                                    item: item,
+                                    sure: false
                                   })
                                 }}
                               >
@@ -702,7 +705,8 @@ const JobsList = () => {
                                     heading: `Do you wish to Proceed?`,
                                     body: `The jobs will be marked as closed, halting new applications and application assessments.`,
                                     state: 'closed',
-                                    item: item
+                                    item: item,
+                                    sure: false
                                   })
                                   // handleCommonEvent(item, "closed")
                                 }}>
@@ -721,7 +725,8 @@ const JobsList = () => {
                                     heading: `Do you wish to Proceed?`,
                                     body: `You will start receiving new applications for the jobs.`,
                                     state: 'Active',
-                                    item: item
+                                    item: item,
+                                    sure: false
                                   })
                                   // handleCommonEvent(item, "Active")
                                 }}>
@@ -740,7 +745,8 @@ const JobsList = () => {
                                     heading: `Do you wish to Proceed?`,
                                     body: `You will no longer receive new applications for the jobs.`,
                                     state: 'Application-Stopped',
-                                    item: item
+                                    item: item,
+                                    sure: false
                                   })
                                   // handleCommonEvent(item, "Application-Stopped")
                                 }}>
@@ -812,7 +818,12 @@ const JobsList = () => {
             />
           )}
           {modalText?.showPopup && (
-            <CustomPopup show={modalText?.showPopup} handleClose={() => setModalText({ ...modalText, showPopup: false })} modalText={modalText} setModalText={setModalText} />
+            <CustomPopup
+              show={modalText?.showPopup}
+              handleClose={() => setModalText({ ...modalText, showPopup: false })}
+              modalText={modalText}
+              setModalText={setModalText}
+            />
           )}
         </Container>
 
