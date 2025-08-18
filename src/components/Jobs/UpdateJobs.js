@@ -385,7 +385,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
     } else {
       setUpdateFormData({
         ...updateFormData,
-        [name]: value,
+        [name]:name=='min_salary' || name=='max_salary'?parseInt(value.replace(/,/g, ""), 10):  value,
       });
     }
   };

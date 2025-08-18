@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Breadcrumb,
   Button,
@@ -23,12 +23,22 @@ import Sidebar from "../../components/Sidebar";
 import Sendicon from "../../images/icons/send-01.svg"
 import attachcon from "../../images/icons/paperclip.svg"
 import filter from "../../images/icons/filter-lines.svg"
+import { JobList } from '../../services/provider';
+import { useSelector } from 'react-redux';
 
 export default function GlobalChat() {
+  const companyInfo = useSelector((state) => state.login.CompanyProfileDetails);
 
   const [selectedJobIndex, setSelectedJobIndex] = useState(null);
 
   const [show, filterShow] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [jobData, setJobData] = useState({
+    jobs: [],
+    total_active_job_count: 0,
+    ActiveJobs: [],
+    InactiveJobs: []
+  });
 
   const handleClose = () => filterShow(false);
   const handleShow = () => filterShow(true);
@@ -54,6 +64,48 @@ export default function GlobalChat() {
     { value: 'Oldestfirst', label: 'Oldest First' },
 
   ]
+
+  const JobListbyCompanyApi = async (SerachList) => {
+    setIsLoading(true);
+
+    // Base API URL
+    // let url = `https://bittrend.shubansoftware.com/assets-api/job-list-api/?page=1&limit=2000&search=${SerachList}`
+    let url = `https://bittrend.shubansoftware.com/assets-api/job-list-by-company-api/${companyInfo?.uid}/?page=1&limit=2000&search=${SerachList}`
+    try {
+      const response = await JobList(url);
+      setIsLoading(false);
+
+      setJobData({
+        jobs: response?.data?.response || [],
+        total_active_job_count: response?.data?.total_active_job_count || 0
+      });
+
+    } catch (error) {
+      setIsLoading(false);
+      console.log("response  error-----", error);
+    }
+  };
+
+  useEffect(() => {
+    // JobListApi();
+    JobListbyCompanyApi("")
+  }, []);
+  useEffect(() => {
+    JobListbyCompanyApi("")
+  }, [companyInfo])
+
+  useEffect(() => {
+    if (jobData?.jobs?.length > 0) {
+      const filterActive = jobData.jobs.filter((item) => item.job_status === "Active")
+      const filterInactive = jobData.jobs.filter((item) => item.job_status !== "Active")
+      setJobData((prev) => ({
+        ...prev,
+        ActiveJobs: filterActive,
+        InactiveJobs: filterInactive
+      }))
+    }
+  }, [jobData?.jobs])
+
 
   const jobs = [
     { title: 'Figma Designer (10)', company: 'Cloudsportre', location: 'Remote - Future', status: 'Active' },
@@ -94,13 +146,12 @@ export default function GlobalChat() {
   };
 
 
-
+  console.log(jobData)
 
   return (
     <>
       <Header />
       <Sidebar />
-
       <div className="page-body">
         <Container fluid className="pt-3">
           <Row className="g-0 shadow-sm" style={{ height: 'calc(100vh - 120px)' }}>
@@ -109,7 +160,6 @@ export default function GlobalChat() {
               <Card className="h-100 border-0 chat-module">
                 <Card.Header className="border-bottom d-flex justify-content-between align-items-center" style={{ padding: "16px", paddingBottom: "0" }} >
                   <Card.Title>Job List</Card.Title>
-
                   <Select
                     options={options}
                     //value={userOption.find((opt)=>opt.value===companyInfo)}
@@ -117,10 +167,8 @@ export default function GlobalChat() {
                     className="react_selectbox"
                     styles={customStyles}
                   />
-
                 </Card.Header>
                 <Card.Body className="">
-
                   <Tabs
                     defaultActiveKey="home"
                     id="uncontrolled-tab-example"
@@ -154,29 +202,26 @@ export default function GlobalChat() {
                         </InputGroup>
                       </div>
                       <div className='job-chat-form-card'>
-                        {jobs.map((job, index) => (
+                        {jobData?.jobs?.map((job, index) => (
                           <Card key={index}
                             className={`mb-2 cursor-pointer ${selectedJobIndex === index ? 'active' : ''}`}
                             onClick={() => setSelectedJobIndex(index)}
                           >
                             <Card.Body>
-                              <Card.Title className="">{job.title}</Card.Title>
+                              <Card.Title className="">{job.job_title}</Card.Title>
                               <Card.Text className="text-muted fs-12 mb-1">
-                                {job.company}
+                                {job.job_company.company_name}
                               </Card.Text>
                               <Card.Text className="text-muted fs-10 ">
-                                {job.location}
+                                {job?.job_location?.location_name}
                               </Card.Text>
                               <span className="badge">
-                                {job.status}
+                                {job.job_status}
                               </span>
                             </Card.Body>
                           </Card>
                         ))}
-
                       </div>
-
-
                     </Tab>
                     <Tab eventKey="profile" title="Active">
                       <div className='filter-chats'>
@@ -205,13 +250,35 @@ export default function GlobalChat() {
                           />
                         </InputGroup>
                       </div>
-
-                      <div className='applicant-chats'>
-                        <p>
-                          There are no Active for this job yet!
-                        </p>
-                      </div>
-
+                      {jobData?.ActiveJobs?.length > 0 ? (
+                        <div className='job-chat-form-card'>
+                          {jobData?.ActiveJobs?.map((job, index) => (
+                            <Card key={index}
+                              className={`mb-2 cursor-pointer ${selectedJobIndex === index ? 'active' : ''}`}
+                              onClick={() => setSelectedJobIndex(index)}
+                            >
+                              <Card.Body>
+                                <Card.Title className="">{job.job_title}</Card.Title>
+                                <Card.Text className="text-muted fs-12 mb-1">
+                                  {job.job_company.company_name}
+                                </Card.Text>
+                                <Card.Text className="text-muted fs-10 ">
+                                  {job?.job_location?.location_name}
+                                </Card.Text>
+                                <span className="badge">
+                                  {job.job_status}
+                                </span>
+                              </Card.Body>
+                            </Card>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className='applicant-chats'>
+                          <p>
+                            There are no Active for this job yet!
+                          </p>
+                        </div>
+                      )}
                     </Tab>
                     <Tab eventKey="contact" title="Inactive" >
                       <div className='filter-chats'>
@@ -240,26 +307,45 @@ export default function GlobalChat() {
                           />
                         </InputGroup>
                       </div>
-
-                      <div className='applicant-chats'>
-                        <p>
-                          There are no Inactive  job yet!
-                        </p>
-                      </div>
-
+                      {jobData?.InactiveJobs?.length > 0 ? (
+                        <div className='job-chat-form-card'>
+                          {jobData?.InactiveJobs?.map((job, index) => (
+                            <Card key={index}
+                              className={`mb-2 cursor-pointer ${selectedJobIndex === index ? 'active' : ''}`}
+                              onClick={() => setSelectedJobIndex(index)}
+                            >
+                              <Card.Body>
+                                <Card.Title className="">{job.job_title}</Card.Title>
+                                <Card.Text className="text-muted fs-12 mb-1">
+                                  {job.job_company.company_name}
+                                </Card.Text>
+                                <Card.Text className="text-muted fs-10 ">
+                                  {job?.job_location?.location_name}
+                                </Card.Text>
+                                <span className="badge">
+                                  {job.job_status}
+                                </span>
+                              </Card.Body>
+                            </Card>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className='applicant-chats'>
+                          <p>
+                            There are no Inactive  job yet!
+                          </p>
+                        </div>
+                      )}
                     </Tab>
                   </Tabs>
-
                 </Card.Body>
               </Card>
             </Col>
-
             {/* Middle Sidebar - Candidates */}
             <Col md={3} className="bg-white " style={{ borderRight: "2px solid #F2F4F7" }}>
               <Card className="h-100 border-0 chat-module">
                 <Card.Header className="border-bottom d-flex justify-content-between align-items-center" style={{ padding: "16px", paddingBottom: "0" }} >
                   <Card.Title>Candidates</Card.Title>
-
                   <Select
                     options={options}
                     //value={userOption.find((opt)=>opt.value===companyInfo)}
@@ -267,10 +353,8 @@ export default function GlobalChat() {
                     className="react_selectbox"
                     styles={customStyles}
                   />
-
                 </Card.Header>
                 <Card.Body className="">
-
                   <Tabs
                     defaultActiveKey="home"
                     id="uncontrolled-tab-example"

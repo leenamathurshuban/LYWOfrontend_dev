@@ -45,11 +45,42 @@ const Evaluations = ({ show, handleClose, assetJob, setAssetJob, localAssetJob, 
     const handleSelect = (key) => {
         setTabActive(key);
     };
+
+
+    const [mshow, modShow] = useState(false);
+
+    const modelClose = () => modShow(false);
+    const modelShow = () => modShow(true);
+
+
     const PassCriteriaOption = [
-        { value: "1", label: "One" },
-        { value: "2", label: "Two" },
-        { value: "3", label: "Three" },
+        { value: "50", label: "50%" },
+        { value: "60", label: "60%" },
+        { value: "70", label: "70%" },
+        { value: "80", label: "80%" },
+        { value: "90", label: "90%" },
     ]
+
+    const DurationOption = [
+        { value: "30", label: "30 Mins" },
+        { value: "60", label: "60 mins" },
+        { value: "90", label: "90 mins" },
+        { value: "120", label: "120 mins" },
+        { value: "150", label: "150 mins" },
+    ]
+
+    const customStyles = {
+        option: (provided, state) => ({
+            ...provided,
+            backgroundColor: state.isSelected
+                ? "#deebff"
+                : state.isFocused
+                    ? "#deebff" // Color on hover
+                    : "inherit",
+            color: state.isSelected ? "#000" : "black",
+            cursor: "pointer", // Optional: improves UX on hover
+        }),
+    };
 
     const revaluationsListAPI = async (SerachQuestion) => {
         setIsLoading(true);
@@ -198,238 +229,242 @@ const Evaluations = ({ show, handleClose, assetJob, setAssetJob, localAssetJob, 
     console.log(draggedIndex)
     console.log(assetJob)
     return (
-        <Offcanvas
-            show={show}
-            onHide={handleClose}
-            backdrop={false}
-            placement="end"
-            className="evaluations_drawer lg-drawer shadow-md border-0"
-        >
-            <Offcanvas.Header closeButton>
-                <Offcanvas.Title>
-                    Evaluations
-                </Offcanvas.Title>
-            </Offcanvas.Header>
-            <Offcanvas.Body className="add_evaluwarp">
-                <Tab.Container id="left-tabs-example1" activeKey={tabActive} onSelect={handleSelect}>
-                    <Row>
-                        <Col sm={12}>
-                            <Nav variant="pills">
-                                <Nav.Item>
-                                    <Nav.Link eventKey="evaluation">Select Evaluation</Nav.Link>
-                                </Nav.Item>
-                                <Nav.Item>
-                                    <Nav.Link eventKey="order">Set order of Evaluation</Nav.Link>
-                                </Nav.Item>
-                            </Nav>
-                        </Col>
-                        <Col sm={12}>
-                            <Tab.Content>
-                                <Tab.Pane eventKey="evaluation">
-                                    <p className="base-text my-3">Evaluations have not been added. You can choose up to 4 evaluations from the list below for this position</p>
-                                    <Card className="border-0 evaluations_data">
-                                        <Card.Header className="px-0 pb-3">
-                                            <Row>
-                                                <Col md={5}>
-                                                    <InputGroup className="defult_serachbox">
-                                                        <Button id="basic-addon1">
-                                                            <svg
-                                                                width="18"
-                                                                height="18"
-                                                                viewBox="0 0 18 18"
-                                                                fill="none"
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                            >
-                                                                <path
-                                                                    d="M16.5 16.5L11.5001 11.5M13.1667 7.33333C13.1667 10.555 10.555 13.1667 7.33333 13.1667C4.11167 13.1667 1.5 10.555 1.5 7.33333C1.5 4.11167 4.11167 1.5 7.33333 1.5C10.555 1.5 13.1667 4.11167 13.1667 7.33333Z"
-                                                                    stroke="#667085"
-                                                                    stroke-width="1.66667"
-                                                                    stroke-linecap="round"
-                                                                    stroke-linejoin="round"
-                                                                />
-                                                            </svg>
-                                                        </Button>
-                                                        <Form.Control
-                                                            placeholder="Search"
-                                                            aria-label="Search"
-                                                            aria-describedby="basic-addon1"
-                                                        />
-                                                    </InputGroup>
-                                                </Col>
-                                            </Row>
-                                        </Card.Header>
-                                        <Card.Body className="p-0 mt-3">
-                                            <ul class="head_filterlist">
-                                                <li
-                                                    className={activeTab === "viewAll" ? "active" : ""}
-                                                    onClick={() => handleTab("viewAll")}
-                                                >
-                                                    View all
-                                                </li>
-                                                <li
-                                                    className={activeTab === "Quiz" ? "active" : ""}
-                                                    onClick={() => handleTab("Quiz")}
-                                                >
-                                                    Quiz
-                                                </li>
-                                                <li
-                                                    className={activeTab === "Assignment" ? "active" : ""}
-                                                    onClick={() => handleTab("Assignment")}
-                                                >
-                                                    Assignment
-                                                </li>
-                                            </ul>
-                                            <div className="elv_datatable shadow-none">
-                                                <Table striped className="m-0">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Evaluation Title</th>
-                                                            <th>Type</th>
-                                                            <th>Duration</th>
-                                                            <th>Avg. Score</th>
-                                                            <th>Questions</th>
-                                                            <th>Pass Ratio</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {EvaluationListFilterData.length > 0 ? (
-                                                            EvaluationListFilterData.slice(0, loadeMoreCount).map(
-                                                                (item) => (
-                                                                    <tr>
-                                                                        <td
-                                                                            onClick={() => quizModal(item.uid)}
-                                                                            style={{ cursor: "pointer" }}
-                                                                        >
-                                                                            <Form.Check
-                                                                                className="custom-checkbox me-1"
-                                                                                id='1'
-                                                                                type="checkbox"
-                                                                                onChange={() => handleMultiple(item)}
-                                                                                checked={assetJob.some((Val) => Val.uid == item.uid)}
-                                                                            />
-                                                                            <span className="font-weight-600">
-                                                                                {item.asset_title}
-                                                                            </span>
-                                                                        </td>
-                                                                        <td><img className="me-1" src={item.asset_type == "Assignment" ? fileIcon : quizIcon} alt="" />{item.asset_type}</td>
-                                                                        <td>{item.fixed_time ? item.fixed_time : "Untimed"}</td>
-                                                                        <td>{item.pass_criteria}{item.avg_score} <img src={item.pass_criteria >= 60 ? RingSucess : faRingicon} className="ms-1" alt="" /></td>
-                                                                        <td>{item.total_number_of_question}</td>
-                                                                        <td><div className="d-flex align-items-center"><span>{item.pass_criteria}{item.pass_ratio}</span> <ProgressBar variant="warning" now={60} /></div></td>
-                                                                    </tr>
-                                                                )
-                                                            )
-                                                        ) : (
+
+        <>
+            <Offcanvas
+                show={show}
+                onHide={handleClose}
+                backdrop={true}
+                placement="end"
+                className="evaluations_drawer lg-drawer shadow-md border-0"
+            >
+                <Offcanvas.Header closeButton>
+                    <Offcanvas.Title>
+                        Evaluations
+                    </Offcanvas.Title>
+                </Offcanvas.Header>
+                <Offcanvas.Body className="add_evaluwarp">
+                    <Tab.Container id="left-tabs-example1" activeKey={tabActive} onSelect={handleSelect}>
+                        <Row>
+                            <Col sm={12}>
+                                <Nav variant="pills">
+                                    <Nav.Item>
+                                        <Nav.Link eventKey="evaluation">Select Evaluation</Nav.Link>
+                                    </Nav.Item>
+                                    <Nav.Item>
+                                        <Nav.Link eventKey="order">Set order of Evaluation</Nav.Link>
+                                    </Nav.Item>
+                                </Nav>
+                            </Col>
+                            <Col sm={12}>
+                                <Tab.Content>
+                                    <Tab.Pane eventKey="evaluation">
+                                        <p className="base-text my-3">Evaluations have not been added. You can choose up to 4 evaluations from the list below for this position</p>
+                                        <Card className="border-0 evaluations_data">
+                                            <Card.Header className="px-0 pb-3">
+                                                <Row>
+                                                    <Col md={5}>
+                                                        <InputGroup className="defult_serachbox">
+                                                            <Button id="basic-addon1">
+                                                                <svg
+                                                                    width="18"
+                                                                    height="18"
+                                                                    viewBox="0 0 18 18"
+                                                                    fill="none"
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                >
+                                                                    <path
+                                                                        d="M16.5 16.5L11.5001 11.5M13.1667 7.33333C13.1667 10.555 10.555 13.1667 7.33333 13.1667C4.11167 13.1667 1.5 10.555 1.5 7.33333C1.5 4.11167 4.11167 1.5 7.33333 1.5C10.555 1.5 13.1667 4.11167 13.1667 7.33333Z"
+                                                                        stroke="#667085"
+                                                                        stroke-width="1.66667"
+                                                                        stroke-linecap="round"
+                                                                        stroke-linejoin="round"
+                                                                    />
+                                                                </svg>
+                                                            </Button>
+                                                            <Form.Control
+                                                                placeholder="Search"
+                                                                aria-label="Search"
+                                                                aria-describedby="basic-addon1"
+                                                            />
+                                                        </InputGroup>
+                                                    </Col>
+                                                </Row>
+                                            </Card.Header>
+                                            <Card.Body className="p-0 mt-3">
+                                                <ul class="head_filterlist">
+                                                    <li
+                                                        className={activeTab === "viewAll" ? "active" : ""}
+                                                        onClick={() => handleTab("viewAll")}
+                                                    >
+                                                        View all
+                                                    </li>
+                                                    <li
+                                                        className={activeTab === "Quiz" ? "active" : ""}
+                                                        onClick={() => handleTab("Quiz")}
+                                                    >
+                                                        Quiz
+                                                    </li>
+                                                    <li
+                                                        className={activeTab === "Assignment" ? "active" : ""}
+                                                        onClick={() => handleTab("Assignment")}
+                                                    >
+                                                        Assignment
+                                                    </li>
+                                                </ul>
+                                                <div className="elv_datatable shadow-none">
+                                                    <Table striped className="m-0">
+                                                        <thead>
                                                             <tr>
-                                                                <td colSpan="8" style={{ textAlign: "center" }}>
-                                                                    No data found of this category
+                                                                <th>Evaluation Title</th>
+                                                                <th>Type</th>
+                                                                <th>Duration</th>
+                                                                <th>Avg. Score</th>
+                                                                <th>Questions</th>
+                                                                <th>Pass Ratio</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {EvaluationListFilterData.length > 0 ? (
+                                                                EvaluationListFilterData.slice(0, loadeMoreCount).map(
+                                                                    (item) => (
+                                                                        <tr>
+                                                                            <td
+                                                                                onClick={() => quizModal(item.uid)}
+                                                                                style={{ cursor: "pointer" }}
+                                                                            >
+                                                                                <Form.Check
+                                                                                    className="custom-checkbox me-1"
+                                                                                    id='1'
+                                                                                    type="checkbox"
+                                                                                    onChange={() => handleMultiple(item)}
+                                                                                    checked={assetJob.some((Val) => Val.uid == item.uid)}
+                                                                                />
+                                                                                <span className="font-weight-600">
+                                                                                    {item.asset_title}
+                                                                                </span>
+                                                                            </td>
+                                                                            <td><img className="me-1" src={item.asset_type == "Assignment" ? fileIcon : quizIcon} alt="" />{item.asset_type}</td>
+                                                                            <td>{item.fixed_time ? item.fixed_time : "Untimed"}</td>
+                                                                            <td>{item.pass_criteria}{item.avg_score} <img src={item.pass_criteria >= 60 ? RingSucess : faRingicon} className="ms-1" alt="" /></td>
+                                                                            <td>{item.total_number_of_question}</td>
+                                                                            <td><div className="d-flex align-items-center"><span>{item.pass_criteria}{item.pass_ratio}</span> <ProgressBar variant="warning" now={60} /></div></td>
+                                                                        </tr>
+                                                                    )
+                                                                )
+                                                            ) : (
+                                                                <tr>
+                                                                    <td colSpan="8" style={{ textAlign: "center" }}>
+                                                                        No data found of this category
+                                                                    </td>
+                                                                </tr>
+                                                            )}
+                                                        </tbody>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <td colSpan={2}>
+                                                                    <Button
+                                                                        className="btn-light-outline"
+                                                                    >
+                                                                        Load More
+                                                                    </Button>
+                                                                </td>
+                                                                <td colSpan={4} className="text-end pe-3">
+                                                                    <span className="pagination_count">
+                                                                        Showing {EvaluationListFilterData.length} items
+                                                                    </span>
                                                                 </td>
                                                             </tr>
-                                                        )}
-                                                    </tbody>
-                                                    <tfoot>
-                                                        <tr>
-                                                            <td colSpan={2}>
-                                                                <Button
-                                                                    className="btn-light-outline"
-                                                                >
-                                                                    Load More
-                                                                </Button>
-                                                            </td>
-                                                            <td colSpan={4} className="text-end pe-3">
-                                                                <span className="pagination_count">
-                                                                    Showing {EvaluationListFilterData.length} items
-                                                                </span>
-                                                            </td>
-                                                        </tr>
-                                                    </tfoot>
-                                                </Table>
-                                            </div>
-                                        </Card.Body>
-                                    </Card>
-                                </Tab.Pane>
-                                <Tab.Pane eventKey="order">
-                                    <p className="base-text my-3">Drag and drop to reorder assignments</p>
-                                    <Table className="m-0 evelu_order">
-                                        {assetJob.length > 0 ? (
-                                            assetJob.map((item, index) => (
-                                                <tr>
-                                                    <td>
+                                                        </tfoot>
+                                                    </Table>
+                                                </div>
+                                            </Card.Body>
+                                        </Card>
+                                    </Tab.Pane>
+                                    <Tab.Pane eventKey="order">
+                                        <p className="base-text my-3 ">Drag and drop to reorder assignments</p>
+                                        <Table className="m-0 evelu_order">
+                                            {assetJob.length > 0 ? (
+                                                assetJob.map((item, index) => (
+                                                    <tr>
+                                                        {/* <td>
                                                         <button className='drag-icon' style={{border: '0', marginRight: '4px'}} >
                                                             <img src={Dragdropicon} className='img-fluid' alt='Dragdropicon' />
                                                         </button>
-                                                    </td>
+                                                    </td> */}
 
-                                                    {item?.unSelect && (
-                                                        <td style={{ cursor: "pointer" }}>
-                                                            <img src={DragDrop} alt="" draggable
-                                                                onDragStart={() => handleDragStart(index)}
-                                                                onDragOver={handleDragOver}
-                                                                onDrop={() => handleDrop(index)}
-                                                            />
-                                                        </td>
-                                                    )}
-                                                    <td style={{ width: "30px" }}>{index + 1}</td>
-                                                    <td>{item?.asset_title}</td>
-                                                    <td>
-                                                        <div className="d-flex align-items-center">
-                                                            <span>Pass Criteria</span>
-                                                            {/* <Form.Select className="select-sm w-80 ms-2" value={item?.pass_criteria}>
+                                                        {item?.unSelect && (
+                                                            <td style={{ cursor: "pointer" }}>
+                                                                <img src={DragDrop} alt="" draggable
+                                                                    onDragStart={() => handleDragStart(index)}
+                                                                    onDragOver={handleDragOver}
+                                                                    onDrop={() => handleDrop(index)}
+                                                                />
+                                                            </td>
+                                                        )}
+                                                        <td style={{ width: "30px" }}>{index + 1}</td>
+                                                        <td>{item?.asset_title}</td>
+                                                        <td>
+                                                            <div className="d-flex align-items-center">
+                                                                <span>Pass Criteria</span>
+                                                                {/* <Form.Select className="select-sm w-80 ms-2" value={item?.pass_criteria}>
                                                                 <option value="" disabled hidden> 60%</option>
                                                                 <option value="1">One</option>
                                                                 <option value="2">Two</option>
                                                                 <option value="3">Three</option>
                                                             </Form.Select> */}
-                                                            <Select
-                                                                className=" w-120 ms-2 react_selectbox"
-                                                                options={PassCriteriaOption}
-                                                                value={PassCriteriaOption.find((opt) => opt.value === item?.pass_criteria)}
-                                                                onChange={(e) => {
-                                                                }}
-                                                            />
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div className="d-flex align-items-center">
-                                                            <span>Duration</span>
-                                                            {/* <Form.Select className="select-sm w-80 ms-2" value={item?.fixed_time}>
+                                                                <Select
+                                                                    className=" w-120 ms-2 react_selectbox"
+                                                                    options={PassCriteriaOption}
+                                                                    styles={customStyles}
+                                                                    value={PassCriteriaOption.find((opt) => opt.value === item?.pass_criteria)}
+                                                                    onChange={(e) => {
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div className="d-flex align-items-center">
+                                                                <span>Duration</span>
+                                                                {/* <Form.Select className="select-sm w-80 ms-2" value={item?.fixed_time}>
                                                                 <option value="" disabled hidden> 30mins</option>
                                                                 <option value="1">One</option>
                                                                 <option value="2">Two</option>
                                                                 <option value="3">Three</option>
                                                             </Form.Select> */}
-                                                            <Select
-                                                                className=" w-120 ms-2 react_selectbox"
-                                                                options={PassCriteriaOption}
-                                                                value={PassCriteriaOption.find((opt) => opt.value === item?.fixed_time)}
-                                                                onChange={(e) => {
-                                                                }}
-                                                            />
-                                                        </div>
-                                                    </td>
-                                                    {item?.unSelect && (
-                                                        <td>
-                                                            <button type="button" className="btn-transpant" onClick={() => handleDeleteRow(item)}><img src={deleteDark} alt="" /></button>
+                                                                <Select
+                                                                    className=" w-120 ms-2 react_selectbox"
+                                                                    options={DurationOption}
+                                                                    styles={customStyles}
+                                                                    value={DurationOption.find((opt) => opt.value === item?.fixed_time)}
+                                                                    onChange={(e) => {
+                                                                    }}
+                                                                />
+                                                            </div>
                                                         </td>
-                                                    )}
+                                                        {item?.unSelect && (
+                                                            <td>
+                                                                <button type="button" className="btn-transpant" onClick={() => handleDeleteRow(item)}><img src={deleteDark} alt="" /></button>
+                                                            </td>
+                                                        )}
 
 
-                                                    <td>
+                                                        {/* <td>
                                                         <button type="button" className="btn-transpant"><img src={deleteDark} alt="" /></button>
-                                                    </td>
+                                                    </td> */}
 
 
 
-                                                </tr>
-                                            )))
-                                            : (
-                                                <tr>
-                                                    <td colSpan="8" style={{ textAlign: "center" }}>
-                                                        No data found of this category
-                                                    </td>
-                                                </tr>
-                                            )}
-                                        {/* {localAssetJob.map((item) => (
+                                                    </tr>
+                                                )))
+                                                : (
+                                                    <tr>
+                                                        <td colSpan="8" style={{ textAlign: "center", marginBottom: "10px" }}>
+                                                            No data found of this category
+                                                        </td>
+                                                    </tr>
+                                                )}
+                                            {/* {localAssetJob.map((item) => (
                                                 <tr>
                                                     <td style={{ cursor: "pointer" }}><img src={DragDrop} alt="" /></td>
                                                     <td style={{ width: "30px" }}>1</td>
@@ -461,7 +496,7 @@ const Evaluations = ({ show, handleClose, assetJob, setAssetJob, localAssetJob, 
                                                     </td>
                                                 </tr>
                                             ))} */}
-                                        {/* <tr>
+                                            {/* <tr>
                                             <td style={{ cursor: "pointer" }}><img src={DragDrop} alt="" /></td>
                                             <td style={{ width: "30px" }}>1</td>
                                             <td>Assignment for Figma Designer</td>
@@ -611,27 +646,65 @@ const Evaluations = ({ show, handleClose, assetJob, setAssetJob, localAssetJob, 
                                                 <button type="button" className="btn-transpant"><img src={deleteDark} alt="" /></button>
                                             </td>
                                         </tr> */}
-                                    </Table>
-                                </Tab.Pane>
-                            </Tab.Content>
-                        </Col>
-                    </Row>
-                </Tab.Container>
-            </Offcanvas.Body>
-            <div className="offcanvas-footer text-end">
-                <span className="me-4 font-sm">0/4</span>
-                {tabActive === 'evaluation' && (
-                    <Button variant="primary" onClick={() => setTabActive('order')}>
-                        Select
+                                        </Table>
+                                    </Tab.Pane>
+                                </Tab.Content>
+                            </Col>
+                        </Row>
+                    </Tab.Container>
+                </Offcanvas.Body>
+                <div className="offcanvas-footer text-end">
+                    <span className="me-4 font-sm">0/4</span>
+                    {tabActive === 'evaluation' && (
+                        <Button variant="primary" onClick={() => setTabActive('order')}>
+                            Select
+                        </Button>
+                    )}
+                    {tabActive === 'order' && (
+                        <Button variant="primary" onClick={()=>{
+                            handleClose();
+                            modelShow();
+                        }}>
+                            Save
+                        </Button>
+
+                        // handleClose()
+                    )}
+                </div>
+            </Offcanvas>
+
+
+            <Modal
+                show={mshow}
+                onHide={modelClose}
+                backdrop="static"
+                keyboard={false}
+                aria-labelledby="contained-modal-title-vcenter"
+                className='model-confirmations'
+                centered
+            >
+                <Modal.Header closeButton>
+                   
+                </Modal.Header>
+                <Modal.Body>
+
+                    <div className='confirm-model-save text-center'>
+                    <h5 className='mb-3'>Are you sure you want to save ?</h5>
+                   <p> Once saved ,modification <br></br> will not be possible</p>
+
+                   <div className="d-flex justify-contemt-between gap-2 mt-3">
+
+                    <Button variant="light" className='w-50'  onClick={modelClose}>
+                        No
                     </Button>
-                )}
-                {tabActive === 'order' && (
-                    <Button variant="primary" onClick={handleSubmit}>
-                        Save
-                    </Button>
-                )}
-            </div>
-        </Offcanvas>
+                    <Button variant="primary" className='w-50' onClick={handleSubmit} >Yes</Button>
+                    </div>
+                    </div>
+                </Modal.Body>
+              
+            </Modal>
+
+        </>
     )
 }
 

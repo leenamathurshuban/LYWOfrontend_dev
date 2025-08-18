@@ -766,6 +766,15 @@ ol.breadcrumb {
   font-size: 13px;
 }
 
+.gpa-select {
+  width: 140px;
+  border-top-left-radius: 0 !important;
+}
+.gpa-select .css-13cymwt-control {
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+
 .shadow-md {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);
 }
@@ -779,7 +788,7 @@ ol.breadcrumb {
 }
 
 .sm-fcontrol {
-  min-height: 34px;
+  min-height: 38px;
   font-size: 12px;
   border-radius: 6px;
   background-color: #fff !important;
@@ -1093,7 +1102,7 @@ button.btn-link-muted svg {
 .btn-light {
   background-color: #fff !important;
   border-radius: 8px;
-  font-size: 12px;
+  font-size: 16px;
   text-transform: capitalize;
   font-weight: 600;
   padding: 8px 15px;
@@ -2585,7 +2594,7 @@ select.h-36.form-select {
 }
 .jobpre_leftpanel .checklist li a {
   color: #667085;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 400;
   display: flex;
   align-items: center;
@@ -2604,14 +2613,22 @@ select.h-36.form-select {
   background-color: #f6fef9;
   border-color: #067647;
 }
-.jobpre_leftpanel .checklist li.active, .jobpre_leftpanel .checklist li.completed {
+.jobpre_leftpanel .checklist li.completed a {
+  color: #667085;
+}
+.jobpre_leftpanel .checklist li.completed .fa {
+  color: #17B26A;
+  background-color: hsla(152, 77%, 39%, 0.28);
+  border-color: #17B26A;
+}
+.jobpre_leftpanel .checklist li.active {
   border-color: #067647;
   background-color: #f6fef9;
 }
-.jobpre_leftpanel .checklist li.active a, .jobpre_leftpanel .checklist li.completed a {
+.jobpre_leftpanel .checklist li.active a {
   color: #067647;
 }
-.jobpre_leftpanel .checklist li.active .fa, .jobpre_leftpanel .checklist li.completed .fa {
+.jobpre_leftpanel .checklist li.active .fa {
   color: #17B26A;
   background-color: hsla(152, 77%, 39%, 0.28);
   border-color: #17B26A;
@@ -8171,6 +8188,10 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   width: 130px;
 }
 
+.indleffort-mdl {
+  z-index: 1111;
+}
+
 .chat-box-global .card-header .card-title {
   font-size: 16px;
   line-height: 24px;
@@ -8361,6 +8382,10 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   z-index: 111;
 }
 
+.custom-backdrop {
+  z-index: 1111 !important;
+}
+
 .Job-requiremnt-model {
   padding-left: 0 !important;
   z-index: 1111;
@@ -8494,6 +8519,10 @@ path.recharts-rectangle.recharts-tooltip-cursor {
 
 .cmt_questions .form-control {
   min-height: 34px;
+}
+
+.summary-full .ct_scrollbar {
+  max-height: 100% !important;
 }
 
 @media screen and (max-width: 767px) {
@@ -8990,5 +9019,9 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   }
   .mobile-footer-quiz {
     display: none;
+  }
+  .verify-box-mobile.desktop-flex-colum {
+    flex-direction: column;
+    align-items: self-start;
   }
 }/*# sourceMappingURL=main.css.map */

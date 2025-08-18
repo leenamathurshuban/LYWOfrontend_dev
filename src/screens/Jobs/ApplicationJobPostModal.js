@@ -1859,6 +1859,7 @@ import { toast } from "react-toastify";
 import Select from "react-select";
 
 import Offcanvas from 'react-bootstrap/Offcanvas';
+import { Label } from "recharts";
 
 const ApplicationJobPostModal = ({
   show,
@@ -2089,6 +2090,13 @@ const ApplicationJobPostModal = ({
       showSaveModal: false,
     });
   };
+
+
+  const gpaOptions = [
+    { label: "4 Point GPA", value: "4 Point GPA" },
+    { label: "10 Point GPA", value: "10 Point GPA" },
+    { label: "GPA in %", value: "GPA in %" },
+  ];
 
   const handleShowModal = (modalName) => {
     if (modalName === "SaveAsDraft") {
@@ -2535,12 +2543,12 @@ const ApplicationJobPostModal = ({
   // useEffect(() => {
   //   getLocationAPIList()
   // }, [])
-  useEffect(()=>{
+  useEffect(() => {
     getAreaOfEducationData()
     getIndustriesData()
     getRolelistData()
     getLocationAPIList()
-  },[localStorage.getItem('authToken')])  
+  }, [localStorage.getItem('authToken')])
   // useEffect(() => {
   //   if (profileformData?.CurrentLocation) {
   //     handleLocationAPIList()
@@ -3569,7 +3577,7 @@ const ApplicationJobPostModal = ({
                     </Col>
 
                     <Col>
-                      <div className="verify-box-mobile ">
+                      <div className="verify-box-mobile desktop-flex-colum">
 
                         <Form.Control
                           type="email"
@@ -3583,11 +3591,18 @@ const ApplicationJobPostModal = ({
                           onBlur={handleBlur}
                           isInvalid={touchedFields.email && !!errors.email}
                         />
+
                         <Form.Control.Feedback type="invalid">
                           {errors.email}
                         </Form.Control.Feedback>
+
+
+
                         <button className="verify-btn" onClick={handleInviteShow}>Verify</button>
+
+
                       </div>
+
                     </Col>
                   </Row>
 
@@ -4339,7 +4354,7 @@ const ApplicationJobPostModal = ({
                               <div className="mix-inputs">
                                 <Form.Control
                                   name="grade"
-                                  type="text"
+                                  type="number"
                                   placeholder="Grade"
                                   size="sm"
                                   value={row.grade}
@@ -4348,12 +4363,25 @@ const ApplicationJobPostModal = ({
                                   }
                                   disabled={row.saved}
                                 />
-                                <Form.Select name="gpa" value={row.gpa} onChange={(e) => handleEducationQualificationChange(index, e)}>
+
+                                {/* <Form.Select name="gpa" value={row.gpa} onChange={(e) => handleEducationQualificationChange(index, e)}>
                                   <option value="" hidden>GPA</option>
                                   <option value="4 Point GPA">4 Point GPA</option>
                                   <option value="10 Point GPA">10 Point GPA</option>
                                   <option value="GPA in %">GPA in %</option>
-                                </Form.Select>
+                                </Form.Select> */}
+
+                                <Select
+                                  className="react_selectbox maw-350 gpa-select"
+                                  options={gpaOptions}
+                                  value={gpaOptions.find(option => option.value === row.gpa)} // ensures proper controlled value
+                                  placeholder="GPA"
+                                  onChange={(selectedOption) =>
+                                    handleEducationQualificationChange(index, { target: { name: "gpa", value: selectedOption.value } })
+                                  }
+                                  styles={customStyles}
+                                />
+
                               </div>
                             </td>
                             {!row.saved && (
@@ -4515,12 +4543,24 @@ const ApplicationJobPostModal = ({
                               }
                               disabled={row.saved}
                             />
-                            <Form.Select name="gpa" value={row.gpa} onChange={(e) => handleEducationQualificationChange(index, e)}>
+                            {/* <Form.Select name="gpa" value={row.gpa} onChange={(e) => handleEducationQualificationChange(index, e)}>
                               <option value="" hidden>GPA</option>
                               <option value="4 Point GPA">4 Point GPA</option>
                               <option value="10 Point GPA">10 Point GPA</option>
                               <option value="GPA in %">GPA in %</option>
-                            </Form.Select>
+                            </Form.Select> */}
+
+                            <Select
+                              className="react_selectbox maw-350 gpa-select"
+                              options={gpaOptions}
+                              value={gpaOptions.find(option => option.value === row.gpa)} // ensures proper controlled value
+                              placeholder="GPA"
+                              onChange={(selectedOption) =>
+                                handleEducationQualificationChange(index, { target: { name: "gpa", value: selectedOption.value } })
+                              }
+                              styles={customStyles}
+                            />
+
                           </div>
 
                         </div>
@@ -5017,163 +5057,163 @@ const ApplicationJobPostModal = ({
 
                     </div>
 
-                   
-  <div className="mobile-table">
-    {WorkExpreienceRow.map((row, index) => (
-      <div className="row">
 
-        <div className="col-12 form-input-mobile">
-          <label class="form-label">Role</label>
-          <div className="mw-130 relative">
+                    <div className="mobile-table">
+                      {WorkExpreienceRow.map((row, index) => (
+                        <div className="row">
 
-            <Select
-              className="react_selectbox maw-350"
-              options={roleList}
-              isSearchable={true}
-              noOptionsMessage={() => "No results found"}
-              value={roleList.find((opt) => opt.label === row.WorkRole)}
-              disabled={row.savedWorkExp}
-              placeholder="Role"
-              filterOption={(option, inputValue) => {
-                if (!inputValue) return false; // hide all options until user types
-                return option.label.toLowerCase().includes(inputValue.toLowerCase());
-              }}
-              onChange={(e) => handleWorkRole(index, e.label)}
-              styles={customStyles} />
-          </div>
-        </div>
+                          <div className="col-12 form-input-mobile">
+                            <label class="form-label">Role</label>
+                            <div className="mw-130 relative">
 
-        <div className="col-6 form-input-mobile">
-          <label class="form-label">From</label>
-          <Form.Control
-            placeholder="June 2019"
-            size="sm"
-            style={{ width: "150px" }}
-            type="date"
-            value={row?.WorkFrom}
-            name="WorkFrom"
-            onChange={(e) =>
-              handleWorkExpeienceChange(index, e)
-            }
-            disabled={row.savedWorkExp}
-          />
-        </div>
+                              <Select
+                                className="react_selectbox maw-350"
+                                options={roleList}
+                                isSearchable={true}
+                                noOptionsMessage={() => "No results found"}
+                                value={roleList.find((opt) => opt.label === row.WorkRole)}
+                                disabled={row.savedWorkExp}
+                                placeholder="Role"
+                                filterOption={(option, inputValue) => {
+                                  if (!inputValue) return false; // hide all options until user types
+                                  return option.label.toLowerCase().includes(inputValue.toLowerCase());
+                                }}
+                                onChange={(e) => handleWorkRole(index, e.label)}
+                                styles={customStyles} />
+                            </div>
+                          </div>
 
-        <div className="col-6 form-input-mobile">
-          <label class="form-label">To</label>
-          <Form.Control
-            type="date"
-            placeholder="May 2022"
-            size="sm"
-            style={{ width: "150px" }}
-            value={row?.WorkTo}
-            name="WorkTo"
-            onChange={(e) =>
-              handleWorkExpeienceChange(index, e)
-            }
-            disabled={row.savedWorkExp}
-          />
-        </div>
+                          <div className="col-6 form-input-mobile">
+                            <label class="form-label">From</label>
+                            <Form.Control
+                              placeholder="June 2019"
+                              size="sm"
+                              style={{ width: "150px" }}
+                              type="date"
+                              value={row?.WorkFrom}
+                              name="WorkFrom"
+                              onChange={(e) =>
+                                handleWorkExpeienceChange(index, e)
+                              }
+                              disabled={row.savedWorkExp}
+                            />
+                          </div>
 
-        <div className="col-12 form-input-mobile">
-          <label class="form-label">Company</label>
+                          <div className="col-6 form-input-mobile">
+                            <label class="form-label">To</label>
+                            <Form.Control
+                              type="date"
+                              placeholder="May 2022"
+                              size="sm"
+                              style={{ width: "150px" }}
+                              value={row?.WorkTo}
+                              name="WorkTo"
+                              onChange={(e) =>
+                                handleWorkExpeienceChange(index, e)
+                              }
+                              disabled={row.savedWorkExp}
+                            />
+                          </div>
 
-          <Form.Control
-            type="text"
-            placeholder="Company"
-            size="sm"
-            style={{ width: "150px" }}
-            value={row?.WorkComapny}
-            name="WorkComapny"
-            onChange={(e) =>
-              handleWorkExpeienceChange(index, e)
-            }
-            disabled={row.savedWorkExp}
-          />
+                          <div className="col-12 form-input-mobile">
+                            <label class="form-label">Company</label>
 
-        </div>
-        <div className="col-12 form-input-mobile">
-          <label class="form-label">Industry</label>
-          <Select
-            className="react_selectbox maw-350"
-            options={industriesList}
-            isSearchable={true}
-            noOptionsMessage={() => "No results found"}
-            value={industriesList.find((opt) => opt.label === row.WorkIndustry)}
-            disabled={row.savedWorkExp}
-            placeholder="Industry"
-            filterOption={(option, inputValue) => {
-              if (!inputValue) return false; // hide all options until user types
-              return option.label.toLowerCase().includes(inputValue.toLowerCase());
-            }}
-            onChange={(e) => handleSelectIndustries(index, e.label)}
-            styles={customStyles} />
-        </div>
+                            <Form.Control
+                              type="text"
+                              placeholder="Company"
+                              size="sm"
+                              style={{ width: "150px" }}
+                              value={row?.WorkComapny}
+                              name="WorkComapny"
+                              onChange={(e) =>
+                                handleWorkExpeienceChange(index, e)
+                              }
+                              disabled={row.savedWorkExp}
+                            />
 
-
-
-        <div className="col-12">
-          <div className="d-flex justify-content-between">
-            {!row.savedWorkExp && !showNotesByIndex.includes(row?.id) && (
-              <Button
-                variant="link"
-                className="p-1 font-sm mt-1 link-iconbtn"
-                onClick={() => handleButtonClick(row?.id)}
-              >
-                <i className="far fa-file me-1 "></i>
-                Note
-              </Button>
-            )}
-
-            {!row.savedWorkExp && showNotesByIndex.includes(row?.id) && (
-              <Button
-                variant="link"
-                className="p-1 font-sm mt-1 link-iconbtn"
-                // onClick={handleButtonClick}
-                onClick={() => saveWorkExperienceData(row, index)}
-              >
-                <img
-                  src={saveIcon}
-                  className="me-1"
-                  alt="Delete"
-                  style={{ width: "16px", height: "16px" }}
-                />
-                Save
-              </Button>
-            )}
+                          </div>
+                          <div className="col-12 form-input-mobile">
+                            <label class="form-label">Industry</label>
+                            <Select
+                              className="react_selectbox maw-350"
+                              options={industriesList}
+                              isSearchable={true}
+                              noOptionsMessage={() => "No results found"}
+                              value={industriesList.find((opt) => opt.label === row.WorkIndustry)}
+                              disabled={row.savedWorkExp}
+                              placeholder="Industry"
+                              filterOption={(option, inputValue) => {
+                                if (!inputValue) return false; // hide all options until user types
+                                return option.label.toLowerCase().includes(inputValue.toLowerCase());
+                              }}
+                              onChange={(e) => handleSelectIndustries(index, e.label)}
+                              styles={customStyles} />
+                          </div>
 
 
 
-            {row.savedWorkExp && (
-              <Button
-                variant="link"
-                className="p-1 font-sm mt-1 link-iconbtn"
-                onClick={() => handleButtonEdit(row, index)}
-              >
-                <svg className="me-1" width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M6.99998 12.3341H13M1 12.3341H2.11636C2.44248 12.3341 2.60554 12.3341 2.75899 12.2973C2.89504 12.2646 3.0251 12.2108 3.1444 12.1377C3.27895 12.0552 3.39425 11.9399 3.62486 11.7093L12 3.33414C12.5523 2.78185 12.5523 1.88642 12 1.33413C11.4477 0.781851 10.5523 0.781851 10 1.33414L1.62484 9.7093C1.39424 9.9399 1.27894 10.0552 1.19648 10.1898C1.12338 10.3091 1.0695 10.4391 1.03684 10.5752C1 10.7286 1 10.8917 1 11.2178V12.3341Z" stroke="#3538CD" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-                Edit
-              </Button>
-            )}
+                          <div className="col-12">
+                            <div className="d-flex justify-content-between">
+                              {!row.savedWorkExp && !showNotesByIndex.includes(row?.id) && (
+                                <Button
+                                  variant="link"
+                                  className="p-1 font-sm mt-1 link-iconbtn"
+                                  onClick={() => handleButtonClick(row?.id)}
+                                >
+                                  <i className="far fa-file me-1 "></i>
+                                  Note
+                                </Button>
+                              )}
 
-            <Button
-              variant="link"
-              className="p-1"
-              onClick={() => WorkExperienceDeleteRow(index, row?.id)}
-            >
-              <img
-                src={imgpTrash}
-                alt="Delete"
-                style={{ width: "20px", height: "20px" }}
-              />
-            </Button>
+                              {!row.savedWorkExp && showNotesByIndex.includes(row?.id) && (
+                                <Button
+                                  variant="link"
+                                  className="p-1 font-sm mt-1 link-iconbtn"
+                                  // onClick={handleButtonClick}
+                                  onClick={() => saveWorkExperienceData(row, index)}
+                                >
+                                  <img
+                                    src={saveIcon}
+                                    className="me-1"
+                                    alt="Delete"
+                                    style={{ width: "16px", height: "16px" }}
+                                  />
+                                  Save
+                                </Button>
+                              )}
 
-          </div>
-        </div>
-      </div>
-    ))}
-  </div>
+
+
+                              {row.savedWorkExp && (
+                                <Button
+                                  variant="link"
+                                  className="p-1 font-sm mt-1 link-iconbtn"
+                                  onClick={() => handleButtonEdit(row, index)}
+                                >
+                                  <svg className="me-1" width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M6.99998 12.3341H13M1 12.3341H2.11636C2.44248 12.3341 2.60554 12.3341 2.75899 12.2973C2.89504 12.2646 3.0251 12.2108 3.1444 12.1377C3.27895 12.0552 3.39425 11.9399 3.62486 11.7093L12 3.33414C12.5523 2.78185 12.5523 1.88642 12 1.33413C11.4477 0.781851 10.5523 0.781851 10 1.33414L1.62484 9.7093C1.39424 9.9399 1.27894 10.0552 1.19648 10.1898C1.12338 10.3091 1.0695 10.4391 1.03684 10.5752C1 10.7286 1 10.8917 1 11.2178V12.3341Z" stroke="#3538CD" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                                  </svg>
+                                  Edit
+                                </Button>
+                              )}
+
+                              <Button
+                                variant="link"
+                                className="p-1"
+                                onClick={() => WorkExperienceDeleteRow(index, row?.id)}
+                              >
+                                <img
+                                  src={imgpTrash}
+                                  alt="Delete"
+                                  style={{ width: "20px", height: "20px" }}
+                                />
+                              </Button>
+
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
 
                   </div>
                   <Button variant="link" onClick={WorkExpreienceAddRow}>
@@ -5610,12 +5650,25 @@ const ApplicationJobPostModal = ({
                             {skill?.skill_name}
                           </span>
                         ))}
+
+
+                        
+
+
                       </div>
                     </div>
                   ))}
                   {errors?.selectedSkills && (
                     <p className="error">{errors?.selectedSkills}</p>
                   )}
+
+                  {skillError && (
+                     
+                           <p className="text-danger">
+                            <span style={{fontSize:"12px"}}
+                            >{skillError}</span>
+                         </p>
+                      )}
                 </div>
 
                 <div className="custom-card mb-5">
@@ -5659,14 +5712,14 @@ const ApplicationJobPostModal = ({
                     </div>
                   ))}
                 </div>
-                {skillError && (
+                {/* {skillError && (
                   <div className="custom-card mb-5">
                     <div className="toster">
                       <img src={closeBtn} className='closebtn' onClick={() => setSkillError("")} />
                       <span>{skillError}</span>
                     </div>
                   </div>
-                )}
+                )} */}
 
                 {/*  */}
 
@@ -5675,7 +5728,7 @@ const ApplicationJobPostModal = ({
                   show={inviteModalShow}
                   onHide={handleInviteClose}
                   placement="bottom"
-
+                  backdrop="true"
                   className="verify-people-modal"
 
                 >
@@ -5978,7 +6031,7 @@ const ApplicationJobPostModal = ({
         </Modal.Footer>
       </Modal>
 
-      <Modal backdrop={false} aria-labelledby="contained-modal-title-vcenter zinde999"
+      <Modal backdrop={true} aria-labelledby="contained-modal-title-vcenter zinde999"
         centered show={showModal.showSaveAsDraft} onHide={handleCloseModals} className="model_sm alartmdl">
         <Modal.Header closeButton>
         </Modal.Header>

@@ -13,9 +13,10 @@ const HelpChoose = ({
     show, setShow, behaviours, createUid, isIndex, setIsIndex,
     selectedItem, setSelectedItem, selectedItem1, setSelectedItem1,
     selectedItem2, setSelectedItem2, selectedItem3, setSelectedItem3,
-    totalItem, setTotalItem, important, setImportant, setIsUpdated, helpChooseOption, setHelpChooseOption, setBehaviours
+    totalItem, setTotalItem, important, setImportant, setIsUpdated, helpChooseOption, setHelpChooseOption, setBehaviours,
+    selectedCount,markedImportantCount
 }) => {
-    console.log(helpChooseOption)
+    console.log(helpChooseOption,selectedCount, markedImportantCount)
     // const [isIndex, setIsIndex] = useState([]);
     // const [selectedItem, setSelectedItem] = useState([]);
     // const [selectedItem1, setSelectedItem1] = useState([]);
@@ -647,26 +648,26 @@ const HelpChoose = ({
                                 <div className="behaviours_ratting">
                                     <h6 className="text-base mb-2">Behaviours</h6>
                                     <div className="circle_ratting">
-                                        <span className="ratitem active"></span>
-                                        <span className="ratitem active"></span>
-                                        <span className="ratitem active"></span>
-                                        <span className="ratitem active"></span>
-                                        <span className="ratitem"></span>
-                                        <span className="ratitem"></span>
+                                        <span className={`ratitem ${selectedCount>0 && 'active'}`}></span>
+                                        <span className={`ratitem ${selectedCount>1 && 'active'}`}></span>
+                                        <span className={`ratitem ${selectedCount>2 && 'active'}`}></span>
+                                        <span className={`ratitem ${selectedCount>3 && 'active'}`}></span>
+                                        <span className={`ratitem ${selectedCount>4 && 'active'}`}></span>
+                                        <span className={`ratitem ${selectedCount>5 && 'active'}`}></span>
                                     </div>
-                                    <small>(4 of 6 selected)</small>
+                                    <small>({selectedCount} of 6 selected)</small>
                                 </div>
                                 <div className="important_ratting">
                                     <h6 className="text-base mb-2">Important Behaviours</h6>
                                     <div className="star_ratting">
-                                        <i className="fa fa-star active"></i>
-                                        <i className="fa fa-star active"></i>
+                                        <i className={`fa fa-star ${markedImportantCount>0 && 'active'}`}></i>
+                                        <i className={`fa fa-star ${markedImportantCount>1 && 'active'}`}></i>
+                                        {/* <i className="fa fa-star"></i>
                                         <i className="fa fa-star"></i>
                                         <i className="fa fa-star"></i>
-                                        <i className="fa fa-star"></i>
-                                        <i className="fa fa-star"></i>
+                                        <i className="fa fa-star"></i> */}
                                     </div>
-                                    <small>(2 of 6 selected)</small>
+                                    <small>({markedImportantCount} of 2 selected)</small>
                                 </div>
                             </Col>
                         </Row>

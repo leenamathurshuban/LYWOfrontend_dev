@@ -1509,13 +1509,13 @@ const UpdateJobsRevised = ({
         if (updateFormData?.year_of_experience_type) {
             if (updateFormData?.year_of_experience_type == 'Range' && updateFormData?.min_exp && updateFormData?.max_exp &&
                 IndustriesBadges?.length > 0 && restrictedRoleBadges?.length > 0) {
-                return 'active'
+                return 'completed'
             } else if (updateFormData?.year_of_experience_type == 'Min' && updateFormData?.min_exp &&
                 IndustriesBadges?.length > 0 && restrictedRoleBadges?.length > 0) {
-                return 'active'
+                return 'completed'
             } else if (updateFormData?.year_of_experience_type == 'Max' && updateFormData?.max_exp &&
                 IndustriesBadges?.length > 0 && restrictedRoleBadges?.length > 0) {
-                return 'active'
+                return 'completed'
             }
         }
     }
@@ -1523,20 +1523,20 @@ const UpdateJobsRevised = ({
         if (components?.[0]?.is_mandatory && components?.[0]?.job_question && components?.[0]?.question_option?.part1?.length > 0 && components?.[0]?.question_title &&
             components?.[0]?.questions_answer?.length > 0 && components?.[0]?.quiz_type
         ) {
-            return 'active'
+            return 'completed'
         }
     }
     function setClassForSalary() {
         if (updateFormData?.salary_price_type) {
             if (updateFormData?.salary_price_type == 'Salary-range' && updateFormData?.min_salary &&
                 updateFormData?.max_salary && updateFormData?.currency && updateFormData?.salary_type) {
-                return 'active'
+                return 'completed'
             } else if (updateFormData?.salary_price_type == 'Min-range' && updateFormData?.min_salary &&
                 updateFormData?.currency && updateFormData?.salary_type) {
-                return 'active'
+                return 'completed'
             } else if (updateFormData?.salary_price_type == 'Max-range' && updateFormData?.max_salary
                 && updateFormData?.currency && updateFormData?.salary_type) {
-                return 'active'
+                return 'completed'
             }
         }
     }
@@ -1588,7 +1588,7 @@ const UpdateJobsRevised = ({
             if (openStep[0] === '1' && !Array.isArray(currentStep)) {
                 setToolbarPosition(85);
             } else if (openStep[0] === '1' && Array.isArray(currentStep)) {
-                setToolbarPosition(245);
+                setToolbarPosition(264);
             } else if (openStep[0] === '2') {
                 setToolbarPosition(142);
             } else if (openStep[0] === '3') {
@@ -2048,7 +2048,7 @@ const UpdateJobsRevised = ({
     };
     useEffect(() => {
         if (Array.isArray(currentStep)) {
-            setToolbarPosition(245)
+            setToolbarPosition(264)
         }
     }, [])
     const handleClosecomboEdu = (e) => {
@@ -2125,7 +2125,7 @@ const UpdateJobsRevised = ({
                 }));
                 const matchedBehaviours = updatedBehaviourResponse.filter(item =>
                     personalityKeys.includes(item.behaviour_type_name)
-                );                
+                );
                 setPersonalityData(matchedBehaviours)
             }
         } catch (error) {
@@ -2171,6 +2171,27 @@ const UpdateJobsRevised = ({
     }, [selectedCount, markedImportantCount])
     // <--------------------------------End of Personality Match------------->
 
+    const shouldShowRecommendation = () => {
+        if (
+            !updateFormData?.salary_price_type ||
+            !updateFormData?.min_salary ||
+            !updateFormData?.max_salary ||
+            !updateFormData?.salary_type
+        ) {
+            return "";
+        } else if (badges?.length === 0 || !updateFormData?.minimum_education) {
+            return "";
+        } else if (
+            setClassName() !== "completed" ||
+            restrictedRoleBadges.length === 0 ||
+            IndustriesBadges.length === 0
+        ) {
+            return "";
+        } else {
+            return 'summary-full';
+        }
+    };
+    console.log(shouldShowRecommendation())
 
     // console.log(behaviours)
 
@@ -2237,7 +2258,7 @@ const UpdateJobsRevised = ({
                         <Col md={3} lg={2} className="jobpre_leftpanel px-2">
                             <h6>Requirements</h6>
                             <ul className="checklist">
-                                <li className={`${setClassForSalary()}`}
+                                <li className={`${setClassForSalary()} ${openStep[0] === "1" && 'active'}`}
                                     onClick={() => {
                                         setCurrentStep(["0", "1"])
                                         handleOpenStep("1")
@@ -2248,7 +2269,7 @@ const UpdateJobsRevised = ({
                                         Salary <i class="fa fa-check" aria-hidden="true"></i>
                                     </Link>
                                 </li>
-                                <li className={`${badges?.length > 0 && updateFormData?.minimum_education ? "active" : ''}`}
+                                <li className={`${badges?.length > 0 && updateFormData?.minimum_education ? "completed" : ''} ${openStep[0] === "2" && 'active'}`}
                                     onClick={() => {
                                         setCurrentStep("2")
                                         handleOpenStep("2")
@@ -2259,7 +2280,7 @@ const UpdateJobsRevised = ({
                                         Education <i class="fa fa-check" aria-hidden="true"></i>
                                     </Link>
                                 </li>
-                                <li className={`${setClassName()}`}
+                                <li className={`${setClassName()} ${openStep[0] === "3" && 'active'}`}
                                     onClick={() => {
                                         setCurrentStep("3")
                                         handleOpenStep("3")
@@ -2270,7 +2291,7 @@ const UpdateJobsRevised = ({
                                         Experience <i class="fa fa-check" aria-hidden="true"></i>
                                     </Link>
                                 </li>
-                                <li className={`${updateFormData?.targate_hire_date && 'active'}`}
+                                <li className={`${updateFormData?.targate_hire_date && 'completed'} ${openStep[0] === "4" && 'active'}`}
                                     onClick={() => {
                                         setCurrentStep("4")
                                         handleOpenStep("4")
@@ -2282,7 +2303,7 @@ const UpdateJobsRevised = ({
                                         <i class="fa fa-check" aria-hidden="true"></i>
                                     </Link>
                                 </li>
-                                <li className={`${spokenLanguageBadges?.length > 0 && rdnwBadges?.length > 0 ? 'active' : ''}`}
+                                <li className={`${spokenLanguageBadges?.length > 0 && rdnwBadges?.length > 0 ? 'completed' : ''} ${openStep[0] === "5" && 'active'}`}
                                     onClick={() => {
                                         setCurrentStep("5")
                                         handleOpenStep("5")
@@ -2293,7 +2314,7 @@ const UpdateJobsRevised = ({
                                         Language <i class="fa fa-check" aria-hidden="true"></i>
                                     </Link>
                                 </li>
-                                <li className={`${locationBadges?.length > 0 ? 'active' : ''}`}
+                                <li className={`${locationBadges?.length > 0 ? 'completed' : ''} ${openStep[0] === "6" && 'active'}`}
                                     onClick={() => {
                                         setCurrentStep("6")
                                         handleOpenStep("6")
@@ -2307,7 +2328,7 @@ const UpdateJobsRevised = ({
                             </ul>
                             <h6>Skills</h6>
                             <ul className="checklist">
-                                <li className={`${SelectSkillsData?.length > 0 && 'active'}`}
+                                <li className={`${SelectSkillsData?.length > 0 && 'completed'} ${openStep[0] === "8" && 'active'}`}
                                     onClick={() => {
                                         setCurrentStep(["7", "8"])
                                         handleOpenStep("8")
@@ -2318,7 +2339,7 @@ const UpdateJobsRevised = ({
                                         Skills <i class="fa fa-check" aria-hidden="true"></i>
                                     </Link>
                                 </li>
-                                <li className={`${cusQuestion()}`}
+                                <li className={`${cusQuestion()} ${openStep[0] === "9" && 'active'}`}
                                     onClick={() => {
                                         setCurrentStep("9")
                                         handleOpenStep("9")
@@ -2333,7 +2354,7 @@ const UpdateJobsRevised = ({
                             </ul>
                             <h6>Personality</h6>
                             <ul className="checklist">
-                                <li className={`${selectedCount == 6 && markedImportantCount == 2 && 'active'}`}
+                                <li className={`${selectedCount == 6 && markedImportantCount == 2 && 'completed'} ${openStep[0] === "11" && 'active'}`}
                                     onClick={() => {
                                         setCurrentStep(["10", "11"])
                                         handleOpenStep("11")
@@ -3624,10 +3645,8 @@ const UpdateJobsRevised = ({
                                                                 </ul>
                                                             </div>
                                                         )}
-                                                        {showSkillList && skillngroupList.length === 0 && (
-                                                            <ul>
-                                                                <li>No data found</li>
-                                                            </ul>
+                                                        {showSkillList && skillngroupList.length === 0 && ( 
+                                                             <p className="text-danger fs-12">    No data found </p>
                                                         )}
                                                     </Col>
                                                     <Col md={3}>
@@ -4215,7 +4234,7 @@ const UpdateJobsRevised = ({
                                 </motion.div>
                             )}
                         </Col>
-                        <Col md={3} lg={2} className="jobpre_Rightpanel">
+                        <Col md={3} lg={2} className={`jobpre_Rightpanel ${shouldShowRecommendation()}`}>
                             <h5>{createRevisedJobData?.job_title}</h5>
                             <p>
                                 Like {createRevisedJobData?.is_like?.map((val) => (
@@ -4236,7 +4255,7 @@ const UpdateJobsRevised = ({
                                             {/* {updateFormData?.min_exp}-
                                                 {updateFormData?.max_exp} Years Experience{" "} */}
                                             {updateFormData?.min_exp && updateFormData?.max_exp ? (
-                                                <>{updateFormData?.min_exp}-{updateFormData?.max_exp} Years Experience</>
+                                                <>{updateFormData?.year_of_experience_type !== "Max" && updateFormData?.min_exp}{updateFormData?.year_of_experience_type == "Range" && '-'}{updateFormData?.year_of_experience_type !== "Min" && updateFormData?.max_exp} Years Experience</>
                                             ) : (
                                                 <>
                                                     Experience{" "}
@@ -4251,7 +4270,7 @@ const UpdateJobsRevised = ({
                                         </li>
                                         <li>
                                             {updateFormData?.min_salary && updateFormData?.max_salary ? (
-                                                <>INR {updateFormData?.min_salary} - {updateFormData?.max_salary} {updateFormData.salary_type}</>
+                                                <>INR {updateFormData?.salary_price_type !== "Max-salary" && updateFormData?.min_salary} {updateFormData?.salary_price_type == "Salary-range" && '-'} {updateFormData?.salary_price_type !== "Min-salary" && updateFormData?.max_salary} {updateFormData.salary_type}</>
                                             ) : (
                                                 <>
                                                     Salary{" "}
@@ -4412,7 +4431,11 @@ const UpdateJobsRevised = ({
                                     <h6>Benefits</h6>
                                     <ul>
                                         <li>
-                                            <span className="text-danger italic">Not defined</span>
+                                            {createRevisedJobData?.job_benefits?.length > 0 ? createRevisedJobData?.job_benefits?.map((item, index) => (
+                                                <>{item?.benefit_name}{index !== createRevisedJobData?.job_benefits?.length - 1 && ", "}</>
+                                            )) : (
+                                                <span className="text-danger italic">Not defined</span>
+                                            )}
                                         </li>
                                     </ul>
                                 </div>
@@ -4460,10 +4483,12 @@ const UpdateJobsRevised = ({
                                     </div> */}
                             </div>
                             <div className="recomed_panel">
-                                <div className="recomed_head">
-                                    <h6>Recommendations</h6>
-                                    <ProgressBar now={calculateRecommend.length * 10} />
-                                </div>
+                                {shouldShowRecommendation() == '' && (
+                                    <div className="recomed_head">
+                                        <h6>Recommendations</h6>
+                                        <ProgressBar now={calculateRecommend.length * 10} />
+                                    </div>
+                                )}
                                 <ul class="rects_list2 px-3">
                                     {(!updateFormData?.salary_price_type || !updateFormData?.min_salary || !updateFormData?.max_salary || !updateFormData?.salary_type) && (
                                         <li class={`${openStep[0] == '1' && "active"}`}>
@@ -4509,7 +4534,7 @@ const UpdateJobsRevised = ({
                                             </p>
                                         </li>
                                     )}
-                                    {(setClassName() != "active" || restrictedRoleBadges.length == 0 || IndustriesBadges.length == 0) && (
+                                    {(setClassName() != "completed" || restrictedRoleBadges.length == 0 || IndustriesBadges.length == 0) && (
                                         <li class={`${openStep[0] == '3' && "active"}`}>
                                             <svg
                                                 width="12"
@@ -4541,10 +4566,11 @@ const UpdateJobsRevised = ({
                 onHide={handleCloseModal}
                 animation={false}
                 size="md"
-                backdrop={false}
+                backdrop={true}
                 className="indleffort-mdl"
+                backdropClassName="custom-backdrop"
             >
-                <Modal.Header closeButton>
+                <Modal.Header closeButton> 
                     <img src={LeaderIcn} />
                     <Modal.Title>
                         <span className="count">{selectedpersonality?.modal_data?.behaviours_name?.slice(0, 1)}</span>
@@ -4595,6 +4621,7 @@ const UpdateJobsRevised = ({
                 important={important} setImportant={setImportant} setIsUpdated={setIsUpdated}
                 helpChooseOption={helpChooseOption} setHelpChooseOption={setHelpChooseOption}
                 setBehaviours={setBehaviours}
+                selectedCount={selectedCount} markedImportantCount={markedImportantCount}
             />
 
             {/* customised requiremnt model */}
@@ -4604,8 +4631,10 @@ const UpdateJobsRevised = ({
                 onHide={requireClose}
                 className="Job-requiremnt-model"
                 backdrop="true"
+                backdropClassName="custom-backdrop"
                 keyboard={false}
                 aria-labelledby="contained-modal-title-vcenter"
+
                 centered >
                 <ModalHeader  >
                     <div className="colum">
