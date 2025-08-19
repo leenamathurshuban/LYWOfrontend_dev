@@ -191,7 +191,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                         formData.append('behaviour_status', 'Completed');
                     }
                     // debugger
-                    const UID = applicantUid?.uid
+                    const UID = applicantUid?.applicant_data?.uid
                     // const response = await ApplicationFormDetailsApi(formData, applicantId.applcant.uid)
                     const response = await ApplicationFormDetailsApi(formData, UID)
                     if (response?.data?.success) {
@@ -581,7 +581,8 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
             <Offcanvas
                 show={showInstruction}
                 onHide={handleInstructionModel}
-                backdrop={false}
+                backdrop={true}
+                backdropClassName='custom-backdrop'
                 placement="end"
                 className="instructions_dwr lg-drawer shadow-md border-0"
             >

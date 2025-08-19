@@ -778,16 +778,19 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
         formdata.append(key, JSON.stringify(uids));
       } else if (key === "spoken_language" && spokenLanguageBadges.length > 0) {
         let uids = spokenLanguageBadges?.map((item) => item?.uid);
-
-        formdata.append(key, JSON.stringify(uids));
+        if(!updateFormData.no_specific_language_require){
+          formdata.append(key, JSON.stringify(uids));
+        }        
       } else if (key === "read_write_language" && rdnwBadges.length > 0) {
         let uids = rdnwBadges?.map((item) => item?.uid);
-
-        formdata.append(key, JSON.stringify(uids));
+        if(!updateFormData.no_specific_language_require){
+          formdata.append(key, JSON.stringify(uids));
+        }        
       } else if (key === "preferred_geography" && locationBadges.length > 0) {
         let uids = locationBadges?.map((item) => item?.uid);
-
-        formdata.append(key, JSON.stringify(uids));
+        if(!updateFormData.no_specific_location){
+          formdata.append(key, JSON.stringify(uids));
+        }        
       }
       // else if (key === "skills" && SelectSkillsData.length > 0) {
       //   let skillID = SelectSkillsData?.map((item) => item?.uid) // Extract skill_name values

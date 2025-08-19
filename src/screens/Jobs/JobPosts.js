@@ -489,8 +489,26 @@ const JobPosts = () => {
       handleViewDetailsAPi(paramemail);
     }
   }, [paramemail])
+  useEffect(() => {
+    if (totalWorkExperience == "Fresher") {
+      setWorkExpreienceRow([])
+    } else {
+      setWorkExpreienceRow([{
+        // TotalWorkExperience: "",
+        id: Math.random().toString(36).slice(2),
+        WorkRole: "",
+        WorkFrom: "",
+        WorkTo: "",
+        WorkComapny: "",
+        WorkIndustry: "",
+        WorkNote: "",
+        savedWorkExp: false,
+      },])
+    }
+  }, [totalWorkExperience])
   console.log("buttonText", buttonText)
   console.log(jobPostData?.asset_job)
+  console.log(totalWorkExperience)
   const handleShareModal = () => {
     return (
       <Modal show={showModal} onHide={toggleModal} aria-labelledby="contained-modal-title-vcenter" centered  >
@@ -690,7 +708,7 @@ const JobPosts = () => {
           backdrop={false}
           className="aplcnt_view quizDev_model jobapplymodel"
         >
-          <Modal.Header className="d-flex justify-content-between profile-user-application"  closeButton>
+          <Modal.Header className="d-flex justify-content-between profile-user-application" closeButton>
             <Modal.Title><img src={logoIcon} className="me-4" />  Profile Details</Modal.Title>
           </Modal.Header>
           <Modal.Body>
@@ -698,23 +716,23 @@ const JobPosts = () => {
               <>
                 <Row className="justify-content-center">
                   <Col md={8}>
-                  
-                      <div className="d-flex justify-content-between ps-3 pe-3">
-                        <div className="aplcnt_info">
-                          <h5>{viewDetailData?.user?.username}</h5>
-                          <ul>
-                            <li><i class="far fa-envelope me-2" aria-hidden="true"></i>{viewDetailData?.user?.email}</li>
-                            <li>
-                             <img src={Phone} className="img-fluid me-2" />
-                              {viewDetailData?.user?.phone_number}
-                            </li>
-                          </ul>
-                          </div>
-                         
-                        <div className="aplcnt_cv"><Link to={`https://bittrend.shubansoftware.com${viewDetailData?.resume}`} target="_blank" ><i class="fa fa-paperclip" aria-hidden="true"></i>{"https://bittrend.shubansoftware.com" + viewDetailData?.resume}</Link></div>
-                      
-                        </div>
-                     
+
+                    <div className="d-flex justify-content-between ps-3 pe-3">
+                      <div className="aplcnt_info">
+                        <h5>{viewDetailData?.user?.username}</h5>
+                        <ul>
+                          <li><i class="far fa-envelope me-2" aria-hidden="true"></i>{viewDetailData?.user?.email}</li>
+                          <li>
+                            <img src={Phone} className="img-fluid me-2" />
+                            {viewDetailData?.user?.phone_number}
+                          </li>
+                        </ul>
+                      </div>
+
+                      <div className="aplcnt_cv"><Link to={`https://bittrend.shubansoftware.com${viewDetailData?.resume}`} target="_blank" ><i class="fa fa-paperclip" aria-hidden="true"></i>{"https://bittrend.shubansoftware.com" + viewDetailData?.resume}</Link></div>
+
+                    </div>
+
                     <div className="aplcnt_details">
                       <ul>
                         <li><span>Availability</span> <strong>{viewDetailData?.availble_by}</strong></li>
@@ -789,12 +807,12 @@ const JobPosts = () => {
       localStorage.getItem("applicantProfileData")
     );
     const applicantApplyData = JSON.parse(localStorage.getItem("applicantData"))
-    if (applicantProfileData) {
-      setRegisterdUserLoginDetails(applicantProfileData);
+    if (applicantProfileData?.applicant_data) {
+      setRegisterdUserLoginDetails(applicantProfileData?.applicant_data);
     }
-    if (applicantApplyData?.applicant_status === 'Draft') {
+    if (applicantApplyData?.applicant_data?.applicant_status === 'Draft') {
       setButtonText('Continue Btn')
-    } else if (applicantApplyData?.applicant_status === 'Completed') {
+    } else if (applicantApplyData?.applicant_data?.applicant_status === 'Completed') {
       setButtonText('View Form Btn')
     }
   }, [localStorage.getItem("applicantData")]);
@@ -1297,78 +1315,78 @@ const JobPosts = () => {
         <Offcanvas.Body>
           <div className="instruction-book">
             <div className="proces">
-            <h6 className="mt-0">Your Progress</h6>
-            <div className={`${buttonText === "View Form Btn" ? 'complate_status' : buttonText === "Continue Btn" ? 'pending_status' : ''} progress_box`} >
-              <h5>
-                {buttonText === "View Form Btn" ? <img src={checkRight} className="me-2" /> : buttonText === "Continue Btn" ? <img src={checkpending} className="me-2" /> : (<span className="bg_circle"></span>)}
-                Profile Details
-              </h5>
-              {(buttonText == "View Form Btn" && <p>Completed</p>) ||
-                (buttonText == "Continue Btn" && <p>Pending</p>)}
-              <div className="text-end">
-                <Button
-                  variant="primary"
-                  size=""
-                  className={`${buttonText == "Apply Now" && 'w-100'}`}
-                  disabled={jobPostErrorMsg}
-                  hidden={buttonText == 'Apply Now' ? true : false}
-                  onClick={() => handleBtns(buttonText)}
-                >
-                  {buttonText === "View Form Btn" ? "View" : buttonText === "Continue Btn" ? "Continue" : buttonText}
-                </Button>
-              </div>
-              {(buttonText == 'Apply Now' || jobPostErrorMsg) && (
-                <div className="status_locked">
-                  <img src={lockedIcon} />
+              <h6 className="mt-0">Your Progress</h6>
+              <div className={`${buttonText === "View Form Btn" ? 'complate_status' : buttonText === "Continue Btn" ? 'pending_status' : ''} progress_box`} >
+                <h5>
+                  {buttonText === "View Form Btn" ? <img src={checkRight} className="me-2" /> : buttonText === "Continue Btn" ? <img src={checkpending} className="me-2" /> : (<span className="bg_circle"></span>)}
+                  Profile Details
+                </h5>
+                {(buttonText == "View Form Btn" && <p>Completed</p>) ||
+                  (buttonText == "Continue Btn" && <p>Pending</p>)}
+                <div className="text-end">
+                  <Button
+                    variant="primary"
+                    size=""
+                    className={`${buttonText == "Apply Now" && 'w-100'}`}
+                    disabled={jobPostErrorMsg}
+                    hidden={buttonText == 'Apply Now' ? true : false}
+                    onClick={() => handleBtns(buttonText)}
+                  >
+                    {buttonText === "View Form Btn" ? "View" : buttonText === "Continue Btn" ? "Continue" : buttonText}
+                  </Button>
                 </div>
-              )}
-            </div>
-            <div className={`${Number(localStorage.getItem("AttemptStatus")) === 28 ? 'complate_status' : buttonText === "View Form Btn" ? 'pending_status' : ''} progress_box`}>
-              <h5>
-                {Number(localStorage.getItem("AttemptStatus")) === 28 ? <img src={checkRight} className="me-2" /> : buttonText === "View Form Btn" ? <img src={checkpending} className="me-2" /> : (<span className="bg_circle"></span>)}
-                Behavioural Assessment
-              </h5>
-              <p>
-                {buttonText == "View Form Btn" && Number(localStorage.getItem("AttemptStatus")) < 28 && "Pending"}
-                {Number(localStorage.getItem("AttemptStatus")) === 28 &&
-                  "Completed"}
-              </p>
-              <div className="text-end">
-                <Button
-                  variant="primary"
-                  size="lg"
-                  disabled={buttonText !== "View Form Btn"}
-                  hidden={buttonText == 'Apply Now'}
-                  // className={`${Number(localStorage.getItem("AttemptStatus")) < 28?'small_btn':'view_btn'}`}
-                  onClick={() => {
-                    if (
-                      Number(localStorage.getItem("AttemptStatus")) < 28 ||
-                      Number(localStorage.getItem("AttemptStatus")) === 0
-                    ) {
-                      // navigate("/Behavioural-Assessment");
-                      setBehaviourAssModel(true)
-                    } else if (
-                      Number(localStorage.getItem("AttemptStatus")) === 28
-                    ) {
-                      // navigate("/Behaviour-Assessment-Report");
-                      setBehaviourReportModel(true)
-                    }
-                  }}
-                >
-                  {Number(localStorage.getItem("AttemptStatus")) > 0 &&
-                    Number(localStorage.getItem("AttemptStatus")) < 28 &&
-                    "Continue"}
-                  {Number(localStorage.getItem("AttemptStatus")) === 28 && "View"}
-                  {Number(localStorage.getItem("AttemptStatus")) === 0 && "Start"}
-                </Button>
+                {(buttonText == 'Apply Now' || jobPostErrorMsg) && (
+                  <div className="status_locked">
+                    <img src={lockedIcon} />
+                  </div>
+                )}
               </div>
-              {buttonText !== "View Form Btn" && (
-                <div className="status_locked">
-                  <img src={lockedIcon} />
+              <div className={`${Number(localStorage.getItem("AttemptStatus")) === 28 ? 'complate_status' : buttonText === "View Form Btn" ? 'pending_status' : ''} progress_box`}>
+                <h5>
+                  {Number(localStorage.getItem("AttemptStatus")) === 28 ? <img src={checkRight} className="me-2" /> : buttonText === "View Form Btn" ? <img src={checkpending} className="me-2" /> : (<span className="bg_circle"></span>)}
+                  Behavioural Assessment
+                </h5>
+                <p>
+                  {buttonText == "View Form Btn" && Number(localStorage.getItem("AttemptStatus")) < 28 && "Pending"}
+                  {Number(localStorage.getItem("AttemptStatus")) === 28 &&
+                    "Completed"}
+                </p>
+                <div className="text-end">
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    disabled={buttonText !== "View Form Btn"}
+                    hidden={buttonText == 'Apply Now'}
+                    // className={`${Number(localStorage.getItem("AttemptStatus")) < 28?'small_btn':'view_btn'}`}
+                    onClick={() => {
+                      if (
+                        Number(localStorage.getItem("AttemptStatus")) < 28 ||
+                        Number(localStorage.getItem("AttemptStatus")) === 0
+                      ) {
+                        // navigate("/Behavioural-Assessment");
+                        setBehaviourAssModel(true)
+                      } else if (
+                        Number(localStorage.getItem("AttemptStatus")) === 28
+                      ) {
+                        // navigate("/Behaviour-Assessment-Report");
+                        setBehaviourReportModel(true)
+                      }
+                    }}
+                  >
+                    {Number(localStorage.getItem("AttemptStatus")) > 0 &&
+                      Number(localStorage.getItem("AttemptStatus")) < 28 &&
+                      "Continue"}
+                    {Number(localStorage.getItem("AttemptStatus")) === 28 && "View"}
+                    {Number(localStorage.getItem("AttemptStatus")) === 0 && "Start"}
+                  </Button>
                 </div>
-              )}
-            </div>
-            {/* {jobPostData?.asset_job?.map((Val) => (
+                {buttonText !== "View Form Btn" && (
+                  <div className="status_locked">
+                    <img src={lockedIcon} />
+                  </div>
+                )}
+              </div>
+              {/* {jobPostData?.asset_job?.map((Val) => (
             <div className={`${localStorage.getItem("assestQuiz") === 'Completed' ? 'complate_status' :localStorage.getItem("assestQuiz") == 'Draft'? 'pending_status':''} progress_box`}>
               <h5>
                 {localStorage.getItem("assestQuiz") == 'Completed' ? <img src={checkRight} className="me-2" /> : localStorage.getItem("assestQuiz") == 'Draft' ? <img src={checkpending} className="me-2" /> : (<span className="bg_circle"></span>)}
@@ -1392,85 +1410,85 @@ const JobPosts = () => {
               </Button>
             </div>
           ))}           */}
-            {jobPostData?.asset_job?.map((Val) => {
-              if (Val?.asset_title === 'Technical round for EHS Manager') {
-                return (
-                  <div className={`${localStorage.getItem("assestQuiz") === 'Completed' ? 'complate_status' : localStorage.getItem("assestQuiz") == 'Draft' ? 'pending_status' : ''} progress_box`}>
-                    <h5>
-                      {localStorage.getItem("assestQuiz") == 'Completed' ? <img src={checkRight} className="me-2" /> : localStorage.getItem("assestQuiz") == 'Draft' ? <img src={checkpending} className="me-2" /> : (<span className="bg_circle"></span>)}
+              {jobPostData?.asset_job?.map((Val) => {
+                if (Val?.asset_title === 'Technical round for EHS Manager') {
+                  return (
+                    <div className={`${localStorage.getItem("assestQuiz") === 'Completed' ? 'complate_status' : localStorage.getItem("assestQuiz") == 'Draft' ? 'pending_status' : ''} progress_box`}>
+                      <h5>
+                        {localStorage.getItem("assestQuiz") == 'Completed' ? <img src={checkRight} className="me-2" /> : localStorage.getItem("assestQuiz") == 'Draft' ? <img src={checkpending} className="me-2" /> : (<span className="bg_circle"></span>)}
 
-                      {Val?.asset_title}
-                    </h5>
-                    <p>
-                      {localStorage.getItem("assestQuiz") == 'Completed' ? 'Completed' : localStorage.getItem("assestQuiz") == 'Draft' ? 'Pending' : ''}
+                        {Val?.asset_title}
+                      </h5>
+                      <p>
+                        {localStorage.getItem("assestQuiz") == 'Completed' ? 'Completed' : localStorage.getItem("assestQuiz") == 'Draft' ? 'Pending' : ''}
 
-                    </p>
-                    <div className="text-end">
-                      <Button
-                        variant="primary"
-                        // size="lg"
-                        disabled={localStorage.getItem("AttemptStatus") == 28 ? false : true}
-                        hidden={buttonText == 'Apply Now'}
-                        onClick={() => {
-                          navigate(`/evaluation-quiz/${Val?.uid}`, { state: jobPostData })
-                        }}
-                      >
-                        {localStorage.getItem("assestQuiz") == 'Completed' ? "View" : localStorage.getItem("assestQuiz") == 'Draft' ? "Continue" : "Start"}
+                      </p>
+                      <div className="text-end">
+                        <Button
+                          variant="primary"
+                          // size="lg"
+                          disabled={localStorage.getItem("AttemptStatus") == 28 ? false : true}
+                          hidden={buttonText == 'Apply Now'}
+                          onClick={() => {
+                            navigate(`/evaluation-quiz/${Val?.uid}`, { state: jobPostData })
+                          }}
+                        >
+                          {localStorage.getItem("assestQuiz") == 'Completed' ? "View" : localStorage.getItem("assestQuiz") == 'Draft' ? "Continue" : "Start"}
 
-                      </Button>
-                    </div>
-                    {localStorage.getItem("AttemptStatus") < 28 && (
-                      <div className="status_locked">
-                        <img src={lockedIcon} />
+                        </Button>
                       </div>
-                    )}
-                  </div>
-                )
-              } else if (Val?.asset_title === 'Pre-interview round for creative director') {
-                return (
-                  <div className={`${localStorage.getItem("preAssestQuiz") === 'Completed' ? 'complate_status' : localStorage.getItem("preAssestQuiz") == 'Draft' ? 'pending_status' : ''} progress_box`}>
-                    <h5>
-                      {localStorage.getItem("preAssestQuiz") == 'Completed' ? <img src={checkRight} className="me-2" /> : localStorage.getItem("preAssestQuiz") == 'Draft' ? <img src={checkpending} className="me-2" /> : (<span className="bg_circle"></span>)}
-
-                      {Val?.asset_title}
-                    </h5>
-                    <p>
-                      {localStorage.getItem("preAssestQuiz") == 'Completed' ? 'Completed' : localStorage.getItem("preAssestQuiz") == 'Draft' ? 'Pending' : ''}
-
-                    </p>
-                    <div className="text-end">
-                      <Button
-                        variant="primary"
-                        size="lg"
-                        disabled={localStorage.getItem("assestQuiz") !== 'Completed' ? true : false}
-                        hidden={buttonText == 'Apply Now'}
-                        onClick={() => {
-                          // setShowAssignmentInstruction(true);
-                          // setAssignmentId(Val?.uid)
-                          navigate(`/assigntment-test/${Val?.uid}`, { state: jobPostData })
-                        }}
-                      >
-                        {localStorage.getItem("preAssestQuiz") == 'Completed' ? "View" : localStorage.getItem("preAssestQuiz") == 'Draft' ? "Continue" : "Start"}
-
-                      </Button>
+                      {localStorage.getItem("AttemptStatus") < 28 && (
+                        <div className="status_locked">
+                          <img src={lockedIcon} />
+                        </div>
+                      )}
                     </div>
-                    {localStorage.getItem("assestQuiz") !== 'Completed' && (
-                      <div className="status_locked">
-                        <img src={lockedIcon} />
-                      </div>
-                    )}
-                  </div>
-                )
-              }
-            })}
+                  )
+                } else if (Val?.asset_title === 'Pre-interview round for creative director') {
+                  return (
+                    <div className={`${localStorage.getItem("preAssestQuiz") === 'Completed' ? 'complate_status' : localStorage.getItem("preAssestQuiz") == 'Draft' ? 'pending_status' : ''} progress_box`}>
+                      <h5>
+                        {localStorage.getItem("preAssestQuiz") == 'Completed' ? <img src={checkRight} className="me-2" /> : localStorage.getItem("preAssestQuiz") == 'Draft' ? <img src={checkpending} className="me-2" /> : (<span className="bg_circle"></span>)}
 
-            {!behaviourAssModel && !modalOpen.showFirstModal && (
-              <div className="livechat">
-                <div className="chat_icon">
-                  <img src={Chat} onClick={() => handleShowModal("chatModal")} />
+                        {Val?.asset_title}
+                      </h5>
+                      <p>
+                        {localStorage.getItem("preAssestQuiz") == 'Completed' ? 'Completed' : localStorage.getItem("preAssestQuiz") == 'Draft' ? 'Pending' : ''}
+
+                      </p>
+                      <div className="text-end">
+                        <Button
+                          variant="primary"
+                          size="lg"
+                          disabled={localStorage.getItem("assestQuiz") !== 'Completed' ? true : false}
+                          hidden={buttonText == 'Apply Now'}
+                          onClick={() => {
+                            // setShowAssignmentInstruction(true);
+                            // setAssignmentId(Val?.uid)
+                            navigate(`/assigntment-test/${Val?.uid}`, { state: jobPostData })
+                          }}
+                        >
+                          {localStorage.getItem("preAssestQuiz") == 'Completed' ? "View" : localStorage.getItem("preAssestQuiz") == 'Draft' ? "Continue" : "Start"}
+
+                        </Button>
+                      </div>
+                      {localStorage.getItem("assestQuiz") !== 'Completed' && (
+                        <div className="status_locked">
+                          <img src={lockedIcon} />
+                        </div>
+                      )}
+                    </div>
+                  )
+                }
+              })}
+
+              {!behaviourAssModel && !modalOpen.showFirstModal && (
+                <div className="livechat">
+                  <div className="chat_icon">
+                    <img src={Chat} onClick={() => handleShowModal("chatModal")} />
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
             </div>
 

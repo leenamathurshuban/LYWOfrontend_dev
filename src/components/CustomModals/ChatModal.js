@@ -9,7 +9,8 @@ import attachcon from "../../images/icons/paperclip.svg"
 import { chatPostAPI } from "../../services/provider";
 
 const ChatModal = ({ show, handleClose, status, jobData }) => {
-  const applicantUid = JSON.parse(localStorage.getItem("applicantData"))
+  const applicant = JSON.parse(localStorage.getItem("applicantData"))
+  const sender = JSON.parse(localStorage.getItem("applicantProfileData"))
   const [message, setMessage] = useState('');
   const [fileData,setFileData] = useState(null)
   const [messages, setMessages] = useState([
@@ -50,25 +51,18 @@ const ChatModal = ({ show, handleClose, status, jobData }) => {
   const handleSendMessage = async (e) => {
     e.preventDefault();
     try {
-      if (message.trim()) {
-        // setMessages([...messages, {
-        //   sender: 'You',
-        //   time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        //   text: message,
-        //   isUser: true
-        // }]);
-        // setMessage('');
+      if (message.trim()) {        
         const formData = new FormData();
-        formData.append("sender", applicantUid?.uid)
+        formData.append("sender", sender?.user_login?.uid)
         formData.append("job", jobData?.uid)
-        formData.append("job_applicant", applicantUid?.uid)
+        formData.append("job_applicant", applicant?.job_applicant_data?.uid)
         formData.append("message", message)
-        if(isBinaryFile(fileData)){
-          formData.append("document",fileData)
-        }
-        if(isImageFile(fileData)){
-          formData.append("image",fileData)
-        }     
+        // if(isBinaryFile(fileData)){
+        //   formData.append("document",fileData)
+        // }
+        // if(isImageFile(fileData)){
+        //   formData.append("image",fileData)
+        // }     
         const response = await chatPostAPI(formData)
         debugger
       }
@@ -80,14 +74,15 @@ const ChatModal = ({ show, handleClose, status, jobData }) => {
     <Offcanvas
       show={show}
       onHide={handleClose}
-      backdrop={false}
+      backdrop={true}
+      backdropClassName="custom-backdrop"
       placement="end"
-      className="luwoprocess_drawer lg-drawer shadow-md border-0"
+      className="luwoprocess_drawer lg-drawer shadow-md border-0 chat-process-drawer"
     >
-      <Offcanvas.Header closeButton></Offcanvas.Header>
+      <Offcanvas.Header closeButton> <h2>&nbsp;</h2></Offcanvas.Header>
       <Offcanvas.Body
         className="d-flex flex-column justify-content-center align-items-center text-center"
-        style={{ height: "100%" }}
+        style={{ height: "100%", padding:'15px' }}
       >
         {status === "View Form Btn" ? (
           <>
@@ -98,7 +93,7 @@ const ChatModal = ({ show, handleClose, status, jobData }) => {
                   Assignment for Figma Designer  <span className='text-warning'> • Incomplete </span>
                 </Card.Text>
               </Card.Header> */}
-              <Card.Body className=" ">
+              <Card.Body className="p-0">
                 <div className='message-chat-body overflow-auto'>
                   <p className='date-msg'><small>December 10</small></p>
                   {

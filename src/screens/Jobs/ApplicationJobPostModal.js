@@ -2784,7 +2784,7 @@ const ApplicationJobPostModal = ({
           updateButtonText("Continue Btn");
           handleCloseModals();
           handleClose();
-        } else if (response?.data?.response.applicant_status === "Completed") {
+        } else if (response?.data?.response.applicant_data.applicant_status === "Completed") {
           updateButtonText("View Form Btn");
           handleCloseModals();
           handleClose();
@@ -2798,8 +2798,9 @@ const ApplicationJobPostModal = ({
         localStorage.setItem('applicantData', JSON.stringify(response?.data?.response))
       }
     } catch (error) {
-      console.log(error);
-      handleClose()
+      handleCloseModals();
+      // handleClose()
+      toast.error(error.response.data.response)
     }
   };
 
@@ -4804,18 +4805,19 @@ const ApplicationJobPostModal = ({
                     </Row>
 
                     <div className="desktop-table">
-
                       <table className="mb-2 form_table">
                         <thead>
-                          <tr>
-                            <td>Role</td>
-                            <td>From</td>
-                            <td>To</td>
-                            <td>Company</td>
-                            <td>Industry</td>
-                            <td></td>
-                            <td></td>
-                          </tr>
+                          {WorkExpreienceRow?.length>0 ? (
+                            <tr>
+                              <td>Role</td>
+                              <td>From</td>
+                              <td>To</td>
+                              <td>Company</td>
+                              <td>Industry</td>
+                              <td></td>
+                              <td></td>
+                            </tr>
+                          ):''}
                         </thead>
                         <tbody>
                           {WorkExpreienceRow.map((row, index) => (
@@ -4823,32 +4825,7 @@ const ApplicationJobPostModal = ({
                               <tr>
                                 <td className="experince-td-1">
                                   <div className="mw-130 relative">
-                                    {/* <FormControl
-                                    // autoFocus
-                                    name="WorkRole"
-                                    placeholder="Role"
-                                    size="sm"
-                                    value={row.WorkRole}
-                                    disabled={row.savedWorkExp}
-                                    onChange={(e) => handleRolelist(index, e)}
-                                    onBlur={(e) => handleClosecomboExp(index, e)}
-                                  />
-                                  <div class={`${roleList.length ? 'ctm_dropdown ct_scrollbar' : ''}`}>
-                                    {isOpen[index] && (
-                                      <ul className="m-0">
-                                        {roleList.map((option, idx) => (
-                                          <li
-                                            key={idx}
-                                            onClick={(e) =>
-                                              handleWorkRole(index, option?.is_like_name)
-                                            }
-                                          >
-                                            {option?.is_like_name}
-                                          </li>
-                                        ))}
-                                      </ul>
-                                    )}
-                                  </div> */}
+
                                     <Select
                                       className="react_selectbox maw-350"
                                       options={roleList}
@@ -4910,32 +4887,7 @@ const ApplicationJobPostModal = ({
                                 </td>
                                 <td className="experince-td-5">
                                   <div className="mw-130 relative">
-                                    {/* <FormControl
-                                    // autoFocus
-                                    name="WorkIndustry"
-                                    placeholder="Industry"
-                                    size="sm"
-                                    value={row.WorkIndustry}
-                                    disabled={row.savedWorkExp}
-                                    onChange={(e) => handleIndustries(index, e)}
-                                    onBlur={(e) => handleClosecomboExp(index, e)}
-                                  />
-                                  <div class={`${industriesList.length ? 'ctm_dropdown ct_scrollbar' : ''}`}>
-                                    {isOpen[index] && (
-                                      <ul className="m-0">
-                                        {industriesList.map((option, idx) => (
-                                          <li
-                                            key={idx}
-                                            onClick={(e) =>
-                                              handleSelectIndustries(index, option?.industry_name)
-                                            }
-                                          >
-                                            {option?.industry_name}
-                                          </li>
-                                        ))}
-                                      </ul>
-                                    )}
-                                  </div> */}
+
                                     <Select
                                       className="react_selectbox maw-350"
                                       options={industriesList}
@@ -4952,15 +4904,6 @@ const ApplicationJobPostModal = ({
                                       styles={customStyles} />
                                   </div>
                                 </td>
-                                {/* <td className="experince-td-6">
-                                <div className="d-flex align-items-center">
-                                 
-
-                                </div>
-
-                              </td> */}
-
-
                                 <td className="experince-td-6" colSpan={2}>
                                   <div className="d-flex justify-content-between">
                                     {!row.savedWorkExp && !showNotesByIndex.includes(row?.id) && (
@@ -4990,9 +4933,6 @@ const ApplicationJobPostModal = ({
                                         Save
                                       </Button>
                                     )}
-
-
-
                                     {row.savedWorkExp && (
                                       <Button
                                         variant="link"
@@ -5005,7 +4945,6 @@ const ApplicationJobPostModal = ({
                                         Edit
                                       </Button>
                                     )}
-
                                     <Button
                                       variant="link"
                                       className="p-1"
@@ -5017,9 +4956,7 @@ const ApplicationJobPostModal = ({
                                         style={{ width: "20px", height: "20px" }}
                                       />
                                     </Button>
-
                                   </div>
-
                                 </td>
                               </tr>
                               <tr>
@@ -5054,9 +4991,7 @@ const ApplicationJobPostModal = ({
                           ))}
                         </tbody>
                       </table>
-
                     </div>
-
 
                     <div className="mobile-table">
                       {WorkExpreienceRow.map((row, index) => (
@@ -5181,9 +5116,6 @@ const ApplicationJobPostModal = ({
                                   Save
                                 </Button>
                               )}
-
-
-
                               {row.savedWorkExp && (
                                 <Button
                                   variant="link"
@@ -5196,7 +5128,6 @@ const ApplicationJobPostModal = ({
                                   Edit
                                 </Button>
                               )}
-
                               <Button
                                 variant="link"
                                 className="p-1"
@@ -5652,7 +5583,7 @@ const ApplicationJobPostModal = ({
                         ))}
 
 
-                        
+
 
 
                       </div>
@@ -5663,12 +5594,12 @@ const ApplicationJobPostModal = ({
                   )}
 
                   {skillError && (
-                     
-                           <p className="text-danger">
-                            <span style={{fontSize:"12px"}}
-                            >{skillError}</span>
-                         </p>
-                      )}
+
+                    <p className="text-danger">
+                      <span style={{ fontSize: "12px" }}
+                      >{skillError}</span>
+                    </p>
+                  )}
                 </div>
 
                 <div className="custom-card mb-5">
@@ -6054,8 +5985,8 @@ const ApplicationJobPostModal = ({
         </Modal.Footer>
       </Modal>
 
-      <Modal backdrop={false} aria-labelledby="contained-modal-title-vcenter zinde999"
-        centered show={showModal.showSaveModal} onHide={handleCloseModals} className="model_sm alartmdl alart-submited">
+      <Modal backdrop={true} aria-labelledby="contained-modal-title-vcenter zinde999"
+        centered show={showModal.showSaveModal} onHide={handleCloseModals} className="model_sm alartmdl alart-submited" backdropClassName="custom-backdrop">
         <Modal.Header closeButton>
 
         </Modal.Header>
@@ -6077,7 +6008,30 @@ const ApplicationJobPostModal = ({
       </Modal>
 
 
+      {/* email already exist */}
 
+      {/* 
+       <Modal backdrop={true} aria-labelledby="contained-modal-title-vcenter zinde999"
+        centered className="model_sm alartmdl alart-submited" backdropClassName="custom-backdrop">
+        <Modal.Header closeButton>
+
+        </Modal.Header>
+        <Modal.Body className="text-center">
+          <Modal.Title>
+            Your email address is already registered.
+          </Modal.Title>
+          <p className="mdl_description">
+            Your personal details have already been submitted. You may now proceed with the Behavioural Assessment.
+          </p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="light" >
+            Cancel
+          </Button>
+          <Button variant="primary">Behavioural Assessment</Button>
+        </Modal.Footer>
+
+      </Modal> */}
     </>
   );
 };

@@ -1939,15 +1939,15 @@ const UpdateJobsRevised = ({
             isError = true;
         } else if (!mustHaveSkills.length) {
             isError = true;
-        } else if (!updateFormData.max_salary) {
+        } else if (!updateFormData.max_salary && updateFormData.salary_price_type!=="Min-salary") {
             isError = true;
-        } else if (!updateFormData.min_salary) {
+        } else if (!updateFormData.min_salary && updateFormData.salary_price_type!=="Max-salary") {
             isError = true
         } else if (!updateFormData.minimum_education) {
             isError = true
-        } else if (!updateFormData.min_exp) {
+        } else if (!updateFormData.min_exp && updateFormData.year_of_experience_type!=="Max") {
             isError = true
-        } else if (!updateFormData.max_exp) {
+        } else if (!updateFormData.max_exp && updateFormData.year_of_experience_type!=="Min") {
             isError = true
         } else if (!updateFormData.targate_hire_date) {
             isError = true
@@ -2174,8 +2174,8 @@ const UpdateJobsRevised = ({
     const shouldShowRecommendation = () => {
         if (
             !updateFormData?.salary_price_type ||
-            !updateFormData?.min_salary ||
-            !updateFormData?.max_salary ||
+            (!updateFormData?.min_salary && updateFormData.salary_price_type !=="Max-salary") ||
+            (!updateFormData?.max_salary && updateFormData.salary_price_type !=="Min-salary") ||
             !updateFormData?.salary_type
         ) {
             return "";
@@ -2233,7 +2233,7 @@ const UpdateJobsRevised = ({
                             {createRevisedJobData?.job_type},{" "}
                             {createRevisedJobData?.workplace_type}
                         </span>
-                        <button type="button" className="edit-btnicon">
+                        <button type="button" className="edit-btnicon" onClick={handleClose}>
                             <img src={Edit03} />
                         </button>
                     </Modal.Title>
@@ -2440,7 +2440,7 @@ const UpdateJobsRevised = ({
                                                     <img src={simpleFlag} className="flag_icon" onClick={(e) => handleImportantFlag(e, '1')} />
                                                 )}
                                                 {!openStep.includes("1") && (
-                                                    <span className="acheade_right">{updateFormData?.currency} {updateFormData?.min_salary} - {updateFormData?.max_salary} {updateFormData?.salary_type}</span>
+                                                    <span className="acheade_right">{updateFormData?.currency} {formatNumber(updateFormData?.min_salary)} - {formatNumber(updateFormData?.max_salary)} {updateFormData?.salary_type}</span>
                                                 )}
                                             </Accordion.Header>
                                             <Accordion.Body ref={(el) => (sectionRefs.current['1'] = el)}>
@@ -3211,16 +3211,16 @@ const UpdateJobsRevised = ({
                                                 )}
                                             </Accordion.Header>
                                             <Accordion.Body ref={(el) => (sectionRefs.current['5'] = el)}>
-                                                {/* {!updateFormData?.no_specific_language_require && ( */}
-                                                <Form className="row">
-                                                    <Form.Group
-                                                        className="mb-3 col-md-6"
-                                                        controlId="exampleForm.ControlTextarea1"
-                                                    >
-                                                        <Form.Label className="sm-label">
-                                                            Spoken Language
-                                                        </Form.Label>
-                                                        {/* <div className="tagarea p-2">
+                                                {!updateFormData?.no_specific_language_require && (
+                                                    <Form className="row">
+                                                        <Form.Group
+                                                            className="mb-3 col-md-6"
+                                                            controlId="exampleForm.ControlTextarea1"
+                                                        >
+                                                            <Form.Label className="sm-label">
+                                                                Spoken Language
+                                                            </Form.Label>
+                                                            {/* <div className="tagarea p-2">
                                                             {spokenLanguageBadges.map((badge, index) => (
                                                                 <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
                                                                     {badge?.language_name}
@@ -3247,64 +3247,64 @@ const UpdateJobsRevised = ({
                                                                 }}
                                                             />
                                                         </div> */}
-                                                        <div className="tagarea p-2 position-relative">
-                                                            {spokenLanguageBadges?.map((badge, index) => (
-                                                                <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
-                                                                    {badge?.language_name}
-                                                                    <button
-                                                                        className="btn close_tag"
-                                                                        style={{ cursor: "pointer" }}
-                                                                        onClick={() =>
-                                                                            handleRemoveSpokenLanguageBadge(index)
-                                                                        }
-                                                                    >
-                                                                        <i className="fa fa-close ms-1"></i>
-                                                                    </button>
-                                                                </Badge>
-                                                            ))}
-                                                            <div className="inline-dropdown-container position-relative d-inline-block">
-                                                                <Form.Control
-                                                                    type="text"
-                                                                    className="inline-input"
-                                                                    placeholder="Enter text"
-                                                                    ref={spokenRef}
-                                                                    // value={row.areaOfEducation}
-                                                                    // disabled={row.saved}
-                                                                    onChange={(e) => handleWaSlanguages(e, "spoken")}
-                                                                    onBlur={(e) => handleClosecomboLang(e, "spoken")}
-                                                                />
-                                                                {spokenLanguage?.length > 0 ? (
-                                                                    <Dropdown show={true} >
-                                                                        <Dropdown.Menu className="w-100 dropdown_ctm">
-                                                                            <div class={`${spokenLanguage.length ? 'droplistmulti' : ''}`}>
-                                                                                {spokenLanguage.map((option, idx) => (
-                                                                                    <Dropdown.Item
-                                                                                        key={idx}
-                                                                                        onClick={(e) =>
-                                                                                            handleSelectSpokenLang(option)
-                                                                                        }
-                                                                                    >
-                                                                                        {option?.language_name}
-                                                                                    </Dropdown.Item>
-                                                                                ))}
-                                                                            </div>
-                                                                        </Dropdown.Menu>
-                                                                    </Dropdown>
-                                                                ) : ('')}
+                                                            <div className="tagarea p-2 position-relative">
+                                                                {spokenLanguageBadges?.map((badge, index) => (
+                                                                    <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
+                                                                        {badge?.language_name}
+                                                                        <button
+                                                                            className="btn close_tag"
+                                                                            style={{ cursor: "pointer" }}
+                                                                            onClick={() =>
+                                                                                handleRemoveSpokenLanguageBadge(index)
+                                                                            }
+                                                                        >
+                                                                            <i className="fa fa-close ms-1"></i>
+                                                                        </button>
+                                                                    </Badge>
+                                                                ))}
+                                                                <div className="inline-dropdown-container position-relative d-inline-block">
+                                                                    <Form.Control
+                                                                        type="text"
+                                                                        className="inline-input"
+                                                                        placeholder="Enter text"
+                                                                        ref={spokenRef}
+                                                                        // value={row.areaOfEducation}
+                                                                        // disabled={row.saved}
+                                                                        onChange={(e) => handleWaSlanguages(e, "spoken")}
+                                                                        onBlur={(e) => handleClosecomboLang(e, "spoken")}
+                                                                    />
+                                                                    {spokenLanguage?.length > 0 ? (
+                                                                        <Dropdown show={true} >
+                                                                            <Dropdown.Menu className="w-100 dropdown_ctm">
+                                                                                <div class={`${spokenLanguage.length ? 'droplistmulti' : ''}`}>
+                                                                                    {spokenLanguage.map((option, idx) => (
+                                                                                        <Dropdown.Item
+                                                                                            key={idx}
+                                                                                            onClick={(e) =>
+                                                                                                handleSelectSpokenLang(option)
+                                                                                            }
+                                                                                        >
+                                                                                            {option?.language_name}
+                                                                                        </Dropdown.Item>
+                                                                                    ))}
+                                                                                </div>
+                                                                            </Dropdown.Menu>
+                                                                        </Dropdown>
+                                                                    ) : ('')}
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <span className="required_text">
-                                                            Select all spoken languages
-                                                        </span>
-                                                    </Form.Group>
-                                                    <Form.Group
-                                                        className="mb-3 col-md-6"
-                                                        controlId="exampleForm.ControlTextarea1"
-                                                    >
-                                                        <Form.Label className="sm-label">
-                                                            Written and Reading Language
-                                                        </Form.Label>
-                                                        {/* <div className="tagarea p-2">
+                                                            <span className="required_text">
+                                                                Select all spoken languages
+                                                            </span>
+                                                        </Form.Group>
+                                                        <Form.Group
+                                                            className="mb-3 col-md-6"
+                                                            controlId="exampleForm.ControlTextarea1"
+                                                        >
+                                                            <Form.Label className="sm-label">
+                                                                Written and Reading Language
+                                                            </Form.Label>
+                                                            {/* <div className="tagarea p-2">
                                                             {rdnwBadges.map((badge, index) => (
                                                                 <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
                                                                     {badge?.language_name}
@@ -3332,58 +3332,58 @@ const UpdateJobsRevised = ({
                                                             />
                                                         </div> */}
 
-                                                        <div className="tagarea p-2 position-relative">
-                                                            {rdnwBadges.map((badge, index) => (
-                                                                <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
-                                                                    {badge?.language_name}
-                                                                    <button
-                                                                        className="btn close_tag"
-                                                                        style={{ cursor: "pointer" }}
-                                                                        onClick={() =>
-                                                                            handleRemoveReadAndWriteLanguageBadge(index)
-                                                                        }
-                                                                    >
-                                                                        <i className="fa fa-close ms-1"></i>
-                                                                    </button>
-                                                                </Badge>
-                                                            ))}
-                                                            <div className="inline-dropdown-container position-relative d-inline-block">
-                                                                <Form.Control
-                                                                    type="text"
-                                                                    className="inline-input"
-                                                                    placeholder="Enter text"
-                                                                    ref={writtenRef}
-                                                                    // value={row.areaOfEducation}
-                                                                    // disabled={row.saved}
-                                                                    onChange={(e) => handleWaSlanguages(e, "rdnw")}
-                                                                    onBlur={(e) => handleClosecomboLang(e, "rdnw")}
-                                                                />
-                                                                {writtenLanguage?.length > 0 ? (
-                                                                    <Dropdown show={true} >
-                                                                        <Dropdown.Menu className="w-100 dropdown_ctm">
-                                                                            <div class={`${writtenLanguage.length ? 'droplistmulti' : ''}`}>
-                                                                                {writtenLanguage.map((option, idx) => (
-                                                                                    <Dropdown.Item
-                                                                                        key={idx}
-                                                                                        onClick={(e) =>
-                                                                                            handleSelectWrittenLang(option)
-                                                                                        }
-                                                                                    >
-                                                                                        {option?.language_name}
-                                                                                    </Dropdown.Item>
-                                                                                ))}
-                                                                            </div>
-                                                                        </Dropdown.Menu>
-                                                                    </Dropdown>
-                                                                ) : ('')}
+                                                            <div className="tagarea p-2 position-relative">
+                                                                {rdnwBadges.map((badge, index) => (
+                                                                    <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
+                                                                        {badge?.language_name}
+                                                                        <button
+                                                                            className="btn close_tag"
+                                                                            style={{ cursor: "pointer" }}
+                                                                            onClick={() =>
+                                                                                handleRemoveReadAndWriteLanguageBadge(index)
+                                                                            }
+                                                                        >
+                                                                            <i className="fa fa-close ms-1"></i>
+                                                                        </button>
+                                                                    </Badge>
+                                                                ))}
+                                                                <div className="inline-dropdown-container position-relative d-inline-block">
+                                                                    <Form.Control
+                                                                        type="text"
+                                                                        className="inline-input"
+                                                                        placeholder="Enter text"
+                                                                        ref={writtenRef}
+                                                                        // value={row.areaOfEducation}
+                                                                        // disabled={row.saved}
+                                                                        onChange={(e) => handleWaSlanguages(e, "rdnw")}
+                                                                        onBlur={(e) => handleClosecomboLang(e, "rdnw")}
+                                                                    />
+                                                                    {writtenLanguage?.length > 0 ? (
+                                                                        <Dropdown show={true} >
+                                                                            <Dropdown.Menu className="w-100 dropdown_ctm">
+                                                                                <div class={`${writtenLanguage.length ? 'droplistmulti' : ''}`}>
+                                                                                    {writtenLanguage.map((option, idx) => (
+                                                                                        <Dropdown.Item
+                                                                                            key={idx}
+                                                                                            onClick={(e) =>
+                                                                                                handleSelectWrittenLang(option)
+                                                                                            }
+                                                                                        >
+                                                                                            {option?.language_name}
+                                                                                        </Dropdown.Item>
+                                                                                    ))}
+                                                                                </div>
+                                                                            </Dropdown.Menu>
+                                                                        </Dropdown>
+                                                                    ) : ('')}
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <span className="required_text">
-                                                            Select all written and reading languages
-                                                        </span>
-                                                    </Form.Group>
-                                                </Form>
-                                                {/* )} */}
+                                                            <span className="required_text">
+                                                                Select all written and reading languages
+                                                            </span>
+                                                        </Form.Group>
+                                                    </Form>
+                                                )}
                                                 <div className="accordion_footer">
                                                     <Form>
                                                         {["checkbox"].map((type) => (
@@ -3430,16 +3430,16 @@ const UpdateJobsRevised = ({
                                                 )}
                                             </Accordion.Header>
                                             <Accordion.Body ref={(el) => (sectionRefs.current['6'] = el)}>
-                                                {/* {!updateFormData?.no_specific_location && ( */}
-                                                <Form>
-                                                    <Form.Group
-                                                        className="mb-3"
-                                                        controlId="exampleForm.ControlTextarea1"
-                                                    >
-                                                        <Form.Label className="sm-label">
-                                                            Preferred States / Cities / Towns
-                                                        </Form.Label>
-                                                        {/* <div className="tagarea p-2">
+                                                {!updateFormData?.no_specific_location && (
+                                                    <Form>
+                                                        <Form.Group
+                                                            className="mb-3"
+                                                            controlId="exampleForm.ControlTextarea1"
+                                                        >
+                                                            <Form.Label className="sm-label">
+                                                                Preferred States / Cities / Towns
+                                                            </Form.Label>
+                                                            {/* <div className="tagarea p-2">
                                                             {locationBadges.map((badge, index) => (
                                                                 <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
                                                                     {badge?.location_name}
@@ -3462,57 +3462,57 @@ const UpdateJobsRevised = ({
                                                                 onKeyDown={handleKeyPressForLocation}
                                                             />
                                                         </div> */}
-                                                        {/* <--------workingbaba-------? */}
-                                                        <div className="tagarea p-2 position-relative">
-                                                            {locationBadges.map((badge, index) => (
-                                                                <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
-                                                                    {badge?.location_name}
-                                                                    <button
-                                                                        className="btn close_tag"
-                                                                        style={{ cursor: "pointer" }}
-                                                                        onClick={() => handleRemoveLocationBadge(index)}
-                                                                    >
-                                                                        <i className="fa fa-close ms-1"></i>
-                                                                    </button>
-                                                                </Badge>
-                                                            ))}
-                                                            <div className="inline-dropdown-container position-relative d-inline-block">
-                                                                <Form.Control
-                                                                    type="text"
-                                                                    className="inline-input"
-                                                                    placeholder="Enter text"
-                                                                    ref={locationRef}
-                                                                    // value={row.areaOfEducation}
-                                                                    // disabled={row.saved}
-                                                                    onChange={handleLocationAPIList}
-                                                                    onBlur={handleCloseComboLocation}
-                                                                />
-                                                                {locationList?.length > 0 ? (
-                                                                    <Dropdown show={true} >
-                                                                        <Dropdown.Menu className="w-100 dropdown_ctm">
-                                                                            <div class={`${locationList.length ? 'droplistmulti' : ''}`}>
-                                                                                {locationList.map((option, idx) => (
-                                                                                    <Dropdown.Item
-                                                                                        key={idx}
-                                                                                        onClick={(e) =>
-                                                                                            handleSelectLocation(option)
-                                                                                        }
-                                                                                    >
-                                                                                        {option?.location_name}
-                                                                                    </Dropdown.Item>
-                                                                                ))}
-                                                                            </div>
-                                                                        </Dropdown.Menu>
-                                                                    </Dropdown>
-                                                                ) : ('')}
+                                                            {/* <--------workingbaba-------? */}
+                                                            <div className="tagarea p-2 position-relative">
+                                                                {locationBadges.map((badge, index) => (
+                                                                    <Badge key={index} bg="white" className="me-2 mb-2 tag-white">
+                                                                        {badge?.location_name}
+                                                                        <button
+                                                                            className="btn close_tag"
+                                                                            style={{ cursor: "pointer" }}
+                                                                            onClick={() => handleRemoveLocationBadge(index)}
+                                                                        >
+                                                                            <i className="fa fa-close ms-1"></i>
+                                                                        </button>
+                                                                    </Badge>
+                                                                ))}
+                                                                <div className="inline-dropdown-container position-relative d-inline-block">
+                                                                    <Form.Control
+                                                                        type="text"
+                                                                        className="inline-input"
+                                                                        placeholder="Enter text"
+                                                                        ref={locationRef}
+                                                                        // value={row.areaOfEducation}
+                                                                        // disabled={row.saved}
+                                                                        onChange={handleLocationAPIList}
+                                                                        onBlur={handleCloseComboLocation}
+                                                                    />
+                                                                    {locationList?.length > 0 ? (
+                                                                        <Dropdown show={true} >
+                                                                            <Dropdown.Menu className="w-100 dropdown_ctm">
+                                                                                <div class={`${locationList.length ? 'droplistmulti' : ''}`}>
+                                                                                    {locationList.map((option, idx) => (
+                                                                                        <Dropdown.Item
+                                                                                            key={idx}
+                                                                                            onClick={(e) =>
+                                                                                                handleSelectLocation(option)
+                                                                                            }
+                                                                                        >
+                                                                                            {option?.location_name}
+                                                                                        </Dropdown.Item>
+                                                                                    ))}
+                                                                                </div>
+                                                                            </Dropdown.Menu>
+                                                                        </Dropdown>
+                                                                    ) : ('')}
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <span className="required_text">
-                                                            Select all relevant locations
-                                                        </span>
-                                                    </Form.Group>
-                                                </Form>
-                                                {/* )} */}
+                                                            <span className="required_text">
+                                                                Select all relevant locations
+                                                            </span>
+                                                        </Form.Group>
+                                                    </Form>
+                                                )}
                                                 <div className="accordion_footer">
                                                     <Form>
                                                         {["checkbox"].map((type) => (
@@ -3645,8 +3645,8 @@ const UpdateJobsRevised = ({
                                                                 </ul>
                                                             </div>
                                                         )}
-                                                        {showSkillList && skillngroupList.length === 0 && ( 
-                                                             <p className="text-danger fs-12">    No data found </p>
+                                                        {showSkillList && skillngroupList.length === 0 && (
+                                                            <p className="text-danger fs-12">    No data found </p>
                                                         )}
                                                     </Col>
                                                     <Col md={3}>
@@ -4254,7 +4254,7 @@ const UpdateJobsRevised = ({
                                         <li>
                                             {/* {updateFormData?.min_exp}-
                                                 {updateFormData?.max_exp} Years Experience{" "} */}
-                                            {updateFormData?.min_exp && updateFormData?.max_exp ? (
+                                            {updateFormData?.min_exp || updateFormData?.max_exp ? (
                                                 <>{updateFormData?.year_of_experience_type !== "Max" && updateFormData?.min_exp}{updateFormData?.year_of_experience_type == "Range" && '-'}{updateFormData?.year_of_experience_type !== "Min" && updateFormData?.max_exp} Years Experience</>
                                             ) : (
                                                 <>
@@ -4269,8 +4269,8 @@ const UpdateJobsRevised = ({
                                             )}
                                         </li>
                                         <li>
-                                            {updateFormData?.min_salary && updateFormData?.max_salary ? (
-                                                <>INR {updateFormData?.salary_price_type !== "Max-salary" && updateFormData?.min_salary} {updateFormData?.salary_price_type == "Salary-range" && '-'} {updateFormData?.salary_price_type !== "Min-salary" && updateFormData?.max_salary} {updateFormData.salary_type}</>
+                                            {updateFormData?.min_salary || updateFormData?.max_salary ? (
+                                                <>INR {updateFormData?.salary_price_type !== "Max-salary" && formatNumber(updateFormData?.min_salary)} {updateFormData?.salary_price_type == "Salary-range" && '-'} {updateFormData?.salary_price_type !== "Min-salary" && formatNumber(updateFormData?.max_salary)} {updateFormData.salary_type}</>
                                             ) : (
                                                 <>
                                                     Salary{" "}
@@ -4490,7 +4490,7 @@ const UpdateJobsRevised = ({
                                     </div>
                                 )}
                                 <ul class="rects_list2 px-3">
-                                    {(!updateFormData?.salary_price_type || !updateFormData?.min_salary || !updateFormData?.max_salary || !updateFormData?.salary_type) && (
+                                    {(!updateFormData?.salary_price_type || (!updateFormData?.min_salary && updateFormData.salary_price_type !=="Max-salary") || (!updateFormData?.max_salary && updateFormData.salary_price_type !=="Min-salary") || !updateFormData?.salary_type) && (
                                         <li class={`${openStep[0] == '1' && "active"}`}>
                                             <svg
                                                 width="12"
@@ -4570,7 +4570,7 @@ const UpdateJobsRevised = ({
                 className="indleffort-mdl"
                 backdropClassName="custom-backdrop"
             >
-                <Modal.Header closeButton> 
+                <Modal.Header closeButton>
                     <img src={LeaderIcn} />
                     <Modal.Title>
                         <span className="count">{selectedpersonality?.modal_data?.behaviours_name?.slice(0, 1)}</span>

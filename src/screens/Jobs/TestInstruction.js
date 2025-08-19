@@ -183,8 +183,9 @@ const TestInstruction = ({ showinstruction, handleInstructionClose, handleStartQ
                 onHide={handleInstructionClose}
                 animation={false}
                 size="lg"
-                backdrop={false}
+                backdrop={true}
                 className="beharlasmnt_mdl"
+                backdropClassName="custom-backdrop"
             >
                 <Modal.Header closeButton>
                     <img src={logoIcon} className="me-4" />

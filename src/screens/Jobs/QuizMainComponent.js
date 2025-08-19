@@ -450,7 +450,7 @@ const QuizMainComponent = (item) => {
       const isSingleArray = QuizData[getKeyIndex]?.some(Array.isArray) ? QuizData[getKeyIndex]?.flat() : QuizData[getKeyIndex]
       const formData = new FormData();
       formData.append("job", jobData?.state?.uid)
-      formData.append("applicant", applicantUid?.uid)
+      formData.append("applicant", applicantUid?.applicant_data?.uid)
       formData.append("question", questionId)
       formData.append("selected_answer", JSON.stringify(isSingleArray))
       const res = await PostQuizDataApi(formData)
@@ -467,7 +467,7 @@ const QuizMainComponent = (item) => {
           const fillUpdate = [{ answer_uid: answerUids[getKeyIndex], question_uid: questionId, selected_answer: isSingleArray }]
           formData.append('job_uid', jobData?.state?.uid)
           formData.append('question_answer_array', JSON.stringify(fillUpdate))
-          const res = await ApplicationFormDetailsApi(formData, applicantUid?.uid)
+          const res = await ApplicationFormDetailsApi(formData, applicantUid?.applicant_data?.uid)
           if (res?.data?.success) {
             // applicantDetailAPI()
           }
@@ -483,7 +483,7 @@ const QuizMainComponent = (item) => {
     try {
       const user = applcant.user_login.email ? applcant.user_login.email : applcant?.applcant?.user;
       // const res = await ApplicationDeatilsApi(user)
-      const res = await getAssetDataDetailsAPI(jobData?.state?.uid, applicantUid?.uid)
+      const res = await getAssetDataDetailsAPI(jobData?.state?.uid, applicantUid?.applicant_data?.uid)
       if (res?.success) {
         // setSelectedSectionAnswer(res?.data?.response?.asset_data)
         // res?.data?.response?.asset_data[0].section_asset.sort((a, b) => a.id - b.id).map((item, quesIndex) =>

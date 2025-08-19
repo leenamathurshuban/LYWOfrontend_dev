@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   Breadcrumb,
   Button,
@@ -23,8 +23,9 @@ import Sidebar from "../../components/Sidebar";
 import Sendicon from "../../images/icons/send-01.svg"
 import attachcon from "../../images/icons/paperclip.svg"
 import filter from "../../images/icons/filter-lines.svg"
-import { JobList } from '../../services/provider';
+import { chatDetailsAPI, getCandidateListAPI, JobList } from '../../services/provider';
 import { useSelector } from 'react-redux';
+import { TimeDisplay } from '../../utils/test';
 
 export default function GlobalChat() {
   const companyInfo = useSelector((state) => state.login.CompanyProfileDetails);
@@ -39,9 +40,35 @@ export default function GlobalChat() {
     ActiveJobs: [],
     InactiveJobs: []
   });
+  const [candidateList, setCandidateList] = useState({
+    AllList: [],
+    Unread: [],
+    Selected: [],
+    jobuid: '',
+    // aplUid:''
+  })
+  const [message,setMessage] = useState('');
+  const [messages,setMessages] = useState([])
 
   const handleClose = () => filterShow(false);
   const handleShow = () => filterShow(true);
+
+
+
+   const [fileName, setFileName] = useState('No file chosen');
+    const fileInputRef = useRef(null);
+  
+    const handleFileChange = (e) => {
+      if (e.target.files.length > 0) {
+        setFileName(e.target.files[0].name);
+      } else {
+        setFileName('No file chosen');
+      }
+    };
+  
+    const handleAttachmentClick = () => {
+      fileInputRef.current.click();
+    };
 
 
   // custom style react select box
@@ -85,9 +112,22 @@ export default function GlobalChat() {
       console.log("response  error-----", error);
     }
   };
+  const getCandiDateData = async (id) => {
+    try {
+      const res = await getCandidateListAPI(id)
+      if (res?.data?.success) {
+        setCandidateList((prev) => ({
+          ...prev,
+          AllList: res?.data?.response,
+          jobuid: id
+        }))
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   useEffect(() => {
-    // JobListApi();
     JobListbyCompanyApi("")
   }, []);
   useEffect(() => {
@@ -106,6 +146,17 @@ export default function GlobalChat() {
     }
   }, [jobData?.jobs])
 
+  const getChatDetailsData=async(uid)=>{
+    try {
+      const response = await chatDetailsAPI(uid,candidateList.jobuid);
+      if(response?.data?.success){
+        setMessages(response?.data?.response)
+      }
+    } catch (error) {
+      console.log(error);      
+    }    
+  }
+
 
   const jobs = [
     { title: 'Figma Designer (10)', company: 'Cloudsportre', location: 'Remote - Future', status: 'Active' },
@@ -122,13 +173,13 @@ export default function GlobalChat() {
     { name: 'Sandeep Kattamuri', time: '1 day ago' },
   ];
 
-  const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState([
-    { sender: 'Alice Johnson', time: '02:10 PM', text: 'Hi there, How are you?', isUser: false },
-    { sender: 'You', time: '02:10 PM', text: 'Suspendisse purus quam, finibus ac lacus non...', isUser: true },
-    { sender: 'Alice Johnson', time: '02:10 PM', text: 'Suspendisse purus quam, finibus ac lacus non...', isUser: false },
-    { sender: 'Alice Johnson', time: '04:10 PM', text: 'Suspendisse purus quam, finibus ac lacus non, euismod dignissim sapien. Praesent nisl sem, vestibulum vitae mollis in, ullamcorper et magna. ', isUser: false },
-  ]);
+  // const [message, setMessage] = useState('');
+  // const [messages, setMessages] = useState([
+  //   { sender: 'Alice Johnson', time: '02:10 PM', text: 'Hi there, How are you?', isUser: false },
+  //   { sender: 'You', time: '02:10 PM', text: 'Suspendisse purus quam, finibus ac lacus non...', isUser: true },
+  //   { sender: 'Alice Johnson', time: '02:10 PM', text: 'Suspendisse purus quam, finibus ac lacus non...', isUser: false },
+  //   { sender: 'Alice Johnson', time: '04:10 PM', text: 'Suspendisse purus quam, finibus ac lacus non, euismod dignissim sapien. Praesent nisl sem, vestibulum vitae mollis in, ullamcorper et magna. ', isUser: false },
+  // ]);
 
 
 
@@ -205,7 +256,7 @@ export default function GlobalChat() {
                         {jobData?.jobs?.map((job, index) => (
                           <Card key={index}
                             className={`mb-2 cursor-pointer ${selectedJobIndex === index ? 'active' : ''}`}
-                            onClick={() => setSelectedJobIndex(index)}
+                            onClick={() => getCandiDateData(job?.uid)}
                           >
                             <Card.Body>
                               <Card.Title className="">{job.job_title}</Card.Title>
@@ -225,7 +276,7 @@ export default function GlobalChat() {
                     </Tab>
                     <Tab eventKey="profile" title="Active">
                       <div className='filter-chats'>
-                        <InputGroup className="header_serach">
+                        <InputGroup className="header_serach mb-3">
                           <InputGroup.Text id="basic-addon1">
                             <svg
                               width="18"
@@ -282,7 +333,7 @@ export default function GlobalChat() {
                     </Tab>
                     <Tab eventKey="contact" title="Inactive" >
                       <div className='filter-chats'>
-                        <InputGroup className="header_serach">
+                        <InputGroup className="header_serach mb-3">
                           <InputGroup.Text id="basic-addon1">
                             <svg
                               width="18"
@@ -412,10 +463,10 @@ export default function GlobalChat() {
                       </div>
 
                       <div className='job-chat-form-card mt-2'>
-                        {candidates.map((candidates, index) => (
-                          <Card key={index} className=" cursor-pointer ">
+                        {candidateList?.AllList?.map((candidates, index) => (
+                          <Card key={index} className=" cursor-pointer" onClick={()=>getChatDetailsData(candidates?.job_applicant?.uid)}>
                             <Card.Body>
-                              <Card.Title className="">{candidates.name}</Card.Title>
+                              <Card.Title className="">{candidates.job_applicant.job_applicant_profile.user.email}</Card.Title>
 
                               <Card.Text className="text-muted fs-10 ">
                                 {candidates.time}
@@ -427,10 +478,7 @@ export default function GlobalChat() {
                             </Card.Body>
                           </Card>
                         ))}
-
                       </div>
-
-
                     </Tab>
                     <Tab eventKey="profile" title="Unread">
                       <div className='filter-chats  d-flex justify-content-between gap-2'>
@@ -568,10 +616,8 @@ export default function GlobalChat() {
                 </Card.Header>
                 <Card.Body className=" ">
                   <div className='message-chat-body overflow-auto'>
-
                     <p className='date-msg'><small>December 10</small></p>
-
-                    {
+                    {/* {
                       messages.map((msg, index) => (
                         <div key={index} className={`mb-3 ${msg.isUser ? 'text-end' : 'text-start'}`}>
                           <Card
@@ -579,24 +625,29 @@ export default function GlobalChat() {
                           >
                             <Card.Body className="p-2" >
                               <Card.Text>{msg.text} </Card.Text>
-                              < Card.Text className={`small ${msg.isUser ? '' : 'text-muted'}`}>
-
+                              <Card.Text className={`small ${msg.isUser ? '' : 'text-muted'}`}>
                               </Card.Text>
                             </Card.Body>
-
                           </Card>
-
                           <p className='time-msg' > <small> {msg.time} </small></p>
                         </div>
+                      ))} */}
+                      {messages[0]?.chats?.map((msg, index) => (
+                        <div key={index} className={`mb-3 ${msg.isUser ? 'text-end' : 'text-start'}`}>
+                          <Card
+                            className={`d-inline-block no-border ${msg.isUser ? 'bg-sender text-white' : 'bg-white'}`}
+                          >
+                            <Card.Body className="p-2" >
+                              <Card.Text>{msg.message} </Card.Text>
+                              <Card.Text className={`small ${msg.isUser ? '' : 'text-muted'}`}>
+                              </Card.Text>
+                            </Card.Body>
+                          </Card>
+                          <p className='time-msg' > <small> {TimeDisplay(msg.created_at)} </small></p>
+                        </div>
                       ))}
-
-
-
-
-
                   </div>
-
-                  <div className='chat-form'>
+                  {/* <div className='chat-form'>
                     <Form onSubmit={handleSendMessage}>
                       <InputGroup>
                         <Form.Control
@@ -615,7 +666,48 @@ export default function GlobalChat() {
                         </Button>
                       </InputGroup>
                     </Form>
-                  </div>
+                  </div> */}
+
+                  <div className='chat-form'>
+                                      <Form onSubmit={handleSendMessage}>
+                                        <InputGroup>
+                                        <div className='chat-widget'  >
+                                          <Form.Control
+                                            type="text"
+                                            value={message}
+                                            onChange={(e) => setMessage(e.target.value)}
+                                            placeholder="Your Message here"
+                                          />
+                                          {/* <label for="fileattached">
+                                            <input type='file' id="fileattached" />
+                                            <button className='attachment' > <img src={attachcon} className='img-fluid' alt='attach' /> </button>
+                                          </label> */}
+                  
+                                          {/* Hidden file input */}
+                                          <Form.Control
+                                            type="file"
+                                            id="fileattached"
+                                            ref={fileInputRef}
+                                            onChange={handleFileChange}
+                                            style={{ display: 'none' }}
+                                          />
+                                          
+                                          {/* Custom attachment button */}
+                                          <InputGroup.Text 
+                                            className="attachment" 
+                                            onClick={handleAttachmentClick}
+                                            style={{ cursor: 'pointer' }}
+                                          >
+                                            <img src={attachcon} className="img-fluid" alt="attach" />
+                                            {/* <span className="ms-2">{fileName}</span> */}
+                                          </InputGroup.Text>
+                                            </div>
+                                          <Button variant="primary" type="submit" >
+                                            <img src={Sendicon} className='img-fluid' alt='send' />
+                                          </Button>
+                                        </InputGroup>
+                                      </Form>
+                                    </div>
                 </Card.Body>
 
               </Card>

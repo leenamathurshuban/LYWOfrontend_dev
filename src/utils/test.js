@@ -29,3 +29,19 @@ export const calculateDays = (date) => {
 
   return diffInDays;
 };
+
+export const TimeDisplay = () => {
+  const isoString = "2025-08-18T16:49:05.239978Z";
+
+  const date = new Date(isoString);
+
+  // Format only hour:minute AM/PM
+  let timeString = date.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true, // ensures AM/PM format
+  });
+
+  timeString = timeString.replace("am", "AM").replace("pm", "PM");
+  return timeString;
+};

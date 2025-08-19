@@ -305,3 +305,11 @@ export const chatPostAPI=(data)=>{
   const result = client.postWithToken(`${ApplicationJobPostUrl.chatsPost}`,data)
   return result
 }
+export const getCandidateListAPI=(id)=>{
+  const result = client.getWithToken(`${ApplicationJobPostUrl.getCandidate}${id}`)
+  return result
+}
+export const chatDetailsAPI=(aplUid,jobUid)=>{
+  const result = client.getWithToken(`${ApplicationJobPostUrl.chatDetails}${aplUid}/job-uid/${jobUid}/`)
+  return result
+}

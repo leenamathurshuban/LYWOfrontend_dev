@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 
 import {
   Breadcrumb,
@@ -50,6 +50,24 @@ export default function CandidateChat() {
     { value: 'Oldestfirst', label: 'Oldest First' },
 
   ]
+
+
+  
+      const [fileName, setFileName] = useState('No file chosen');
+      const fileInputRef = useRef(null);
+    
+      const handleFileChange = (e) => {
+        if (e.target.files.length > 0) {
+          setFileName(e.target.files[0].name);
+        } else {
+          setFileName('No file chosen');
+        }
+      };
+    
+      const handleAttachmentClick = () => {
+        fileInputRef.current.click();
+      };
+  
     
 
 
@@ -348,7 +366,48 @@ export default function CandidateChat() {
 
                   </div>
 
-                  <div className='chat-form'>
+                   <div className='chat-form'>
+                                                  <Form onSubmit={handleSendMessage}>
+                                                    <InputGroup>
+                                                    <div className='chat-widget'  >
+                                                      <Form.Control
+                                                        type="text"
+                                                        value={message}
+                                                        onChange={(e) => setMessage(e.target.value)}
+                                                        placeholder="Your Message here"
+                                                      />
+                                                      {/* <label for="fileattached">
+                                                        <input type='file' id="fileattached" />
+                                                        <button className='attachment' > <img src={attachcon} className='img-fluid' alt='attach' /> </button>
+                                                      </label> */}
+                              
+                                                      {/* Hidden file input */}
+                                                      <Form.Control
+                                                        type="file"
+                                                        id="fileattached"
+                                                        ref={fileInputRef}
+                                                        onChange={handleFileChange}
+                                                        style={{ display: 'none' }}
+                                                      />
+                                                      
+                                                      {/* Custom attachment button */}
+                                                      <InputGroup.Text 
+                                                        className="attachment" 
+                                                        onClick={handleAttachmentClick}
+                                                        style={{ cursor: 'pointer' }}
+                                                      >
+                                                        <img src={attachcon} className="img-fluid" alt="attach" />
+                                                        {/* <span className="ms-2">{fileName}</span> */}
+                                                      </InputGroup.Text>
+                                                        </div>
+                                                      <Button variant="primary" type="submit" >
+                                                        <img src={Sendicon} className='img-fluid' alt='send' />
+                                                      </Button>
+                                                    </InputGroup>
+                                                  </Form>
+                                                </div>
+
+                  {/* <div className='chat-form'>
                     <Form onSubmit={handleSendMessage}>
                       <InputGroup>
                         <Form.Control
@@ -367,7 +426,7 @@ export default function CandidateChat() {
                         </Button>
                       </InputGroup>
                     </Form>
-                  </div>
+                  </div> */}
                 </Card.Body>
 
               </Card>

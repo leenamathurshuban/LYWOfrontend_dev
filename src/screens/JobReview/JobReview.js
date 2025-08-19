@@ -3052,8 +3052,8 @@ tracker.show_tasks()
                                                     <Form.Label>
                                                         Reminder Interval
                                                     </Form.Label>
-                                                    <div className="row gap-0">
-                                                        <div className="col-md-2">
+                                                    <div className="row p-2">
+                                                        <div className="col-md-2 ps-1 pe-1">
                                                             <Form.Control
                                                                 type="text"
                                                                 id="inputText5"
@@ -3061,7 +3061,7 @@ tracker.show_tasks()
                                                                 placeholder="Every 1"
                                                             />
                                                         </div>
-                                                        <div className="col-md-2">
+                                                        <div className="col-md-2  ps-1 pe-1">
                                                             <Select
                                                                 className="react_selectbox"
                                                                 options={[
@@ -3074,7 +3074,7 @@ tracker.show_tasks()
                                                                 styles={customStyles}
                                                             />
                                                         </div>
-                                                        <div className="col-md-2">
+                                                        <div className="col-md-2  ps-1 pe-1">
                                                             <Select
                                                                 className="react_selectbox"
                                                                 options={[
@@ -3088,7 +3088,7 @@ tracker.show_tasks()
                                                                 styles={customStyles}
                                                             />
                                                         </div>
-                                                        <div className="col-md-2 d-flex align-items-center">
+                                                        <div className="col-md-2 d-flex align-items-center  ps-1 pe-1">
 
                                                             <Form.Check // prettier-ignore
                                                                 type="switch"
