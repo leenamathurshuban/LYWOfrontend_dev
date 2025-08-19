@@ -551,7 +551,8 @@ export default function CustomQuestionsBuilder({ components, setComponents,handl
                         <button
                             type="button"
                             className="btn btn-light me-2 border-0"
-                            onClick={() => handleAddResponse(questionIndex)}
+                            onClick={() => handleAddResponse(questionIndex)} 
+                            style={{fontSize: "12px"}}
                         >
                             + Add Response
                         </button>

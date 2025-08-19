@@ -1508,13 +1508,13 @@ const UpdateJobsRevised = ({
     function setClassName() {
         if (updateFormData?.year_of_experience_type) {
             if (updateFormData?.year_of_experience_type == 'Range' && updateFormData?.min_exp && updateFormData?.max_exp &&
-                IndustriesBadges?.length > 0 && restrictedRoleBadges?.length > 0) {
+                (updateFormData.restricted_industries? IndustriesBadges?.length > 0:!IndustriesBadges?.length) && (updateFormData.define_current_role? restrictedRoleBadges?.length > 0:!restrictedRoleBadges?.length)) {
                 return 'completed'
             } else if (updateFormData?.year_of_experience_type == 'Min' && updateFormData?.min_exp &&
-                IndustriesBadges?.length > 0 && restrictedRoleBadges?.length > 0) {
+                (updateFormData.restricted_industries? IndustriesBadges?.length > 0:!IndustriesBadges?.length) && (updateFormData.define_current_role? restrictedRoleBadges?.length > 0:!restrictedRoleBadges?.length)) {
                 return 'completed'
             } else if (updateFormData?.year_of_experience_type == 'Max' && updateFormData?.max_exp &&
-                IndustriesBadges?.length > 0 && restrictedRoleBadges?.length > 0) {
+                (updateFormData.restricted_industries? IndustriesBadges?.length > 0:!IndustriesBadges?.length) && (updateFormData.define_current_role? restrictedRoleBadges?.length > 0:!restrictedRoleBadges?.length)) {
                 return 'completed'
             }
         }
@@ -1531,10 +1531,10 @@ const UpdateJobsRevised = ({
             if (updateFormData?.salary_price_type == 'Salary-range' && updateFormData?.min_salary &&
                 updateFormData?.max_salary && updateFormData?.currency && updateFormData?.salary_type) {
                 return 'completed'
-            } else if (updateFormData?.salary_price_type == 'Min-range' && updateFormData?.min_salary &&
+            } else if (updateFormData?.salary_price_type == 'Min-salary' && updateFormData?.min_salary &&
                 updateFormData?.currency && updateFormData?.salary_type) {
                 return 'completed'
-            } else if (updateFormData?.salary_price_type == 'Max-range' && updateFormData?.max_salary
+            } else if (updateFormData?.salary_price_type == 'Max-salary' && updateFormData?.max_salary
                 && updateFormData?.currency && updateFormData?.salary_type) {
                 return 'completed'
             }
@@ -1925,29 +1925,29 @@ const UpdateJobsRevised = ({
         let isError = false;
         if (!badges?.length) {
             isError = true;
-        } else if (!IndustriesBadges?.length) {
+        } else if (!IndustriesBadges?.length && updateFormData?.restricted_industries) {
             isError = true;
-        } else if (!restrictedRoleBadges?.length) {
+        } else if (!restrictedRoleBadges?.length && updateFormData?.define_current_role) {
             isError = true;
-        } else if (!spokenLanguageBadges.length) {
+        } else if (!spokenLanguageBadges.length && !updateFormData?.no_specific_language_require) {
             isError = true;
-        } else if (!rdnwBadges.length) {
+        } else if (!rdnwBadges.length && !updateFormData?.no_specific_language_require) {
             isError = true;
-        } else if (!locationBadges.length) {
+        } else if (!locationBadges.length && !updateFormData?.no_specific_location) {
             isError = true;
         } else if (!SelectSkillsData.length) {
             isError = true;
         } else if (!mustHaveSkills.length) {
             isError = true;
-        } else if (!updateFormData.max_salary && updateFormData.salary_price_type!=="Min-salary") {
+        } else if (!updateFormData.max_salary && updateFormData.salary_price_type !== "Min-salary") {
             isError = true;
-        } else if (!updateFormData.min_salary && updateFormData.salary_price_type!=="Max-salary") {
+        } else if (!updateFormData.min_salary && updateFormData.salary_price_type !== "Max-salary") {
             isError = true
         } else if (!updateFormData.minimum_education) {
             isError = true
-        } else if (!updateFormData.min_exp && updateFormData.year_of_experience_type!=="Max") {
+        } else if (!updateFormData.min_exp && updateFormData.year_of_experience_type !== "Max") {
             isError = true
-        } else if (!updateFormData.max_exp && updateFormData.year_of_experience_type!=="Min") {
+        } else if (!updateFormData.max_exp && updateFormData.year_of_experience_type !== "Min") {
             isError = true
         } else if (!updateFormData.targate_hire_date) {
             isError = true
@@ -2174,8 +2174,8 @@ const UpdateJobsRevised = ({
     const shouldShowRecommendation = () => {
         if (
             !updateFormData?.salary_price_type ||
-            (!updateFormData?.min_salary && updateFormData.salary_price_type !=="Max-salary") ||
-            (!updateFormData?.max_salary && updateFormData.salary_price_type !=="Min-salary") ||
+            (!updateFormData?.min_salary && updateFormData.salary_price_type !== "Max-salary") ||
+            (!updateFormData?.max_salary && updateFormData.salary_price_type !== "Min-salary") ||
             !updateFormData?.salary_type
         ) {
             return "";
@@ -2303,7 +2303,7 @@ const UpdateJobsRevised = ({
                                         <i class="fa fa-check" aria-hidden="true"></i>
                                     </Link>
                                 </li>
-                                <li className={`${spokenLanguageBadges?.length > 0 && rdnwBadges?.length > 0 ? 'completed' : ''} ${openStep[0] === "5" && 'active'}`}
+                                <li className={`${spokenLanguageBadges?.length > 0 && rdnwBadges?.length > 0 ? 'completed' : updateFormData?.no_specific_language_require ? 'completed' : ''} ${openStep[0] === "5" && 'active'}`}
                                     onClick={() => {
                                         setCurrentStep("5")
                                         handleOpenStep("5")
@@ -2314,7 +2314,7 @@ const UpdateJobsRevised = ({
                                         Language <i class="fa fa-check" aria-hidden="true"></i>
                                     </Link>
                                 </li>
-                                <li className={`${locationBadges?.length > 0 ? 'completed' : ''} ${openStep[0] === "6" && 'active'}`}
+                                <li className={`${locationBadges?.length > 0 ? 'completed' :updateFormData?.no_specific_location?'completed': ''} ${openStep[0] === "6" && 'active'}`}
                                     onClick={() => {
                                         setCurrentStep("6")
                                         handleOpenStep("6")
@@ -4490,7 +4490,7 @@ const UpdateJobsRevised = ({
                                     </div>
                                 )}
                                 <ul class="rects_list2 px-3">
-                                    {(!updateFormData?.salary_price_type || (!updateFormData?.min_salary && updateFormData.salary_price_type !=="Max-salary") || (!updateFormData?.max_salary && updateFormData.salary_price_type !=="Min-salary") || !updateFormData?.salary_type) && (
+                                    {(!updateFormData?.salary_price_type || (!updateFormData?.min_salary && updateFormData.salary_price_type !== "Max-salary") || (!updateFormData?.max_salary && updateFormData.salary_price_type !== "Min-salary") || !updateFormData?.salary_type) && (
                                         <li class={`${openStep[0] == '1' && "active"}`}>
                                             <svg
                                                 width="12"

@@ -184,7 +184,7 @@ const TestInstruction = ({ showinstruction, handleInstructionClose, handleStartQ
                 animation={false}
                 size="lg"
                 backdrop={true}
-                className="beharlasmnt_mdl"
+                className="beharlasmnt_mdl evalutation-quiz-model"
                 backdropClassName="custom-backdrop"
             >
                 <Modal.Header closeButton>

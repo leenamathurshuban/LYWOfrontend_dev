@@ -3059,6 +3059,7 @@ tracker.show_tasks()
                                                                 id="inputText5"
                                                                 aria-describedby="passwordHelpBlock"
                                                                 placeholder="Every 1"
+                                                                style={{height: '38px'}}
                                                             />
                                                         </div>
                                                         <div className="col-md-2  ps-1 pe-1">
@@ -3309,7 +3310,7 @@ tracker.show_tasks()
                             </Accordion.Item>
 
                             <Accordion.Item eventKey="3">
-                                <Accordion.Header>Auto Short List</Accordion.Header>
+                                <Accordion.Header>Finalised Candidates response</Accordion.Header>
                                 <Accordion.Body className="pt-0">
                                     <div className="autoremider-body">
                                         <Form.Check // prettier-ignore

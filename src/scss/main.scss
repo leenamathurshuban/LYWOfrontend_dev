@@ -7,7 +7,7 @@ html {
   /* transform: scale(0.8); */
 }
 
-html, 
+html,
 .modal {
   scroll-behavior: smooth;
 
@@ -880,13 +880,13 @@ ol.breadcrumb {
 }
 
 .gpa-select {
-    width: 140px;
-    border-top-left-radius: 0 !important;
+  width: 140px;
+  border-top-left-radius: 0 !important;
 
-    .css-13cymwt-control{
-      border-top-left-radius: 0 !important;
-      border-bottom-left-radius: 0 !important;
-    }
+  .css-13cymwt-control {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+  }
 
 
 }
@@ -1503,6 +1503,11 @@ button.btn-link-muted {
 
 .modal-backdrop {
   background-color: rgb(242 244 247 / 80%) !important;
+   backdrop-filter: blur(1px);
+    -webkit-backdrop-filter: blur(1px);
+    width: 100%;
+    height: 100%;
+    opacity: 1 !important;
 }
 
 .filter_modal {
@@ -3078,25 +3083,25 @@ select.h-36.form-select {
 
       }
 
-       &.completed {
-        
+      &.completed {
+
 
         a {
           color: #667085;
         }
 
-         .fa {
+        .fa {
           color: #17B26A;
           background-color: hsla(152, 77%, 39%, 0.28);
           border-color: #17B26A;
         }
 
-       }
+      }
 
-      &.active{
+      &.active {
         border-color: #067647;
         background-color: #f6fef9;
-     
+
 
         a {
           color: #067647;
@@ -5161,6 +5166,8 @@ select.h-36.form-select {
 .qzslider {
   position: relative;
   padding-top: 40px;
+  display: flex;
+  align-items: center;
 
   span.handraw {
     position: absolute;
@@ -5761,6 +5768,10 @@ select.h-36.form-select {
       }
     }
 
+    p{
+      font-size: 12px;
+    }
+
     .form-select,
     .form-control {
       font-size: 12px;
@@ -5885,8 +5896,8 @@ select.h-36.form-select {
 
 .green-tick-check {
 
-  .form-check-input{
-     &:focus{
+  .form-check-input {
+    &:focus {
       box-shadow: none;
       border-color: #dee2e6
     }
@@ -5897,25 +5908,23 @@ select.h-36.form-select {
     border-color: #17B26A;
     border: 1px solid #17B26A;
 
-    &:focus{
+    &:focus {
       box-shadow: none;
     }
   }
 
   .form-check-input:checked[type=radio] {
-  --bs-form-check-bg-image: url("../images/icons/green-radio.svg");
-  background-size: 100%;
-  border:0
-
-}
+    --bs-form-check-bg-image: url("../images/icons/green-radio.svg");
+    background-size: 100%;
+    border: 0
+  }
 
 
   .form-check-input:checked[type=checkbox] {
-  --bs-form-check-bg-image: url("../images/icons/green-check.svg");
-  background-size: 100%;
-  border:0
-
-}
+    --bs-form-check-bg-image: url("../images/icons/green-check.svg");
+    background-size: 100%;
+    border: 0
+  }
 
 
 }
@@ -6038,12 +6047,12 @@ select.h-36.form-select {
       border: none;
     }
 
-   
+
   }
 
-   .btn{
-      max-width: 300px;
-    }
+  .btn {
+    max-width: 300px;
+  }
 
 
 
@@ -8213,7 +8222,7 @@ button#input-group-dropdown-1 {
 }
 
 .slick-vertical .slick-slide>div {
-  margin-bottom: 60px;
+  margin-bottom: 63px;
 }
 
 .apcnt_info {
@@ -9985,14 +9994,14 @@ path.recharts-rectangle.recharts-tooltip-cursor {
 }
 
 
-.chat-box-indidual{
-  .chat-widget{
+.chat-box-indidual {
+  .chat-widget {
     width: 94% !important;
   }
 }
 
 
-.indleffort-mdl{
+.indleffort-mdl {
   z-index: 1111;
 }
 
@@ -10004,7 +10013,7 @@ path.recharts-rectangle.recharts-tooltip-cursor {
 
 .chat-box-global {
 
-  .chat-widget{
+  .chat-widget {
     position: relative;
     width: 91%;
   }
@@ -10306,7 +10315,7 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   opacity: 1;
 }
 
-.custom-backdrop{
+.custom-backdrop {
   z-index: 1111 !important;
 }
 
@@ -10343,7 +10352,7 @@ path.recharts-rectangle.recharts-tooltip-cursor {
     // box-shadow: 0px 1px 3px 0px #1018281A;
 
   }
-  
+
 
   .job-model-require {
 
@@ -10495,38 +10504,39 @@ path.recharts-rectangle.recharts-tooltip-cursor {
 }
 
 
-.summary-full .ct_scrollbar{
+.summary-full .ct_scrollbar {
   max-height: 100% !important;
 }
 
 
-.jobcreattion-model{
-  .btn-close{
+.jobcreattion-model {
+  .btn-close {
     right: 0 !important;
   }
-  .expand-view-btn{
+
+  .expand-view-btn {
     margin-right: 10px;
   }
 }
 
 
-.alartmdl{
+.alartmdl {
   padding-left: 0;
   z-index: 1111;
 
-  .modal-dialog{
+  .modal-dialog {
     max-width: 500px;
     width: 100%;
   }
 }
 
-.chat-process-drawer{
+.chat-process-drawer {
   z-index: 1111;
 
-  .message-chat-body{
+  .message-chat-body {
     max-height: 100vh !important;
 
-   
+
 
   }
 
@@ -10535,18 +10545,38 @@ path.recharts-rectangle.recharts-tooltip-cursor {
     bottom: 15px !important;
     left: 15px !important;
     right: 15px !important;
-    }
+  }
 
-     .form-control{
-      min-height: 42px !important;
-    }
-    
+  .form-control {
+    min-height: 42px !important;
+  }
+
 
 }
 
-// .beharlasmnt_mdl {
-//   z-index: 1111;
-// }
+.evalutation-quiz-model {
+  z-index: 1111;
+}
+
+.beharquiz_mdl {
+  .modal-content {
+    min-height: 100%;
+
+    .quiz-slide-h-100.row {
+      height: calc(100vh - 125px);
+    }
+  }
+}
+
+.css-t3ipsp-control{
+  border: 0;
+}
+
+.proceed-quiz-model{
+  .modal-dialog{
+    max-width: 600px !important;
+  }
+}
 
 // responsive
 
@@ -11258,7 +11288,7 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   }
 
 
-  .app_rightsdbr{
+  .app_rightsdbr {
     width: 100% !important;
   }
 
@@ -11285,6 +11315,6 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   .verify-box-mobile.desktop-flex-colum {
     flex-direction: column;
     align-items: self-start;
-}
+  }
 
 }
