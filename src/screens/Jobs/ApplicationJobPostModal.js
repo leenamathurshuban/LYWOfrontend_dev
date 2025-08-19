@@ -2800,7 +2800,7 @@ const ApplicationJobPostModal = ({
     } catch (error) {
       handleCloseModals();
       // handleClose()
-      toast.error(error.response.data.response)
+      toast.error(error?.response?.data?.response?.error[0])
     }
   };
 
@@ -5830,32 +5830,32 @@ const ApplicationJobPostModal = ({
                       </div>
                       <div className="user_bsinfo">
                         <h6>Language</h6>
-                        {selectedSpokenLanguageNames.length > 0 ||
+                        {spokenLanguageBadges.length > 0 ||
                           getSelectedWrittenLanguageName.length > 0 ? (
                           <>
 
-                            {selectedSpokenLanguageNames.length > 0 && (
+                            {spokenLanguageBadges.length > 0 && (
                               <div className="lang_list">
-                                {selectedSpokenLanguageNames.map(
+                                {spokenLanguageBadges.map(
                                   (skillName, index) => (
                                     <span key={index}>
-                                      {skillName}
+                                      {skillName?.language_name}
                                       {index <
-                                        selectedSpokenLanguageNames.length - 1 &&
+                                        spokenLanguageBadges.length - 1 &&
                                         ", "}
                                     </span>
                                   )
                                 )}
                               </div>
                             )}
-                            {getSelectedWrittenLanguageName.length > 0 && (
+                            {rdnwBadges.length > 0 && (
                               <div className="lang_list">
-                                {getSelectedWrittenLanguageName.map(
+                                {rdnwBadges.map(
                                   (skillName, index) => (
                                     <span key={index}>
-                                      {skillName}
+                                      {skillName?.language_name}
                                       {index <
-                                        getSelectedWrittenLanguageName.length - 1 &&
+                                        rdnwBadges.length - 1 &&
                                         ", "}
                                     </span>
                                   )
@@ -5934,13 +5934,8 @@ const ApplicationJobPostModal = ({
                   </div>
                 </div>
               </Col>
-
-
-
             </Row>
           </Container>
-
-
         </Modal.Body>
         <Modal.Footer>
           <Button

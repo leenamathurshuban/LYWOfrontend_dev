@@ -364,7 +364,7 @@ const JobPosts = () => {
     try {
       const response = await ApplicationDeatilsApi(EmailId);
 
-      if (response.status === 200) {
+      if (response?.data?.success) {
         setViewDetailData(response?.data?.response);
         localStorage.setItem(
           "applicantProfileAllSavedData",
@@ -406,9 +406,7 @@ const JobPosts = () => {
           ...writtenUids.filter((uid) => !prevState.includes(uid)),
         ]);
         setSpokenLanguageBadges(response?.data?.response?.spoken_language);
-        setrdnwBadges(response?.data?.response?.written_reading_language)
-        const skillsUids = response?.data?.response?.applicant_profile_job[0]?.job_applicant_skill.map((item) => item?.uid);
-        setSelectedSkills((prevState) => [...prevState, ...skillsUids]);
+        setrdnwBadges(response?.data?.response?.written_reading_language);        
         const resumeFileUrl = response?.data?.response?.resume || null;
         setResumeFile(resumeFileUrl);
         const resumeFileName = resumeFileUrl ? resumeFileUrl.split("/").pop() : "";
@@ -463,6 +461,8 @@ const JobPosts = () => {
         } else if (response?.data?.response?.applicant_status === 'Completed') {
           setButtonText('View Form Btn')
         }
+        const skillsUids = response?.data?.response?.applicant_profile_job[0]?.job_applicant_skill.map((item) => item?.uid);
+        setSelectedSkills((prevState) => [...prevState, ...skillsUids]);
       }
     } catch (error) {
       console.log("Error occurred:", error);
