@@ -1226,14 +1226,32 @@ const QuizMainComponent = (item) => {
           {/* mobile component  */}
 
           <Offcanvas
-            className="question-popup p-0"
+            className="question-popup p-0 quest-offcanvas"
             show={showQuestion}
             onHide={() => {
               setIsBodyClassActive(false);
               questionClose();
             }}
             placement="bottom" >
-            <Offcanvas.Body>
+            <Offcanvas.Body className="p-0">
+              <div className="d-flex justify-content-between mb-3">
+                <div className="completed-status d-flex align-items-center ">
+                  <h6 style={{marginRight:'6px'}} >40%</h6>
+                  <span style={{fontSize:'12px'}}>completed</span>
+                  <ProgressBar
+                    className="ms-3"
+                    style={{ width: "80px", height: "8px" }}
+                    now={40}
+                  />
+                </div>
+
+                  <div className="completed-status d-flex align-items-center">
+                    <span style={{fontSize:'12px', marginRight:'6px'}}>Attempted</span>  <h6>00 / 28 </h6>
+                  </div>
+
+
+              </div>
+
               <div className="question-book slick-mumber-dot">
                 <p>Section 1</p>
                 <ul className='number-dot-pagination'>

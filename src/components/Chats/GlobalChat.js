@@ -23,12 +23,44 @@ import Sidebar from "../../components/Sidebar";
 import Sendicon from "../../images/icons/send-01.svg"
 import attachcon from "../../images/icons/paperclip.svg"
 import filter from "../../images/icons/filter-lines.svg"
-import { chatDetailsAPI, getCandidateListAPI, JobList } from '../../services/provider';
+import { chatDetailsAPI, chatPostAPI, getCandidateListAPI, JobList } from '../../services/provider';
 import { useSelector } from 'react-redux';
-import { TimeDisplay } from '../../utils/test';
+import { monthDayFormat, TimeDisplay } from '../../utils/test';
+import ChatDocumentMessage from './ChatDocumnet';
+
+import FileCloud from '../../images/icons/upload-cloud-02.svg';
+import pdfIcon from '../../images/icons/file-pdf.svg'
+import checkboxbase from '../../images/icons/_Checkbox base.svg'
+import imagefile from '../../images/icons/img.png';
+import EmailChat from './EmailChat';
+//import trash from '../../images/icons/trash-01.svg'
+
 
 export default function GlobalChat() {
   const companyInfo = useSelector((state) => state.login.CompanyProfileDetails);
+  const user = useSelector((state) => state.login?.loginUserInfo);
+
+  const isBinaryFile = (file) => {
+    const binaryMimeTypes = [
+      "application/pdf",
+      "application/octet-stream", // Generic binary file      
+      "application/zip",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // DOCX
+      "application/vnd.ms-excel",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // XLSX
+      "application/x-executable", // EXE
+    ];
+    return binaryMimeTypes.includes(file.type);
+  };
+  const isImageFile = (file) => {
+    const imageMimeTypes = [
+      "image/png",
+      "image/jpeg",
+      "image/gif",
+    ];
+    return imageMimeTypes.includes(file.type)
+  }
 
   const [selectedJobIndex, setSelectedJobIndex] = useState(null);
 
@@ -45,33 +77,117 @@ export default function GlobalChat() {
     Unread: [],
     Selected: [],
     jobuid: '',
-    // aplUid:''
+    aplUid: '',
+    profileUser: '',
+    job_title: ''
   })
-  const [message,setMessage] = useState('');
-  const [messages,setMessages] = useState([])
+  const [message, setMessage] = useState('');
+  const [messages, setMessages] = useState([])
 
   const handleClose = () => filterShow(false);
   const handleShow = () => filterShow(true);
 
 
+  // 
 
-   const [fileName, setFileName] = useState('No file chosen');
-    const fileInputRef = useRef(null);
-  
-    const handleFileChange = (e) => {
-      if (e.target.files.length > 0) {
-        setFileName(e.target.files[0].name);
-      } else {
-        setFileName('No file chosen');
-      }
-    };
-  
-    const handleAttachmentClick = () => {
-      fileInputRef.current.click();
-    };
+  const [file, setFile] = useState(null);
+  const [progress, setProgress] = useState(0);
+  const [uploaded, setUploaded] = useState(false);
+  const inputRef = useRef(null);
+  const [dragActive, setDragActive] = useState(false);
+  const [image, setImage] = useState(null);
+
+  const handleFiles = (files) => {
+    if (files && files[0]) {
+      const uploadedFile = files[0];
+      setFile(uploadedFile);
+      setImage(URL.createObjectURL(files[0]))
+      setUploaded(false);
+      setProgress(0);
+
+      // Fake upload simulation
+      const interval = setInterval(() => {
+        setProgress((prev) => {
+          if (prev >= 100) {
+            clearInterval(interval);
+            setUploaded(true);
+            return 100;
+          }
+          return prev + 10;
+        });
+      }, 200);
+    }
+  };
+
+  const handleDrag = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true);
+    } else if (e.type === "dragleave") {
+      setDragActive(false);
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      handleFiles(e.dataTransfer.files);
+    }
+  };
+
+  const handleChange = (e) => {
+    handleFiles(e.target.files);
+  };
+
+  const handleClear = () => {
+    setFile(null);
+    setProgress(0);
+    setUploaded(false);
+    inputRef.current.value = null;
+  };
+
+  // File extension → icon color
+  const getFileBadge = (name) => {
+    if (!name) return null;
+    const ext = name.split(".").pop().toLowerCase();
+    if (ext === "pdf")
+      return <span className="bg-red-100 text-red-600 px-2 py-1 rounded text-xs font-bold">PDF</span>;
+    if (["doc", "docx"].includes(ext))
+      return <span className="bg-blue-100 text-blue-600 px-2 py-1 rounded text-xs font-bold">DOC</span>;
+    if (["jpg", "jpeg", "png"].includes(ext))
+      return <span className="bg-green-100 text-green-600 px-2 py-1 rounded text-xs font-bold">IMG</span>;
+    return <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs font-bold">FILE</span>;
+  };
 
 
-  // custom style react select box
+  // 
+
+
+
+  const [fileName, setFileName] = useState('No file chosen');
+  const fileInputRef = useRef(null);
+
+
+  const [showUpload, setShowUpload] = useState(false);
+
+  const handleAttachmentClick = () => {
+    setShowUpload(!showUpload); // toggle on each click
+  };
+
+  const handleFileChange = (e) => {
+    if (e.target.files.length > 0) {
+      setFileName(e.target.files[0].name);
+    } else {
+      setFileName('No file chosen');
+    }
+  };
+
+  // const handleAttachmentClick = () => {
+  //   fileInputRef.current.click();
+  // };
 
   const customStyles = {
     option: (provided, state) => ({
@@ -112,15 +228,18 @@ export default function GlobalChat() {
       console.log("response  error-----", error);
     }
   };
-  const getCandiDateData = async (id) => {
+  const getCandiDateData = async (val) => {
     try {
-      const res = await getCandidateListAPI(id)
+      const res = await getCandidateListAPI(val?.uid)
       if (res?.data?.success) {
         setCandidateList((prev) => ({
           ...prev,
           AllList: res?.data?.response,
-          jobuid: id
+          jobuid: val?.uid,
+          job_title: val?.job_title,
+          profileUser: ''
         }))
+        setMessages([])
       }
     } catch (error) {
       console.log(error)
@@ -146,59 +265,66 @@ export default function GlobalChat() {
     }
   }, [jobData?.jobs])
 
-  const getChatDetailsData=async(uid)=>{
+  const getChatDetailsData = async (Val) => {
     try {
-      const response = await chatDetailsAPI(uid,candidateList.jobuid);
-      if(response?.data?.success){
+      const response = await chatDetailsAPI(Val?.uid, candidateList.jobuid);
+      if (response?.data?.success) {
         setMessages(response?.data?.response)
+        setCandidateList((prev) => ({
+          ...prev,
+          aplUid: Val?.uid,
+          profileUser: Val.job_applicant_profile.user.username
+        }))
       }
     } catch (error) {
-      console.log(error);      
-    }    
+      console.log(error);
+    }
   }
 
-
-  const jobs = [
-    { title: 'Figma Designer (10)', company: 'Cloudsportre', location: 'Remote - Future', status: 'Active' },
-    { title: 'UI Designer (5)', company: 'Cloudsportre', location: 'Remote - Future', status: 'Active' },
-    { title: 'Finance Manager (12)', company: 'Cloudsportre', location: 'Remote - Future', status: 'Active' },
-    { title: 'Python Developer (6)', company: 'Cloudsportre', location: 'Remote - Future', status: 'Active' },
-    { title: 'Senior React Developer (2)', company: 'Cloudsportre', location: 'Remote - Future', status: 'Active' },
-  ];
-
-  const candidates = [
-    { name: 'Alice Johnson', time: '3 days ago' },
-    { name: 'Sandeep Kattamuri', time: '1 day ago' },
-    { name: 'Alice Johnson', time: '5 hours ago' },
-    { name: 'Sandeep Kattamuri', time: '1 day ago' },
-  ];
-
-  // const [message, setMessage] = useState('');
-  // const [messages, setMessages] = useState([
-  //   { sender: 'Alice Johnson', time: '02:10 PM', text: 'Hi there, How are you?', isUser: false },
-  //   { sender: 'You', time: '02:10 PM', text: 'Suspendisse purus quam, finibus ac lacus non...', isUser: true },
-  //   { sender: 'Alice Johnson', time: '02:10 PM', text: 'Suspendisse purus quam, finibus ac lacus non...', isUser: false },
-  //   { sender: 'Alice Johnson', time: '04:10 PM', text: 'Suspendisse purus quam, finibus ac lacus non, euismod dignissim sapien. Praesent nisl sem, vestibulum vitae mollis in, ullamcorper et magna. ', isUser: false },
-  // ]);
-
-
-
-  const handleSendMessage = (e) => {
+  const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (message.trim()) {
-      setMessages([...messages, {
-        sender: 'You',
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        text: message,
-        isUser: true
-      }]);
-      setMessage('');
+    try {
+
+      const formData = new FormData();
+      formData.append("sender", user?.uid)
+      formData.append("job", candidateList.jobuid)
+      formData.append("job_applicant", candidateList.aplUid)
+      if (message.trim()) {
+        formData.append("message", message)
+      }
+      if (file && isBinaryFile(file)) {
+        formData.append("document", file)
+      }
+      if (file && isImageFile(file)) {
+        formData.append("image", file)
+      }
+      setMessages([
+        ...messages,
+        {
+          date: new Date(), chats: [{
+            message: message ? message : '',
+            // document: file ? file.name : '',
+            document: file,
+            image: image ? image : "",
+            created_at: new Date(), sender: { email: user?.email }
+          }]
+        }
+      ])
+      const response = await chatPostAPI(formData)
+      if (response.data.success) {
+        setMessage('')
+        setShowUpload(false)
+        setFile(null)
+      }
+
+      // setShowUpload(false)
+      // setFile(null)
+    } catch (error) {
+      console.log(error)
     }
   };
-
-
   console.log(jobData)
-
+  console.log(messages)
   return (
     <>
       <Header />
@@ -255,8 +381,11 @@ export default function GlobalChat() {
                       <div className='job-chat-form-card'>
                         {jobData?.jobs?.map((job, index) => (
                           <Card key={index}
-                            className={`mb-2 cursor-pointer ${selectedJobIndex === index ? 'active' : ''}`}
-                            onClick={() => getCandiDateData(job?.uid)}
+                            className={`mb-2 cursor-pointer ${selectedJobIndex === job?.uid ? 'active' : ''}`}
+                            onClick={() => {
+                              setSelectedJobIndex(job?.uid);
+                              getCandiDateData(job);
+                            }}
                           >
                             <Card.Body>
                               <Card.Title className="">{job.job_title}</Card.Title>
@@ -305,8 +434,11 @@ export default function GlobalChat() {
                         <div className='job-chat-form-card'>
                           {jobData?.ActiveJobs?.map((job, index) => (
                             <Card key={index}
-                              className={`mb-2 cursor-pointer ${selectedJobIndex === index ? 'active' : ''}`}
-                              onClick={() => setSelectedJobIndex(index)}
+                              className={`mb-2 cursor-pointer ${selectedJobIndex === job?.uid ? 'active' : ''}`}
+                              onClick={() => {
+                                setSelectedJobIndex(job?.uid);
+                                getCandiDateData(job);
+                              }}
                             >
                               <Card.Body>
                                 <Card.Title className="">{job.job_title}</Card.Title>
@@ -362,8 +494,11 @@ export default function GlobalChat() {
                         <div className='job-chat-form-card'>
                           {jobData?.InactiveJobs?.map((job, index) => (
                             <Card key={index}
-                              className={`mb-2 cursor-pointer ${selectedJobIndex === index ? 'active' : ''}`}
-                              onClick={() => setSelectedJobIndex(index)}
+                              className={`mb-2 cursor-pointer ${selectedJobIndex === job?.uid ? 'active' : ''}`}
+                              onClick={() => {
+                                setSelectedJobIndex(job?.uid);
+                                getCandiDateData(job);
+                              }}
                             >
                               <Card.Body>
                                 <Card.Title className="">{job.job_title}</Card.Title>
@@ -464,9 +599,9 @@ export default function GlobalChat() {
 
                       <div className='job-chat-form-card mt-2'>
                         {candidateList?.AllList?.map((candidates, index) => (
-                          <Card key={index} className=" cursor-pointer" onClick={()=>getChatDetailsData(candidates?.job_applicant?.uid)}>
+                          <Card key={index} className=" cursor-pointer" onClick={() => getChatDetailsData(candidates?.job_applicant)}>
                             <Card.Body>
-                              <Card.Title className="">{candidates.job_applicant.job_applicant_profile.user.email}</Card.Title>
+                              <Card.Title className="">{candidates.job_applicant.job_applicant_profile.user.username}</Card.Title>
 
                               <Card.Text className="text-muted fs-10 ">
                                 {candidates.time}
@@ -609,14 +744,14 @@ export default function GlobalChat() {
             <Col md={6} className="d-flex flex-column bg-light" style={{ borderTopRightRadius: "12px", borderBottomRightRadius: "12px" }} >
               <Card className="border-0 flex-grow-1 chat-box-global">
                 <Card.Header className="border-bottom" style={{ padding: "16px" }} >
-                  <Card.Title>Alice Johnson</Card.Title>
+                  <Card.Title className='text-capitalise'>{candidateList.profileUser}</Card.Title>
                   <Card.Text className="text-muted small">
-                    Assignment for Figma Designer  <span className='text-warning'> • Incomplete </span>
+                    {candidateList.profileUser ? `Assignment for ${candidateList.job_title}` : ''} <span className='text-warning'>{candidateList.profileUser ? '• Incomplete' : ''} </span>
                   </Card.Text>
                 </Card.Header>
                 <Card.Body className=" ">
-                  <div className='message-chat-body overflow-auto'>
-                    <p className='date-msg'><small>December 10</small></p>
+                  <div className='message-chat-body '>
+                    {/* <p className='date-msg'><small>December 10</small></p> */}
                     {/* {
                       messages.map((msg, index) => (
                         <div key={index} className={`mb-3 ${msg.isUser ? 'text-end' : 'text-start'}`}>
@@ -632,20 +767,33 @@ export default function GlobalChat() {
                           <p className='time-msg' > <small> {msg.time} </small></p>
                         </div>
                       ))} */}
-                      {messages[0]?.chats?.map((msg, index) => (
-                        <div key={index} className={`mb-3 ${msg.isUser ? 'text-end' : 'text-start'}`}>
-                          <Card
-                            className={`d-inline-block no-border ${msg.isUser ? 'bg-sender text-white' : 'bg-white'}`}
-                          >
-                            <Card.Body className="p-2" >
-                              <Card.Text>{msg.message} </Card.Text>
-                              <Card.Text className={`small ${msg.isUser ? '' : 'text-muted'}`}>
-                              </Card.Text>
-                            </Card.Body>
-                          </Card>
-                          <p className='time-msg' > <small> {TimeDisplay(msg.created_at)} </small></p>
-                        </div>
+
+                    <div className='chat-inner-body overflow-auto'>
+                      {messages?.map((item, index) => (
+                        <>
+                          <p className='date-msg'><small>{monthDayFormat(item?.date == new Date() ? '' : item?.date)}</small></p>
+                          {item.chats.map((msg) => (
+                            <div key={index} className={`mb-3 ${msg?.sender?.email == user?.email ? 'text-end sender-bubble' : 'text-start'}`}>
+                              <Card
+                                className={`d-inline-block no-border ${msg?.sender?.email == user?.email ? 'bg-sender text-white' : 'bg-white'}`}
+                              >
+                                <Card.Body className="p-2" >
+                                  <Card.Text>{msg.message} </Card.Text>
+                                  <Card.Text className={`small ${msg?.sender?.email == user?.email ? '' : 'text-muted'}`}>
+                                  </Card.Text>
+
+                                </Card.Body>
+                              </Card>
+                              {(msg?.document || msg?.image) && <ChatDocumentMessage document={msg?.document ? msg?.document : msg?.image ? msg?.image : null} image={file} />}
+                              {/* <EmailChat /> */}
+                              <p className='time-msg' > <small> {TimeDisplay(msg.created_at)} </small></p>
+                            </div>
+                          ))}
+                        </>
                       ))}
+
+                    </div>
+
                   </div>
                   {/* <div className='chat-form'>
                     <Form onSubmit={handleSendMessage}>
@@ -669,50 +817,113 @@ export default function GlobalChat() {
                   </div> */}
 
                   <div className='chat-form'>
-                                      <Form onSubmit={handleSendMessage}>
-                                        <InputGroup>
-                                        <div className='chat-widget'  >
-                                          <Form.Control
-                                            type="text"
-                                            value={message}
-                                            onChange={(e) => setMessage(e.target.value)}
-                                            placeholder="Your Message here"
-                                          />
-                                          {/* <label for="fileattached">
-                                            <input type='file' id="fileattached" />
-                                            <button className='attachment' > <img src={attachcon} className='img-fluid' alt='attach' /> </button>
-                                          </label> */}
-                  
-                                          {/* Hidden file input */}
-                                          <Form.Control
-                                            type="file"
-                                            id="fileattached"
-                                            ref={fileInputRef}
-                                            onChange={handleFileChange}
-                                            style={{ display: 'none' }}
-                                          />
-                                          
-                                          {/* Custom attachment button */}
-                                          <InputGroup.Text 
-                                            className="attachment" 
-                                            onClick={handleAttachmentClick}
-                                            style={{ cursor: 'pointer' }}
-                                          >
-                                            <img src={attachcon} className="img-fluid" alt="attach" />
-                                            {/* <span className="ms-2">{fileName}</span> */}
-                                          </InputGroup.Text>
-                                            </div>
-                                          <Button variant="primary" type="submit" >
-                                            <img src={Sendicon} className='img-fluid' alt='send' />
-                                          </Button>
-                                        </InputGroup>
-                                      </Form>
-                                    </div>
-                </Card.Body>
+                    <Form onSubmit={handleSendMessage}>
+                      <InputGroup>
+                        <div className='chat-widget'  >
+                          <Form.Control
+                            type="text"
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            placeholder="Your Message here"
+                          />
+                          {/* <label for="fileattached">
+                            <input type='file' id="fileattached" />
+                            <button className='attachment' > <img src={attachcon} className='img-fluid' alt='attach' /> </button>
+                          </label> */}
 
+                          {/* Hidden file input */}
+                          <Form.Control
+                            type="file"
+                            id="fileattached"
+                            ref={fileInputRef}
+                            onChange={handleFileChange}
+                            style={{ display: 'none' }}
+                          />
+
+                          {/* Custom attachment button */}
+                          <InputGroup.Text
+                            className="attachment"
+                            onClick={handleAttachmentClick}
+                            style={{ cursor: 'pointer' }}
+                          >
+                            <img src={attachcon} className="img-fluid" alt="attach" />
+                            {/* <span className="ms-2">{fileName}</span> */}
+                          </InputGroup.Text>
+                        </div>
+
+                        <div className={`upload-container ${showUpload ? "active" : ""}`}>
+                          {!file ? (
+                            <div
+                              className={`dropzone ${dragActive ? "dropzone--active" : ""}`}
+                              onDragEnter={handleDrag}
+                              onDragOver={handleDrag}
+                              onDragLeave={handleDrag}
+                              onDrop={handleDrop}
+                            >
+                              <input
+                                ref={inputRef}
+                                type="file"
+                                className="dropzone__input"
+                                id="fileUpload"
+                                onChange={handleChange}
+                                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                              />
+                              <div>
+                                <img src={FileCloud} className="img-fluid" alt="uploadicon" />
+
+
+                              </div>
+                              <label htmlFor="fileUpload" className="dropzone__label">
+                                <span className="highlight">Click to upload</span> or drag and drop
+                              </label>
+                              <p className="dropzone__hint">
+                                Supported formats: PDF, Word, JPG, PNG
+                              </p>
+                            </div>
+                          ) :
+                            (
+                              <div className="file-card">
+                                <div className="file-card__badge">
+                                  {file && file.name.toLowerCase().endsWith(".pdf") ? (
+                                    <img src={pdfIcon} className="img-fluid" alt="pdf" />
+                                  ) : file && /\.(jpg|jpeg|png|gif)$/i.test(file.name) ? (
+                                    <img src={imagefile} width={36} className="img-fluid" alt="image" />
+                                  ) : null}
+                                </div>
+
+                                <div className="file-card__info">
+                                  <p className="file-card__name">{file.name}</p>
+                                  <p className="file-card__size">{(file.size / 1024).toFixed(1)} KB</p>
+
+                                  <div className="progress file-progress">
+                                    <div
+                                      className={`progress__bar ${uploaded ? "progress__bar--done" : ""}`}
+                                      style={{ width: `${progress}%` }}
+                                    ></div>
+                                  </div>
+
+                                  <span className="percent">{progress}%</span>
+                                </div>
+
+                                <div className="file-card__status">
+                                  {uploaded && (
+                                    <span className="check">
+                                      <img src={checkboxbase} alt="Uploaded" className="check__img" />
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            )}
+                        </div>
+                        <Button variant="primary" type="submit" >
+                          <img src={Sendicon} className='img-fluid' alt='send' />
+                        </Button>
+                      </InputGroup>
+                    </Form>
+                  </div>
+                </Card.Body>
               </Card>
             </Col>
-
           </Row>
         </Container>
       </div>
@@ -828,10 +1039,6 @@ export default function GlobalChat() {
             Apply
           </Button>
         </div>
-
-
-
-
       </Offcanvas>
 
     </>

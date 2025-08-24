@@ -15,23 +15,23 @@ import ArrangeIcon from '../../images/icons/order.png';
 import MatchIcon from '../../images/icons/match.png';
 import imgpTrash from "../../images/icons/trash-01.svg";
 
- const customStyles2 = {
-        option: (provided, state) => ({
-            ...provided,
-            display: 'flex',
-            alignItems: 'center',
-            padding: '8px 12px',
-            backgroundColor: state.isSelected
-                ? "#F2F4F7"
-                : state.isFocused
-                    ? "#F2F4F7" // Color on hover
-                    : "inherit",
-            color: state.isSelected ? "rgb(0 0 0 / 50%)" : "rgb(0 0 0 / 50%)",
-            cursor: "pointer",
+const customStyles2 = {
+    option: (provided, state) => ({
+        ...provided,
+        display: 'flex',
+        alignItems: 'center',
+        padding: '8px 12px',
+        backgroundColor: state.isSelected
+            ? "#F2F4F7"
+            : state.isFocused
+                ? "#F2F4F7" // Color on hover
+                : "inherit",
+        color: state.isSelected ? "rgb(0 0 0 / 50%)" : "rgb(0 0 0 / 50%)",
+        cursor: "pointer",
 
-        }),
-        // Add other custom styles as needed
-    };
+    }),
+    // Add other custom styles as needed
+};
 
 const QUESTION_TYPES = {
     SINGLE: "single",
@@ -99,7 +99,7 @@ const makeBlankQuestion = () => ({
     questions_answer: [],
 });
 
-export default function CustomQuestionsBuilder({ components, setComponents,handleSaveCustomQuestion }) {
+export default function CustomQuestionsBuilder({ components, setComponents, handleSaveCustomQuestion }) {
     // const [components, setComponents] = useState([makeBlankQuestion()]);
 
     // ---------- handlers (questions) ----------
@@ -330,38 +330,38 @@ export default function CustomQuestionsBuilder({ components, setComponents,handl
             {components?.map((question, questionIndex) => (
                 <div key={question.id} className="starttag_box ctmqus_panel mt-0 mb-3">
                     <div className="mb-4">
-                    <div className="stagbox_head">
-                        <span className="border_box">
-                            <Form.Control
-                                className="formControl_cstmQuestion"
-                                placeholder="Your Question"
-                                onChange={(e) => handleQuestionTitleChange(questionIndex, e.target.value)}
-                                value={question.question_title}
-                            />
-                        </span>
+                        <div className="stagbox_head">
+                            <span className="border_box">
+                                <Form.Control
+                                    className="formControl_cstmQuestion"
+                                    placeholder="Your Question"
+                                    onChange={(e) => handleQuestionTitleChange(questionIndex, e.target.value)}
+                                    value={question.question_title}
+                                />
+                            </span>
 
-                        <div className="d-flex ms-3">
-                            <Select
-                                className="react_selectbox react-select-mcq-change"
-                                classNamePrefix="select"
-                                styles={customStyles2}
-                                value={typeOptions.find((o) => o.value === question.quiz_type)}
-                                options={typeOptions}
-                                formatOptionLabel={({ label }) => label}
-                                onChange={(e) => handleQuestionTypeChange(questionIndex, e.value)}
-                            />
+                            <div className="d-flex ms-3">
+                                <Select
+                                    className="react_selectbox react-select-mcq-change"
+                                    classNamePrefix="select"
+                                    styles={customStyles2}
+                                    value={typeOptions.find((o) => o.value === question.quiz_type)}
+                                    options={typeOptions}
+                                    formatOptionLabel={({ label }) => label}
+                                    onChange={(e) => handleQuestionTypeChange(questionIndex, e.value)}
+                                />
+                            </div>
+                            <div className="d-flex ms-3 me-2">
+                                <button
+                                    type="button"
+                                    className="btn-transpant"
+                                    onClick={() => handleDeleteRowQuestion(questionIndex)}
+                                    title="Delete question"
+                                >
+                                    <img src={imgpTrash} alt="Delete" style={{ width: 18, height: 18 }} />
+                                </button>
+                            </div>
                         </div>
-                        <div className="d-flex ms-3 me-2">
-                        <button
-                            type="button"
-                            className="btn-transpant"
-                            onClick={() => handleDeleteRowQuestion(questionIndex)}
-                            title="Delete question"
-                        >
-                            <img src={imgpTrash} alt="Delete" style={{ width: 18, height: 18 }} />
-                        </button>
-                        </div>
-                    </div>
                     </div>
 
                     <div className="mt-3">
@@ -384,7 +384,7 @@ export default function CustomQuestionsBuilder({ components, setComponents,handl
                                     {question.question_option.part1.map((option, optionIndex) => (
                                         <div key={`opt-${optionIndex}`} className="d-flex align-items-center form-check">
                                             {/* radio/checkbox only for SINGLE/MULTIPLE */}
-                                            
+
                                             {(question.quiz_type === QUESTION_TYPES.SINGLE ||
                                                 question.quiz_type === QUESTION_TYPES.MULTIPLE) && (
                                                     <Form.Check
@@ -399,22 +399,22 @@ export default function CustomQuestionsBuilder({ components, setComponents,handl
                                                     />
                                                 )}
 
-                                                
-                                                <label className="form-check-label" >
-                                                    <div className="inputTypes">
-                                            <Form.Control
-                                                type="text"
-                                                placeholder="Enter your text here"
-                                                className="formControl_cstmQuestion"
-                                                value={option}
-                                                onChange={(e) =>
-                                                    handleQuestionOptionChange(questionIndex, optionIndex, e.target.value)
-                                                }
-                                                style={{ maxWidth: 520 }}
-                                            />
 
-                                            {/* Arrange up/down buttons */}
-                                            {/* {question.quiz_type === QUESTION_TYPES.ARRANGE && (
+                                            <label className="form-check-label" >
+                                                <div className="inputTypes">
+                                                    <Form.Control
+                                                        type="text"
+                                                        placeholder="Enter your text here"
+                                                        className="formControl_cstmQuestion"
+                                                        value={option}
+                                                        onChange={(e) =>
+                                                            handleQuestionOptionChange(questionIndex, optionIndex, e.target.value)
+                                                        }
+                                                        style={{ maxWidth: 520 }}
+                                                    />
+
+                                                    {/* Arrange up/down buttons */}
+                                                    {/* {question.quiz_type === QUESTION_TYPES.ARRANGE && (
                                                 <div className="btn-group">
                                                     <button
                                                         className="btn btn-outline-secondary"
@@ -435,16 +435,16 @@ export default function CustomQuestionsBuilder({ components, setComponents,handl
                                                 </div>
                                             )} */}
 
-                                            <button
-                                                className="btn-transparent border-0"
-                                                onClick={() => handleDeleteOption(questionIndex, optionIndex)}
-                                                title="Remove option"
-                                                style={{backgroundColor:"transparent"}}
-                                                
-                                            >
-                                                ✕
-                                            </button>
-                                            </div>
+                                                    <button
+                                                        className="btn-transparent border-0"
+                                                        onClick={() => handleDeleteOption(questionIndex, optionIndex)}
+                                                        title="Remove option"
+                                                        style={{ backgroundColor: "transparent" }}
+
+                                                    >
+                                                        ✕
+                                                    </button>
+                                                </div>
                                             </label>
                                         </div>
                                     ))}
@@ -551,8 +551,8 @@ export default function CustomQuestionsBuilder({ components, setComponents,handl
                         <button
                             type="button"
                             className="btn btn-light me-2 border-0"
-                            onClick={() => handleAddResponse(questionIndex)} 
-                            style={{fontSize: "12px"}}
+                            onClick={() => handleAddResponse(questionIndex)}
+                            style={{ fontSize: "12px" }}
                         >
                             + Add Response
                         </button>

@@ -1860,6 +1860,7 @@ import Select from "react-select";
 
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { Label } from "recharts";
+import QuestionAnswerJob from "./QuestionAnswerJob";
 
 const ApplicationJobPostModal = ({
   show,
@@ -1900,6 +1901,7 @@ const ApplicationJobPostModal = ({
   const dropdownRef = useRef(null);
 
   const [inviteModalShow, setInviteModalShow] = useState(false);
+  const [components, setComponents] = useState(jobPostData?.question_job);
 
   const noticeOptions = [
     { value: "Less than 30 Days", label: "Less than 30 Days" },
@@ -2719,7 +2721,12 @@ const ApplicationJobPostModal = ({
   };
 
   const handleFormDetailsApi = async (status, flag) => {
-    const questionAnswerArray = generateQuestionAnswerArray();
+    // const questionAnswerArray = generateQuestionAnswerArray();
+    const questionAnswerArray = components.map((item) => ({
+      answer_uid: "", // Add logic to populate this if needed
+      question_uid: item?.uid,
+      ["selected_answer"]:item.selected_answer
+    }));
 
     try {
       const dataToSend = selectedSkills.length === 0 ? [] : selectedSkills;
@@ -2744,6 +2751,7 @@ const ApplicationJobPostModal = ({
         "Job_applicant_status",
         status
       );
+      // formdata.append("total_work_experience", totalWorkExperience);
       formdata.append("expected_salary", profileformData?.ExpectedSalary);
       if (spokenLanguageBadges.length) {
         formdata.append(
@@ -2800,7 +2808,9 @@ const ApplicationJobPostModal = ({
     } catch (error) {
       handleCloseModals();
       // handleClose()
-      toast.error(error?.response?.data?.response?.error[0])
+      if (error?.response?.data?.response?.error?.[0]) {
+        toast.error(error?.response?.data?.response?.error?.[0])
+      }
     }
   };
 
@@ -3410,6 +3420,7 @@ const ApplicationJobPostModal = ({
   console.log('testing', profileformData)
   console.log(spokenLanguageBadges, rdnwBadges)
   console.log(WorkExpreienceRow)
+  console.log("jjjjjjjjuuuuuuuu",selectedAnswers)
   return (
     <>
       <Modal
@@ -3492,7 +3503,7 @@ const ApplicationJobPostModal = ({
                     {/* </a> */}
                   </li>
                   <li
-                    className={`${isAllWorkExperienceFieldsFilled && "active"}`}
+                    className={`${totalWorkExperience && "active"}`}
                   >
                     {/* <a href="#item_Geog"> */}
                     <Link to={''}>
@@ -4386,7 +4397,7 @@ const ApplicationJobPostModal = ({
                               </div>
                             </td>
                             {!row.saved && (
-                              <td>
+                              <td >
                                 <Button
                                   variant="link"
                                   className="p-1 font-sm mt-1 link-iconbtn"
@@ -4404,7 +4415,7 @@ const ApplicationJobPostModal = ({
                               </td>
                             )}
                             {row.saved && (
-                              <td>
+                              <td style={{ textAlign: 'right' }}>
                                 <Button
                                   variant="link"
                                   className="p-1 font-sm mt-1 link-iconbtn"
@@ -4420,7 +4431,7 @@ const ApplicationJobPostModal = ({
                                 </Button>
                               </td>
                             )}
-                            <td>
+                            <td style={{ textAlign: 'right' }}>
                               <button
                                 type="button"
                                 className="btn-transpant"
@@ -4807,7 +4818,7 @@ const ApplicationJobPostModal = ({
                     <div className="desktop-table">
                       <table className="mb-2 form_table">
                         <thead>
-                          {WorkExpreienceRow?.length>0 ? (
+                          {WorkExpreienceRow?.length > 0 ? (
                             <tr>
                               <td>Role</td>
                               <td>From</td>
@@ -4817,7 +4828,7 @@ const ApplicationJobPostModal = ({
                               <td></td>
                               <td></td>
                             </tr>
-                          ):''}
+                          ) : ''}
                         </thead>
                         <tbody>
                           {WorkExpreienceRow.map((row, index) => (
@@ -5604,11 +5615,11 @@ const ApplicationJobPostModal = ({
 
                 <div className="custom-card mb-5">
                   <h6 className="mb-4">Additional Question from Company</h6>
-                  {jobPostData?.question_job.map((item) => (
+                  {/* {jobPostData?.question_job.map((item) => (
                     <div key={item.id} className="mb-3">
                       <h6 className="strong-label">{item?.question_title}</h6>
 
-                      {item?.quiz_type === "MCQ" &&
+                      {item?.quiz_type === "single" &&
                         item?.question_option?.part1?.map((option, index) => (
                           <Form.Check
                             key={index}
@@ -5621,27 +5632,32 @@ const ApplicationJobPostModal = ({
                           />
                         ))}
 
-                      {/* {item?.quiz_type === "Text" && (
-                      <Form.Control
-                        type="text"
-                        placeholder="Enter your answer"
-                        className="mb-3"
-                      />
-                    )}
-
-                    {item?.quiz_type === "Checkbox" &&
-                      item?.question_option?.part1?.map((option, index) => (
-                        <Form.Check
-                          key={index}
-                          type="checkbox"
-                          label={option}
-                          name={`formCheckbox-${item.id}`}
-                          id={`formCheckbox-${item.id}-${index}`}
-                          className="mr-3"
+                      {item?.quiz_type === "Text" && (
+                        <Form.Control
+                          type="text"
+                          placeholder="Enter your answer"
+                          className="mb-3"
                         />
-                      ))} */}
+                      )}
+
+                      {item?.quiz_type === "multiple" &&
+                        item?.question_option?.part1?.map((option, index) => (
+                          <Form.Check
+                            key={index}
+                            type="checkbox"
+                            label={option}
+                            name={`formCheckbox-${item.id}`}
+                            id={`formCheckbox-${item.id}-${index}`}
+                            className="mr-3"
+                          />
+                        ))}
                     </div>
-                  ))}
+                  ))} */}
+                  <QuestionAnswerJob
+                    components={components} 
+                    setComponents={setComponents}
+                    handleAnswerChange={handleAnswerChange}
+                  />
                 </div>
                 {/* {skillError && (
                   <div className="custom-card mb-5">
@@ -5692,16 +5708,11 @@ const ApplicationJobPostModal = ({
                           <Col>
                             <Form.Control type="number" placeholder="Enter OTP" />
                           </Col>
-
                           <div className="d-flex justify-content-between">
                             <p className="text-success mb-0 mt-2 fs-14">OTP verified successfully</p>
                             <p className="text-primary mb-0 mt-2 fs-7" >Resend OTP</p>
                           </div>
-
-
-
                         </Form.Group>
-
 
                         <div className="d-flex justify-content-between">
                           <Button variant="light">
@@ -5712,9 +5723,6 @@ const ApplicationJobPostModal = ({
                         </div>
 
                       </Form>
-
-
-
                     </div>
                   </Offcanvas.Body>
 

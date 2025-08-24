@@ -32,6 +32,7 @@ import closebtn from "../../images/icons/Tag-close X.svg";
 import InfoCircle from "../../images/icons/info-circle16x16.svg";
 import {
   ApplicationDeatilsApi,
+  chatDetailsAPI,
   EvalationAssestDetails,
   getPostJobIdApi,
 } from "../../services/provider";
@@ -80,6 +81,8 @@ const JobPosts = () => {
       localStorage.setItem('authToken', paramtoken)
     }
   }, [])
+  const applicant = JSON.parse(localStorage.getItem("applicantData"));
+  const [messages, setMessages] = useState([]);
   const [jobPostData, setJobPostData] = useState(null);
   const [jobPostErrorMsg, setJobPostErrorMsg] = useState("");
   const [behaviourAssModel, setBehaviourAssModel] = useState(false);
@@ -406,7 +409,7 @@ const JobPosts = () => {
           ...writtenUids.filter((uid) => !prevState.includes(uid)),
         ]);
         setSpokenLanguageBadges(response?.data?.response?.spoken_language);
-        setrdnwBadges(response?.data?.response?.written_reading_language);        
+        setrdnwBadges(response?.data?.response?.written_reading_language);
         const resumeFileUrl = response?.data?.response?.resume || null;
         setResumeFile(resumeFileUrl);
         const resumeFileName = resumeFileUrl ? resumeFileUrl.split("/").pop() : "";
@@ -414,8 +417,11 @@ const JobPosts = () => {
         const educationData = response?.data?.response?.qualification_applicantprofile || [];
         const workExpData = response?.data?.response?.work_applicant || []
         const filterEducation = educationData.filter((obj, index) => {
-          return index !== educationData.findIndex(o => obj.level === o.level && obj.applicant_area_of_education === o.applicant_area_of_education &&
-            obj.grad_year === o.grad_year && obj.university === o.university
+          return index === educationData.findIndex(o =>
+            obj.level === o.level &&
+            obj.applicant_area_of_education === o.applicant_area_of_education &&
+            obj.grad_year === o.grad_year &&
+            obj.university === o.university
           );
         });
         if (Array.isArray(filterEducation)) {
@@ -506,22 +512,29 @@ const JobPosts = () => {
       },])
     }
   }, [totalWorkExperience])
+
+  const getChatDetailsData = async () => {
+    try {
+      const response = await chatDetailsAPI(applicant?.job_applicant_data?.uid, jobPostData?.uid);
+      if (response?.data?.success) {
+        setMessages(response?.data?.response)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  useEffect(() => {
+    if (buttonText == "View Form Btn") {
+      getChatDetailsData()
+    }
+  }, [jobPostData,modalOpen.showFirstModal])
   console.log("buttonText", buttonText)
   console.log(jobPostData?.asset_job)
   console.log(totalWorkExperience)
   const handleShareModal = () => {
     return (
       <Modal show={showModal} onHide={toggleModal} aria-labelledby="contained-modal-title-vcenter" centered  >
-
-
-        {/* <Modal.Header closeButton>
-        
-      </Modal.Header> */}
-
         <Modal.Body className="sharing-model" ref={containerRef} closeButton>
-
-
-
           <Row>
             <Col md={12}>
               <Modal.Title >
@@ -1282,6 +1295,9 @@ const JobPosts = () => {
           handleClose={handleCloseModals}
           status={buttonText}
           jobData={jobPostData}
+          messages={messages}
+          setMessages={setMessages}
+          handleBtns={handleBtns}
         />
 
         <AboutLywoModal
@@ -1522,7 +1538,7 @@ const JobPosts = () => {
           <li><button onClick={instructionShow}  ><img src={linechart} alt="Line cahrt" /> <br></br> Progress</button></li>
           <li><button onClick={toggleModal} ><img src={share2} alt="Share" width={25} /><br></br> Share</button></li>
           <li><button><img src={Download2} alt="Download" width={25} /> <br></br> Download</button></li>
-          <li><button><img src={Message} alt="Chat" /><br></br> Message</button></li>
+          <li><button onClick={() => handleShowModal("chatModal")}><img src={Message} alt="Chat" /><br></br> Message</button></li>
         </ul>
       </div>
     </>

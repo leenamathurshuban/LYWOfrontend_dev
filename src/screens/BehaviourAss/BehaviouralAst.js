@@ -50,8 +50,11 @@ import { useNavigate } from 'react-router-dom';
 
 const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }) => {
     const [show, setShow] = useState(false);
+    
     const [showInstruction, setShowInstruction] = useState(false)
     const handleInstructionModel = () => setShowInstruction(false);
+
+
     const [popupShow, setPopupShow] = useState(false);
     const handleClosePop = () => {
         if (complete && runCounter() == 28) {
@@ -63,7 +66,13 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
     }
 
      const [active, setActive] = useState(false);
-  const popupRef = useRef(null);
+
+    const [qshow, qsetShow] = useState(false);
+
+  const qhandleClose = () => qsetShow(false);
+  const qhandleShow = () => qsetShow(true);
+
+    const popupRef = useRef(null);
 
     const handleShow = () => setShow(true);
     const navigate = useNavigate();
@@ -114,6 +123,21 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
             console.log(error)
         }
     }
+
+    const customStyles = {
+        option: (provided, state) => ({
+            ...provided,
+            backgroundColor: state.isSelected
+                ? "#deebff"
+                : state.isFocused
+                    ? "#deebff" // Color on hover
+                    : "inherit",
+            color: state.isSelected ? "#000" : "black",
+            cursor: "pointer",
+            // Optional: improves UX on hover
+        }),
+    };
+
     const getQuizQuestion = async (id) => {
         try {
             const response = await getQuizQuestionListAPi();
@@ -139,16 +163,17 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
             getQuizQuestion()
         }
 
-         const handleClickOutside = (event) => {
-      if (popupRef.current && !popupRef.current.contains(event.target) && !event.target.closest('.language-btn')) {
-        setActive(false);
-      }
-    };
+        const handleClickOutside = (event) => {
+            if (popupRef.current && !popupRef.current.contains(event.target) && !event.target.closest('.language-btn')) {
+                setActive(false);
+                
+            }
+        };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
 
     }, [attemptQuiz, attemptLeastQuiz])
     const handleSubmitAll = () => {
@@ -296,10 +321,10 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                                         <div className="brb_cards most_like">
                                             <span className="brb-cicon">
 
-                                                <img src={choice_normal_3} className='normal-choice'/>
+                                                <img src={choice_normal_3} className='normal-choice' />
                                                 <img src={choice_brb} className='hover-choice' />
-                                                
-                                                </span>
+
+                                            </span>
 
                                             <h6>Pick one "Most Like” you</h6>
                                         </div>
@@ -309,9 +334,9 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                                             <span className="brb-cicon">
 
                                                 <img src={pink_brb} className='hover-choice' />
-                                                  <img src={choice_normal_4} className='normal-choice'/>
+                                                <img src={choice_normal_4} className='normal-choice' />
 
-                                                </span>
+                                            </span>
                                             <h6>Pick one "Least Like” you</h6>
                                         </div>
                                     </Col>
@@ -350,7 +375,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                     <Modal.Title>Behavioural Assessment</Modal.Title>
                     <div className="score_panel">
                         <span className="att_count"> <span>Attempted </span>  <strong>{runCounter()} / 28</strong></span>
-                        <button type="button" onClick={() => setShowInstruction(true)} className="me-3 btn-light-outline-sm"><img src={infogray} />Instructions</button>
+                        <button type="button" onClick={() => setShowInstruction(true)} className="me-3 btn-light-outline-sm" style={{ height: '38px' }}><img src={infogray} />Instructions</button>
                         <button type="button" className="btn-light-outline-sm me-3 setlanguage"><img src={globgray} />
                             {/* <Form.Select
                                 name="currency"
@@ -371,10 +396,11 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                             </Form.Select> */}
                             <Select
                                 options={langOption}
-                                value={langOption?.find((opt)=>opt?.value===language)}
+                                value={langOption?.find((opt) => opt?.value === language)}
                                 onChange={(e) => {
                                     setLanguage(e.value);
                                 }}
+                                styles={customStyles}
                                 className="sm-fselect react_selectbox"
                             />
                         </button>
@@ -426,83 +452,92 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                 <Modal.Footer>
 
 
-                   
 
-                     <div className='job-post-footer behavvoior-footer-menu'>
-                <div className='mobile-footer lang-help-btn'>
-                    <div className='language-btn'>
-                            <img src={langicon} className='lng'/> <br></br>
 
-                            Language
+                    <div className='job-post-footer behavvoior-footer-menu'>
+                        <div className='mobile-footer lang-help-btn'>
+                            <div className='language-btn'>
+                                <img src={langicon} className='lng' /> <br></br>
+
+                                Language
+                            </div>
+
+
+                            <div className='language-btn' onClick={qhandleShow}  >
+                                <img src={gridicon} className='lng' /> <br></br>
+
+                                Question
+                            </div>
+
+                            <div onClick={() => setShowInstruction(true)} className='language-btn'>
+                                <img src={helpicon} className='lng' /> <br></br>
+
+                                Instructions
+                            </div>
+                        </div>
                     </div>
 
 
-                     <div className='language-btn' onClick={() => setActive(true)}  >
-                            <img src={gridicon} className='lng'/> <br></br>
+                    <Offcanvas
+                        show={qshow} onHide={qhandleClose}
+                        backdropClassName='custom-backdrop'
+                        backdrop={true}
+                        className="question-model-pop"
+                        placement='bottom'
+                        >
+                        <Offcanvas.Body className='question-popop'>
+                           
+                                <div className='d-flex justify-content-between'>
+                                    <div className='range-progress'>
+                                        <strong className="font-20">50%</strong> Complete
+                                    </div>
+                                    <div className='attempted'>
+                                        <span className="att_count"> <span>Attempted </span>  <strong className="font-20">{runCounter()} / 28</strong></span>
+                                    </div>
+                                </div>
 
-                            Question
-                    </div>
+                                <div className='slick-mumber-dot'>
+                                    <ul className='number-dot-pagination'>
+                                        <li className='complete' >1</li>
+                                        <li className='complete'>2</li>
+                                        <li className='complete'>3</li>
+                                        <li className='complete'>4</li>
+                                        <li>5</li>
+                                        <li>6</li>
+                                        <li>7</li>
+                                        <li>8</li>
+                                        <li>9</li>
 
-                     <div onClick={() => setShowInstruction(true)} className='language-btn'>
-                            <img src={helpicon} className='lng'/> <br></br>
-
-                            Instructions
-                    </div>
-                </div>
-            </div>
-
-
-            <div  className={`question-popop ${active ? 'active' : ''}`}
-        ref={popupRef} >
-                <div className='d-flex justify-content-between'>
-                    <div className='range-progress'>
-<strong className="font-20">50%</strong> Complete
-                    </div>
-                    <div className='attempted'>
-                            <span className="att_count"> <span>Attempted </span>  <strong className="font-20">{runCounter()} / 28</strong></span>
-                    </div>
-                </div>
-
-                    <div className='slick-mumber-dot'>
-                        <ul className='number-dot-pagination'>
-                            <li className='complete' >1</li>
-                             <li className='complete'>2</li>
-                              <li className='complete'>3</li>
-                               <li className='complete'>4</li>
-                                <li>5</li>
-                                 <li>6</li>
-                                  <li>7</li>
-                                   <li>8</li>
-                                    <li>9</li>
-
-                                     <li>10</li>
+                                        <li>10</li>
 
                                         <li>11</li>
-                             <li>12</li>
-                              <li>13</li>
-                               <li>14</li>
-                                <li>15</li>
-                                 <li>16</li>
-                                  <li>17</li>
-                                   <li>18</li>
-                                    <li>19</li>
+                                        <li>12</li>
+                                        <li>13</li>
+                                        <li>14</li>
+                                        <li>15</li>
+                                        <li>16</li>
+                                        <li>17</li>
+                                        <li>18</li>
+                                        <li>19</li>
 
-                                     <li>20</li>
+                                        <li>20</li>
 
 
-                                       <li>21</li>
-                             <li>22</li>
-                              <li>23</li>
-                               <li>24</li>
-                                <li>25</li>
-                                 <li>26</li>
-                                  <li>27</li>
-                                   <li>28</li>
-                                    
+                                        <li>21</li>
+                                        <li>22</li>
+                                        <li>23</li>
+                                        <li>24</li>
+                                        <li>25</li>
+                                        <li>26</li>
+                                        <li>27</li>
+                                        <li>28</li>
+
                                     </ul>
-                    </div>
+                                </div>
 
-            </div>
+                            
+                        </Offcanvas.Body>
+                    </Offcanvas>
 
 
 
@@ -522,17 +557,17 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
 
 
 
-             {/* question progress modal */}
-           
+            {/* question progress modal */}
 
 
-{/* modal  */}
-         
+
+            {/* modal  */}
+
 
             <Modal
                 show={popupShow}
                 onHide={handleClosePop}
-                className="confirmation_model behaviour-model"
+                className="confirmation_model behaviour-model proceed-quiz-model"
                 aria-labelledby="contained-modal-title-vcenter"
                 centered
             >
@@ -681,7 +716,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
             </Offcanvas>
 
 
-           
+
         </>
     )
 }

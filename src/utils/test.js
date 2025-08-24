@@ -30,8 +30,7 @@ export const calculateDays = (date) => {
   return diffInDays;
 };
 
-export const TimeDisplay = () => {
-  const isoString = "2025-08-18T16:49:05.239978Z";
+export const TimeDisplay = (isoString) => {
 
   const date = new Date(isoString);
 
@@ -44,4 +43,24 @@ export const TimeDisplay = () => {
 
   timeString = timeString.replace("am", "AM").replace("pm", "PM");
   return timeString;
+};
+
+export const monthDayFormat = (dateStr) => {
+  const date = new Date(dateStr);
+
+  // Format to "Month Day"
+  const formattedDate = date.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+  });
+
+  return formattedDate
+}
+
+export const formatSize = (bytes) => {
+  if (!bytes) return "0 Bytes";
+  const k = 1024;
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
 };

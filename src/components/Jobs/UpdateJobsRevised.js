@@ -2220,7 +2220,7 @@ const UpdateJobsRevised = ({
                 animation={false}
                 size="lg"
                 backdrop={false}
-                className="cmprofile_mdl quizDev_model"
+                className="cmprofile_mdl quizDev_model jobcreattion-model"
             >
                 <Modal.Header closeButton>
                     <img src={logoIcon} className="me-4" />

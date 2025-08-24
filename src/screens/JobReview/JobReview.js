@@ -128,24 +128,24 @@ tracker.show_tasks()
   `;
 
     const CustomToolbar = () => (
-  <div id="toolbar">
-    <button className="ql-bold">
-      
-    </button>
-    <button className="ql-italic">
-      
-    </button>
-    <button className="ql-underline">
-      
-    </button>
-    <button className="ql-strike">
-    
-    </button>
-       <button className="ql-link">
-    
-    </button>
-  </div>
-);
+        <div id="toolbar">
+            <button className="ql-bold">
+
+            </button>
+            <button className="ql-italic">
+
+            </button>
+            <button className="ql-underline">
+
+            </button>
+            <button className="ql-strike">
+
+            </button>
+            <button className="ql-link">
+
+            </button>
+        </div>
+    );
 
 
     const getFileType = (url) => {
@@ -169,8 +169,8 @@ tracker.show_tasks()
     const [activeAccordion, setActiveAccordion] = useState('0');
 
     const handleSaveTemplate = () => {
-    setActiveAccordion('1'); // This will open the second accordion (eventKey="1")
-  };
+        setActiveAccordion('1'); // This will open the second accordion (eventKey="1")
+    };
 
     const [isLikeUid, setIsLikeUid] = useState([]);
 
@@ -237,7 +237,7 @@ tracker.show_tasks()
     };
 
 
-        const handleEditorChange1 = (value) => {
+    const handleEditorChange1 = (value) => {
         const wordCount = value.trim().split(/\s+/).length;
 
         if (wordCount <= MAX_DESCRIPTION_WORDS) {
@@ -251,7 +251,7 @@ tracker.show_tasks()
     };
 
 
-        const handleEditorChange2 = (value) => {
+    const handleEditorChange2 = (value) => {
         const wordCount = value.trim().split(/\s+/).length;
 
         if (wordCount <= MAX_DESCRIPTION_WORDS) {
@@ -265,7 +265,7 @@ tracker.show_tasks()
     };
 
 
-        const handleEditorChange3 = (value) => {
+    const handleEditorChange3 = (value) => {
         const wordCount = value.trim().split(/\s+/).length;
 
         if (wordCount <= MAX_DESCRIPTION_WORDS) {
@@ -1150,6 +1150,33 @@ tracker.show_tasks()
         }
     }
     const AssetGraphData = transformOverallAndSectionData(InsightsGraphData?.asset_data?.length > 0 ? InsightsGraphData?.asset_data : [])
+    
+    const coloringByStatus=(value)=>{
+        if(value=="Active" || value=="Inactive"){
+            return value.toLowerCase()
+        }else if(value=="Reject"){
+            return "rejected"
+        }else if(value=="On Hold"){
+            return "hold"
+        }else if(value=="Select"){
+            return "shortlisted"
+        }
+        
+    }
+    const iconByStatus=(value)=>{
+        if(value=="Active"){
+            return 'far fa-check-circle'
+        }else if(value=="Inactive"){
+            return 'fa fa-minus'
+        }else if(value=="Reject"){
+            return "far fa-times-circle"
+        }else if(value=="On Hold"){
+            return "fa fa-ban"
+        }else if(value=="Select"){
+            return "fa fa-check-circle"
+        }
+        
+    }
     // console.log(assignmentReviewList)
     // console.log('section', sectionWiseData)
     // console.log(questionWiseData)
@@ -1158,15 +1185,16 @@ tracker.show_tasks()
     console.log(groupParameterId)
     console.log(ListData)
     console.log(mode)
+    console.log('=======================ListShow', ListShow, ListData)
     return (
         <>
             <Sidebar />
             <Header />
             {/* {isLoading && (
-        <div className="loader-overlay">
-          <Spinner animation="border" role="status" className="ml-3" />
-        </div>
-      )} */}
+                <div className="loader-overlay">
+                    <Spinner animation="border" role="status" className="ml-3" />
+                </div>
+            )} */}
 
             <div className="page-body ps-0">
                 <Container fluid className="bg-white">
@@ -1411,7 +1439,7 @@ tracker.show_tasks()
                                                                             <span className="tag tag-lightprimery">Recall</span>
                                                                         </td>
                                                                         <td>
-                                                                            <span className="dic_tag inactive"><i class="fa fa-minus"></i> {item?.job_applicant_status}</span>
+                                                                            <span className={`dic_tag ${coloringByStatus(item?.job_applicant_status)}`}><i class={iconByStatus(item?.job_applicant_status)}></i> {item?.job_applicant_status=="Reject"?"Rejected":item?.job_applicant_status=="Select"?"Selected":item?.job_applicant_status}</span>
                                                                         </td>
                                                                         <td className="action" style={{ width: "42px" }}>
                                                                             <Dropdown className="action_dropdown">
@@ -2846,7 +2874,7 @@ tracker.show_tasks()
                                     <Card className="rounded border-0 review_card">
                                         <div className="p-3 tab-content">
                                             <div className="row g-0 "  >
-                                                <CandidateChat />
+                                                <CandidateChat jobDetails={jobDetails} />
                                             </div>
                                         </div>
                                     </Card>
@@ -3059,7 +3087,7 @@ tracker.show_tasks()
                                                                 id="inputText5"
                                                                 aria-describedby="passwordHelpBlock"
                                                                 placeholder="Every 1"
-                                                                style={{height: '38px'}}
+                                                                style={{ height: '38px' }}
                                                             />
                                                         </div>
                                                         <div className="col-md-2  ps-1 pe-1">
@@ -3116,16 +3144,16 @@ tracker.show_tasks()
                                                     </Form.Label>
 
                                                     <div className="texteditor_warp" onClick={handleWrapperClick}>
-                                                            <ReactQuill
-                                                                value={description}
-                                                                onChange={handleEditorChange}
-                                                                theme="snow"
-                                                                ref={quillRef}
-                                                                className="custom-quill"
-                                                                modules={{
-                                                                    toolbar: [["bold", "italic", "underline", "strike"], ["link"]],
-                                                                }}
-                                                            />
+                                                        <ReactQuill
+                                                            value={description}
+                                                            onChange={handleEditorChange}
+                                                            theme="snow"
+                                                            ref={quillRef}
+                                                            className="custom-quill"
+                                                            modules={{
+                                                                toolbar: [["bold", "italic", "underline", "strike"], ["link"]],
+                                                            }}
+                                                        />
 
 
                                                     </div>
@@ -3137,10 +3165,10 @@ tracker.show_tasks()
                                                             label={`Do not prompt me to edit emails every time i enable automation. `}
                                                         />
 
-                                                        <Button variant="primary" style={{ color: '#fff' }}  onClick={handleSaveTemplate}  >Save Template</Button>
+                                                        <Button variant="primary" style={{ color: '#fff' }} onClick={handleSaveTemplate}  >Save Template</Button>
                                                     </div>
 
-                                                    {descriptionError && ( 
+                                                    {descriptionError && (
                                                         <div className="error">{descriptionError}</div>
                                                     )}
                                                     {errors.detailed_description && (
@@ -3255,7 +3283,7 @@ tracker.show_tasks()
                                             className="mb-3"
                                         >
                                             <Tab eventKey="Application" title="Application">
-                                            
+
 
                                                 <Form.Group className="mb-2" controlId="jobDescription">
                                                     <Form.Label>
@@ -3319,44 +3347,44 @@ tracker.show_tasks()
                                             label="Send Auto Response to user who have been shortlised"
                                         />
 
-                                       
-                                        
-                                                <Form.Group className="mb-2" controlId="jobDescription">
-                                                    <Form.Label>
-                                                        Message Template
-                                                    </Form.Label>
-
-                                                    <div className="texteditor_warp" onClick={handleWrapperClick}>
-                                                        <ReactQuill
-                                                            value={description}
-                                                            onChange={handleEditorChange3}
-                                                            theme="snow"
-                                                            ref={quillRef}
-                                                            modules={{
-                                                                toolbar: [["bold", "italic", "underline", "strike"], ["link"]],
-                                                            }}
-                                                        />
 
 
-                                                    </div>
+                                        <Form.Group className="mb-2" controlId="jobDescription">
+                                            <Form.Label>
+                                                Message Template
+                                            </Form.Label>
 
-                                                    <div className="d-flex justify-content-between custom-checkbox mt-3">
-                                                        <Form.Check // prettier-ignore
-                                                            type="checkbox"
-                                                            id={`default-checkbox`}
-                                                            label={`Do not prompt me to edit emails every time i enable automation. `}
-                                                        />
+                                            <div className="texteditor_warp" onClick={handleWrapperClick}>
+                                                <ReactQuill
+                                                    value={description}
+                                                    onChange={handleEditorChange3}
+                                                    theme="snow"
+                                                    ref={quillRef}
+                                                    modules={{
+                                                        toolbar: [["bold", "italic", "underline", "strike"], ["link"]],
+                                                    }}
+                                                />
 
-                                                        <Button variant="primary" style={{ color: '#fff' }}  >Save Template</Button>
-                                                    </div>
 
-                                                    {descriptionError && (
-                                                        <div className="error">{descriptionError}</div>
-                                                    )}
-                                                    {errors.detailed_description && (
-                                                        <div className="error">{errors.detailed_description}</div>
-                                                    )}
-                                                </Form.Group>
+                                            </div>
+
+                                            <div className="d-flex justify-content-between custom-checkbox mt-3">
+                                                <Form.Check // prettier-ignore
+                                                    type="checkbox"
+                                                    id={`default-checkbox`}
+                                                    label={`Do not prompt me to edit emails every time i enable automation. `}
+                                                />
+
+                                                <Button variant="primary" style={{ color: '#fff' }}  >Save Template</Button>
+                                            </div>
+
+                                            {descriptionError && (
+                                                <div className="error">{descriptionError}</div>
+                                            )}
+                                            {errors.detailed_description && (
+                                                <div className="error">{errors.detailed_description}</div>
+                                            )}
+                                        </Form.Group>
                                     </div>
                                 </Accordion.Body>
                             </Accordion.Item>

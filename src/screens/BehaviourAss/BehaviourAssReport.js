@@ -159,7 +159,7 @@ const BehaviourAssReport = ({ behaviourReportModel, setBehaviourReportModel }) =
           <Modal.Title>Behavioral Assessment Report</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className="bg-white p-5 rounded text-center">
+          <div className="bg-white p-2 rounded text-center">
             <h5 className="mb-3">You have completed your assessment.</h5>
             <p className="disc-text"> You have completed the LYWO behavioral test, which is based on the classic DISC personality theory and assessment. This test helps us understand your natural tendencies, allowing us to tailor job roles and subsequent assessments to complement your traits. The test broadly categorizes all candidates into personality groups.</p>
             <Row className="mt-5 justify-content-center">
