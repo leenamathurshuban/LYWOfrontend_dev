@@ -942,7 +942,8 @@ ol.breadcrumb {
 .form_card {
   border-color: #eaecf0;
   box-shadow: 0 3px 5px rgb(0 0 0 / 8%);
-  min-height: 555px;
+  min-height: 82vh;
+  height: 100%;
 }
 
 .required.form-label:after {
@@ -6598,6 +6599,14 @@ select.select-transpant {
     thead {
       .border-b {
         border-bottom: solid 1px #D0D5DD;
+      }
+
+      th{
+        padding: 6px 10px;
+        line-height: 18px;
+        color: #475467;
+
+
       }
 
       strong {

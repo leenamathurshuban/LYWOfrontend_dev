@@ -821,7 +821,8 @@ ol.breadcrumb {
 .form_card {
   border-color: #eaecf0;
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.08);
-  min-height: 555px;
+  min-height: 82vh;
+  height: 100%;
 }
 
 .required.form-label:after {
@@ -5499,6 +5500,11 @@ select.select-transpant:hover, select.select-transpant:focus, select.select-tran
 
 .jobreview_data .table thead .border-b {
   border-bottom: solid 1px #D0D5DD;
+}
+.jobreview_data .table thead th {
+  padding: 6px 10px;
+  line-height: 18px;
+  color: #475467;
 }
 .jobreview_data .table thead strong {
   font-weight: 700;

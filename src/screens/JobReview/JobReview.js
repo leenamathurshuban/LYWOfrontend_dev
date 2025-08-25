@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import {
     Container, Row, Col, Tab, Nav, Card, Form, Button, InputGroup, Table, Offcanvas, Accordion, Badge, Stack, ProgressBar,
     Dropdown, OverlayTrigger, Tooltip, Tabs,
-    FormGroup
+    FormGroup, Modal
 } from "react-bootstrap";
 import Select from "react-select";
 import ReactQuill from "react-quill";
@@ -92,40 +92,40 @@ import CandidateChat from "../../components/Chats/CandidateChat";
 
 const JobReview = () => {
     const codeSnippet = `class WorkloadTracker:
-    def __init__(self):
-        self.tasks = []
+        def __init__(self):
+            self.tasks = []
 
-    def add_task(self, task, priority="Medium"):
-        self.tasks.append({"task": task, "priority": priority, "completed": False})
-        print(f"Added task: {task} (Priority: {priority})")
+        def add_task(self, task, priority="Medium"):
+            self.tasks.append({"task": task, "priority": priority, "completed": False})
+            print(f"Added task: {task} (Priority: {priority})")
 
-    def complete_task(self, task):
-        for t in self.tasks:
-            if t["task"] == task and not t["completed"]:
-                t["completed"] = True
-                print(f"Marked '{task}' as completed.")
+        def complete_task(self, task):
+            for t in self.tasks:
+                if t["task"] == task and not t["completed"]:
+                    t["completed"] = True
+                    print(f"Marked '{task}' as completed.")
+                    return
+            print(f"Task '{task}' not found or already completed.")
+
+        def show_tasks(self):
+            if not self.tasks:
+                print("No tasks available.")
                 return
-        print(f"Task '{task}' not found or already completed.")
 
-    def show_tasks(self):
-        if not self.tasks:
-            print("No tasks available.")
-            return
+            print("\nCurrent Tasks:")
+            for t in self.tasks:
+                status = "✅ Completed" if t["completed"] else "❌ Pending"
+                print(f"- {t['task']} (Priority: {t['priority']}) - {status}")
 
-        print("\nCurrent Tasks:")
-        for t in self.tasks:
-            status = "✅ Completed" if t["completed"] else "❌ Pending"
-            print(f"- {t['task']} (Priority: {t['priority']}) - {status}")
+    # Example Usage
+    tracker = WorkloadTracker()
+    tracker.add_task("Finish report", "High")
+    tracker.add_task("Reply to emails", "Low")
+    tracker.show_tasks()
+    tracker.complete_task("Finish report")
+    tracker.show_tasks()
 
-# Example Usage
-tracker = WorkloadTracker()
-tracker.add_task("Finish report", "High")
-tracker.add_task("Reply to emails", "Low")
-tracker.show_tasks()
-tracker.complete_task("Finish report")
-tracker.show_tasks()
-
-  `;
+    `;
 
     const CustomToolbar = () => (
         <div id="toolbar">
@@ -146,6 +146,12 @@ tracker.show_tasks()
             </button>
         </div>
     );
+
+
+    const [recallshow, recallsetShow] = useState(false);
+
+  const recallClose = () => recallsetShow(false);
+  const recallShow = () => recallsetShow(true);
 
 
     const getFileType = (url) => {
@@ -171,6 +177,8 @@ tracker.show_tasks()
     const handleSaveTemplate = () => {
         setActiveAccordion('1'); // This will open the second accordion (eventKey="1")
     };
+
+      const [modalShow, setModalShow] = React.useState(false);
 
     const [isLikeUid, setIsLikeUid] = useState([]);
 
@@ -1150,32 +1158,32 @@ tracker.show_tasks()
         }
     }
     const AssetGraphData = transformOverallAndSectionData(InsightsGraphData?.asset_data?.length > 0 ? InsightsGraphData?.asset_data : [])
-    
-    const coloringByStatus=(value)=>{
-        if(value=="Active" || value=="Inactive"){
+
+    const coloringByStatus = (value) => {
+        if (value == "Active" || value == "Inactive") {
             return value.toLowerCase()
-        }else if(value=="Reject"){
+        } else if (value == "Reject") {
             return "rejected"
-        }else if(value=="On Hold"){
+        } else if (value == "On Hold") {
             return "hold"
-        }else if(value=="Select"){
+        } else if (value == "Select") {
             return "shortlisted"
         }
-        
+
     }
-    const iconByStatus=(value)=>{
-        if(value=="Active"){
+    const iconByStatus = (value) => {
+        if (value == "Active") {
             return 'far fa-check-circle'
-        }else if(value=="Inactive"){
+        } else if (value == "Inactive") {
             return 'fa fa-minus'
-        }else if(value=="Reject"){
+        } else if (value == "Reject") {
             return "far fa-times-circle"
-        }else if(value=="On Hold"){
+        } else if (value == "On Hold") {
             return "fa fa-ban"
-        }else if(value=="Select"){
+        } else if (value == "Select") {
             return "fa fa-check-circle"
         }
-        
+
     }
     // console.log(assignmentReviewList)
     // console.log('section', sectionWiseData)
@@ -1191,10 +1199,10 @@ tracker.show_tasks()
             <Sidebar />
             <Header />
             {/* {isLoading && (
-                <div className="loader-overlay">
-                    <Spinner animation="border" role="status" className="ml-3" />
-                </div>
-            )} */}
+                    <div className="loader-overlay">
+                        <Spinner animation="border" role="status" className="ml-3" />
+                    </div>
+                )} */}
 
             <div className="page-body ps-0">
                 <Container fluid className="bg-white">
@@ -1240,7 +1248,7 @@ tracker.show_tasks()
                                     <Row className="hori_scroll evalutaion-page-tab-scroller">
                                         {ListShow && ListData?.length > 0 ? (
                                             <Card className="shadow-sm border-0 evaluations_data mt-4 rounded overflow-hidden">
-                                                <Card.Header className="py-2">
+                                                <Card.Header className="py-3">
                                                     <Row>
                                                         <Col md={6} className="d-flex">
                                                             <div className="d-inline">
@@ -1304,23 +1312,27 @@ tracker.show_tasks()
                                                 </Card.Header>
                                                 <Card.Body className="pt-2">
                                                     {/* <div className="applid-filters">
-                                                <span className="filter-tag">Filter 1 <i class="fa fa-times" aria-hidden="true"></i></span>
-                                                <span className="filter-tag">Filter 2 <i class="fa fa-times" aria-hidden="true"></i></span>
-                                                <span className="filter-tag">Filter 3 <i class="fa fa-times" aria-hidden="true"></i></span>
-                                                <span className="filter-tag">Filter 4 <i class="fa fa-times" aria-hidden="true"></i></span>
-                                            </div> */}
+                                                    <span className="filter-tag">Filter 1 <i class="fa fa-times" aria-hidden="true"></i></span>
+                                                    <span className="filter-tag">Filter 2 <i class="fa fa-times" aria-hidden="true"></i></span>
+                                                    <span className="filter-tag">Filter 3 <i class="fa fa-times" aria-hidden="true"></i></span>
+                                                    <span className="filter-tag">Filter 4 <i class="fa fa-times" aria-hidden="true"></i></span>
+                                                </div> */}
                                                     <div className="elv_datatable jobreview_data">
                                                         <Table striped className="m-0">
                                                             <thead>
                                                                 <tr>
                                                                     <th colSpan={1}>&nbsp;</th>
+                                                                    <th></th>
                                                                     <th colSpan={5} className="border-b">
                                                                         <div className="d-flex align-items-end justify-content-between">
                                                                             <strong>Details</strong><button type="button" className="btn btn-link font-sm pb-0"><i class="fas fa-plus-circle"></i></button>
                                                                         </div>
-                                                                    </th>
+                                                                    </th>  <th></th>
+
                                                                     <th colSpan={2} className="border-b"><strong>LYWO Score</strong></th>
-                                                                    <th colSpan={5} className="border-b"><strong>Progress</strong></th>
+                                                                    <th></th>
+                                                                    <th colSpan={6} className="border-b"><strong>Progress</strong></th>
+                                                                    <th></th>
                                                                     <th colSpan={2} className="border-b"><strong>Status</strong></th>
                                                                 </tr>
                                                                 <tr>
@@ -1370,19 +1382,23 @@ tracker.show_tasks()
                                                                         </span>
                                                                         Candidate Name
                                                                     </th>
+                                                                    <th></th>
                                                                     <th>Education</th>
                                                                     <th>Industry</th>
                                                                     <th>Experience</th>
                                                                     <th>Available By</th>
                                                                     <th>Location</th>
+                                                                    <th></th>
                                                                     <th>Match</th>
                                                                     <th>Personality</th>
+                                                                    <th></th>
                                                                     <th>Step 3</th>
                                                                     <th>Step 4</th>
                                                                     <th>Step 5</th>
                                                                     <th>Step 6</th>
                                                                     <th>Score</th>
                                                                     <th>Tag</th>
+                                                                    <th></th>
                                                                     <th>Decision</th>
                                                                     <th style={{ width: "42px" }}></th>
                                                                 </tr>
@@ -1390,7 +1406,7 @@ tracker.show_tasks()
                                                             <tbody>
                                                                 {ListData.map((item, index) => (
                                                                     <tr>
-                                                                        <td>
+                                                                        <td colSpan={2}>
                                                                             <Form.Check
                                                                                 className="custom-checkbox me-2_5"
                                                                                 name="group1"
@@ -1399,7 +1415,7 @@ tracker.show_tasks()
                                                                                 onChange={() => handleCheckBoxBtn(item?.uid)}
                                                                                 disabled={item?.job_applicant_status == "Reject"}
                                                                             />
-                                                                            <span className="font-weight-600" onClick={() => {
+                                                                            <span className="font-weight-600" style={{ textTransform: 'capitalize' }} onClick={() => {
                                                                                 setReviewModal(true)
                                                                                 setCandidateEmail(item?.job_applicant_profile?.user?.email)
                                                                             }}>
@@ -1417,11 +1433,25 @@ tracker.show_tasks()
                                                                         </span></td>
                                                                         <td>{item?.job_applicant_profile?.work_applicant?.[0]?.total_work_experience}</td>
                                                                         <td>{item?.job_applicant_profile?.availble_by}</td>
-                                                                        <td>{item?.job_applicant_profile?.current_location}</td>
+                                                                        <td colSpan={2} >{item?.job_applicant_profile?.current_location}</td>
                                                                         <td>{item?.job_match_score}%</td>
-                                                                        <td>
+                                                                        <td colSpan={2}>
                                                                             <div className="d-flex">
                                                                                 <img src={User01Gray} />
+
+                                                                                {/* <Select
+                                                                                    key={index}
+                                                                                    options={Object.entries(item?.job_applicant_profile?.personality || {}).map(
+                                                                                    ([key, value]) => ({
+                                                                                        value: value,
+                                                                                        label: `${value}%`
+                                                                                    })
+                                                                                    )}
+                                                                                    className="select-transpant"
+                                                                                    styles={customStyles}
+                                                                                    placeholder=""
+                                                                                /> */}
+
                                                                                 <select className="select-transpant">
                                                                                     {Object.entries(item?.job_applicant_profile?.personality).map(([key, value]) => (
                                                                                         <option>{value}%</option>
@@ -1435,11 +1465,12 @@ tracker.show_tasks()
                                                                         <td><span className="text-elipe-40">Under Review</span></td>
                                                                         <td><span className="text-elipe-40">Under Review</span></td>
                                                                         <td>76%</td>
-                                                                        <td>
-                                                                            <span className="tag tag-lightprimery">Recall</span>
+                                                                        <td colSpan={2} >
+                                                                            <span onClick={recallShow} className="tag tag-lightprimery" style={{cursor:'pointer'}} >Recall</span>
                                                                         </td>
-                                                                        <td>
-                                                                            <span className={`dic_tag ${coloringByStatus(item?.job_applicant_status)}`}><i class={iconByStatus(item?.job_applicant_status)}></i> {item?.job_applicant_status=="Reject"?"Rejected":item?.job_applicant_status=="Select"?"Selected":item?.job_applicant_status}</span>
+
+                                                                        <td >
+                                                                            <span className={`dic_tag ${coloringByStatus(item?.job_applicant_status)}`}><i class={iconByStatus(item?.job_applicant_status)}></i> {item?.job_applicant_status == "Reject" ? "Rejected" : item?.job_applicant_status == "Select" ? "Selected" : item?.job_applicant_status}</span>
                                                                         </td>
                                                                         <td className="action" style={{ width: "42px" }}>
                                                                             <Dropdown className="action_dropdown">
@@ -1466,6 +1497,12 @@ tracker.show_tasks()
                                                                                     <Dropdown.Item href={""} onClick={() => handleStatusGroup('Select', item?.uid)} disabled={item?.job_applicant_status == "Reject"}>
                                                                                         Select
                                                                                     </Dropdown.Item>
+
+
+                                                                                    <Dropdown.Item href={""} onClick={() => setModalShow(true)} >
+                                                                                        Send Message
+                                                                                    </Dropdown.Item>
+
                                                                                 </Dropdown.Menu>
                                                                             </Dropdown>
                                                                         </td>
@@ -1473,395 +1510,395 @@ tracker.show_tasks()
                                                                 ))}
 
                                                                 {/* <tr>
-                                                                    <td>
-                                                                        <Form.Check
-                                                                            className="custom-checkbox me-2_5"
-                                                                            name="group1"
-                                                                            type="checkbox"
+                                                                        <td>
+                                                                            <Form.Check
+                                                                                className="custom-checkbox me-2_5"
+                                                                                name="group1"
+                                                                                type="checkbox"
 
-                                                                        />
-                                                                        <span className="font-weight-600">
-                                                                            Sandeep Kattamuri
-                                                                        </span>
-                                                                    </td>
-                                                                    <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
-                                                                    <td><span className="text-elipe-100">Pharmaceutical</span></td>
-                                                                    <td>5 Years</td>
-                                                                    <td>15/09/2024</td>
-                                                                    <td>Hyderabad</td>
-                                                                    <td>60%</td>
-                                                                    <td>
-                                                                        <div className="d-flex">
-                                                                            <img src={User01Gray} />
-                                                                            <select className="select-transpant">
-                                                                                <option>76%</option>
-                                                                                <option>70%</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>Invited</td>
-                                                                    <td><span className="text-elipe-40">Under Review</span></td>
-                                                                    <td><span className="text-elipe-40">Under Review</span></td>
-                                                                    <td><span className="text-elipe-40">Under Review</span></td>
-                                                                    <td>76%</td>
-                                                                    <td>
-                                                                        <span className="tag tag-lightprimery">Revisit</span>
-                                                                    </td>
-                                                                    <td>
-                                                                        <span className="dic_tag active"><i class="far fa-check-circle"></i> Active</span>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <Form.Check
-                                                                            className="custom-checkbox me-2_5"
-                                                                            name="group1"
-                                                                            type="checkbox"
+                                                                            />
+                                                                            <span className="font-weight-600">
+                                                                                Sandeep Kattamuri
+                                                                            </span>
+                                                                        </td>
+                                                                        <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
+                                                                        <td><span className="text-elipe-100">Pharmaceutical</span></td>
+                                                                        <td>5 Years</td>
+                                                                        <td>15/09/2024</td>
+                                                                        <td>Hyderabad</td>
+                                                                        <td>60%</td>
+                                                                        <td>
+                                                                            <div className="d-flex">
+                                                                                <img src={User01Gray} />
+                                                                                <select className="select-transpant">
+                                                                                    <option>76%</option>
+                                                                                    <option>70%</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>Invited</td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td>
+                                                                        <td>76%</td>
+                                                                        <td>
+                                                                            <span className="tag tag-lightprimery">Revisit</span>
+                                                                        </td>
+                                                                        <td>
+                                                                            <span className="dic_tag active"><i class="far fa-check-circle"></i> Active</span>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <Form.Check
+                                                                                className="custom-checkbox me-2_5"
+                                                                                name="group1"
+                                                                                type="checkbox"
 
-                                                                        />
-                                                                        <span className="font-weight-600">
-                                                                            Sandeep Kattamuri
-                                                                        </span>
-                                                                    </td>
-                                                                    <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
-                                                                    <td><span className="text-elipe-100">Pharmaceutical</span></td>
-                                                                    <td>5 Years</td>
-                                                                    <td>15/09/2024</td>
-                                                                    <td>Hyderabad</td>
-                                                                    <td>80%</td>
-                                                                    <td>
-                                                                        <div className="d-flex">
-                                                                            <img src={User01Gray} />
-                                                                            <select className="select-transpant">
-                                                                                <option>76%</option>
-                                                                                <option>70%</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>Invited</td>
-                                                                    <td><span className="text-elipe-40">Under Review</span></td>
-                                                                    <td><span className="text-elipe-40">Under Review</span></td>
-                                                                    <td><span className="text-elipe-40">Under Review</span></td>
-                                                                    <td>76%</td>
-                                                                    <td>
-                                                                        <span className="tag tag-lightprimery">Recall</span>
-                                                                    </td>
-                                                                    <td>
-                                                                        <span className="dic_tag rejected"><i class="far fa-times-circle"></i> Rejected</span>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <Form.Check
-                                                                            className="custom-checkbox me-2_5"
-                                                                            name="group1"
-                                                                            type="checkbox"
+                                                                            />
+                                                                            <span className="font-weight-600">
+                                                                                Sandeep Kattamuri
+                                                                            </span>
+                                                                        </td>
+                                                                        <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
+                                                                        <td><span className="text-elipe-100">Pharmaceutical</span></td>
+                                                                        <td>5 Years</td>
+                                                                        <td>15/09/2024</td>
+                                                                        <td>Hyderabad</td>
+                                                                        <td>80%</td>
+                                                                        <td>
+                                                                            <div className="d-flex">
+                                                                                <img src={User01Gray} />
+                                                                                <select className="select-transpant">
+                                                                                    <option>76%</option>
+                                                                                    <option>70%</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>Invited</td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td>
+                                                                        <td>76%</td>
+                                                                        <td>
+                                                                            <span className="tag tag-lightprimery">Recall</span>
+                                                                        </td>
+                                                                        <td>
+                                                                            <span className="dic_tag rejected"><i class="far fa-times-circle"></i> Rejected</span>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <Form.Check
+                                                                                className="custom-checkbox me-2_5"
+                                                                                name="group1"
+                                                                                type="checkbox"
 
-                                                                        />
-                                                                        <span className="font-weight-600">
-                                                                            Sandeep Kattamuri
-                                                                        </span>
-                                                                    </td>
-                                                                    <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
-                                                                    <td><span className="text-elipe-100">Pharmaceutical</span></td>
-                                                                    <td>5 Years</td>
-                                                                    <td>15/09/2024</td>
-                                                                    <td>Hyderabad</td>
-                                                                    <td>40%</td>
-                                                                    <td>
-                                                                        <div className="d-flex">
-                                                                            <img src={User01Gray} />
-                                                                            <select className="select-transpant">
-                                                                                <option>76%</option>
-                                                                                <option>70%</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>Invited</td>
-                                                                    <td><span className="text-elipe-40">Under Review</span></td>
-                                                                    <td><span className="text-elipe-40">Under Review</span></td>
-                                                                    <td><span className="text-elipe-40">Under Review</span></td>
-                                                                    <td>76%</td>
-                                                                    <td>
-                                                                        <span className="tag tag-lightprimery">Recall</span>
-                                                                    </td>
-                                                                    <td>
-                                                                        <span className="dic_tag hold"><i class="fa fa-ban"></i> On Hold</span>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <Form.Check
-                                                                            className="custom-checkbox me-2_5"
-                                                                            name="group1"
-                                                                            type="checkbox"
+                                                                            />
+                                                                            <span className="font-weight-600">
+                                                                                Sandeep Kattamuri
+                                                                            </span>
+                                                                        </td>
+                                                                        <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
+                                                                        <td><span className="text-elipe-100">Pharmaceutical</span></td>
+                                                                        <td>5 Years</td>
+                                                                        <td>15/09/2024</td>
+                                                                        <td>Hyderabad</td>
+                                                                        <td>40%</td>
+                                                                        <td>
+                                                                            <div className="d-flex">
+                                                                                <img src={User01Gray} />
+                                                                                <select className="select-transpant">
+                                                                                    <option>76%</option>
+                                                                                    <option>70%</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>Invited</td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td>
+                                                                        <td>76%</td>
+                                                                        <td>
+                                                                            <span className="tag tag-lightprimery">Recall</span>
+                                                                        </td>
+                                                                        <td>
+                                                                            <span className="dic_tag hold"><i class="fa fa-ban"></i> On Hold</span>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <Form.Check
+                                                                                className="custom-checkbox me-2_5"
+                                                                                name="group1"
+                                                                                type="checkbox"
 
-                                                                        />
-                                                                        <span className="font-weight-600">
-                                                                            Sandeep Kattamuri
-                                                                        </span>
-                                                                    </td>
-                                                                    <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
-                                                                    <td><span className="text-elipe-100">Pharmaceutical</span></td>
-                                                                    <td>5 Years</td>
-                                                                    <td>15/09/2024</td>
-                                                                    <td>Hyderabad</td>
-                                                                    <td>40%</td>
-                                                                    <td>
-                                                                        <div className="d-flex">
-                                                                            <img src={User01Gray} />
-                                                                            <select className="select-transpant">
-                                                                                <option>76%</option>
-                                                                                <option>70%</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>Invited</td>
-                                                                    <td><span className="text-elipe-40">Under Review</span></td>
-                                                                    <td><span className="text-elipe-40">Under Review</span></td>
-                                                                    <td><span className="text-elipe-40">Under Review</span></td>
-                                                                    <td>76%</td>
-                                                                    <td>
-                                                                        <span className="tag tag-lightprimery">Recall</span>
-                                                                    </td>
-                                                                    <td>
-                                                                        <span className="dic_tag Pending"><i class="far fa-circle"></i> Pending</span>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <Form.Check
-                                                                            className="custom-checkbox me-2_5"
-                                                                            name="group1"
-                                                                            type="checkbox"
+                                                                            />
+                                                                            <span className="font-weight-600">
+                                                                                Sandeep Kattamuri
+                                                                            </span>
+                                                                        </td>
+                                                                        <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
+                                                                        <td><span className="text-elipe-100">Pharmaceutical</span></td>
+                                                                        <td>5 Years</td>
+                                                                        <td>15/09/2024</td>
+                                                                        <td>Hyderabad</td>
+                                                                        <td>40%</td>
+                                                                        <td>
+                                                                            <div className="d-flex">
+                                                                                <img src={User01Gray} />
+                                                                                <select className="select-transpant">
+                                                                                    <option>76%</option>
+                                                                                    <option>70%</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>Invited</td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td>
+                                                                        <td>76%</td>
+                                                                        <td>
+                                                                            <span className="tag tag-lightprimery">Recall</span>
+                                                                        </td>
+                                                                        <td>
+                                                                            <span className="dic_tag Pending"><i class="far fa-circle"></i> Pending</span>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <Form.Check
+                                                                                className="custom-checkbox me-2_5"
+                                                                                name="group1"
+                                                                                type="checkbox"
 
-                                                                        />
-                                                                        <span className="font-weight-600">
-                                                                            Sandeep Kattamuri
-                                                                        </span>
-                                                                    </td>
-                                                                    <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
-                                                                    <td><span className="text-elipe-100">Pharmaceutical</span></td>
-                                                                    <td>5 Years</td>
-                                                                    <td>15/09/2024</td>
-                                                                    <td>Hyderabad</td>
-                                                                    <td>40%</td>
-                                                                    <td>
-                                                                        <div className="d-flex">
-                                                                            <img src={User01Gray} />
-                                                                            <select className="select-transpant">
-                                                                                <option>76%</option>
-                                                                                <option>70%</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>Invited</td>
-                                                                    <td><span className="text-elipe-40">Under Review</span></td>
-                                                                    <td><span className="text-elipe-40">Under Review</span></td>
-                                                                    <td><span className="text-elipe-40">Under Review</span></td>
-                                                                    <td>76%</td>
-                                                                    <td>
-                                                                        <span className="tag tag-lightprimery">Recall</span>
-                                                                    </td>
-                                                                    <td>
-                                                                        <span className="dic_tag shortlisted"><i class="fa fa-check-circle"></i> Shortlisted</span>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <Form.Check
-                                                                            className="custom-checkbox me-2_5"
-                                                                            name="group1"
-                                                                            type="checkbox"
+                                                                            />
+                                                                            <span className="font-weight-600">
+                                                                                Sandeep Kattamuri
+                                                                            </span>
+                                                                        </td>
+                                                                        <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
+                                                                        <td><span className="text-elipe-100">Pharmaceutical</span></td>
+                                                                        <td>5 Years</td>
+                                                                        <td>15/09/2024</td>
+                                                                        <td>Hyderabad</td>
+                                                                        <td>40%</td>
+                                                                        <td>
+                                                                            <div className="d-flex">
+                                                                                <img src={User01Gray} />
+                                                                                <select className="select-transpant">
+                                                                                    <option>76%</option>
+                                                                                    <option>70%</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>Invited</td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td>
+                                                                        <td>76%</td>
+                                                                        <td>
+                                                                            <span className="tag tag-lightprimery">Recall</span>
+                                                                        </td>
+                                                                        <td>
+                                                                            <span className="dic_tag shortlisted"><i class="fa fa-check-circle"></i> Shortlisted</span>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <Form.Check
+                                                                                className="custom-checkbox me-2_5"
+                                                                                name="group1"
+                                                                                type="checkbox"
 
-                                                                        />
-                                                                        <span className="font-weight-600">
-                                                                            Sandeep Kattamuri
-                                                                        </span>
-                                                                    </td>
-                                                                    <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
-                                                                    <td><span className="text-elipe-100">Pharmaceutical</span></td>
-                                                                    <td>5 Years</td>
-                                                                    <td>15/09/2024</td>
-                                                                    <td>Hyderabad</td>
-                                                                    <td>40%</td>
-                                                                    <td>
-                                                                        <div className="d-flex">
-                                                                            <img src={User01Gray} />
-                                                                            <select className="select-transpant">
-                                                                                <option>76%</option>
-                                                                                <option>70%</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>Invited</td>
-                                                                    <td><span className="text-elipe-40">Under Review</span></td>
-                                                                    <td><span className="text-elipe-40">Under Review</span></td>
-                                                                    <td><span className="text-elipe-40">Under Review</span></td>
-                                                                    <td>76%</td>
-                                                                    <td>
-                                                                        <span className="tag tag-lightprimery">Recall</span>
-                                                                    </td>
-                                                                    <td>
-                                                                        <span className="dic_tag Pending"><i class="far fa-circle"></i> Pending</span>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <Form.Check
-                                                                            className="custom-checkbox me-2_5"
-                                                                            name="group1"
-                                                                            type="checkbox"
+                                                                            />
+                                                                            <span className="font-weight-600">
+                                                                                Sandeep Kattamuri
+                                                                            </span>
+                                                                        </td>
+                                                                        <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
+                                                                        <td><span className="text-elipe-100">Pharmaceutical</span></td>
+                                                                        <td>5 Years</td>
+                                                                        <td>15/09/2024</td>
+                                                                        <td>Hyderabad</td>
+                                                                        <td>40%</td>
+                                                                        <td>
+                                                                            <div className="d-flex">
+                                                                                <img src={User01Gray} />
+                                                                                <select className="select-transpant">
+                                                                                    <option>76%</option>
+                                                                                    <option>70%</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>Invited</td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td>
+                                                                        <td>76%</td>
+                                                                        <td>
+                                                                            <span className="tag tag-lightprimery">Recall</span>
+                                                                        </td>
+                                                                        <td>
+                                                                            <span className="dic_tag Pending"><i class="far fa-circle"></i> Pending</span>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <Form.Check
+                                                                                className="custom-checkbox me-2_5"
+                                                                                name="group1"
+                                                                                type="checkbox"
 
-                                                                        />
-                                                                        <span className="font-weight-600">
-                                                                            Sandeep Kattamuri
-                                                                        </span>
-                                                                    </td>
-                                                                    <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
-                                                                    <td><span className="text-elipe-100">Pharmaceutical</span></td>
-                                                                    <td>5 Years</td>
-                                                                    <td>15/09/2024</td>
-                                                                    <td>Hyderabad</td>
-                                                                    <td>40%</td>
-                                                                    <td>
-                                                                        <div className="d-flex">
-                                                                            <img src={User01Gray} />
-                                                                            <select className="select-transpant">
-                                                                                <option>76%</option>
-                                                                                <option>70%</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>Invited</td>
-                                                                    <td><span className="text-elipe-40">Under Review</span></td>
-                                                                    <td><span className="text-elipe-40">Under Review</span></td>
-                                                                    <td><span className="text-elipe-40">Under Review</span></td>
-                                                                    <td>76%</td>
-                                                                    <td>
-                                                                        <span className="tag tag-lightprimery">Recall</span>
-                                                                    </td>
-                                                                    <td>
-                                                                        <span className="dic_tag hold"><i class="fa fa-ban"></i> On Hold</span>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <Form.Check
-                                                                            className="custom-checkbox me-2_5"
-                                                                            name="group1"
-                                                                            type="checkbox"
+                                                                            />
+                                                                            <span className="font-weight-600">
+                                                                                Sandeep Kattamuri
+                                                                            </span>
+                                                                        </td>
+                                                                        <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
+                                                                        <td><span className="text-elipe-100">Pharmaceutical</span></td>
+                                                                        <td>5 Years</td>
+                                                                        <td>15/09/2024</td>
+                                                                        <td>Hyderabad</td>
+                                                                        <td>40%</td>
+                                                                        <td>
+                                                                            <div className="d-flex">
+                                                                                <img src={User01Gray} />
+                                                                                <select className="select-transpant">
+                                                                                    <option>76%</option>
+                                                                                    <option>70%</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>Invited</td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td>
+                                                                        <td>76%</td>
+                                                                        <td>
+                                                                            <span className="tag tag-lightprimery">Recall</span>
+                                                                        </td>
+                                                                        <td>
+                                                                            <span className="dic_tag hold"><i class="fa fa-ban"></i> On Hold</span>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <Form.Check
+                                                                                className="custom-checkbox me-2_5"
+                                                                                name="group1"
+                                                                                type="checkbox"
 
-                                                                        />
-                                                                        <span className="font-weight-600">
-                                                                            Sandeep Kattamuri
-                                                                        </span>
-                                                                    </td>
-                                                                    <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
-                                                                    <td><span className="text-elipe-100">Pharmaceutical</span></td>
-                                                                    <td>5 Years</td>
-                                                                    <td>15/09/2024</td>
-                                                                    <td>Hyderabad</td>
-                                                                    <td>40%</td>
-                                                                    <td>
-                                                                        <div className="d-flex">
-                                                                            <img src={User01Gray} />
-                                                                            <select className="select-transpant">
-                                                                                <option>76%</option>
-                                                                                <option>70%</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>Invited</td>
-                                                                    <td><span className="text-elipe-40">Under Review</span></td>
-                                                                    <td><span className="text-elipe-40">Under Review</span></td>
-                                                                    <td><span className="text-elipe-40">Under Review</span></td>
-                                                                    <td>76%</td>
-                                                                    <td>
-                                                                        <span className="tag tag-lightprimery">Recall</span>
-                                                                    </td>
-                                                                    <td>
-                                                                        <span className="dic_tag hold"><i class="fa fa-ban"></i> On Hold</span>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <Form.Check
-                                                                            className="custom-checkbox me-2_5"
-                                                                            name="group1"
-                                                                            type="checkbox"
+                                                                            />
+                                                                            <span className="font-weight-600">
+                                                                                Sandeep Kattamuri
+                                                                            </span>
+                                                                        </td>
+                                                                        <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
+                                                                        <td><span className="text-elipe-100">Pharmaceutical</span></td>
+                                                                        <td>5 Years</td>
+                                                                        <td>15/09/2024</td>
+                                                                        <td>Hyderabad</td>
+                                                                        <td>40%</td>
+                                                                        <td>
+                                                                            <div className="d-flex">
+                                                                                <img src={User01Gray} />
+                                                                                <select className="select-transpant">
+                                                                                    <option>76%</option>
+                                                                                    <option>70%</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>Invited</td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td>
+                                                                        <td>76%</td>
+                                                                        <td>
+                                                                            <span className="tag tag-lightprimery">Recall</span>
+                                                                        </td>
+                                                                        <td>
+                                                                            <span className="dic_tag hold"><i class="fa fa-ban"></i> On Hold</span>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <Form.Check
+                                                                                className="custom-checkbox me-2_5"
+                                                                                name="group1"
+                                                                                type="checkbox"
 
-                                                                        />
-                                                                        <span className="font-weight-600">
-                                                                            Sandeep Kattamuri
-                                                                        </span>
-                                                                    </td>
-                                                                    <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
-                                                                    <td><span className="text-elipe-100">Pharmaceutical</span></td>
-                                                                    <td>5 Years</td>
-                                                                    <td>15/09/2024</td>
-                                                                    <td>Hyderabad</td>
-                                                                    <td>40%</td>
-                                                                    <td>
-                                                                        <div className="d-flex">
-                                                                            <img src={User01Gray} />
-                                                                            <select className="select-transpant">
-                                                                                <option>76%</option>
-                                                                                <option>70%</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>Invited</td>
-                                                                    <td><span className="text-elipe-40">Under Review</span></td>
-                                                                    <td><span className="text-elipe-40">Under Review</span></td>
-                                                                    <td><span className="text-elipe-40">Under Review</span></td>
-                                                                    <td>76%</td>
-                                                                    <td>
-                                                                        <span className="tag tag-lightprimery">Recall</span>
-                                                                    </td>
-                                                                    <td>
-                                                                        <span className="dic_tag Pending"><i class="far fa-circle"></i> Pending</span>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <Form.Check
-                                                                            className="custom-checkbox me-2_5"
-                                                                            name="group1"
-                                                                            type="checkbox"
+                                                                            />
+                                                                            <span className="font-weight-600">
+                                                                                Sandeep Kattamuri
+                                                                            </span>
+                                                                        </td>
+                                                                        <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
+                                                                        <td><span className="text-elipe-100">Pharmaceutical</span></td>
+                                                                        <td>5 Years</td>
+                                                                        <td>15/09/2024</td>
+                                                                        <td>Hyderabad</td>
+                                                                        <td>40%</td>
+                                                                        <td>
+                                                                            <div className="d-flex">
+                                                                                <img src={User01Gray} />
+                                                                                <select className="select-transpant">
+                                                                                    <option>76%</option>
+                                                                                    <option>70%</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>Invited</td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td>
+                                                                        <td>76%</td>
+                                                                        <td>
+                                                                            <span className="tag tag-lightprimery">Recall</span>
+                                                                        </td>
+                                                                        <td>
+                                                                            <span className="dic_tag Pending"><i class="far fa-circle"></i> Pending</span>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <Form.Check
+                                                                                className="custom-checkbox me-2_5"
+                                                                                name="group1"
+                                                                                type="checkbox"
 
-                                                                        />
-                                                                        <span className="font-weight-600">
-                                                                            Sandeep Kattamuri
-                                                                        </span>
-                                                                    </td>
-                                                                    <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
-                                                                    <td><span className="text-elipe-100">Pharmaceutical</span></td>
-                                                                    <td>5 Years</td>
-                                                                    <td>15/09/2024</td>
-                                                                    <td>Hyderabad</td>
-                                                                    <td>40%</td>
-                                                                    <td>
-                                                                        <div className="d-flex">
-                                                                            <img src={User01Gray} />
-                                                                            <select className="select-transpant">
-                                                                                <option>76%</option>
-                                                                                <option>70%</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>Invited</td>
-                                                                    <td><span className="text-elipe-40">Under Review</span></td>
-                                                                    <td><span className="text-elipe-40">Under Review</span></td>
-                                                                    <td><span className="text-elipe-40">Under Review</span></td>
-                                                                    <td>76%</td>
-                                                                    <td>
-                                                                        <span className="tag tag-lightprimery">Recall</span>
-                                                                    </td>
-                                                                    <td>
-                                                                        <span className="dic_tag shortlisted"><i class="fa fa-check-circle"></i> Shortlisted</span>
-                                                                    </td>
-                                                                </tr> */}
+                                                                            />
+                                                                            <span className="font-weight-600">
+                                                                                Sandeep Kattamuri
+                                                                            </span>
+                                                                        </td>
+                                                                        <td><span className="text-elipe-100">Masters in Biomedicine</span></td>
+                                                                        <td><span className="text-elipe-100">Pharmaceutical</span></td>
+                                                                        <td>5 Years</td>
+                                                                        <td>15/09/2024</td>
+                                                                        <td>Hyderabad</td>
+                                                                        <td>40%</td>
+                                                                        <td>
+                                                                            <div className="d-flex">
+                                                                                <img src={User01Gray} />
+                                                                                <select className="select-transpant">
+                                                                                    <option>76%</option>
+                                                                                    <option>70%</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>Invited</td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td>
+                                                                        <td>76%</td>
+                                                                        <td>
+                                                                            <span className="tag tag-lightprimery">Recall</span>
+                                                                        </td>
+                                                                        <td>
+                                                                            <span className="dic_tag shortlisted"><i class="fa fa-check-circle"></i> Shortlisted</span>
+                                                                        </td>
+                                                                    </tr> */}
                                                             </tbody>
                                                             <tfoot>
                                                                 <tr>
@@ -1887,40 +1924,40 @@ tracker.show_tasks()
                                                             </div>
                                                             <Card.Body>
                                                                 {/* {paraName?.parameter_name === "Screening" ? (
-                                                            <>
-                                                                <button type="button" onClick={() => {
-                                                                    setGroupModal(true)
-                                                                    setGroupParameterId(paraName?.uid)
-                                                                }} className="btn btn-link mb-3"><i className="fa fa-plus me-2"></i>Create a New Group</button>
-                                                                {paraName?.groups_parameter?.sort((a, b) => a.id - b.id)?.map((groupItem) => (
-                                                                    <>
+                                                                <>
+                                                                    <button type="button" onClick={() => {
+                                                                        setGroupModal(true)
+                                                                        setGroupParameterId(paraName?.uid)
+                                                                    }} className="btn btn-link mb-3"><i className="fa fa-plus me-2"></i>Create a New Group</button>
+                                                                    {paraName?.groups_parameter?.sort((a, b) => a.id - b.id)?.map((groupItem) => (
+                                                                        <>
+                                                                            <div className={`sts_databox ${groupItem?.group_name.toLowerCase()}`}>
+                                                                                <div className="d-flex justify-content-between">
+                                                                                    <h6>{groupItem?.group_name}<span className="count">{groupItem?.group_wise_applicant_count}</span></h6>
+                                                                                </div>
+                                                                                <div className="d-flex justify-content-between align-items-end">
+                                                                                    <Form>
+                                                                                        <Form.Check
+                                                                                            type="switch"
+                                                                                            id="custom-switch"
+                                                                                            label="Auto-Remind"
+                                                                                        />
+                                                                                    </Form>
+                                                                                    <button className="button" class="btn-transpant"><i class="fa fa-list-ul" aria-hidden="true"></i></button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </>
+                                                                    ))}
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    {paraName?.groups_parameter?.sort((a, b) => a.id - b.id)?.map((groupItem) => (
                                                                         <div className={`sts_databox ${groupItem?.group_name.toLowerCase()}`}>
-                                                                            <div className="d-flex justify-content-between">
-                                                                                <h6>{groupItem?.group_name}<span className="count">{groupItem?.group_wise_applicant_count}</span></h6>
-                                                                            </div>
-                                                                            <div className="d-flex justify-content-between align-items-end">
-                                                                                <Form>
-                                                                                    <Form.Check
-                                                                                        type="switch"
-                                                                                        id="custom-switch"
-                                                                                        label="Auto-Remind"
-                                                                                    />
-                                                                                </Form>
-                                                                                <button className="button" class="btn-transpant"><i class="fa fa-list-ul" aria-hidden="true"></i></button>
-                                                                            </div>
+                                                                            <h6>{groupItem?.group_name}<span className="count">{groupItem?.group_wise_applicant_count}</span></h6>
                                                                         </div>
-                                                                    </>
-                                                                ))}
-                                                            </>
-                                                        ) : (
-                                                            <>
-                                                                {paraName?.groups_parameter?.sort((a, b) => a.id - b.id)?.map((groupItem) => (
-                                                                    <div className={`sts_databox ${groupItem?.group_name.toLowerCase()}`}>
-                                                                        <h6>{groupItem?.group_name}<span className="count">{groupItem?.group_wise_applicant_count}</span></h6>
-                                                                    </div>
-                                                                ))}
-                                                            </>
-                                                        )} */}
+                                                                    ))}
+                                                                </>
+                                                            )} */}
                                                                 <button type="button" onClick={() => {
                                                                     setGroupModal(true)
                                                                     setGroupParameterId(paraName?.uid)
@@ -1949,11 +1986,11 @@ tracker.show_tasks()
                                                                                             />
                                                                                         </Form>
                                                                                         {/* <button className="button" class="btn-transpant" onClick={() => {
-                                                                                    handleListData(groupItem);
-                                                                                    setGroupParameterId(paraName?.uid)
-                                                                                    setGroupTitleName(groupItem?.group_name)
-                                                                                    setParamUid(groupItem?.uid)
-                                                                                }}><i class="fa fa-list-ul" aria-hidden="true"></i></button> */}
+                                                                                        handleListData(groupItem);
+                                                                                        setGroupParameterId(paraName?.uid)
+                                                                                        setGroupTitleName(groupItem?.group_name)
+                                                                                        setParamUid(groupItem?.uid)
+                                                                                    }}><i class="fa fa-list-ul" aria-hidden="true"></i></button> */}
                                                                                         <div className="right-cols">
                                                                                             <button className="button" class="btn-transpant me-2">
                                                                                                 <img src={trash} className="img-fluid" alt="Trash" />
@@ -1978,23 +2015,23 @@ tracker.show_tasks()
                                                                     ))}
                                                                 </div>
                                                                 {/* <div className="sts_databox excellent">
-                                                        <h6>Excellent<span className="count">40</span></h6>
-                                                    </div>
-                                                    <div className="sts_databox good">
-                                                        <h6>Good<span className="count">45</span></h6>
-                                                    </div>
-                                                    <div className="sts_databox average">
-                                                        <h6>Average<span className="count">45</span></h6>
-                                                    </div>
-                                                    <div className="sts_databox baverage">
-                                                        <h6>Below Average<span className="count">20</span></h6>
-                                                    </div>
-                                                    <div className="sts_databox hold">
-                                                        <h6>On Hold<span className="count">20</span></h6>
-                                                    </div>
-                                                    <div className="sts_databox rejected">
-                                                        <h6>Rejected<span className="count">20</span></h6>
-                                                    </div> */}
+                                                            <h6>Excellent<span className="count">40</span></h6>
+                                                        </div>
+                                                        <div className="sts_databox good">
+                                                            <h6>Good<span className="count">45</span></h6>
+                                                        </div>
+                                                        <div className="sts_databox average">
+                                                            <h6>Average<span className="count">45</span></h6>
+                                                        </div>
+                                                        <div className="sts_databox baverage">
+                                                            <h6>Below Average<span className="count">20</span></h6>
+                                                        </div>
+                                                        <div className="sts_databox hold">
+                                                            <h6>On Hold<span className="count">20</span></h6>
+                                                        </div>
+                                                        <div className="sts_databox rejected">
+                                                            <h6>Rejected<span className="count">20</span></h6>
+                                                        </div> */}
                                                             </Card.Body>
                                                         </Card>
                                                     </Col>
@@ -2010,216 +2047,216 @@ tracker.show_tasks()
                                             </>
                                         )}
                                         {/* <Col md={2}>
-                                            <Card className="status_cardpanel">
-                                                <div className="card-header">
-                                                    <h5>Behaviour <span className="count">150</span></h5>
-                                                    <button type="button"><i class="fa fa-ellipsis-h"></i></button>
-                                                </div>
-                                                <Card.Body>
-                                                    <div className="sts_databox incopmlate">
-                                                        <h6>Incomplete<span className="count">100</span></h6>
+                                                <Card className="status_cardpanel">
+                                                    <div className="card-header">
+                                                        <h5>Behaviour <span className="count">150</span></h5>
+                                                        <button type="button"><i class="fa fa-ellipsis-h"></i></button>
                                                     </div>
-                                                    <div className="sts_databox excellent">
-                                                        <h6>Excellent<span className="count">40</span></h6>
-                                                    </div>
-                                                    <div className="sts_databox good">
-                                                        <h6>Good<span className="count">45</span></h6>
-                                                    </div>
-                                                    <div className="sts_databox average">
-                                                        <h6>Average<span className="count">45</span></h6>
-                                                    </div>
-                                                    <div className="sts_databox baverage">
-                                                        <h6>Below Average<span className="count">20</span></h6>
-                                                    </div>
-                                                    <div className="sts_databox hold">
-                                                        <h6>On Hold<span className="count">20</span></h6>
-                                                    </div>
-                                                    <div className="sts_databox rejected">
-                                                        <h6>Rejected<span className="count">20</span></h6>
-                                                    </div>
-                                                </Card.Body>
-                                            </Card>
-                                        </Col>                                         */}
-                                        {/* <Col md={3}>
-                                            <Card className="status_cardpanel screening text-center">
-                                                <div className="card-header">
-                                                    <h5>Screening <span className="count">150</span></h5>
-                                                    <button type="button"><i class="fa fa-ellipsis-h"></i></button>
-                                                </div>
-                                                <Card.Body>
-                                                    <button type="button" onClick={() => setGroupModal(true)} className="btn btn-link mb-3"><i className="fa fa-plus me-2"></i>Create a New Group</button>
-                                                    <div className="sts_databoxlg incopmlate">
-                                                        <div className="d-flex justify-content-between">
+                                                    <Card.Body>
+                                                        <div className="sts_databox incopmlate">
                                                             <h6>Incomplete<span className="count">100</span></h6>
                                                         </div>
-                                                        <div className="d-flex justify-content-between align-items-end">
-                                                            <Form>
-                                                                <Form.Check
-                                                                    type="switch"
-                                                                    id="custom-switch"
-                                                                    label="Auto-Remind"
-                                                                />
-                                                            </Form>
-                                                            <button className="button" class="btn-transpant"><i class="fa fa-list-ul" aria-hidden="true"></i></button>
-                                                        </div>
-                                                    </div>
-                                                    <div className="sts_databoxlg excellent">
-                                                        <div className="d-flex justify-content-between">
+                                                        <div className="sts_databox excellent">
                                                             <h6>Excellent<span className="count">40</span></h6>
                                                         </div>
-                                                        <div className="d-flex justify-content-between align-items-end">
-                                                            <Form>
-                                                                <Form.Check
-                                                                    type="switch"
-                                                                    id="custom-switch"
-                                                                    label="Auto-Remind"
-                                                                />
-                                                            </Form>
-                                                            <button className="button" class="btn-transpant"><i class="fa fa-list-ul" aria-hidden="true"></i></button>
+                                                        <div className="sts_databox good">
+                                                            <h6>Good<span className="count">45</span></h6>
                                                         </div>
+                                                        <div className="sts_databox average">
+                                                            <h6>Average<span className="count">45</span></h6>
+                                                        </div>
+                                                        <div className="sts_databox baverage">
+                                                            <h6>Below Average<span className="count">20</span></h6>
+                                                        </div>
+                                                        <div className="sts_databox hold">
+                                                            <h6>On Hold<span className="count">20</span></h6>
+                                                        </div>
+                                                        <div className="sts_databox rejected">
+                                                            <h6>Rejected<span className="count">20</span></h6>
+                                                        </div>
+                                                    </Card.Body>
+                                                </Card>
+                                            </Col>                                         */}
+                                        {/* <Col md={3}>
+                                                <Card className="status_cardpanel screening text-center">
+                                                    <div className="card-header">
+                                                        <h5>Screening <span className="count">150</span></h5>
+                                                        <button type="button"><i class="fa fa-ellipsis-h"></i></button>
                                                     </div>
-                                                    <div className="sts_databoxlg good">
-                                                        <div className="d-flex justify-content-between">
-                                                            <h6>Good<span className="count">40</span></h6>
+                                                    <Card.Body>
+                                                        <button type="button" onClick={() => setGroupModal(true)} className="btn btn-link mb-3"><i className="fa fa-plus me-2"></i>Create a New Group</button>
+                                                        <div className="sts_databoxlg incopmlate">
+                                                            <div className="d-flex justify-content-between">
+                                                                <h6>Incomplete<span className="count">100</span></h6>
+                                                            </div>
+                                                            <div className="d-flex justify-content-between align-items-end">
+                                                                <Form>
+                                                                    <Form.Check
+                                                                        type="switch"
+                                                                        id="custom-switch"
+                                                                        label="Auto-Remind"
+                                                                    />
+                                                                </Form>
+                                                                <button className="button" class="btn-transpant"><i class="fa fa-list-ul" aria-hidden="true"></i></button>
+                                                            </div>
                                                         </div>
-                                                        <div className="d-flex justify-content-between align-items-end">
-                                                            <Form>
-                                                                <Form.Check
-                                                                    type="switch"
-                                                                    id="custom-switch"
-                                                                    label="Auto-Remind"
-                                                                />
-                                                            </Form>
-                                                            <button className="button" class="btn-transpant"><i class="fa fa-list-ul" aria-hidden="true"></i></button>
+                                                        <div className="sts_databoxlg excellent">
+                                                            <div className="d-flex justify-content-between">
+                                                                <h6>Excellent<span className="count">40</span></h6>
+                                                            </div>
+                                                            <div className="d-flex justify-content-between align-items-end">
+                                                                <Form>
+                                                                    <Form.Check
+                                                                        type="switch"
+                                                                        id="custom-switch"
+                                                                        label="Auto-Remind"
+                                                                    />
+                                                                </Form>
+                                                                <button className="button" class="btn-transpant"><i class="fa fa-list-ul" aria-hidden="true"></i></button>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div className="sts_databoxlg average">
-                                                        <div className="d-flex justify-content-between">
-                                                            <h6>Average<span className="count">40</span></h6>
+                                                        <div className="sts_databoxlg good">
+                                                            <div className="d-flex justify-content-between">
+                                                                <h6>Good<span className="count">40</span></h6>
+                                                            </div>
+                                                            <div className="d-flex justify-content-between align-items-end">
+                                                                <Form>
+                                                                    <Form.Check
+                                                                        type="switch"
+                                                                        id="custom-switch"
+                                                                        label="Auto-Remind"
+                                                                    />
+                                                                </Form>
+                                                                <button className="button" class="btn-transpant"><i class="fa fa-list-ul" aria-hidden="true"></i></button>
+                                                            </div>
                                                         </div>
-                                                        <div className="d-flex justify-content-between align-items-end">
-                                                            <Form>
-                                                                <Form.Check
-                                                                    type="switch"
-                                                                    id="custom-switch"
-                                                                    label="Auto-Remind"
-                                                                />
-                                                            </Form>
-                                                            <button className="button" class="btn-transpant"><i class="fa fa-list-ul" aria-hidden="true"></i></button>
+                                                        <div className="sts_databoxlg average">
+                                                            <div className="d-flex justify-content-between">
+                                                                <h6>Average<span className="count">40</span></h6>
+                                                            </div>
+                                                            <div className="d-flex justify-content-between align-items-end">
+                                                                <Form>
+                                                                    <Form.Check
+                                                                        type="switch"
+                                                                        id="custom-switch"
+                                                                        label="Auto-Remind"
+                                                                    />
+                                                                </Form>
+                                                                <button className="button" class="btn-transpant"><i class="fa fa-list-ul" aria-hidden="true"></i></button>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div className="sts_databoxlg baverage">
-                                                        <div className="d-flex justify-content-between">
-                                                            <h6>Below Average<span className="count">40</span></h6>
+                                                        <div className="sts_databoxlg baverage">
+                                                            <div className="d-flex justify-content-between">
+                                                                <h6>Below Average<span className="count">40</span></h6>
+                                                            </div>
+                                                            <div className="d-flex justify-content-between align-items-end">
+                                                                <Form>
+                                                                    <Form.Check
+                                                                        type="switch"
+                                                                        id="custom-switch"
+                                                                        label="Auto-Remind"
+                                                                    />
+                                                                </Form>
+                                                                <button className="button" class="btn-transpant"><i class="fa fa-list-ul" aria-hidden="true"></i></button>
+                                                            </div>
                                                         </div>
-                                                        <div className="d-flex justify-content-between align-items-end">
-                                                            <Form>
-                                                                <Form.Check
-                                                                    type="switch"
-                                                                    id="custom-switch"
-                                                                    label="Auto-Remind"
-                                                                />
-                                                            </Form>
-                                                            <button className="button" class="btn-transpant"><i class="fa fa-list-ul" aria-hidden="true"></i></button>
+                                                        <div className="sts_databoxlg hold">
+                                                            <div className="d-flex justify-content-between">
+                                                                <h6>On Hold<span className="count">40</span></h6>
+                                                            </div>
+                                                            <div className="d-flex justify-content-between align-items-end">
+                                                                <Form>
+                                                                    <Form.Check
+                                                                        type="switch"
+                                                                        id="custom-switch"
+                                                                        label="Auto-Remind"
+                                                                    />
+                                                                </Form>
+                                                                <button className="button" class="btn-transpant"><i class="fa fa-list-ul" aria-hidden="true"></i></button>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div className="sts_databoxlg hold">
-                                                        <div className="d-flex justify-content-between">
-                                                            <h6>On Hold<span className="count">40</span></h6>
+                                                        <div className="sts_databoxlg rejected">
+                                                            <div className="d-flex justify-content-between">
+                                                                <h6>Rejected<span className="count">40</span></h6>
+                                                            </div>
+                                                            <div className="d-flex justify-content-between align-items-end">
+                                                                <Form>
+                                                                    <Form.Check
+                                                                        type="switch"
+                                                                        id="custom-switch"
+                                                                        label="Auto-Remind"
+                                                                    />
+                                                                </Form>
+                                                                <button className="button" class="btn-transpant"><i class="fa fa-list-ul" aria-hidden="true"></i></button>
+                                                            </div>
                                                         </div>
-                                                        <div className="d-flex justify-content-between align-items-end">
-                                                            <Form>
-                                                                <Form.Check
-                                                                    type="switch"
-                                                                    id="custom-switch"
-                                                                    label="Auto-Remind"
-                                                                />
-                                                            </Form>
-                                                            <button className="button" class="btn-transpant"><i class="fa fa-list-ul" aria-hidden="true"></i></button>
-                                                        </div>
-                                                    </div>
-                                                    <div className="sts_databoxlg rejected">
-                                                        <div className="d-flex justify-content-between">
-                                                            <h6>Rejected<span className="count">40</span></h6>
-                                                        </div>
-                                                        <div className="d-flex justify-content-between align-items-end">
-                                                            <Form>
-                                                                <Form.Check
-                                                                    type="switch"
-                                                                    id="custom-switch"
-                                                                    label="Auto-Remind"
-                                                                />
-                                                            </Form>
-                                                            <button className="button" class="btn-transpant"><i class="fa fa-list-ul" aria-hidden="true"></i></button>
-                                                        </div>
-                                                    </div>
-                                                </Card.Body>
-                                            </Card>
-                                        </Col> */}
+                                                    </Card.Body>
+                                                </Card>
+                                            </Col> */}
                                         {/* <Col md={2}>
-                                            <Card className="status_cardpanel">
-                                                <div className="card-header">
-                                                    <h5>Tech-Quiz1 <span className="count">100</span></h5>
-                                                    <button type="button"><i class="fa fa-ellipsis-h"></i></button>
-                                                </div>
-                                                <Card.Body>
-                                                    <div className="text-center"><button type="button" className="btn btn-link mb-3"><i className="fa fa-plus me-2"></i></button></div>
-                                                    <div className="sts_databox incopmlate">
-                                                        <h6>Incomplete<span className="count">100</span></h6>
+                                                <Card className="status_cardpanel">
+                                                    <div className="card-header">
+                                                        <h5>Tech-Quiz1 <span className="count">100</span></h5>
+                                                        <button type="button"><i class="fa fa-ellipsis-h"></i></button>
                                                     </div>
-                                                    <div className="sts_databox excellent">
-                                                        <h6>Excellent<span className="count">40</span></h6>
+                                                    <Card.Body>
+                                                        <div className="text-center"><button type="button" className="btn btn-link mb-3"><i className="fa fa-plus me-2"></i></button></div>
+                                                        <div className="sts_databox incopmlate">
+                                                            <h6>Incomplete<span className="count">100</span></h6>
+                                                        </div>
+                                                        <div className="sts_databox excellent">
+                                                            <h6>Excellent<span className="count">40</span></h6>
+                                                        </div>
+                                                        <div className="sts_databox good">
+                                                            <h6>Good<span className="count">45</span></h6>
+                                                        </div>
+                                                        <div className="sts_databox average">
+                                                            <h6>Average<span className="count">45</span></h6>
+                                                        </div>
+                                                        <div className="sts_databox baverage">
+                                                            <h6>Below Average<span className="count">20</span></h6>
+                                                        </div>
+                                                        <div className="sts_databox hold">
+                                                            <h6>On Hold<span className="count">20</span></h6>
+                                                        </div>
+                                                        <div className="sts_databox rejected">
+                                                            <h6>Rejected<span className="count">20</span></h6>
+                                                        </div>
+                                                    </Card.Body>
+                                                </Card>
+                                            </Col>
+                                            <Col md={2}>
+                                                <Card className="status_cardpanel">
+                                                    <div className="card-header">
+                                                        <h5>Assignment 1 <span className="count">100</span></h5>
+                                                        <button type="button"><i class="fa fa-ellipsis-h"></i></button>
                                                     </div>
-                                                    <div className="sts_databox good">
-                                                        <h6>Good<span className="count">45</span></h6>
-                                                    </div>
-                                                    <div className="sts_databox average">
-                                                        <h6>Average<span className="count">45</span></h6>
-                                                    </div>
-                                                    <div className="sts_databox baverage">
-                                                        <h6>Below Average<span className="count">20</span></h6>
-                                                    </div>
-                                                    <div className="sts_databox hold">
-                                                        <h6>On Hold<span className="count">20</span></h6>
-                                                    </div>
-                                                    <div className="sts_databox rejected">
-                                                        <h6>Rejected<span className="count">20</span></h6>
-                                                    </div>
-                                                </Card.Body>
-                                            </Card>
-                                        </Col>
-                                        <Col md={2}>
-                                            <Card className="status_cardpanel">
-                                                <div className="card-header">
-                                                    <h5>Assignment 1 <span className="count">100</span></h5>
-                                                    <button type="button"><i class="fa fa-ellipsis-h"></i></button>
-                                                </div>
-                                                <Card.Body>
-                                                    <div className="text-center"><button type="button" className="btn btn-link mb-3"><i className="fa fa-plus me-2"></i></button></div>
-                                                    <div className="sts_databox incopmlate">
-                                                        <h6>Incomplete<span className="count">100</span></h6>
-                                                    </div>
-                                                    <div className="sts_databox excellent">
-                                                        <h6>Excellent<span className="count">40</span></h6>
-                                                    </div>
-                                                    <div className="sts_databox good">
-                                                        <h6>Good<span className="count">45</span></h6>
-                                                    </div>
-                                                    <div className="sts_databox average">
-                                                        <h6>Average<span className="count">45</span></h6>
-                                                    </div>
-                                                    <div className="sts_databox baverage">
-                                                        <h6>Below Average<span className="count">20</span></h6>
-                                                    </div>
-                                                    <div className="sts_databox hold">
-                                                        <h6>On Hold<span className="count">20</span></h6>
-                                                    </div>
-                                                    <div className="sts_databox rejected">
-                                                        <h6>Rejected<span className="count">20</span></h6>
-                                                    </div>
-                                                </Card.Body>
-                                            </Card>
-                                        </Col> */}
+                                                    <Card.Body>
+                                                        <div className="text-center"><button type="button" className="btn btn-link mb-3"><i className="fa fa-plus me-2"></i></button></div>
+                                                        <div className="sts_databox incopmlate">
+                                                            <h6>Incomplete<span className="count">100</span></h6>
+                                                        </div>
+                                                        <div className="sts_databox excellent">
+                                                            <h6>Excellent<span className="count">40</span></h6>
+                                                        </div>
+                                                        <div className="sts_databox good">
+                                                            <h6>Good<span className="count">45</span></h6>
+                                                        </div>
+                                                        <div className="sts_databox average">
+                                                            <h6>Average<span className="count">45</span></h6>
+                                                        </div>
+                                                        <div className="sts_databox baverage">
+                                                            <h6>Below Average<span className="count">20</span></h6>
+                                                        </div>
+                                                        <div className="sts_databox hold">
+                                                            <h6>On Hold<span className="count">20</span></h6>
+                                                        </div>
+                                                        <div className="sts_databox rejected">
+                                                            <h6>Rejected<span className="count">20</span></h6>
+                                                        </div>
+                                                    </Card.Body>
+                                                </Card>
+                                            </Col> */}
                                     </Row>
                                 </Tab.Pane>
                                 <Tab.Pane eventKey="second" className="insights_tab">
@@ -2536,8 +2573,8 @@ tracker.show_tasks()
                                         ))}
                                     </Row>
                                     {/* <Row>
-                                      
-                                    </Row> */}
+                                        
+                                        </Row> */}
                                 </Tab.Pane>
                                 {/* <Tab.Pane eventKey="second">Second tab content</Tab.Pane> */}
                                 <Tab.Pane eventKey="third">
@@ -2546,10 +2583,10 @@ tracker.show_tasks()
                                             <Row>
                                                 <Col md={6}>
                                                     {/* <Form.Select className="select-md-transpant" onChange={handleTestJob}>
-                                                        {assignmentReviewList.map((Val) => (
-                                                            <option value={Val?.uid} >{Val?.asset_title}</option>
-                                                        ))}                                                       
-                                                    </Form.Select> */}
+                                                            {assignmentReviewList.map((Val) => (
+                                                                <option value={Val?.uid} >{Val?.asset_title}</option>
+                                                            ))}                                                       
+                                                        </Form.Select> */}
                                                     <Select
                                                         options={assignmentListOption}
                                                         onChange={handleTestJob}
@@ -2567,10 +2604,10 @@ tracker.show_tasks()
                                                 {assignmentReviewList.map((item, index) => (
                                                     <Col md={2} className="queslsit_panel pe-0">
                                                         {/* <Form.Select className="qs_dropdown" onChange={handleSectionWise}>
-                                                            {item?.section_asset.map((cVal) => (
-                                                                <option value={cVal?.uid}>{cVal?.section_title}</option>
-                                                            ))}
-                                                        </Form.Select> */}
+                                                                {item?.section_asset.map((cVal) => (
+                                                                    <option value={cVal?.uid}>{cVal?.section_title}</option>
+                                                                ))}
+                                                            </Form.Select> */}
                                                         <Select
                                                             options={sectionAssetfun(item?.section_asset)}
                                                             onChange={handleSectionWise}
@@ -2595,117 +2632,117 @@ tracker.show_tasks()
                                                             ))}
 
                                                             {/* <li>
-                                                            <span>Q. 2</span>
-                                                            <div className="ratting_warp">
-                                                                <div className="ratting">
-                                                                    <span className="avg-text">Avg.</span>
-                                                                    <span className="rt-item active"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item active"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item active"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item"><i className="fa fa-star"></i></span>
+                                                                <span>Q. 2</span>
+                                                                <div className="ratting_warp">
+                                                                    <div className="ratting">
+                                                                        <span className="avg-text">Avg.</span>
+                                                                        <span className="rt-item active"><i className="fa fa-star"></i></span>
+                                                                        <span className="rt-item active"><i className="fa fa-star"></i></span>
+                                                                        <span className="rt-item active"><i className="fa fa-star"></i></span>
+                                                                        <span className="rt-item"><i className="fa fa-star"></i></span>
+                                                                        <span className="rt-item"><i className="fa fa-star"></i></span>
+                                                                    </div>
+                                                                    <p>50 Pending</p>
                                                                 </div>
-                                                                <p>50 Pending</p>
-                                                            </div>
-                                                        </li>
-                                                        <li className="active">
-                                                            <span>Q. 3</span>
-                                                            <div className="ratting_warp">
-                                                                <div className="ratting">
-                                                                    <span className="avg-text">Avg.</span>
-                                                                    <span className="rt-item active"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item active"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item active"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item"><i className="fa fa-star"></i></span>
+                                                            </li>
+                                                            <li className="active">
+                                                                <span>Q. 3</span>
+                                                                <div className="ratting_warp">
+                                                                    <div className="ratting">
+                                                                        <span className="avg-text">Avg.</span>
+                                                                        <span className="rt-item active"><i className="fa fa-star"></i></span>
+                                                                        <span className="rt-item active"><i className="fa fa-star"></i></span>
+                                                                        <span className="rt-item active"><i className="fa fa-star"></i></span>
+                                                                        <span className="rt-item"><i className="fa fa-star"></i></span>
+                                                                        <span className="rt-item"><i className="fa fa-star"></i></span>
+                                                                    </div>
+                                                                    <p>50 Pending</p>
                                                                 </div>
-                                                                <p>50 Pending</p>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <span>Q. 4</span>
-                                                            <div className="ratting_warp">
-                                                                <div className="ratting">
-                                                                    <span className="avg-text">Avg.</span>
-                                                                    <span className="rt-item active"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item active"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item active"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item"><i className="fa fa-star"></i></span>
+                                                            </li>
+                                                            <li>
+                                                                <span>Q. 4</span>
+                                                                <div className="ratting_warp">
+                                                                    <div className="ratting">
+                                                                        <span className="avg-text">Avg.</span>
+                                                                        <span className="rt-item active"><i className="fa fa-star"></i></span>
+                                                                        <span className="rt-item active"><i className="fa fa-star"></i></span>
+                                                                        <span className="rt-item active"><i className="fa fa-star"></i></span>
+                                                                        <span className="rt-item"><i className="fa fa-star"></i></span>
+                                                                        <span className="rt-item"><i className="fa fa-star"></i></span>
+                                                                    </div>
+                                                                    <p>50 Pending</p>
                                                                 </div>
-                                                                <p>50 Pending</p>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <span>Q. 5</span>
-                                                            <div className="ratting_warp">
-                                                                <div className="ratting">
-                                                                    <span className="avg-text">Avg.</span>
-                                                                    <span className="rt-item active"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item active"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item active"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item"><i className="fa fa-star"></i></span>
+                                                            </li>
+                                                            <li>
+                                                                <span>Q. 5</span>
+                                                                <div className="ratting_warp">
+                                                                    <div className="ratting">
+                                                                        <span className="avg-text">Avg.</span>
+                                                                        <span className="rt-item active"><i className="fa fa-star"></i></span>
+                                                                        <span className="rt-item active"><i className="fa fa-star"></i></span>
+                                                                        <span className="rt-item active"><i className="fa fa-star"></i></span>
+                                                                        <span className="rt-item"><i className="fa fa-star"></i></span>
+                                                                        <span className="rt-item"><i className="fa fa-star"></i></span>
+                                                                    </div>
+                                                                    <p>50 Pending</p>
                                                                 </div>
-                                                                <p>50 Pending</p>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <span>Q. 6</span>
-                                                            <div className="ratting_warp">
-                                                                <div className="ratting">
-                                                                    <span className="avg-text">Avg.</span>
-                                                                    <span className="rt-item active"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item active"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item active"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item"><i className="fa fa-star"></i></span>
+                                                            </li>
+                                                            <li>
+                                                                <span>Q. 6</span>
+                                                                <div className="ratting_warp">
+                                                                    <div className="ratting">
+                                                                        <span className="avg-text">Avg.</span>
+                                                                        <span className="rt-item active"><i className="fa fa-star"></i></span>
+                                                                        <span className="rt-item active"><i className="fa fa-star"></i></span>
+                                                                        <span className="rt-item active"><i className="fa fa-star"></i></span>
+                                                                        <span className="rt-item"><i className="fa fa-star"></i></span>
+                                                                        <span className="rt-item"><i className="fa fa-star"></i></span>
+                                                                    </div>
+                                                                    <p>50 Pending</p>
                                                                 </div>
-                                                                <p>50 Pending</p>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <span>Q. 7</span>
-                                                            <div className="ratting_warp">
-                                                                <div className="ratting">
-                                                                    <span className="avg-text">Avg.</span>
-                                                                    <span className="rt-item active"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item active"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item active"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item"><i className="fa fa-star"></i></span>
+                                                            </li>
+                                                            <li>
+                                                                <span>Q. 7</span>
+                                                                <div className="ratting_warp">
+                                                                    <div className="ratting">
+                                                                        <span className="avg-text">Avg.</span>
+                                                                        <span className="rt-item active"><i className="fa fa-star"></i></span>
+                                                                        <span className="rt-item active"><i className="fa fa-star"></i></span>
+                                                                        <span className="rt-item active"><i className="fa fa-star"></i></span>
+                                                                        <span className="rt-item"><i className="fa fa-star"></i></span>
+                                                                        <span className="rt-item"><i className="fa fa-star"></i></span>
+                                                                    </div>
+                                                                    <p>50 Pending</p>
                                                                 </div>
-                                                                <p>50 Pending</p>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <span>Q. 8</span>
-                                                            <div className="ratting_warp">
-                                                                <div className="ratting">
-                                                                    <span className="avg-text">Avg.</span>
-                                                                    <span className="rt-item active"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item active"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item active"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item"><i className="fa fa-star"></i></span>
+                                                            </li>
+                                                            <li>
+                                                                <span>Q. 8</span>
+                                                                <div className="ratting_warp">
+                                                                    <div className="ratting">
+                                                                        <span className="avg-text">Avg.</span>
+                                                                        <span className="rt-item active"><i className="fa fa-star"></i></span>
+                                                                        <span className="rt-item active"><i className="fa fa-star"></i></span>
+                                                                        <span className="rt-item active"><i className="fa fa-star"></i></span>
+                                                                        <span className="rt-item"><i className="fa fa-star"></i></span>
+                                                                        <span className="rt-item"><i className="fa fa-star"></i></span>
+                                                                    </div>
+                                                                    <p>50 Pending</p>
                                                                 </div>
-                                                                <p>50 Pending</p>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <span>Q. 9</span>
-                                                            <div className="ratting_warp">
-                                                                <div className="ratting">
-                                                                    <span className="avg-text">Avg.</span>
-                                                                    <span className="rt-item active"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item active"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item active"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item"><i className="fa fa-star"></i></span>
-                                                                    <span className="rt-item"><i className="fa fa-star"></i></span>
+                                                            </li>
+                                                            <li>
+                                                                <span>Q. 9</span>
+                                                                <div className="ratting_warp">
+                                                                    <div className="ratting">
+                                                                        <span className="avg-text">Avg.</span>
+                                                                        <span className="rt-item active"><i className="fa fa-star"></i></span>
+                                                                        <span className="rt-item active"><i className="fa fa-star"></i></span>
+                                                                        <span className="rt-item active"><i className="fa fa-star"></i></span>
+                                                                        <span className="rt-item"><i className="fa fa-star"></i></span>
+                                                                        <span className="rt-item"><i className="fa fa-star"></i></span>
+                                                                    </div>
+                                                                    <p>50 Pending</p>
                                                                 </div>
-                                                                <p>50 Pending</p>
-                                                            </div>
-                                                        </li> */}
+                                                            </li> */}
                                                             <li className="justify-content-center">
                                                                 <button type="button" className="btn-transpant"><img src={ArrowDownDark} /></button>
                                                             </li>
@@ -2769,8 +2806,8 @@ tracker.show_tasks()
                                                                             <Ratting rating={rating} setRating={setRating} ID={user?.uid} getJobAssignmentReviewList={getJobAssignmentReviewList} questionWiseData={questionWiseData} />
 
                                                                             {/* <button onClick={() => handleReviewModal(user)} type="button" className="btn-transpant ms-4">
-                                                                                <img src={ExpandButton} alt="" />
-                                                                            </button> */}
+                                                                                    <img src={ExpandButton} alt="" />
+                                                                                </button> */}
 
                                                                             {/* reviewModal */}
 
@@ -2815,53 +2852,53 @@ tracker.show_tasks()
 
 
                                                             {/* <Card className="ans_card">
-                                                                <Card.Header className="p-0 pb-2 d-flex align-items-center justify-content-between">
-                                                                    <Card.Title>Sndeep Kattamuri</Card.Title>
-                                                                    <div className="d-flex">
-                                                                        <Ratting />
-                                                                        <button onClick={handleShow} type="button" className="btn-transpant ms-4">
-                                                                            <img src={ExpandButton} alt="" />
-                                                                        </button>
-                                                                    </div>
-                                                                </Card.Header>
-                                                                <Card.Body className="px-0">
-                                                                    <Card.Text>
-                                                                        Phasellus erat arcu, scelerisque vitae efficitur sed, ornare et purus. Duis vel semper ligula. Proin consectetur magna quis ullamcorper efficitur. Donec suscipit tristique leo, ac porta odio maximus quis. Mauris quis lacinia massa. Curabitur vitae leo quis lorem elementum tincidunt. Morbi et convallis nibh.
-                                                                    </Card.Text>
-                                                                </Card.Body>
-                                                            </Card>
-                                                            <Card className="ans_card">
-                                                                <Card.Header className="p-0 pb-2 d-flex align-items-center justify-content-between">
-                                                                    <Card.Title>Sndeep Kattamuri</Card.Title>
-                                                                    <div className="d-flex">
-                                                                        <Ratting />
-                                                                        <button onClick={handleShow} type="button" className="btn-transpant ms-4">
-                                                                            <img src={ExpandButton} alt="" />
-                                                                        </button>
-                                                                    </div>
-                                                                </Card.Header>
-                                                                <Card.Body className="px-0">
-                                                                    <Card.Text>
-                                                                        Phasellus erat arcu, scelerisque vitae efficitur sed, ornare et purus. Duis vel semper ligula. Proin consectetur magna quis ullamcorper efficitur. Donec suscipit tristique leo, ac porta odio maximus quis. Mauris quis lacinia massa. Curabitur vitae leo quis lorem elementum tincidunt. Morbi et convallis nibh.
-                                                                    </Card.Text>
-                                                                </Card.Body>
-                                                            </Card>
-                                                            <Card className="ans_card">
-                                                                <Card.Header className="p-0 pb-2 d-flex align-items-center justify-content-between">
-                                                                    <Card.Title>Sndeep Kattamuri</Card.Title>
-                                                                    <div className="d-flex">
-                                                                        <Ratting />
-                                                                        <button onClick={handleShow} type="button" className="btn-transpant ms-4">
-                                                                            <img src={ExpandButton} alt="" />
-                                                                        </button>
-                                                                    </div>
-                                                                </Card.Header>
-                                                                <Card.Body className="px-0">
-                                                                    <Card.Text>
-                                                                        Phasellus erat arcu, scelerisque vitae efficitur sed, ornare et purus. Duis vel semper ligula. Proin consectetur magna quis ullamcorper efficitur. Donec suscipit tristique leo, ac porta odio maximus quis. Mauris quis lacinia massa. Curabitur vitae leo quis lorem elementum tincidunt. Morbi et convallis nibh.
-                                                                    </Card.Text>
-                                                                </Card.Body>
-                                                            </Card> */}
+                                                                    <Card.Header className="p-0 pb-2 d-flex align-items-center justify-content-between">
+                                                                        <Card.Title>Sndeep Kattamuri</Card.Title>
+                                                                        <div className="d-flex">
+                                                                            <Ratting />
+                                                                            <button onClick={handleShow} type="button" className="btn-transpant ms-4">
+                                                                                <img src={ExpandButton} alt="" />
+                                                                            </button>
+                                                                        </div>
+                                                                    </Card.Header>
+                                                                    <Card.Body className="px-0">
+                                                                        <Card.Text>
+                                                                            Phasellus erat arcu, scelerisque vitae efficitur sed, ornare et purus. Duis vel semper ligula. Proin consectetur magna quis ullamcorper efficitur. Donec suscipit tristique leo, ac porta odio maximus quis. Mauris quis lacinia massa. Curabitur vitae leo quis lorem elementum tincidunt. Morbi et convallis nibh.
+                                                                        </Card.Text>
+                                                                    </Card.Body>
+                                                                </Card>
+                                                                <Card className="ans_card">
+                                                                    <Card.Header className="p-0 pb-2 d-flex align-items-center justify-content-between">
+                                                                        <Card.Title>Sndeep Kattamuri</Card.Title>
+                                                                        <div className="d-flex">
+                                                                            <Ratting />
+                                                                            <button onClick={handleShow} type="button" className="btn-transpant ms-4">
+                                                                                <img src={ExpandButton} alt="" />
+                                                                            </button>
+                                                                        </div>
+                                                                    </Card.Header>
+                                                                    <Card.Body className="px-0">
+                                                                        <Card.Text>
+                                                                            Phasellus erat arcu, scelerisque vitae efficitur sed, ornare et purus. Duis vel semper ligula. Proin consectetur magna quis ullamcorper efficitur. Donec suscipit tristique leo, ac porta odio maximus quis. Mauris quis lacinia massa. Curabitur vitae leo quis lorem elementum tincidunt. Morbi et convallis nibh.
+                                                                        </Card.Text>
+                                                                    </Card.Body>
+                                                                </Card>
+                                                                <Card className="ans_card">
+                                                                    <Card.Header className="p-0 pb-2 d-flex align-items-center justify-content-between">
+                                                                        <Card.Title>Sndeep Kattamuri</Card.Title>
+                                                                        <div className="d-flex">
+                                                                            <Ratting />
+                                                                            <button onClick={handleShow} type="button" className="btn-transpant ms-4">
+                                                                                <img src={ExpandButton} alt="" />
+                                                                            </button>
+                                                                        </div>
+                                                                    </Card.Header>
+                                                                    <Card.Body className="px-0">
+                                                                        <Card.Text>
+                                                                            Phasellus erat arcu, scelerisque vitae efficitur sed, ornare et purus. Duis vel semper ligula. Proin consectetur magna quis ullamcorper efficitur. Donec suscipit tristique leo, ac porta odio maximus quis. Mauris quis lacinia massa. Curabitur vitae leo quis lorem elementum tincidunt. Morbi et convallis nibh.
+                                                                        </Card.Text>
+                                                                    </Card.Body>
+                                                                </Card> */}
                                                         </div>
                                                     </div>
                                                 </Col>
@@ -3398,348 +3435,348 @@ tracker.show_tasks()
 
             {/*======Evaluations======*/}
             {/* <Offcanvas
-                show={show}
-                onHide={handleClose}
-                backdrop={false}
-                placement="end"
-                className="evaluations_drawer lg-drawer shadow-md border-0"
-            >
-                <Offcanvas.Header closeButton>
-                    <Offcanvas.Title>
-                        Evaluations
-                    </Offcanvas.Title>
-                </Offcanvas.Header>
-                <Offcanvas.Body className="add_evaluwarp">
-                    <Tab.Container id="left-tabs-example1" defaultActiveKey="evaluation">
-                        <Row>
-                            <Col sm={12}>
-                                <Nav variant="pills">
-                                    <Nav.Item>
-                                        <Nav.Link eventKey="evaluation">Select Evaluation</Nav.Link>
-                                    </Nav.Item>
-                                    <Nav.Item>
-                                        <Nav.Link eventKey="order">Set order of Evaluation</Nav.Link>
-                                    </Nav.Item>
-                                </Nav>
-                            </Col>
-                            <Col sm={12}>
-                                <Tab.Content>
-                                    <Tab.Pane eventKey="evaluation">
-                                        <p className="base-text my-3">Evaluations have not been added. You can choose up to 4 evaluations from the list below for this position</p>
-                                        <Card className="border-0 evaluations_data">
-                                            <Card.Header className="px-0 pb-3">
-                                                <Row>
-                                                    <Col md={5}>
-                                                        <InputGroup className="defult_serachbox">
-                                                            <Button id="basic-addon1">
-                                                                <svg
-                                                                    width="18"
-                                                                    height="18"
-                                                                    viewBox="0 0 18 18"
-                                                                    fill="none"
-                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                >
-                                                                    <path
-                                                                        d="M16.5 16.5L11.5001 11.5M13.1667 7.33333C13.1667 10.555 10.555 13.1667 7.33333 13.1667C4.11167 13.1667 1.5 10.555 1.5 7.33333C1.5 4.11167 4.11167 1.5 7.33333 1.5C10.555 1.5 13.1667 4.11167 13.1667 7.33333Z"
-                                                                        stroke="#667085"
-                                                                        stroke-width="1.66667"
-                                                                        stroke-linecap="round"
-                                                                        stroke-linejoin="round"
-                                                                    />
-                                                                </svg>
-                                                            </Button>
-                                                            <Form.Control
-                                                                placeholder="Search"
-                                                                aria-label="Search"
-                                                                aria-describedby="basic-addon1"
-                                                            />
-                                                        </InputGroup>
-                                                    </Col>
-                                                </Row>
-                                            </Card.Header>
-                                            <Card.Body className="p-0 mt-3">
-                                                <ul class="head_filterlist">
-                                                    <li class="active">View all</li>
-                                                    <li class="">Quiz</li>
-                                                    <li class="">Assignment</li>
-                                                </ul>
-                                                <div className="elv_datatable shadow-none">
-                                                    <Table striped className="m-0">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Evaluation Title</th>
-                                                                <th>Type</th>
-                                                                <th>Duration</th>
-                                                                <th>Avg. Score</th>
-                                                                <th>Questions</th>
-                                                                <th>Pass Ratio</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td style={{ cursor: 'pointer' }}>
-                                                                    <Form.Check
-                                                                        className="custom-checkbox me-1"
-                                                                        id="1"
-                                                                        type="checkbox"
-                                                                    />
-                                                                    <span class="font-weight-600">Pre-interview round for creative director</span>
-                                                                </td>
-                                                                <td><img className="me-1" src={fileIcon} alt="" />Assignment</td>
-                                                                <td>26.4 Min</td>
-                                                                <td>40% <img src={faRingicon} className="ms-1" alt="" /></td>
-                                                                <td>112</td>
-                                                                <td><div className="d-flex align-items-center"><span>40%</span> <ProgressBar variant="warning" now={60} /></div></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td style={{ cursor: 'pointer' }}>
-                                                                    <Form.Check
-                                                                        className="custom-checkbox me-1"
-                                                                        id="1"
-                                                                        type="checkbox"
-                                                                    />
-                                                                    <span class="font-weight-600">Quiz for Backend Developer</span>
-                                                                </td>
-                                                                <td><img className="me-1" src={quizIcon} alt="" />Quiz</td>
-                                                                <td>26.4 Min</td>
-                                                                <td>40% <img src={faRingicon} className="ms-1" alt="" /></td>
-                                                                <td>112</td>
-                                                                <td><div className="d-flex align-items-center"><span>40%</span> <ProgressBar variant="warning" now={60} /></div></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td style={{ cursor: 'pointer' }}>
-                                                                    <Form.Check
-                                                                        className="custom-checkbox me-1"
-                                                                        id="1"
-                                                                        type="checkbox"
-                                                                    />
-                                                                    <span class="font-weight-600">Assignment for Figma Designer</span>
-                                                                </td>
-                                                                <td><img className="me-1" src={quizIcon} alt="" />Quiz</td>
-                                                                <td>26.4 Min</td>
-                                                                <td>40% <img src={RingSucess} className="ms-1" alt="" /></td>
-                                                                <td>112</td>
-                                                                <td><div className="d-flex align-items-center"><span>40%</span> <ProgressBar variant="success" now={60} /></div></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td style={{ cursor: 'pointer' }}>
-                                                                    <Form.Check
-                                                                        className="custom-checkbox me-1"
-                                                                        id="1"
-                                                                        type="checkbox"
-                                                                    />
-                                                                    <span class="font-weight-600">Pre-interview round for creative director</span>
-                                                                </td>
-                                                                <td><img className="me-1" src={fileIcon} alt="" />Assignment</td>
-                                                                <td>26.4 Min</td>
-                                                                <td>40% <img src={faRingicon} className="ms-1" alt="" /></td>
-                                                                <td>112</td>
-                                                                <td><div className="d-flex align-items-center"><span>40%</span> <ProgressBar variant="warning" now={60} /></div></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td style={{ cursor: 'pointer' }}>
-                                                                    <Form.Check
-                                                                        className="custom-checkbox me-1"
-                                                                        id="1"
-                                                                        type="checkbox"
-                                                                    />
-                                                                    <span class="font-weight-600">Pre-interview round for creative director</span>
-                                                                </td>
-                                                                <td><img className="me-1" src={fileIcon} alt="" />Assignment</td>
-                                                                <td>26.4 Min</td>
-                                                                <td>40% <img src={faRingicon} className="ms-1" alt="" /></td>
-                                                                <td>112</td>
-                                                                <td><div className="d-flex align-items-center"><span>40%</span> <ProgressBar variant="warning" now={60} /></div></td>
-                                                            </tr>
-                                                        </tbody>
-                                                        <tfoot>
-                                                            <tr>
-                                                                <td colSpan={2}>
-                                                                    <Button
-                                                                        className="btn-light-outline"
+                    show={show}
+                    onHide={handleClose}
+                    backdrop={false}
+                    placement="end"
+                    className="evaluations_drawer lg-drawer shadow-md border-0"
+                >
+                    <Offcanvas.Header closeButton>
+                        <Offcanvas.Title>
+                            Evaluations
+                        </Offcanvas.Title>
+                    </Offcanvas.Header>
+                    <Offcanvas.Body className="add_evaluwarp">
+                        <Tab.Container id="left-tabs-example1" defaultActiveKey="evaluation">
+                            <Row>
+                                <Col sm={12}>
+                                    <Nav variant="pills">
+                                        <Nav.Item>
+                                            <Nav.Link eventKey="evaluation">Select Evaluation</Nav.Link>
+                                        </Nav.Item>
+                                        <Nav.Item>
+                                            <Nav.Link eventKey="order">Set order of Evaluation</Nav.Link>
+                                        </Nav.Item>
+                                    </Nav>
+                                </Col>
+                                <Col sm={12}>
+                                    <Tab.Content>
+                                        <Tab.Pane eventKey="evaluation">
+                                            <p className="base-text my-3">Evaluations have not been added. You can choose up to 4 evaluations from the list below for this position</p>
+                                            <Card className="border-0 evaluations_data">
+                                                <Card.Header className="px-0 pb-3">
+                                                    <Row>
+                                                        <Col md={5}>
+                                                            <InputGroup className="defult_serachbox">
+                                                                <Button id="basic-addon1">
+                                                                    <svg
+                                                                        width="18"
+                                                                        height="18"
+                                                                        viewBox="0 0 18 18"
+                                                                        fill="none"
+                                                                        xmlns="http://www.w3.org/2000/svg"
                                                                     >
-                                                                        Load More
-                                                                    </Button>
-                                                                </td>
-                                                                <td colSpan={4} className="text-end pe-3">
-                                                                    <span className="pagination_count">
-                                                                        Showing 10 items
-                                                                    </span>
-                                                                </td>
-                                                            </tr>
-                                                        </tfoot>
-                                                    </Table>
-                                                </div>
-                                            </Card.Body>
-                                        </Card>
-                                    </Tab.Pane>
-                                    <Tab.Pane eventKey="order">
-                                        <p className="base-text my-3">Drag and drop to reorder assignments</p>
-                                        <Table className="m-0 evelu_order">
-                                            <tr>
-                                                <td style={{ cursor: "pointer" }}><img src={DragDrop} alt="" /></td>
-                                                <td style={{ width: "30px" }}>1</td>
-                                                <td>Assignment for Figma Designer</td>
-                                                <td>
-                                                    <div className="d-flex align-items-center">
-                                                        <span>Pass Criteria</span>
-                                                        <Form.Select className="select-sm w-80 ms-2">
-                                                            <option> 60%</option>
-                                                            <option value="1">One</option>
-                                                            <option value="2">Two</option>
-                                                            <option value="3">Three</option>
-                                                        </Form.Select>
+                                                                        <path
+                                                                            d="M16.5 16.5L11.5001 11.5M13.1667 7.33333C13.1667 10.555 10.555 13.1667 7.33333 13.1667C4.11167 13.1667 1.5 10.555 1.5 7.33333C1.5 4.11167 4.11167 1.5 7.33333 1.5C10.555 1.5 13.1667 4.11167 13.1667 7.33333Z"
+                                                                            stroke="#667085"
+                                                                            stroke-width="1.66667"
+                                                                            stroke-linecap="round"
+                                                                            stroke-linejoin="round"
+                                                                        />
+                                                                    </svg>
+                                                                </Button>
+                                                                <Form.Control
+                                                                    placeholder="Search"
+                                                                    aria-label="Search"
+                                                                    aria-describedby="basic-addon1"
+                                                                />
+                                                            </InputGroup>
+                                                        </Col>
+                                                    </Row>
+                                                </Card.Header>
+                                                <Card.Body className="p-0 mt-3">
+                                                    <ul class="head_filterlist">
+                                                        <li class="active">View all</li>
+                                                        <li class="">Quiz</li>
+                                                        <li class="">Assignment</li>
+                                                    </ul>
+                                                    <div className="elv_datatable shadow-none">
+                                                        <Table striped className="m-0">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Evaluation Title</th>
+                                                                    <th>Type</th>
+                                                                    <th>Duration</th>
+                                                                    <th>Avg. Score</th>
+                                                                    <th>Questions</th>
+                                                                    <th>Pass Ratio</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td style={{ cursor: 'pointer' }}>
+                                                                        <Form.Check
+                                                                            className="custom-checkbox me-1"
+                                                                            id="1"
+                                                                            type="checkbox"
+                                                                        />
+                                                                        <span class="font-weight-600">Pre-interview round for creative director</span>
+                                                                    </td>
+                                                                    <td><img className="me-1" src={fileIcon} alt="" />Assignment</td>
+                                                                    <td>26.4 Min</td>
+                                                                    <td>40% <img src={faRingicon} className="ms-1" alt="" /></td>
+                                                                    <td>112</td>
+                                                                    <td><div className="d-flex align-items-center"><span>40%</span> <ProgressBar variant="warning" now={60} /></div></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style={{ cursor: 'pointer' }}>
+                                                                        <Form.Check
+                                                                            className="custom-checkbox me-1"
+                                                                            id="1"
+                                                                            type="checkbox"
+                                                                        />
+                                                                        <span class="font-weight-600">Quiz for Backend Developer</span>
+                                                                    </td>
+                                                                    <td><img className="me-1" src={quizIcon} alt="" />Quiz</td>
+                                                                    <td>26.4 Min</td>
+                                                                    <td>40% <img src={faRingicon} className="ms-1" alt="" /></td>
+                                                                    <td>112</td>
+                                                                    <td><div className="d-flex align-items-center"><span>40%</span> <ProgressBar variant="warning" now={60} /></div></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style={{ cursor: 'pointer' }}>
+                                                                        <Form.Check
+                                                                            className="custom-checkbox me-1"
+                                                                            id="1"
+                                                                            type="checkbox"
+                                                                        />
+                                                                        <span class="font-weight-600">Assignment for Figma Designer</span>
+                                                                    </td>
+                                                                    <td><img className="me-1" src={quizIcon} alt="" />Quiz</td>
+                                                                    <td>26.4 Min</td>
+                                                                    <td>40% <img src={RingSucess} className="ms-1" alt="" /></td>
+                                                                    <td>112</td>
+                                                                    <td><div className="d-flex align-items-center"><span>40%</span> <ProgressBar variant="success" now={60} /></div></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style={{ cursor: 'pointer' }}>
+                                                                        <Form.Check
+                                                                            className="custom-checkbox me-1"
+                                                                            id="1"
+                                                                            type="checkbox"
+                                                                        />
+                                                                        <span class="font-weight-600">Pre-interview round for creative director</span>
+                                                                    </td>
+                                                                    <td><img className="me-1" src={fileIcon} alt="" />Assignment</td>
+                                                                    <td>26.4 Min</td>
+                                                                    <td>40% <img src={faRingicon} className="ms-1" alt="" /></td>
+                                                                    <td>112</td>
+                                                                    <td><div className="d-flex align-items-center"><span>40%</span> <ProgressBar variant="warning" now={60} /></div></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style={{ cursor: 'pointer' }}>
+                                                                        <Form.Check
+                                                                            className="custom-checkbox me-1"
+                                                                            id="1"
+                                                                            type="checkbox"
+                                                                        />
+                                                                        <span class="font-weight-600">Pre-interview round for creative director</span>
+                                                                    </td>
+                                                                    <td><img className="me-1" src={fileIcon} alt="" />Assignment</td>
+                                                                    <td>26.4 Min</td>
+                                                                    <td>40% <img src={faRingicon} className="ms-1" alt="" /></td>
+                                                                    <td>112</td>
+                                                                    <td><div className="d-flex align-items-center"><span>40%</span> <ProgressBar variant="warning" now={60} /></div></td>
+                                                                </tr>
+                                                            </tbody>
+                                                            <tfoot>
+                                                                <tr>
+                                                                    <td colSpan={2}>
+                                                                        <Button
+                                                                            className="btn-light-outline"
+                                                                        >
+                                                                            Load More
+                                                                        </Button>
+                                                                    </td>
+                                                                    <td colSpan={4} className="text-end pe-3">
+                                                                        <span className="pagination_count">
+                                                                            Showing 10 items
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+                                                            </tfoot>
+                                                        </Table>
                                                     </div>
-                                                </td>
-                                                <td>
-                                                    <div className="d-flex align-items-center">
-                                                        <span>Duration</span>
-                                                        <Form.Select className="select-sm w-80 ms-2">
-                                                            <option> 30mins</option>
-                                                            <option value="1">One</option>
-                                                            <option value="2">Two</option>
-                                                            <option value="3">Three</option>
-                                                        </Form.Select>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <button type="button" className="btn-transpant"><img src={deleteDark} alt="" /></button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td style={{ cursor: "pointer" }}><img src={DragDrop} alt="" /></td>
-                                                <td style={{ width: "30px" }}>2</td>
-                                                <td>Assignment for Figma Designer</td>
-                                                <td>
-                                                    <div className="d-flex align-items-center">
-                                                        <span>Pass Criteria</span>
-                                                        <Form.Select className="select-sm w-80 ms-2">
-                                                            <option> 60%</option>
-                                                            <option value="1">One</option>
-                                                            <option value="2">Two</option>
-                                                            <option value="3">Three</option>
-                                                        </Form.Select>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div className="d-flex align-items-center">
-                                                        <span>Duration</span>
-                                                        <Form.Select className="select-sm w-80 ms-2">
-                                                            <option> 30mins</option>
-                                                            <option value="1">One</option>
-                                                            <option value="2">Two</option>
-                                                            <option value="3">Three</option>
-                                                        </Form.Select>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <button type="button" className="btn-transpant"><img src={deleteDark} alt="" /></button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td style={{ cursor: "pointer" }}><img src={DragDrop} alt="" /></td>
-                                                <td style={{ width: "30px" }}>3</td>
-                                                <td>Assignment for Figma Designer</td>
-                                                <td>
-                                                    <div className="d-flex align-items-center">
-                                                        <span>Pass Criteria</span>
-                                                        <Form.Select className="select-sm w-80 ms-2">
-                                                            <option> 60%</option>
-                                                            <option value="1">One</option>
-                                                            <option value="2">Two</option>
-                                                            <option value="3">Three</option>
-                                                        </Form.Select>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div className="d-flex align-items-center">
-                                                        <span>Duration</span>
-                                                        <Form.Select className="select-sm w-80 ms-2">
-                                                            <option> 30mins</option>
-                                                            <option value="1">One</option>
-                                                            <option value="2">Two</option>
-                                                            <option value="3">Three</option>
-                                                        </Form.Select>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <button type="button" className="btn-transpant"><img src={deleteDark} alt="" /></button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td style={{ cursor: "pointer" }}><img src={DragDrop} alt="" /></td>
-                                                <td style={{ width: "30px" }}>4</td>
-                                                <td>Assignment for Figma Designer</td>
-                                                <td>
-                                                    <div className="d-flex align-items-center">
-                                                        <span>Pass Criteria</span>
-                                                        <Form.Select className="select-sm w-80 ms-2">
-                                                            <option> 60%</option>
-                                                            <option value="1">One</option>
-                                                            <option value="2">Two</option>
-                                                            <option value="3">Three</option>
-                                                        </Form.Select>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div className="d-flex align-items-center">
-                                                        <span>Duration</span>
-                                                        <Form.Select className="select-sm w-80 ms-2">
-                                                            <option> 30mins</option>
-                                                            <option value="1">One</option>
-                                                            <option value="2">Two</option>
-                                                            <option value="3">Three</option>
-                                                        </Form.Select>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <button type="button" className="btn-transpant"><img src={deleteDark} alt="" /></button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td style={{ cursor: "pointer" }}><img src={DragDrop} alt="" /></td>
-                                                <td style={{ width: "30px" }}>5</td>
-                                                <td>Assignment for Figma Designer</td>
-                                                <td>
-                                                    <div className="d-flex align-items-center">
-                                                        <span>Pass Criteria</span>
-                                                        <Form.Select className="select-sm w-80 ms-2">
-                                                            <option> 60%</option>
-                                                            <option value="1">One</option>
-                                                            <option value="2">Two</option>
-                                                            <option value="3">Three</option>
-                                                        </Form.Select>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div className="d-flex align-items-center">
-                                                        <span>Duration</span>
-                                                        <Form.Select className="select-sm w-80 ms-2">
-                                                            <option> 30mins</option>
-                                                            <option value="1">One</option>
-                                                            <option value="2">Two</option>
-                                                            <option value="3">Three</option>
-                                                        </Form.Select>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <button type="button" className="btn-transpant"><img src={deleteDark} alt="" /></button>
-                                                </td>
-                                            </tr>
-                                        </Table>
-                                    </Tab.Pane>
-                                </Tab.Content>
-                            </Col>
-                        </Row>
-                    </Tab.Container>
-                </Offcanvas.Body>
-                <div className="offcanvas-footer text-end">
-                    <span className="me-4 font-sm">0/4</span>
-                    <Button onClick={handleClose} variant="primary">
-                        Select
-                    </Button>
-                </div>
-            </Offcanvas> */}
+                                                </Card.Body>
+                                            </Card>
+                                        </Tab.Pane>
+                                        <Tab.Pane eventKey="order">
+                                            <p className="base-text my-3">Drag and drop to reorder assignments</p>
+                                            <Table className="m-0 evelu_order">
+                                                <tr>
+                                                    <td style={{ cursor: "pointer" }}><img src={DragDrop} alt="" /></td>
+                                                    <td style={{ width: "30px" }}>1</td>
+                                                    <td>Assignment for Figma Designer</td>
+                                                    <td>
+                                                        <div className="d-flex align-items-center">
+                                                            <span>Pass Criteria</span>
+                                                            <Form.Select className="select-sm w-80 ms-2">
+                                                                <option> 60%</option>
+                                                                <option value="1">One</option>
+                                                                <option value="2">Two</option>
+                                                                <option value="3">Three</option>
+                                                            </Form.Select>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="d-flex align-items-center">
+                                                            <span>Duration</span>
+                                                            <Form.Select className="select-sm w-80 ms-2">
+                                                                <option> 30mins</option>
+                                                                <option value="1">One</option>
+                                                                <option value="2">Two</option>
+                                                                <option value="3">Three</option>
+                                                            </Form.Select>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" className="btn-transpant"><img src={deleteDark} alt="" /></button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style={{ cursor: "pointer" }}><img src={DragDrop} alt="" /></td>
+                                                    <td style={{ width: "30px" }}>2</td>
+                                                    <td>Assignment for Figma Designer</td>
+                                                    <td>
+                                                        <div className="d-flex align-items-center">
+                                                            <span>Pass Criteria</span>
+                                                            <Form.Select className="select-sm w-80 ms-2">
+                                                                <option> 60%</option>
+                                                                <option value="1">One</option>
+                                                                <option value="2">Two</option>
+                                                                <option value="3">Three</option>
+                                                            </Form.Select>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="d-flex align-items-center">
+                                                            <span>Duration</span>
+                                                            <Form.Select className="select-sm w-80 ms-2">
+                                                                <option> 30mins</option>
+                                                                <option value="1">One</option>
+                                                                <option value="2">Two</option>
+                                                                <option value="3">Three</option>
+                                                            </Form.Select>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" className="btn-transpant"><img src={deleteDark} alt="" /></button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style={{ cursor: "pointer" }}><img src={DragDrop} alt="" /></td>
+                                                    <td style={{ width: "30px" }}>3</td>
+                                                    <td>Assignment for Figma Designer</td>
+                                                    <td>
+                                                        <div className="d-flex align-items-center">
+                                                            <span>Pass Criteria</span>
+                                                            <Form.Select className="select-sm w-80 ms-2">
+                                                                <option> 60%</option>
+                                                                <option value="1">One</option>
+                                                                <option value="2">Two</option>
+                                                                <option value="3">Three</option>
+                                                            </Form.Select>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="d-flex align-items-center">
+                                                            <span>Duration</span>
+                                                            <Form.Select className="select-sm w-80 ms-2">
+                                                                <option> 30mins</option>
+                                                                <option value="1">One</option>
+                                                                <option value="2">Two</option>
+                                                                <option value="3">Three</option>
+                                                            </Form.Select>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" className="btn-transpant"><img src={deleteDark} alt="" /></button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style={{ cursor: "pointer" }}><img src={DragDrop} alt="" /></td>
+                                                    <td style={{ width: "30px" }}>4</td>
+                                                    <td>Assignment for Figma Designer</td>
+                                                    <td>
+                                                        <div className="d-flex align-items-center">
+                                                            <span>Pass Criteria</span>
+                                                            <Form.Select className="select-sm w-80 ms-2">
+                                                                <option> 60%</option>
+                                                                <option value="1">One</option>
+                                                                <option value="2">Two</option>
+                                                                <option value="3">Three</option>
+                                                            </Form.Select>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="d-flex align-items-center">
+                                                            <span>Duration</span>
+                                                            <Form.Select className="select-sm w-80 ms-2">
+                                                                <option> 30mins</option>
+                                                                <option value="1">One</option>
+                                                                <option value="2">Two</option>
+                                                                <option value="3">Three</option>
+                                                            </Form.Select>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" className="btn-transpant"><img src={deleteDark} alt="" /></button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style={{ cursor: "pointer" }}><img src={DragDrop} alt="" /></td>
+                                                    <td style={{ width: "30px" }}>5</td>
+                                                    <td>Assignment for Figma Designer</td>
+                                                    <td>
+                                                        <div className="d-flex align-items-center">
+                                                            <span>Pass Criteria</span>
+                                                            <Form.Select className="select-sm w-80 ms-2">
+                                                                <option> 60%</option>
+                                                                <option value="1">One</option>
+                                                                <option value="2">Two</option>
+                                                                <option value="3">Three</option>
+                                                            </Form.Select>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="d-flex align-items-center">
+                                                            <span>Duration</span>
+                                                            <Form.Select className="select-sm w-80 ms-2">
+                                                                <option> 30mins</option>
+                                                                <option value="1">One</option>
+                                                                <option value="2">Two</option>
+                                                                <option value="3">Three</option>
+                                                            </Form.Select>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" className="btn-transpant"><img src={deleteDark} alt="" /></button>
+                                                    </td>
+                                                </tr>
+                                            </Table>
+                                        </Tab.Pane>
+                                    </Tab.Content>
+                                </Col>
+                            </Row>
+                        </Tab.Container>
+                    </Offcanvas.Body>
+                    <div className="offcanvas-footer text-end">
+                        <span className="me-4 font-sm">0/4</span>
+                        <Button onClick={handleClose} variant="primary">
+                            Select
+                        </Button>
+                    </div>
+                </Offcanvas> */}
             <Evaluations
                 show={show}
                 handleClose={handleClose}
@@ -3906,6 +3943,126 @@ tracker.show_tasks()
                     )}
                 </Offcanvas.Body>
             </Offcanvas>
+
+
+
+            <Modal
+                show={modalShow}
+                onHide={() => setModalShow(false)}                              
+                centered
+                className="model-md"
+            >
+                <Modal.Header closeButton style={
+                    {
+                        borderTopLeftRadius:'8px',
+                        borderTopRightRadius: '8px'
+                    }
+                }>
+                    <Modal.Title id="contained-modal-title-vcenter">
+                       Do you wish to reject Sandeep Kattamuri?
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form.Group className="mb-2" controlId="jobDescription">
+                                                    <Form.Label>
+                                                        Message Template
+                                                    </Form.Label>
+
+                                                    <div className="texteditor_warp" onClick={handleWrapperClick}>
+                                                        <ReactQuill
+                                                            value={description}
+                                                            onChange={handleEditorChange}
+                                                            theme="snow"
+                                                            ref={quillRef}
+                                                            className="custom-quill"
+                                                            modules={{
+                                                                toolbar: [["bold", "italic", "underline", "strike"], ["link"]],
+                                                            }}
+                                                        />
+
+
+                                                    </div>
+
+                                                    <div className="d-flex justify-content-between custom-checkbox align-items-center mt-3">
+                                                        <Form.Check // prettier-ignore
+                                                            type="checkbox"
+                                                            id={`default-checkbox`}
+                                                            label={`Update Template`}
+                                                            style={{fontSize:'12px', lineHeight:'18px', marginLeft:'6px'}}
+                                                        />
+
+                                                          <div className="jobs-footer text-end">
+                    <Button
+                        variant="light"
+                        className="me-3"
+                        style={{fontSize:'12px', lineHeight:'18px', width:'113px', height:'38px'}}
+                    >
+                        Clear All
+                    </Button>
+                    <Button onClick={handleClose} variant="primary" style={{fontSize:'12px', lineHeight:'18px', width:'113px', height:'38px'}} >
+                        Reject
+                    </Button>
+                </div>
+
+                                                                                                           </div>
+
+                                                    {descriptionError && (
+                                                        <div className="error">{descriptionError}</div>
+                                                    )}
+                                                    {errors.detailed_description && (
+                                                        <div className="error">{errors.detailed_description}</div>
+                                                    )}
+                                                </Form.Group>
+                   
+                </Modal.Body>
+                {/* <Modal.Footer>
+                    <Button onClick={() => setModalShow(false)} className="btn btn-primary" >Reject</Button>
+                </Modal.Footer> */}
+            </Modal>
+
+
+
+             <Modal show={recallshow} onHide={recallClose}  centered>
+        <Modal.Header closeButton style={
+                    {
+                        borderTopLeftRadius:'8px',
+                        borderTopRightRadius: '8px'
+                    }
+                }>
+          <Modal.Title>Add Tags</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+
+            <p style={{fontSize:'12px', lineHeight:'18px', fontWeight:'500', color:'#344054'}}>Tags</p>
+
+            <textarea className="form-control" rows={5}>
+
+                </textarea>
+
+
+            <div className="jobs-footer text-end d-flex justify-content-between mt-3">
+                    <Button
+                        variant="light"
+                        className="me-3 w-50"
+                        style={{fontSize:'12px', lineHeight:'18px', width:'113px', height:'38px'}}
+                        onClick={recallClose}
+                    >
+                        Reset
+                    </Button>
+                    <Button className="w-50"  variant="primary" style={{fontSize:'12px', lineHeight:'18px', width:'113px', height:'38px'}} >
+                        Save
+                    </Button>
+                </div>
+        </Modal.Body>
+        {/* <Modal.Footer>
+          <Button variant="secondary" onClick={recallClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={recallClose}>
+            Save Changes
+          </Button>
+        </Modal.Footer> */}
+      </Modal>
 
         </>
     );

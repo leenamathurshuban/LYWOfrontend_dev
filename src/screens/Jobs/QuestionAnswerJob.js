@@ -292,7 +292,7 @@ export default function QuestionAnswerJob({ components, setComponents}) {
                                                         type={
                                                             question.quiz_type === QUESTION_TYPES.SINGLE ? "radio" : "checkbox"
                                                         }
-                                                        name={`question-${optionIndex}`}
+                                                        name={`question`}
                                                         id={`question-${question.id}-${optionIndex}`}
                                                         onChange={(e) =>
                                                             handleAnswerChange(questionIndex, option, e.target.checked)
