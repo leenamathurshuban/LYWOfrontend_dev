@@ -157,13 +157,13 @@ const JobReview = () => {
     );
 
 
-     const [selectedpersonality, setSelectedpersonality] = useState({
-            modal_name: "",
-            modal_data: {}
-        })
+    const [selectedpersonality, setSelectedpersonality] = useState({
+        modal_name: "",
+        modal_data: {}
+    })
 
 
-        // Handle click on Col
+    // Handle click on Col
     const handleCardClick = (behaviour) => {
         setSelectedpersonality({
             modal_isOpen: true,
@@ -195,13 +195,13 @@ const JobReview = () => {
     const stopappShow = () => stopappsetShow(true);
 
     const [holdappshow, holdappsetShow] = useState(false);
-const holdappClose = () => holdappsetShow(false);
+    const holdappClose = () => holdappsetShow(false);
     const holdappShow = () => holdappsetShow(true);
 
 
 
-       const [sortmodalshow, sortmodalsetShow] = useState(false);
-const sortmodalClose = () => sortmodalsetShow(false);
+    const [sortmodalshow, sortmodalsetShow] = useState(false);
+    const sortmodalClose = () => sortmodalsetShow(false);
     const sortmodalShow = () => sortmodalsetShow(true);
 
 
@@ -3978,7 +3978,7 @@ const sortmodalClose = () => sortmodalsetShow(false);
                         <Button variant="link" onClick={() => setremindModalShow(true)} className="btn-sm btn-link-muted"><img className="me-2" src={SReminder} />Send Reminder</Button>
                         <Button variant="link" onClick={() => holdappsetShow(true)} className="btn-sm btn-link-muted"><img className="me-2" src={Hold} />Hold</Button>
                         <Button variant="link" onClick={() => setModalShow(true)} className="btn-sm btn-link-muted"><img className="me-2" src={Reject} />Reject</Button>
-                        <Button variant="link"  onClick={() => sortmodalsetShow(true)}  className="btn-sm btn-link-muted"><img className="me-2" src={ShortList} />Short List</Button>
+                        <Button variant="link" onClick={() => sortmodalsetShow(true)} className="btn-sm btn-link-muted"><img className="me-2" src={ShortList} />Short List</Button>
                     </div>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
@@ -4020,9 +4020,7 @@ const sortmodalClose = () => sortmodalsetShow(false);
                                                 setCandidateQuestionList={setCandidateQuestionList} handleReviewClose={handleReviewClose} setReviewEventKey={setReviewEventKey} />
                                         </Tab.Pane>
                                         <Tab.Pane eventKey="Messages">
-                                            <Step5 />
-
-
+                                            <Step5 data={assetData} reviewModal={reviewModal} />
                                         </Tab.Pane>
                                     </Tab.Content>
                                 </Tab.Container>
@@ -4192,13 +4190,6 @@ const sortmodalClose = () => sortmodalsetShow(false);
                                 />
                             </div>
 
-
-
-
-
-
-
-
                         </div>
                     </Form.Group>
 
@@ -4264,11 +4255,11 @@ const sortmodalClose = () => sortmodalsetShow(false);
 
 
             <Modal
-             show={holdappshow} 
-             onHide={holdappClose} 
-             className="confirmation-model custom-backdrop-2 comman-model" 
-             backdropClassName="custom-backdrop"
-             centered>
+                show={holdappshow}
+                onHide={holdappClose}
+                className="confirmation-model custom-backdrop-2 comman-model"
+                backdropClassName="custom-backdrop"
+                centered>
                 <Modal.Header closeButton style={
                     {
                         borderTopLeftRadius: '8px',
@@ -4318,7 +4309,7 @@ const sortmodalClose = () => sortmodalsetShow(false);
 
             {/* shortlist */}
 
-             
+
 
             <Modal
                 show={sortmodalshow}
@@ -4332,19 +4323,19 @@ const sortmodalClose = () => sortmodalsetShow(false);
                         borderTopLeftRadius: '8px',
                         borderTopRightRadius: '8px'
                     }
-                }>  
-                <div>
-                    <Modal.Title id="contained-modal-title-vcenter">
-                        Do you wish to shortlist Sandeep Kattamuri?
-                    </Modal.Title>
-                    <p className="mb-0 " style={{fontSize:'14px', lineHeight:'24px'}}>Shortlist will add the candidate to the Final Selection.</p>
+                }>
+                    <div>
+                        <Modal.Title id="contained-modal-title-vcenter">
+                            Do you wish to shortlist Sandeep Kattamuri?
+                        </Modal.Title>
+                        <p className="mb-0 " style={{ fontSize: '14px', lineHeight: '24px' }}>Shortlist will add the candidate to the Final Selection.</p>
                     </div>
                 </Modal.Header>
                 <Modal.Body>
-                
+
                     <Form.Group className="mb-2" controlId="jobDescription">
                         <Form.Label>
-                            Message 
+                            Message
                         </Form.Label>
 
                         <div className="texteditor_warp" onClick={handleWrapperClick}>
@@ -4402,14 +4393,6 @@ const sortmodalClose = () => sortmodalsetShow(false);
                     <Button onClick={() => setModalShow(false)} className="btn btn-primary" >Reject</Button>
                 </Modal.Footer> */}
             </Modal>
-
-
-
-
-
-
-
-
 
             {/* recall */}
 
@@ -4512,7 +4495,7 @@ const sortmodalClose = () => sortmodalsetShow(false);
 
 
 
-                
+
 
 
 
