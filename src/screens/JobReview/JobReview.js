@@ -12,6 +12,7 @@ import angleDown from "../../images/icons/angle-down-arrow.svg"
 import EvaluaBtn from "../../images/icons/evalua_icon.svg"
 import AutomatBtn from "../../images/icons/automations_icon.svg"
 import stopBtn from "../../images/icons/pause-circle-16x16.svg"
+import LeaderIcn from "../../images/icons/Leader-icon.svg";
 import gridView from "../../images/icons/grid_icon.svg"
 import listView from "../../images/icons/list_icon.svg"
 import Dragableicn from "../../images/icons/dragable-six-dots.svg"
@@ -56,7 +57,7 @@ import sorticn from "../../images/icons/switch-vertical-01.svg";
 import printicn from "../../images/icons/printer.svg";
 import downloadicn from "../../images/icons/download-b.svg";
 
-import checkgreen from "../../images/icons/Check-g-icon.png"
+import checkgreen from "../../images/icons/Checkicon__1.svg"
 import xcircle from "../../images/icons/x-circle.svg"
 import slashCircle from "../../images/icons/slash-circle-01.svg"
 import placeholdericon from "../../images/icons/placeholder.svg"
@@ -81,6 +82,7 @@ import Step2 from "./Step/Step2";
 import SideCard from "./Step/SideCard";
 import Step3 from "./Step/Step3";
 import Step4 from "./Step/Step4";
+import Step5 from "./Step/Step5";
 import CandidateQuestionList from "./Step/CandidateQuestionList";
 import AvailabilityPieChart from "./GraphChart/AvailabilityPieChart";
 import PersonalityGraph from "./GraphChart/PersonalityGraph";
@@ -155,17 +157,56 @@ const JobReview = () => {
     );
 
 
+     const [selectedpersonality, setSelectedpersonality] = useState({
+            modal_name: "",
+            modal_data: {}
+        })
+
+
+        // Handle click on Col
+    const handleCardClick = (behaviour) => {
+        setSelectedpersonality({
+            modal_isOpen: true,
+            modal_data: behaviour
+        });
+    };
+
+    // Close modal
+    const handleCloseModal = () => {
+        setSelectedpersonality({
+            modal_isOpen: false,
+            modal_data: {}
+        });
+    };
+
+
     const [recallshow, recallsetShow] = useState(false);
 
-  const recallClose = () => recallsetShow(false);
-  const recallShow = () => recallsetShow(true);
+    const recallClose = () => recallsetShow(false);
+    const recallShow = () => recallsetShow(true);
 
 
- const [stopappshow, stopappsetShow] = useState(false);
+    const [stopappshow, stopappsetShow] = useState(false);
+
+
 
 
     const stopappClose = () => stopappsetShow(false);
-  const stopappShow = () => stopappsetShow(true);
+    const stopappShow = () => stopappsetShow(true);
+
+    const [holdappshow, holdappsetShow] = useState(false);
+const holdappClose = () => holdappsetShow(false);
+    const holdappShow = () => holdappsetShow(true);
+
+
+
+       const [sortmodalshow, sortmodalsetShow] = useState(false);
+const sortmodalClose = () => sortmodalsetShow(false);
+    const sortmodalShow = () => sortmodalsetShow(true);
+
+
+
+
 
 
     const getFileType = (url) => {
@@ -192,7 +233,12 @@ const JobReview = () => {
         setActiveAccordion('1'); // This will open the second accordion (eventKey="1")
     };
 
-      const [modalShow, setModalShow] = React.useState(false);
+    const [modalShow, setModalShow] = React.useState(false);
+
+
+    const [remindmodalShow, setremindModalShow] = React.useState(false);
+
+
 
     const [isLikeUid, setIsLikeUid] = useState([]);
 
@@ -1293,29 +1339,29 @@ const JobReview = () => {
                                                             </div>
                                                         </Col>
                                                         <Col md={6} className="d-flex justify-content-end align-items-center list-kanban">
-                                                           
+
                                                             <Button className="icon_btnlink" onClick={() => handleStatusGroup('Select', selectedListUids)}>
-                                                               <img src={checkgreen} className="img-fluid"/>
+                                                                <img src={checkgreen} className="img-fluid" />
                                                                 Select</Button>
                                                             <Button className="icon_btnlink" onClick={() => handleStatusGroup('Reject', selectedListUids)}>
-                                                               <img src={xcircle} className="img-fluid"/>
+                                                                <img src={xcircle} className="img-fluid" />
                                                                 Reject</Button>
                                                             <Button className="icon_btnlink" onClick={() => handleStatusGroup('On Hold', selectedListUids)}>
-                                                               <img src={slashCircle} className="img-fluid"/>
-                                                                
+                                                                <img src={slashCircle} className="img-fluid" />
+
                                                                 On Hold</Button>
 
 
-                                                                 <Button className="icon_btnlink" onClick={() => handleStatusGroup('Active', selectedListUids)}>
-                                                                <img src={placeholdericon} className="img-fluid"/>
+                                                            <Button className="icon_btnlink" onClick={() => handleStatusGroup('Active', selectedListUids)}>
+                                                                <img src={placeholdericon} className="img-fluid" />
                                                                 Clear Round</Button>
-                                                            <Button className="icon_btnlink" onClick={() => setModalShow(true)}>
-                                                                <img src={sendmsg } className="img-fluid"/>
+                                                            <Button className="icon_btnlink" onClick={() => setremindModalShow(true)}>
+                                                                <img src={sendmsg} className="img-fluid" />
                                                                 Send Message</Button>
 
 
-                                                                <Button className="icon_btnlink" onClick={() => handleStatusGroup('InActive', selectedListUids)}>
-                                                                <img src={downloadicon } className="img-fluid"/>
+                                                            <Button className="icon_btnlink" onClick={() => handleStatusGroup('InActive', selectedListUids)}>
+                                                                <img src={downloadicon} className="img-fluid" />
                                                                 Download</Button>
 
 
@@ -1362,7 +1408,7 @@ const JobReview = () => {
                                                                     <th colSpan={5} className="border-b">
                                                                         <div className="d-flex align-items-end justify-content-between">
                                                                             <strong>Details</strong>
-                                                                            
+
                                                                             {/* <button type="button" className="btn btn-link font-sm pb-0"><i class="fas fa-plus-circle"></i></button> */}
 
 
@@ -1455,7 +1501,7 @@ const JobReview = () => {
                                                                                 onChange={() => handleCheckBoxBtn(item?.uid)}
                                                                                 disabled={item?.job_applicant_status == "Reject"}
                                                                             />
-                                                                            <span className="font-weight-600" style={{ textTransform: 'capitalize' }} onClick={() => {
+                                                                            <span className="font-weight-600" style={{ textTransform: 'capitalize', cursor: 'pointer' }} onClick={() => {
                                                                                 setReviewModal(true)
                                                                                 setCandidateEmail(item?.job_applicant_profile?.user?.email)
                                                                             }}>
@@ -1506,7 +1552,7 @@ const JobReview = () => {
                                                                         <td><span className="text-elipe-40">Under Review</span></td>
                                                                         <td>76%</td>
                                                                         <td colSpan={2} >
-                                                                            <span onClick={recallShow} className="tag tag-lightprimery" style={{cursor:'pointer'}} >Recall</span>
+                                                                            <span onClick={recallShow} className="tag tag-lightprimery" style={{ cursor: 'pointer' }} >Recall</span>
                                                                         </td>
 
                                                                         <td >
@@ -1539,7 +1585,7 @@ const JobReview = () => {
                                                                                     </Dropdown.Item>
 
 
-                                                                                    <Dropdown.Item href={""} onClick={() => setModalShow(true)} >
+                                                                                    <Dropdown.Item href={""} onClick={() => setremindModalShow(true)} >
                                                                                         Send Message
                                                                                     </Dropdown.Item>
 
@@ -2652,6 +2698,7 @@ const JobReview = () => {
                                                             options={sectionAssetfun(item?.section_asset)}
                                                             onChange={handleSectionWise}
                                                             className="qs_dropdown react_selectbox"
+                                                            styles={customStyles}
                                                         />
                                                         <ul className="queslsit">
                                                             {sectionWiseData[0]?.question_section?.map((QuesItem, quesIndex) => (
@@ -3928,10 +3975,10 @@ const JobReview = () => {
                         </div>
                     </Offcanvas.Title>
                     <div className="d-flex ml-auto">
-                        <Button variant="link" className="btn-sm btn-link-muted"><img className="me-2" src={SReminder} />Send Reminder</Button>
-                        <Button variant="link" className="btn-sm btn-link-muted"><img className="me-2" src={Hold} />Hold</Button>
-                        <Button variant="link" className="btn-sm btn-link-muted"><img className="me-2" src={Reject} />Reject</Button>
-                        <Button variant="link" className="btn-sm btn-link-muted"><img className="me-2" src={ShortList} />Short List</Button>
+                        <Button variant="link" onClick={() => setremindModalShow(true)} className="btn-sm btn-link-muted"><img className="me-2" src={SReminder} />Send Reminder</Button>
+                        <Button variant="link" onClick={() => holdappsetShow(true)} className="btn-sm btn-link-muted"><img className="me-2" src={Hold} />Hold</Button>
+                        <Button variant="link" onClick={() => setModalShow(true)} className="btn-sm btn-link-muted"><img className="me-2" src={Reject} />Reject</Button>
+                        <Button variant="link"  onClick={() => sortmodalsetShow(true)}  className="btn-sm btn-link-muted"><img className="me-2" src={ShortList} />Short List</Button>
                     </div>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
@@ -3941,9 +3988,9 @@ const JobReview = () => {
                         <Row>
                             <Col md={9}>
                                 <Tab.Container id="left-tabs-example" defaultActiveKey="Application">
-                                    <Nav variant="pills" className="tab-underline">
+                                    <Nav variant="pills" className="tab-underline under-border-2">
                                         <Nav.Item>
-                                            <Nav.Link eventKey="Application">Application <span className="count badge ms-2">1</span></Nav.Link>
+                                            <Nav.Link eventKey="Application">Application </Nav.Link>
                                         </Nav.Item>
                                         <Nav.Item>
                                             <Nav.Link eventKey="Resume">Resume</Nav.Link>
@@ -3972,7 +4019,11 @@ const JobReview = () => {
                                             <Step4 data={assetData} setCandidateQuestionShow={setCandidateQuestionShow}
                                                 setCandidateQuestionList={setCandidateQuestionList} handleReviewClose={handleReviewClose} setReviewEventKey={setReviewEventKey} />
                                         </Tab.Pane>
-                                        <Tab.Pane eventKey="Messages">Second tab content</Tab.Pane>
+                                        <Tab.Pane eventKey="Messages">
+                                            <Step5 />
+
+
+                                        </Tab.Pane>
                                     </Tab.Content>
                                 </Tab.Container>
                             </Col>
@@ -3985,79 +4036,367 @@ const JobReview = () => {
             </Offcanvas>
 
 
+            {/* Reject Model */}
 
             <Modal
                 show={modalShow}
-                onHide={() => setModalShow(false)}                              
+                onHide={() => setModalShow(false)}
                 centered
-                className="model-md"
+                className="model-md custom-backdrop-2 comman-model"
+                backdropClassName="custom-backdrop"
             >
                 <Modal.Header closeButton style={
                     {
-                        borderTopLeftRadius:'8px',
+                        borderTopLeftRadius: '8px',
                         borderTopRightRadius: '8px'
                     }
                 }>
                     <Modal.Title id="contained-modal-title-vcenter">
-                       Do you wish to reject Sandeep Kattamuri?
+                        Do you wish to reject Sandeep Kattamuri?
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form.Group className="mb-2" controlId="jobDescription">
-                                                    <Form.Label>
-                                                        Message Template
-                                                    </Form.Label>
+                        <Form.Label>
+                            Message Template
+                        </Form.Label>
 
-                                                    <div className="texteditor_warp" onClick={handleWrapperClick}>
-                                                        <ReactQuill
-                                                            value={description}
-                                                            onChange={handleEditorChange}
-                                                            theme="snow"
-                                                            ref={quillRef}
-                                                            className="custom-quill "
-                                                            modules={{
-                                                                toolbar: [["bold", "italic", "underline", "strike"], ["link"]],
-                                                            }}
-                                                            // style={{ 
-                                                            //     minHeight: '200px',
-                                                            //     height: 'auto'
-                                                            // }}
-                                                        />
+                        <div className="texteditor_warp" onClick={handleWrapperClick}>
+                            <ReactQuill
+                                value={description}
+                                onChange={handleEditorChange}
+                                theme="snow"
+                                ref={quillRef}
+                                className="custom-quill "
+                                modules={{
+                                    toolbar: [["bold", "italic", "underline", "strike"], ["link"]],
+                                }}
+                            // style={{ 
+                            //     minHeight: '200px',
+                            //     height: 'auto'
+                            // }}
+                            />
 
 
-                                                    </div>
+                        </div>
 
-                                                    <div className="d-flex justify-content-between custom-checkbox align-items-center mt-3">
-                                                        <Form.Check // prettier-ignore
-                                                            type="checkbox"
-                                                            id={`default-checkbox`}
-                                                            label={`Update Template`}
-                                                            style={{fontSize:'12px', lineHeight:'18px', marginLeft:'6px'}}
-                                                        />
+                        <div className="d-flex justify-content-between custom-checkbox align-items-center mt-3">
+                            <Form.Check // prettier-ignore
+                                type="checkbox"
+                                id={`default-checkbox`}
+                                label={`Update Template`}
+                                style={{ fontSize: '12px', lineHeight: '18px', marginLeft: '6px' }}
+                            />
 
-                                                          <div className="jobs-footer text-end">
-                    <Button
-                        variant="light"
-                        className="me-3"
-                        style={{fontSize:'12px', lineHeight:'18px', width:'113px', height:'38px'}}
-                    >
-                        Clear All
-                    </Button>
-                    <Button onClick={handleClose} variant="primary" style={{fontSize:'12px', lineHeight:'18px', width:'113px', height:'38px'}} >
-                        Reject
-                    </Button>
-                </div>
+                            <div className="jobs-footer text-end">
+                                <Button
+                                    variant="light"
+                                    className="me-3"
+                                    style={{ fontSize: '12px', lineHeight: '18px', width: '113px', height: '38px' }}
+                                >
+                                    Clear All
+                                </Button>
+                                <Button onClick={handleClose} variant="primary" style={{ fontSize: '12px', lineHeight: '18px', width: '113px', height: '38px' }} >
+                                    Reject
+                                </Button>
+                            </div>
 
-                                                                                                           </div>
+                        </div>
 
-                                                    {descriptionError && (
-                                                        <div className="error">{descriptionError}</div>
-                                                    )}
-                                                    {errors.detailed_description && (
-                                                        <div className="error">{errors.detailed_description}</div>
-                                                    )}
-                                                </Form.Group>
-                   
+                        {descriptionError && (
+                            <div className="error">{descriptionError}</div>
+                        )}
+                        {errors.detailed_description && (
+                            <div className="error">{errors.detailed_description}</div>
+                        )}
+                    </Form.Group>
+
+                </Modal.Body>
+                {/* <Modal.Footer>
+                    <Button onClick={() => setModalShow(false)} className="btn btn-primary" >Reject</Button>
+                </Modal.Footer> */}
+            </Modal>
+
+
+
+            {/* Send Message Model */}
+
+            <Modal
+                show={remindmodalShow}
+                onHide={() => setremindModalShow(false)}
+                centered
+                className="model-md custom-backdrop-2 comman-model"
+                backdropClassName="custom-backdrop"
+            >
+                <Modal.Header closeButton style={
+                    {
+                        borderTopLeftRadius: '8px',
+                        borderTopRightRadius: '8px'
+                    }
+                }>
+                    <Modal.Title id="contained-modal-title-vcenter">
+                        Send Reminder
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form.Group className="mb-2">
+                        <Form.Label>
+                            Reminder Interval
+                        </Form.Label>
+                        <div className="row p-2">
+                            <div className="col-md-3 ps-1 pe-1">
+                                <Form.Control
+                                    type="text"
+                                    id="inputText5"
+                                    aria-describedby="passwordHelpBlock"
+                                    placeholder="Every 1"
+                                    style={{ minHeight: '37px' }}
+                                />
+                            </div>
+                            <div className="col-md-3  ps-1 pe-1">
+                                <Select
+                                    className="react_selectbox"
+                                    options={[
+                                        { value: 'day', label: 'Day' },
+                                        { value: 'Night', label: 'Night' }
+                                    ]}
+                                    defaultValue={{ value: 'day', label: 'Day' }}
+                                    isSearchable={false}
+                                    onChange={(selectedOption) => console.log(selectedOption)}
+                                    styles={customStyles}
+                                />
+                            </div>
+                            <div className="col-md-3  ps-1 pe-1">
+                                <Select
+                                    className="react_selectbox"
+                                    options={[
+                                        { value: 'untilcompleted', label: 'Until Completed' },
+                                        { value: 'completed', label: 'Completed' }
+                                    ]}
+                                    defaultValue={{ value: 'untilcompleted', label: 'Until Completed' }}
+                                    isSearchable={false}
+                                    onChange={(selectedOption) => console.log(selectedOption)}
+                                    // onChange={handleSelectedLikeItems}
+                                    styles={customStyles}
+                                />
+                            </div>
+                            <div className="col-md-3 d-flex align-items-center  ps-1 pe-1">
+
+                                <Form.Check // prettier-ignore
+                                    type="switch"
+                                    id="custom-switch"
+                                    label="Auto Remind"
+                                    className="mt-1"
+                                    style={{ fontSize: '12px', lineHeight: '18px', fontWeight: '500' }}
+
+                                />
+                            </div>
+
+
+
+
+
+
+
+
+                        </div>
+                    </Form.Group>
+
+                    <Form.Group className="mb-2" controlId="jobDescription">
+                        <Form.Label>
+                            Message Template
+                        </Form.Label>
+
+                        <div className="texteditor_warp" onClick={handleWrapperClick}>
+                            <ReactQuill
+                                value={description}
+                                onChange={handleEditorChange}
+                                theme="snow"
+                                ref={quillRef}
+                                className="custom-quill"
+                                modules={{
+                                    toolbar: [["bold", "italic", "underline", "strike"], ["link"]],
+                                }}
+                            />
+
+
+                        </div>
+
+                        <div className="d-flex justify-content-between custom-checkbox align-items-center mt-3">
+                            <Form.Check // prettier-ignore
+                                type="checkbox"
+                                id={`default-checkbox`}
+                                label={`Update Template`}
+                                style={{ fontSize: '12px', lineHeight: '18px', marginLeft: '6px' }}
+                            />
+
+                            <div className="jobs-footer text-end">
+                                <Button
+                                    variant="light"
+                                    className="me-3"
+                                    style={{ fontSize: '12px', lineHeight: '18px', width: '113px', height: '38px' }}
+                                >
+                                    Clear All
+                                </Button>
+                                <Button onClick={handleClose} variant="primary" style={{ fontSize: '12px', lineHeight: '18px', width: '160px', height: '38px' }} >
+                                    Send Message
+                                </Button>
+                            </div>
+
+                        </div>
+
+                        {descriptionError && (
+                            <div className="error">{descriptionError}</div>
+                        )}
+                        {errors.detailed_description && (
+                            <div className="error">{errors.detailed_description}</div>
+                        )}
+                    </Form.Group>
+
+                </Modal.Body>
+                {/* <Modal.Footer>
+                    <Button onClick={() => setModalShow(false)} className="btn btn-primary" >Reject</Button>
+                </Modal.Footer> */}
+            </Modal>
+
+
+            {/* OnHold Model */}
+
+
+            <Modal
+             show={holdappshow} 
+             onHide={holdappClose} 
+             className="confirmation-model custom-backdrop-2 comman-model" 
+             backdropClassName="custom-backdrop"
+             centered>
+                <Modal.Header closeButton style={
+                    {
+                        borderTopLeftRadius: '8px',
+                        borderTopRightRadius: '8px'
+                    }
+                }>
+                    <Modal.Title></Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+
+
+                    <h4>Do you want to put Sandeep Kattamuri on hold?</h4>
+
+
+                    <p>This will keep the candidate <br></br> at the current stage.</p>
+
+
+
+
+                    <div className="jobs-footer text-end d-flex justify-content-between mt-3">
+                        <Button
+                            variant="light"
+                            className="me-3 w-50 btn btn-outline"
+                            //style={{fontSize:'12px', lineHeight:'18px', width:'113px', height:'38px'}}
+                            onClick={holdappClose}
+                        >
+                            No
+                        </Button>
+                        <Button className="w-50 btn btn-primary" variant="primary"
+                        // style={{fontSize:'12px', lineHeight:'18px', width:'113px', height:'38px'}}
+                        >
+                            Yes
+                        </Button>
+                    </div>
+                </Modal.Body>
+                {/* <Modal.Footer>
+          <Button variant="secondary" onClick={recallClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={recallClose}>
+            Save Changes
+          </Button>
+        </Modal.Footer> */}
+            </Modal>
+
+
+
+            {/* shortlist */}
+
+             
+
+            <Modal
+                show={sortmodalshow}
+                onHide={() => sortmodalsetShow(false)}
+                centered
+                className="model-md custom-backdrop-2 sort-list-modal comman-model"
+                backdropClassName="custom-backdrop"
+            >
+                <Modal.Header closeButton style={
+                    {
+                        borderTopLeftRadius: '8px',
+                        borderTopRightRadius: '8px'
+                    }
+                }>  
+                <div>
+                    <Modal.Title id="contained-modal-title-vcenter">
+                        Do you wish to shortlist Sandeep Kattamuri?
+                    </Modal.Title>
+                    <p className="mb-0 " style={{fontSize:'14px', lineHeight:'24px'}}>Shortlist will add the candidate to the Final Selection.</p>
+                    </div>
+                </Modal.Header>
+                <Modal.Body>
+                
+                    <Form.Group className="mb-2" controlId="jobDescription">
+                        <Form.Label>
+                            Message 
+                        </Form.Label>
+
+                        <div className="texteditor_warp" onClick={handleWrapperClick}>
+                            <ReactQuill
+                                value={description}
+                                onChange={handleEditorChange}
+                                theme="snow"
+                                ref={quillRef}
+                                className="custom-quill "
+                                modules={{
+                                    toolbar: [["bold", "italic", "underline", "strike"], ["link"]],
+                                }}
+                            // style={{ 
+                            //     minHeight: '200px',
+                            //     height: 'auto'
+                            // }}
+                            />
+
+
+                        </div>
+
+                        <div className="d-flex justify-content-between custom-checkbox align-items-center mt-3">
+                            <Form.Check // prettier-ignore
+                                type="checkbox"
+                                id={`default-checkbox`}
+                                label={`Update Template`}
+                                style={{ fontSize: '12px', lineHeight: '18px', marginLeft: '6px' }}
+                            />
+
+                            <div className="jobs-footer text-end">
+                                <Button
+                                    variant="light"
+                                    className="me-3"
+                                    style={{ fontSize: '12px', lineHeight: '18px', width: '113px', height: '38px' }}
+                                >
+                                    Clear All
+                                </Button>
+                                <Button onClick={handleClose} variant="primary" style={{ fontSize: '12px', lineHeight: '18px', width: '113px', height: '38px' }} >
+                                    ShortList
+                                </Button>
+                            </div>
+
+                        </div>
+
+                        {descriptionError && (
+                            <div className="error">{descriptionError}</div>
+                        )}
+                        {errors.detailed_description && (
+                            <div className="error">{errors.detailed_description}</div>
+                        )}
+                    </Form.Group>
+
                 </Modal.Body>
                 {/* <Modal.Footer>
                     <Button onClick={() => setModalShow(false)} className="btn btn-primary" >Reject</Button>
@@ -4067,42 +4406,51 @@ const JobReview = () => {
 
 
 
-             <Modal show={recallshow} onHide={recallClose}  centered>
-            <Modal.Header closeButton style={
-                        {
-                            borderTopLeftRadius:'8px',
-                            borderTopRightRadius: '8px'
-                        }
-                    }>
-          <Modal.Title>Add Tags</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>           
-
-  <p style={{fontSize:'12px', lineHeight:'18px', fontWeight:'500', color:'#344054'}}>Tags</p>
-                        <div className="tagarea">
-
-                        </div>
-                        
-                       
 
 
-            <div className="jobs-footer text-end d-flex justify-content-between mt-3">
-                    <Button
-                        variant="light"
-                        className="me-3 w-50 btn btn-outline"
-                        //style={{fontSize:'16px', lineHeight:'24px', width:'113px', height:'38px'}}
-                        onClick={recallClose}
-                    >
-                        Reset
-                    </Button>
-                    <Button className="w-50 btn btn-primary"  variant="primary"
-                     //style={{fontSize:'16px', lineHeight:'24px', width:'113px', height:'38px'}} 
-                     >
-                        Save
-                    </Button>
-                </div>
-        </Modal.Body>
-        {/* <Modal.Footer>
+
+
+
+            {/* recall */}
+
+
+
+            <Modal show={recallshow} className="comman-model" onHide={recallClose} centered>
+                <Modal.Header closeButton style={
+                    {
+                        borderTopLeftRadius: '8px',
+                        borderTopRightRadius: '8px'
+                    }
+                }>
+                    <Modal.Title>Add Tags</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+
+                    <p style={{ fontSize: '12px', lineHeight: '18px', fontWeight: '500', color: '#344054' }}>Tags</p>
+                    <div className="tagarea">
+
+                    </div>
+
+
+
+
+                    <div className="jobs-footer text-end d-flex justify-content-between mt-3">
+                        <Button
+                            variant="light"
+                            className="me-3 w-50 btn btn-outline"
+                            //style={{fontSize:'16px', lineHeight:'24px', width:'113px', height:'38px'}}
+                            onClick={recallClose}
+                        >
+                            Reset
+                        </Button>
+                        <Button className="w-50 btn btn-primary" variant="primary"
+                        //style={{fontSize:'16px', lineHeight:'24px', width:'113px', height:'38px'}} 
+                        >
+                            Save
+                        </Button>
+                    </div>
+                </Modal.Body>
+                {/* <Modal.Footer>
           <Button variant="secondary" onClick={recallClose}>
             Close
           </Button>
@@ -4110,49 +4458,49 @@ const JobReview = () => {
             Save Changes
           </Button>
         </Modal.Footer> */}
-      </Modal>
+            </Modal>
 
 
-      {/* stop application model */}
-
-        
-              <Modal show={stopappshow} onHide={stopappClose} className="confirmation-model"   centered>
-            <Modal.Header closeButton style={
-                        {
-                            borderTopLeftRadius:'8px',
-                            borderTopRightRadius: '8px'
-                        }
-                    }>
-          <Modal.Title></Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
+            {/* stop application model */}
 
 
-            <h4>Are you sure you wish to stop applications for the job?</h4>
+            <Modal show={stopappshow} onHide={stopappClose} className="confirmation-model comman-model" centered>
+                <Modal.Header closeButton style={
+                    {
+                        borderTopLeftRadius: '8px',
+                        borderTopRightRadius: '8px'
+                    }
+                }>
+                    <Modal.Title></Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
 
 
-            <p>You will no longer receive new applications for the job.</p>
-
-                    
+                    <h4>Are you sure you wish to stop applications for the job?</h4>
 
 
-            <div className="jobs-footer text-end d-flex justify-content-between mt-3">
-                    <Button
-                        variant="light"
-                        className="me-3 w-50 btn btn-outline"
-                        //style={{fontSize:'12px', lineHeight:'18px', width:'113px', height:'38px'}}
-                        onClick={stopappClose}
-                    >
-                        Reset
-                    </Button>
-                    <Button className="w-50 btn btn-primary"  variant="primary"
-                    // style={{fontSize:'12px', lineHeight:'18px', width:'113px', height:'38px'}}
-                      >
-                        Save
-                    </Button>
-                </div>
-        </Modal.Body>
-        {/* <Modal.Footer>
+                    <p>You will no longer receive new applications for the job.</p>
+
+
+
+
+                    <div className="jobs-footer text-end d-flex justify-content-between mt-3">
+                        <Button
+                            variant="light"
+                            className="me-3 w-50 btn btn-outline"
+                            //style={{fontSize:'12px', lineHeight:'18px', width:'113px', height:'38px'}}
+                            onClick={stopappClose}
+                        >
+                            Reset
+                        </Button>
+                        <Button className="w-50 btn btn-primary" variant="primary"
+                        // style={{fontSize:'12px', lineHeight:'18px', width:'113px', height:'38px'}}
+                        >
+                            Save
+                        </Button>
+                    </div>
+                </Modal.Body>
+                {/* <Modal.Footer>
           <Button variant="secondary" onClick={recallClose}>
             Close
           </Button>
@@ -4160,7 +4508,13 @@ const JobReview = () => {
             Save Changes
           </Button>
         </Modal.Footer> */}
-      </Modal>
+            </Modal>
+
+
+
+                
+
+
 
 
 

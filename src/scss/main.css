@@ -669,6 +669,10 @@ ol.breadcrumb {
   opacity: 0.8;
   background-size: 40%;
 }
+.modal-header .btn-close:focus {
+  outline: 0;
+  box-shadow: none;
+}
 .modal-header .modal-title {
   color: #101828;
   font-weight: 600;
@@ -3342,22 +3346,29 @@ select.h-36.form-select {
 .perlitymth-card {
   border: solid 1px #D0D5DD;
   border-radius: 8px;
-  padding: 15px;
+  padding: 5px;
   box-shadow: 0 3px 4px rgba(0, 0, 0, 0.11);
 }
 .perlitymth-card .perlitymth-head {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 4px;
 }
 .perlitymth-card .perlitymth-head .prtmth_icon {
   margin-right: 15px;
+  max-width: 40px;
 }
 .perlitymth-card .perlitymth-head .prtmth_title {
-  margin-top: 8px;
+  margin-top: 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  height: 100%;
+  justify-content: space-between;
 }
 .perlitymth-card .perlitymth-head .prtmth_title h6 {
   font-size: 12px;
+  line-height: 18px;
 }
 .perlitymth-card .perlitymth-head .prtmth_title span {
   color: #4C60E5;
@@ -4433,20 +4444,27 @@ select.h-36.form-select {
 }
 
 .gray-card {
-  background-color: #FCFCFD;
+  background-color: #fff;
   border-radius: 16px;
   padding: 24px;
-  border: solid 1px #EAECF0;
+  border: 1px solid #EAECF0;
+  cursor: pointer;
+}
+.gray-card .ps-card {
+  min-height: 120px;
 }
 .gray-card h6 {
   font-size: 18px;
   color: #1D2939;
   margin: 10px 0;
+  line-height: 28px;
+  font-weight: 600;
 }
 .gray-card p {
   color: #344054;
   font-size: 12px;
   font-weight: 400;
+  line-height: 18px;
 }
 .gray-card img {
   height: 180px;
@@ -6766,7 +6784,8 @@ button#input-group-dropdown-1 {
 }
 
 .apcnt_prfle.lg-drawer {
-  width: 1150px;
+  max-width: 1280px;
+  width: 100%;
 }
 .apcnt_prfle .offcanvas-title h5 {
   font-weight: 700;
@@ -6801,15 +6820,37 @@ button#input-group-dropdown-1 {
   height: 4px;
   border-radius: 50%;
 }
+.apcnt_prfle .chat-box-global > .card-body {
+  height: 85vh;
+}
+.apcnt_prfle .chat-box-global > .card-body .message-chat-body {
+  max-height: 100vh;
+}
+.apcnt_prfle .chat-box-global > .card-body .chat-form {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  right: 15px;
+}
 .apcnt_prfle .btn-close {
   margin-left: 15px !important;
+}
+.apcnt_prfle .tab-underline .nav-item {
+  flex: 0 0 20%;
+  max-width: 20%;
+}
+.apcnt_prfle .under-border-2 {
+  margin-bottom: -4px;
+}
+.apcnt_prfle .accordion-button:not(.collapsed) {
+  background: transparent;
 }
 .apcnt_prfle .tab-underline .nav-link.active {
   color: #3538CD;
 }
 .apcnt_prfle .tab-content {
   border: solid 1px #F2F4F7;
-  padding: 15px 20px;
+  padding: 15px;
 }
 .apcnt_prfle .eval_accordion .accordion-button::after {
   margin-left: 10px;
@@ -6909,6 +6950,7 @@ button#input-group-dropdown-1 {
   line-height: 18px;
   color: #344054;
   margin: 5px 0;
+  text-transform: capitalize;
 }
 .apcnt_info .bulted_list {
   margin: 0;
@@ -8475,6 +8517,28 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   z-index: 1111 !important;
 }
 
+.custom-backdrop-2 {
+  z-index: 11111 !important;
+}
+
+.sort-list-modal .modal-header {
+  align-items: start;
+}
+
+.comman-model .modal-content {
+  box-shadow: 0px 8px 8px -4px rgba(16, 24, 40, 0.031372549);
+  box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.0784313725);
+  border: 1px solid #EAECF0;
+}
+.comman-model .modal-header {
+  box-shadow: none;
+  padding-bottom: 0;
+}
+
+.form-check-label {
+  margin-left: 6px;
+}
+
 .Job-requiremnt-model {
   padding-left: 0 !important;
   z-index: 1111;
@@ -9024,6 +9088,7 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   font-size: 13px;
   border: 1px solid #cbd5e1;
   background: #f8fafc;
+  justify-content: center;
 }
 
 .tag.predefined {
@@ -9071,10 +9136,19 @@ path.recharts-rectangle.recharts-tooltip-cursor {
 }
 .list-kanban .icon_btnlink img {
   margin-right: 6px;
+  filter: grayscale(100%);
+  opacity: 0.3;
+}
+.list-kanban .icon_btnlink:hover {
+  color: #444CE7;
+}
+.list-kanban .icon_btnlink:hover img {
+  filter: none;
+  opacity: 1;
 }
 
 .custom-quill .ql-editor {
-  min-height: 100px;
+  min-height: 200px;
 }
 
 @media screen and (max-width: 767px) {

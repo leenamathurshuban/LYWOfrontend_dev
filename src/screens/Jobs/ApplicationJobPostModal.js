@@ -1827,6 +1827,7 @@ import {
   InputGroup,
   Modal,
   Row,
+  Spinner,
   Table,
 } from "react-bootstrap";
 import { useDropzone } from "react-dropzone";
@@ -1885,6 +1886,7 @@ const ApplicationJobPostModal = ({
   // const [ResumeFile, setResumeFile] = useState(null);
   // const [ResumeFileName, setResumeFileName] = useState("");
   const [error, setError] = useState(null);
+  const [isLoading,setIsLoading] = useState(false);
   const [showNotesByIndex, setShowNotesByIndex] = useState([])
   const [ApplicantProfileData, setApplicantProfileData] = useState(null);
   const [dynamicArray, setDynamicArray] = useState([]);
@@ -2782,12 +2784,14 @@ const ApplicationJobPostModal = ({
         JSON.stringify(questionAnswerArray)
       );
       formdata.append("applicant_status", status);
+      setIsLoading(true)
       const response = await axios.put(
         `https://bittrend.shubansoftware.com/assets-api/applicant-update-api/${storedApplicantId}/`,
         formdata,
         { headers: headers }
       );
       if (response?.data?.success) {
+        setIsLoading(false)
         if (response?.data?.response.applicant_status === "Draft") {
           updateButtonText("Continue Btn");
           handleCloseModals();
@@ -2806,6 +2810,7 @@ const ApplicationJobPostModal = ({
         localStorage.setItem('applicantData', JSON.stringify(response?.data?.response))
       }
     } catch (error) {
+      setIsLoading(false);
       handleCloseModals();
       // handleClose()
       if (error?.response?.data?.response?.error?.[0]) {
@@ -3542,7 +3547,7 @@ const ApplicationJobPostModal = ({
                   </li>
                   <li
                     className={
-                      Object.keys(selectedAnswers).length > 0 ? "active" : ""
+                     components.every(item => item.selected_answer && item.selected_answer.length > 0) ? "active" : ""
                     }
                   >
                     {/* <a href="#item_Geog"> */}
@@ -6006,7 +6011,7 @@ const ApplicationJobPostModal = ({
           <Button variant="light" onClick={() => handleFormDetailsApi('Completed', '')}>
             Return to Job
           </Button>
-          <Button variant="primary" onClick={() => handleFormDetailsApi('Completed', 'test')}>Proceed to Behavioral Test</Button>
+          <Button variant="primary" onClick={() => handleFormDetailsApi('Completed', 'test')}>{isLoading? <Spinner animation="border" variant="light" />:'Proceed to Behavioral Test'}</Button>
         </Modal.Footer>
       </Modal>
 

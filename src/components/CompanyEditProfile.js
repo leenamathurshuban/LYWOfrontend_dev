@@ -979,7 +979,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
   const [website, setWebsite] = useState("");
 
 
-    // custom style react select box
+  // custom style react select box
 
   const customStyles = {
     option: (provided, state) => ({
@@ -1408,11 +1408,11 @@ const CompanyEditProfile = ({ show, handleClose }) => {
   const getHeadQuerterHandleApi = () => {
     const url = `https://bittrend.shubansoftware.com/account-api/location-list-api/?limit=5000`;
     LocationSelection(url)
-      .then((res) => {        
-        if(res?.data?.success){
-          const key = res.data.response.map((opt)=>({value:opt.uid,label:opt.location_name}))
+      .then((res) => {
+        if (res?.data?.success) {
+          const key = res.data.response.map((opt) => ({ value: opt.uid, label: opt.location_name }))
           setLocation(key);
-        }        
+        }
       })
       .catch((error) => {
         if (
@@ -1426,9 +1426,9 @@ const CompanyEditProfile = ({ show, handleClose }) => {
         }
       });
   };
-  useEffect(()=>{
+  useEffect(() => {
     getHeadQuerterHandleApi()
-  },[])
+  }, [])
 
   // useEffect(() => {
   //   const timeoutId = setTimeout(() => {
@@ -1650,6 +1650,20 @@ const CompanyEditProfile = ({ show, handleClose }) => {
     getIndustryHandleApi()
   }, [])
 
+  const shouldShowRecommendation = () => {   
+    if (
+      !companyProfileDetails?.logo ||
+      !companyProfileDetails?.website_url ||
+      !companyProfileDetails?.industry ||
+      !companyProfileDetails?.industry || !companyProfileDetails?.description || (!selectedCompanyType || !companyProfileDetails?.company_type)
+    || !companyProfileDetails?.number_of_employees || (!companyProfileDetails?.location || !searchLocationTerm)
+    ) {
+      return "";
+    } else {
+      return 'summary-full';
+    }   
+  };
+
   // const filePath = companyProfileDetails?.logo;
 
   // const LogoName = filePath?.split("/").pop();
@@ -1812,7 +1826,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                     }}
                                     onChange={handleIndustrySelect}
                                     className="react_selectbox"
-                                     styles={customStyles}
+                                    styles={customStyles}
                                   />
                                 </Form.Group>
 
@@ -1849,7 +1863,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                       Partnership
                                     </option>
                                   </Form.Select> */}
-                                  <Select value={companyTypeValue} options={companyTypeOption} onChange={handleCompanyTypeChange} className="react_selectbox"  styles={customStyles} />
+                                  <Select value={companyTypeValue} options={companyTypeOption} onChange={handleCompanyTypeChange} className="react_selectbox" styles={customStyles} />
                                 </Form.Group>
                                 <Form.Group className="mb-3">
                                   <Form.Label>Company Size</Form.Label>
@@ -1894,7 +1908,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                       More than 10,000 employees
                                     </option>
                                   </Form.Select> */}
-                                  <Select value={companySizeValue} options={companySizeOption} onChange={handleNoOfTypeEmployChange} className="react_selectbox"  styles={customStyles} />
+                                  <Select value={companySizeValue} options={companySizeOption} onChange={handleNoOfTypeEmployChange} className="react_selectbox" styles={customStyles} />
                                 </Form.Group>
 
                                 <Form.Group className="mb-3 relative">
@@ -1945,7 +1959,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                     }}
                                     className="react_selectbox"
                                     onChange={handleLocationSelect}
-                                     styles={customStyles}
+                                    styles={customStyles}
                                   />
                                 </Form.Group>
 
@@ -2016,7 +2030,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                         </Card.Body>
                       </Card>
                     </Col>
-                    <Col md={3} className="cmp_details sd-rightFixed">
+                    <Col md={3} className={`cmp_details sd-rightFixed ${shouldShowRecommendation()}`}>
                       <Accordion defaultActiveKey="0" flush>
                         <Accordion.Item eventKey="0">
                           <Accordion.Header>Company Details</Accordion.Header>
@@ -2082,7 +2096,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                         </Accordion.Item>
                       </Accordion>
                       <div className="rects-panel bottom-fixed">
-                        <h5>Recommendations</h5>
+                        {shouldShowRecommendation()== '' && <h5>Recommendations</h5>}                       
                         <ul className="rects_list">
                           {!companyProfileDetails?.logo && (
                             <li>

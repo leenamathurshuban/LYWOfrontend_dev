@@ -8,7 +8,8 @@ import {
     Form,
     Modal,
     Offcanvas,
-    Row
+    Row,
+    Spinner
 } from "react-bootstrap";
 import Select from "react-select";
 import cakeIQ from "../../images/icons/quiz/cake-IQ.svg";
@@ -47,10 +48,11 @@ import QuizSlider from "../../components/QuizSlider";
 import { ApplicationDeatilsApi, ApplicationFormDetailsApi, getApplicantBehaviourDetailApi, getAssetDataDetailsAPI, getQuizQuestionListAPi, postQuizQuestionApi, updateApplicantBehaviourApi } from '../../services/provider';
 import QuizQuestionSlider from '../../components/QuizQuestionSlider';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }) => {
     const [show, setShow] = useState(false);
-
+    const [isLoading,setIsLoading] = useState(false);
     const [showInstruction, setShowInstruction] = useState(false)
     const handleInstructionModel = () => setShowInstruction(false);
 
@@ -234,8 +236,10 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                     // debugger
                     const UID = applicantUid?.applicant_data?.uid
                     // const response = await ApplicationFormDetailsApi(formData, applicantId.applcant.uid)
+                    setIsLoading(true)
                     const response = await ApplicationFormDetailsApi(formData, UID)
                     if (response?.data?.success) {
+                        setIsLoading(false)
                         setPopupShow(false)
                         // setComplete(true)
                         localStorage.setItem('applicantBehaviour', JSON.stringify(response?.data?.response))
@@ -248,11 +252,15 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                             //         navigate(`/evaluation-quiz/${Val?.uid}`, { state: jobPostData })
                             //     }
                             // })
-                            assetData?.map((Val) => {
+                            if(assetData?.length){
+                                assetData?.map((Val) => {
                                 if (Val?.asset_type === 'Quiz') {
                                     navigate(`/evaluation-quiz/${Val?.uid}`, { state: jobPostData })
                                 }
                             })
+                            }else{
+                                toast.info('Quiz is not assigned for this job')
+                            }                            
                         } else {
                             setShow(false)
                         }
@@ -269,8 +277,10 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                         formData.append('behaviour_status', 'Completed');
                     }
                     // const response = await updateApplicantBehaviourApi(behavioralId?.uid, formData);
+                    setIsLoading(true)
                     const response = await ApplicationFormDetailsApi(formData, behavioralId?.uid);
                     if (response?.data?.success) {
+                        setIsLoading(false)
                         setPopupShow(false)
                         // setComplete(true)
                         localStorage.setItem('applicantBehaviour', JSON.stringify(response?.data?.response))
@@ -283,11 +293,15 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                             //         navigate(`/evaluation-quiz/${Val?.uid}`, { state: jobPostData })
                             //     }
                             // })
-                            assetData?.map((Val) => {
+                            if(assetData?.length){
+                                assetData?.map((Val) => {
                                 if (Val?.asset_type === 'Quiz') {
                                     navigate(`/evaluation-quiz/${Val?.uid}`, { state: jobPostData })
                                 }
                             })
+                            }else{
+                                toast.info('Quiz is not assigned for this job')
+                            }                            
                         } else {
                             setShow(false)
                         }
@@ -631,11 +645,12 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                     <Button className='button-70' variant="primary"
                         onClick={handleSubmit}
                     >
+                        {isLoading && <Spinner animation="border" variant="light" />}
                         {!quizMostLeastLike.length && 'Start Test'}
                         {quizMostLeastLike.length > 0 && (quizMostLeastLike.length > quizMostLeastLike.flatMap(row => row.mostList).length) &&
-                            (quizMostLeastLike.length > quizMostLeastLike.flatMap(row => row.leastList).length) && 'Save and Exit'}
+                            (quizMostLeastLike.length > quizMostLeastLike.flatMap(row => row.leastList).length) && !isLoading && 'Save and Exit'}
                         {complete && (quizMostLeastLike.length === quizMostLeastLike.flatMap(row => row.mostList).length) &&
-                            (quizMostLeastLike.length === quizMostLeastLike.flatMap(row => row.leastList).length) && `Proceed to Quiz for ${jobPostData.job_title}`}
+                            (quizMostLeastLike.length === quizMostLeastLike.flatMap(row => row.leastList).length) && isLoading && `Proceed to Quiz for ${jobPostData.job_title}`}
                     </Button>
                 </Modal.Footer>
             </Modal>
