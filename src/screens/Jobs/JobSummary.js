@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Col, Form, Modal, Row, Tab, Tabs } from 'react-bootstrap';
+import { Button, Card, Col, Form, Modal, Row, Spinner, Tab, Tabs } from 'react-bootstrap';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 
 import Qrcode from "../../images/icons/QR-code.svg";
@@ -32,6 +32,7 @@ const JobSummary = () => {
 
     const [show, setShow] = useState(true);
     const [inviteModalShow, setInviteModalShow] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const [data, setData] = useState({})
     const [company, setCompany] = useState({})
@@ -77,8 +78,10 @@ const JobSummary = () => {
     const getJobDetails = async () => {
         const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-api/${id}/`;
         try {
+            setLoading(true);
             const response = await getJobDetailsApi(url);
             if (response?.data?.success) {
+                setLoading(false)
                 setData(response.data.response)
                 const output = response?.data?.response?.skills?.reduce((acc, item) => {
                     acc[item.skill_group.skill_group_name] = acc[item.skill_group.skill_group_name]
@@ -92,6 +95,7 @@ const JobSummary = () => {
                 setBehaviour(filteredArray)
             }
         } catch (error) {
+            setLoading(false)
         }
     }
     useEffect(() => {
@@ -142,6 +146,11 @@ const JobSummary = () => {
     console.log(location)
     return (
         <>
+            {loading && (
+                <div className="loader-overlay">
+                    <Spinner animation="border" role="status" className="ml-3" />
+                </div>
+            )}
             <div>
                 <Modal
                     show={show}
@@ -413,7 +422,7 @@ const JobSummary = () => {
                                     id="custom-switch"
                                     label="Receive Applications"
                                     className='ms-auto me-2'
-                                    style={{'fontSize':'14px', 'fontWeight': '600', 'lineHeight' : '20px'  }}
+                                    style={{ 'fontSize': '14px', 'fontWeight': '600', 'lineHeight': '20px' }}
 
                                 />
                             </Offcanvas.Header>

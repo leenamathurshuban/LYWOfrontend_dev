@@ -44,18 +44,19 @@ import popSucess from "../../images/popSuc.png";
 import SuggNormal from "../../images/icons/sugg_normal.svg";
 import SuggLealike from "../../images/icons/sugg_lealike.svg";
 import QuizSlider from "../../components/QuizSlider";
-import { ApplicationDeatilsApi, ApplicationFormDetailsApi, getApplicantBehaviourDetailApi, getQuizQuestionListAPi, postQuizQuestionApi, updateApplicantBehaviourApi } from '../../services/provider';
+import { ApplicationDeatilsApi, ApplicationFormDetailsApi, getApplicantBehaviourDetailApi, getAssetDataDetailsAPI, getQuizQuestionListAPi, postQuizQuestionApi, updateApplicantBehaviourApi } from '../../services/provider';
 import QuizQuestionSlider from '../../components/QuizQuestionSlider';
 import { useNavigate } from 'react-router-dom';
 
 const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }) => {
     const [show, setShow] = useState(false);
-    
+
     const [showInstruction, setShowInstruction] = useState(false)
     const handleInstructionModel = () => setShowInstruction(false);
 
 
     const [popupShow, setPopupShow] = useState(false);
+    const [assetData,setAssetData] = useState([])
     const handleClosePop = () => {
         if (complete && runCounter() == 28) {
             handleSubmit();
@@ -65,12 +66,12 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
         }
     }
 
-     const [active, setActive] = useState(false);
+    const [active, setActive] = useState(false);
 
     const [qshow, qsetShow] = useState(false);
 
-  const qhandleClose = () => qsetShow(false);
-  const qhandleShow = () => qsetShow(true);
+    const qhandleClose = () => qsetShow(false);
+    const qhandleShow = () => qsetShow(true);
 
     const popupRef = useRef(null);
 
@@ -155,8 +156,22 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
             console.log(error)
         }
     }
+
+    const applicantDetailAPI = async () => {
+        try {            
+            const res = await getAssetDataDetailsAPI(jobPostData?.uid, applicantUid?.applicant_data?.uid)
+            if (res?.success) {
+                setAssetData(res?.response?.job?.asset_job)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
     useEffect(() => {
         getApplicantBehaviourDetail()
+        applicantDetailAPI()
     }, [])
     useEffect(() => {
         if (attemptQuiz.length && attemptLeastQuiz.length) {
@@ -166,7 +181,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
         const handleClickOutside = (event) => {
             if (popupRef.current && !popupRef.current.contains(event.target) && !event.target.closest('.language-btn')) {
                 setActive(false);
-                
+
             }
         };
 
@@ -202,6 +217,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
     const handleSubmit = async () => {
         if (!quizMostLeastLike.length) {
             getQuizQuestion();
+            applicantDetailAPI();
             setPopupShow(false)
         } else {
             try {
@@ -227,8 +243,13 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                         localStorage.setItem("AttemptStatus", runCounter())
                         // sessionStorage.setItem("AttemptStatus",runCounter())                         
                         if (runCounter() === 28) {
-                            jobPostData?.asset_job?.map((Val) => {
-                                if (Val?.asset_title === 'Technical round for EHS Manager') {
+                            // jobPostData?.asset_job?.map((Val) => {
+                            //     if (Val?.asset_title === 'Technical round for EHS Manager') {
+                            //         navigate(`/evaluation-quiz/${Val?.uid}`, { state: jobPostData })
+                            //     }
+                            // })
+                            assetData?.map((Val) => {
+                                if (Val?.asset_type === 'Quiz') {
                                     navigate(`/evaluation-quiz/${Val?.uid}`, { state: jobPostData })
                                 }
                             })
@@ -257,8 +278,13 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                         localStorage.setItem("AttemptStatus", runCounter())
                         // sessionStorage.setItem("AttemptStatus",runCounter())  
                         if (runCounter() === 28) {
-                            jobPostData?.asset_job?.map((Val) => {
-                                if (Val?.asset_title === 'Technical round for EHS Manager') {
+                            // jobPostData?.asset_job?.map((Val) => {
+                            //     if (Val?.asset_title === 'Technical round for EHS Manager') {
+                            //         navigate(`/evaluation-quiz/${Val?.uid}`, { state: jobPostData })
+                            //     }
+                            // })
+                            assetData?.map((Val) => {
+                                if (Val?.asset_type === 'Quiz') {
                                     navigate(`/evaluation-quiz/${Val?.uid}`, { state: jobPostData })
                                 }
                             })
@@ -484,58 +510,58 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                         backdrop={true}
                         className="question-model-pop"
                         placement='bottom'
-                        >
+                    >
                         <Offcanvas.Body className='question-popop'>
-                           
-                                <div className='d-flex justify-content-between'>
-                                    <div className='range-progress'>
-                                        <strong className="font-20">50%</strong> Complete
-                                    </div>
-                                    <div className='attempted'>
-                                        <span className="att_count"> <span>Attempted </span>  <strong className="font-20">{runCounter()} / 28</strong></span>
-                                    </div>
+
+                            <div className='d-flex justify-content-between'>
+                                <div className='range-progress'>
+                                    <strong className="font-20">50%</strong> Complete
                                 </div>
-
-                                <div className='slick-mumber-dot'>
-                                    <ul className='number-dot-pagination'>
-                                        <li className='complete' >1</li>
-                                        <li className='complete'>2</li>
-                                        <li className='complete'>3</li>
-                                        <li className='complete'>4</li>
-                                        <li>5</li>
-                                        <li>6</li>
-                                        <li>7</li>
-                                        <li>8</li>
-                                        <li>9</li>
-
-                                        <li>10</li>
-
-                                        <li>11</li>
-                                        <li>12</li>
-                                        <li>13</li>
-                                        <li>14</li>
-                                        <li>15</li>
-                                        <li>16</li>
-                                        <li>17</li>
-                                        <li>18</li>
-                                        <li>19</li>
-
-                                        <li>20</li>
-
-
-                                        <li>21</li>
-                                        <li>22</li>
-                                        <li>23</li>
-                                        <li>24</li>
-                                        <li>25</li>
-                                        <li>26</li>
-                                        <li>27</li>
-                                        <li>28</li>
-
-                                    </ul>
+                                <div className='attempted'>
+                                    <span className="att_count"> <span>Attempted </span>  <strong className="font-20">{runCounter()} / 28</strong></span>
                                 </div>
+                            </div>
 
-                            
+                            <div className='slick-mumber-dot'>
+                                <ul className='number-dot-pagination'>
+                                    <li className='complete' >1</li>
+                                    <li className='complete'>2</li>
+                                    <li className='complete'>3</li>
+                                    <li className='complete'>4</li>
+                                    <li>5</li>
+                                    <li>6</li>
+                                    <li>7</li>
+                                    <li>8</li>
+                                    <li>9</li>
+
+                                    <li>10</li>
+
+                                    <li>11</li>
+                                    <li>12</li>
+                                    <li>13</li>
+                                    <li>14</li>
+                                    <li>15</li>
+                                    <li>16</li>
+                                    <li>17</li>
+                                    <li>18</li>
+                                    <li>19</li>
+
+                                    <li>20</li>
+
+
+                                    <li>21</li>
+                                    <li>22</li>
+                                    <li>23</li>
+                                    <li>24</li>
+                                    <li>25</li>
+                                    <li>26</li>
+                                    <li>27</li>
+                                    <li>28</li>
+
+                                </ul>
+                            </div>
+
+
                         </Offcanvas.Body>
                     </Offcanvas>
 

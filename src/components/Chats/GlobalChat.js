@@ -774,16 +774,20 @@ export default function GlobalChat() {
                           <p className='date-msg'><small>{monthDayFormat(item?.date == new Date() ? '' : item?.date)}</small></p>
                           {item.chats.map((msg) => (
                             <div key={index} className={`mb-3 ${msg?.sender?.email == user?.email ? 'text-end sender-bubble' : 'text-start'}`}>
-                              <Card
-                                className={`d-inline-block no-border ${msg?.sender?.email == user?.email ? 'bg-sender text-white' : 'bg-white'}`}
-                              >
-                                <Card.Body className="p-2" >
-                                  <Card.Text>{msg.message} </Card.Text>
-                                  <Card.Text className={`small ${msg?.sender?.email == user?.email ? '' : 'text-muted'}`}>
-                                  </Card.Text>
+                             
+                              {msg.message && msg.message.trim() !== "" && (
+                                                     <Card
+                                                       className={`d-inline-block no-border ${msg?.sender?.email == user?.email ? 'bg-sender text-white' : 'bg-white'}`}
+                                                     >
+                                                       <Card.Body className="p-2">
+                                                         <Card.Text>{msg.message}</Card.Text>
+                                                         <Card.Text className={`small ${msg?.sender?.email == user?.email ? '' : 'text-muted'}`}>
+                                                           {/* Timestamp */}
+                                                         </Card.Text>
+                                                       </Card.Body>
+                                                     </Card>
+                                                   )}
 
-                                </Card.Body>
-                              </Card>
                               {(msg?.document || msg?.image) && <ChatDocumentMessage document={msg?.document ? msg?.document : msg?.image ? msg?.image : null} image={file} />}
                               {/* <EmailChat /> */}
                               <p className='time-msg' > <small> {TimeDisplay(msg.created_at)} </small></p>

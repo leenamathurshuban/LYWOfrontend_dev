@@ -56,6 +56,13 @@ import sorticn from "../../images/icons/switch-vertical-01.svg";
 import printicn from "../../images/icons/printer.svg";
 import downloadicn from "../../images/icons/download-b.svg";
 
+import checkgreen from "../../images/icons/Check-g-icon.png"
+import xcircle from "../../images/icons/x-circle.svg"
+import slashCircle from "../../images/icons/slash-circle-01.svg"
+import placeholdericon from "../../images/icons/placeholder.svg"
+import sendmsg from "../../images/icons/send-011.svg"
+import downloadicon from "../../images/icons/download-001.svg"
+
 
 
 
@@ -152,6 +159,13 @@ const JobReview = () => {
 
   const recallClose = () => recallsetShow(false);
   const recallShow = () => recallsetShow(true);
+
+
+ const [stopappshow, stopappsetShow] = useState(false);
+
+
+    const stopappClose = () => stopappsetShow(false);
+  const stopappShow = () => stopappsetShow(true);
 
 
     const getFileType = (url) => {
@@ -1213,7 +1227,7 @@ const JobReview = () => {
                         <Col md={6} className="d-flex justify-content-end align-items-center">
                             <button type="button" onClick={handleShow} className="icon_btnlink btn btn-primary"><img src={EvaluaBtn} className="me-1" />Evaluations</button>
                             <button type="button" onClick={() => setShowInstruction(true)} className="icon_btnlink btn btn-primary"><img src={AutomatBtn} className="me-1" />Automations</button>
-                            <button type="button" className="icon_btnlink btn btn-primary"><img src={stopBtn} className="me-1" />Stop Applications</button>
+                            <button type="button" onClick={() => stopappsetShow(true)} className="icon_btnlink btn btn-primary"><img src={stopBtn} className="me-1" />Stop Applications</button>
                         </Col>
                     </Row>
                 </Container>
@@ -1278,12 +1292,34 @@ const JobReview = () => {
                                                                 </InputGroup>
                                                             </div>
                                                         </Col>
-                                                        <Col md={6} className="d-flex justify-content-end align-items-center">
-                                                            <Button className="icon_btnlink" onClick={() => handleStatusGroup('Active', selectedListUids)}><i className="fa fa-download me-2 text-primery"></i>Active</Button>
-                                                            <Button className="icon_btnlink" onClick={() => handleStatusGroup('InActive', selectedListUids)}><i className="fa fa-download me-2 text-primery"></i>InActive</Button>
-                                                            <Button className="icon_btnlink" onClick={() => handleStatusGroup('Select', selectedListUids)}><i className="far fa-check-circle me-2 text-primery"></i>Select</Button>
-                                                            <Button className="icon_btnlink" onClick={() => handleStatusGroup('Reject', selectedListUids)}><i className="far fa-times-circle me-2 text-primery"></i>Reject</Button>
-                                                            <Button className="icon_btnlink" onClick={() => handleStatusGroup('On Hold', selectedListUids)}><i className="fa fa-ban me-2 text-primery"></i>On Hold</Button>
+                                                        <Col md={6} className="d-flex justify-content-end align-items-center list-kanban">
+                                                           
+                                                            <Button className="icon_btnlink" onClick={() => handleStatusGroup('Select', selectedListUids)}>
+                                                               <img src={checkgreen} className="img-fluid"/>
+                                                                Select</Button>
+                                                            <Button className="icon_btnlink" onClick={() => handleStatusGroup('Reject', selectedListUids)}>
+                                                               <img src={xcircle} className="img-fluid"/>
+                                                                Reject</Button>
+                                                            <Button className="icon_btnlink" onClick={() => handleStatusGroup('On Hold', selectedListUids)}>
+                                                               <img src={slashCircle} className="img-fluid"/>
+                                                                
+                                                                On Hold</Button>
+
+
+                                                                 <Button className="icon_btnlink" onClick={() => handleStatusGroup('Active', selectedListUids)}>
+                                                                <img src={placeholdericon} className="img-fluid"/>
+                                                                Clear Round</Button>
+                                                            <Button className="icon_btnlink" onClick={() => setModalShow(true)}>
+                                                                <img src={sendmsg } className="img-fluid"/>
+                                                                Send Message</Button>
+
+
+                                                                <Button className="icon_btnlink" onClick={() => handleStatusGroup('InActive', selectedListUids)}>
+                                                                <img src={downloadicon } className="img-fluid"/>
+                                                                Download</Button>
+
+
+
                                                             <Button
                                                                 // className="btn btn-light-outline me-3"
                                                                 className="icon_btnlink"
@@ -1325,7 +1361,11 @@ const JobReview = () => {
                                                                     <th></th>
                                                                     <th colSpan={5} className="border-b">
                                                                         <div className="d-flex align-items-end justify-content-between">
-                                                                            <strong>Details</strong><button type="button" className="btn btn-link font-sm pb-0"><i class="fas fa-plus-circle"></i></button>
+                                                                            <strong>Details</strong>
+                                                                            
+                                                                            {/* <button type="button" className="btn btn-link font-sm pb-0"><i class="fas fa-plus-circle"></i></button> */}
+
+
                                                                         </div>
                                                                     </th>  <th></th>
 
@@ -3974,10 +4014,14 @@ const JobReview = () => {
                                                             onChange={handleEditorChange}
                                                             theme="snow"
                                                             ref={quillRef}
-                                                            className="custom-quill"
+                                                            className="custom-quill "
                                                             modules={{
                                                                 toolbar: [["bold", "italic", "underline", "strike"], ["link"]],
                                                             }}
+                                                            // style={{ 
+                                                            //     minHeight: '200px',
+                                                            //     height: 'auto'
+                                                            // }}
                                                         />
 
 
@@ -4022,34 +4066,38 @@ const JobReview = () => {
 
 
 
+
              <Modal show={recallshow} onHide={recallClose}  centered>
-        <Modal.Header closeButton style={
-                    {
-                        borderTopLeftRadius:'8px',
-                        borderTopRightRadius: '8px'
-                    }
-                }>
+            <Modal.Header closeButton style={
+                        {
+                            borderTopLeftRadius:'8px',
+                            borderTopRightRadius: '8px'
+                        }
+                    }>
           <Modal.Title>Add Tags</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body>           
 
-            <p style={{fontSize:'12px', lineHeight:'18px', fontWeight:'500', color:'#344054'}}>Tags</p>
+  <p style={{fontSize:'12px', lineHeight:'18px', fontWeight:'500', color:'#344054'}}>Tags</p>
+                        <div className="tagarea">
 
-            <textarea className="form-control" rows={5}>
-
-                </textarea>
+                        </div>
+                        
+                       
 
 
             <div className="jobs-footer text-end d-flex justify-content-between mt-3">
                     <Button
                         variant="light"
-                        className="me-3 w-50"
-                        style={{fontSize:'12px', lineHeight:'18px', width:'113px', height:'38px'}}
+                        className="me-3 w-50 btn btn-outline"
+                        //style={{fontSize:'16px', lineHeight:'24px', width:'113px', height:'38px'}}
                         onClick={recallClose}
                     >
                         Reset
                     </Button>
-                    <Button className="w-50"  variant="primary" style={{fontSize:'12px', lineHeight:'18px', width:'113px', height:'38px'}} >
+                    <Button className="w-50 btn btn-primary"  variant="primary"
+                     //style={{fontSize:'16px', lineHeight:'24px', width:'113px', height:'38px'}} 
+                     >
                         Save
                     </Button>
                 </div>
@@ -4063,6 +4111,58 @@ const JobReview = () => {
           </Button>
         </Modal.Footer> */}
       </Modal>
+
+
+      {/* stop application model */}
+
+        
+              <Modal show={stopappshow} onHide={stopappClose} className="confirmation-model"   centered>
+            <Modal.Header closeButton style={
+                        {
+                            borderTopLeftRadius:'8px',
+                            borderTopRightRadius: '8px'
+                        }
+                    }>
+          <Modal.Title></Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+
+
+            <h4>Are you sure you wish to stop applications for the job?</h4>
+
+
+            <p>You will no longer receive new applications for the job.</p>
+
+                    
+
+
+            <div className="jobs-footer text-end d-flex justify-content-between mt-3">
+                    <Button
+                        variant="light"
+                        className="me-3 w-50 btn btn-outline"
+                        //style={{fontSize:'12px', lineHeight:'18px', width:'113px', height:'38px'}}
+                        onClick={stopappClose}
+                    >
+                        Reset
+                    </Button>
+                    <Button className="w-50 btn btn-primary"  variant="primary"
+                    // style={{fontSize:'12px', lineHeight:'18px', width:'113px', height:'38px'}}
+                      >
+                        Save
+                    </Button>
+                </div>
+        </Modal.Body>
+        {/* <Modal.Footer>
+          <Button variant="secondary" onClick={recallClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={recallClose}>
+            Save Changes
+          </Button>
+        </Modal.Footer> */}
+      </Modal>
+
+
 
         </>
     );

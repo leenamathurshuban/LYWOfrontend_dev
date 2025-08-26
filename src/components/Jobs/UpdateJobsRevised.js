@@ -3397,7 +3397,11 @@ const UpdateJobsRevised = ({
                                                                         setIsSpecificLanguareRequired(
                                                                             !isSpecificLanguareRequired
                                                                         );
-                                                                        handleFormData(e);
+                                                                        // handleFormData(e);
+                                                                        setUpdateFormData({
+                                                                            ...updateFormData,
+                                                                            [e.target.name]:e.target.checked
+                                                                        })
                                                                     }}
                                                                     id={`inline-${type}-9`}
                                                                     checked={updateFormData?.no_specific_language_require}
@@ -3523,7 +3527,11 @@ const UpdateJobsRevised = ({
                                                                     name="no_specific_location"
                                                                     onChange={(e) => {
                                                                         setIsHideLLocation(!isHideLocation);
-                                                                        handleFormData(e);
+                                                                        // handleFormData(e);
+                                                                        setUpdateFormData({
+                                                                            ...updateFormData,
+                                                                            [e.target.name]:e.target.checked
+                                                                        })
                                                                     }}
                                                                     type={type}
                                                                     id={`inline-${type}-10`}

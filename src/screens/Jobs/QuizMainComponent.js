@@ -500,7 +500,7 @@ const QuizMainComponent = (item) => {
         // )
 
         res?.response?.job?.asset_job.map((Val) => {
-          if (Val?.asset_title === "Technical round for EHS Manager") {
+          if (Val?.asset_type === 'Quiz') {
             Val?.section_asset.sort((a, b) => a.id - b.id).map((item, quesIndex) =>
               item.question_section.map((Val, sectionIndex) => {
                 setQuizData((prev) => ({
