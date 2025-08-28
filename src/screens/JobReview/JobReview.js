@@ -70,7 +70,7 @@ import downloadicon from "../../images/icons/download-001.svg"
 
 
 import { useParams } from "react-router-dom";
-import { ApplicationDeatilsApi, getAssetDataDetailsAPI, getJobAssignmentReview, getJobDetailsApi, getJobGroupParameterListAPI, getScreeningParameterDataAPI, insightsListAPI, jobApplicantUpdateAPI, postJobGroupParameterListByFetchAPI } from "../../services/provider";
+import { ApplicationDeatilsApi, chatPostAPI, getAssetDataDetailsAPI, getJobAssignmentReview, getJobDetailsApi, getJobGroupParameterListAPI, getScreeningParameterDataAPI, insightsListAPI, jobApplicantUpdateAPI, postJobGroupParameterListByFetchAPI, UpdateMultipleJobApi } from "../../services/provider";
 import Evaluations from "./Evaluations";
 import Ratting from "../../components/Ratting";
 import CodeBlock from "../../components/CodeBlock";
@@ -98,6 +98,7 @@ import AssetOverAllGraphComponent from "./GraphChart/AssetOverallGraph";
 import { transformOverallAndSectionData } from "../../utils/assetgraphLogic";
 
 import CandidateChat from "../../components/Chats/CandidateChat";
+import { useSelector } from "react-redux";
 
 const JobReview = () => {
     const codeSnippet = `class WorkloadTracker:
@@ -179,7 +180,7 @@ const JobReview = () => {
         });
     };
 
-
+    const user = useSelector((state) => state.login?.loginUserInfo);
     const [recallshow, recallsetShow] = useState(false);
 
     const recallClose = () => recallsetShow(false);
@@ -468,6 +469,7 @@ const JobReview = () => {
     const [selectedListUids, setSelectedListUids] = useState([]);
     const [ListShow, setListShow] = useState(false);
     const [candidateEmail, setCandidateEmail] = useState('')
+    const [candidateInfo, setCandidateInfo] = useState({})
     const [candidateDetails, setCandidateDetails] = useState({})
     const [assetData, setAssetData] = useState({})
     const [applicantPersonality, setApplicantPersonality] = useState();
@@ -1179,6 +1181,27 @@ const JobReview = () => {
             console.log(error);
         }
     }
+
+    const handleSendMessage = async () => {
+        // e.preventDefault();
+        try {
+            const formData = new FormData();
+            formData.append("sender", user?.uid);
+            formData.append("job", id);
+            formData.append("job_applicant", candidateInfo?.uid);
+            if (description.trim()) formData.append("message", description);
+
+            const response = await chatPostAPI(formData);
+            if (response.data.success) {
+                setDescription("")
+                setModalShow(false)
+                sortmodalsetShow(false)
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     const handleStatusGroup = async (status, applicant_uid) => {
         try {
             const formData = new FormData();
@@ -1194,9 +1217,14 @@ const JobReview = () => {
             if (res?.data?.success) {
                 fetchListAPIByKey(groupParameterId, groupTitleName, paramUid)
                 setSelectedListUids([]);
+                if (status == 'Reject' || status == 'Select') {
+                    handleSendMessage()
+                }
+                holdappClose()
             }
         } catch (error) {
             console.log(error);
+            holdappClose()
         }
     }
     useEffect(() => {
@@ -1245,6 +1273,18 @@ const JobReview = () => {
         }
 
     }
+    const handleCommonEvent = async (status) => {
+        const uids = [];
+        uids.push(id)
+        const formData = new FormData();
+        formData.append('job_uids', JSON.stringify(uids))
+        formData.append('job_status', status)
+        const res = await UpdateMultipleJobApi(formData)
+        if (res.data.success) {
+            getJobDetails(id)
+            stopappClose()
+        }
+    }
     // console.log(assignmentReviewList)
     // console.log('section', sectionWiseData)
     // console.log(questionWiseData)
@@ -1254,6 +1294,7 @@ const JobReview = () => {
     console.log(ListData)
     console.log(mode)
     console.log('=======================ListShow', ListShow, ListData)
+    console.log(jobDetails)
     return (
         <>
             <Sidebar />
@@ -1273,7 +1314,7 @@ const JobReview = () => {
                         <Col md={6} className="d-flex justify-content-end align-items-center">
                             <button type="button" onClick={handleShow} className="icon_btnlink btn btn-primary"><img src={EvaluaBtn} className="me-1" />Evaluations</button>
                             <button type="button" onClick={() => setShowInstruction(true)} className="icon_btnlink btn btn-primary"><img src={AutomatBtn} className="me-1" />Automations</button>
-                            <button type="button" onClick={() => stopappsetShow(true)} className="icon_btnlink btn btn-primary"><img src={stopBtn} className="me-1" />Stop Applications</button>
+                            <button type="button" onClick={() => stopappsetShow(true)} className="icon_btnlink btn btn-primary"><img src={stopBtn} className="me-1" />{jobDetails?.job_status == "Active" ? "Active" : "Stop Applications"}</button>
                         </Col>
                     </Row>
                 </Container>
@@ -1363,8 +1404,6 @@ const JobReview = () => {
                                                             <Button className="icon_btnlink" onClick={() => handleStatusGroup('InActive', selectedListUids)}>
                                                                 <img src={downloadicon} className="img-fluid" />
                                                                 Download</Button>
-
-
 
                                                             <Button
                                                                 // className="btn btn-light-outline me-3"
@@ -1504,6 +1543,7 @@ const JobReview = () => {
                                                                             <span className="font-weight-600" style={{ textTransform: 'capitalize', cursor: 'pointer' }} onClick={() => {
                                                                                 setReviewModal(true)
                                                                                 setCandidateEmail(item?.job_applicant_profile?.user?.email)
+                                                                                setCandidateInfo(item)
                                                                             }}>
                                                                                 {/* Sandeep Kattamuri */}
                                                                                 {item?.job_applicant_profile?.user?.username}
@@ -2058,9 +2098,14 @@ const JobReview = () => {
                                                                                     <h6
                                                                                         onClick={() => setExpandedGroup(prev =>
                                                                                             prev === paraName.uid ? null : paraName.uid
-                                                                                        )}>{groupItem?.group_name}<span className="count">{groupItem?.group_wise_applicant_count}</span></h6>
-
-                                                                                    <span className="badge bg-outline-success">25 pending</span>
+                                                                                        )}>{groupItem?.group_name}
+                                                                                        {(paraName?.parameter_name == "Application" || paraName?.parameter_name == "Behaviour") && (
+                                                                                            <span className="count">{groupItem?.group_wise_applicant_count}</span>
+                                                                                        )}
+                                                                                    </h6>
+                                                                                    {(paraName?.parameter_name == "Application" || paraName?.parameter_name == "Behaviour") ? (
+                                                                                        ""
+                                                                                    ) : <span className="badge bg-outline-success">{groupItem?.group_wise_applicant_count} pending</span>}
                                                                                 </div>
                                                                                 <div className="remind-checkbox ">
                                                                                     <div className="d-flex justify-content-between align-items-end">
@@ -2371,16 +2416,8 @@ const JobReview = () => {
                                                                     id="dropdown-basic"
                                                                     className="btn-transpant btn-action-reorder"
                                                                 >
-
-
                                                                     <img src={sorticn} className="img-fluid" alt="Sort Icon" />
-
-
-
-
                                                                 </Dropdown.Toggle>
-
-
                                                                 <Dropdown.Menu className="reorder-doprodown-custom" >
                                                                     <Dropdown.Item >
                                                                         <img src={Dragableicn} className="imglfluid me-2" alt="Drag icon" />
@@ -2416,36 +2453,20 @@ const JobReview = () => {
                                                                         <img src={Dragableicn} className="imglfluid me-2" alt="Drag icon" />
                                                                         Custom Questions
                                                                     </Dropdown.Item>
-
-
                                                                     <Dropdown.Item >
                                                                         <img src={Dragableicn} className="imglfluid me-2" alt="Drag icon" />
                                                                         Assignments
                                                                     </Dropdown.Item>
-
-
                                                                     <button className="btn btn-md btn-primary mt-3 ms-auto me-auto">Apply</button>
-
-
-
-
-
-
-
                                                                 </Dropdown.Menu>
                                                             </Dropdown>
                                                         </OverlayTrigger>
                                                     </li>
-                                                    <li><button> <img src={printicn} className="img-fluid" alt="Print icon" />       </button></li>
-
-                                                    <li><button> <img src={downloadicn} className="img-fluid" alt="Download icon" />     </button></li>
-
+                                                    <li><button> <img src={printicn} className="img-fluid" alt="Print icon" /></button></li>
+                                                    <li><button> <img src={downloadicn} className="img-fluid" alt="Download icon" /></button></li>
                                                 </ul>
                                             </div>
                                         </Col>
-
-
-
                                     </Row>
                                     <Row>
                                         <Col md={12}>
@@ -2606,14 +2627,10 @@ const JobReview = () => {
                                             <Col md={6}>
                                                 <Card className="shadow-sm border-0 grap_card mt-3 radius-sm experience-chart assets-chart">
                                                     <Card.Body>
-
-
                                                         <Row className="align-items-center">
                                                             <Col md="6">
                                                                 {item?.title}
-
                                                             </Col>
-
                                                             <Col md="6">
                                                                 <div className="d-flex justify-content-between align-items-center">
                                                                     <Form.Label
@@ -2641,11 +2658,7 @@ const JobReview = () => {
                                                                     <button className="btn-icon"><img src={CopyBtn} alt="" /></button>
                                                                 </div>
                                                             </Col>
-
-
                                                         </Row>
-
-
                                                         <div className="chart_warp">
                                                             <AssetOverAllGraphComponent
                                                                 key={index}
@@ -3011,7 +3024,7 @@ const JobReview = () => {
                 </Container>
             </div >
             {/*======MORE FILTER======*/}
-            < Offcanvas
+            <Offcanvas
                 show={show}
                 onHide={handleClose}
                 backdrop={false}
@@ -3242,7 +3255,6 @@ const JobReview = () => {
                                                             />
                                                         </div>
                                                         <div className="col-md-2 d-flex align-items-center  ps-1 pe-1">
-
                                                             <Form.Check // prettier-ignore
                                                                 type="switch"
                                                                 id="custom-switch"
@@ -3251,14 +3263,6 @@ const JobReview = () => {
 
                                                             />
                                                         </div>
-
-
-
-
-
-
-
-
                                                     </div>
                                                 </Form.Group>
 
@@ -3470,9 +3474,6 @@ const JobReview = () => {
                                             id="custom-switch-3"
                                             label="Send Auto Response to user who have been shortlised"
                                         />
-
-
-
                                         <Form.Group className="mb-2" controlId="jobDescription">
                                             <Form.Label>
                                                 Message Template
@@ -3488,8 +3489,6 @@ const JobReview = () => {
                                                         toolbar: [["bold", "italic", "underline", "strike"], ["link"]],
                                                     }}
                                                 />
-
-
                                             </div>
 
                                             <div className="d-flex justify-content-between custom-checkbox mt-3">
@@ -3514,8 +3513,6 @@ const JobReview = () => {
                             </Accordion.Item>
                         </Accordion>
                     </div>
-
-
                 </Offcanvas.Body>
 
             </Offcanvas>
@@ -3975,10 +3972,10 @@ const JobReview = () => {
                         </div>
                     </Offcanvas.Title>
                     <div className="d-flex ml-auto">
-                        <Button variant="link" onClick={() => setremindModalShow(true)} className="btn-sm btn-link-muted"><img className="me-2" src={SReminder} />Send Reminder</Button>
-                        <Button variant="link" onClick={() => holdappsetShow(true)} className="btn-sm btn-link-muted"><img className="me-2" src={Hold} />Hold</Button>
-                        <Button variant="link" onClick={() => setModalShow(true)} className="btn-sm btn-link-muted"><img className="me-2" src={Reject} />Reject</Button>
-                        <Button variant="link" onClick={() => sortmodalsetShow(true)} className="btn-sm btn-link-muted"><img className="me-2" src={ShortList} />Short List</Button>
+                        <Button variant="link" onClick={() => setremindModalShow(true)} className="btn-sm btn-link-muted" disabled={candidateInfo?.job_applicant_status == "Reject"}><img className="me-2" src={SReminder} />Send Reminder</Button>
+                        <Button variant="link" onClick={() => holdappsetShow(true)} className="btn-sm btn-link-muted" disabled={candidateInfo?.job_applicant_status == "Reject"}><img className="me-2" src={Hold} />Hold</Button>
+                        <Button variant="link" onClick={() => setModalShow(true)} className="btn-sm btn-link-muted" disabled={candidateInfo?.job_applicant_status == "Reject"}><img className="me-2" src={Reject} />Reject</Button>
+                        <Button variant="link" onClick={() => sortmodalsetShow(true)} className="btn-sm btn-link-muted" disabled={candidateInfo?.job_applicant_status == "Reject"}><img className="me-2" src={ShortList} />Short List</Button>
                     </div>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
@@ -4050,7 +4047,7 @@ const JobReview = () => {
                     }
                 }>
                     <Modal.Title id="contained-modal-title-vcenter">
-                        Do you wish to reject Sandeep Kattamuri?
+                        Do you wish to reject {candidateInfo?.job_applicant_profile?.user?.username}?
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -4074,8 +4071,6 @@ const JobReview = () => {
                             //     height: 'auto'
                             // }}
                             />
-
-
                         </div>
 
                         <div className="d-flex justify-content-between custom-checkbox align-items-center mt-3">
@@ -4091,10 +4086,11 @@ const JobReview = () => {
                                     variant="light"
                                     className="me-3"
                                     style={{ fontSize: '12px', lineHeight: '18px', width: '113px', height: '38px' }}
+                                    onClick={() => setDescription("")}
                                 >
                                     Clear All
                                 </Button>
-                                <Button onClick={handleClose} variant="primary" style={{ fontSize: '12px', lineHeight: '18px', width: '113px', height: '38px' }} >
+                                <Button onClick={() => handleStatusGroup('Reject', candidateInfo?.uid)} variant="primary" style={{ fontSize: '12px', lineHeight: '18px', width: '113px', height: '38px' }} >
                                     Reject
                                 </Button>
                             </div>
@@ -4209,8 +4205,6 @@ const JobReview = () => {
                                     toolbar: [["bold", "italic", "underline", "strike"], ["link"]],
                                 }}
                             />
-
-
                         </div>
 
                         <div className="d-flex justify-content-between custom-checkbox align-items-center mt-3">
@@ -4269,16 +4263,8 @@ const JobReview = () => {
                     <Modal.Title></Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-
-
-                    <h4>Do you want to put Sandeep Kattamuri on hold?</h4>
-
-
+                    <h4>Do you want to put {candidateInfo?.job_applicant_profile?.user?.username} on hold?</h4>
                     <p>This will keep the candidate <br></br> at the current stage.</p>
-
-
-
-
                     <div className="jobs-footer text-end d-flex justify-content-between mt-3">
                         <Button
                             variant="light"
@@ -4289,7 +4275,8 @@ const JobReview = () => {
                             No
                         </Button>
                         <Button className="w-50 btn btn-primary" variant="primary"
-                        // style={{fontSize:'12px', lineHeight:'18px', width:'113px', height:'38px'}}
+                            // style={{fontSize:'12px', lineHeight:'18px', width:'113px', height:'38px'}}
+                            onClick={() => handleStatusGroup('On Hold', candidateInfo?.uid)}
                         >
                             Yes
                         </Button>
@@ -4304,13 +4291,7 @@ const JobReview = () => {
           </Button>
         </Modal.Footer> */}
             </Modal>
-
-
-
             {/* shortlist */}
-
-
-
             <Modal
                 show={sortmodalshow}
                 onHide={() => sortmodalsetShow(false)}
@@ -4326,7 +4307,7 @@ const JobReview = () => {
                 }>
                     <div>
                         <Modal.Title id="contained-modal-title-vcenter">
-                            Do you wish to shortlist Sandeep Kattamuri?
+                            Do you wish to shortlist {candidateInfo?.job_applicant_profile?.user?.username}?
                         </Modal.Title>
                         <p className="mb-0 " style={{ fontSize: '14px', lineHeight: '24px' }}>Shortlist will add the candidate to the Final Selection.</p>
                     </div>
@@ -4353,8 +4334,6 @@ const JobReview = () => {
                             //     height: 'auto'
                             // }}
                             />
-
-
                         </div>
 
                         <div className="d-flex justify-content-between custom-checkbox align-items-center mt-3">
@@ -4370,10 +4349,11 @@ const JobReview = () => {
                                     variant="light"
                                     className="me-3"
                                     style={{ fontSize: '12px', lineHeight: '18px', width: '113px', height: '38px' }}
+                                    onClick={() => setDescription("")}
                                 >
                                     Clear All
                                 </Button>
-                                <Button onClick={handleClose} variant="primary" style={{ fontSize: '12px', lineHeight: '18px', width: '113px', height: '38px' }} >
+                                <Button onClick={() => handleStatusGroup('Select', candidateInfo?.uid)} variant="primary" style={{ fontSize: '12px', lineHeight: '18px', width: '113px', height: '38px' }} >
                                     ShortList
                                 </Button>
                             </div>
@@ -4458,15 +4438,8 @@ const JobReview = () => {
                 </Modal.Header>
                 <Modal.Body>
 
-
-                    <h4>Are you sure you wish to stop applications for the job?</h4>
-
-
+                    <h4>Are you sure you wish to {jobDetails?.job_status == "Application-Stopped" ? "restart" : "stop"}  applications for the job?</h4>
                     <p>You will no longer receive new applications for the job.</p>
-
-
-
-
                     <div className="jobs-footer text-end d-flex justify-content-between mt-3">
                         <Button
                             variant="light"
@@ -4477,6 +4450,7 @@ const JobReview = () => {
                             Reset
                         </Button>
                         <Button className="w-50 btn btn-primary" variant="primary"
+                            onClick={() => handleCommonEvent(jobDetails?.job_status == "Application-Stopped" ? "Active" : "Application-Stopped")}
                         // style={{fontSize:'12px', lineHeight:'18px', width:'113px', height:'38px'}}
                         >
                             Save
@@ -4492,15 +4466,6 @@ const JobReview = () => {
           </Button>
         </Modal.Footer> */}
             </Modal>
-
-
-
-
-
-
-
-
-
         </>
     );
 };

@@ -15,6 +15,7 @@ import {
   Spinner,
   Tab,
   Table,
+  Offcanvas
 } from "react-bootstrap";
 import Select from "react-select";
 import Header from "../../components/Header";
@@ -243,7 +244,7 @@ const Evalation = () => {
         <Row>
           <Col md={12}>
             {/* <h4 className="my-3 pagetitle">Evaluations</h4> */}
-            <h6 className="my-2-5 pagetitle">Evaluations</h6>
+            <h6 className="my-2-5 ps-3 pagetitle">Evaluations</h6>
           </Col>
         </Row>
         <Card className="shadow-sm border-0 evaluations_data">
@@ -421,16 +422,19 @@ const Evalation = () => {
 
   const TestInstructionModal = () => {
     return (
-      <Modal
+      <Offcanvas
         show={showinstruction}
         onHide={handleInstructionClose}
-        className="instructions_mdl model-md"
+        backdrop={true}
+        placement="end"
+        backdropClassName="custom-backdrop"
+        className="instructions_mdl model-md custom-backdrop-2 lg-drawer"
       >
-        <Modal.Header closeButton>
+        <Offcanvas.Header closeButton style={{padding:'25px', border:'0', paddingRight: '30px'}}>
           <Modal.Title></Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <h4>Instructions</h4>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          <h4 className="mb-3">Instructions</h4>
           <p>
             (Add the description of the test from the creator of test) This
             assessment is designed to evaluate [brief description of what the
@@ -543,8 +547,8 @@ const Evalation = () => {
               each question carefully before responding. All the best.
             </li>
           </ul>
-        </Modal.Body>
-      </Modal>
+        </Offcanvas.Body>
+      </Offcanvas>
     );
   };
 

@@ -101,8 +101,7 @@ const Step1 = ({ candidateDetails }) => {
                     <h6 className="h6-title">Custom Questions</h6>
                     <p>data</p>
                 </Col>
-            </Row>
- 
+            </Row> 
         </>
     )
 }

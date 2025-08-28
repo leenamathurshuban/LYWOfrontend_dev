@@ -316,10 +316,11 @@ fieldset:disabled .btn {
   margin-left: 90px;
   padding-top: 80px;
   padding-left: 15px;
+  padding-right: 15px;
 }
 
 .header-wrapper.row {
-  padding: 16px 35px;
+  padding: 16px 30px;
   display: flex;
   align-items: center;
 }
@@ -3420,6 +3421,33 @@ select.h-36.form-select {
   border: 1px solid red;
 }
 
+.personalty-drawer-new {
+  max-width: 864px;
+  width: 100% !important;
+  border: 0 !important;
+}
+.personalty-drawer-new .modal-header {
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+
+.instruction-box-blue {
+  background: #F5F8FF;
+  margin-left: -15px;
+  margin-right: -15px;
+  padding: 25px;
+}
+.instruction-box-blue ul {
+  padding-left: 15px;
+  margin-bottom: 0;
+}
+.instruction-box-blue ul li {
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 22px;
+  letter-spacing: 0%;
+}
+
 .modal-dialog.modal-md {
   max-width: 800px;
 }
@@ -4179,6 +4207,10 @@ select.h-36.form-select {
 .beharquiz_mdl .modal-header .score_panel .setlanguage .sm-fselect .css-t3ipsp-control .css-hlgwow {
   padding-right: 0;
   padding-left: 0;
+}
+.beharquiz_mdl .modal-header .score_panel .setlanguage .sm-fselect .css-1nmdiq5-menu {
+  width: 143px;
+  right: 0;
 }
 .beharquiz_mdl .modal-header .btn-close {
   margin-left: 0;
@@ -5034,6 +5066,10 @@ select.h-36.form-select {
   background-color: transparent;
 }
 
+.tab-staic-dark .nav-link.active {
+  filter: brightness(0) saturate(100%);
+}
+
 .last-row-flex-001 {
   min-width: 16%;
 }
@@ -5082,7 +5118,8 @@ select.h-36.form-select {
 .status_cardpanel .card-header h5 .count {
   color: #667085;
   font-size: 12px;
-  font-weight: 400;
+  font-weight: 500;
+  line-height: 18px;
 }
 .status_cardpanel .card-header button {
   background-color: transparent;
@@ -7491,8 +7528,18 @@ button.btn-icon {
 }
 
 .table-list-scroll {
-  max-height: 330px;
+  max-height: 290px;
   overflow-y: auto;
+}
+
+.pagetitle {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 30px;
+}
+
+.job-kanban-panel {
+  padding: 2rem;
 }
 
 .jobrvsd_head h6 {
@@ -8303,7 +8350,7 @@ path.recharts-rectangle.recharts-tooltip-cursor {
 }
 .chat-board-indidual .chat-widget {
   position: relative;
-  width: 93.9% !important;
+  width: 93.5% !important;
 }
 .chat-board-indidual .upload-container {
   max-width: 94%;
@@ -9122,6 +9169,17 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   font-size: 13px;
   padding: 4px 6px;
   min-width: 80px;
+}
+
+.selected-btn .icon_btnlink {
+  color: #444CE7 !important;
+}
+.selected-btn .icon_btnlink img {
+  filter: none !important;
+  opacity: 1 !important;
+}
+.selected-btn:last-child {
+  color: #475467 !important;
 }
 
 .list-kanban .icon_btnlink {

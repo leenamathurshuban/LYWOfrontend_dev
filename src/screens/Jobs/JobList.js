@@ -378,7 +378,7 @@ const JobsList = () => {
               md={12}
               className="d-flex justify-content-between align-items-center"
             >
-              <h6 class="my-3 pagetitle">Jobs</h6>
+              <h6 class="my-3 pagetitle ps-3">Jobs</h6>
               <Button
                 variant="primary"
                 className="btn-md"
@@ -404,7 +404,7 @@ const JobsList = () => {
               </Button>
             </Col>
           </Row>
-          <Card className="shadow-sm border-0 evaluations_data">
+          <Card className="shadow-sm border-0 evaluations_data mb-4">
             <Card.Header className="py-3">
               <Row>
                 <Col md={3}>

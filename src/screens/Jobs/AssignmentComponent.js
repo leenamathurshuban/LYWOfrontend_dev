@@ -1513,6 +1513,18 @@ const AssignmentComponent = (item) => {
                                         </Nav.Link>
                                     </Nav.Item>
                                 </Nav>
+                                
+                                <div className="instruction-box-blue">
+                                    <ul>
+                                        <li>8/10 Mandatory Questions Pending</li>
+                                        <li>
+                                            5 Questions marked for Review</li>
+
+                                            <li>3/5 Sections Completed</li>
+                                            <li>Estimated time for completion - 10min</li>
+                                    </ul>
+                                </div>
+
                             </Col>
                         </Row>
                     </Tab.Container>
@@ -1668,6 +1680,17 @@ const AssignmentComponent = (item) => {
                                         </Nav.Link>
                                     </Nav.Item>
                                 </Nav>
+
+                                   <div className="instruction-box-blue">
+                                    <ul>
+                                        <li>8/10 Mandatory Questions Pending</li>
+                                        <li>
+                                            5 Questions marked for Review</li>
+
+                                            <li>3/5 Sections Completed</li>
+                                            <li>Estimated time for completion - 10min</li>
+                                    </ul>
+                                </div>
                             </div>
                         </Offcanvas.Body>
                     </Offcanvas>

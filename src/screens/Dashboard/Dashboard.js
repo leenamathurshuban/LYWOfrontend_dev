@@ -494,7 +494,7 @@ const Dashboard = () => {
         </div>
       )} */}
       <div className="page-body">
-        <Container fluid className="pt-3">
+        <Container fluid className="">
           <Row>
             {/* <Col md={12}>
               <Breadcrumb>
@@ -1145,7 +1145,7 @@ const Dashboard = () => {
 
                   </Card.Body>
                 </Card>
-                <Card className="draft_jobs dbstatus_card mt-3">
+                <Card className="draft_jobs dbstatus_card mt-4">
                   <Card.Body>
                     <div className="d-flex align-items-center">
                       <span className="status_icon">

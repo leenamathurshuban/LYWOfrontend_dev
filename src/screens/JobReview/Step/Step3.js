@@ -28,7 +28,7 @@ const Step3 = ({ applicantPersonality, personalityData }) => {
           </Col>
         </Row>
 
-        <Row className='row-cols-5 '>
+        <Row className=' '>
           {personalityData?.length > 0 &&
             personalityData
               ?.sort((a, b) => b?.personality_percentage - a?.personality_percentage)
