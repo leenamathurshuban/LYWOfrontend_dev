@@ -12,7 +12,7 @@ import angleDown from "../../images/icons/angle-down-arrow.svg"
 import EvaluaBtn from "../../images/icons/evalua_icon.svg"
 import AutomatBtn from "../../images/icons/automations_icon.svg"
 import stopBtn from "../../images/icons/pause-circle-16x16.svg"
-import LeaderIcn from "../../images/icons/Leader-icon.svg";
+import LeaderIcn from "../../images/icons/Leader-icon.svg"; 
 import gridView from "../../images/icons/grid_icon.svg"
 import listView from "../../images/icons/list_icon.svg"
 import Dragableicn from "../../images/icons/dragable-six-dots.svg"
@@ -1305,7 +1305,7 @@ const JobReview = () => {
                     </div>
                 )} */}
 
-            <div className="page-body ps-0">
+            <div className="page-body ps-0 pe-0">
                 <Container fluid className="bg-white">
                     <Row>
                         <Col md={6} className="d-flex justify-content-between align-items-center">
@@ -1322,7 +1322,7 @@ const JobReview = () => {
                     <Tab.Container id="left-tabs-example" activeKey={reviewEventKey} onSelect={k => setReviewEventKey(k)}>
                         <Row className="bg-white">
                             <Col md={6}>
-                                <Nav variant="pills" className="tab-underline">
+                                <Nav variant="pills" className="tab-underline tab-staic-dark ps-4">
                                     <Nav.Item>
                                         <Nav.Link eventKey="first"><img src={Folder} className="img-fluid" alt="folder" />  &nbsp;Applications</Nav.Link>
                                     </Nav.Item>
@@ -1338,20 +1338,20 @@ const JobReview = () => {
                                 </Nav>
 
                             </Col>
-                            <Col md={6} className="text-end">
+                            <Col md={6} className="text-end pe-4">
                                 <button className="btn btn-traspant" onClick={() => setListShow(false)}><img src={gridView} /></button>
                                 <button className="btn btn-traspant" onClick={() => setListShow(true)}><img src={listView} /></button>
                             </Col>
                         </Row>
                         <Row >
-                            <Tab.Content className="p-3">
+                            <Tab.Content className="job-kanban-panel">
                                 <Tab.Pane eventKey="first">
-                                    <Row className="hori_scroll evalutaion-page-tab-scroller">
+                                    <Row className="hori_scroll evalutaion-page-tab-scroller  p-2">
                                         {ListShow && ListData?.length > 0 ? (
                                             <Card className="shadow-sm border-0 evaluations_data mt-4 rounded overflow-hidden">
                                                 <Card.Header className="py-3">
                                                     <Row>
-                                                        <Col md={6} className="d-flex">
+                                                        <Col md={5} className="d-flex">
                                                             <div className="d-inline">
                                                                 <InputGroup className="defult_serachbox">
                                                                     <Button id="basic-addon1">
@@ -1379,7 +1379,7 @@ const JobReview = () => {
                                                                 </InputGroup>
                                                             </div>
                                                         </Col>
-                                                        <Col md={6} className="d-flex justify-content-end align-items-center list-kanban">
+                                                        <Col md={7} className="d-flex justify-content-end align-items-center list-kanban">
 
                                                             <Button className="icon_btnlink" onClick={() => handleStatusGroup('Select', selectedListUids)}>
                                                                 <img src={checkgreen} className="img-fluid" />
@@ -2042,7 +2042,7 @@ const JobReview = () => {
                                                     <Col
                                                         md={2}
                                                         key={paraName.uid}
-                                                        className={expandedGroup === paraName.uid ? 'expanded-col' : ''} >
+                                                        className={expandedGroup === paraName.uid ? 'expanded-col ps-1 pe-1' : 'ps-1 pe-1'} >
                                                         <Card className="status_cardpanel">
                                                             <div className="card-header">
                                                                 <h5>{paraName?.parameter_name} <span className="count">{paraName?.parameter_applicant_count}</span></h5>
@@ -2105,7 +2105,7 @@ const JobReview = () => {
                                                                                     </h6>
                                                                                     {(paraName?.parameter_name == "Application" || paraName?.parameter_name == "Behaviour") ? (
                                                                                         ""
-                                                                                    ) : <span className="badge bg-outline-success">{groupItem?.group_wise_applicant_count} pending</span>}
+                                                                                    ) : (groupItem?.group_wise_applicant_count > 0 && <span className="badge bg-outline-success">{groupItem?.group_wise_applicant_count} pending</span>)}
                                                                                 </div>
                                                                                 <div className="remind-checkbox ">
                                                                                     <div className="d-flex justify-content-between align-items-end">
@@ -2167,7 +2167,7 @@ const JobReview = () => {
                                                         </Card>
                                                     </Col>
                                                 ))}
-                                                <Col md="auto flex-fill col-md-2 last-row-flex-001">
+                                                <Col md="auto flex-fill col-md-2 last-row-flex-001 ps-1 pe-1">
                                                     <Card className="status_cardpanel">
                                                         <Card.Body className="text-center d-flex align-items-center justify-content-center flex-column">
                                                             <button type="button" className="btn btn-light-primery w-100" onClick={handleShow}><i className="fa fa-plus me-2"></i>Add Evaluation</button>

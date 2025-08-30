@@ -79,10 +79,11 @@ const Step3 = ({ applicantPersonality, personalityData }) => {
         animation={false}
         size="md"
         backdrop={true}
-        className="indleffort-mdl"
+        className="indleffort-mdl border-0 no-border-model"
         backdropClassName="custom-backdrop"
       >
-        <Modal.Header closeButton>
+        <div className="p-5">
+        <Modal.Header closeButton style={{borderTopLeftRadius:'12px', borderTopRightRadius:'12px'}}>
           <img src={LeaderIcn} alt="leader-icon" />
           <Modal.Title>
             <span className="count">P</span> Persuader
@@ -109,6 +110,7 @@ decisions and promote harmony in the team.</p>
             </ul>
           </div>
         </Modal.Body>
+        </div>
       </Modal>
     </>
   );
