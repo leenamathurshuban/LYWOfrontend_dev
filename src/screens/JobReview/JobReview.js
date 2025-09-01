@@ -2898,7 +2898,7 @@ const JobReview = () => {
                                                                     <Card.Header className="p-0 pb-2 d-flex align-items-center justify-content-between">
 
                                                                         <Card.Title>
-                                                                            {user?.applicant?.user?.username}
+                                                                            {user?.job_applicant?.job_applicant_profile?.user?.username}
                                                                         </Card.Title>
 
                                                                         <div className="d-flex">
@@ -2910,10 +2910,6 @@ const JobReview = () => {
                                                                                 </button> */}
 
                                                                             {/* reviewModal */}
-
-
-
-
                                                                             <button
                                                                                 onClick={() => {
                                                                                     setSelectedUser(user);
