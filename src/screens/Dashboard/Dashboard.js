@@ -355,8 +355,10 @@ const Dashboard = () => {
       const res = await dashboardListAPI(companyInfo?.uid);
       if (res?.data?.success) {
         setDashboardList(res?.data?.response)
-        setFirstTotalData(res?.data?.response?.total_count_data?.hiring_pipeline)
-        setTotalData(res?.data?.response?.total_job_data);
+        const hirePipline = res?.data?.response?.total_count_data?.hiring_pipeline?.filter((item) => item.job_status == "Active")
+        setFirstTotalData(hirePipline)
+        const filterData = res?.data?.response?.total_job_data?.filter((item) => item.job_status == "Active")
+        setTotalData(filterData);
         setPendingReview(res?.data?.response?.total_count_data?.pending_reviews)
         setIsLoading(false);
       }
@@ -412,16 +414,22 @@ const Dashboard = () => {
         const searchData = dashboardList?.total_job_data?.filter(val =>
           val?.job_title?.toLowerCase()?.includes(searchTerm?.toLowerCase())
         );
-        setTotalData(searchData)
+        const filterData = searchData?.filter((item) => item.job_status == "Active")
+        setTotalData(filterData)
       } else {
         const searchData = dashboardList?.total_count_data?.hiring_pipeline?.filter(val =>
           val?.job_title?.toLowerCase()?.includes(searchTerm?.toLowerCase())
         );
-        setFirstTotalData(searchData)
+        const filterData = searchData?.filter((item) => item.job_status == "Active")
+        setFirstTotalData(filterData)
       }
     } else {
-      setFirstTotalData(dashboardList?.total_count_data?.hiring_pipeline)
-      setTotalData(dashboardList?.total_job_data)
+      const hirePipline = dashboardList?.total_count_data?.hiring_pipeline?.filter((item) => item.job_status == "Active")
+      setFirstTotalData(hirePipline)
+      // setFirstTotalData(dashboardList?.total_count_data?.hiring_pipeline)
+      const filterData = dashboardList?.total_job_data?.filter((item) => item.job_status == "Active")
+      setTotalData(filterData)
+      // setTotalData(dashboardList?.total_job_data)
     }
   }, [searchTerm])
 
@@ -484,6 +492,7 @@ const Dashboard = () => {
 
   console.log(dashboardList)
   console.log(keyColumn)
+  console.log(TotalData)
   return (
     <>
       <Sidebar />

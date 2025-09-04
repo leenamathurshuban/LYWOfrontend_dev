@@ -528,7 +528,7 @@ export default function GlobalChat() {
               </Card>
             </Col>
             {/* Middle Sidebar - Candidates */}
-            <Col md={3} className="bg-white " style={{ borderRight: "2px solid #F2F4F7" }}>
+            <Col md={3} className=" " style={{ background:'#fcfcfd', borderRight: "2px solid #F2F4F7" }}>
               <Card className="h-100 border-0 chat-module">
                 <Card.Header className="border-bottom d-flex justify-content-between align-items-center" style={{ padding: "16px", paddingBottom: "0" }} >
                   <Card.Title>Candidates</Card.Title>

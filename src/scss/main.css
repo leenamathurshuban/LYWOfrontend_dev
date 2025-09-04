@@ -65,13 +65,13 @@ a {
 }
 
 .min-h-full {
-  min-height: 100vh;
+  min-height: 100%;
 }
 
 .authentication-wrapper {
   display: flex;
   flex-basis: 100%;
-  min-height: 100vh;
+  min-height: 110vh;
   width: 100%;
   position: relative;
 }
@@ -80,6 +80,21 @@ a {
   z-index: 1;
   inset-block-start: 2.5rem;
   inset-inline-start: 1.5rem;
+}
+
+.offcanvas-body::-webkit-scrollbar {
+  width: 6px;
+}
+.offcanvas-body::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgb(213, 213, 213);
+  border-radius: 8px;
+}
+.offcanvas-body::-webkit-scrollbar-thumb {
+  background: #D0D5DD;
+  border-radius: 8px;
+}
+.offcanvas-body::-webkit-scrollbar-thumb:hover {
+  background: #D0D5DD;
 }
 
 .offcanvas-backdrop {
@@ -575,8 +590,19 @@ ol.breadcrumb {
   margin-top: 4px;
 }
 
+.light-shadows {
+  background: #EAECF0;
+  padding: 16px;
+  border-radius: 16px;
+  height: 100%;
+}
+
 .com_infotext {
-  padding: 20px 40px 0 45px;
+  padding: 30px !important;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
 }
 .com_infotext p {
   font-size: 12px;
@@ -881,10 +907,9 @@ label.required.form-label {
   font-size: 12px;
   min-height: 36px;
 }
-.form_card .words_limit {
+.form_card .words_limits {
   font-size: 12px;
   text-align: left !important;
-  margin-top: 50px !important;
 }
 .form_card .mb-3 {
   margin-bottom: 0.5rem !important;
@@ -2320,6 +2345,7 @@ select.h-36.form-select {
   font-size: 12px;
   font-weight: 400;
   vertical-align: middle;
+  cursor: pointer;
 }
 .offcanvas .checkbox-group {
   display: flex;
@@ -3357,11 +3383,13 @@ select.h-36.form-select {
   border-radius: 8px;
   padding: 5px;
   box-shadow: 0 3px 4px rgba(0, 0, 0, 0.11);
+  cursor: pointer;
 }
 .perlitymth-card .perlitymth-head {
   display: flex;
   align-items: center;
   margin-bottom: 4px;
+  gap: 10px;
 }
 .perlitymth-card .perlitymth-head .prtmth_icon {
   margin-right: 15px;
@@ -3844,6 +3872,7 @@ select.h-36.form-select {
   color: #344054;
   padding-left: 12px;
   border-left: solid 4px #000;
+  cursor: pointer;
 }
 .helpme_drawer .h5_title.danger {
   border-color: #F97066;
@@ -3916,6 +3945,7 @@ select.h-36.form-select {
   padding: 10px;
   position: relative;
   height: 100%;
+  margin-top: 10px;
 }
 .helpme_drawer .syatic_box .fa-star {
   position: absolute;
@@ -6739,7 +6769,6 @@ button#input-group-dropdown-1 {
   transition: all 0.2s ease-in-out;
   margin-right: 2px;
   margin-top: 0;
-  top: 0px;
 }
 .custom-checkbox .form-check-input[type=checkbox]:checked {
   background-color: #EEF4FF;
@@ -7538,6 +7567,23 @@ button.btn-icon {
 .table-list-scroll {
   max-height: 290px;
   overflow-y: auto;
+}
+.table-list-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.table-list-scroll::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgb(213, 213, 213);
+  border-radius: 8px;
+}
+.table-list-scroll::-webkit-scrollbar-thumb {
+  background: #D0D5DD;
+  border-radius: 8px;
+}
+.table-list-scroll::-webkit-scrollbar-thumb:hover {
+  background: #D0D5DD;
+}
+.table-list-scroll td {
+  width: 100%;
 }
 
 .pagetitle {
@@ -8730,8 +8776,16 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   min-height: 34px;
 }
 
+.min-h-100 {
+  min-height: calc(100vh - 30px);
+}
+
 .summary-full .ct_scrollbar {
   max-height: 100% !important;
+}
+
+.summary-full .rects-panel.bottom-fixed {
+  display: none;
 }
 
 .jobcreattion-model .btn-close {
@@ -9216,6 +9270,11 @@ path.recharts-rectangle.recharts-tooltip-cursor {
 
 .custom-quill .ql-editor {
   min-height: 200px;
+}
+
+.profile-text-editor .ql-editor {
+  height: 100%;
+  min-height: 296px;
 }
 
 @media screen and (max-width: 767px) {

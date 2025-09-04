@@ -1507,14 +1507,17 @@ const UpdateJobsRevised = ({
     }, [isUpdated]);
     function setClassName() {
         if (updateFormData?.year_of_experience_type) {
-            if (updateFormData?.year_of_experience_type == 'Range' && updateFormData?.min_exp && updateFormData?.max_exp &&
-                (updateFormData.restricted_industries? IndustriesBadges?.length > 0:!IndustriesBadges?.length) && (updateFormData.define_current_role? restrictedRoleBadges?.length > 0:!restrictedRoleBadges?.length)) {
+            if (updateFormData?.year_of_experience_type == 'Range' && updateFormData?.min_exp && updateFormData?.max_exp)
+            // && (updateFormData.restricted_industries? IndustriesBadges?.length > 0:!IndustriesBadges?.length) && (updateFormData.define_current_role? restrictedRoleBadges?.length > 0:!restrictedRoleBadges?.length)) 
+            {
                 return 'completed'
-            } else if (updateFormData?.year_of_experience_type == 'Min' && updateFormData?.min_exp &&
-                (updateFormData.restricted_industries? IndustriesBadges?.length > 0:!IndustriesBadges?.length) && (updateFormData.define_current_role? restrictedRoleBadges?.length > 0:!restrictedRoleBadges?.length)) {
+            } else if (updateFormData?.year_of_experience_type == 'Min' && updateFormData?.min_exp
+                // && (updateFormData.restricted_industries? IndustriesBadges?.length > 0:!IndustriesBadges?.length) && (updateFormData.define_current_role? restrictedRoleBadges?.length > 0:!restrictedRoleBadges?.length)
+            ) {
                 return 'completed'
-            } else if (updateFormData?.year_of_experience_type == 'Max' && updateFormData?.max_exp &&
-                (updateFormData.restricted_industries? IndustriesBadges?.length > 0:!IndustriesBadges?.length) && (updateFormData.define_current_role? restrictedRoleBadges?.length > 0:!restrictedRoleBadges?.length)) {
+            } else if (updateFormData?.year_of_experience_type == 'Max' && updateFormData?.max_exp)
+            //  &&(updateFormData.restricted_industries? IndustriesBadges?.length > 0:!IndustriesBadges?.length) && (updateFormData.define_current_role? restrictedRoleBadges?.length > 0:!restrictedRoleBadges?.length))
+            {
                 return 'completed'
             }
         }
@@ -2314,7 +2317,7 @@ const UpdateJobsRevised = ({
                                         Language <i class="fa fa-check" aria-hidden="true"></i>
                                     </Link>
                                 </li>
-                                <li className={`${locationBadges?.length > 0 ? 'completed' :updateFormData?.no_specific_location?'completed': ''} ${openStep[0] === "6" && 'active'}`}
+                                <li className={`${locationBadges?.length > 0 ? 'completed' : updateFormData?.no_specific_location ? 'completed' : ''} ${openStep[0] === "6" && 'active'}`}
                                     onClick={() => {
                                         setCurrentStep("6")
                                         handleOpenStep("6")
@@ -3400,7 +3403,7 @@ const UpdateJobsRevised = ({
                                                                         // handleFormData(e);
                                                                         setUpdateFormData({
                                                                             ...updateFormData,
-                                                                            [e.target.name]:e.target.checked
+                                                                            [e.target.name]: e.target.checked
                                                                         })
                                                                     }}
                                                                     id={`inline-${type}-9`}
@@ -3530,7 +3533,7 @@ const UpdateJobsRevised = ({
                                                                         // handleFormData(e);
                                                                         setUpdateFormData({
                                                                             ...updateFormData,
-                                                                            [e.target.name]:e.target.checked
+                                                                            [e.target.name]: e.target.checked
                                                                         })
                                                                     }}
                                                                     type={type}

@@ -459,7 +459,7 @@ const AddUserManagement = () => {
             </Button>
           </div>
         </div>
-        <Card className="usermanagement_table shadow-md border-light">
+        <Card className="usermanagement_table shadow-md border-light min-h-100">
           <Form onSubmit={handleSubmit}>
             <Card.Body>
               {isLoading && (

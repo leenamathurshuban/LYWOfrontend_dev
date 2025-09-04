@@ -117,6 +117,7 @@ const TextEditor = ({ data, onUpdate }) => {
       <ReactQuill
         value={editorValue}
         onChange={handleChange} 
+        className='profile-text-editor'
         modules={{
           toolbar: [
             ['bold', 'italic', 'underline'],
@@ -124,11 +125,11 @@ const TextEditor = ({ data, onUpdate }) => {
           ],
         }}
         placeholder="Write something..."
-        style={{ height: '360px' }} 
+        //style={{ height: '360px' }} 
       />
       {/* Word Counter */}
-      <div className="words_limit" style={{ textAlign: 'right', marginTop: '10px' }}>
-        {wordCount}/{maxWords}
+      <div className="words_limits" style={{ textAlign: 'right', marginTop: '10px !important' }}>
+        {wordCount}/{maxWords} Words
       </div>
       {/* Error Message */}
       {errorMessage && <div style={{ color: 'red', marginTop: '5px' }}>{errorMessage}</div>}

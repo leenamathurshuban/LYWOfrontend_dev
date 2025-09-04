@@ -42,6 +42,8 @@ import ExpandButton from "../../images/icons/expand-03-primery.svg";
 import ArrowBack from "../../images/icons/arrowBack.svg";
 import ArrowNext from "../../images/icons/arrowNext.svg";
 
+import Finalise from "../../images/icons/finalise.svg";
+
 import Barchart from "../../images/icons/bar-chart-07.svg";
 import Folder from "../../images/icons/folder.svg";
 import Messagedot from "../../images/icons/message-dots-circle-b.svg";
@@ -2171,7 +2173,7 @@ const JobReview = () => {
                                                     <Card className="status_cardpanel">
                                                         <Card.Body className="text-center d-flex align-items-center justify-content-center flex-column">
                                                             <button type="button" className="btn btn-light-primery w-100" onClick={handleShow}><i className="fa fa-plus me-2"></i>Add Evaluation</button>
-                                                            <button type="button" className="btn btn-white mt-2 w-100"><i className="fa fa-plus me-2"></i>Finalise Selection</button>
+                                                            <button type="button" className="btn btn-white mt-2 w-100"><img src={Finalise} className="imgfluid me-2" alt="finalise"  />  Finalise Selection</button>
                                                         </Card.Body>
                                                     </Card>
                                                 </Col>
@@ -2910,6 +2912,10 @@ const JobReview = () => {
                                                                                 </button> */}
 
                                                                             {/* reviewModal */}
+
+
+
+
                                                                             <button
                                                                                 onClick={() => {
                                                                                     setSelectedUser(user);
@@ -3925,7 +3931,7 @@ const JobReview = () => {
                     </div>
                     <Card className="ans_card">
                         <Card.Header className="p-0 pb-1 d-flex align-items-center justify-content-between border-0">
-                            <Card.Title>{currentItem?.applicant?.user?.username}</Card.Title>
+                            <Card.Title>{currentItem?.job_applicant?.job_applicant_profile?.user?.username}</Card.Title>
                             <Ratting rating={rating} setRating={setRating} ID={currentItem?.uid} getJobAssignmentReviewList={getJobAssignmentReviewList} questionWiseData={questionWiseData} />
                         </Card.Header>
                         <Card.Body className="px-0">

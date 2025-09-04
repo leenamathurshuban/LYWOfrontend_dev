@@ -219,7 +219,8 @@ const Evaluations = ({ show, handleClose, assetJob, setAssetJob, localAssetJob, 
             formdata.append("asset_job", JSON.stringify(assetJob.map((Val) => Val.uid)))
             const response = await UpdateJobForm(formdata, id)
             if (response?.data?.success) {
-                handleClose()
+                // handleClose()
+                modelClose()
             }
         } catch (error) {
             console.log(error)

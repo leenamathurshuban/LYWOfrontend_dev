@@ -3594,7 +3594,8 @@ const ApplicationJobPostModal = ({
                     </Col>
 
                     <Col>
-                      <div className="verify-box-mobile desktop-flex-colum">
+                    {/* verify-box-mobile */}
+                      <div className=" desktop-flex-colum">
 
                         <Form.Control
                           type="email"
@@ -3615,7 +3616,7 @@ const ApplicationJobPostModal = ({
 
 
 
-                        <button className="verify-btn" onClick={handleInviteShow}>Verify</button>
+                        {/* <button className="verify-btn" onClick={handleInviteShow}>Verify</button> */}
 
 
                       </div>
@@ -3623,7 +3624,9 @@ const ApplicationJobPostModal = ({
                     </Col>
                   </Row>
 
-                  <Row className="mb-3 mt-2 mobile-hide">
+                    {/* mobile-hide */}
+
+                  <Row className="mb-3 mt-2 ">
                     <Col md={2}>
                       <Form.Label>Confirm Email ID</Form.Label>
                     </Col>
