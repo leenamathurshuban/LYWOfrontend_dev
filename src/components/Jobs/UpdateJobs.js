@@ -72,7 +72,8 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
   const [spokenLanguageBadges, setSpokenLanguageBadges] = useState([]);
   const [rdnwBadges, setrdnwBadges] = useState([]);
   const [locationBadges, setLocationBadges] = useState([]);
-  const [fileName, setFileName] = useState("");
+  const [fileName, setFileName] = useState(editData?.description_attachment?`https://bittrend.shubansoftware.com${editData?.description_attachment}`:"");
+  const [attachFile,setAttachFile] = useState(null)
   const [behaviours, setBehaviours] = useState([
     {
       heading: "Efficiency",
@@ -429,6 +430,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
 
     // Set the file name to display it
     setFileName(file.name);
+    setAttachFile(file)
 
     if (file.type.startsWith("image/")) {
       // Handle Image Upload
@@ -716,6 +718,9 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
       formdata.append("detailed_description", descriptionWithoutTags);
       formdata.append("job_type", createFormData.jobType);
       formdata.append("workplace_type", createFormData.workPlaceType);
+      if(attachFile){
+        formdata.append("description_attachment",attachFile)
+      }
       if(SelectBenefitsData?.length){
         formdata.append("job_benefits", JSON.stringify(SelectBenefitsData));
       }      
@@ -891,7 +896,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
       } else if (key === "is_geography_imp" && importantFlag.geography) {
         formdata.append('is_geography_imp', importantFlag.geography)
 
-      } else if (updateFormData[key] !== "") {
+      } else if (updateFormData[key] !== "" && !Number.isNaN(updateFormData[key])) {
         formdata.append(key, updateFormData[key]);
       }
     }

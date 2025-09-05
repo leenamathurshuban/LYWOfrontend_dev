@@ -2185,9 +2185,9 @@ const UpdateJobsRevised = ({
         } else if (badges?.length === 0 || !updateFormData?.minimum_education) {
             return "";
         } else if (
-            setClassName() !== "completed" ||
-            restrictedRoleBadges.length === 0 ||
-            IndustriesBadges.length === 0
+            setClassName() !== "completed"
+            // || restrictedRoleBadges.length === 0 ||
+            // IndustriesBadges.length === 0
         ) {
             return "";
         } else {
@@ -2877,7 +2877,7 @@ const UpdateJobsRevised = ({
                                                         </Row>
                                                     </Form.Group>
 
-                                                    {ishideIndustries && (
+                                                    {updateFormData?.restricted_industries && (
                                                         <Form.Group
                                                             className="mb-3"
                                                             controlId="exampleForm.ControlTextarea1"
@@ -2962,7 +2962,7 @@ const UpdateJobsRevised = ({
                                                         </Form.Group>
                                                     )}
 
-                                                    {isHideRestrictedRoles && (
+                                                    {updateFormData?.define_current_role && (
                                                         <Form.Group
                                                             className="mb-3"
                                                             controlId="exampleForm.ControlTextarea1"
@@ -3079,7 +3079,7 @@ const UpdateJobsRevised = ({
                                                                         handleFormData(e);
                                                                         setIsHideIndustries(!ishideIndustries);
                                                                     }}
-                                                                    checked={ishideIndustries ? true : false}
+                                                                    checked={updateFormData?.restricted_industries ? true : false}
                                                                     id={`inline-${type}-5`}
                                                                 />
 
@@ -3092,7 +3092,7 @@ const UpdateJobsRevised = ({
                                                                         handleFormData(e);
                                                                         setIsHideRestrictedRoles(!isHideRestrictedRoles);
                                                                     }}
-                                                                    checked={isHideRestrictedRoles ? true : false}
+                                                                    checked={updateFormData?.define_current_role ? true : false}
                                                                     id={`inline-${type}-6`}
                                                                 />
                                                             </div>
@@ -3608,7 +3608,7 @@ const UpdateJobsRevised = ({
                                                     <span className={`imprt_icon ${mustHaveSkills.length >= 3 && 'text-primery'}`}>
                                                         <i class={`${mustHaveSkills.length >= 3 ? 'fa' : 'far'} fa-star`} aria-hidden="true"></i>
                                                     </span>
-                                                    <span className="count ms-1">1 of 3</span>
+                                                    <span className="count ms-1">{mustHaveSkills?.length} of 3</span>
                                                 </div>
 
 
@@ -4343,37 +4343,41 @@ const UpdateJobsRevised = ({
 
                                         </li>
                                         <li>Needs to Travel Rarely </li>
-                                        <li>Must Speak
-                                            {spokenLanguageBadges?.length > 0 ? (
-                                                <>
-                                                    {spokenLanguageBadges?.map((lang, index) => (
-                                                        <> {lang?.language_name}{index !== spokenLanguageBadges.length - 1 && ", "}</>
-                                                    ))}
-                                                </>
-                                            ) : (
-                                                <span className="text-danger italic"> Not defined</span>
-                                            )}
-                                            {importantFlag.language && (
-                                                <img src={flagFill} className="flag_icon" />
-                                            )}
-                                        </li>
-                                        <li>Must Read/Write in
-                                            {rdnwBadges?.length > 0 ? (
-                                                <>
-                                                    {rdnwBadges?.map((lang, index) => (
-                                                        <> {lang?.language_name}{index !== rdnwBadges.length - 1 && ", "}</>
-                                                    ))}
-                                                </>
-                                            ) : (
-                                                <span className="text-danger italic"> Not defined</span>
-                                            )}
-                                            {importantFlag.language && (
-                                                <img src={flagFill} className="flag_icon" />
-                                            )}
-                                            {/* {rdnwBadges?.map((lang, index) => (
+                                        {!updateFormData?.no_specific_language_require && (
+                                            <>
+                                                <li>Must Speak
+                                                    {spokenLanguageBadges?.length > 0 ? (
+                                                        <>
+                                                            {!updateFormData?.no_specific_language_require && spokenLanguageBadges?.map((lang, index) => (
+                                                                <> {lang?.language_name}{index !== spokenLanguageBadges.length - 1 && ", "}</>
+                                                            ))}
+                                                        </>
+                                                    ) : (
+                                                        <span className="text-danger italic"> Not defined</span>
+                                                    )}
+                                                    {importantFlag.language && (
+                                                        <img src={flagFill} className="flag_icon" />
+                                                    )}
+                                                </li>
+                                                <li>Must Read/Write in
+                                                    {!updateFormData?.no_specific_language_require && rdnwBadges?.length > 0 ? (
+                                                        <>
+                                                            {rdnwBadges?.map((lang, index) => (
+                                                                <> {lang?.language_name}{index !== rdnwBadges.length - 1 && ", "}</>
+                                                            ))}
+                                                        </>
+                                                    ) : (
+                                                        <span className="text-danger italic"> Not defined</span>
+                                                    )}
+                                                    {importantFlag.language && (
+                                                        <img src={flagFill} className="flag_icon" />
+                                                    )}
+                                                    {/* {rdnwBadges?.map((lang, index) => (
                                                 <>{lang?.language_name}{index !== rdnwBadges.length - 1 && ", "}</>
                                             ))} */}
-                                        </li>
+                                                </li>
+                                            </>
+                                        )}
                                         <li>
                                             {locationBadges?.length > 0 ? (
                                                 <>
@@ -4545,7 +4549,7 @@ const UpdateJobsRevised = ({
                                             </p>
                                         </li>
                                     )}
-                                    {(setClassName() != "completed" || restrictedRoleBadges.length == 0 || IndustriesBadges.length == 0) && (
+                                    {setClassName() != "completed" && (
                                         <li class={`${openStep[0] == '3' && "active"}`}>
                                             <svg
                                                 width="12"

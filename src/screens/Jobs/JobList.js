@@ -434,7 +434,7 @@ const JobsList = () => {
                     />
                   </InputGroup>
                 </Col>
-                <Col md={9} className="d-flex justify-content-end align-items-center disabled-btn">
+                <Col md={9} className={`d-flex justify-content-end align-items-center ${!activeIds.length && "disabled-btn"}`}>
                   <Button className="icon_btnlink" onClick={() => {
                     if (activeIds.length) {
                       setModalText({
