@@ -385,9 +385,9 @@ export default function GlobalChat() {
         <Container fluid className="pt-3">
           <Row className="g-0 shadow-sm" style={{ height: 'calc(100vh - 120px)' }}>
             {/* Left Sidebar - Jobs */}
-            <Col md={3} className="" style={{ background: "#F9FAFB", borderRight: "2px solid #F2F4F7", borderTopLeftRadius: "12px", borderBottomLeftRadius: "12px" }} >
-              <Card className="h-100 border-0 chat-module">
-                <Card.Header className="border-bottom d-flex justify-content-between align-items-center" style={{ padding: "16px", paddingBottom: "0" }} >
+            <Col md={3} className="" style={{  borderRight: "2px solid #F2F4F7", borderTopLeftRadius: "12px", borderBottomLeftRadius: "12px" }} >
+              <Card className="h-100 border-0 chat-module" style={{background: "#F9FAFB"}}>
+                <Card.Header className="border-bottom d-flex justify-content-between align-items-center" style={{ padding: "16px", paddingBottom: "0" , background:'transparent' }} >
                   <Card.Title>Job List</Card.Title>
                   <Select
                     options={options}
@@ -584,8 +584,8 @@ export default function GlobalChat() {
             </Col>
             {/* Middle Sidebar - Candidates */}
             <Col md={3} className=" " style={{ background: '#fcfcfd', borderRight: "2px solid #F2F4F7" }}>
-              <Card className="h-100 border-0 chat-module">
-                <Card.Header className="border-bottom d-flex justify-content-between align-items-center" style={{ padding: "16px", paddingBottom: "0" }} >
+              <Card className="h-100 border-0 chat-module" style={{background:'#FCFCFD'}}>
+                <Card.Header className="border-bottom d-flex justify-content-between align-items-center" style={{ padding: "16px", paddingBottom: "0", background: 'transparent' }} >
                   <Card.Title>Candidates</Card.Title>
                   <Select
                     options={options}
