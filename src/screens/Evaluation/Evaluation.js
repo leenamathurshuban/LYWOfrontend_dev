@@ -31,6 +31,7 @@ import listQuestions from "../../images/icons/list-question.svg";
 import mcqIcon from "../../images/icons/mcq_icon.png";
 import quizIcon from "../../images/icons/quiz_icon.svg";
 import logoIcon from "../../images/logo_icon.png";
+import Closeicon from "../../images/icons/x-close.svg"
 import {
   EvalationAssestDetails,
   EvalationAssestList,
@@ -561,7 +562,7 @@ const Evalation = () => {
         size="lg"
         className="cmprofile_mdl quizDev_model quiz-model-mobile"
       >
-        <Modal.Header className="model-close-eval" closeButton>
+        <Modal.Header className="model-close-eval" >
           <Col md={4}>
             <Modal.Title>
               <img src={logoIcon} className="me-4" />
@@ -578,7 +579,7 @@ const Evalation = () => {
               now={100}
             />
           </Col>
-          <Col md={4} className="score_panel">
+          <Col md={4} className="score_panel eval-score">
             <ul>
               <li>
                 <span className="outline_scorebtn">
@@ -619,6 +620,12 @@ const Evalation = () => {
               <li>
                 <Button variant="link" className="ms-4">
                   <img src={eyePrimery} />
+                </Button>
+              </li>
+
+               <li>
+                <Button variant="link" onClick={handleClose} className=" view-eye-tab">
+                  <img src={Closeicon} />
                 </Button>
               </li>
             </ul>

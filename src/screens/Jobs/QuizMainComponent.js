@@ -33,6 +33,8 @@ import quizIcon from "../../images/icons/quiz_icon.svg";
 import clock from "../../images/icons/clock.svg";
 import logoIcon from "../../images/logo_icon.png";
 
+import helpcircle from "../../images/icons/help-circle.svg"
+
 import Headericn from "../../images/icons/flex-align-top.svg";
 import gridicn from "../../images/icons/question.svg";
 import instructionicn from "../../images/icons/help-circle.svg";
@@ -582,7 +584,7 @@ const QuizMainComponent = (item) => {
       >
         <Modal.Header closeButton>
           <Col md={4}>
-            <Modal.Title>
+            <Modal.Title className="quiz-logo">
               <img src={logoIcon} className="me-4" />
               Quiz for {jobData?.state?.job_title}
               {item.asset_title}
@@ -1236,8 +1238,8 @@ const QuizMainComponent = (item) => {
             <Offcanvas.Body className="p-0">
               <div className="d-flex justify-content-between mb-3">
                 <div className="completed-status d-flex align-items-center ">
-                  <h6 style={{marginRight:'6px'}} >40%</h6>
-                  <span style={{fontSize:'12px'}}>completed</span>
+                  <h6 style={{ marginRight: '6px' }} >40%</h6>
+                  <span style={{ fontSize: '12px' }}>completed</span>
                   <ProgressBar
                     className="ms-3"
                     style={{ width: "80px", height: "8px" }}
@@ -1245,9 +1247,9 @@ const QuizMainComponent = (item) => {
                   />
                 </div>
 
-                  <div className="completed-status d-flex align-items-center">
-                    <span style={{fontSize:'12px', marginRight:'6px'}}>Attempted</span>  <h6>00 / 28 </h6>
-                  </div>
+                <div className="completed-status d-flex align-items-center">
+                  <span style={{ fontSize: '12px', marginRight: '6px' }}>Attempted</span>  <h6>00 / 28 </h6>
+                </div>
 
 
               </div>
@@ -1346,7 +1348,7 @@ const QuizMainComponent = (item) => {
           >
             <Offcanvas.Body>
               <div className="instruction-book">
-                <h5>Instructions</h5>
+                <h5 style={{ color: '#000' }} > <img src={helpcircle} alt="help" className="me-1" />  Instructions</h5>
                 <ul className="bullet_list mb-0">
                   {EvaluationListDetails.map((list, quesIndex) => (
                     <>
@@ -1396,6 +1398,9 @@ const QuizMainComponent = (item) => {
                     </Nav.Link>
                   </Nav.Item>
                 </Nav>
+
+                <div class="instruction-box-blue"><ul><li>8/10 Mandatory Questions Pending</li><li>5 Questions marked for Review</li><li>3/5 Sections Completed</li><li>Estimated time for completion - 10min</li></ul></div>
+
               </div>
             </Offcanvas.Body>
           </Offcanvas>
@@ -1440,7 +1445,7 @@ const QuizMainComponent = (item) => {
                 <p>We recommend completing the quiz in a single session.</p>
               </Modal.Body>
               <Modal.Footer className="justify-content-center">
-                <Button variant="light" onClick={SaveClose}>
+                <Button variant="light" onClick={SaveClose} style={{ minHeight: '42px' }} >
                   Continue with Test
                 </Button>
                 <Button variant="primary" onClick={handleClose}>
@@ -1512,15 +1517,17 @@ const QuizMainComponent = (item) => {
         onHide={handleClose}
         animation={false}
         size="lg"
-        backdrop={false}
-        className="bsreport_mdl"
+        backdrop={true}
+        className="bsreport_mdl custom-backdrop-2"
+        backdropClassName="custom-backdrop"
+        centered
       >
         <Modal.Header closeButton>
           <img src={logoIcon} className="me-4" />
           <Modal.Title>Quiz for {jobData?.state?.job_title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className="bg-white p-5 rounded text-center">
+          <div className="bg-white p-4 rounded text-center">
             <h5 className="mb-3">You have submitted the evaluation on {assestStatus?.asset_completion_date}.</h5>
             <p className="disc-text">Thank you for your time and efforts. The Quiz for {jobData?.state?.job_title} will be used to evaluate your readiness for the job position. The next round of recruitment process will open for you based on your performance.</p>
             <Row className="mt-5 justify-content-center">

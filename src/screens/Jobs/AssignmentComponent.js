@@ -1717,12 +1717,14 @@ const AssignmentComponent = (item) => {
 
 
                     <Modal
-                        className="instruction-popup "
+                        className="instruction-popup custom-backdrop-2"
                         show={showSave}
                         onHide={() => {
                             setIsBodyClassActive(false);
                             SaveClose();
                         }}
+                        backdrop={true}
+                        backdropClassName="custom-backdrop"
                         centered
                     >
                         <Modal.Body>
@@ -1731,7 +1733,7 @@ const AssignmentComponent = (item) => {
                                 <Modal.Title>Quiz for {jobdetail?.job_title}</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-                                <div className="bg-white p-2 rounded text-center">
+                                <div className="bg-white p-3 rounded text-center">
                                     <h5 className="mb-3">You have submitted the evaluation on {assestStatus?.asset_completion_date}.</h5>
                                     <p className="disc-text">Thank you for your time and efforts. The Quiz for {jobdetail?.job_title} will be used to evaluate your readiness for the job position. The next round of recruitment process will open for you based on your performance.</p>
                                     
@@ -1815,15 +1817,17 @@ const AssignmentComponent = (item) => {
                 onHide={handleClose}
                 animation={false}
                 size="lg"
-                backdrop={false}
-                className="bsreport_mdl"
+                backdrop={true}
+                className="bsreport_mdl custom-backdrop-2"
+                backdropClassName="custom-backdrop"
+                centered
             >
                 <Modal.Header closeButton>
                     <img src={logoIcon} className="me-4" />
                     <Modal.Title>Quiz for {jobdetail?.job_title}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <div className="bg-white p-5 rounded text-center">
+                    <div className="bg-white p-3 rounded text-center">
                         <h5 className="mb-3">You have submitted the evaluation on {assestStatus?.asset_completion_date}.</h5>
                         <p className="disc-text">Thank you for your time and efforts. The Quiz for {jobdetail?.job_title} will be used to evaluate your readiness for the job position. The next round of recruitment process will open for you based on your performance.</p>
                      
