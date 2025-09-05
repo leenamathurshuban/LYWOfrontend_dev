@@ -72,8 +72,16 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
 
     const [qshow, qsetShow] = useState(false);
 
+
+  
+
     const qhandleClose = () => qsetShow(false);
     const qhandleShow = () => qsetShow(true);
+
+       const [langshow, langsetShow] = useState(false);
+
+     const langhandleClose = () => langsetShow(false);
+    const langhandleShow = () => langsetShow(true);
 
     const popupRef = useRef(null);
 
@@ -415,8 +423,8 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                     <Modal.Title>Behavioural Assessment</Modal.Title>
                     <div className="score_panel">
                         <span className="att_count"> <span>Attempted </span>  <strong>{runCounter()} / 28</strong></span>
-                        <button type="button" onClick={() => setShowInstruction(true)} className="me-3 btn-light-outline-sm" style={{ height: '38px' }}><img src={infogray} />Instructions</button>
-                        <button type="button" className="btn-light-outline-sm me-3 setlanguage"><img src={globgray} />
+                        <button type="button" onClick={() => setShowInstruction(true)} className="me-3 btn-light-outline-sm m-hide" style={{ height: '38px' }}><img src={infogray} />Instructions</button>
+                        <button type="button" className="btn-light-outline-sm me-3 setlanguage m-hide"><img src={globgray} />
                             {/* <Form.Select
                                 name="currency"
                                 aria-label="Default select example"
@@ -496,7 +504,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
 
                     <div className='job-post-footer behavvoior-footer-menu'>
                         <div className='mobile-footer lang-help-btn'>
-                            <div className='language-btn'>
+                            <div className='language-btn' onClick={langhandleShow}>
                                 <img src={langicon} className='lng' /> <br></br>
 
                                 Language
@@ -516,6 +524,8 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                             </div>
                         </div>
                     </div>
+
+                     
 
 
                     <Offcanvas
@@ -580,6 +590,70 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                     </Offcanvas>
 
 
+                    {/* language modal */}
+
+                                   <Offcanvas
+                        show={langshow} onHide={langhandleClose}
+                        backdropClassName='custom-backdrop'
+                        backdrop={true}
+                        className="question-model-pop language-model"
+                        placement='bottom'
+                    >
+                        <Offcanvas.Body className='question-popop'>
+
+                            <div className='d-flex justify-content-between'>
+                                <div className='range-progress'>
+                                    <strong className="font-20">Select Language</strong> 
+                                </div>
+                              
+                            </div>
+
+
+                            <div className='choose-languae-mobile'>
+
+                            <button type="button" className="btn-light-outline-sm me-3 setlanguage m-show">
+                                
+                                {/* <img src={globgray} /> */}
+
+
+                            {/* <Form.Select
+                                name="currency"
+                                aria-label="Default select example"
+                                className="sm-fselect"
+                                value={language}
+                                onChange={(e) => {
+                                    setLanguage(e?.target?.value);
+                                    // getQuizQuestion()
+                                }}
+                            >
+                                <option selected value="english">English</option>
+                                <option selected value="hindi">Hindi</option>
+                                <option selected value="gujrati">Gujrati</option>
+                                <option selected value="kannada">Kannada</option>
+                                <option selected value="tamil">Tamil</option>
+                                <option selected value="telugu">Telugu</option>
+                            </Form.Select> */}
+                            <Select
+                                options={langOption}
+                                value={langOption?.find((opt) => opt?.value === language)}
+                                onChange={(e) => {
+                                    setLanguage(e.value);
+                                }}
+                                styles={customStyles}
+                                className="sm-fselect react_selectbox"
+                            />
+                        </button>
+
+                        </div>
+
+                            
+
+
+                        </Offcanvas.Body>
+                    </Offcanvas>
+
+
+
 
                     {allSelectionsMade && (
                         <Button variant="primary" onClick={handleSubmitAll}>
@@ -634,7 +708,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                             (quizMostLeastLike.length === quizMostLeastLike.flatMap(row => row.leastList).length) && 'Your responses have been successfully submitted. Log in using your email ID to access a detailed personality report.'}
                     </p>
                 </Modal.Body>
-                <Modal.Footer>
+                <Modal.Footer className='modal-btn-1-1'>
                     <Button className='button-30' variant="light" onClick={handleClosePop}>
                         {!quizMostLeastLike.length && 'Back'}
                         {quizMostLeastLike.length > 0 && (quizMostLeastLike.length > quizMostLeastLike.flatMap(row => row.mostList).length) &&
@@ -651,6 +725,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                             (quizMostLeastLike.length > quizMostLeastLike.flatMap(row => row.leastList).length) && !isLoading && 'Save and Exit'}
                         {complete && (quizMostLeastLike.length === quizMostLeastLike.flatMap(row => row.mostList).length) &&
                             (quizMostLeastLike.length === quizMostLeastLike.flatMap(row => row.leastList).length) && isLoading && `Proceed to Quiz for ${jobPostData.job_title}`}
+                    Proceed to Quiz
                     </Button>
                 </Modal.Footer>
             </Modal>

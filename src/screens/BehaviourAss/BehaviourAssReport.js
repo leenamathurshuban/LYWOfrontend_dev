@@ -197,8 +197,9 @@ const BehaviourAssReport = ({ behaviourReportModel, setBehaviourReportModel }) =
         onHide={handleCloseModal}
         animation={false}
         size="md"
-        backdrop={false}
-        className="indleffort-mdl"
+        backdrop={true}
+        className="indleffort-mdl custom-backdrop-2"
+        backdropClassName='custom-backdrop'
       >
         <Modal.Header closeButton>
           <img src={LeaderIcn} />

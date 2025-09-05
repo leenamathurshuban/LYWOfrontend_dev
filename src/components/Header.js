@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Col, Form, InputGroup, Dropdown } from "react-bootstrap";
+import { Col, Form, InputGroup, Dropdown, Button } from "react-bootstrap";
 import Select from "react-select";
 import { useDispatch, useSelector } from "react-redux";
 import { logoMaker, removeToken } from "../helpers/helper";
@@ -7,7 +7,7 @@ import UpdateDetailsIcon from "../images/icons/update-details-Hicon.svg";
 import ResetPassIcon from "../images/icons/reset-pass-Hicon.svg";
 import RemovePassIcon from "../images/icons/remove-pass-Hicon.svg";
 import LogoutIcon from "../images/icons/log-out-Hicon.svg";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { GetcompanyDetailsApi, logoutApi } from "../services/provider";
 import { setCompanyProfileDetails } from "../Slice/Login/LoginSlice";
 // import {persistor} from "../../src/Slice/Store"
@@ -129,6 +129,7 @@ const Header = () => {
               onChange={handleCompanyDropdown}
               className="react_selectbox"
               styles={customStyles}
+              isSearchable={false} 
             />
           </div>
         </Col>
@@ -160,6 +161,11 @@ const Header = () => {
         </Col>
         <Col className="col-4"  md={4}>
           <div className="header_right">
+             <Link to="/jobs" className="btn btn-primary me-4" style={{ width: "160px" }}>
+      Create Job
+    </Link>
+
+
             <button type="button" className="hed_notifaction">
               <svg
                 width="24"

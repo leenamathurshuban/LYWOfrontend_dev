@@ -4641,13 +4641,25 @@ const ApplicationJobPostModal = ({
                             <tbody>
                               <tr>
 
-
+                            <td className="text-start">
+                                  <button
+                                    type="button"
+                                    className="btn-transpant"
+                                    onClick={() => EducationdeleteRow(index)}
+                                  >
+                                    <img
+                                      src={imgpTrash}
+                                      alt="Delete"
+                                      style={{ width: "20px", height: "20px" }}
+                                    />
+                                  </button>
+                                </td>
 
                                 {!row.saved && (
-                                  <td>
+                                  <td className="text-end">
                                     <Button
                                       variant="link"
-                                      className="p-1 font-sm mt-1 link-iconbtn"
+                                      className="p-1 font-sm mt-1 ms-auto link-iconbtn"
                                       // onClick={handleButtonClick}
                                       onClick={() => saveQualificationData(row, index)}
                                     >
@@ -4662,10 +4674,10 @@ const ApplicationJobPostModal = ({
                                   </td>
                                 )}
                                 {row.saved && (
-                                  <td>
+                                  <td className="text-end">
                                     <Button
                                       variant="link"
-                                      className="p-1 font-sm mt-1 link-iconbtn"
+                                      className="p-1 font-sm mt-1 ms-auto link-iconbtn"
                                       // onClick={handleButtonClick}
                                       onClick={() => handleEditRowEducation(row, index)}
                                     >
@@ -4678,19 +4690,7 @@ const ApplicationJobPostModal = ({
                                     </Button>
                                   </td>
                                 )}
-                                <td>
-                                  <button
-                                    type="button"
-                                    className="btn-transpant"
-                                    onClick={() => EducationdeleteRow(index)}
-                                  >
-                                    <img
-                                      src={imgpTrash}
-                                      alt="Delete"
-                                      style={{ width: "20px", height: "20px" }}
-                                    />
-                                  </button>
-                                </td>
+                                
                               </tr>
                             </tbody>
 
@@ -6010,7 +6010,7 @@ const ApplicationJobPostModal = ({
             into LYWO with {profileformData?.email}.
           </p>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="modal-btn-1-1">
           <Button variant="light" onClick={() => handleFormDetailsApi('Completed', '')}>
             Return to Job
           </Button>

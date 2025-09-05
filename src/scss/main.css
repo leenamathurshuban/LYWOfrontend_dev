@@ -5738,13 +5738,11 @@ select.select-transpant:hover, select.select-transpant:focus, select.select-tran
 }
 .review_card .queslsit_panel .qs_dropdown {
   background-color: #F9FAFB;
-  border: solid 1px #EAECF0;
-  border-radius: 8px;
   color: #344054;
   font-size: 12px;
   font-weight: 600;
-  padding: 4px 12px;
   min-height: 34px;
+  margin-bottom: 30px;
 }
 
 .ratting_warp p {
@@ -5792,19 +5790,23 @@ select.select-transpant:hover, select.select-transpant:focus, select.select-tran
 
 .ans_panel {
   padding-left: 55px;
+  background: #F2F4F7;
+  padding-top: 15px;
 }
 .ans_panel .que_head {
   padding: 15px;
 }
 .ans_panel .que_head .text-sm {
-  font-size: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #444ce7;
 }
 .ans_panel strong.qus_number {
-  width: 34px;
+  width: 32px;
   height: 34px;
   border-radius: 8px 0 0 8px;
   top: 10px;
-  left: -34px;
+  left: -32px;
   line-height: 36px;
   font-size: 12px;
   font-weight: 500;
@@ -5820,7 +5822,9 @@ select.select-transpant:hover, select.select-transpant:focus, select.select-tran
   border: none;
   border-radius: 16px;
   position: relative;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+  box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.0588235294);
+  box-shadow: 0px 1px 3px 0px rgba(16, 24, 40, 0.1019607843);
 }
 .all_anslist .ans_card::before {
   content: counter(mycounter);
@@ -5839,10 +5843,11 @@ select.select-transpant:hover, select.select-transpant:focus, select.select-tran
 }
 .all_anslist .ans_card .card-title {
   font-weight: 500;
-  font-size: 13px;
+  font-size: 12px;
   line-height: 18px;
   color: #1D2939;
   margin: 0;
+  text-transform: capitalize;
 }
 .all_anslist .ans_card .card-text {
   font-weight: 400;
@@ -5852,14 +5857,16 @@ select.select-transpant:hover, select.select-transpant:focus, select.select-tran
 }
 .all_anslist .ctmstart_rating span {
   font-size: 12px;
-  margin-left: 1px;
+  margin-left: 3px;
 }
 
 .ansexp_drawer .que_head {
   padding: 15px;
 }
 .ansexp_drawer .que_head .text-sm {
-  font-size: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #444ce7;
 }
 .ansexp_drawer .btn-back,
 .ansexp_drawer .btn-next {
@@ -5888,6 +5895,9 @@ select.select-transpant:hover, select.select-transpant:focus, select.select-tran
   position: relative;
   margin-bottom: 10px;
 }
+.ansexp_drawer .ans_card .card-header {
+  text-transform: capitalize;
+}
 .ansexp_drawer .ans_card .card-title {
   font-weight: 500;
   font-size: 13px;
@@ -5904,7 +5914,7 @@ select.select-transpant:hover, select.select-transpant:focus, select.select-tran
 }
 .ansexp_drawer .ctmstart_rating span {
   font-size: 12px;
-  margin-left: 1px;
+  margin-left: 3px;
 }
 .ansexp_drawer .video-frame iframe,
 .ansexp_drawer .video-frame video {
@@ -6276,6 +6286,15 @@ select.select-transpant:hover, select.select-transpant:focus, select.select-tran
   font-size: 13px;
 }
 
+.quiz-logo {
+  padding-left: 50px;
+  position: relative;
+}
+.quiz-logo img {
+  position: absolute;
+  left: 0;
+}
+
 .quiz_headright {
   padding-right: 50px;
 }
@@ -6285,6 +6304,7 @@ select.select-transpant:hover, select.select-transpant:focus, select.select-tran
 }
 .quiz_headright .timer {
   margin: 0 0 0 20px;
+  display: flex;
 }
 .quiz_headright .timer img {
   max-width: 22px;
@@ -7368,9 +7388,22 @@ button.btn-icon {
   left: 0;
 }
 
+.pending_reviews {
+  min-height: 62vh;
+}
+
+.draft_jobs {
+  min-height: 30vh;
+}
+
+.evaluations_data {
+  min-height: 88vh;
+}
+
 .hiring_pipeline {
   border-radius: 12px;
   box-shadow: 0px 4px 10px -4px rgba(16, 24, 40, 0.0588235294);
+  min-height: 80vh;
 }
 .hiring_pipeline .card-header {
   border-radius: 12px 12px 0 0;
@@ -8336,7 +8369,7 @@ path.recharts-rectangle.recharts-tooltip-cursor {
 }
 .chat-module .job-chat-form-card .active {
   border: 1px solid #D7E2FF !important;
-  background: #F5F8FF;
+  background: #F5F8FF !important;
   border-radius: 8px !important;
 }
 .chat-module .job-chat-form-card .card {
@@ -8346,6 +8379,7 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   border-right: none;
   cursor: pointer;
   border-radius: 0;
+  background: transparent;
 }
 .chat-module .job-chat-form-card .card:hover {
   background: #F9FAFB;
@@ -9319,7 +9353,16 @@ path.recharts-rectangle.recharts-tooltip-cursor {
     display: block;
   }
   .page_body.appcaint {
-    padding-top: 70px;
+    padding-top: 90px;
+  }
+  .chat-process-drawer .message-chat-body {
+    max-height: 100vh !important;
+  }
+  .bsreport_mdl .modal-body {
+    padding: 5px;
+  }
+  .jobapplymodel .custom-card .mb-3 {
+    margin-bottom: 0 !important;
   }
   .mobile-col-1 {
     flex-wrap: wrap;
@@ -9409,6 +9452,12 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   .jobMain_panel .custom-card {
     margin-bottom: 15px !important;
   }
+  .jobMain_panel .custom-card:last-child {
+    margin-bottom: 70px !important;
+  }
+  .jobpost_view .modal-footer .btn {
+    width: 46%;
+  }
   .css-kjuw32-container {
     width: 100% !important;
   }
@@ -9437,6 +9486,9 @@ path.recharts-rectangle.recharts-tooltip-cursor {
     padding: 0px;
     height: auto;
   }
+  .instruction-box-blue {
+    transform: scale(1.07);
+  }
   .react_selectbox .css-13cymwt-control {
     min-width: 100px;
   }
@@ -9449,6 +9501,16 @@ path.recharts-rectangle.recharts-tooltip-cursor {
     text-align: center;
     margin-top: 10px;
     margin-bottom: 10px;
+  }
+  .quiz_card.info-select:hover .btn-up {
+    width: 100%;
+  }
+  .quiz_card.info-select:hover .btn-down {
+    display: none;
+  }
+  .modal-btn-1-1 .btn {
+    width: 100% !important;
+    max-width: 100% !important;
   }
   .beharlasmnt_mdl .brb_cards .brb-cicon img {
     height: 100%;
@@ -9471,10 +9533,6 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   .beharlasmnt_mdl .modal-dialog.modal-lg {
     margin: 0 !important;
     height: 100%;
-  }
-  button.me-3.btn-light-outline-sm,
-  .setlanguage {
-    display: none !important;
   }
   .beharquiz_mdl .modal-header .att_count strong {
     font-size: 12px;
@@ -9625,6 +9683,7 @@ path.recharts-rectangle.recharts-tooltip-cursor {
     text-align: center;
     left: 0;
     right: 0;
+    z-index: 1111;
   }
   .behavvoior-footer-menu .mobile-footer.lang-help-btn .language-btn {
     font-size: 12px;
@@ -9677,10 +9736,33 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   .question-popop.active {
     transform: translateY(0px);
   }
+  .language-model {
+    min-height: 14vh !important;
+    height: auto !important;
+  }
+  .language-model .question-popop {
+    min-height: auto !important;
+  }
+  .choose-languae-mobile {
+    margin-top: 15px;
+  }
+  .choose-languae-mobile .setlanguage {
+    width: 100%;
+    padding: 0;
+    border: 0;
+  }
+  .choose-languae-mobile .setlanguage .sm-fselect {
+    width: 100%;
+    border: 0;
+    text-align: left;
+  }
   .alart-submited .modal-footer .btn {
     width: auto !important;
     min-width: auto;
-    flex: 0 0 47%;
+    flex: 0 0 100%;
+  }
+  .m-hide {
+    display: none !important;
   }
   .authinfo_slider {
     padding: 40px 10px 0;
@@ -9760,11 +9842,14 @@ path.recharts-rectangle.recharts-tooltip-cursor {
     display: none;
   }
   .que_mainsection {
-    padding: 15px 14px 0 45px;
+    padding: 15px 14px 0 15px;
     margin-bottom: 80px;
   }
   .applicat_flow {
     padding-bottom: 60px;
+  }
+  .quetions_list .accordion-item::before {
+    display: none;
   }
   .appcaint_head .app_rightinfo {
     flex: 0 0 100%;

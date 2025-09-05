@@ -63,10 +63,14 @@ export default function GlobalChat() {
   }
 
   const [selectedJobIndex, setSelectedJobIndex] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchActive, setSearchActive] = useState("");
+  const [searchInactive, setSearchInactive] = useState("");
 
   const [show, filterShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [jobData, setJobData] = useState({
+    allJob: [],
     jobs: [],
     total_active_job_count: 0,
     ActiveJobs: [],
@@ -219,6 +223,7 @@ export default function GlobalChat() {
       setIsLoading(false);
 
       setJobData({
+        allJob: response?.data?.response?.filter((item) => item.job_status !== "Draft"),
         jobs: response?.data?.response || [],
         total_active_job_count: response?.data?.total_active_job_count || 0
       });
@@ -255,8 +260,8 @@ export default function GlobalChat() {
 
   useEffect(() => {
     if (jobData?.jobs?.length > 0) {
-      const filterActive = jobData.jobs.filter((item) => item.job_status === "Active")
-      const filterInactive = jobData.jobs.filter((item) => item.job_status !== "Active")
+      const filterActive = jobData.jobs.filter((item) => item.job_status === "Active" && item.job_status !== "Draft")
+      const filterInactive = jobData.jobs.filter((item) => item.job_status !== "Active" && item.job_status !== "Draft")
       setJobData((prev) => ({
         ...prev,
         ActiveJobs: filterActive,
@@ -323,6 +328,53 @@ export default function GlobalChat() {
       console.log(error)
     }
   };
+
+  useEffect(() => {
+    if (searchTerm != "") {
+      const searchData = jobData?.allJob?.filter(val =>
+        val?.job_title?.toLowerCase()?.includes(searchTerm?.toLowerCase())
+      );     
+      setJobData((prev) => ({
+        ...prev,
+        allJob: searchData        
+      }))
+    } else {
+      setJobData((prev) => ({
+        ...prev,
+        allJob: jobData?.jobs?.filter((item) => item.job_status !== "Draft")        
+      }))
+    }
+  }, [searchTerm])
+  useEffect(() => {
+    if (searchActive != "") {     
+      const filterTab = jobData.jobs.filter(val =>
+        val?.job_title?.toLowerCase()?.includes(searchActive?.toLowerCase()))
+      setJobData((prev) => ({
+        ...prev,        
+        ActiveJobs: filterTab.filter((item) => item.job_status === "Active" && item.job_status !== "Draft"),       
+      }))
+    } else {
+      setJobData((prev) => ({
+        ...prev,        
+        ActiveJobs: jobData?.jobs.filter((item) => item.job_status === "Active" && item.job_status !== "Draft")       
+      }))
+    }
+  }, [searchActive])
+  useEffect(() => {
+    if (searchInactive != "") {     
+      const filterTab = jobData.jobs.filter(val =>
+        val?.job_title?.toLowerCase()?.includes(searchInactive?.toLowerCase()))
+      setJobData((prev) => ({
+        ...prev,        
+        InactiveJobs: filterTab.filter((item) => item.job_status !== "Active" && item.job_status !== "Draft")
+      }))
+    } else {
+      setJobData((prev) => ({
+        ...prev,
+        InactiveJobs: jobData?.jobs.filter((item) => item.job_status !== "Active" && item.job_status !== "Draft")
+      }))
+    }
+  }, [searchInactive])
   console.log(jobData)
   console.log(messages)
   return (
@@ -375,11 +427,12 @@ export default function GlobalChat() {
                             placeholder="Search"
                             aria-label="Search"
                             aria-describedby="basic-addon1"
+                            onChange={e => setSearchTerm(e.target.value)}
                           />
                         </InputGroup>
                       </div>
                       <div className='job-chat-form-card'>
-                        {jobData?.jobs?.map((job, index) => (
+                        {jobData?.allJob?.map((job, index) => (
                           <Card key={index}
                             className={`mb-2 cursor-pointer ${selectedJobIndex === job?.uid ? 'active' : ''}`}
                             onClick={() => {
@@ -427,6 +480,7 @@ export default function GlobalChat() {
                             placeholder="Search"
                             aria-label="Search"
                             aria-describedby="basic-addon1"
+                            onChange={e => setSearchActive(e.target.value)}
                           />
                         </InputGroup>
                       </div>
@@ -487,6 +541,7 @@ export default function GlobalChat() {
                             placeholder="Search"
                             aria-label="Search"
                             aria-describedby="basic-addon1"
+                            onChange={e => setSearchInactive(e.target.value)}
                           />
                         </InputGroup>
                       </div>
@@ -528,7 +583,7 @@ export default function GlobalChat() {
               </Card>
             </Col>
             {/* Middle Sidebar - Candidates */}
-            <Col md={3} className=" " style={{ background:'#fcfcfd', borderRight: "2px solid #F2F4F7" }}>
+            <Col md={3} className=" " style={{ background: '#fcfcfd', borderRight: "2px solid #F2F4F7" }}>
               <Card className="h-100 border-0 chat-module">
                 <Card.Header className="border-bottom d-flex justify-content-between align-items-center" style={{ padding: "16px", paddingBottom: "0" }} >
                   <Card.Title>Candidates</Card.Title>
@@ -774,19 +829,19 @@ export default function GlobalChat() {
                           <p className='date-msg'><small>{monthDayFormat(item?.date == new Date() ? '' : item?.date)}</small></p>
                           {item.chats.map((msg) => (
                             <div key={index} className={`mb-3 ${msg?.sender?.email == user?.email ? 'text-end sender-bubble' : 'text-start'}`}>
-                             
+
                               {msg.message && msg.message.trim() !== "" && (
-                                                     <Card
-                                                       className={`d-inline-block no-border ${msg?.sender?.email == user?.email ? 'bg-sender text-white' : 'bg-white'}`}
-                                                     >
-                                                       <Card.Body className="p-2">
-                                                         <Card.Text>{msg.message}</Card.Text>
-                                                         <Card.Text className={`small ${msg?.sender?.email == user?.email ? '' : 'text-muted'}`}>
-                                                           {/* Timestamp */}
-                                                         </Card.Text>
-                                                       </Card.Body>
-                                                     </Card>
-                                                   )}
+                                <Card
+                                  className={`d-inline-block no-border ${msg?.sender?.email == user?.email ? 'bg-sender text-white' : 'bg-white'}`}
+                                >
+                                  <Card.Body className="p-2">
+                                    <Card.Text>{msg.message}</Card.Text>
+                                    <Card.Text className={`small ${msg?.sender?.email == user?.email ? '' : 'text-muted'}`}>
+                                      {/* Timestamp */}
+                                    </Card.Text>
+                                  </Card.Body>
+                                </Card>
+                              )}
 
                               {(msg?.document || msg?.image) && <ChatDocumentMessage document={msg?.document ? msg?.document : msg?.image ? msg?.image : null} image={file} />}
                               {/* <EmailChat /> */}

@@ -418,6 +418,16 @@ const JobReview = () => {
         setFileName("")
     }
 
+
+    const [activeTab, setActiveTab] = useState("evaluated");
+
+//   const handleEvaluated = () => setActiveTab("evaluated");
+//   const handlePending = () => setActiveTab("pending");
+//   const handleAllEvaiPend = () => setActiveTab("all");
+
+
+
+
     const [reviewModal, setReviewModal] = useState(false);
 
     const [answerModal, setAnswerModal] = useState(false);
@@ -1037,6 +1047,7 @@ const JobReview = () => {
             user_answer_question: originalObject?.user_answer_question?.filter(item => item.score > 0),
         };
         setQuestionWiseData(filteredData)
+        setActiveTab("evaluated");
     }
 
     const handlePending = () => {
@@ -1047,10 +1058,12 @@ const JobReview = () => {
             user_answer_question: originalObject?.user_answer_question?.filter(item => item.score == 0),
         };
         setQuestionWiseData(filteredData)
+        setActiveTab("pending");
     }
 
     const handleAllEvaiPend = () => {
         setQuestionWiseData(questionWiseDuplicate)
+        setActiveTab("all");
     }
 
     const getCurrentIndex = () => questionWiseData?.user_answer_question?.findIndex(item => item.id === currentId);
@@ -1313,7 +1326,7 @@ const JobReview = () => {
                         <Col md={6} className="d-flex justify-content-between align-items-center">
                             <h6 class="my-3 ps-4 pagetitle" style={{ 'textTransform': "capitalize" }} ><i class="fa fa-suitcase text-primery me-2"></i>{jobDetails?.job_title}<img src={angleDown} className="ms-2 w-14" /></h6>
                         </Col>
-                        <Col md={6} className="d-flex justify-content-end align-items-center">
+                        <Col md={6} className="d-flex pe-4 justify-content-end align-items-center">
                             <button type="button" onClick={handleShow} className="icon_btnlink btn btn-primary"><img src={EvaluaBtn} className="me-1" />Evaluations</button>
                             <button type="button" onClick={() => setShowInstruction(true)} className="icon_btnlink btn btn-primary"><img src={AutomatBtn} className="me-1" />Automations</button>
                             <button type="button" onClick={() => stopappsetShow(true)} className="icon_btnlink btn btn-primary"><img src={stopBtn} className="me-1" />{jobDetails?.job_status == "Active" ? "Active" : "Stop Applications"}</button>
@@ -1340,7 +1353,7 @@ const JobReview = () => {
                                 </Nav>
 
                             </Col>
-                            <Col md={6} className="text-end pe-4">
+                            <Col md={6} className="text-end pe-3">
                                 <button className="btn btn-traspant" onClick={() => setListShow(false)}><img src={gridView} /></button>
                                 <button className="btn btn-traspant" onClick={() => setListShow(true)}><img src={listView} /></button>
                             </Col>
@@ -1350,7 +1363,7 @@ const JobReview = () => {
                                 <Tab.Pane eventKey="first">
                                     <Row className="hori_scroll evalutaion-page-tab-scroller  p-2">
                                         {ListShow && ListData?.length > 0 ? (
-                                            <Card className="shadow-sm border-0 evaluations_data mt-4 rounded overflow-hidden">
+                                            <Card className="shadow-sm border-0 evaluations_data  rounded overflow-hidden">
                                                 <Card.Header className="py-3">
                                                     <Row>
                                                         <Col md={5} className="d-flex">
@@ -2703,7 +2716,7 @@ const JobReview = () => {
                                         <Card.Body>
                                             <Row>
                                                 {assignmentReviewList.map((item, index) => (
-                                                    <Col md={2} className="queslsit_panel pe-0">
+                                                    <Col md={2} className="queslsit_panel ">
                                                         {/* <Form.Select className="qs_dropdown" onChange={handleSectionWise}>
                                                                 {item?.section_asset.map((cVal) => (
                                                                     <option value={cVal?.uid}>{cVal?.section_title}</option>
@@ -2888,9 +2901,9 @@ const JobReview = () => {
                                                             </Col>
                                                             <Col md={8} className="text-end">
                                                                 <ul className="head_filterlist">
-                                                                    <li className="" onClick={handleEvaluated}>Evaluated</li>
-                                                                    <li className="" onClick={handlePending}>Pending</li>
-                                                                    <li className="active" onClick={handleAllEvaiPend}>All</li>
+                                                                    <li className={activeTab === "evaluated" ? "active" : ""} onClick={handleEvaluated}>Evaluated</li>
+                                                                    <li className={activeTab === "pending" ? "active" : ""} onClick={handlePending}>Pending</li>
+                                                                    <li className={activeTab === "all" ? "active" : ""} onClick={handleAllEvaiPend}>All</li>
                                                                 </ul>
                                                             </Col>
                                                         </Row>
@@ -2928,7 +2941,7 @@ const JobReview = () => {
 
                                                                         </div>
                                                                     </Card.Header>
-                                                                    <Card.Body className="px-0">
+                                                                    <Card.Body className="px-0 pb-0">
                                                                         {user?.text && (
                                                                             <Card.Text>{user?.text?.replace(/<[^>]*>/g, '')}</Card.Text>
                                                                         )}
@@ -3934,12 +3947,12 @@ const JobReview = () => {
                             <Card.Title>{currentItem?.job_applicant?.job_applicant_profile?.user?.username}</Card.Title>
                             <Ratting rating={rating} setRating={setRating} ID={currentItem?.uid} getJobAssignmentReviewList={getJobAssignmentReviewList} questionWiseData={questionWiseData} />
                         </Card.Header>
-                        <Card.Body className="px-0">
+                        <Card.Body className="px-0 pb-0">
                             {currentItem?.text && (
                                 <Card.Text>{currentItem?.text?.replace(/<[^>]*>/g, '')}</Card.Text>
                             )}
                             {getFileType(currentItem?.attach_or_video) === "image" && (
-                                <img src={`https://bittrend.shubansoftware.com${currentItem?.attach_or_video}`} width={500} height={400} />
+                                <img src={`https://bittrend.shubansoftware.com${currentItem?.attach_or_video}`} className="img-fluid" />
                             )}
                             {getFileType(currentItem?.attach_or_video) === "audio" && (
                                 <audio controls className="w-full">

@@ -6914,13 +6914,14 @@ select.select-transpant {
   .queslsit_panel {
     .qs_dropdown {
       background-color: #F9FAFB;
-      border: solid 1px #EAECF0;
-      border-radius: 8px;
+      // border: solid 1px #EAECF0;
+      // border-radius: 8px;
       color: #344054;
       font-size: 12px;
       font-weight: 600;
-      padding: 4px 12px;
+      // padding: 4px 12px;
       min-height: 34px;
+      margin-bottom: 30px;
     }
   }
 }
@@ -6979,21 +6980,25 @@ select.select-transpant {
 
 .ans_panel {
   padding-left: 55px;
+  background: #F2F4F7;
+  padding-top: 15px;
 
   .que_head {
     padding: 15px;
 
     .text-sm {
-      font-size: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #444ce7;
     }
   }
 
   strong.qus_number {
-    width: 34px;
+    width: 32px;
     height: 34px;
     border-radius: 8px 0 0 8px;
     top: 10px;
-    left: -34px;
+    left: -32px;
     line-height: 36px;
     font-size: 12px;
     font-weight: 500;
@@ -7010,7 +7015,11 @@ select.select-transpant {
     border: none;
     border-radius: 16px;
     position: relative;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0px 1px 2px 0px #1018280F;
+    box-shadow: 0px 1px 3px 0px #1018281A;
+
+
 
     &::before {
       content: counter(mycounter);
@@ -7030,10 +7039,11 @@ select.select-transpant {
 
     .card-title {
       font-weight: 500;
-      font-size: 13px;
+      font-size: 12px;
       line-height: 18px;
       color: #1D2939;
       margin: 0;
+      text-transform: capitalize;
     }
 
     .card-text {
@@ -7047,7 +7057,7 @@ select.select-transpant {
   .ctmstart_rating {
     span {
       font-size: 12px;
-      margin-left: 1px;
+      margin-left: 3px;
     }
   }
 }
@@ -7057,7 +7067,9 @@ select.select-transpant {
     padding: 15px;
 
     .text-sm {
-      font-size: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #444ce7;
     }
   }
 
@@ -7090,6 +7102,10 @@ select.select-transpant {
     position: relative;
     margin-bottom: 10px;
 
+    .card-header{
+      text-transform: capitalize;
+    }
+
     .card-title {
       font-weight: 500;
       font-size: 13px;
@@ -7110,7 +7126,7 @@ select.select-transpant {
   .ctmstart_rating {
     span {
       font-size: 12px;
-      margin-left: 1px;
+      margin-left: 3px;
     }
   }
 
@@ -7564,6 +7580,17 @@ select.select-transpant {
   }
 }
 
+
+.quiz-logo {
+    padding-left: 50px;
+    position: relative;
+
+    img{
+      position: absolute;
+      left: 0;
+    }
+}
+
 .quiz_headright {
   padding-right: 50px;
 
@@ -7574,6 +7601,7 @@ select.select-transpant {
 
   .timer {
     margin: 0 0 0 20px;
+    display: flex;
 
     img {
       max-width: 22px;
@@ -8879,9 +8907,22 @@ button.btn-icon {
   }
 }
 
+.pending_reviews {
+    min-height: 62vh;
+}
+
+.draft_jobs {
+    min-height: 30vh;
+}
+
+.evaluations_data {
+    min-height: 88vh;
+}
+
 .hiring_pipeline {
   border-radius: 12px;
   box-shadow: 0px 4px 10px -4px #1018280F;
+  min-height: 80vh;
 
   .card-header {
     border-radius: 12px 12px 0 0;
@@ -10175,7 +10216,7 @@ path.recharts-rectangle.recharts-tooltip-cursor {
 
     .active {
       border: 1px solid #D7E2FF !important;
-      background: #F5F8FF;
+      background: #F5F8FF !important;
       border-radius: 8px !important;
 
     }
@@ -10187,6 +10228,7 @@ path.recharts-rectangle.recharts-tooltip-cursor {
       border-right: none;
       cursor: pointer;
       border-radius: 0;
+      background: transparent;
 
       &:hover {
         background: #F9FAFB;
@@ -11561,8 +11603,21 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   }
 
   .page_body.appcaint {
-    padding-top: 70px;
+    padding-top: 90px;
   }
+
+  .chat-process-drawer .message-chat-body {
+    max-height: 100vh !important;
+}
+
+
+.bsreport_mdl .modal-body{
+  padding: 5px  ;
+}
+
+.jobapplymodel .custom-card .mb-3 {
+    margin-bottom: 0 !important;
+}
 
 
 
@@ -11692,6 +11747,17 @@ path.recharts-rectangle.recharts-tooltip-cursor {
 
   .jobMain_panel .custom-card {
     margin-bottom: 15px !important;
+
+    &:last-child{
+      margin-bottom: 70px !important;
+    }
+
+  }
+
+
+  .jobpost_view .modal-footer .btn{
+    width: 46%;
+
   }
 
   .css-kjuw32-container {
@@ -11742,6 +11808,11 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   }
 
 
+.instruction-box-blue {
+    transform: scale(1.07);
+}
+
+
   .react_selectbox .css-13cymwt-control {
     min-width: 100px;
   }
@@ -11758,6 +11829,20 @@ path.recharts-rectangle.recharts-tooltip-cursor {
     margin-top: 10px;
     margin-bottom: 10px;
   }
+
+
+  .quiz_card.info-select:hover .btn-up {
+    width: 100%;
+}
+
+.quiz_card.info-select:hover .btn-down {
+    display: none;
+}
+
+.modal-btn-1-1 .btn {
+    width: 100% !important;
+    max-width: 100% !important;
+}
 
 
   .beharlasmnt_mdl .brb_cards .brb-cicon img {
@@ -11791,10 +11876,10 @@ path.recharts-rectangle.recharts-tooltip-cursor {
     height: 100%;
   }
 
-  button.me-3.btn-light-outline-sm,
-  .setlanguage {
-    display: none !important;
-  }
+  // button.me-3.btn-light-outline-sm,
+  // .setlanguage {
+  //   display: none !important;
+  // }
 
   .beharquiz_mdl .modal-header .att_count strong {
     font-size: 12px;
@@ -12001,6 +12086,7 @@ path.recharts-rectangle.recharts-tooltip-cursor {
       text-align: center;
       left: 0;
       right: 0;
+      z-index: 1111;
 
       .language-btn {
         font-size: 12px;
@@ -12082,11 +12168,45 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   //     flex: 0 0 91%;
   // }
 
+  .language-model {
+    min-height: 14vh !important;
+    height: auto !important;
+
+    .question-popop{
+      min-height: auto !important;
+    }
+
+
+}
+
+
+  .choose-languae-mobile {
+    margin-top: 15px;
+
+    .setlanguage {
+      width: 100%;
+      padding: 0;
+      border: 0;
+
+      .sm-fselect{
+        width: 100%;
+        border: 0;
+        text-align: left;
+      }
+
+    }
+
+}
+
 
   .alart-submited .modal-footer .btn {
     width: auto !important;
     min-width: auto;
-    flex: 0 0 47%;
+    flex: 0 0 100%;
+  }
+
+  .m-hide{
+    display: none !important;
   }
 
   // 
@@ -12213,13 +12333,17 @@ path.recharts-rectangle.recharts-tooltip-cursor {
 
 
   .que_mainsection {
-    padding: 15px 14px 0 45px;
+    padding: 15px 14px 0 15px;
     margin-bottom: 80px;
   }
 
 
   .applicat_flow {
     padding-bottom: 60px;
+  }
+
+  .quetions_list .accordion-item::before{
+    display: none;
   }
 
 
