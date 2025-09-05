@@ -1147,10 +1147,10 @@ const CreateJobs = ({ show, handleClose }) => {
               isSearchable={true}
               noOptionsMessage={() => "No results found"}
               placeholder="Search"
-              filterOption={(option, inputValue) => {
-                if (!inputValue) return false; // hide all options until user types
-                return option.label.toLowerCase().includes(inputValue.toLowerCase());
-              }}
+              // filterOption={(option, inputValue) => {
+              //   if (!inputValue) return false; // hide all options until user types
+              //   return option.label.toLowerCase().includes(inputValue.toLowerCase());
+              // }}
               onChange={handleSelectedLikeItems}
               styles={customStyles}
             />
@@ -1241,13 +1241,13 @@ const CreateJobs = ({ show, handleClose }) => {
             <Select
               className="react_selectbox"
               options={locationData}
-              isSearchable={true}
-              noOptionsMessage={() => "No results found"}
+             isSearchable={true}
+             noOptionsMessage={() => "No results found"}
               placeholder="Search location"
-              filterOption={(option, inputValue) => {
-                if (!inputValue) return false; // hide all options until user types
-                return option.label.toLowerCase().includes(inputValue.toLowerCase());
-              }}
+              // filterOption={(option, inputValue) => {
+              //   if (!inputValue) return false; // hide all options until user types
+              //   return option.label.toLowerCase().includes(inputValue.toLowerCase());
+              // }}
               onChange={handleLocationItems}
               styles={customStyles}
             />

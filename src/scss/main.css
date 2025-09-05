@@ -363,8 +363,7 @@ fieldset:disabled .btn {
 .header-wrapper.row .org_name .orgshort_text img {
   width: 40px;
   height: 40px;
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
 }
 .header-wrapper.row .org_name .css-13cymwt-control,
 .header-wrapper.row .org_name .css-t3ipsp-control {
@@ -455,8 +454,7 @@ fieldset:disabled .btn {
 .header_right .hed_username img {
   width: 40px;
   height: 40px;
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
 }
 .header_right .dropdown-menu {
   border-color: #eaecf0;
@@ -995,8 +993,7 @@ label.required.form-label {
 .cmp_details .cmp_textlogo img {
   width: 72px;
   height: 72px;
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
 }
 .cmp_details .cmp_info {
   margin: 15px 0 0 0;
@@ -2140,8 +2137,7 @@ select.h-36.form-select {
   position: relative;
   width: 56px;
   left: 20px;
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
 }
 .qus_crossed li img.dragicon {
   position: inherit;
@@ -3110,9 +3106,7 @@ select.h-36.form-select {
   width: 100%;
   height: 0;
   background: none;
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  appearance: none;
   pointer-events: all;
   z-index: 3;
 }
@@ -3225,6 +3219,11 @@ select.h-36.form-select {
   padding: 2px 4px;
   font-size: 14px;
   color: #667085;
+}
+
+.stagbox_head .icon-btn {
+  font-size: 16px;
+  width: 32px;
 }
 
 .input-container {
@@ -3777,8 +3776,7 @@ select.h-36.form-select {
 .helpme_drawer.lg-drawer::before {
   content: "";
   background-color: rgba(242, 244, 247, 0.8);
-  -webkit-backdrop-filter: blur(1px);
-          backdrop-filter: blur(1px);
+  backdrop-filter: blur(1px);
   position: absolute;
   top: 0;
   left: -67%;
@@ -6424,8 +6422,7 @@ select.select-transpant:hover, select.select-transpant:focus, select.select-tran
   top: 0;
   width: 100%;
   height: 100%;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
   margin: 0 !important;
 }
 .media_box .record_overlay {
@@ -6776,8 +6773,7 @@ button#input-group-dropdown-1 {
   vertical-align: middle;
 }
 .custom-checkbox .form-check-input[type=checkbox] {
-  -moz-appearance: none;
-       appearance: none;
+  appearance: none;
   -webkit-appearance: none;
   background-color: #fff;
   border: 2px solid #D0D5DD;
@@ -7666,9 +7662,7 @@ button.btn-icon {
   border-radius: 8px;
   border: 1px solid #ccc;
   outline: none;
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  appearance: none;
   /* Remove default arrow */
   background-color: #fff;
   background-image: url("../images/icons/chevron-down.png");
@@ -8163,8 +8157,7 @@ button.btn-icon {
 .mobile-footer-quiz li button img {
   width: 24px;
   height: 24px;
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
 }
 .mobile-footer-quiz li button p {
   margin-bottom: 0;
@@ -8735,8 +8728,7 @@ path.recharts-rectangle.recharts-tooltip-cursor {
 }
 .react-select-mcq-change .css-hlgwow img {
   width: 20px !important;
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
 }
 
 .ql-toolbar.ql-snow .ql-formats {
@@ -9311,6 +9303,11 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   min-height: 296px;
 }
 
+.disabled-btn .icon_btnlink {
+  filter: grayscale(1);
+  opacity: 0.5;
+}
+
 @media screen and (max-width: 767px) {
   .jobapplymodel .modal-dialog {
     margin: 0;
@@ -9554,8 +9551,7 @@ path.recharts-rectangle.recharts-tooltip-cursor {
     margin: 0px auto;
     width: 90px;
     height: 90px;
-    -o-object-fit: contain;
-       object-fit: contain;
+    object-fit: contain;
   }
   .quiz_card {
     padding: 75px 15px;
@@ -9737,7 +9733,7 @@ path.recharts-rectangle.recharts-tooltip-cursor {
     transform: translateY(0px);
   }
   .language-model {
-    min-height: 14vh !important;
+    min-height: 24vh !important;
     height: auto !important;
   }
   .language-model .question-popop {
@@ -9904,4 +9900,6 @@ path.recharts-rectangle.recharts-tooltip-cursor {
     flex-direction: column;
     align-items: self-start;
   }
-}/*# sourceMappingURL=main.css.map */
+}
+
+/*# sourceMappingURL=main.css.map */

@@ -4324,10 +4324,10 @@ const ApplicationJobPostModal = ({
                                   value={aresEducationOption.find((opt) => opt.label === row.areaOfEducation)}
                                   disabled={row.saved}
                                   placeholder="Area of Education"
-                                  filterOption={(option, inputValue) => {
-                                    if (!inputValue) return false; // hide all options until user types
-                                    return option.label.toLowerCase().includes(inputValue.toLowerCase());
-                                  }}
+                                  // filterOption={(option, inputValue) => {
+                                  //   if (!inputValue) return false; // hide all options until user types
+                                  //   return option.label.toLowerCase().includes(inputValue.toLowerCase());
+                                  // }}
                                   onChange={(e) => handleSelectAreaEducation(index, e.label)}
                                   styles={customStyles} />
                               </div>
@@ -4504,10 +4504,10 @@ const ApplicationJobPostModal = ({
                               value={aresEducationOption.find((opt) => opt.label === row.areaOfEducation)}
                               disabled={row.saved}
                               placeholder="Area of Education"
-                              filterOption={(option, inputValue) => {
-                                if (!inputValue) return false; // hide all options until user types
-                                return option.label.toLowerCase().includes(inputValue.toLowerCase());
-                              }}
+                              // filterOption={(option, inputValue) => {
+                              //   if (!inputValue) return false; // hide all options until user types
+                              //   return option.label.toLowerCase().includes(inputValue.toLowerCase());
+                              // }}
                               onChange={(e) => handleSelectAreaEducation(index, e.label)}
                               styles={customStyles} />
 
@@ -4853,10 +4853,10 @@ const ApplicationJobPostModal = ({
                                       value={roleList.find((opt) => opt.label === row.WorkRole)}
                                       disabled={row.savedWorkExp}
                                       placeholder="Role"
-                                      filterOption={(option, inputValue) => {
-                                        if (!inputValue) return false; // hide all options until user types
-                                        return option.label.toLowerCase().includes(inputValue.toLowerCase());
-                                      }}
+                                      // filterOption={(option, inputValue) => {
+                                      //   if (!inputValue) return false; // hide all options until user types
+                                      //   return option.label.toLowerCase().includes(inputValue.toLowerCase());
+                                      // }}
                                       onChange={(e) => handleWorkRole(index, e.label)}
                                       styles={customStyles} />
                                   </div>
@@ -4915,10 +4915,10 @@ const ApplicationJobPostModal = ({
                                       value={industriesList.find((opt) => opt.label === row.WorkIndustry)}
                                       disabled={row.savedWorkExp}
                                       placeholder="Industry"
-                                      filterOption={(option, inputValue) => {
-                                        if (!inputValue) return false; // hide all options until user types
-                                        return option.label.toLowerCase().includes(inputValue.toLowerCase());
-                                      }}
+                                      // filterOption={(option, inputValue) => {
+                                      //   if (!inputValue) return false; // hide all options until user types
+                                      //   return option.label.toLowerCase().includes(inputValue.toLowerCase());
+                                      // }}
                                       onChange={(e) => handleSelectIndustries(index, e.label)}
                                       styles={customStyles} />
                                   </div>
@@ -5028,10 +5028,10 @@ const ApplicationJobPostModal = ({
                                 value={roleList.find((opt) => opt.label === row.WorkRole)}
                                 disabled={row.savedWorkExp}
                                 placeholder="Role"
-                                filterOption={(option, inputValue) => {
-                                  if (!inputValue) return false; // hide all options until user types
-                                  return option.label.toLowerCase().includes(inputValue.toLowerCase());
-                                }}
+                                // filterOption={(option, inputValue) => {
+                                //   if (!inputValue) return false; // hide all options until user types
+                                //   return option.label.toLowerCase().includes(inputValue.toLowerCase());
+                                // }}
                                 onChange={(e) => handleWorkRole(index, e.label)}
                                 styles={customStyles} />
                             </div>
@@ -5096,10 +5096,10 @@ const ApplicationJobPostModal = ({
                               value={industriesList.find((opt) => opt.label === row.WorkIndustry)}
                               disabled={row.savedWorkExp}
                               placeholder="Industry"
-                              filterOption={(option, inputValue) => {
-                                if (!inputValue) return false; // hide all options until user types
-                                return option.label.toLowerCase().includes(inputValue.toLowerCase());
-                              }}
+                              // filterOption={(option, inputValue) => {
+                              //   if (!inputValue) return false; // hide all options until user types
+                              //   return option.label.toLowerCase().includes(inputValue.toLowerCase());
+                              // }}
                               onChange={(e) => handleSelectIndustries(index, e.label)}
                               styles={customStyles} />
                           </div>
@@ -5477,10 +5477,10 @@ const ApplicationJobPostModal = ({
                           noOptionsMessage={() => "No results found"}
                           value={locationList.find((opt) => opt.label === profileformData?.CurrentLocation)}
                           placeholder="Current Location"
-                          filterOption={(option, inputValue) => {
-                            if (!inputValue) return false; // hide all options until user types
-                            return option.label.toLowerCase().includes(inputValue.toLowerCase());
-                          }}
+                          // filterOption={(option, inputValue) => {
+                          //   if (!inputValue) return false; // hide all options until user types
+                          //   return option.label.toLowerCase().includes(inputValue.toLowerCase());
+                          // }}
                           onChange={(e) => handleSelectGeographyLocaton(e.label)}
                           styles={customStyles} />
                       </div>

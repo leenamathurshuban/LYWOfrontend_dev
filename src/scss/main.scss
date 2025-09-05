@@ -3834,6 +3834,14 @@ select.h-36.form-select {
   color: #667085;
 }
 
+
+.stagbox_head{
+  .icon-btn{
+    font-size: 16px; 
+    width: 32px;
+  }
+}
+
 .input-container {
   display: inline-block;
 
@@ -11540,6 +11548,12 @@ path.recharts-rectangle.recharts-tooltip-cursor {
 }
 
 
+.disabled-btn .icon_btnlink {
+    filter: grayscale(1);
+    opacity: .5;
+}
+
+
 // responsive
 
 @media screen and (max-width:767px) {
@@ -12169,7 +12183,7 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   // }
 
   .language-model {
-    min-height: 14vh !important;
+    min-height: 24vh !important;
     height: auto !important;
 
     .question-popop{

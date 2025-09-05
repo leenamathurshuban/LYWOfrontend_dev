@@ -3753,7 +3753,7 @@ const UpdateJobsRevised = ({
                                                                 <button
                                                                     type="button"
                                                                     onClick={handleSaveSkillGroup}
-                                                                    class="icon-btn"
+                                                                    class="icon-btn text-primary"
                                                                 >
                                                                     <i class="far fa-save"></i>
                                                                 </button>

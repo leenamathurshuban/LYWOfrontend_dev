@@ -247,10 +247,10 @@ const FilterJobs = ({
         placement="end"
         className="shadow-md border-0"
       >
-        <Offcanvas.Header closeButton>
+        <Offcanvas.Header className="justify-content-between" closeButton >
           <Offcanvas.Title>
             <img src={filterLines} alt="" />
-            More Filters
+            Filters
           </Offcanvas.Title>
           <span className="applied_count">Applied ({countfilter})</span>
         </Offcanvas.Header>

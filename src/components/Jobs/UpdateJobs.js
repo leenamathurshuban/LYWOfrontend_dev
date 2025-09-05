@@ -1188,10 +1188,10 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
               isSearchable={true}
               noOptionsMessage={() => "No results found"}
               placeholder="Search"
-              filterOption={(option, inputValue) => {
-                if (!inputValue) return false; // hide all options until user types
-                return option.label.toLowerCase().includes(inputValue.toLowerCase());
-              }}              
+              // filterOption={(option, inputValue) => {
+              //   if (!inputValue) return false; // hide all options until user types
+              //   return option.label.toLowerCase().includes(inputValue.toLowerCase());
+              // }}              
               onChange={handleSelectedLikeItems}
               styles={customStyles}
             />
@@ -1283,10 +1283,10 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
               isSearchable={true}
               noOptionsMessage={() => "No results found"}
               placeholder="search location"
-              filterOption={(option, inputValue) => {
-                if (!inputValue) return false; // hide all options until user types
-                return option.label.toLowerCase().includes(inputValue.toLowerCase());
-              }}
+              // filterOption={(option, inputValue) => {
+              //   if (!inputValue) return false; // hide all options until user types
+              //   return option.label.toLowerCase().includes(inputValue.toLowerCase());
+              // }}
               onChange={handleLocationItems}
               styles={customStyles}
             />

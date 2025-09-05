@@ -434,7 +434,7 @@ const JobsList = () => {
                     />
                   </InputGroup>
                 </Col>
-                <Col md={9} className="d-flex justify-content-end align-items-center">
+                <Col md={9} className="d-flex justify-content-end align-items-center disabled-btn">
                   <Button className="icon_btnlink" onClick={() => {
                     if (activeIds.length) {
                       setModalText({
@@ -489,7 +489,7 @@ const JobsList = () => {
                       stroke-linejoin="round"
                     />
                   </svg>
-                  More filters
+                   filters
                 </Button>
               </div>
               <div className="elv_datatable joblist_data table-responsive">

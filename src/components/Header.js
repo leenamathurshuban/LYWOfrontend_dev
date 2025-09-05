@@ -161,9 +161,10 @@ const Header = () => {
         </Col>
         <Col className="col-4"  md={4}>
           <div className="header_right">
-             <Link to="/jobs" className="btn btn-primary me-4" style={{ width: "160px" }}>
-      Create Job
-    </Link>
+
+             {/* <Link to="/jobs" className="btn btn-primary me-4" style={{ width: "160px" }}>
+              Create Job
+            </Link> */} 
 
 
             <button type="button" className="hed_notifaction">
