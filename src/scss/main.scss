@@ -6187,6 +6187,14 @@ select.h-36.form-select {
 
 }
 
+.elv-thmnail-data-table{
+  tr{
+    th{
+      padding: 12px 10px;
+    }
+  }
+}
+
 .status_cardpanel {
   background-color: #fff;
   border: none;
@@ -6241,6 +6249,12 @@ select.h-36.form-select {
     cursor: pointer;
     margin-bottom: 15px;
     padding-left: 20px;
+    transition: .5s;
+
+    &:hover{
+      transition: .5s;
+      transform: translateY(-5px);
+    }
 
 
     .bg-outline-success {
@@ -6965,6 +6979,26 @@ select.select-transpant {
 .queslsit {
   margin: 10px 0 0 0;
   padding: 0;
+  height: 100%;
+  overflow: auto;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px rgb(213, 213, 213);
+    border-radius: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #D0D5DD;
+    border-radius: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #D0D5DD;
+  }
 
   li {
     margin: 0;
@@ -6976,7 +7010,7 @@ select.select-transpant {
     font-weight: 500;
     border-bottom: solid 1px #EAECF0;
     padding: 10px 8px;
-    border-right: solid 1px #EAECF0;
+    // border-right: solid 1px #EAECF0;
     cursor: pointer;
 
     &:hover,
@@ -6987,9 +7021,9 @@ select.select-transpant {
 }
 
 .ans_panel {
-  padding-left: 55px;
-  background: #F2F4F7;
-  padding-top: 15px;
+  // padding-left: 55px;
+  background: #fdfefe;
+  // padding-top: 15px;
 
   .que_head {
     padding: 15px;
@@ -7011,6 +7045,22 @@ select.select-transpant {
     font-size: 12px;
     font-weight: 500;
   }
+}
+
+.ans_body {
+    padding-left: 40px;
+    padding-top: 15px;
+}
+
+.question-box-eval {
+    position: sticky;
+    top: 70px;
+    z-index: 1;
+    padding: 15px;
+    background: #fff;
+    left: 0;
+    right: 0;
+    border-bottom: solid 1px #eaecf0;
 }
 
 .all_anslist {
@@ -10394,6 +10444,25 @@ path.recharts-rectangle.recharts-tooltip-cursor {
 
       .chat-inner-body {
         max-height: 100%;
+
+          &::-webkit-scrollbar {
+            width: 6px;
+          }
+
+          &::-webkit-scrollbar-track {
+            box-shadow: inset 0 0 5px rgb(213, 213, 213);
+            border-radius: 8px;
+          }
+
+          &::-webkit-scrollbar-thumb {
+            background: #D0D5DD;
+            border-radius: 8px;
+          }
+
+          &::-webkit-scrollbar-thumb:hover {
+            background: #D0D5DD;
+          }
+
       }
 
 
@@ -11551,6 +11620,15 @@ path.recharts-rectangle.recharts-tooltip-cursor {
 .disabled-btn .icon_btnlink {
     filter: grayscale(1);
     opacity: .5;
+}
+
+
+.scroll-column {
+    max-height: 100vh;
+    height: auto;
+    position: sticky;
+    top: 85px;
+    border-right: solid 1px #eaecf0;
 }
 
 

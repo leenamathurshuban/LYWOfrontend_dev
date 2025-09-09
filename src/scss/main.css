@@ -363,7 +363,8 @@ fieldset:disabled .btn {
 .header-wrapper.row .org_name .orgshort_text img {
   width: 40px;
   height: 40px;
-  object-fit: contain;
+  -o-object-fit: contain;
+     object-fit: contain;
 }
 .header-wrapper.row .org_name .css-13cymwt-control,
 .header-wrapper.row .org_name .css-t3ipsp-control {
@@ -454,7 +455,8 @@ fieldset:disabled .btn {
 .header_right .hed_username img {
   width: 40px;
   height: 40px;
-  object-fit: contain;
+  -o-object-fit: contain;
+     object-fit: contain;
 }
 .header_right .dropdown-menu {
   border-color: #eaecf0;
@@ -993,7 +995,8 @@ label.required.form-label {
 .cmp_details .cmp_textlogo img {
   width: 72px;
   height: 72px;
-  object-fit: contain;
+  -o-object-fit: contain;
+     object-fit: contain;
 }
 .cmp_details .cmp_info {
   margin: 15px 0 0 0;
@@ -2137,7 +2140,8 @@ select.h-36.form-select {
   position: relative;
   width: 56px;
   left: 20px;
-  object-fit: contain;
+  -o-object-fit: contain;
+     object-fit: contain;
 }
 .qus_crossed li img.dragicon {
   position: inherit;
@@ -3106,7 +3110,9 @@ select.h-36.form-select {
   width: 100%;
   height: 0;
   background: none;
-  appearance: none;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
   pointer-events: all;
   z-index: 3;
 }
@@ -3776,7 +3782,8 @@ select.h-36.form-select {
 .helpme_drawer.lg-drawer::before {
   content: "";
   background-color: rgba(242, 244, 247, 0.8);
-  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+          backdrop-filter: blur(1px);
   position: absolute;
   top: 0;
   left: -67%;
@@ -5129,6 +5136,10 @@ select.h-36.form-select {
   height: 68px !important;
 }
 
+.elv-thmnail-data-table tr th {
+  padding: 12px 10px;
+}
+
 .status_cardpanel {
   background-color: #fff;
   border: none;
@@ -5175,6 +5186,11 @@ select.h-36.form-select {
   cursor: pointer;
   margin-bottom: 15px;
   padding-left: 20px;
+  transition: 0.5s;
+}
+.status_cardpanel .sts_databox:hover {
+  transition: 0.5s;
+  transform: translateY(-5px);
 }
 .status_cardpanel .sts_databox .bg-outline-success {
   background: #ECFDF3;
@@ -5768,6 +5784,22 @@ select.select-transpant:hover, select.select-transpant:focus, select.select-tran
 .queslsit {
   margin: 10px 0 0 0;
   padding: 0;
+  height: 100%;
+  overflow: auto;
+}
+.queslsit::-webkit-scrollbar {
+  width: 6px;
+}
+.queslsit::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgb(213, 213, 213);
+  border-radius: 8px;
+}
+.queslsit::-webkit-scrollbar-thumb {
+  background: #D0D5DD;
+  border-radius: 8px;
+}
+.queslsit::-webkit-scrollbar-thumb:hover {
+  background: #D0D5DD;
 }
 .queslsit li {
   margin: 0;
@@ -5779,7 +5811,6 @@ select.select-transpant:hover, select.select-transpant:focus, select.select-tran
   font-weight: 500;
   border-bottom: solid 1px #EAECF0;
   padding: 10px 8px;
-  border-right: solid 1px #EAECF0;
   cursor: pointer;
 }
 .queslsit li:hover, .queslsit li.active {
@@ -5787,9 +5818,7 @@ select.select-transpant:hover, select.select-transpant:focus, select.select-tran
 }
 
 .ans_panel {
-  padding-left: 55px;
-  background: #F2F4F7;
-  padding-top: 15px;
+  background: #fdfefe;
 }
 .ans_panel .que_head {
   padding: 15px;
@@ -5808,6 +5837,22 @@ select.select-transpant:hover, select.select-transpant:focus, select.select-tran
   line-height: 36px;
   font-size: 12px;
   font-weight: 500;
+}
+
+.ans_body {
+  padding-left: 40px;
+  padding-top: 15px;
+}
+
+.question-box-eval {
+  position: sticky;
+  top: 70px;
+  z-index: 1;
+  padding: 15px;
+  background: #fff;
+  left: 0;
+  right: 0;
+  border-bottom: solid 1px #eaecf0;
 }
 
 .all_anslist {
@@ -6422,7 +6467,8 @@ select.select-transpant:hover, select.select-transpant:focus, select.select-tran
   top: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  -o-object-fit: cover;
+     object-fit: cover;
   margin: 0 !important;
 }
 .media_box .record_overlay {
@@ -6773,7 +6819,8 @@ button#input-group-dropdown-1 {
   vertical-align: middle;
 }
 .custom-checkbox .form-check-input[type=checkbox] {
-  appearance: none;
+  -moz-appearance: none;
+       appearance: none;
   -webkit-appearance: none;
   background-color: #fff;
   border: 2px solid #D0D5DD;
@@ -7662,7 +7709,9 @@ button.btn-icon {
   border-radius: 8px;
   border: 1px solid #ccc;
   outline: none;
-  appearance: none;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
   /* Remove default arrow */
   background-color: #fff;
   background-image: url("../images/icons/chevron-down.png");
@@ -8157,7 +8206,8 @@ button.btn-icon {
 .mobile-footer-quiz li button img {
   width: 24px;
   height: 24px;
-  object-fit: contain;
+  -o-object-fit: contain;
+     object-fit: contain;
 }
 .mobile-footer-quiz li button p {
   margin-bottom: 0;
@@ -8467,6 +8517,20 @@ path.recharts-rectangle.recharts-tooltip-cursor {
 .chat-box-global > .card-body .message-chat-body .chat-inner-body {
   max-height: 100%;
 }
+.chat-box-global > .card-body .message-chat-body .chat-inner-body::-webkit-scrollbar {
+  width: 6px;
+}
+.chat-box-global > .card-body .message-chat-body .chat-inner-body::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgb(213, 213, 213);
+  border-radius: 8px;
+}
+.chat-box-global > .card-body .message-chat-body .chat-inner-body::-webkit-scrollbar-thumb {
+  background: #D0D5DD;
+  border-radius: 8px;
+}
+.chat-box-global > .card-body .message-chat-body .chat-inner-body::-webkit-scrollbar-thumb:hover {
+  background: #D0D5DD;
+}
 .chat-box-global > .card-body .message-chat-body .card {
   border: 0;
   max-width: 70%;
@@ -8728,7 +8792,8 @@ path.recharts-rectangle.recharts-tooltip-cursor {
 }
 .react-select-mcq-change .css-hlgwow img {
   width: 20px !important;
-  object-fit: contain;
+  -o-object-fit: contain;
+     object-fit: contain;
 }
 
 .ql-toolbar.ql-snow .ql-formats {
@@ -9308,6 +9373,14 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   opacity: 0.5;
 }
 
+.scroll-column {
+  max-height: 100vh;
+  height: auto;
+  position: sticky;
+  top: 85px;
+  border-right: solid 1px #eaecf0;
+}
+
 @media screen and (max-width: 767px) {
   .jobapplymodel .modal-dialog {
     margin: 0;
@@ -9551,7 +9624,8 @@ path.recharts-rectangle.recharts-tooltip-cursor {
     margin: 0px auto;
     width: 90px;
     height: 90px;
-    object-fit: contain;
+    -o-object-fit: contain;
+       object-fit: contain;
   }
   .quiz_card {
     padding: 75px 15px;
@@ -9882,6 +9956,12 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   .question-popup .offcanvas-body {
     padding: 30px;
   }
+  .upload-container {
+    max-width: 83%;
+  }
+  .file-progress {
+    max-width: 80%;
+  }
 }
 @media screen and (min-width: 1200px) {
   .table-responsive {
@@ -9900,6 +9980,4 @@ path.recharts-rectangle.recharts-tooltip-cursor {
     flex-direction: column;
     align-items: self-start;
   }
-}
-
-/*# sourceMappingURL=main.css.map */
+}/*# sourceMappingURL=main.css.map */

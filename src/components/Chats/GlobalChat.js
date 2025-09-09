@@ -100,6 +100,7 @@ export default function GlobalChat() {
   const inputRef = useRef(null);
   const [dragActive, setDragActive] = useState(false);
   const [image, setImage] = useState(null);
+  const [orderJob,setOrderJob] = useState("Recentfirst")
 
   const handleFiles = (files) => {
     if (files && files[0]) {
@@ -221,10 +222,12 @@ export default function GlobalChat() {
     try {
       const response = await JobList(url);
       setIsLoading(false);
+      const allJobs = response?.data?.response?.sort((a, b) => new Date(b.targate_hire_date) - new Date(a.targate_hire_date));
+      const jobsdata = response?.data?.response?.sort((a, b) => new Date(b.targate_hire_date) - new Date(a.targate_hire_date));
 
       setJobData({
-        allJob: response?.data?.response?.filter((item) => item.job_status !== "Draft"),
-        jobs: response?.data?.response || [],
+        allJob: allJobs?.filter((item) => item.job_status !== "Draft"),
+        jobs: jobsdata || [],
         total_active_job_count: response?.data?.total_active_job_count || 0
       });
 
@@ -333,39 +336,39 @@ export default function GlobalChat() {
     if (searchTerm != "") {
       const searchData = jobData?.allJob?.filter(val =>
         val?.job_title?.toLowerCase()?.includes(searchTerm?.toLowerCase())
-      );     
+      );
       setJobData((prev) => ({
         ...prev,
-        allJob: searchData        
+        allJob: searchData
       }))
     } else {
       setJobData((prev) => ({
         ...prev,
-        allJob: jobData?.jobs?.filter((item) => item.job_status !== "Draft")        
+        allJob: jobData?.jobs?.filter((item) => item.job_status !== "Draft")
       }))
     }
   }, [searchTerm])
   useEffect(() => {
-    if (searchActive != "") {     
+    if (searchActive != "") {
       const filterTab = jobData.jobs.filter(val =>
         val?.job_title?.toLowerCase()?.includes(searchActive?.toLowerCase()))
       setJobData((prev) => ({
-        ...prev,        
-        ActiveJobs: filterTab.filter((item) => item.job_status === "Active" && item.job_status !== "Draft"),       
+        ...prev,
+        ActiveJobs: filterTab.filter((item) => item.job_status === "Active" && item.job_status !== "Draft"),
       }))
     } else {
       setJobData((prev) => ({
-        ...prev,        
-        ActiveJobs: jobData?.jobs.filter((item) => item.job_status === "Active" && item.job_status !== "Draft")       
+        ...prev,
+        ActiveJobs: jobData?.jobs.filter((item) => item.job_status === "Active" && item.job_status !== "Draft")
       }))
     }
   }, [searchActive])
   useEffect(() => {
-    if (searchInactive != "") {     
+    if (searchInactive != "") {
       const filterTab = jobData.jobs.filter(val =>
         val?.job_title?.toLowerCase()?.includes(searchInactive?.toLowerCase()))
       setJobData((prev) => ({
-        ...prev,        
+        ...prev,
         InactiveJobs: filterTab.filter((item) => item.job_status !== "Active" && item.job_status !== "Draft")
       }))
     } else {
@@ -375,6 +378,31 @@ export default function GlobalChat() {
       }))
     }
   }, [searchInactive])
+
+  const handleCompanyOrder = (e) => {
+    setOrderJob(e.value)    
+  }
+  useEffect(()=>{
+    if (orderJob == "Recentfirst") {
+      const recentDate = jobData?.allJob?.sort((a, b) => new Date(b.targate_hire_date) - new Date(a.targate_hire_date));
+      const recentActive = jobData?.jobs?.sort((a, b) => new Date(b.targate_hire_date) - new Date(a.targate_hire_date));
+      setJobData((prev) => ({
+        ...prev,
+        allJob: recentDate,
+        ActiveJobs: recentActive?.filter((item) => item.job_status === "Active" && item.job_status !== "Draft"),
+        InactiveJobs: recentActive?.filter((item) => item.job_status !== "Active" && item.job_status !== "Draft")
+      }))
+    } else {
+      const recentDate = jobData?.allJob?.sort((a, b) => new Date(a.targate_hire_date) - new Date(b.targate_hire_date));
+      const recentActive = jobData?.jobs?.sort((a, b) => new Date(a.targate_hire_date) - new Date(b.targate_hire_date));
+      setJobData((prev) => ({
+        ...prev,
+        allJob: recentDate,
+        ActiveJobs: recentActive?.filter((item) => item.job_status === "Active" && item.job_status !== "Draft"),
+        InactiveJobs: recentActive?.filter((item) => item.job_status !== "Active" && item.job_status !== "Draft")
+      }))
+    }
+  },[orderJob])
   console.log(jobData)
   console.log(messages)
   return (
@@ -385,14 +413,16 @@ export default function GlobalChat() {
         <Container fluid className="pt-3">
           <Row className="g-0 shadow-sm" style={{ height: 'calc(100vh - 120px)' }}>
             {/* Left Sidebar - Jobs */}
-            <Col md={3} className="" style={{  borderRight: "2px solid #F2F4F7", borderTopLeftRadius: "12px", borderBottomLeftRadius: "12px" }} >
-              <Card className="h-100 border-0 chat-module" style={{background: "#F9FAFB"}}>
-                <Card.Header className="border-bottom d-flex justify-content-between align-items-center" style={{ padding: "16px", paddingBottom: "0" , background:'transparent' }} >
+            <Col md={3} className="" style={{ borderRight: "2px solid #F2F4F7", borderTopLeftRadius: "12px", borderBottomLeftRadius: "12px" }} >
+              <Card className="h-100 border-0 chat-module" style={{ background: "#F9FAFB" }}>
+                <Card.Header className="border-bottom d-flex justify-content-between align-items-center" style={{ padding: "16px", paddingBottom: "0", background: 'transparent' }} >
                   <Card.Title>Job List</Card.Title>
                   <Select
                     options={options}
                     //value={userOption.find((opt)=>opt.value===companyInfo)}
+                    value={options.find((opt)=>opt.value===orderJob)}
                     // onChange={handleCompanyDropdown}
+                    onChange={handleCompanyOrder}
                     className="react_selectbox"
                     styles={customStyles}
                   />
@@ -584,7 +614,7 @@ export default function GlobalChat() {
             </Col>
             {/* Middle Sidebar - Candidates */}
             <Col md={3} className=" " style={{ background: '#fcfcfd', borderRight: "2px solid #F2F4F7" }}>
-              <Card className="h-100 border-0 chat-module" style={{background:'#FCFCFD'}}>
+              <Card className="h-100 border-0 chat-module" style={{ background: '#FCFCFD' }}>
                 <Card.Header className="border-bottom d-flex justify-content-between align-items-center" style={{ padding: "16px", paddingBottom: "0", background: 'transparent' }} >
                   <Card.Title>Candidates</Card.Title>
                   <Select

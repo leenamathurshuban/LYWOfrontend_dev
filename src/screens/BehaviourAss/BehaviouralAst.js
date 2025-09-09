@@ -52,13 +52,13 @@ import { toast } from 'react-toastify';
 
 const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }) => {
     const [show, setShow] = useState(false);
-    const [isLoading,setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [showInstruction, setShowInstruction] = useState(false)
     const handleInstructionModel = () => setShowInstruction(false);
 
 
     const [popupShow, setPopupShow] = useState(false);
-    const [assetData,setAssetData] = useState([])
+    const [assetData, setAssetData] = useState([])
     const handleClosePop = () => {
         if (complete && runCounter() == 28) {
             handleSubmit();
@@ -73,14 +73,14 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
     const [qshow, qsetShow] = useState(false);
 
 
-  
+
 
     const qhandleClose = () => qsetShow(false);
     const qhandleShow = () => qsetShow(true);
 
-       const [langshow, langsetShow] = useState(false);
+    const [langshow, langsetShow] = useState(false);
 
-     const langhandleClose = () => langsetShow(false);
+    const langhandleClose = () => langsetShow(false);
     const langhandleShow = () => langsetShow(true);
 
     const popupRef = useRef(null);
@@ -168,7 +168,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
     }
 
     const applicantDetailAPI = async () => {
-        try {            
+        try {
             const res = await getAssetDataDetailsAPI(jobPostData?.uid, applicantUid?.applicant_data?.uid)
             if (res?.success) {
                 setAssetData(res?.response?.job?.asset_job)
@@ -260,15 +260,16 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                             //         navigate(`/evaluation-quiz/${Val?.uid}`, { state: jobPostData })
                             //     }
                             // })
-                            if(assetData?.length){
+                            if (assetData?.length) {
                                 assetData?.map((Val) => {
-                                if (Val?.asset_type === 'Quiz') {
-                                    navigate(`/evaluation-quiz/${Val?.uid}`, { state: jobPostData })
-                                }
-                            })
-                            }else{
-                                toast.info('Quiz is not assigned for this job')
-                            }                            
+                                    if (Val?.asset_type === 'Quiz') {
+                                        navigate(`/evaluation-quiz/${Val?.uid}`, { state: jobPostData })
+                                    }
+                                })
+                            } else {
+                                setBehaviourAssModel(false)
+                                toast.info('Quiz is not assigned for this job')                                
+                            }
                         } else {
                             setShow(false)
                         }
@@ -301,15 +302,16 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                             //         navigate(`/evaluation-quiz/${Val?.uid}`, { state: jobPostData })
                             //     }
                             // })
-                            if(assetData?.length){
+                            if (assetData?.length) {
                                 assetData?.map((Val) => {
-                                if (Val?.asset_type === 'Quiz') {
-                                    navigate(`/evaluation-quiz/${Val?.uid}`, { state: jobPostData })
-                                }
-                            })
-                            }else{
-                                toast.info('Quiz is not assigned for this job')
-                            }                            
+                                    if (Val?.asset_type === 'Quiz') {
+                                        navigate(`/evaluation-quiz/${Val?.uid}`, { state: jobPostData })
+                                    }
+                                })
+                            } else {
+                                setBehaviourAssModel(false)
+                                toast.info('Quiz is not assigned for this job')                                
+                            }
                         } else {
                             setShow(false)
                         }
@@ -525,7 +527,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                         </div>
                     </div>
 
-                     
+
 
 
                     <Offcanvas
@@ -592,7 +594,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
 
                     {/* language modal */}
 
-                                   <Offcanvas
+                    <Offcanvas
                         show={langshow} onHide={langhandleClose}
                         backdropClassName='custom-backdrop'
                         backdrop={true}
@@ -603,20 +605,20 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
 
                             <div className='d-flex justify-content-between'>
                                 <div className='range-progress'>
-                                    <strong className="font-20">Select Language</strong> 
+                                    <strong className="font-20">Select Language</strong>
                                 </div>
-                              
+
                             </div>
 
 
                             <div className='choose-languae-mobile'>
 
-                            <button type="button" className="btn-light-outline-sm me-3 setlanguage m-show">
-                                
-                                {/* <img src={globgray} /> */}
+                                <button type="button" className="btn-light-outline-sm me-3 setlanguage m-show">
+
+                                    {/* <img src={globgray} /> */}
 
 
-                            {/* <Form.Select
+                                    {/* <Form.Select
                                 name="currency"
                                 aria-label="Default select example"
                                 className="sm-fselect"
@@ -633,20 +635,20 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                                 <option selected value="tamil">Tamil</option>
                                 <option selected value="telugu">Telugu</option>
                             </Form.Select> */}
-                            <Select
-                                options={langOption}
-                                value={langOption?.find((opt) => opt?.value === language)}
-                                onChange={(e) => {
-                                    setLanguage(e.value);
-                                }}
-                                styles={customStyles}
-                                className="sm-fselect react_selectbox"
-                            />
-                        </button>
+                                    <Select
+                                        options={langOption}
+                                        value={langOption?.find((opt) => opt?.value === language)}
+                                        onChange={(e) => {
+                                            setLanguage(e.value);
+                                        }}
+                                        styles={customStyles}
+                                        className="sm-fselect react_selectbox"
+                                    />
+                                </button>
 
-                        </div>
+                            </div>
 
-                            
+
 
 
                         </Offcanvas.Body>
@@ -725,7 +727,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                             (quizMostLeastLike.length > quizMostLeastLike.flatMap(row => row.leastList).length) && !isLoading && 'Save and Exit'}
                         {complete && (quizMostLeastLike.length === quizMostLeastLike.flatMap(row => row.mostList).length) &&
                             (quizMostLeastLike.length === quizMostLeastLike.flatMap(row => row.leastList).length) && isLoading && `Proceed to Quiz for ${jobPostData.job_title}`}
-                    Proceed to Quiz
+                        Proceed to Quiz
                     </Button>
                 </Modal.Footer>
             </Modal>

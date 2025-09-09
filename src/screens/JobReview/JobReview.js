@@ -2716,7 +2716,7 @@ const JobReview = () => {
                                         <Card.Body>
                                             <Row>
                                                 {assignmentReviewList.map((item, index) => (
-                                                    <Col md={2} className="queslsit_panel ">
+                                                    <Col md={2} className="queslsit_panel scroll-column">
                                                         {/* <Form.Select className="qs_dropdown" onChange={handleSectionWise}>
                                                                 {item?.section_asset.map((cVal) => (
                                                                     <option value={cVal?.uid}>{cVal?.section_title}</option>
@@ -2858,20 +2858,24 @@ const JobReview = () => {
                                                                     <p>50 Pending</p>
                                                                 </div>
                                                             </li> */}
-                                                            <li className="justify-content-center">
+                                                            {/* <li className="justify-content-center">
                                                                 <button type="button" className="btn-transpant"><img src={ArrowDownDark} /></button>
-                                                            </li>
+                                                            </li> */}
                                                         </ul>
                                                     </Col>
                                                 ))}
 
                                                 <Col md={10} className="ans_panel">
+                                                <div className="question-box-eval">
                                                     <div className="que_head">
                                                         <p class="text-sm">{questionWiseData?.question_title}</p>
-                                                        <strong className="qus_number">1</strong>
+                                                        
+                                                     
+
                                                     </div>
-                                                    <div className="ans_body">
-                                                        <Row className="my-3">
+
+
+                                                       <Row className="my-3 mb-0">
                                                             <Col md={4}>
                                                                 <InputGroup className="defult_serachbox">
                                                                     <Button id="basic-addon1">
@@ -2907,6 +2911,10 @@ const JobReview = () => {
                                                                 </ul>
                                                             </Col>
                                                         </Row>
+</div>
+
+                                                    <div className="ans_body">
+                                                        
                                                         <div className="all_anslist">
                                                             {questionWiseData?.user_answer_question?.map((user, index) => (
                                                                 <Card className="ans_card"  >

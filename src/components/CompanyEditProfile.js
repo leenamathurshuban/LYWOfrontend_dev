@@ -1820,10 +1820,10 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                     isSearchable={true}
                                     noOptionsMessage={() => "No results found"}
                                     placeholder="Search for an industry.."
-                                    filterOption={(option, inputValue) => {
-                                      if (!inputValue) return false; // hide all options until user types
-                                      return option.label.toLowerCase().includes(inputValue.toLowerCase());
-                                    }}
+                                    // filterOption={(option, inputValue) => {
+                                    //   if (!inputValue) return false; // hide all options until user types
+                                    //   return option.label.toLowerCase().includes(inputValue.toLowerCase());
+                                    // }}
                                     onChange={handleIndustrySelect}
                                     className="react_selectbox"
                                     styles={customStyles}
@@ -1953,10 +1953,10 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                     isSearchable={true}
                                     noOptionsMessage={() => "No results found"}
                                     placeholder="Search for an Headquarter..."
-                                    filterOption={(option, inputValue) => {
-                                      if (!inputValue) return false; // hide all options until user types
-                                      return option.label.toLowerCase().includes(inputValue.toLowerCase());
-                                    }}
+                                    // filterOption={(option, inputValue) => {
+                                    //   if (!inputValue) return false; // hide all options until user types
+                                    //   return option.label.toLowerCase().includes(inputValue.toLowerCase());
+                                    // }}
                                     className="react_selectbox"
                                     onChange={handleLocationSelect}
                                     styles={customStyles}

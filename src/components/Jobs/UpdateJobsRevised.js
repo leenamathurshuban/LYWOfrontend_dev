@@ -1499,6 +1499,7 @@ const UpdateJobsRevised = ({
         setrdnwBadges([]);
         setSpokenLanguageBadges([]);
         setLocationBadges([]);
+        requireShow()
     }, []);
     useEffect(() => {
         if (isUpdated) {
@@ -1550,23 +1551,25 @@ const UpdateJobsRevised = ({
         //         : prevState.filter((item2) => JSON.stringify(item2) != JSON.stringify(benefititem))
         // );
         e.stopPropagation();
-        setMustHaveSkills((prevState) => {
-            const exists = prevState.some(item => item.skill_name === benefititem.skill_name);
+        if (SelectSkillsData.includes(benefititem)) {
+            setMustHaveSkills((prevState) => {
+                const exists = prevState.some(item => item.skill_name === benefititem.skill_name);
 
-            if (exists) {
-                // Remove the item if it exists
-                return prevState.filter(item => item.skill_name !== benefititem.skill_name);
-            } else {
-                // Add only if length < 12
-                if (prevState.length < 3) {
-                    return [...prevState, benefititem];
+                if (exists) {
+                    // Remove the item if it exists
+                    return prevState.filter(item => item.skill_name !== benefititem.skill_name);
                 } else {
-                    toast.warning('A Skill Group cannot contain more than 3 iimportant skills.')
-                    // setSkillError('A Skill Group cannot contain more than 12 skills.')
-                    return prevState; // Do nothing if already 12 items
+                    // Add only if length < 12
+                    if (prevState.length < 3) {
+                        return [...prevState, benefititem];
+                    } else {
+                        toast.warning('A Skill Group cannot contain more than 3 iimportant skills.')
+                        // setSkillError('A Skill Group cannot contain more than 12 skills.')
+                        return prevState; // Do nothing if already 12 items
+                    }
                 }
-            }
-        });
+            });
+        }
     }
     const handleOpenStep = (index) => {
         if (!openStep.includes(index)) {
@@ -2582,8 +2585,8 @@ const UpdateJobsRevised = ({
                                                         // onClick={handleCreateForm}
                                                         type="button"
                                                         class="btn btn-lightgray next-btn-shadow"
-                                                        // onClick={handleNext}
-                                                        onClick={requireShow}
+                                                        onClick={handleNext}
+                                                        // onClick={requireShow}
                                                     >
                                                         Next
                                                     </button>
@@ -4696,7 +4699,7 @@ const UpdateJobsRevised = ({
                             <div className="col-12 mt-4">
                                 <Button className="w-100" variant="primary" onClick={() => {
                                     requiremodelShow(false);
-                                    handleNext()
+                                    // handleNext()
                                 }}>OK</Button >
                             </div>
                         </div>
