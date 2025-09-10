@@ -1886,7 +1886,7 @@ const ApplicationJobPostModal = ({
   // const [ResumeFile, setResumeFile] = useState(null);
   // const [ResumeFileName, setResumeFileName] = useState("");
   const [error, setError] = useState(null);
-  const [isLoading,setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [showNotesByIndex, setShowNotesByIndex] = useState([])
   const [ApplicantProfileData, setApplicantProfileData] = useState(null);
   const [dynamicArray, setDynamicArray] = useState([]);
@@ -2727,7 +2727,7 @@ const ApplicationJobPostModal = ({
     const questionAnswerArray = components.map((item) => ({
       answer_uid: "", // Add logic to populate this if needed
       question_uid: item?.uid,
-      ["selected_answer"]:item.selected_answer
+      ["selected_answer"]: item.selected_answer
     }));
 
     try {
@@ -3425,7 +3425,7 @@ const ApplicationJobPostModal = ({
   console.log('testing', profileformData)
   console.log(spokenLanguageBadges, rdnwBadges)
   console.log(WorkExpreienceRow)
-  console.log("jjjjjjjjuuuuuuuu",selectedAnswers)
+  console.log("jjjjjjjjuuuuuuuu", selectedAnswers)
   return (
     <>
       <Modal
@@ -3547,7 +3547,7 @@ const ApplicationJobPostModal = ({
                   </li>
                   <li
                     className={
-                     components.every(item => item.selected_answer && item.selected_answer.length > 0) ? "active" : ""
+                      components.every(item => item.selected_answer && item.selected_answer.length > 0) ? "active" : ""
                     }
                   >
                     {/* <a href="#item_Geog"> */}
@@ -3594,7 +3594,7 @@ const ApplicationJobPostModal = ({
                     </Col>
 
                     <Col>
-                    {/* verify-box-mobile */}
+                      {/* verify-box-mobile */}
                       <div className=" desktop-flex-colum">
 
                         <Form.Control
@@ -3624,7 +3624,7 @@ const ApplicationJobPostModal = ({
                     </Col>
                   </Row>
 
-                    {/* mobile-hide */}
+                  {/* mobile-hide */}
 
                   <Row className="mb-3 mt-2 ">
                     <Col md={2}>
@@ -4641,7 +4641,7 @@ const ApplicationJobPostModal = ({
                             <tbody>
                               <tr>
 
-                            <td className="text-start">
+                                <td className="text-start">
                                   <button
                                     type="button"
                                     className="btn-transpant"
@@ -4690,7 +4690,7 @@ const ApplicationJobPostModal = ({
                                     </Button>
                                   </td>
                                 )}
-                                
+
                               </tr>
                             </tbody>
 
@@ -5662,7 +5662,7 @@ const ApplicationJobPostModal = ({
                     </div>
                   ))} */}
                   <QuestionAnswerJob
-                    components={components} 
+                    components={components}
                     setComponents={setComponents}
                     handleAnswerChange={handleAnswerChange}
                   />
@@ -5936,13 +5936,12 @@ const ApplicationJobPostModal = ({
                       </div>
                       <div className="user_bsinfo">
                         <h6>Additional Questions from Company</h6>
-                        {jobPostData?.question_job.map((item) => (
+                        {components?.map((item) => (
                           <div key={item.id} className="mb-3">
                             <h6 className="strong-label">{item?.question_title}</h6>
                             <strong className="strong-label">{" "}
-                              {selectedAnswers[item?.uid] || (
-                                <p className="error" style={{ color: "red" }}>Not defined</p>
-                              )}</strong>
+                              {item?.selected_answer?.length > 0 ? item?.selected_answer?.join(", ") : (<p className="error" style={{ color: "red" }}>Not defined</p>)}
+                            </strong>
                           </div>
                         ))}
                       </div>
@@ -6014,7 +6013,7 @@ const ApplicationJobPostModal = ({
           <Button variant="light" onClick={() => handleFormDetailsApi('Completed', '')}>
             Return to Job
           </Button>
-          <Button variant="primary" onClick={() => handleFormDetailsApi('Completed', 'test')}>{isLoading? <Spinner animation="border" variant="light" />:'Proceed to Behavioral Test'}</Button>
+          <Button variant="primary" onClick={() => handleFormDetailsApi('Completed', 'test')}>{isLoading ? <Spinner animation="border" variant="light" /> : 'Proceed to Behavioral Test'}</Button>
         </Modal.Footer>
       </Modal>
 

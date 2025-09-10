@@ -2739,7 +2739,7 @@ const JobReview = () => {
                                                         />
                                                         <ul className="queslsit">
                                                             {sectionWiseData[0]?.question_section?.map((QuesItem, quesIndex) => (
-                                                                <li onClick={() => handleSectionQuestionbyuser(QuesItem)}  >
+                                                                <li onClick={() => handleSectionQuestionbyuser(QuesItem)} className={`${QuesItem.uid == questionWiseData.uid && "question-active"}`} >
                                                                     <span>Q. {quesIndex + 1}</span>
                                                                     <div className="ratting_warp">
                                                                         <div className="ratting">
@@ -2878,12 +2878,7 @@ const JobReview = () => {
                                                     <div className="question-box-eval">
                                                         <div className="que_head">
                                                             <p class="text-sm">{questionWiseData?.question_title}</p>
-
-
-
                                                         </div>
-
-
                                                         <Row className="my-3 mb-0">
                                                             <Col md={4}>
                                                                 <InputGroup className="defult_serachbox">
