@@ -65,7 +65,8 @@ export const ApplicationJobPostUrl = {
   getApplicantAssetData:"assets-api/get-job-applicant-asset-data-api/job-uid/",
   chatsPost:"assets-api/chat-post-api/",
   getCandidate:"assets-api/chat-list-api/",
-  chatDetails:"assets-api/chat-detail-api/job-applicant-uid/"
+  chatDetails:"assets-api/chat-detail-api/job-applicant-uid/",
+  getCandidateListforSingleJob:"assets-api/job-applicant-list-api/"
 }
 
 export const GraphBarChartUrl = {

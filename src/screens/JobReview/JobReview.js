@@ -72,7 +72,7 @@ import downloadicon from "../../images/icons/download-001.svg"
 
 
 import { useParams } from "react-router-dom";
-import { ApplicationDeatilsApi, chatPostAPI, getAssetDataDetailsAPI, getJobAssignmentReview, getJobDetailsApi, getJobGroupParameterListAPI, getScreeningParameterDataAPI, insightsListAPI, jobApplicantUpdateAPI, postJobGroupParameterListByFetchAPI, UpdateMultipleJobApi } from "../../services/provider";
+import { ApplicationDeatilsApi, chatPostAPI, getAssetDataDetailsAPI, getCandidateListForSingleJob, getJobAssignmentReview, getJobDetailsApi, getJobGroupParameterListAPI, getScreeningParameterDataAPI, insightsListAPI, jobApplicantUpdateAPI, postJobGroupParameterListByFetchAPI, UpdateMultipleJobApi } from "../../services/provider";
 import Evaluations from "./Evaluations";
 import Ratting from "../../components/Ratting";
 import CodeBlock from "../../components/CodeBlock";
@@ -481,6 +481,8 @@ const JobReview = () => {
     const [currentId, setCurrentId] = useState(questionWiseData?.user_answer_question?.[0]?.id);
     const [groupParameterList, setGroupParameterList] = useState([]);
     const [ListData, setListData] = useState([]);
+    const [ListGrid, setListGrid] = useState([]);
+    const [count, setCount] = useState(10);
     const [selectedListUids, setSelectedListUids] = useState([]);
     const [ListShow, setListShow] = useState(false);
     const [candidateEmail, setCandidateEmail] = useState('')
@@ -995,6 +997,21 @@ const JobReview = () => {
     );
 
 
+    const getListGridData = async () => {
+        try {
+            const res = await getCandidateListForSingleJob(id)
+            if (res?.data?.success) {
+                setListGrid(res.data.response)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    const handleLoadMore = () => {
+        const nextData = ListGrid.slice(count, count + 10);
+        setListData([...ListData, ...nextData]);
+        setCount(count + 10);
+    };
     // 
     useEffect(() => {
         getScreeningAPI(id)
@@ -1002,6 +1019,7 @@ const JobReview = () => {
         getJobDetails(id)
         getJobGroupParameterList()
         getInsightsGraphList()
+        getListGridData()
     }, [id])
     const getJobAssignmentReviewList = async (uid) => {
         try {
@@ -1358,7 +1376,12 @@ const JobReview = () => {
                             </Col>
                             <Col md={6} className="text-end pe-3">
                                 <button className="btn btn-traspant" onClick={() => setListShow(false)}><img src={gridView} /></button>
-                                <button className="btn btn-traspant" onClick={() => setListShow(true)}><img src={listView} /></button>
+                                <button className="btn btn-traspant"
+                                    onClick={() => {
+                                        setListShow(true)
+                                        setListData(ListGrid.slice(0,10))
+                                    }}
+                                ><img src={listView} /></button>
                             </Col>
                         </Row>
                         <Row >
@@ -2046,8 +2069,8 @@ const JobReview = () => {
                                                             </tbody>
                                                             <tfoot>
                                                                 <tr>
-                                                                    <td colspan="2"><button type="button" class="btn-light-outline btn btn-primary">Load More</button></td>
-                                                                    <td colspan="13" class="text-end pe-3"><span class="pagination_count">Showing 10 items</span></td>
+                                                                    <td colspan="2"><button type="button" class="btn-light-outline btn btn-primary" onClick={handleLoadMore}>Load More</button></td>
+                                                                    <td colspan="13" class="text-end pe-3"><span class="pagination_count">Showing {ListData.length} items</span></td>
                                                                 </tr>
                                                             </tfoot>
                                                         </Table>

@@ -313,3 +313,7 @@ export const chatDetailsAPI=(aplUid,jobUid)=>{
   const result = client.getWithToken(`${ApplicationJobPostUrl.chatDetails}${aplUid}/job-uid/${jobUid}/`)
   return result
 }
+export const getCandidateListForSingleJob=(jobUid)=>{
+  const result = client.getWithToken(`${ApplicationJobPostUrl.getCandidateListforSingleJob}${jobUid}/?page=1&limit=2000`)
+  return result
+}
