@@ -5816,6 +5816,9 @@ select.select-transpant:hover, select.select-transpant:focus, select.select-tran
 .queslsit li:hover, .queslsit li.active {
   background-color: #F5F8FF;
 }
+.queslsit li.question-active {
+  background-color: #F5F8FF;
+}
 
 .ans_panel {
   background: #fdfefe;
@@ -5846,7 +5849,7 @@ select.select-transpant:hover, select.select-transpant:focus, select.select-tran
 
 .question-box-eval {
   position: sticky;
-  top: 70px;
+  top: 124px;
   z-index: 1;
   padding: 15px;
   background: #fff;
@@ -6647,6 +6650,7 @@ select.select-transpant:hover, select.select-transpant:focus, select.select-tran
 }
 .creategroup_drawer .behav_assmnt .assmntbox {
   min-height: 80px;
+  height: 100%;
 }
 .creategroup_drawer .behav_assmnt .assmntbox-head {
   align-items: center;
@@ -7545,7 +7549,7 @@ button.btn-icon {
   color: #344054;
   font-size: 12px;
   font-weight: 500;
-  border-radius: 8px;
+  border-radius: 4px;
   min-height: 36px;
   border-color: #d0d5dd !important;
 }
@@ -9377,8 +9381,17 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   max-height: 100vh;
   height: auto;
   position: sticky;
-  top: 85px;
+  top: 135px;
   border-right: solid 1px #eaecf0;
+}
+
+.review-sticky {
+  position: sticky;
+  top: 70px;
+  z-index: 1;
+}
+.review-sticky .select-default {
+  max-width: 230px;
 }
 
 @media screen and (max-width: 767px) {

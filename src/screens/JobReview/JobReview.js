@@ -12,7 +12,7 @@ import angleDown from "../../images/icons/angle-down-arrow.svg"
 import EvaluaBtn from "../../images/icons/evalua_icon.svg"
 import AutomatBtn from "../../images/icons/automations_icon.svg"
 import stopBtn from "../../images/icons/pause-circle-16x16.svg"
-import LeaderIcn from "../../images/icons/Leader-icon.svg"; 
+import LeaderIcn from "../../images/icons/Leader-icon.svg";
 import gridView from "../../images/icons/grid_icon.svg"
 import listView from "../../images/icons/list_icon.svg"
 import Dragableicn from "../../images/icons/dragable-six-dots.svg"
@@ -164,6 +164,9 @@ const JobReview = () => {
         modal_name: "",
         modal_data: {}
     })
+
+
+    const [activeIndex, setActiveIndex] = useState(null);
 
 
     // Handle click on Col
@@ -421,9 +424,9 @@ const JobReview = () => {
 
     const [activeTab, setActiveTab] = useState("evaluated");
 
-//   const handleEvaluated = () => setActiveTab("evaluated");
-//   const handlePending = () => setActiveTab("pending");
-//   const handleAllEvaiPend = () => setActiveTab("all");
+    //   const handleEvaluated = () => setActiveTab("evaluated");
+    //   const handlePending = () => setActiveTab("pending");
+    //   const handleAllEvaiPend = () => setActiveTab("all");
 
 
 
@@ -2099,21 +2102,25 @@ const JobReview = () => {
                                                                     ))}
                                                                 </>
                                                             )} */}
-                                                                <button type="button" onClick={() => {
-                                                                    setGroupModal(true)
-                                                                    setGroupParameterId(paraName?.uid)
-                                                                }} className="btn btn-link mb-3 create-group-card ms-auto me-auto"><i className="fa fa-plus "></i> <span className="ms-2">  Create a New Group </span></button>
+                                                                {(paraName?.parameter_name !== "Application" && paraName?.parameter_name !== "Behaviour") && (
+                                                                    <button type="button" onClick={() => {
+                                                                        setGroupModal(true)
+                                                                        setGroupParameterId(paraName?.uid)
+                                                                    }} className="btn btn-link mb-3 create-group-card ms-auto me-auto">
+                                                                        <i className="fa fa-plus "></i> <span className="ms-2">  Create a New Group </span>
+                                                                    </button>
+                                                                )}
                                                                 <div className="eval-vertical-scrool ct_scrollbar ">
                                                                     {paraName?.groups_parameter?.sort((a, b) => a.id - b.id)?.map((groupItem) => (
                                                                         <>
 
                                                                             <div className={`sts_databox ${groupItem?.group_name.toLowerCase()}`}
+                                                                                onClick={() => setExpandedGroup(prev =>
+                                                                                    prev === paraName.uid ? null : paraName.uid
+                                                                                )}
                                                                             >
                                                                                 <div className="d-flex justify-content-between">
-                                                                                    <h6
-                                                                                        onClick={() => setExpandedGroup(prev =>
-                                                                                            prev === paraName.uid ? null : paraName.uid
-                                                                                        )}>{groupItem?.group_name}
+                                                                                    <h6>{groupItem?.group_name}
                                                                                         {(paraName?.parameter_name == "Application" || paraName?.parameter_name == "Behaviour") && (
                                                                                             <span className="count">{groupItem?.group_wise_applicant_count}</span>
                                                                                         )}
@@ -2186,7 +2193,7 @@ const JobReview = () => {
                                                     <Card className="status_cardpanel">
                                                         <Card.Body className="text-center d-flex align-items-center justify-content-center flex-column">
                                                             <button type="button" className="btn btn-light-primery w-100" onClick={handleShow}><i className="fa fa-plus me-2"></i>Add Evaluation</button>
-                                                            <button type="button" className="btn btn-white mt-2 w-100"><img src={Finalise} className="imgfluid me-2" alt="finalise"  />  Finalise Selection</button>
+                                                            <button type="button" className="btn btn-white mt-2 w-100"><img src={Finalise} className="imgfluid me-2" alt="finalise" />  Finalise Selection</button>
                                                         </Card.Body>
                                                     </Card>
                                                 </Col>
@@ -2693,7 +2700,7 @@ const JobReview = () => {
                                 {/* <Tab.Pane eventKey="second">Second tab content</Tab.Pane> */}
                                 <Tab.Pane eventKey="third">
                                     <Card className="rounded border-0 review_card">
-                                        <Card.Header>
+                                        <Card.Header className="review-sticky" >
                                             <Row>
                                                 <Col md={6}>
                                                     {/* <Form.Select className="select-md-transpant" onChange={handleTestJob}>
@@ -2704,7 +2711,8 @@ const JobReview = () => {
                                                     <Select
                                                         options={assignmentListOption}
                                                         onChange={handleTestJob}
-                                                        className="select-md-transpant react_selectbox"
+                                                        defaultValue={assignmentListOption[0]}
+                                                        className="select-md-transpant react_selectbox select-default"
                                                     />
                                                 </Col>
                                                 <Col md={6} className="d-flex review_count justify-content-end align-items-center">
@@ -2725,12 +2733,13 @@ const JobReview = () => {
                                                         <Select
                                                             options={sectionAssetfun(item?.section_asset)}
                                                             onChange={handleSectionWise}
+                                                            defaultValue={sectionAssetfun(item?.section_asset)[0]}
                                                             className="qs_dropdown react_selectbox"
                                                             styles={customStyles}
                                                         />
                                                         <ul className="queslsit">
                                                             {sectionWiseData[0]?.question_section?.map((QuesItem, quesIndex) => (
-                                                                <li onClick={() => handleSectionQuestionbyuser(QuesItem)}>
+                                                                <li onClick={() => handleSectionQuestionbyuser(QuesItem)}  >
                                                                     <span>Q. {quesIndex + 1}</span>
                                                                     <div className="ratting_warp">
                                                                         <div className="ratting">
@@ -2866,16 +2875,16 @@ const JobReview = () => {
                                                 ))}
 
                                                 <Col md={10} className="ans_panel">
-                                                <div className="question-box-eval">
-                                                    <div className="que_head">
-                                                        <p class="text-sm">{questionWiseData?.question_title}</p>
-                                                        
-                                                     
-
-                                                    </div>
+                                                    <div className="question-box-eval">
+                                                        <div className="que_head">
+                                                            <p class="text-sm">{questionWiseData?.question_title}</p>
 
 
-                                                       <Row className="my-3 mb-0">
+
+                                                        </div>
+
+
+                                                        <Row className="my-3 mb-0">
                                                             <Col md={4}>
                                                                 <InputGroup className="defult_serachbox">
                                                                     <Button id="basic-addon1">
@@ -2911,10 +2920,10 @@ const JobReview = () => {
                                                                 </ul>
                                                             </Col>
                                                         </Row>
-</div>
+                                                    </div>
 
                                                     <div className="ans_body">
-                                                        
+
                                                         <div className="all_anslist">
                                                             {questionWiseData?.user_answer_question?.map((user, index) => (
                                                                 <Card className="ans_card"  >

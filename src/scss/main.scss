@@ -7,7 +7,7 @@ html {
   /* transform: scale(0.8); */
 }
 
-html,
+html, 
 .modal {
   scroll-behavior: smooth;
 
@@ -7017,7 +7017,15 @@ select.select-transpant {
     &.active {
       background-color: #F5F8FF;
     }
+
+    &.question-active{
+      background-color: #F5F8FF;
+    }
+
   }
+
+
+
 }
 
 .ans_panel {
@@ -7054,7 +7062,7 @@ select.select-transpant {
 
 .question-box-eval {
     position: sticky;
-    top: 70px;
+    top: 124px;
     z-index: 1;
     padding: 15px;
     background: #fff;
@@ -7996,6 +8004,7 @@ select.select-transpant {
 
     .assmntbox {
       min-height: 80px;
+      height: 100%;
     }
 
     .assmntbox-head {
@@ -9091,7 +9100,7 @@ button.btn-icon {
     color: #344054;
     font-size: 12px;
     font-weight: 500;
-    border-radius: 8px;
+    border-radius: 4px;
     min-height: 36px;
     border-color: #d0d5dd !important;
   }
@@ -11627,9 +11636,25 @@ path.recharts-rectangle.recharts-tooltip-cursor {
     max-height: 100vh;
     height: auto;
     position: sticky;
-    top: 85px;
+    top: 135px;
     border-right: solid 1px #eaecf0;
 }
+
+
+.review-sticky{
+  position: sticky;
+  top: 70px;
+  z-index: 1;
+
+  .select-default{
+    max-width: 230px;
+  }
+
+}
+
+
+
+
 
 
 // responsive

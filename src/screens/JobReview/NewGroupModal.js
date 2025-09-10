@@ -590,7 +590,7 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, jobDetails
                                         <Card.Body className="p-3">
                                             <div className="behav_assmnt">
                                                 {groupState.map((item, index) => (
-                                                    <Col key={index} md={3}>
+                                                    <Col key={index} md={3} className='mb-2 mt-1' >
                                                         <div
                                                             className={`assmntbox ${item?.isSelected ? "active" : ""}`}
                                                             onClick={() => handleBoxClick(index, item)}

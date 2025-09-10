@@ -267,6 +267,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                                     }
                                 })
                             } else {
+                                setShow(false)
                                 setBehaviourAssModel(false)
                                 toast.info('Quiz is not assigned for this job')                                
                             }
@@ -309,6 +310,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                                     }
                                 })
                             } else {
+                                setShow(false)
                                 setBehaviourAssModel(false)
                                 toast.info('Quiz is not assigned for this job')                                
                             }
