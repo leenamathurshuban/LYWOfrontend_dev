@@ -527,7 +527,7 @@ const JobPosts = () => {
     if (buttonText == "View Form Btn") {
       getChatDetailsData()
     }
-  }, [jobPostData,modalOpen.showFirstModal])
+  }, [jobPostData, modalOpen.showFirstModal])
   console.log("buttonText", buttonText)
   console.log(jobPostData?.asset_job)
   console.log(totalWorkExperience)
@@ -1426,8 +1426,8 @@ const JobPosts = () => {
               </Button>
             </div>
           ))}           */}
-              {jobPostData?.asset_job?.map((Val) => {
-                if (Val?.asset_title === 'Technical round for EHS Manager') {
+              {jobPostData?.asset_job?.sort((a, b) => a.id - b.id)?.map((Val) => {
+                if (Val?.asset_type === 'Quiz') {
                   return (
                     <div className={`${localStorage.getItem("assestQuiz") === 'Completed' ? 'complate_status' : localStorage.getItem("assestQuiz") == 'Draft' ? 'pending_status' : ''} progress_box`}>
                       <h5>
@@ -1460,7 +1460,7 @@ const JobPosts = () => {
                       )}
                     </div>
                   )
-                } else if (Val?.asset_title === 'Pre-interview round for creative director') {
+                } else if (Val?.asset_type === 'Assignment') {
                   return (
                     <div className={`${localStorage.getItem("preAssestQuiz") === 'Completed' ? 'complate_status' : localStorage.getItem("preAssestQuiz") == 'Draft' ? 'pending_status' : ''} progress_box`}>
                       <h5>
