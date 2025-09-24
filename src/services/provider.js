@@ -195,7 +195,7 @@ export const JobDeleteAPI = (data) => {
   const removeresult = client.deleteWithUpload(`${JobsUrl.jobDelete}`, data)
   return removeresult;
 }
-export const deleteBenifitAPI=(id)=>{
+export const deleteBenifitAPI = (id) => {
   const removeBenifit = client.deleteWithUpload(`${JobsUrl.deleteBenifits}${id}`)
   return removeBenifit;
 }
@@ -293,27 +293,48 @@ export const jobApplicantUpdateAPI = (data) => {
   const result = client.putWithUpload(`${JobsUrl.jobApplicantUpdateForList}`, data)
   return result
 }
-export const insightsListAPI=(id)=>{
+export const insightsListAPI = (id) => {
   const result = client.getWithToken(`${GraphBarChartUrl.insightsBarList}${id}`)
   return result
 }
-export const dashboardListAPI=(id)=>{
+export const dashboardListAPI = (id) => {
   const result = client.getWithToken(`${CompanyUrl.DashboardList}${id}`)
   return result
 }
-export const chatPostAPI=(data)=>{
-  const result = client.postWithToken(`${ApplicationJobPostUrl.chatsPost}`,data)
+export const chatPostAPI = (data) => {
+  const result = client.postWithToken(`${ApplicationJobPostUrl.chatsPost}`, data)
   return result
 }
-export const getCandidateListAPI=(id)=>{
+export const getCandidateListAPI = (id) => {
   const result = client.getWithToken(`${ApplicationJobPostUrl.getCandidate}${id}`)
   return result
 }
-export const chatDetailsAPI=(aplUid,jobUid)=>{
+export const chatDetailsAPI = (aplUid, jobUid) => {
   const result = client.getWithToken(`${ApplicationJobPostUrl.chatDetails}${aplUid}/job-uid/${jobUid}/`)
   return result
 }
-export const getCandidateListForSingleJob=(jobUid)=>{
+export const getCandidateListForSingleJob = (jobUid) => {
   const result = client.getWithToken(`${ApplicationJobPostUrl.getCandidateListforSingleJob}${jobUid}/?page=1&limit=2000`)
+  return result
+}
+
+export const postAutomationDataAPI = (data) => {
+  const result = client.postWithToken(`${ApplicationJobPostUrl.postAutomationData}`, data)
+  return result
+}
+export const updateAutomationDataAPI = (id, data) => {
+  const result = client.putWithUpload(`${ApplicationJobPostUrl.updateAutomationData}${id}/`, data)
+  return result
+}
+export const updateAutomationExecellentAPI = (data) => {
+  const result = client.putWithUpload(`${ApplicationJobPostUrl.updateAutomationExcellnentGroup}`, data)
+  return result
+}
+export const automationListAPI = (id) => {
+  const result = client.getWithToken(`${ApplicationJobPostUrl.automationListUrl}${id}/`)
+  return result
+}
+export const postFinalShortlistAPI = (id) => {
+  const result = client.postWithToken(`${ApplicationJobPostUrl.postFinalShorlistUrl}${id}/`)
   return result
 }

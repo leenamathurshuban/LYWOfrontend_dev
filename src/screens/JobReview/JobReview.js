@@ -72,7 +72,7 @@ import downloadicon from "../../images/icons/download-001.svg"
 
 
 import { useParams } from "react-router-dom";
-import { ApplicationDeatilsApi, chatPostAPI, getAssetDataDetailsAPI, getCandidateListForSingleJob, getJobAssignmentReview, getJobDetailsApi, getJobGroupParameterListAPI, getScreeningParameterDataAPI, insightsListAPI, jobApplicantUpdateAPI, postJobGroupParameterListByFetchAPI, UpdateMultipleJobApi } from "../../services/provider";
+import { ApplicationDeatilsApi, automationListAPI, chatPostAPI, getAssetDataDetailsAPI, getCandidateListForSingleJob, getJobAssignmentReview, getJobDetailsApi, getJobGroupParameterListAPI, getScreeningParameterDataAPI, insightsListAPI, jobApplicantUpdateAPI, postAutomationDataAPI, postFinalShortlistAPI, postJobGroupParameterListByFetchAPI, updateAutomationDataAPI, updateAutomationExecellentAPI, UpdateMultipleJobApi } from "../../services/provider";
 import Evaluations from "./Evaluations";
 import Ratting from "../../components/Ratting";
 import CodeBlock from "../../components/CodeBlock";
@@ -101,6 +101,7 @@ import { transformOverallAndSectionData } from "../../utils/assetgraphLogic";
 
 import CandidateChat from "../../components/Chats/CandidateChat";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const JobReview = () => {
     const codeSnippet = `class WorkloadTracker:
@@ -235,9 +236,9 @@ const JobReview = () => {
 
     const [activeAccordion, setActiveAccordion] = useState('0');
 
-    const handleSaveTemplate = () => {
-        setActiveAccordion('1'); // This will open the second accordion (eventKey="1")
-    };
+    // const handleSaveTemplate = () => {
+    //     setActiveAccordion('1'); // This will open the second accordion (eventKey="1")
+    // };
 
     const [modalShow, setModalShow] = React.useState(false);
 
@@ -257,6 +258,13 @@ const JobReview = () => {
     const [fileName, setFileName] = useState("");
 
     const [description, setDescription] = useState("");
+    const [messageRemind, setMessageRemind] = useState("");
+    const [messageShortlist, setMessageShortlist] = useState("");
+    const [messageRejection, setMessageRejection] = useState("");
+    const [messageFinalised, setMessageFinalised] = useState("");
+    const [rejectionObj, SetRejectionObj] = useState({})
+    const [finalShotObj, SetFinalShotObj] = useState({})
+    const [isExcellentAll, setIsExcellentAll] = useState()
 
     const handleWrapperClick = () => {
         if (quillRef.current) {
@@ -301,7 +309,7 @@ const JobReview = () => {
         const wordCount = value.trim().split(/\s+/).length;
 
         if (wordCount <= MAX_DESCRIPTION_WORDS) {
-            setDescription(value);
+            setMessageRemind(value);
             setDescriptionError("");
         } else {
             setDescriptionError(
@@ -315,7 +323,7 @@ const JobReview = () => {
         const wordCount = value.trim().split(/\s+/).length;
 
         if (wordCount <= MAX_DESCRIPTION_WORDS) {
-            setDescription(value);
+            setMessageShortlist(value);
             setDescriptionError("");
         } else {
             setDescriptionError(
@@ -329,7 +337,7 @@ const JobReview = () => {
         const wordCount = value.trim().split(/\s+/).length;
 
         if (wordCount <= MAX_DESCRIPTION_WORDS) {
-            setDescription(value);
+            setMessageRejection(value);
             setDescriptionError("");
         } else {
             setDescriptionError(
@@ -343,7 +351,7 @@ const JobReview = () => {
         const wordCount = value.trim().split(/\s+/).length;
 
         if (wordCount <= MAX_DESCRIPTION_WORDS) {
-            setDescription(value);
+            setMessageFinalised(value);
             setDescriptionError("");
         } else {
             setDescriptionError(
@@ -685,6 +693,22 @@ const JobReview = () => {
             console.log(error);
         }
     }
+    const getAutomationListData = async (id) => {
+        try {
+            const response = await automationListAPI(id)
+            if (response?.data?.success) {
+                const rejectionObj = response?.data?.response?.find((item) => item.type === "Rejected")
+                const finalShortlistObj = response?.data?.response?.find((item) => item.type === "Final-Selection")
+                setMessageRejection(rejectionObj?.message_template)
+                setMessageFinalised(finalShortlistObj?.message_template)
+                SetRejectionObj(rejectionObj)
+                SetFinalShotObj(finalShortlistObj)
+                setIsExcellentAll(response?.data?.autoshortlist)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
     const formatKey = (key) => {
         // Convert snake_case to readable format like "Area of Education"
         return key
@@ -798,8 +822,6 @@ const JobReview = () => {
             console.log(error);
         }
     }
-
-
 
 
     const getJobDetails = async (id) => {
@@ -974,6 +996,10 @@ const JobReview = () => {
             const response = await getJobGroupParameterListAPI(id)
             if (response.data.success) {
                 setGroupParameterList(response?.data?.response)
+                const obj = response?.data?.response[0]?.parameter_automation?.find((item) => item.type = "Reminder")
+                const obj1 = response?.data?.response[2]?.parameter_automation?.find((item) => item.type = "Shortlist")
+                setMessageRemind(obj?.message_template)
+                setMessageShortlist(obj1?.message_template)
             }
         } catch (error) {
             console.log(error)
@@ -1017,6 +1043,7 @@ const JobReview = () => {
         getScreeningAPI(id)
         getJobAssignmentReviewAPI(id)
         getJobDetails(id)
+        getAutomationListData(id)
         getJobGroupParameterList()
         getInsightsGraphList()
         getListGridData()
@@ -1321,6 +1348,267 @@ const JobReview = () => {
             stopappClose()
         }
     }
+    const handleAutoMationToggle = async (e, parent, child) => {
+        try {
+            const updatedGroups = groupParameterList.map(group =>
+                group.uid === parent?.uid
+                    ? {
+                        ...group,
+                        groups_parameter: group.groups_parameter.map(item =>
+                            item.uid === child?.uid
+                                ? { ...item, is_auto_reminde: !item.is_auto_reminde, is_auto_shortlist: !item.is_auto_shortlist }
+                                : item
+                        ),
+                    }
+                    : group
+            );
+            setGroupParameterList(updatedGroups)
+            const formData = new FormData();
+            formData.append("job_uid", id)
+            formData.append("parameter_uid", parent?.uid)
+            formData.append("group_uid", child?.uid)
+            let automation_uid;
+            if (child?.group_name == "Incomplete") {
+                const obj = parent?.parameter_automation?.find((val) => val.type == "Reminder")
+                automation_uid = obj?.uid;
+                formData.append("auto_remind_status", e.target.checked)
+            }
+            // else if (child?.group_name == "Rejected") {                
+            //     automation_uid = rejectionObj?.uid;
+            //     formData.append("auto_remind_status", e.target.checked)
+            // }
+            else {
+                const obj = parent?.parameter_automation?.find((val) => val.type == "Shortlist")
+                automation_uid = obj?.uid;
+                formData.append("auto_short_list_status", e.target.checked)
+            }
+            if (automation_uid) {
+                const res = await updateAutomationDataAPI(automation_uid, formData)
+            } else {
+                toast.error("please create message template")
+            }
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+    const handleSaveTemplate = async (parameterUid, type) => {
+        try {
+            const formData = new FormData();
+            formData.append("job_uid", id);
+            formData.append("type", type)
+            if (type == "Reminder") {
+                // formData.append("auto_remind_status", true)
+                formData.append("message_template", messageRemind)
+                formData.append("parameter_uid", parameterUid)
+            } else if (type == "Shortlist") {
+                formData.append("auto_short_list_status", true)
+                formData.append("message_template", messageShortlist)
+                formData.append("parameter_uid", parameterUid)
+            } else if (type == "Rejected") {
+                formData.append("message_template", messageRejection)
+            } else if (type == "Final-Selection") {
+                formData.append("message_template", messageFinalised)
+            }
+            const res = await postAutomationDataAPI(formData)
+            // debugger
+        } catch (error) {
+            console.log(error)
+            // if (error?.response?.data?.response?.error[0]) {
+            // }
+            // debugger
+        }
+    }
+    const handleAllExcellentGroup = async (e) => {
+        try {
+            setIsExcellentAll(!isExcellentAll)
+            const formData = new FormData();
+            formData.append("job_uid", id);
+            formData.append("type", "Shortlist");
+            const screenAuto = groupParameterList[2]?.parameter_automation?.find((item) => item.type == "Shortlist")
+            const quizAuto = groupParameterList[3]?.parameter_automation?.find((item) => item.type == "Shortlist")
+            const assAuto = groupParameterList[4]?.parameter_automation?.find((item) => item.type == "Shortlist")
+            formData.append("automation_uids", JSON.stringify([screenAuto?.uid, quizAuto?.uid, assAuto?.uid]))
+            formData.append("parameter_uids", JSON.stringify([groupParameterList[2]?.uid, groupParameterList[3]?.uid, groupParameterList[4]?.uid]));
+            if (e?.target?.checked) {
+                formData.append("auto_short_list_status", e.target.checked);
+            } else {
+                formData.append("auto_short_list_status", e.target.checked);
+            }
+            const res = await updateAutomationExecellentAPI(formData)
+            // const res = await postAutomationDataAPI(formData)
+            // debugger
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    const handleCloseToggle = async (e) => {
+        try {
+            SetRejectionObj({
+                ...rejectionObj,
+                is_job_closed: !rejectionObj.is_job_closed
+            })
+            const formData = new FormData();
+            formData.append("job_uid", id);
+            formData.append("type", "Rejected");
+            formData.append("automation_uids", JSON.stringify([rejectionObj?.uid]))
+            if (e?.target?.checked) {
+                formData.append("is_job_closed", e?.target?.checked)
+            } else {
+                formData.append("is_job_closed", e?.target?.checked)
+            }
+            const res = await updateAutomationExecellentAPI(formData)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    const handleIsFinalToggle = async (e) => {
+        try {
+            SetFinalShotObj({
+                ...finalShotObj,
+                is_final_selection: !finalShotObj.is_final_selection
+            })
+            const formData = new FormData();
+            formData.append("job_uid", id);
+            formData.append("type", "Final-Selection");
+            formData.append("automation_uids", JSON.stringify([finalShotObj?.uid]))
+            if (e?.target?.checked) {
+                formData.append("is_final_selection", e?.target?.checked)
+            } else {
+                formData.append("is_final_selection", e?.target?.checked)
+            }
+            const res = await updateAutomationExecellentAPI(formData)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    const handleEditTemplate = async (paraUid, obj, type) => {
+        try {
+            const formData = new FormData();
+            formData.append("job_uid", id)
+            formData.append("type", type);
+            if (type == "Reminder") {
+                formData.append("message_template", messageRemind)
+                formData.append("automation_uids", JSON.stringify([obj.uid]))
+                formData.append("parameter_uids", JSON.stringify([paraUid]))
+            } else if (type == "Shortlist") {
+                formData.append("message_template", messageShortlist)
+                formData.append("automation_uids", JSON.stringify([obj.uid]))
+                formData.append("parameter_uids", JSON.stringify([paraUid]))
+            } else if (type == "Rejected") {
+                formData.append("automation_uids", JSON.stringify([rejectionObj?.uid]))
+                formData.append("message_template", messageRejection)
+            } else if (type == "Final-Selection") {
+                formData.append("automation_uids", JSON.stringify([finalShotObj?.uid]))
+                formData.append("message_template", messageFinalised)
+            }
+            // const res = await updateAutomationDataAPI(obj?.uid, formData)
+            const res = await updateAutomationExecellentAPI(formData)
+            // debugger
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const AutoRemindComponent = ({ uid, EditTrue, findObj }) => {
+        return (
+            <Form.Group className="mb-2" controlId="jobDescription">
+                <Form.Label>
+                    Message Template
+                </Form.Label>
+                <div className="texteditor_warp"
+                // onClick={handleWrapperClick}
+                >
+                    <ReactQuill
+                        value={messageRemind}
+                        onChange={handleEditorChange}
+                        theme="snow"
+                        // ref={quillRef}
+                        className="custom-quill"
+                        modules={{
+                            toolbar: [["bold", "italic", "underline", "strike"], ["link"]],
+                        }}
+                    />
+                </div>
+                <div className="d-flex justify-content-between custom-checkbox mt-3">
+                    <Form.Check // prettier-ignore
+                        type="checkbox"
+                        id={`default-checkbox`}
+                        label={`Do not prompt me to edit emails every time i enable automation. `}
+                    />
+
+                    <Button variant="primary" style={{ color: '#fff' }} onClick={() => {
+                        if (EditTrue) {
+                            handleEditTemplate(uid, findObj, "Reminder")
+                        } else {
+                            handleSaveTemplate(uid, "Reminder")
+                        }
+                    }}  >Save Template</Button>
+                </div>
+
+                {descriptionError && (
+                    <div className="error">{descriptionError}</div>
+                )}
+                {errors.detailed_description && (
+                    <div className="error">{errors.detailed_description}</div>
+                )}
+            </Form.Group>
+        )
+    }
+    const AutoshortlistComponent = ({ uid, EditTrue, findObj }) => {
+        return (
+            <Form.Group className="mb-2" controlId="jobDescription">
+                <Form.Label>
+                    Message Template
+                </Form.Label>
+
+                <div className="texteditor_warp"
+                // onClick={handleWrapperClick}
+                >
+                    <ReactQuill
+                        value={messageShortlist}
+                        onChange={handleEditorChange1}
+                        theme="snow"
+                        ref={quillRef}
+                        modules={{
+                            toolbar: [["bold", "italic", "underline", "strike"], ["link"]],
+                        }}
+                    />
+                </div>
+
+                <div className="d-flex justify-content-between custom-checkbox mt-3">
+                    <Form.Check // prettier-ignore
+                        type="checkbox"
+                        id={`default-checkbox`}
+                        label={`Do not prompt me to edit emails every time i enable automation. `}
+                    />
+
+                    <Button variant="primary" style={{ color: '#fff' }} onClick={() => {
+                        if (EditTrue) {
+                            handleEditTemplate(uid, findObj, "Shortlist")
+                        } else {
+                            handleSaveTemplate(uid, "Shortlist")
+                        }
+                    }}  >Save Template</Button>
+                </div>
+
+                {descriptionError && (
+                    <div className="error">{descriptionError}</div>
+                )}
+                {errors.detailed_description && (
+                    <div className="error">{errors.detailed_description}</div>
+                )}
+            </Form.Group>
+        )
+    }
+    const handleFinaliseCandidateList = async () => {
+        try {
+            const res = await postFinalShortlistAPI(id)
+            // debugger
+        } catch (error) {
+            console.log(error)
+        }
+    }
     // console.log(assignmentReviewList)
     // console.log('section', sectionWiseData)
     // console.log(questionWiseData)
@@ -1331,6 +1619,8 @@ const JobReview = () => {
     console.log(mode)
     console.log('=======================ListShow', ListShow, ListData)
     console.log(jobDetails)
+    console.log(messageRemind)
+    console.log(isExcellentAll)
     return (
         <>
             <Sidebar />
@@ -1379,7 +1669,7 @@ const JobReview = () => {
                                 <button className="btn btn-traspant"
                                     onClick={() => {
                                         setListShow(true)
-                                        setListData(ListGrid.slice(0,10))
+                                        setListData(ListGrid.slice(0, 10))
                                     }}
                                 ><img src={listView} /></button>
                             </Col>
@@ -2136,58 +2426,70 @@ const JobReview = () => {
                                                                 <div className="eval-vertical-scrool ct_scrollbar ">
                                                                     {paraName?.groups_parameter?.sort((a, b) => a.id - b.id)?.map((groupItem) => (
                                                                         <>
-
-                                                                            <div className={`sts_databox ${groupItem?.group_name.toLowerCase()}`}
-                                                                                onClick={() => setExpandedGroup(prev =>
-                                                                                    prev === paraName.uid ? null : paraName.uid
-                                                                                )}
-                                                                            >
-                                                                                <div className="d-flex justify-content-between">
-                                                                                    <h6>{groupItem?.group_name}
-                                                                                        {(paraName?.parameter_name == "Application" || paraName?.parameter_name == "Behaviour") && (
-                                                                                            <span className="count">{groupItem?.group_wise_applicant_count}</span>
-                                                                                        )}
-                                                                                    </h6>
-                                                                                    {(paraName?.parameter_name == "Application" || paraName?.parameter_name == "Behaviour") ? (
-                                                                                        ""
-                                                                                    ) : (groupItem?.group_wise_applicant_count > 0 && <span className="badge bg-outline-success">{groupItem?.group_wise_applicant_count} pending</span>)}
-                                                                                </div>
-                                                                                <div className="remind-checkbox ">
-                                                                                    <div className="d-flex justify-content-between align-items-end">
-                                                                                        <Form>
-                                                                                            <Form.Check
-                                                                                                type="switch"
-                                                                                                id="custom-switch"
-                                                                                                label="Auto-Remind"
-                                                                                            />
-                                                                                        </Form>
-                                                                                        {/* <button className="button" class="btn-transpant" onClick={() => {
+                                                                            {paraName?.parameter_name == "Screening" && groupItem?.group_name === "Incomplete" ? ("") : (
+                                                                                <div className={`sts_databox ${groupItem?.group_name.toLowerCase()}`}>
+                                                                                    <div className="d-flex justify-content-between"
+                                                                                        onClick={() => setExpandedGroup(prev =>
+                                                                                            prev === paraName.uid ? null : paraName.uid
+                                                                                        )}>
+                                                                                        <h6>{groupItem?.group_name}
+                                                                                            {(paraName?.parameter_name == "Application" || paraName?.parameter_name == "Behaviour") && (
+                                                                                                <span className="count">{groupItem?.group_wise_applicant_count}</span>
+                                                                                            )}
+                                                                                        </h6>
+                                                                                        {(paraName?.parameter_name == "Application" || paraName?.parameter_name == "Behaviour") ? (
+                                                                                            ""
+                                                                                        ) : (groupItem?.group_wise_applicant_count > 0 && <span className="badge bg-outline-success">{groupItem?.group_wise_applicant_count} pending</span>)}
+                                                                                    </div>
+                                                                                    <div className="remind-checkbox ">
+                                                                                        <div className="d-flex justify-content-between align-items-end">
+                                                                                            {paraName?.parameter_name !== "Application" && paraName?.parameter_name !== "Behaviour" && (
+                                                                                                <Form>
+                                                                                                    <Form.Check
+                                                                                                        type="switch"
+                                                                                                        id="custom-switch"
+                                                                                                        checked={groupItem?.is_auto_shortlist}
+                                                                                                        label={groupItem?.group_name === "Incomplete" ? "Auto-Remind" : "Auto Shortlist"}
+                                                                                                        onClick={(e) => handleAutoMationToggle(e, paraName, groupItem)}
+                                                                                                    />
+                                                                                                </Form>
+                                                                                            )}
+                                                                                            {(paraName?.parameter_name == "Application" || paraName?.parameter_name == "Behaviour") && groupItem?.group_name === "Incomplete" && (
+                                                                                                <Form>
+                                                                                                    <Form.Check
+                                                                                                        type="switch"
+                                                                                                        id="custom-switch"
+                                                                                                        checked={groupItem?.is_auto_reminde}
+                                                                                                        label="Auto-Remind"
+                                                                                                        onClick={(e) => handleAutoMationToggle(e, paraName, groupItem)}
+                                                                                                    />
+                                                                                                </Form>
+                                                                                            )}
+                                                                                            {/* <button className="button" class="btn-transpant" onClick={() => {
                                                                                         handleListData(groupItem);
                                                                                         setGroupParameterId(paraName?.uid)
                                                                                         setGroupTitleName(groupItem?.group_name)
                                                                                         setParamUid(groupItem?.uid)
                                                                                     }}><i class="fa fa-list-ul" aria-hidden="true"></i></button> */}
-                                                                                        <div className="right-cols">
-                                                                                            <button className="button" class="btn-transpant me-2">
+                                                                                            <div className="right-cols">
+                                                                                                {/* <button className="button" class="btn-transpant me-2">
                                                                                                 <img src={trash} className="img-fluid" alt="Trash" />
-                                                                                            </button>
+                                                                                            </button> */}
 
-                                                                                            <button className="button" class="btn-transpant" onClick={() =>
-                                                                                                // handleListData(groupItem)
-                                                                                                fetchListAPIByKey(paraName?.uid, groupItem?.group_name, groupItem?.uid)
-                                                                                            }>
-                                                                                                {/* <i class="fa fa-list-ul" aria-hidden="true"></i> */}
-                                                                                                <img src={list} className="img-fluid" alt="Trash" />
-
-
-                                                                                            </button>
+                                                                                                <button className="button" class="btn-transpant" onClick={() =>
+                                                                                                    // handleListData(groupItem)
+                                                                                                    fetchListAPIByKey(paraName?.uid, groupItem?.group_name, groupItem?.uid)
+                                                                                                }>
+                                                                                                    {/* <i class="fa fa-list-ul" aria-hidden="true"></i> */}
+                                                                                                    <img src={list} className="img-fluid" alt="Trash" />
+                                                                                                </button>
+                                                                                            </div>
                                                                                         </div>
+
                                                                                     </div>
-
                                                                                 </div>
-                                                                            </div>
+                                                                            )}
                                                                         </>
-
                                                                     ))}
                                                                 </div>
                                                                 {/* <div className="sts_databox excellent">
@@ -2216,7 +2518,7 @@ const JobReview = () => {
                                                     <Card className="status_cardpanel">
                                                         <Card.Body className="text-center d-flex align-items-center justify-content-center flex-column">
                                                             <button type="button" className="btn btn-light-primery w-100" onClick={handleShow}><i className="fa fa-plus me-2"></i>Add Evaluation</button>
-                                                            <button type="button" className="btn btn-white mt-2 w-100"><img src={Finalise} className="imgfluid me-2" alt="finalise" />  Finalise Selection</button>
+                                                            {groupParameterList.find((item) => item.parameter_name == "Final Selection") ? '' : <button type="button" className="btn btn-white mt-2 w-100" onClick={handleFinaliseCandidateList}><img src={Finalise} className="imgfluid me-2" alt="finalise" />  Finalise Selection</button>}
                                                         </Card.Body>
                                                     </Card>
                                                 </Col>
@@ -3260,10 +3562,9 @@ const JobReview = () => {
                                         <Tabs
                                             defaultActiveKey="Application"
                                             id="automation-tab-example"
-                                            className="mb-3"
-                                        >
+                                            className="mb-3"                                        >
                                             <Tab eventKey="Application" title="Application">
-                                                <Form.Group className="mb-2">
+                                                {/* <Form.Group className="mb-2">
                                                     <Form.Label>
                                                         Reminder Interval
                                                     </Form.Label>
@@ -3314,28 +3615,25 @@ const JobReview = () => {
                                                             />
                                                         </div>
                                                     </div>
-                                                </Form.Group>
-
+                                                </Form.Group> */}
                                                 <Form.Group className="mb-2" controlId="jobDescription">
                                                     <Form.Label>
                                                         Message Template
                                                     </Form.Label>
-
-                                                    <div className="texteditor_warp" onClick={handleWrapperClick}>
+                                                    <div className="texteditor_warp"
+                                                    // onClick={handleWrapperClick}
+                                                    >
                                                         <ReactQuill
-                                                            value={description}
+                                                            value={messageRemind}
                                                             onChange={handleEditorChange}
                                                             theme="snow"
-                                                            ref={quillRef}
+                                                            // ref={quillRef}
                                                             className="custom-quill"
                                                             modules={{
                                                                 toolbar: [["bold", "italic", "underline", "strike"], ["link"]],
                                                             }}
                                                         />
-
-
                                                     </div>
-
                                                     <div className="d-flex justify-content-between custom-checkbox mt-3">
                                                         <Form.Check // prettier-ignore
                                                             type="checkbox"
@@ -3343,7 +3641,13 @@ const JobReview = () => {
                                                             label={`Do not prompt me to edit emails every time i enable automation. `}
                                                         />
 
-                                                        <Button variant="primary" style={{ color: '#fff' }} onClick={handleSaveTemplate}  >Save Template</Button>
+                                                        <Button variant="primary" style={{ color: '#fff' }} onClick={() => {
+                                                            if (groupParameterList[0]?.parameter_automation?.find((item) => item.type == "Reminder")) {
+                                                                handleEditTemplate(groupParameterList[0]?.uid, groupParameterList[0]?.parameter_automation?.find((item) => item.type == "Reminder"), "Reminder")
+                                                            } else {
+                                                                handleSaveTemplate(groupParameterList[0]?.uid, "Reminder")
+                                                            }
+                                                        }}  >Save Template</Button>
                                                     </div>
 
                                                     {descriptionError && (
@@ -3354,20 +3658,154 @@ const JobReview = () => {
                                                     )}
                                                 </Form.Group>
 
+                                                {/* <AutoRemindComponent uid={groupParameterList[0]?.uid}
+                                                    EditTrue={groupParameterList[0]?.parameter_automation?.find((item) => item.type == "Reminder") ? true : false}
+                                                    findObj={groupParameterList[0]?.parameter_automation?.find((item) => item.type == "Reminder")}
+                                                /> */}
                                             </Tab>
                                             <Tab eventKey="Behaviour" title="Behaviour">
-                                                Tab content for Behaviour
+                                                {/* <AutoRemindComponent uid={groupParameterList[1]?.uid}
+                                                    EditTrue={groupParameterList[1]?.parameter_automation?.find((item) => item.type == "Reminder") ? true : false}
+                                                    findObj={groupParameterList[1]?.parameter_automation?.find((item) => item.type == "Reminder")}
+                                                /> */}
+                                                <Form.Group className="mb-2" controlId="jobDescription">
+                                                    <Form.Label>
+                                                        Message Template
+                                                    </Form.Label>
+                                                    <div className="texteditor_warp"
+                                                    // onClick={handleWrapperClick}
+                                                    >
+                                                        <ReactQuill
+                                                            value={messageRemind}
+                                                            onChange={handleEditorChange}
+                                                            theme="snow"
+                                                            // ref={quillRef}
+                                                            className="custom-quill"
+                                                            modules={{
+                                                                toolbar: [["bold", "italic", "underline", "strike"], ["link"]],
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <div className="d-flex justify-content-between custom-checkbox mt-3">
+                                                        <Form.Check // prettier-ignore
+                                                            type="checkbox"
+                                                            id={`default-checkbox`}
+                                                            label={`Do not prompt me to edit emails every time i enable automation. `}
+                                                        />
+
+                                                        <Button variant="primary" style={{ color: '#fff' }} onClick={() => {
+                                                            if (groupParameterList[1]?.parameter_automation?.find((item) => item.type == "Reminder")) {
+                                                                handleEditTemplate(groupParameterList[1]?.uid, groupParameterList[1]?.parameter_automation?.find((item) => item.type == "Reminder"), "Reminder")
+                                                            } else {
+                                                                handleSaveTemplate(groupParameterList[1]?.uid, "Reminder")
+                                                            }
+                                                        }}  >Save Template</Button>
+                                                    </div>
+
+                                                    {descriptionError && (
+                                                        <div className="error">{descriptionError}</div>
+                                                    )}
+                                                    {errors.detailed_description && (
+                                                        <div className="error">{errors.detailed_description}</div>
+                                                    )}
+                                                </Form.Group>
                                             </Tab>
                                             <Tab eventKey="Testquiz" title="Test Quiz" >
-                                                Tab content for Test Quiz
+                                                {/* <AutoRemindComponent uid={groupParameterList[3]?.uid}
+                                                    EditTrue={groupParameterList[3]?.parameter_automation?.find((item) => item.type == "Reminder") ? true : false}
+                                                    findObj={groupParameterList[3]?.parameter_automation?.find((item) => item.type == "Reminder")}
+                                                /> */}
+                                                <Form.Group className="mb-2" controlId="jobDescription">
+                                                    <Form.Label>
+                                                        Message Template
+                                                    </Form.Label>
+                                                    <div className="texteditor_warp"
+                                                    // onClick={handleWrapperClick}
+                                                    >
+                                                        <ReactQuill
+                                                            value={messageRemind}
+                                                            onChange={handleEditorChange}
+                                                            theme="snow"
+                                                            // ref={quillRef}
+                                                            className="custom-quill"
+                                                            modules={{
+                                                                toolbar: [["bold", "italic", "underline", "strike"], ["link"]],
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <div className="d-flex justify-content-between custom-checkbox mt-3">
+                                                        <Form.Check // prettier-ignore
+                                                            type="checkbox"
+                                                            id={`default-checkbox`}
+                                                            label={`Do not prompt me to edit emails every time i enable automation. `}
+                                                        />
+
+                                                        <Button variant="primary" style={{ color: '#fff' }} onClick={() => {
+                                                            if (groupParameterList[3]?.parameter_automation?.find((item) => item.type == "Reminder")) {
+                                                                handleEditTemplate(groupParameterList[3]?.uid, groupParameterList[3]?.parameter_automation?.find((item) => item.type == "Reminder"), "Reminder")
+                                                            } else {
+                                                                handleSaveTemplate(groupParameterList[3]?.uid, "Reminder")
+                                                            }
+                                                        }}  >Save Template</Button>
+                                                    </div>
+
+                                                    {descriptionError && (
+                                                        <div className="error">{descriptionError}</div>
+                                                    )}
+                                                    {errors.detailed_description && (
+                                                        <div className="error">{errors.detailed_description}</div>
+                                                    )}
+                                                </Form.Group>
                                             </Tab>
                                             <Tab eventKey="Assignment" title="Assignment" >
-                                                Tab content for Assignment
+                                                {/* <AutoRemindComponent uid={groupParameterList[4]?.uid}
+                                                    EditTrue={groupParameterList[4]?.parameter_automation?.find((item) => item.type == "Reminder") ? true : false}
+                                                    findObj={groupParameterList[4]?.parameter_automation?.find((item) => item.type == "Reminder")}
+                                                /> */}
+                                                <Form.Group className="mb-2" controlId="jobDescription">
+                                                    <Form.Label>
+                                                        Message Template
+                                                    </Form.Label>
+                                                    <div className="texteditor_warp"
+                                                    // onClick={handleWrapperClick}
+                                                    >
+                                                        <ReactQuill
+                                                            value={messageRemind}
+                                                            onChange={handleEditorChange}
+                                                            theme="snow"
+                                                            // ref={quillRef}
+                                                            className="custom-quill"
+                                                            modules={{
+                                                                toolbar: [["bold", "italic", "underline", "strike"], ["link"]],
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <div className="d-flex justify-content-between custom-checkbox mt-3">
+                                                        <Form.Check // prettier-ignore
+                                                            type="checkbox"
+                                                            id={`default-checkbox`}
+                                                            label={`Do not prompt me to edit emails every time i enable automation. `}
+                                                        />
+
+                                                        <Button variant="primary" style={{ color: '#fff' }} onClick={() => {
+                                                            if (groupParameterList[4]?.parameter_automation?.find((item) => item.type == "Reminder")) {
+                                                                handleEditTemplate(groupParameterList[4]?.uid, groupParameterList[4]?.parameter_automation?.find((item) => item.type == "Reminder"), "Reminder")
+                                                            } else {
+                                                                handleSaveTemplate(groupParameterList[4]?.uid, "Reminder")
+                                                            }
+                                                        }}  >Save Template</Button>
+                                                    </div>
+
+                                                    {descriptionError && (
+                                                        <div className="error">{descriptionError}</div>
+                                                    )}
+                                                    {errors.detailed_description && (
+                                                        <div className="error">{errors.detailed_description}</div>
+                                                    )}
+                                                </Form.Group>
                                             </Tab>
                                         </Tabs>
                                     </div>
-
-
                                 </Accordion.Body>
                             </Accordion.Item>
                             <Accordion.Item eventKey="1">
@@ -3375,26 +3813,30 @@ const JobReview = () => {
                                     <Form.Check
                                         type="switch"
                                         id="auto-switch"
-                                        label="Enable auto shortlist throughout the pipeline"
+                                        label="Enable auto shortlist throughout for excellent group"
+                                        checked={isExcellentAll}
+                                        onChange={handleAllExcellentGroup}
                                     />
-                                </Form> </Accordion.Header>
+                                </Form>
+                                </Accordion.Header>
                                 <Accordion.Body className="pt-0">
                                     <div className="autoremider-body">
                                         <Tabs
-                                            defaultActiveKey="Application"
+                                            defaultActiveKey="Screening"
                                             id="automation-tab-example"
                                             className="mb-3"
                                         >
-                                            <Tab eventKey="Application" title="Application">
-
+                                            <Tab eventKey="Screening" title="Screening">
                                                 <Form.Group className="mb-2" controlId="jobDescription">
                                                     <Form.Label>
                                                         Message Template
                                                     </Form.Label>
 
-                                                    <div className="texteditor_warp" onClick={handleWrapperClick}>
+                                                    <div className="texteditor_warp"
+                                                    // onClick={handleWrapperClick}
+                                                    >
                                                         <ReactQuill
-                                                            value={description}
+                                                            value={messageShortlist}
                                                             onChange={handleEditorChange1}
                                                             theme="snow"
                                                             ref={quillRef}
@@ -3402,8 +3844,6 @@ const JobReview = () => {
                                                                 toolbar: [["bold", "italic", "underline", "strike"], ["link"]],
                                                             }}
                                                         />
-
-
                                                     </div>
 
                                                     <div className="d-flex justify-content-between custom-checkbox mt-3">
@@ -3413,7 +3853,109 @@ const JobReview = () => {
                                                             label={`Do not prompt me to edit emails every time i enable automation. `}
                                                         />
 
-                                                        <Button variant="primary" style={{ color: '#fff' }}   >Save Template</Button>
+                                                        <Button variant="primary" style={{ color: '#fff' }} onClick={() => {
+                                                            if (groupParameterList[2]?.parameter_automation?.find((item) => item.type == "Shortlist")) {
+                                                                handleEditTemplate(groupParameterList[2]?.uid, groupParameterList[2]?.parameter_automation?.find((item) => item.type == "Shortlist"), "Shortlist")
+                                                            } else {
+                                                                handleSaveTemplate(groupParameterList[2]?.uid, "Shortlist")
+                                                            }
+                                                        }}  >Save Template</Button>
+                                                    </div>
+
+                                                    {descriptionError && (
+                                                        <div className="error">{descriptionError}</div>
+                                                    )}
+                                                    {errors.detailed_description && (
+                                                        <div className="error">{errors.detailed_description}</div>
+                                                    )}
+                                                </Form.Group>
+                                                {/* <AutoshortlistComponent uid={groupParameterList[2]?.uid}
+                                                    EditTrue={groupParameterList[2]?.parameter_automation?.find((item) => item.type == "Shortlist") ? true : false}
+                                                    findObj={groupParameterList[2]?.parameter_automation?.find((item) => item.type == "Shortlist")}
+                                                /> */}
+                                            </Tab>
+                                            <Tab eventKey="Testquiz" title="Test Quiz" >
+                                                <Form.Group className="mb-2" controlId="jobDescription">
+                                                    <Form.Label>
+                                                        Message Template
+                                                    </Form.Label>
+
+                                                    <div className="texteditor_warp"
+                                                    // onClick={handleWrapperClick}
+                                                    >
+                                                        <ReactQuill
+                                                            value={messageShortlist}
+                                                            onChange={handleEditorChange1}
+                                                            theme="snow"
+                                                            ref={quillRef}
+                                                            modules={{
+                                                                toolbar: [["bold", "italic", "underline", "strike"], ["link"]],
+                                                            }}
+                                                        />
+                                                    </div>
+
+                                                    <div className="d-flex justify-content-between custom-checkbox mt-3">
+                                                        <Form.Check // prettier-ignore
+                                                            type="checkbox"
+                                                            id={`default-checkbox`}
+                                                            label={`Do not prompt me to edit emails every time i enable automation. `}
+                                                        />
+
+                                                        <Button variant="primary" style={{ color: '#fff' }} onClick={() => {
+                                                            if (groupParameterList[3]?.parameter_automation?.find((item) => item.type == "Shortlist")) {
+                                                                handleEditTemplate(groupParameterList[3]?.uid, groupParameterList[3]?.parameter_automation?.find((item) => item.type == "Shortlist"), "Shortlist")
+                                                            } else {
+                                                                handleSaveTemplate(groupParameterList[3]?.uid, "Shortlist")
+                                                            }
+                                                        }}  >Save Template</Button>
+                                                    </div>
+
+                                                    {descriptionError && (
+                                                        <div className="error">{descriptionError}</div>
+                                                    )}
+                                                    {errors.detailed_description && (
+                                                        <div className="error">{errors.detailed_description}</div>
+                                                    )}
+                                                </Form.Group>
+                                                {/* <AutoshortlistComponent uid={groupParameterList[3]?.uid}
+                                                    EditTrue={groupParameterList[3]?.parameter_automation?.find((item) => item.type == "Shortlist") ? true : false}
+                                                    findObj={groupParameterList[3]?.parameter_automation?.find((item) => item.type == "Shortlist")}
+                                                /> */}
+                                            </Tab>
+                                            <Tab eventKey="Assignment" title="Assignment" >
+                                                <Form.Group className="mb-2" controlId="jobDescription">
+                                                    <Form.Label>
+                                                        Message Template
+                                                    </Form.Label>
+
+                                                    <div className="texteditor_warp"
+                                                    // onClick={handleWrapperClick}
+                                                    >
+                                                        <ReactQuill
+                                                            value={messageShortlist}
+                                                            onChange={handleEditorChange1}
+                                                            theme="snow"
+                                                            ref={quillRef}
+                                                            modules={{
+                                                                toolbar: [["bold", "italic", "underline", "strike"], ["link"]],
+                                                            }}
+                                                        />
+                                                    </div>
+
+                                                    <div className="d-flex justify-content-between custom-checkbox mt-3">
+                                                        <Form.Check // prettier-ignore
+                                                            type="checkbox"
+                                                            id={`default-checkbox`}
+                                                            label={`Do not prompt me to edit emails every time i enable automation. `}
+                                                        />
+
+                                                        <Button variant="primary" style={{ color: '#fff' }} onClick={() => {
+                                                            if (groupParameterList[4]?.parameter_automation?.find((item) => item.type == "Shortlist")) {
+                                                                handleEditTemplate(groupParameterList[4]?.uid, groupParameterList[4]?.parameter_automation?.find((item) => item.type == "Shortlist"), "Shortlist")
+                                                            } else {
+                                                                handleSaveTemplate(groupParameterList[4]?.uid, "Shortlist")
+                                                            }
+                                                        }}  >Save Template</Button>
                                                     </div>
 
                                                     {descriptionError && (
@@ -3424,15 +3966,10 @@ const JobReview = () => {
                                                     )}
                                                 </Form.Group>
 
-                                            </Tab>
-                                            <Tab eventKey="Behaviour" title="Behaviour">
-                                                Tab content for Behaviour
-                                            </Tab>
-                                            <Tab eventKey="Testquiz" title="Test Quiz" >
-                                                Tab content for Test Quiz
-                                            </Tab>
-                                            <Tab eventKey="Assignment" title="Assignment" >
-                                                Tab content for Assignment
+                                                {/* <AutoshortlistComponent uid={groupParameterList[4]?.uid}
+                                                    EditTrue={groupParameterList[4]?.parameter_automation?.find((item) => item.type == "Shortlist") ? true : false}
+                                                    findObj={groupParameterList[4]?.parameter_automation?.find((item) => item.type == "Shortlist")}
+                                                /> */}
                                             </Tab>
                                         </Tabs>
                                     </div>
@@ -3444,97 +3981,27 @@ const JobReview = () => {
                                 <Accordion.Header>Rejected candidates response </Accordion.Header>
                                 <Accordion.Body className="pt-0">
                                     <div className="autoremider-body">
-                                        <Form.Check // prettier-ignore
-                                            type="switch"
-                                            id="custom-switch-2"
-                                            label="Enable auto reject throughout the pipeline (Poor Group only)"
-                                        />
 
                                         <Form.Check // prettier-ignore
                                             type="switch"
                                             id="custom-switch-3"
                                             label="Auto Reject Candidates who have not been selected once the job application is closed "
-                                        />
-                                        <Tabs
-                                            defaultActiveKey="Application"
-                                            id="automation-tab-example"
-                                            className="mb-3"
-                                        >
-                                            <Tab eventKey="Application" title="Application">
-
-
-                                                <Form.Group className="mb-2" controlId="jobDescription">
-                                                    <Form.Label>
-                                                        Message Template
-                                                    </Form.Label>
-
-                                                    <div className="texteditor_warp" onClick={handleWrapperClick}>
-                                                        <ReactQuill
-                                                            value={description}
-                                                            onChange={handleEditorChange2}
-                                                            theme="snow"
-                                                            ref={quillRef}
-                                                            modules={{
-                                                                toolbar: [["bold", "italic", "underline", "strike"], ["link"]],
-                                                            }}
-                                                        />
-
-
-                                                    </div>
-
-                                                    <div className="d-flex justify-content-between custom-checkbox mt-3">
-                                                        <Form.Check // prettier-ignore
-                                                            type="checkbox"
-                                                            id={`default-checkbox`}
-                                                            label={`Do not prompt me to edit emails every time i enable automation. `}
-                                                        />
-
-                                                        <Button variant="primary" style={{ color: '#fff' }}  >Save Template</Button>
-                                                    </div>
-
-                                                    {descriptionError && (
-                                                        <div className="error">{descriptionError}</div>
-                                                    )}
-                                                    {errors.detailed_description && (
-                                                        <div className="error">{errors.detailed_description}</div>
-                                                    )}
-                                                </Form.Group>
-
-                                            </Tab>
-                                            <Tab eventKey="Behaviour" title="Behaviour">
-                                                Tab content for Behaviour
-                                            </Tab>
-                                            <Tab eventKey="Testquiz" title="Test Quiz" >
-                                                Tab content for Test Quiz
-                                            </Tab>
-                                            <Tab eventKey="Assignment" title="Assignment" >
-                                                Tab content for Assignment
-                                            </Tab>
-                                        </Tabs>
-                                    </div>
-                                </Accordion.Body>
-                            </Accordion.Item>
-
-                            <Accordion.Item eventKey="3">
-                                <Accordion.Header>Finalised Candidates response</Accordion.Header>
-                                <Accordion.Body className="pt-0">
-                                    <div className="autoremider-body">
-                                        <Form.Check // prettier-ignore
-                                            type="switch"
-                                            id="custom-switch-3"
-                                            label="Send Auto Response to user who have been shortlised"
+                                            checked={rejectionObj?.is_job_closed}
+                                            onChange={handleCloseToggle}
                                         />
                                         <Form.Group className="mb-2" controlId="jobDescription">
                                             <Form.Label>
                                                 Message Template
                                             </Form.Label>
 
-                                            <div className="texteditor_warp" onClick={handleWrapperClick}>
+                                            <div className="texteditor_warp"
+                                            // onClick={handleWrapperClick}
+                                            >
                                                 <ReactQuill
-                                                    value={description}
-                                                    onChange={handleEditorChange3}
+                                                    value={messageRejection}
+                                                    onChange={handleEditorChange2}
                                                     theme="snow"
-                                                    ref={quillRef}
+                                                    // ref={quillRef}
                                                     modules={{
                                                         toolbar: [["bold", "italic", "underline", "strike"], ["link"]],
                                                     }}
@@ -3548,7 +4015,71 @@ const JobReview = () => {
                                                     label={`Do not prompt me to edit emails every time i enable automation. `}
                                                 />
 
-                                                <Button variant="primary" style={{ color: '#fff' }}  >Save Template</Button>
+                                                <Button variant="primary" style={{ color: '#fff' }} onClick={() => {
+                                                    if (messageRejection) {
+                                                        handleEditTemplate('', "", "Rejected")
+                                                    } else {
+                                                        handleSaveTemplate('', "Rejected")
+                                                    }
+                                                }} >Save Template</Button>
+                                            </div>
+
+                                            {descriptionError && (
+                                                <div className="error">{descriptionError}</div>
+                                            )}
+                                            {errors.detailed_description && (
+                                                <div className="error">{errors.detailed_description}</div>
+                                            )}
+                                        </Form.Group>
+                                    </div>
+                                </Accordion.Body>
+                            </Accordion.Item>
+
+                            <Accordion.Item eventKey="3">
+                                <Accordion.Header>Finalised Candidates response</Accordion.Header>
+                                <Accordion.Body className="pt-0">
+                                    <div className="autoremider-body">
+                                        <Form.Check // prettier-ignore
+                                            type="switch"
+                                            id="custom-switch-3"
+                                            label="Send Auto Response to user who have been shortlised"
+                                            checked={finalShotObj?.is_final_selection}
+                                            onChange={handleIsFinalToggle}
+                                        />
+                                        <Form.Group className="mb-2" controlId="jobDescription">
+                                            <Form.Label>
+                                                Message Template
+                                            </Form.Label>
+
+                                            <div className="texteditor_warp"
+                                            // onClick={handleWrapperClick}
+                                            >
+                                                <ReactQuill
+                                                    value={messageFinalised}
+                                                    onChange={handleEditorChange3}
+                                                    theme="snow"
+                                                    // ref={quillRef}
+                                                    modules={{
+                                                        toolbar: [["bold", "italic", "underline", "strike"], ["link"]],
+                                                    }}
+                                                />
+                                            </div>
+
+                                            <div className="d-flex justify-content-between custom-checkbox mt-3">
+                                                <Form.Check // prettier-ignore
+                                                    type="checkbox"
+                                                    id={`default-checkbox`}
+                                                    label={`Do not prompt me to edit emails every time i enable automation. `}
+                                                />
+
+                                                <Button variant="primary" style={{ color: '#fff' }}
+                                                    onClick={() => {
+                                                        if (messageFinalised) {
+                                                            handleEditTemplate('', '', "Final-Selection")
+                                                        } else {
+                                                            handleSaveTemplate('', "Final-Selection")
+                                                        }
+                                                    }} >Save Template</Button>
                                             </div>
 
                                             {descriptionError && (
