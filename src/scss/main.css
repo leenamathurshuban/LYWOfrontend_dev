@@ -9344,7 +9344,7 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   display: inline-flex;
   align-items: center;
   font-weight: 500;
-  color: #D0D5DD;
+  color: #475467;
   margin-left: 10px;
 }
 .list-kanban .icon_btnlink:last-child {
@@ -9352,8 +9352,7 @@ path.recharts-rectangle.recharts-tooltip-cursor {
 }
 .list-kanban .icon_btnlink img {
   margin-right: 6px;
-  filter: grayscale(100%);
-  opacity: 0.3;
+  opacity: 1;
 }
 .list-kanban .icon_btnlink:hover {
   color: #444CE7;
@@ -9392,6 +9391,34 @@ path.recharts-rectangle.recharts-tooltip-cursor {
 }
 .review-sticky .select-default {
   max-width: 230px;
+}
+
+.btn-grid-list {
+  background: #F9FAFB;
+  margin-left: 10px;
+  cursor: pointer;
+  filter: grayscale(100%);
+  height: 38px;
+  padding: 0;
+  width: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+.btn-grid-list:hover {
+  background: #F2F4F7;
+}
+.btn-grid-list img {
+  filter: grayscale(1);
+  opacity: 0.5;
+}
+.btn-grid-list.active-list {
+  background: #F2F4F7;
+}
+.btn-grid-list.active-list img {
+  filter: grayscale(0);
+  opacity: 1;
 }
 
 @media screen and (max-width: 767px) {

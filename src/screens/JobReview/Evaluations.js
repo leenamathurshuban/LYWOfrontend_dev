@@ -30,7 +30,7 @@ import RingSucess from "../../images/icons/ring_sucess.svg";
 import DragDrop from "../../images/icons/dragdrop-bullet.svg";
 import deleteDark from "../../images/icons/trash-Dark..svg";
 
-const Evaluations = ({ show, handleClose, assetJob, setAssetJob, localAssetJob, setLocalAssetJob, id }) => {
+const Evaluations = ({ show, handleClose, assetJob, setAssetJob, localAssetJob, setLocalAssetJob, id,getJobGroupParameterList }) => {
     const [activeTab, setActiveTab] = useState("viewAll");
     const [EvaluationList, setEvaluationList] = useState([]);
     const [EvaluationListDetails, setEvaluationListDetails] = useState([]);
@@ -221,6 +221,7 @@ const Evaluations = ({ show, handleClose, assetJob, setAssetJob, localAssetJob, 
             if (response?.data?.success) {
                 // handleClose()
                 modelClose()
+                getJobGroupParameterList()
             }
         } catch (error) {
             console.log(error)

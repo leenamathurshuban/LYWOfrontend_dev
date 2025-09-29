@@ -11582,7 +11582,7 @@ path.recharts-rectangle.recharts-tooltip-cursor {
     display: inline-flex;
     align-items: center;
     font-weight: 500;
-    color: #D0D5DD;
+    color:#475467;
     margin-left: 10px;
     
 
@@ -11592,8 +11592,8 @@ path.recharts-rectangle.recharts-tooltip-cursor {
 
     img{
       margin-right: 6px;
-      filter: grayscale(100%);
-      opacity: .3;
+      // filter: grayscale(100%);
+      opacity: 1;
     }
 
     &:hover{
@@ -11649,6 +11649,46 @@ path.recharts-rectangle.recharts-tooltip-cursor {
   .select-default{
     max-width: 230px;
   }
+
+}
+
+
+// 
+
+.btn-grid-list {
+    background: #F9FAFB;
+    margin-left: 10px;
+    cursor: pointer;
+    filter: grayscale(100%);
+    height: 38px;
+    padding: 0;
+    width: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+
+    &:hover{
+      background: #F2F4F7;
+    }
+
+
+    img{
+      filter: grayscale(1);
+      opacity: .5;
+    }
+
+    &.active-list{
+      background:  #F2F4F7;
+
+      img{
+
+      filter: grayscale(0);
+      opacity: 1;
+      
+    }
+
+    }
 
 }
 

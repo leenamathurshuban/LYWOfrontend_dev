@@ -13,8 +13,8 @@ import EvaluaBtn from "../../images/icons/evalua_icon.svg"
 import AutomatBtn from "../../images/icons/automations_icon.svg"
 import stopBtn from "../../images/icons/pause-circle-16x16.svg"
 import LeaderIcn from "../../images/icons/Leader-icon.svg";
-import gridView from "../../images/icons/grid_icon.svg"
-import listView from "../../images/icons/list_icon.svg"
+// import gridView from "../../images/icons/grid_icon.svg"
+// import listView from "../../images/icons/list_icon.svg"
 import Dragableicn from "../../images/icons/dragable-six-dots.svg"
 import ApplicantStaChrt from "../../images/icons/Applicant_Status_chart.svg"
 import AvabCandite from "../../images/icons/aval_candi_grap.svg"
@@ -41,6 +41,8 @@ import ArrowDownDark from "../../images/icons/arrow-narrow-down-dark.svg";
 import ExpandButton from "../../images/icons/expand-03-primery.svg";
 import ArrowBack from "../../images/icons/arrowBack.svg";
 import ArrowNext from "../../images/icons/arrowNext.svg";
+import gridView from "../../images/icons/grid-2.svg"
+import listView from "../../images/icons/list-2.svg"
 
 import Finalise from "../../images/icons/finalise.svg";
 
@@ -490,6 +492,7 @@ const JobReview = () => {
     const [groupParameterList, setGroupParameterList] = useState([]);
     const [ListData, setListData] = useState([]);
     const [ListGrid, setListGrid] = useState([]);
+    const [EvalKey, setEvalKey] = useState([]);
     const [count, setCount] = useState(10);
     const [selectedListUids, setSelectedListUids] = useState([]);
     const [ListShow, setListShow] = useState(false);
@@ -502,6 +505,7 @@ const JobReview = () => {
     const [reviewEventKey, setReviewEventKey] = useState('first')
     const [personalityAll, setPersonalityAll] = useState()
     const [InsightsGraphData, setInsightsGraphData] = useState({})
+    const [activeView, setActiveView] = useState('grid');
 
     const [mode, setMode] = useState(false); // 'overall' | 'section'
 
@@ -1028,6 +1032,7 @@ const JobReview = () => {
             const res = await getCandidateListForSingleJob(id)
             if (res?.data?.success) {
                 setListGrid(res.data.response)
+                setEvalKey(res.data.stored_assets)
             }
         } catch (error) {
             console.log(error)
@@ -1350,19 +1355,6 @@ const JobReview = () => {
     }
     const handleAutoMationToggle = async (e, parent, child) => {
         try {
-            const updatedGroups = groupParameterList.map(group =>
-                group.uid === parent?.uid
-                    ? {
-                        ...group,
-                        groups_parameter: group.groups_parameter.map(item =>
-                            item.uid === child?.uid
-                                ? { ...item, is_auto_reminde: !item.is_auto_reminde, is_auto_shortlist: !item.is_auto_shortlist }
-                                : item
-                        ),
-                    }
-                    : group
-            );
-            setGroupParameterList(updatedGroups)
             const formData = new FormData();
             formData.append("job_uid", id)
             formData.append("parameter_uid", parent?.uid)
@@ -1383,25 +1375,45 @@ const JobReview = () => {
                 formData.append("auto_short_list_status", e.target.checked)
             }
             if (automation_uid) {
+                const updatedGroups = groupParameterList.map(group =>
+                    group.uid === parent?.uid
+                        ? {
+                            ...group,
+                            groups_parameter: group.groups_parameter.map(item =>
+                                item.uid === child?.uid
+                                    ? { ...item, is_auto_reminde: !item.is_auto_reminde, is_auto_shortlist: !item.is_auto_shortlist }
+                                    : item
+                            ),
+                        }
+                        : group
+                );
+                setGroupParameterList(updatedGroups)
                 const res = await updateAutomationDataAPI(automation_uid, formData)
             } else {
                 toast.error("please create message template")
+                setShowInstruction(true)
             }
         } catch (error) {
             console.log(error)
         }
 
     }
-    const handleSaveTemplate = async (parameterUid, type) => {
+    const handleSaveTemplate = async (parameterUid, type, test) => {
         try {
             const formData = new FormData();
             formData.append("job_uid", id);
             formData.append("type", type)
             if (type == "Reminder") {
                 // formData.append("auto_remind_status", true)
+                if (test) {
+                    formData.append("asset_type", type)
+                }
                 formData.append("message_template", messageRemind)
                 formData.append("parameter_uid", parameterUid)
             } else if (type == "Shortlist") {
+                if (test) {
+                    formData.append("asset_type", type)
+                }
                 formData.append("auto_short_list_status", true)
                 formData.append("message_template", messageShortlist)
                 formData.append("parameter_uid", parameterUid)
@@ -1665,13 +1677,32 @@ const JobReview = () => {
 
                             </Col>
                             <Col md={6} className="text-end pe-3">
-                                <button className="btn btn-traspant" onClick={() => setListShow(false)}><img src={gridView} /></button>
+                                {/* <button className="btn btn-traspant" onClick={() => setListShow(false)}><img src={gridView} /></button>
                                 <button className="btn btn-traspant"
                                     onClick={() => {
                                         setListShow(true)
                                         setListData(ListGrid.slice(0, 10))
                                     }}
-                                ><img src={listView} /></button>
+                                ><img src={listView} /></button> */}
+                                <button
+                                    className={`btn btn-traspant btn-grid-list ${activeView === 'grid' ? 'active-list' : ''}`}
+                                    onClick={() => {
+                                        setActiveView('grid');
+                                        setListShow(false);
+                                    }}
+                                >
+                                    <img src={gridView} alt="Grid View" />
+                                </button>
+                                <button
+                                    className={`btn btn-traspant btn-grid-list ${activeView === 'list' ? 'active-list' : ''}`}
+                                    onClick={() => {
+                                        setActiveView('list');
+                                        setListShow(true);
+                                        setListData(ListGrid.slice(0, 10));
+                                    }}
+                                >
+                                    <img src={listView} alt="List View" />
+                                </button>
                             </Col>
                         </Row>
                         <Row >
@@ -1710,7 +1741,7 @@ const JobReview = () => {
                                                                 </InputGroup>
                                                             </div>
                                                         </Col>
-                                                        <Col md={7} className="d-flex justify-content-end align-items-center list-kanban">
+                                                        <Col md={7} className={`d-flex  justify-content-end align-items-center list-kanban ${!selectedListUids.length && 'disabled-btn'}`}>
 
                                                             <Button className="icon_btnlink" onClick={() => handleStatusGroup('Select', selectedListUids)}>
                                                                 <img src={checkgreen} className="img-fluid" />
@@ -1783,11 +1814,12 @@ const JobReview = () => {
 
 
                                                                         </div>
-                                                                    </th>  <th></th>
+                                                                    </th>
+                                                                    <th></th>
 
                                                                     <th colSpan={2} className="border-b"><strong>LYWO Score</strong></th>
                                                                     <th></th>
-                                                                    <th colSpan={6} className="border-b"><strong>Progress</strong></th>
+                                                                    <th colSpan={4} className="border-b"><strong>Assessment</strong></th>
                                                                     <th></th>
                                                                     <th colSpan={2} className="border-b"><strong>Status</strong></th>
                                                                 </tr>
@@ -1848,13 +1880,17 @@ const JobReview = () => {
                                                                     <th>Match</th>
                                                                     <th>Personality</th>
                                                                     <th></th>
-                                                                    <th>Step 3</th>
+                                                                    {/* <th>Step 3</th>
                                                                     <th>Step 4</th>
                                                                     <th>Step 5</th>
                                                                     <th>Step 6</th>
-                                                                    <th>Score</th>
-                                                                    <th>Tag</th>
+                                                                    <th>Score</th> */}
+                                                                    {/* <th>Tag</th> */}
+                                                                    {EvalKey.map((key) => (
+                                                                        <th>{key.asset_title}</th>
+                                                                    ))}
                                                                     <th></th>
+                                                                    <th>Score</th>
                                                                     <th>Decision</th>
                                                                     <th style={{ width: "42px" }}></th>
                                                                 </tr>
@@ -1917,14 +1953,24 @@ const JobReview = () => {
                                                                                 {/* <Select className="select-transpant" options={Object.entries(item?.job_applicant_profile?.personality).map(([key, value]) => ({value:value,label:`${value}%`}))} /> */}
                                                                             </div>
                                                                         </td>
-                                                                        <td>Invited</td>
-                                                                        <td><span className="text-elipe-40">Under Review</span></td>
-                                                                        <td><span className="text-elipe-40">Under Review</span></td>
-                                                                        <td><span className="text-elipe-40">Under Review</span></td>
-                                                                        <td>76%</td>
-                                                                        <td colSpan={2} >
+                                                                        {/* <td>Invited</td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td> */}
+                                                                        {EvalKey.map((keyItem, index) => {
+                                                                            // find score by matching subject
+                                                                            const valueItem =item.jobapplicant_asset_completion.find(
+                                                                                (val) => val.completion_asset.asset_title === keyItem.asset_title
+                                                                            );
+                                                                            return (                                                                                
+                                                                                    <td>{valueItem ? valueItem.applicant_final_overall_score: "-"}</td>                                                                                
+                                                                            );
+                                                                        })}
+                                                                        {/* <td><span className="text-elipe-40">Under Review</span></td>
+                                                                        <td><span className="text-elipe-40">Under Review</span></td> */}
+                                                                        <td></td>
+                                                                        <td>{item?.job_match_score}%</td>
+                                                                        {/* <td colSpan={2} >
                                                                             <span onClick={recallShow} className="tag tag-lightprimery" style={{ cursor: 'pointer' }} >Recall</span>
-                                                                        </td>
+                                                                        </td> */}
 
                                                                         <td >
                                                                             <span className={`dic_tag ${coloringByStatus(item?.job_applicant_status)}`}><i class={iconByStatus(item?.job_applicant_status)}></i> {item?.job_applicant_status == "Reject" ? "Rejected" : item?.job_applicant_status == "Select" ? "Selected" : item?.job_applicant_status}</span>
@@ -2433,9 +2479,9 @@ const JobReview = () => {
                                                                                             prev === paraName.uid ? null : paraName.uid
                                                                                         )}>
                                                                                         <h6>{groupItem?.group_name}
-                                                                                            {(paraName?.parameter_name == "Application" || paraName?.parameter_name == "Behaviour") && (
-                                                                                                <span className="count">{groupItem?.group_wise_applicant_count}</span>
-                                                                                            )}
+                                                                                            {/* {(paraName?.parameter_name == "Application" || paraName?.parameter_name == "Behaviour") && ( */}
+                                                                                            <span className="count">{groupItem?.group_wise_applicant_count > 0 ? groupItem?.group_wise_applicant_count : ""}</span>
+                                                                                            {/* )} */}
                                                                                         </h6>
                                                                                         {(paraName?.parameter_name == "Application" || paraName?.parameter_name == "Behaviour") ? (
                                                                                             ""
@@ -2471,7 +2517,7 @@ const JobReview = () => {
                                                                                         setGroupTitleName(groupItem?.group_name)
                                                                                         setParamUid(groupItem?.uid)
                                                                                     }}><i class="fa fa-list-ul" aria-hidden="true"></i></button> */}
-                                                                                            <div className="right-cols">
+                                                                                            <div className="ms-auto me-0 right-cols">
                                                                                                 {/* <button className="button" class="btn-transpant me-2">
                                                                                                 <img src={trash} className="img-fluid" alt="Trash" />
                                                                                             </button> */}
@@ -3645,7 +3691,7 @@ const JobReview = () => {
                                                             if (groupParameterList[0]?.parameter_automation?.find((item) => item.type == "Reminder")) {
                                                                 handleEditTemplate(groupParameterList[0]?.uid, groupParameterList[0]?.parameter_automation?.find((item) => item.type == "Reminder"), "Reminder")
                                                             } else {
-                                                                handleSaveTemplate(groupParameterList[0]?.uid, "Reminder")
+                                                                handleSaveTemplate(groupParameterList[0]?.uid, "Reminder", "")
                                                             }
                                                         }}  >Save Template</Button>
                                                     </div>
@@ -3697,7 +3743,7 @@ const JobReview = () => {
                                                             if (groupParameterList[1]?.parameter_automation?.find((item) => item.type == "Reminder")) {
                                                                 handleEditTemplate(groupParameterList[1]?.uid, groupParameterList[1]?.parameter_automation?.find((item) => item.type == "Reminder"), "Reminder")
                                                             } else {
-                                                                handleSaveTemplate(groupParameterList[1]?.uid, "Reminder")
+                                                                handleSaveTemplate(groupParameterList[1]?.uid, "Reminder", '')
                                                             }
                                                         }}  >Save Template</Button>
                                                     </div>
@@ -3744,7 +3790,7 @@ const JobReview = () => {
                                                             if (groupParameterList[3]?.parameter_automation?.find((item) => item.type == "Reminder")) {
                                                                 handleEditTemplate(groupParameterList[3]?.uid, groupParameterList[3]?.parameter_automation?.find((item) => item.type == "Reminder"), "Reminder")
                                                             } else {
-                                                                handleSaveTemplate(groupParameterList[3]?.uid, "Reminder")
+                                                                handleSaveTemplate(groupParameterList[3]?.uid, "Reminder", "Quiz")
                                                             }
                                                         }}  >Save Template</Button>
                                                     </div>
@@ -3791,7 +3837,7 @@ const JobReview = () => {
                                                             if (groupParameterList[4]?.parameter_automation?.find((item) => item.type == "Reminder")) {
                                                                 handleEditTemplate(groupParameterList[4]?.uid, groupParameterList[4]?.parameter_automation?.find((item) => item.type == "Reminder"), "Reminder")
                                                             } else {
-                                                                handleSaveTemplate(groupParameterList[4]?.uid, "Reminder")
+                                                                handleSaveTemplate(groupParameterList[4]?.uid, "Reminder", "Assignment")
                                                             }
                                                         }}  >Save Template</Button>
                                                     </div>
@@ -3857,7 +3903,7 @@ const JobReview = () => {
                                                             if (groupParameterList[2]?.parameter_automation?.find((item) => item.type == "Shortlist")) {
                                                                 handleEditTemplate(groupParameterList[2]?.uid, groupParameterList[2]?.parameter_automation?.find((item) => item.type == "Shortlist"), "Shortlist")
                                                             } else {
-                                                                handleSaveTemplate(groupParameterList[2]?.uid, "Shortlist")
+                                                                handleSaveTemplate(groupParameterList[2]?.uid, "Shortlist", '')
                                                             }
                                                         }}  >Save Template</Button>
                                                     </div>
@@ -3905,7 +3951,7 @@ const JobReview = () => {
                                                             if (groupParameterList[3]?.parameter_automation?.find((item) => item.type == "Shortlist")) {
                                                                 handleEditTemplate(groupParameterList[3]?.uid, groupParameterList[3]?.parameter_automation?.find((item) => item.type == "Shortlist"), "Shortlist")
                                                             } else {
-                                                                handleSaveTemplate(groupParameterList[3]?.uid, "Shortlist")
+                                                                handleSaveTemplate(groupParameterList[3]?.uid, "Shortlist", "Quiz")
                                                             }
                                                         }}  >Save Template</Button>
                                                     </div>
@@ -3953,7 +3999,7 @@ const JobReview = () => {
                                                             if (groupParameterList[4]?.parameter_automation?.find((item) => item.type == "Shortlist")) {
                                                                 handleEditTemplate(groupParameterList[4]?.uid, groupParameterList[4]?.parameter_automation?.find((item) => item.type == "Shortlist"), "Shortlist")
                                                             } else {
-                                                                handleSaveTemplate(groupParameterList[4]?.uid, "Shortlist")
+                                                                handleSaveTemplate(groupParameterList[4]?.uid, "Shortlist", "Assignment")
                                                             }
                                                         }}  >Save Template</Button>
                                                     </div>
@@ -4019,7 +4065,7 @@ const JobReview = () => {
                                                     if (messageRejection) {
                                                         handleEditTemplate('', "", "Rejected")
                                                     } else {
-                                                        handleSaveTemplate('', "Rejected")
+                                                        handleSaveTemplate('', "Rejected", '')
                                                     }
                                                 }} >Save Template</Button>
                                             </div>
@@ -4077,7 +4123,7 @@ const JobReview = () => {
                                                         if (messageFinalised) {
                                                             handleEditTemplate('', '', "Final-Selection")
                                                         } else {
-                                                            handleSaveTemplate('', "Final-Selection")
+                                                            handleSaveTemplate('', "Final-Selection", '')
                                                         }
                                                     }} >Save Template</Button>
                                             </div>
@@ -4450,6 +4496,7 @@ const JobReview = () => {
                 localAssetJob={localAssetJob}
                 setLocalAssetJob={setLocalAssetJob}
                 id={id}
+                getJobGroupParameterList={getJobGroupParameterList}
             />
             <CreateGroupModal
                 show={groupModal}

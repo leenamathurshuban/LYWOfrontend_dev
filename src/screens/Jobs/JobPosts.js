@@ -1174,7 +1174,7 @@ const JobPosts = () => {
             {jobPostData?.asset_job?.map((Val) => {
               if (Val?.asset_title === 'Technical round for EHS Manager') {
                 return (
-                  <div className={`${localStorage.getItem("assestQuiz") === 'Completed' ? 'complate_status' : localStorage.getItem("assestQuiz") == 'Draft' ? 'pending_status' : ''} progress_box`}>
+                  <div className={`${localStorage.getItem("assestQuiz") === 'Completed' ? 'complate_status' : localStorage.getItem("assestQuiz") == 'Draft' ? 'pending_status' : 'pending_status'} progress_box`}>
                     <h5>
                       {localStorage.getItem("assestQuiz") == 'Completed' ? <img src={checkRight} className="me-2" /> : localStorage.getItem("assestQuiz") == 'Draft' ? <img src={checkpending} className="me-2" /> : (<span className="bg_circle"></span>)}
 
@@ -1207,7 +1207,7 @@ const JobPosts = () => {
                 )
               } else if (Val?.asset_title === 'Pre-interview round for creative director') {
                 return (
-                  <div className={`${localStorage.getItem("preAssestQuiz") === 'Completed' ? 'complate_status' : localStorage.getItem("preAssestQuiz") == 'Draft' ? 'pending_status' : ''} progress_box`}>
+                  <div className={`${localStorage.getItem("preAssestQuiz") === 'Completed' ? 'complate_status' : localStorage.getItem("preAssestQuiz") == 'Draft' ? 'pending_status' : 'pending_status'} progress_box`}>
                     <h5>
                       {localStorage.getItem("preAssestQuiz") == 'Completed' ? <img src={checkRight} className="me-2" /> : localStorage.getItem("preAssestQuiz") == 'Draft' ? <img src={checkpending} className="me-2" /> : (<span className="bg_circle"></span>)}
 
