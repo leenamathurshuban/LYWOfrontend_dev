@@ -176,7 +176,7 @@
 
 
 // 16jan code chekkk
- 
+
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
@@ -252,68 +252,68 @@ const EmailPasswordVerifyContainer = () => {
       <a href='#' className='app-brand'>
         <img src={appbrand} alt="Logo" />
       </a>
-    <Container fluid className="p-0">
-      <Row className="authentication-inner m-0 min-h-full">
-        <Col
-          md={4}
-          className="justify-content-center align-items-center d-flex"
-        >
-          <Getstarted />
-        </Col>
-        <Col
-          md={8}
-          className="justify-content-center align-items-center d-flex bg-white authent-form"
-        >
-          <div className="w-px-400 mx-auto">
-            <h3>Welcome to LYWO</h3>
-            <Form
-              noValidate
-              validated={validated}
-              onSubmit={handleSubmitEmailPassword}
-            >
-              <Form.Group
-                as={Col}
-                md="12"
-                controlId="validationCustom03"
-                className="form-group"
+      <Container fluid className="p-0">
+        <Row className="authentication-inner m-0 min-h-full">
+          <Col
+            md={4}
+            className="justify-content-center align-items-center d-flex"
+          >
+            <Getstarted />
+          </Col>
+          <Col
+            md={8}
+            className="justify-content-center align-items-center d-flex bg-white authent-form"
+          >
+            <div className="w-px-400 mx-auto">
+              <h3>Welcome to LYWO</h3>
+              <Form
+                noValidate
+                validated={validated}
+                onSubmit={handleSubmitEmailPassword}
               >
-                <Form.Label>Email ID</Form.Label>
-                <Form.Control
-                  type="email"
-                  placeholder="Enter your email"
-                  required
-                  value={emailValue}
-                  readOnly
-                />
-                <Form.Control.Feedback type="invalid">
-                  Email not registered. Please contact administrator.
-                </Form.Control.Feedback>
-              </Form.Group>
-
-              <Form.Group
-                as={Col}
-                md="12"
-                controlId="validationCustom03"
-                className="form-group relative"
-              >
-                <Form.Label>Password</Form.Label>
-                <Form.Control
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
-                  required
-                />
-                <span
-                  onClick={togglePasswordVisibility}
-                  className="pass_eyeicon"
+                <Form.Group
+                  as={Col}
+                  md="12"
+                  controlId="validationCustom03"
+                  className="form-group"
                 >
-                  <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
-                </span>
-                <p className="error">{passwordErrormsg}</p>
-              </Form.Group>
-              <div className="d-flex justify-content-between forgot_pass mb-3">
-                {["checkbox"].map((type) => (
+                  <Form.Label>Email ID</Form.Label>
+                  <Form.Control
+                    type="email"
+                    placeholder="Enter your email"
+                    required
+                    value={emailValue}
+                    readOnly
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    Email not registered. Please contact administrator.
+                  </Form.Control.Feedback>
+                </Form.Group>
+
+                <Form.Group
+                  as={Col}
+                  md="12"
+                  controlId="validationCustom03"
+                  className="form-group relative"
+                >
+                  <Form.Label>Password</Form.Label>
+                  <Form.Control
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter your password"
+                    required
+                  />
+                  <span
+                    onClick={togglePasswordVisibility}
+                    className="pass_eyeicon"
+                  >
+                    <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+                  </span>
+                  <p className="error">{passwordErrormsg}</p>
+                </Form.Group>
+                <div className="d-flex justify-content-between forgot_pass mb-3">
+                  {/* {["checkbox"].map((type) => (
                   <div key={`inline-${type}`}>
                     <Form.Check
                       inline
@@ -323,35 +323,39 @@ const EmailPasswordVerifyContainer = () => {
                       id={`inline-${type}-1`}
                     />
                   </div>
-                ))}
+                ))} */}
+                  <div className="custom-checkbox me-2_5">
+                    <input className="form-check-input" type="checkbox" id="flexCheckChecked" />
+                    <label className="form-check-label" for="flexCheckChecked">Remember me</label>
+                  </div>
+                  <a
+                    href="#"
+                    className="forgot_btn text-primery"
+                    onClick={() => navigate("/verifyOtpForPassword")}
+                  >
+                    Forgot password
+                  </a>
+                </div>
+                <Button
+                  type="submit"
+                  className="btn-full mt-1"
+                  onClick={() => LoginWithPasswordApi()}
+                  disabled={password.length < 8}
+                >
+                  Login
+                </Button>
                 <a
                   href="#"
-                  className="forgot_btn text-primery"
-                  onClick={() => navigate("/verifyOtpForPassword")}
+                  className="text-primery font-weight-600 text-center mt-4 d-block text-base"
+                  onClick={() => navigate("/otp")}
                 >
-                  Forget password
+                  Use OTP for Login
                 </a>
-              </div>
-              <Button
-                type="submit"
-                className="btn-full mt-1"
-                onClick={() => LoginWithPasswordApi()}
-                disabled={password.length < 8}
-              >
-                Login
-              </Button>
-              <a
-                href="#"
-                className="text-primery font-weight-600 text-center mt-4 d-block text-base"
-                onClick={() => navigate("/otp")}
-              >
-                Use OTP for Login
-              </a>
-            </Form>
-          </div>
-        </Col>
-      </Row>
-    </Container>
+              </Form>
+            </div>
+          </Col>
+        </Row>
+      </Container>
     </div>
   );
 };

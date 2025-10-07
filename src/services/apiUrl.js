@@ -39,7 +39,8 @@ export const JobsUrl = {
   jobApplicantUpdateForList: "assets-api/job-applicant-update-api/",
   jobDelete: "assets-api/job-delete-api/",
   deleteBenifits: "assets-api/benefit-delete-api/",
-  getJobListByCompany: "assets-api/job-list-by-company-api/"
+  getJobListByCompany: "assets-api/job-list-by-company-api/",
+  updateCustomQuestion:"assets-api/update-job-question-api/"
 }
 
 export const SkillsUrl = {

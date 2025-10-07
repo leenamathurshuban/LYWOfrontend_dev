@@ -47,6 +47,8 @@ import UpdateJobs from "../../components/Jobs/UpdateJobs";
 import { CustomPopup } from "../../components/CustomPopup";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 const JobsList = () => {
   const [modal, setModal] = useState({
@@ -344,6 +346,19 @@ const JobsList = () => {
       console.log(error);
     }
   }
+  const handleDownloadFile = () => {
+    // Convert JSON to worksheet
+    const worksheet = XLSX.utils.json_to_sheet(VisiblejobData);
+
+    // Create a new workbook
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+
+    // Generate Excel file and trigger download
+    const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+    const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
+    saveAs(blob, "MyData.xlsx");
+  }
   useEffect(() => {
     if (modalText.sure && modalText.state != "Delete") {
       handleCommonEvent(modalText.item, modalText.state)
@@ -434,35 +449,39 @@ const JobsList = () => {
                     />
                   </InputGroup>
                 </Col>
-                <Col md={9} className={`d-flex justify-content-end align-items-center ${!activeIds.length && "disabled-btn"}`}>
-                  <Button className="icon_btnlink" onClick={() => {
-                    if (activeIds.length) {
-                      setModalText({
-                        showPopup: true,
-                        heading: `Do you wish to Proceed?`,
-                        body: `You will no longer receive new applications for the ${activeIds?.length} selected jobs.`,
-                        state: 'Application-Stopped',
-                        item: {},
-                        sure: false
-                      })
-                    }
-                    // handleMultipleStopApp('Application-Stopped')
-                  }}><img className="me-1" src={pauseCircle16} alt="" />Stop New Applications</Button>
-                  <Button className="icon_btnlink" onClick={() => {
-                    if (activeIds.length) {
-                      setModalText({
-                        showPopup: true,
-                        heading: `Do you wish to Proceed?`,
-                        body: `The ${activeIds?.length} selected jobs will be marked as closed, halting new applications and application assessments.`,
-                        state: 'closed',
-                        item: {},
-                        sure: false
-                      })
-                    }
-                    // handleMultipleCloseApp('closed')
-                  }}><img className="me-1" src={closeI} alt="" />Close</Button>
-                  <Button className="icon_btnlink"><img className="me-1" src={printer16} alt="" />Print</Button>
-                  <Button className="icon_btnlink"><img className="me-1" src={download16} alt="" />Download</Button>
+                <Col md={9} className={`d-flex justify-content-end align-items-center `}>
+                  <div className={`${!activeIds.length && "disabled-btn"}`}>
+                    <Button className="icon_btnlink" onClick={() => {
+                      if (activeIds.length) {
+                        setModalText({
+                          showPopup: true,
+                          heading: `Do you wish to Proceed?`,
+                          body: `You will no longer receive new applications for the ${activeIds?.length} selected jobs.`,
+                          state: 'Application-Stopped',
+                          item: {},
+                          sure: false
+                        })
+                      }
+                      // handleMultipleStopApp('Application-Stopped')
+                    }}><img className="me-1" src={pauseCircle16} alt="" />Stop New Applications</Button>
+                    <Button className="icon_btnlink" onClick={() => {
+                      if (activeIds.length) {
+                        setModalText({
+                          showPopup: true,
+                          heading: `Do you wish to Proceed?`,
+                          body: `The ${activeIds?.length} selected jobs will be marked as closed, halting new applications and application assessments.`,
+                          state: 'closed',
+                          item: {},
+                          sure: false
+                        })
+                      }
+                      // handleMultipleCloseApp('closed')
+                    }}><img className="me-1" src={closeI} alt="" />Close</Button>
+                  </div>
+                  <div>
+                    <Button className="icon_btnlink" onClick={() => window.print()}><img className="me-1" src={printer16} alt="" />Print</Button>
+                    <Button className="icon_btnlink" onClick={handleDownloadFile}><img className="me-1" src={download16} alt="" />Download</Button>
+                  </div>
                 </Col>
               </Row>
             </Card.Header>
@@ -489,7 +508,7 @@ const JobsList = () => {
                       stroke-linejoin="round"
                     />
                   </svg>
-                   filters
+                  filters
                 </Button>
               </div>
               <div className="elv_datatable joblist_data table-responsive">

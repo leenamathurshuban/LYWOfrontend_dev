@@ -72,8 +72,8 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
   const [spokenLanguageBadges, setSpokenLanguageBadges] = useState([]);
   const [rdnwBadges, setrdnwBadges] = useState([]);
   const [locationBadges, setLocationBadges] = useState([]);
-  const [fileName, setFileName] = useState(editData?.description_attachment?`https://bittrend.shubansoftware.com${editData?.description_attachment}`:"");
-  const [attachFile,setAttachFile] = useState(null)
+  const [fileName, setFileName] = useState(editData?.description_attachment ? `https://bittrend.shubansoftware.com${editData?.description_attachment}` : "");
+  const [attachFile, setAttachFile] = useState(null)
   const [behaviours, setBehaviours] = useState([
     {
       heading: "Efficiency",
@@ -248,7 +248,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
     { value: "Contract", label: "Contract" },
     { value: "Temporary", label: "Temporary" },
     { value: "Volunteer", label: "Volunteer" },
-    { value: "Internship", lable: "Internship" },
+    { value: "Internship", label: "Internship" },
     { value: "Other", label: "Other" }
   ]
   const jobTypeOption = [
@@ -330,9 +330,15 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
       newErrors.travelOption = "This Field is required";
       isValid = false;
     }
-    if (!description) {
-      newErrors.detailed_description = "This Field is required";
-      isValid = false;
+    if (!description || description.length < MAX_DESCRIPTION_WORDS) {
+      if (!description) {
+        newErrors.detailed_description = "This Field is required";
+        isValid = false;
+      }
+      if (description.length < MAX_DESCRIPTION_WORDS) {
+        newErrors.detailed_description = "Minimum 50 words required";
+        isValid = false;
+      }
     }
     if (!createFormData.jobType) {
       newErrors.jobType = "This Field is required";
@@ -386,7 +392,7 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
     } else {
       setUpdateFormData({
         ...updateFormData,
-        [name]:name=='min_salary' || name=='max_salary'?parseInt(value.replace(/,/g, ""), 10):  value,
+        [name]: name == 'min_salary' || name == 'max_salary' ? parseInt(value.replace(/,/g, ""), 10) : value,
       });
     }
   };
@@ -412,6 +418,10 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
         `You have reached the maximum limit of ${MAX_DESCRIPTION_WORDS} words.`
       );
     }
+    setErrors({
+      ...errors,
+      ["detailed_description"]:""
+    })
   };
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -658,20 +668,20 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
   //   setIsLikeDropdown(false);
   // };
 
-// custom style react select box
+  // custom style react select box
 
- const customStyles = {
-  option: (provided, state) => ({
-    ...provided,
-    backgroundColor: state.isSelected
-      ? "#deebff"
-      : state.isFocused
-      ? "#deebff" // Color on hover
-      : "inherit",
-    color: state.isSelected ? "#000" : "black",
-    cursor: "pointer", // Optional: improves UX on hover
-  }),
-};
+  const customStyles = {
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isSelected
+        ? "#deebff"
+        : state.isFocused
+          ? "#deebff" // Color on hover
+          : "inherit",
+      color: state.isSelected ? "#000" : "black",
+      cursor: "pointer", // Optional: improves UX on hover
+    }),
+  };
 
 
   const hasSelectedAndImportant = behaviours.some((item) => (item?.isSelected || item?.markedImportant));
@@ -718,12 +728,12 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
       formdata.append("detailed_description", descriptionWithoutTags);
       formdata.append("job_type", createFormData.jobType);
       formdata.append("workplace_type", createFormData.workPlaceType);
-      if(attachFile){
-        formdata.append("description_attachment",attachFile)
+      if (attachFile) {
+        formdata.append("description_attachment", attachFile)
       }
-      if(SelectBenefitsData?.length){
+      if (SelectBenefitsData?.length) {
         formdata.append("job_benefits", JSON.stringify(SelectBenefitsData));
-      }      
+      }
       try {
         const response = await UpdateJobForm(formdata, id ? id : editData?.uid);
         if (response.data.status == 200) {
@@ -783,19 +793,19 @@ const UpdateJobs = ({ show, handleClose, editData }) => {
         formdata.append(key, JSON.stringify(uids));
       } else if (key === "spoken_language" && spokenLanguageBadges.length > 0) {
         let uids = spokenLanguageBadges?.map((item) => item?.uid);
-        if(!updateFormData.no_specific_language_require){
+        if (!updateFormData.no_specific_language_require) {
           formdata.append(key, JSON.stringify(uids));
-        }        
+        }
       } else if (key === "read_write_language" && rdnwBadges.length > 0) {
         let uids = rdnwBadges?.map((item) => item?.uid);
-        if(!updateFormData.no_specific_language_require){
+        if (!updateFormData.no_specific_language_require) {
           formdata.append(key, JSON.stringify(uids));
-        }        
+        }
       } else if (key === "preferred_geography" && locationBadges.length > 0) {
         let uids = locationBadges?.map((item) => item?.uid);
-        if(!updateFormData.no_specific_location){
+        if (!updateFormData.no_specific_location) {
           formdata.append(key, JSON.stringify(uids));
-        }        
+        }
       }
       // else if (key === "skills" && SelectSkillsData.length > 0) {
       //   let skillID = SelectSkillsData?.map((item) => item?.uid) // Extract skill_name values

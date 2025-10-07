@@ -34,10 +34,10 @@ const customStyles2 = {
 };
 
 const QUESTION_TYPES = {
-    SINGLE: "single",
-    MULTIPLE: "multiple",
-    ARRANGE: "Arrange",
-    MATCH: "Match",
+    SINGLE: "MCQ",
+    MULTIPLE: "MCQ-Multi",
+    // ARRANGE: "Arrange",
+    // MATCH: "Match",
 };
 
 
@@ -61,24 +61,24 @@ const typeOptions = [
             </div>
         ),
     },
-    {
-        value: QUESTION_TYPES.ARRANGE,
-        label: (
-            <div style={{ display: "flex", alignItems: "center" }}>
-                <img src={ArrangeIcon} alt="Arrange" style={{ width: 20, marginRight: 8 }} />
-                <span>Arrange</span>
-            </div>
-        ),
-    },
-    {
-        value: QUESTION_TYPES.MATCH,
-        label: (
-            <div style={{ display: "flex", alignItems: "center" }}>
-                <img src={MatchIcon} alt="Match" style={{ width: 20, marginRight: 8 }} />
-                <span>Match</span>
-            </div>
-        ),
-    },
+    // {
+    //     value: QUESTION_TYPES.ARRANGE,
+    //     label: (
+    //         <div style={{ display: "flex", alignItems: "center" }}>
+    //             <img src={ArrangeIcon} alt="Arrange" style={{ width: 20, marginRight: 8 }} />
+    //             <span>Arrange</span>
+    //         </div>
+    //     ),
+    // },
+    // {
+    //     value: QUESTION_TYPES.MATCH,
+    //     label: (
+    //         <div style={{ display: "flex", alignItems: "center" }}>
+    //             <img src={MatchIcon} alt="Match" style={{ width: 20, marginRight: 8 }} />
+    //             <span>Match</span>
+    //         </div>
+    //     ),
+    // },
 ];
 
 // Helpers
@@ -111,6 +111,11 @@ export default function CustomQuestionsBuilder({ components, setComponents, hand
     const handleQuestionTitleChange = (qIndex, value) =>
         setComponents((prev) =>
             prev.map((q, i) => (i === qIndex ? { ...q, question_title: value } : q))
+        );
+
+    const handleEditOption = (qIndex) =>
+        setComponents((prev) =>
+            prev.map((q, i) => (i === qIndex ? { ...q, isEdit: !q.isEdit } : q))
         );
 
     const handleQuestionTypeChange = (qIndex, newType) =>
@@ -325,6 +330,7 @@ export default function CustomQuestionsBuilder({ components, setComponents, hand
         });
     }, [components]);
     // ---------- UI ----------
+    console.log("================>",components)
     return (
         <>
             {components?.map((question, questionIndex) => (
@@ -352,14 +358,26 @@ export default function CustomQuestionsBuilder({ components, setComponents, hand
                                 />
                             </div>
                             <div className="d-flex ms-3 me-2">
-                                <button
-                                    type="button"
-                                    className="btn-transpant"
-                                    onClick={() => handleDeleteRowQuestion(questionIndex)}
-                                    title="Delete question"
-                                >
-                                    <img src={imgpTrash} alt="Delete" style={{ width: 18, height: 18 }} />
-                                </button>
+                                {question.isEdit ? (
+                                    <button
+                                        type="button"
+                                        className="btn-transpant"
+                                        onClick={() => handleDeleteRowQuestion(questionIndex)}
+                                        title="Delete question"
+                                    >
+                                        <img src={imgpTrash} alt="Delete" style={{ width: 18, height: 18 }} />
+                                    </button>
+                                ) : (
+                                    <button
+                                        type="button"
+                                        className="btn-transpant"
+                                        onClick={() => handleEditOption(questionIndex)}
+                                        title="Delete question"
+                                    >
+                                        {/* <img src={imgpTrash} alt="Delete" style={{ width: 18, height: 18 }} /> */}Edit
+                                    </button>
+                                )}
+
                             </div>
                         </div>
                     </div>
@@ -411,29 +429,7 @@ export default function CustomQuestionsBuilder({ components, setComponents, hand
                                                             handleQuestionOptionChange(questionIndex, optionIndex, e.target.value)
                                                         }
                                                         style={{ maxWidth: 520 }}
-                                                    />
-
-                                                    {/* Arrange up/down buttons */}
-                                                    {/* {question.quiz_type === QUESTION_TYPES.ARRANGE && (
-                                                <div className="btn-group">
-                                                    <button
-                                                        className="btn btn-outline-secondary"
-                                                        onClick={() => moveOption(questionIndex, optionIndex, optionIndex - 1)}
-                                                        disabled={optionIndex === 0}
-                                                        title="Move up"
-                                                    >
-                                                        ↑
-                                                    </button>
-                                                    <button
-                                                        className="btn btn-outline-secondary"
-                                                        onClick={() => moveOption(questionIndex, optionIndex, optionIndex + 1)}
-                                                        disabled={optionIndex === question.question_option.part1.length - 1}
-                                                        title="Move down"
-                                                    >
-                                                        ↓
-                                                    </button>
-                                                </div>
-                                            )} */}
+                                                    />                                                   
 
                                                     <button
                                                         className="btn-transparent border-0"
@@ -451,68 +447,12 @@ export default function CustomQuestionsBuilder({ components, setComponents, hand
                                 </div>
                             )}
 
-                        {/* MATCH : left/right pairs */}
-                        {/* {question.quiz_type === QUESTION_TYPES.MATCH && (
-                            <div className="cmt_questions">
-                                {question.question_option.pairs.map((pair, pIndex) => (
-                                    <div key={`pair-${pIndex}`} className="mb-2 d-flex align-items-center gap-2">
-                                        <Form.Control
-                                            type="text"
-                                            placeholder="Left"
-                                            className="formControl_cstmQuestion"
-                                            value={pair.left}
-                                            onChange={(e) => handlePairChange(questionIndex, pIndex, "left", e.target.value)}
-                                            style={{ maxWidth: 260 }}
-                                        />
-                                        <span>↔</span>
-                                        <Form.Control
-                                            type="text"
-                                            placeholder="Right"
-                                            className="formControl_cstmQuestion"
-                                            value={pair.right}
-                                            onChange={(e) =>
-                                                handlePairChange(questionIndex, pIndex, "right", e.target.value)
-                                            }
-                                            style={{ maxWidth: 260 }}
-                                        />
-                                        <button
-                                            className="btn btn-link text-danger"
-                                            onClick={() => handleDeletePair(questionIndex, pIndex)}
-                                            title="Remove pair"
-                                        >
-                                            ✕
-                                        </button>
-                                    </div>
-                                ))}
-                            </div>
-                        )} */}
-                        {(question.quiz_type === QUESTION_TYPES.MATCH ||
+                        
+                        {/* {(question.quiz_type === QUESTION_TYPES.MATCH ||
                             question.quiz_type === QUESTION_TYPES.ARRANGE) &&
                             <div className="cmt_questions mb-2">
                                 {question.question_option.part1.map((leftVal, pairIndex) => (
-                                    <>
-                                        {/* <div key={pairIndex} className="d-flex mb-2">
-                                    Left side input
-                                    <Form.Control
-                                        type="text"
-                                        placeholder="Left side"
-                                        value={leftVal}
-                                        onChange={(e) =>
-                                            handlePairChange(questionIndex, pairIndex, "left", e.target.value)
-                                        }
-                                        className="me-2"
-                                    />
-
-                                    Right side input
-                                    <Form.Control
-                                        type="text"
-                                        placeholder="Right side"
-                                        value={question.questions_answer[pairIndex] || ""}
-                                        onChange={(e) =>
-                                            handlePairChange(questionIndex, pairIndex, "right", e.target.value)
-                                        }
-                                    />
-                                </div> */}
+                                    <>                                        
                                         <div key={`pair-${pairIndex}`} className="mb-2 d-flex align-items-center gap-2">
                                             <Form.Control
                                                 type="text"
@@ -544,23 +484,27 @@ export default function CustomQuestionsBuilder({ components, setComponents, hand
                                     </>
                                 ))}
                             </div>
-                        }
+                        } */}
 
 
                         {/* Add response */}
-                        <button
-                            type="button"
-                            className="btn btn-light me-2 border-0"
-                            onClick={() => handleAddResponse(questionIndex)}
-                            style={{ fontSize: "12px" }}
-                        >
-                            + Add Response
-                        </button>
+                        {(question.isEdit || question.isCreated) && (
+                            <>
+                                <button
+                                    type="button"
+                                    className="btn btn-light me-2 border-0"
+                                    onClick={() => handleAddResponse(questionIndex)}
+                                    style={{ fontSize: "12px" }}
+                                >
+                                    + Add Response
+                                </button>
 
-                        {/* Save per block (optional) */}
-                        <button type="button" onClick={handleSaveCustomQuestion} className="btn btn-outline-dark">
-                            Save
-                        </button>
+                                {/* Save per block (optional) */}
+                                <button type="button" onClick={()=>handleSaveCustomQuestion(question?.isEdit,question)} className="btn btn-outline-dark">
+                                    Save
+                                </button>
+                            </>
+                        )}
                     </div>
                 </div>
             ))}

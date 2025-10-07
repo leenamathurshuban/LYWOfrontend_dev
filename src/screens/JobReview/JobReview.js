@@ -104,6 +104,8 @@ import { transformOverallAndSectionData } from "../../utils/assetgraphLogic";
 import CandidateChat from "../../components/Chats/CandidateChat";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 const JobReview = () => {
     const codeSnippet = `class WorkloadTracker:
@@ -260,6 +262,9 @@ const JobReview = () => {
     const [fileName, setFileName] = useState("");
 
     const [description, setDescription] = useState("");
+    const [messageModel, setMessageModel] = useState("");
+    const [messageModel1, setMessageModel1] = useState("");
+    const [messageModel2, setMessageModel2] = useState("");
     const [messageRemind, setMessageRemind] = useState("");
     const [messageShortlist, setMessageShortlist] = useState("");
     const [messageRejection, setMessageRejection] = useState("");
@@ -319,6 +324,45 @@ const JobReview = () => {
             );
         }
     };
+    const handleMessageChange = (value) => {
+        const wordCount = value.trim().split(/\s+/).length;
+
+        if (wordCount <= MAX_DESCRIPTION_WORDS) {
+            setMessageModel(value);
+            setDescriptionError("");
+        } else {
+            setDescriptionError(
+                `You have reached the maximum limit of ${MAX_DESCRIPTION_WORDS} words.`
+            );
+        }
+
+    }
+    const handleMessageChange1 = (value) => {
+        const wordCount = value.trim().split(/\s+/).length;
+
+        if (wordCount <= MAX_DESCRIPTION_WORDS) {
+            setMessageModel1(value);
+            setDescriptionError("");
+        } else {
+            setDescriptionError(
+                `You have reached the maximum limit of ${MAX_DESCRIPTION_WORDS} words.`
+            );
+        }
+
+    }
+    const handleMessageChange2 = (value) => {
+        const wordCount = value.trim().split(/\s+/).length;
+
+        if (wordCount <= MAX_DESCRIPTION_WORDS) {
+            setMessageModel2(value)
+            setDescriptionError("");
+        } else {
+            setDescriptionError(
+                `You have reached the maximum limit of ${MAX_DESCRIPTION_WORDS} words.`
+            );
+        }
+
+    }
 
 
     const handleEditorChange1 = (value) => {
@@ -495,6 +539,8 @@ const JobReview = () => {
     const [EvalKey, setEvalKey] = useState([]);
     const [count, setCount] = useState(10);
     const [selectedListUids, setSelectedListUids] = useState([]);
+    const [groupListUids, setGroupListUids] = useState([]);
+    const [parameterListUids, setParameterListUids] = useState([]);
     const [ListShow, setListShow] = useState(false);
     const [candidateEmail, setCandidateEmail] = useState('')
     const [candidateInfo, setCandidateInfo] = useState({})
@@ -1158,14 +1204,37 @@ const JobReview = () => {
         setListShow(true);
         setListData(data?.job_applicant_group)
     }
-    const handleCheckBoxBtn = (uid) => {
+    const handleCheckBoxBtn = (Val) => {
+        // debugger     
         setSelectedListUids((prevSelectedUids) => {
-            if (prevSelectedUids.includes(uid)) {
-                return prevSelectedUids.filter((id) => id !== uid);
+            if (prevSelectedUids.includes(Val?.uid)) {
+                return prevSelectedUids.filter((id) => id !== Val?.uid);
             } else {
 
-                return [...prevSelectedUids, uid];
+                return [...prevSelectedUids, Val?.uid];
             }
+        });
+        setGroupListUids((prevSelectedUids) => {
+            if (!prevSelectedUids.includes(Val?.job_groups[0]?.uid)) {
+                // return prevSelectedUids.filter((id) => id !== Val?.job_groups[0]?.uid);
+                return [...prevSelectedUids, Val?.job_groups[0]?.uid];
+            } else {
+                return [...prevSelectedUids]
+            }
+            //  else {
+            //     return [...prevSelectedUids, Val?.job_groups[0]?.uid];
+            // }
+        });
+        setParameterListUids((prevSelectedUids) => {
+            if (!prevSelectedUids.includes(Val?.job_groups[0]?.job_group_parameter?.uid)) {
+                // return prevSelectedUids.filter((id) => id !== Val?.job_groups[0]?.job_group_parameter?.uid);
+                return [...prevSelectedUids, Val?.job_groups[0]?.job_group_parameter?.uid];
+            } else {
+                return [...prevSelectedUids]
+            }
+            // else {
+            //     return [...prevSelectedUids, Val?.job_groups[0]?.job_group_parameter?.uid];
+            // }
         });
     }
     const allSelected = selectedListUids.length === ListData.filter(user => user?.job_applicant_status !== "Reject").length;
@@ -1250,27 +1319,28 @@ const JobReview = () => {
         }
     }
 
-    const handleSendMessage = async () => {
-        // e.preventDefault();
+    const handleSendMessage = async (messageModel) => {
         try {
             const formData = new FormData();
             formData.append("sender", user?.uid);
             formData.append("job", id);
             formData.append("job_applicant", candidateInfo?.uid);
             if (description.trim()) formData.append("message", description);
+            if (messageModel.trim()) formData.append("message", messageModel);
 
             const response = await chatPostAPI(formData);
             if (response.data.success) {
                 setDescription("")
                 setModalShow(false)
                 sortmodalsetShow(false)
+                setremindModalShow(false)
             }
         } catch (error) {
             console.log(error);
         }
     };
 
-    const handleStatusGroup = async (status, applicant_uid) => {
+    const handleStatusGroup = async (status, applicant_uid, applicant) => {
         try {
             const formData = new FormData();
             if (Array.isArray(applicant_uid)) {
@@ -1278,15 +1348,30 @@ const JobReview = () => {
             } else {
                 formData.append('job_applicant_uid', JSON.stringify([applicant_uid]))
             }
-            formData.append('job_groups', JSON.stringify([paramUid]))
-            formData.append('parameter_uid', groupParameterId)
+            if (groupListUids?.length) {
+                formData.append('job_groups', JSON.stringify(groupListUids))
+            }
+            if (paramUid) {
+                formData.append('job_groups', JSON.stringify([paramUid]))
+            }
+            if (parameterListUids?.length) {
+                formData.append('parameter_uid', JSON.stringify(parameterListUids))
+            }
+            if (groupParameterId) {
+                formData.append('parameter_uid', JSON.stringify([groupParameterId]))
+            }
+            if (applicant?.length) {
+                formData.append('job_groups', JSON.stringify([applicant[0]?.uid]))
+                formData.append('parameter_uid', JSON.stringify([applicant[0]?.job_group_parameter?.uid]))
+            }
             formData.append('job_applicant_status', status)
             const res = await jobApplicantUpdateAPI(formData)
             if (res?.data?.success) {
                 fetchListAPIByKey(groupParameterId, groupTitleName, paramUid)
+                getListGridData()
                 setSelectedListUids([]);
                 if (status == 'Reject' || status == 'Select') {
-                    handleSendMessage()
+                    handleSendMessage(status == 'Reject' ? messageModel1 : messageModel2)
                 }
                 holdappClose()
             }
@@ -1621,6 +1706,19 @@ const JobReview = () => {
             console.log(error)
         }
     }
+    const handleDownloadFile = () => {
+        // Convert JSON to worksheet
+        const worksheet = XLSX.utils.json_to_sheet(ListData);
+
+        // Create a new workbook
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+
+        // Generate Excel file and trigger download
+        const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+        const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
+        saveAs(blob, "MyData.xlsx");
+    }
     // console.log(assignmentReviewList)
     // console.log('section', sectionWiseData)
     // console.log(questionWiseData)
@@ -1633,6 +1731,7 @@ const JobReview = () => {
     console.log(jobDetails)
     console.log(messageRemind)
     console.log(isExcellentAll)
+    console.log(groupListUids)
     return (
         <>
             <Sidebar />
@@ -1741,55 +1840,59 @@ const JobReview = () => {
                                                                 </InputGroup>
                                                             </div>
                                                         </Col>
-                                                        <Col md={7} className={`d-flex  justify-content-end align-items-center list-kanban ${!selectedListUids.length && 'disabled-btn'}`}>
+                                                        <Col md={7} className={`d-flex  justify-content-end align-items-center list-kanban `}>
+                                                            <div className={`${!selectedListUids.length && 'disabled-btn'}`}>
+                                                                <Button className="icon_btnlink" onClick={() => handleStatusGroup('Select', selectedListUids, candidateInfo?.job_groups)}>
+                                                                    <img src={checkgreen} className="img-fluid" />
+                                                                    Select</Button>
+                                                                <Button className="icon_btnlink" onClick={() => handleStatusGroup('Reject', selectedListUids, candidateInfo?.job_groups)}>
+                                                                    <img src={xcircle} className="img-fluid" />
+                                                                    Reject</Button>
+                                                                <Button className="icon_btnlink" onClick={() => handleStatusGroup('On Hold', selectedListUids, candidateInfo?.job_groups)}>
+                                                                    <img src={slashCircle} className="img-fluid" />
 
-                                                            <Button className="icon_btnlink" onClick={() => handleStatusGroup('Select', selectedListUids)}>
-                                                                <img src={checkgreen} className="img-fluid" />
-                                                                Select</Button>
-                                                            <Button className="icon_btnlink" onClick={() => handleStatusGroup('Reject', selectedListUids)}>
-                                                                <img src={xcircle} className="img-fluid" />
-                                                                Reject</Button>
-                                                            <Button className="icon_btnlink" onClick={() => handleStatusGroup('On Hold', selectedListUids)}>
-                                                                <img src={slashCircle} className="img-fluid" />
-
-                                                                On Hold</Button>
-
-
-                                                            <Button className="icon_btnlink" onClick={() => handleStatusGroup('Active', selectedListUids)}>
-                                                                <img src={placeholdericon} className="img-fluid" />
-                                                                Clear Round</Button>
-                                                            <Button className="icon_btnlink" onClick={() => setremindModalShow(true)}>
-                                                                <img src={sendmsg} className="img-fluid" />
-                                                                Send Message</Button>
+                                                                    On Hold</Button>
 
 
-                                                            <Button className="icon_btnlink" onClick={() => handleStatusGroup('InActive', selectedListUids)}>
-                                                                <img src={downloadicon} className="img-fluid" />
-                                                                Download</Button>
-
-                                                            <Button
-                                                                // className="btn btn-light-outline me-3"
-                                                                className="icon_btnlink"
-                                                                onClick={() => setFilterApplicantShow(true)}
-                                                            >
-                                                                <svg
-                                                                    width="20"
-                                                                    height="20"
-                                                                    viewBox="0 0 20 20"
-                                                                    className="me-2"
-                                                                    fill="none"
-                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                <Button className="icon_btnlink" onClick={() => handleStatusGroup('Active', selectedListUids, candidateInfo?.job_groups)}>
+                                                                    <img src={placeholdericon} className="img-fluid" />
+                                                                    Clear Round</Button>
+                                                                <Button className="icon_btnlink" onClick={() => setremindModalShow(true)}>
+                                                                    <img src={sendmsg} className="img-fluid" />
+                                                                    Send Message
+                                                                </Button>
+                                                            </div>
+                                                            <div className="">
+                                                                <Button className="icon_btnlink" onClick={handleDownloadFile}
+                                                                // onClick={() => handleStatusGroup('InActive', selectedListUids,candidateInfo?.job_groups)}
                                                                 >
-                                                                    <path
-                                                                        d="M5 10H15M2.5 5H17.5M7.5 15H12.5"
-                                                                        stroke="#344054"
-                                                                        stroke-width="1.66667"
-                                                                        stroke-linecap="round"
-                                                                        stroke-linejoin="round"
-                                                                    />
-                                                                </svg>
-                                                                filters
-                                                            </Button>
+                                                                    <img src={downloadicon} className="img-fluid" />
+                                                                    Download</Button>
+
+                                                                <Button
+                                                                    // className="btn btn-light-outline me-3"
+                                                                    className="icon_btnlink"
+                                                                    onClick={() => setFilterApplicantShow(true)}
+                                                                >
+                                                                    <svg
+                                                                        width="20"
+                                                                        height="20"
+                                                                        viewBox="0 0 20 20"
+                                                                        className="me-2"
+                                                                        fill="none"
+                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                    >
+                                                                        <path
+                                                                            d="M5 10H15M2.5 5H17.5M7.5 15H12.5"
+                                                                            stroke="#344054"
+                                                                            stroke-width="1.66667"
+                                                                            stroke-linecap="round"
+                                                                            stroke-linejoin="round"
+                                                                        />
+                                                                    </svg>
+                                                                    filters
+                                                                </Button>
+                                                            </div>
                                                         </Col>
                                                     </Row>
                                                 </Card.Header>
@@ -1904,7 +2007,7 @@ const JobReview = () => {
                                                                                 name="group1"
                                                                                 type="checkbox"
                                                                                 checked={selectedListUids.includes(item?.uid)}
-                                                                                onChange={() => handleCheckBoxBtn(item?.uid)}
+                                                                                onChange={() => handleCheckBoxBtn(item)}
                                                                                 disabled={item?.job_applicant_status == "Reject"}
                                                                             />
                                                                             <span className="font-weight-600" style={{ textTransform: 'capitalize', cursor: 'pointer' }} onClick={() => {
@@ -1931,7 +2034,6 @@ const JobReview = () => {
                                                                         <td colSpan={2}>
                                                                             <div className="d-flex">
                                                                                 <img src={User01Gray} />
-
                                                                                 {/* <Select
                                                                                     key={index}
                                                                                     options={Object.entries(item?.job_applicant_profile?.personality || {}).map(
@@ -1944,7 +2046,6 @@ const JobReview = () => {
                                                                                     styles={customStyles}
                                                                                     placeholder=""
                                                                                 /> */}
-
                                                                                 <select className="select-transpant">
                                                                                     {Object.entries(item?.job_applicant_profile?.personality).map(([key, value]) => (
                                                                                         <option>{value}%</option>
@@ -1953,25 +2054,20 @@ const JobReview = () => {
                                                                                 {/* <Select className="select-transpant" options={Object.entries(item?.job_applicant_profile?.personality).map(([key, value]) => ({value:value,label:`${value}%`}))} /> */}
                                                                             </div>
                                                                         </td>
-                                                                        {/* <td>Invited</td>
-                                                                        <td><span className="text-elipe-40">Under Review</span></td> */}
                                                                         {EvalKey.map((keyItem, index) => {
                                                                             // find score by matching subject
-                                                                            const valueItem =item.jobapplicant_asset_completion.find(
+                                                                            const valueItem = item.jobapplicant_asset_completion.find(
                                                                                 (val) => val.completion_asset.asset_title === keyItem.asset_title
                                                                             );
-                                                                            return (                                                                                
-                                                                                    <td>{valueItem ? valueItem.applicant_final_overall_score: "-"}</td>                                                                                
+                                                                            return (
+                                                                                <td>{valueItem ? valueItem.applicant_final_overall_score : "-"}</td>
                                                                             );
                                                                         })}
-                                                                        {/* <td><span className="text-elipe-40">Under Review</span></td>
-                                                                        <td><span className="text-elipe-40">Under Review</span></td> */}
                                                                         <td></td>
                                                                         <td>{item?.job_match_score}%</td>
                                                                         {/* <td colSpan={2} >
                                                                             <span onClick={recallShow} className="tag tag-lightprimery" style={{ cursor: 'pointer' }} >Recall</span>
                                                                         </td> */}
-
                                                                         <td >
                                                                             <span className={`dic_tag ${coloringByStatus(item?.job_applicant_status)}`}><i class={iconByStatus(item?.job_applicant_status)}></i> {item?.job_applicant_status == "Reject" ? "Rejected" : item?.job_applicant_status == "Select" ? "Selected" : item?.job_applicant_status}</span>
                                                                         </td>
@@ -1985,27 +2081,24 @@ const JobReview = () => {
                                                                                     <img src={threeDots} />
                                                                                 </Dropdown.Toggle>
                                                                                 <Dropdown.Menu>
-                                                                                    <Dropdown.Item href={""} onClick={() => handleStatusGroup('Inactive', item?.uid)} disabled={item?.job_applicant_status == "Reject"}>
+                                                                                    <Dropdown.Item href={""} onClick={() => handleStatusGroup('Inactive', item?.uid, candidateInfo?.job_groups)} disabled={item?.job_applicant_status == "Reject"}>
                                                                                         Inactive
                                                                                     </Dropdown.Item>
-                                                                                    <Dropdown.Item href={""} onClick={() => handleStatusGroup('Active', item?.uid)} disabled={item?.job_applicant_status == "Reject"}>
+                                                                                    <Dropdown.Item href={""} onClick={() => handleStatusGroup('Active', item?.uid, candidateInfo?.job_groups)} disabled={item?.job_applicant_status == "Reject"}>
                                                                                         Active
                                                                                     </Dropdown.Item>
-                                                                                    <Dropdown.Item href={""} onClick={() => handleStatusGroup('Reject', item?.uid)} disabled={item?.job_applicant_status == "Reject"}>
+                                                                                    <Dropdown.Item href={""} onClick={() => handleStatusGroup('Reject', item?.uid, candidateInfo?.job_groups)} disabled={item?.job_applicant_status == "Reject"}>
                                                                                         Reject
                                                                                     </Dropdown.Item>
-                                                                                    <Dropdown.Item href={""} onClick={() => handleStatusGroup('On Hold', item?.uid)} disabled={item?.job_applicant_status == "Reject"}>
+                                                                                    <Dropdown.Item href={""} onClick={() => handleStatusGroup('On Hold', item?.uid, candidateInfo?.job_groups)} disabled={item?.job_applicant_status == "Reject"}>
                                                                                         On Hold
                                                                                     </Dropdown.Item>
-                                                                                    <Dropdown.Item href={""} onClick={() => handleStatusGroup('Select', item?.uid)} disabled={item?.job_applicant_status == "Reject"}>
+                                                                                    <Dropdown.Item href={""} onClick={() => handleStatusGroup('Select', item?.uid, candidateInfo?.job_groups)} disabled={item?.job_applicant_status == "Reject"}>
                                                                                         Select
                                                                                     </Dropdown.Item>
-
-
                                                                                     <Dropdown.Item href={""} onClick={() => setremindModalShow(true)} >
                                                                                         Send Message
                                                                                     </Dropdown.Item>
-
                                                                                 </Dropdown.Menu>
                                                                             </Dropdown>
                                                                         </td>
@@ -4686,18 +4779,14 @@ const JobReview = () => {
 
                         <div className="texteditor_warp" onClick={handleWrapperClick}>
                             <ReactQuill
-                                value={description}
-                                onChange={handleEditorChange}
+                                value={messageModel1}
+                                onChange={handleMessageChange1}
                                 theme="snow"
-                                ref={quillRef}
+                                // ref={quillRef}
                                 className="custom-quill "
                                 modules={{
                                     toolbar: [["bold", "italic", "underline", "strike"], ["link"]],
                                 }}
-                            // style={{ 
-                            //     minHeight: '200px',
-                            //     height: 'auto'
-                            // }}
                             />
                         </div>
 
@@ -4718,7 +4807,7 @@ const JobReview = () => {
                                 >
                                     Clear All
                                 </Button>
-                                <Button onClick={() => handleStatusGroup('Reject', candidateInfo?.uid)} variant="primary" style={{ fontSize: '12px', lineHeight: '18px', width: '113px', height: '38px' }} >
+                                <Button onClick={() => handleStatusGroup('Reject', candidateInfo?.uid, candidateInfo?.job_groups)} variant="primary" style={{ fontSize: '12px', lineHeight: '18px', width: '113px', height: '38px' }} >
                                     Reject
                                 </Button>
                             </div>
@@ -4761,61 +4850,6 @@ const JobReview = () => {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form.Group className="mb-2">
-                        <Form.Label>
-                            Reminder Interval
-                        </Form.Label>
-                        <div className="row p-2">
-                            <div className="col-md-3 ps-1 pe-1">
-                                <Form.Control
-                                    type="text"
-                                    id="inputText5"
-                                    aria-describedby="passwordHelpBlock"
-                                    placeholder="Every 1"
-                                    style={{ minHeight: '37px' }}
-                                />
-                            </div>
-                            <div className="col-md-3  ps-1 pe-1">
-                                <Select
-                                    className="react_selectbox"
-                                    options={[
-                                        { value: 'day', label: 'Day' },
-                                        { value: 'Night', label: 'Night' }
-                                    ]}
-                                    defaultValue={{ value: 'day', label: 'Day' }}
-                                    isSearchable={false}
-                                    onChange={(selectedOption) => console.log(selectedOption)}
-                                    styles={customStyles}
-                                />
-                            </div>
-                            <div className="col-md-3  ps-1 pe-1">
-                                <Select
-                                    className="react_selectbox"
-                                    options={[
-                                        { value: 'untilcompleted', label: 'Until Completed' },
-                                        { value: 'completed', label: 'Completed' }
-                                    ]}
-                                    defaultValue={{ value: 'untilcompleted', label: 'Until Completed' }}
-                                    isSearchable={false}
-                                    onChange={(selectedOption) => console.log(selectedOption)}
-                                    // onChange={handleSelectedLikeItems}
-                                    styles={customStyles}
-                                />
-                            </div>
-                            <div className="col-md-3 d-flex align-items-center  ps-1 pe-1">
-
-                                <Form.Check // prettier-ignore
-                                    type="switch"
-                                    id="custom-switch"
-                                    label="Auto Remind"
-                                    className="mt-1"
-                                    style={{ fontSize: '12px', lineHeight: '18px', fontWeight: '500' }}
-
-                                />
-                            </div>
-
-                        </div>
-                    </Form.Group>
 
                     <Form.Group className="mb-2" controlId="jobDescription">
                         <Form.Label>
@@ -4824,10 +4858,12 @@ const JobReview = () => {
 
                         <div className="texteditor_warp" onClick={handleWrapperClick}>
                             <ReactQuill
-                                value={description}
-                                onChange={handleEditorChange}
+                                // value={description}
+                                // onChange={handleEditorChange}
+                                value={messageModel}
+                                onChange={handleMessageChange}
                                 theme="snow"
-                                ref={quillRef}
+                                // ref={quillRef}
                                 className="custom-quill"
                                 modules={{
                                     toolbar: [["bold", "italic", "underline", "strike"], ["link"]],
@@ -4848,10 +4884,13 @@ const JobReview = () => {
                                     variant="light"
                                     className="me-3"
                                     style={{ fontSize: '12px', lineHeight: '18px', width: '113px', height: '38px' }}
+                                    onClick={() => {
+                                        setMessageModel("")
+                                    }}
                                 >
                                     Clear All
                                 </Button>
-                                <Button onClick={handleClose} variant="primary" style={{ fontSize: '12px', lineHeight: '18px', width: '160px', height: '38px' }} >
+                                <Button onClick={() => handleSendMessage(messageModel)} variant="primary" style={{ fontSize: '12px', lineHeight: '18px', width: '160px', height: '38px' }} >
                                     Send Message
                                 </Button>
                             </div>
@@ -4904,7 +4943,7 @@ const JobReview = () => {
                         </Button>
                         <Button className="w-50 btn btn-primary" variant="primary"
                             // style={{fontSize:'12px', lineHeight:'18px', width:'113px', height:'38px'}}
-                            onClick={() => handleStatusGroup('On Hold', candidateInfo?.uid)}
+                            onClick={() => handleStatusGroup('On Hold', candidateInfo?.uid, candidateInfo?.job_groups)}
                         >
                             Yes
                         </Button>
@@ -4949,8 +4988,9 @@ const JobReview = () => {
 
                         <div className="texteditor_warp" onClick={handleWrapperClick}>
                             <ReactQuill
-                                value={description}
-                                onChange={handleEditorChange}
+                                // value={description}
+                                value={messageModel2}
+                                onChange={handleMessageChange2}
                                 theme="snow"
                                 ref={quillRef}
                                 className="custom-quill "
@@ -4981,7 +5021,7 @@ const JobReview = () => {
                                 >
                                     Clear All
                                 </Button>
-                                <Button onClick={() => handleStatusGroup('Select', candidateInfo?.uid)} variant="primary" style={{ fontSize: '12px', lineHeight: '18px', width: '113px', height: '38px' }} >
+                                <Button onClick={() => handleStatusGroup('Select', candidateInfo?.uid, candidateInfo?.job_groups)} variant="primary" style={{ fontSize: '12px', lineHeight: '18px', width: '113px', height: '38px' }} >
                                     ShortList
                                 </Button>
                             </div>

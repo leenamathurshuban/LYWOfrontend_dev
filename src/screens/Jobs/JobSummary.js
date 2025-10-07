@@ -45,6 +45,7 @@ const JobSummary = () => {
 
     const handleClose = (modalName) => {
         setShow(false)
+        navigate('/jobs')
     };
 
     const handleInviteClose = () => setInviteModalShow(false);
@@ -305,19 +306,22 @@ const JobSummary = () => {
                                                     <p>{Val?.question_title} {Val?.is_mandatory && <i className="fa fa-star text-primery ms-1"></i>}</p>
                                                     <Form>
                                                         {Val?.questions_answer?.map((val) => (
-                                                            <Form.Check
+                                                            <>
+                                                            {/* <Form.Check
                                                                 type="checkbox"
                                                                 id="custom-checkbox"
                                                                 checked
                                                                 label={val}
                                                                 className="success-check"
-                                                            />
+                                                            /> */}
+                                                            <p>{val}</p>
+                                                            </>
                                                         ))}
                                                     </Form>
                                                 </li>
                                             ))}
                                         </ul>
-                                        <a href="#" className="btn-scroll">Scroll for more</a>
+                                        {/* <a href="#" className="btn-scroll">Scroll for more</a> */}
                                     </Card.Body>
                                 </Card>
                             </Col>
@@ -405,15 +409,11 @@ const JobSummary = () => {
                             </Card.Body>
                         </Card>
                         <Offcanvas
-
                             show={inviteModalShow}
                             onHide={handleInviteClose}
                             placement="end"
-
                             className="invite-people-modal"
-
                         >
-
                             <Offcanvas.Header className='justify-content-between' closeButton>
                                 <Offcanvas.Title style={{ 'textTransform': 'capitalize' }} >  {data?.job_title} </Offcanvas.Title>
 
@@ -426,8 +426,6 @@ const JobSummary = () => {
 
                                 />
                             </Offcanvas.Header>
-
-
                             <Offcanvas.Body>
 
                                 <Tabs
@@ -513,15 +511,9 @@ const JobSummary = () => {
                                                 Send Mail
                                             </Button>
                                         </Form>
-
-
                                     </Tab>
                                 </Tabs>
-
                             </Offcanvas.Body>
-
-
-
                         </Offcanvas>
 
                     </Modal.Body>

@@ -235,7 +235,7 @@ const CreateJobs = ({ show, handleClose }) => {
     { value: "Contract", label: "Contract" },
     { value: "Temporary", label: "Temporary" },
     { value: "Volunteer", label: "Volunteer" },
-    { value: "Internship", lable: "Internship" },
+    { value: "Internship", label: "Internship" },
     { value: "Other", label: "Other" }
   ]
   const jobTypeOption = [
@@ -254,7 +254,7 @@ const CreateJobs = ({ show, handleClose }) => {
   ]
   const [showDropdown, setShowDropdown] = useState({ jobType: false, workPlaceType: false });
   const MAX_FILE_SIZE = 5 * 1024 * 1024;
-  const MAX_DESCRIPTION_WORDS = 500;
+  const MAX_DESCRIPTION_WORDS = 50;
   const quillRef = useRef(null);
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
@@ -312,9 +312,19 @@ const CreateJobs = ({ show, handleClose }) => {
       newErrors.travelOption = "This Field is required";
       isValid = false;
     }
-    if (!description) {
-      newErrors.description = "This Field is required";
-      isValid = false;
+    // if (!description) {
+    //   newErrors.description = "This Field is required";
+    //   isValid = false;
+    // }
+    if (!description || description.length < MAX_DESCRIPTION_WORDS) {
+      if (!description) {
+        newErrors.description = "This Field is required";
+        isValid = false;
+      }
+      if (description.length < MAX_DESCRIPTION_WORDS) {
+        newErrors.description = "Minimum 50 words required";
+        isValid = false;
+      }
     }
     if (!createFormData.jobType) {
       newErrors.jobType = "This Field is required";
@@ -379,13 +389,17 @@ const CreateJobs = ({ show, handleClose }) => {
     const wordCount = value.trim().split(/\s+/).length;
 
     if (wordCount <= MAX_DESCRIPTION_WORDS) {
-      setDescription(value);
-      setDescriptionError("");
-    } else {
       setDescriptionError(
         `You have reached the maximum limit of ${MAX_DESCRIPTION_WORDS} words.`
       );
+    } else {
+      setDescription(value);
+      setDescriptionError("");
     }
+    setErrors({
+      ...errors,
+      ["description"]:""
+    })
   };
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -1241,8 +1255,8 @@ const CreateJobs = ({ show, handleClose }) => {
             <Select
               className="react_selectbox"
               options={locationData}
-             isSearchable={true}
-             noOptionsMessage={() => "No results found"}
+              isSearchable={true}
+              noOptionsMessage={() => "No results found"}
               placeholder="Search location"
               // filterOption={(option, inputValue) => {
               //   if (!inputValue) return false; // hide all options until user types

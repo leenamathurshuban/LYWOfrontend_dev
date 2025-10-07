@@ -141,6 +141,11 @@ export const CreateJobQuestion = (data) => {
   return CreateJobQuestion;
 };
 
+export const UpdateJobQuestion = (id,data) => {
+  const updateJobQuestion = client.putWithUpload(`${JobsUrl.updateCustomQuestion}${id}/`,data);
+  return updateJobQuestion;
+};
+
 export const addSkill = (data) => {
   const addSkill = client.postWithUpload(SkillsUrl.skillPost, data);
   return addSkill;

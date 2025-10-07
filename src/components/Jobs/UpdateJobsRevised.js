@@ -43,6 +43,7 @@ import {
     CreateJobIsLike,
     CreateJobLocation,
     UpdateJobForm,
+    UpdateJobQuestion,
 } from "../../services/provider";
 import { removeToken } from "../../helpers/helper";
 import { Link, useNavigate } from "react-router-dom";
@@ -164,7 +165,7 @@ const UpdateJobsRevised = ({
     const salaryRangeOption = [
         { value: "Salary-range", label: "Salary Range" },
         { value: "Min-salary", label: "Min. Salary" },
-        { value: "Max-salary", label: "ContrMax. Salaryact" },
+        { value: "Max-salary", label: "Max. Salary" },
     ]
     const salaryTypeOption = [
         { value: "Per-Month", label: "Per Month" },
@@ -383,7 +384,12 @@ const UpdateJobsRevised = ({
             setMustHaveSkills(response?.data?.response?.must_have_skills)
             setSkillGroupDataExist(response?.data?.response?.skills)
             if (response?.data?.response?.question_job?.length) {
-                setComponents(response?.data?.response?.question_job)
+                const updatedComp = response?.data?.response?.question_job?.map(item => ({
+                    ...item,
+                    isEdit: false,
+                    isCreated: false
+                }));
+                setComponents(updatedComp)
             } else {
                 setComponents([
                     {
@@ -395,6 +401,8 @@ const UpdateJobsRevised = ({
                         },
                         questions_answer: [],
                         is_mandatory: "True", // pass True or False value
+                        isEdit: false,
+                        isCreated: false
                     }
                 ])
             }
@@ -816,6 +824,39 @@ const UpdateJobsRevised = ({
             })
         }
     };
+    // Allow only numbers in input
+    const onlyNumbers = (value) => value.replace(/[^0-9]/g, "");
+
+    const handleMinChange = (e) => {
+        const value = onlyNumbers(e.target.value);
+        if (value === "" || Number(value) < Number(updateFormData.max_exp || Infinity)) {
+            setUpdateFormData({
+                ...updateFormData,
+                [e.target.name]: e.target.value,
+            });
+        }
+    };
+
+    const handleMaxChange = (e) => {
+        const value = onlyNumbers(e.target.value);
+
+        // enforce max ≤ 40
+        if (value === "" || Number(value) <= 40) {
+            setUpdateFormData({
+                ...updateFormData,
+                [e.target.name]: e.target.value,
+            });
+
+            // ensure min is less than max
+            if (updateFormData.min_exp !== "" && Number(updateFormData.min_exp) >= Number(value)) {
+                // setMinSalary(String(Number(value) - 1));
+                setUpdateFormData({
+                    ...updateFormData,
+                    ["min_exp"]: String(Number(value) - 1),
+                });
+            }
+        }
+    };
 
     const handleMaxInputChange = (e) => {
         const value = parseInt(e.target.value, 10);
@@ -909,24 +950,35 @@ const UpdateJobsRevised = ({
         ]);
         setWittenLanguage([])
     }
-    const handleSaveCustomQuestion = async () => {
+    const handleSaveCustomQuestion = async (isEdit, values) => {        
         const formData = new FormData();
-
-        // Append each question and its data to the FormData object
-        components.forEach((question, index) => {
-            formData.append("job_question", question.job_question);
-            formData.append("question_title", question.question_title);
-            formData.append("quiz_type", question.quiz_type);
-            formData.append("is_mandatory", question.is_mandatory);
-            formData.append("question_option", JSON.stringify(question.question_option));
-            formData.append("questions_answer", JSON.stringify(question.questions_answer));
-        });
-
         try {
-            const response = await CreateJobQuestion(formData);
-            if (response.data.status == 200) {
-                alert("Question Saved Successfully");
-                // getJobDetails();
+            if (isEdit) {
+                formData.append("job_question", createJobUid);
+                formData.append("question_title", values.question_title);
+                formData.append("quiz_type", values.quiz_type);
+                formData.append("is_mandatory", values.is_mandatory);
+                formData.append("question_option", JSON.stringify(values.question_option));
+                formData.append("questions_answer", JSON.stringify(values.questions_answer));
+                const res = await UpdateJobQuestion(values?.uid, formData)                
+                if(res.data.success){
+                    toast.success("Question Updated Successfully");
+                }
+            } else {
+                // Append each question and its data to the FormData object
+                components.forEach((question, index) => {
+                    formData.append("job_question", question.job_question);
+                    formData.append("question_title", question.question_title);
+                    formData.append("quiz_type", question.quiz_type);
+                    formData.append("is_mandatory", question.is_mandatory);
+                    formData.append("question_option", JSON.stringify(question.question_option));
+                    formData.append("questions_answer", JSON.stringify(question.questions_answer));
+                });
+                const response = await CreateJobQuestion(formData);
+                if (response.data.status == 200) {
+                    toast.success("Question Saved Successfully");
+                    // getJobDetails();
+                }
             }
         } catch { }
     };
@@ -978,6 +1030,8 @@ const UpdateJobsRevised = ({
                 },
                 questions_answer: [],
                 is_mandatory: "True", // pass True or False value
+                isEdit: false,
+                isCreated: true
             };
 
             setComponents([...components, newQuestion]);
@@ -1499,7 +1553,7 @@ const UpdateJobsRevised = ({
         setrdnwBadges([]);
         setSpokenLanguageBadges([]);
         setLocationBadges([]);
-        requireShow()
+        // requireShow()
     }, []);
     useEffect(() => {
         if (isUpdated) {
@@ -1901,6 +1955,8 @@ const UpdateJobsRevised = ({
                 },
                 questions_answer: [],
                 is_mandatory: "True",
+                isEdit: false,
+                isCreated: false
             }));
             setComponents(cleared);
         } else if (index == "11") {
@@ -2197,6 +2253,14 @@ const UpdateJobsRevised = ({
             return 'summary-full';
         }
     };
+    useEffect(() => {
+        if (updateFormData?.immediate_hiring) {
+            setUpdateFormData({
+                ...updateFormData,
+                ["targate_hire_date"]: "",
+            });
+        }
+    }, [updateFormData?.immediate_hiring])
     console.log(shouldShowRecommendation())
 
     // console.log(behaviours)
@@ -2585,8 +2649,14 @@ const UpdateJobsRevised = ({
                                                         // onClick={handleCreateForm}
                                                         type="button"
                                                         class="btn btn-lightgray next-btn-shadow"
-                                                        onClick={handleNext}
-                                                        // onClick={requireShow}
+                                                        // onClick={handleNext}
+                                                        onClick={() => {
+                                                            if (!importantFlag.salary) {
+                                                                requireShow()
+                                                            } else {
+                                                                handleNext()
+                                                            }
+                                                        }}
                                                     >
                                                         Next
                                                     </button>
@@ -2833,8 +2903,9 @@ const UpdateJobsRevised = ({
                                                                         className="sm-fcontrol w-150"
                                                                         name="min_exp"
                                                                         onChange={(e) => {
-                                                                            handleFormData(e);
+                                                                            // handleFormData(e);
                                                                             // handleMinInputChange(e);
+                                                                            handleMinChange(e)
                                                                         }}
                                                                         value={updateFormData?.min_exp}
                                                                         placeholder="Min."
@@ -2853,8 +2924,9 @@ const UpdateJobsRevised = ({
                                                                         value={updateFormData?.max_exp}
                                                                         name="max_exp"
                                                                         onChange={(e) => {
-                                                                            handleFormData(e);
+                                                                            // handleFormData(e);
                                                                             // handleMaxInputChange(e);
+                                                                            handleMaxChange(e)
                                                                         }}
                                                                     />
                                                                 )}
@@ -4699,7 +4771,7 @@ const UpdateJobsRevised = ({
                             <div className="col-12 mt-4">
                                 <Button className="w-100" variant="primary" onClick={() => {
                                     requiremodelShow(false);
-                                    // handleNext()
+                                    handleNext()
                                 }}>OK</Button >
                             </div>
                         </div>
