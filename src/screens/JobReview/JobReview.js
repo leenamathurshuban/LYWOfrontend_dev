@@ -2226,8 +2226,10 @@ const JobReview = () => {
 
                                                                                                 <button className="button" class="btn-transpant" onClick={() =>
                                                                                                     // handleListData(groupItem)
+                                                                                                    {
+                                                                                                    setActiveView('list')
                                                                                                     fetchListAPIByKey(paraName?.uid, groupItem?.group_name, groupItem?.uid)
-                                                                                                }>
+                                                                                                }}>
                                                                                                     {/* <i class="fa fa-list-ul" aria-hidden="true"></i> */}
                                                                                                     <img src={list} className="img-fluid" alt="Trash" />
                                                                                                 </button>

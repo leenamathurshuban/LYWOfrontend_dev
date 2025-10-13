@@ -457,7 +457,7 @@ const Dashboard = () => {
   const keyArray = Array.from(
     new Set(dashboardList?.total_count_data?.hiring_pipeline?.flatMap(item => Object.keys(item)))
   );
-  const keyColumn = reorderFields(keyArray)?.filter((item) => item != "job_uid")
+  const keyColumn = reorderFields(keyArray)?.filter((item) => item != "job_uid" && item!="job_status")
 
   const totalPendingReviews = dashboardList?.total_count_data?.pending_reviews
     ?.reduce((sum, item) => sum + item.pending_review, 0);
@@ -497,11 +497,11 @@ const Dashboard = () => {
     <>
       <Sidebar />
       <Header />
-      {/* {isLoading && (
+      {isLoading && (
         <div className="loader-overlay">
           <Spinner animation="border" role="status" className="ml-3" />
         </div>
-      )} */}
+      )}
       <div className="page-body">
         <Container fluid className="">
           <Row>

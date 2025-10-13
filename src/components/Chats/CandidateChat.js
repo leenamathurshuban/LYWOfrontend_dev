@@ -63,6 +63,7 @@ export default function CandidateChat({ jobDetails }) {
   }
 
   const [show, filterShow] = useState(false);
+  const [selectedCandidateIndex, setSelectedCandidateIndex] = useState(null);
   const [candidateList, setCandidateList] = useState({
     AllList: [],
     Unread: [],
@@ -312,8 +313,8 @@ export default function CandidateChat({ jobDetails }) {
 
       {/* Middle Sidebar - Candidates */}
       <Col md={3} className="bg-white " style={{ borderRight: "2px solid #F2F4F7" }}>
-        <Card className="h-100 border-0 chat-module" style={{background:'#FCFCFD'}}>
-          <Card.Header className="border-bottom d-flex justify-content-between align-items-center" style={{ padding: "16px", paddingBottom: "0", background:'transparent' }} >
+        <Card className="h-100 border-0 chat-module" style={{ background: '#FCFCFD' }}>
+          <Card.Header className="border-bottom d-flex justify-content-between align-items-center" style={{ padding: "16px", paddingBottom: "0", background: 'transparent' }} >
             <Card.Title>Candidates</Card.Title>
 
             <Select
@@ -385,7 +386,10 @@ export default function CandidateChat({ jobDetails }) {
 
                 <div className='job-chat-form-card mt-2'>
                   {candidateList?.AllList.map((candidates, index) => (
-                    <Card key={index} className="mb-2 cursor-pointer " onClick={() => getChatDetailsData(candidates?.job_applicant)}>
+                    <Card key={index} className={`mb-2 cursor-pointer ${selectedCandidateIndex==candidates?.job_applicant?.uid?"active":""}`} onClick={() => {
+                      setSelectedCandidateIndex(candidates?.job_applicant?.uid)
+                      getChatDetailsData(candidates?.job_applicant)
+                      }}>
                       <Card.Body>
                         <Card.Title className="">{candidates.job_applicant.job_applicant_profile.user.username}</Card.Title>
 

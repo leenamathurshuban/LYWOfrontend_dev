@@ -728,7 +728,7 @@ const BehaviouralAst = ({ behaviourAssModel, setBehaviourAssModel, jobPostData }
                         {quizMostLeastLike.length > 0 && (quizMostLeastLike.length > quizMostLeastLike.flatMap(row => row.mostList).length) &&
                             (quizMostLeastLike.length > quizMostLeastLike.flatMap(row => row.leastList).length) && !isLoading && 'Save and Exit'}
                         {complete && (quizMostLeastLike.length === quizMostLeastLike.flatMap(row => row.mostList).length) &&
-                            (quizMostLeastLike.length === quizMostLeastLike.flatMap(row => row.leastList).length) && isLoading && `Proceed to Quiz for ${jobPostData.job_title}`}
+                            (quizMostLeastLike.length === quizMostLeastLike.flatMap(row => row.leastList).length) && isLoading && `Proceed`}
                         Proceed to Quiz
                     </Button>
                 </Modal.Footer>

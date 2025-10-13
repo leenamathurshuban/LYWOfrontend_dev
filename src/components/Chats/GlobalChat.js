@@ -63,6 +63,7 @@ export default function GlobalChat() {
   }
 
   const [selectedJobIndex, setSelectedJobIndex] = useState(null);
+  const [selectedCandidateIndex, setSelectedCandidateIndex] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchActive, setSearchActive] = useState("");
   const [searchInactive, setSearchInactive] = useState("");
@@ -100,7 +101,7 @@ export default function GlobalChat() {
   const inputRef = useRef(null);
   const [dragActive, setDragActive] = useState(false);
   const [image, setImage] = useState(null);
-  const [orderJob,setOrderJob] = useState("Recentfirst")
+  const [orderJob, setOrderJob] = useState("Recentfirst")
 
   const handleFiles = (files) => {
     if (files && files[0]) {
@@ -380,9 +381,9 @@ export default function GlobalChat() {
   }, [searchInactive])
 
   const handleCompanyOrder = (e) => {
-    setOrderJob(e.value)    
+    setOrderJob(e.value)
   }
-  useEffect(()=>{
+  useEffect(() => {
     if (orderJob == "Recentfirst") {
       const recentDate = jobData?.allJob?.sort((a, b) => new Date(b.targate_hire_date) - new Date(a.targate_hire_date));
       const recentActive = jobData?.jobs?.sort((a, b) => new Date(b.targate_hire_date) - new Date(a.targate_hire_date));
@@ -402,7 +403,7 @@ export default function GlobalChat() {
         InactiveJobs: recentActive?.filter((item) => item.job_status !== "Active" && item.job_status !== "Draft")
       }))
     }
-  },[orderJob])
+  }, [orderJob])
   console.log(jobData)
   console.log(messages)
   return (
@@ -420,7 +421,7 @@ export default function GlobalChat() {
                   <Select
                     options={options}
                     //value={userOption.find((opt)=>opt.value===companyInfo)}
-                    value={options.find((opt)=>opt.value===orderJob)}
+                    value={options.find((opt) => opt.value === orderJob)}
                     // onChange={handleCompanyDropdown}
                     onChange={handleCompanyOrder}
                     className="react_selectbox"
@@ -684,7 +685,10 @@ export default function GlobalChat() {
 
                       <div className='job-chat-form-card mt-2'>
                         {candidateList?.AllList?.map((candidates, index) => (
-                          <Card key={index} className=" cursor-pointer" onClick={() => getChatDetailsData(candidates?.job_applicant)}>
+                          <Card key={index} className={`cursor-pointer ${selectedCandidateIndex==candidates?.job_applicant?.uid?"active":""}`} onClick={() => {
+                            setSelectedCandidateIndex(candidates?.job_applicant?.uid)
+                            getChatDetailsData(candidates?.job_applicant)
+                          }}>
                             <Card.Body>
                               <Card.Title className="">{candidates.job_applicant.job_applicant_profile.user.username}</Card.Title>
 
