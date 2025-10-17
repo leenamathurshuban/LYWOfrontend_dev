@@ -73,7 +73,7 @@ import downloadicon from "../../images/icons/download-001.svg"
 
 
 
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { ApplicationDeatilsApi, automationListAPI, chatPostAPI, getAssetDataDetailsAPI, getCandidateListForSingleJob, getJobAssignmentReview, getJobDetailsApi, getJobGroupParameterListAPI, getScreeningParameterDataAPI, insightsListAPI, jobApplicantUpdateAPI, postAutomationDataAPI, postFinalShortlistAPI, postJobGroupParameterListByFetchAPI, updateAutomationDataAPI, updateAutomationExecellentAPI, UpdateMultipleJobApi } from "../../services/provider";
 import Evaluations from "./Evaluations";
 import Ratting from "../../components/Ratting";
@@ -523,6 +523,7 @@ const JobReview = () => {
 
 
     const { id } = useParams();
+    const location = useLocation()
     const [jobDetails, setJobDetails] = useState({})
     const [assetJob, setAssetJob] = useState([]);
     const [localAssetJob, setLocalAssetJob] = useState([]);
@@ -1719,6 +1720,11 @@ const JobReview = () => {
         const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
         saveAs(blob, "MyData.xlsx");
     }
+    useEffect(() => {
+        if (location.state == "pending_dashboard") {
+            setReviewEventKey("third")
+        }
+    }, []);
     // console.log(assignmentReviewList)
     // console.log('section', sectionWiseData)
     // console.log(questionWiseData)
@@ -2103,7 +2109,7 @@ const JobReview = () => {
                                                                             </Dropdown>
                                                                         </td>
                                                                     </tr>
-                                                                ))}                                                                
+                                                                ))}
                                                             </tbody>
                                                             <tfoot>
                                                                 <tr>
@@ -2225,8 +2231,8 @@ const JobReview = () => {
                                                                                             </button> */}
 
                                                                                                 <button className="button" class="btn-transpant" onClick={() =>
-                                                                                                    // handleListData(groupItem)
-                                                                                                    {
+                                                                                                // handleListData(groupItem)
+                                                                                                {
                                                                                                     setActiveView('list')
                                                                                                     fetchListAPIByKey(paraName?.uid, groupItem?.group_name, groupItem?.uid)
                                                                                                 }}>

@@ -294,6 +294,11 @@ const CreateGroupModal = ({ show, handleClose, assetJob, setAssetJob, jobDetails
         const findObj = groupState.find((val) => val?.heading == selectedGroup?.heading)
         setSelectedGroup(findObj)
     }, [groupState])
+    useEffect(()=>{
+        const findObj = groupState.find((val) => val?.heading == "Job Match")
+        findObj.isSelected = true
+        setSelectedGroup(findObj)
+    },[])
     useEffect(() => {
         if (selectedGroup?.heading && selectedGroup?.selectedList?.length) {
             const formatted = selectedGroup?.selectedList?.reduce((acc, item) => {

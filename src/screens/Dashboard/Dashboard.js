@@ -268,7 +268,7 @@ import Header from "../../components/Header";
 import Sidebar from "../../components/Sidebar";
 import { logoMaker, removeToken } from "../../helpers/helper";
 import { liwotextlogo } from "../../images/assest";
-import { dashboardListAPI, GetcompanyDetailsApi, JobList } from "../../services/provider";
+import { dashboardListAPI, GetcompanyDetailsApi, getJobDetailsApi, JobList } from "../../services/provider";
 import { setCompanyProfileDetails } from "../../Slice/Login/LoginSlice";
 import logoIcon from "../../images/logo_icon.png";
 import applicationstIcon from "../../images/icons/application_stIcon.svg";
@@ -291,6 +291,7 @@ import CreateJobs from "../../components/Jobs/CreateJobs";
 import usersgroupicon from "../../images/icons/users-dark.svg";
 import usersgroupwhite from "../../images/icons/users-01-w.svg";
 import { calculateDays } from "../../utils/test";
+import UpdateJobs from "../../components/Jobs/UpdateJobs";
 
 const Dashboard = () => {
   const [show, setShow] = useState(false);
@@ -311,6 +312,8 @@ const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchJob, setSearchJob] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState({})
+  const [updateModal, setUpdateModal] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -457,7 +460,7 @@ const Dashboard = () => {
   const keyArray = Array.from(
     new Set(dashboardList?.total_count_data?.hiring_pipeline?.flatMap(item => Object.keys(item)))
   );
-  const keyColumn = reorderFields(keyArray)?.filter((item) => item != "job_uid" && item!="job_status")
+  const keyColumn = reorderFields(keyArray)?.filter((item) => item != "job_uid" && item != "job_status")
 
   const totalPendingReviews = dashboardList?.total_count_data?.pending_reviews
     ?.reduce((sum, item) => sum + item.pending_review, 0);
@@ -489,6 +492,18 @@ const Dashboard = () => {
       return null;
     }
   };
+
+  const getJobDetails = async (id) => {
+    const url = `https://bittrend.shubansoftware.com/assets-api/job-detail-api/${id}/`;
+    try {
+      const response = await getJobDetailsApi(url);
+      if (response?.data?.success) {
+        setData(response.data.response)
+        setUpdateModal(true)
+      }
+    } catch (error) {
+    }
+  }
 
   console.log(dashboardList)
   console.log(keyColumn)
@@ -956,67 +971,7 @@ const Dashboard = () => {
                           </thead>
                           <tbody>
 
-                            {/* <tr>
-                            <td className="font-weight-600">Frontend Developer <br></br>
 
-                              <span>25 Openings</span>
-                            </td>
-
-                            <td className="screening-record"> <img src={usersgroupicon} alt="usericons" />  250</td>
-                            <td className="evaluation-1-record"><img src={usersgroupicon} alt="usericons" /> 220</td>
-                            <td className="evaluation-2-record"><img src={usersgroupicon} alt="usericons" /> 180</td>
-                            <td className="evaluation-3-record">
-                              <img src={usersgroupicon} alt="usericons" />   136
-                            </td>
-                            <td className="evaluation-4-record"><img src={usersgroupicon} alt="usericons" /> 91</td>
-                            <td className="final-shortlist"><img src={usersgroupwhite} alt="usericons" />  24</td>
-
-                          </tr>
-
-
-                          <tr>
-                            <td className="font-weight-600">Frontend Developer <br></br>
-
-                              <span>25 Openings</span>
-                            </td>
-
-                            <td className="screening-record"> <img src={usersgroupicon} alt="usericons" />  250</td>
-                            <td className="evaluation-1-record"><img src={usersgroupicon} alt="usericons" /> 220</td>
-                            <td className="evaluation-2-record disabled-eval"></td>
-                            <td className="evaluation-3-record disabled-eval">
-
-                            </td>
-                            <td className="evaluation-4-record disabled-eval"></td>
-                            <td className="final-shortlist"><img src={usersgroupwhite} alt="usericons" />  24</td>
-
-                          </tr>
-
-
-
-
-                          <tr>
-                            <td className="font-weight-600">Frontend Developer <br></br>
-
-                              <span>25 Openings</span>
-                            </td>
-
-                            <td className="screening-record"> <img src={usersgroupicon} alt="usericons" />  250</td>
-                            <td className="evaluation-1-record"><img src={usersgroupicon} alt="usericons" /> 220</td>
-                            <td className="evaluation-2-record"><img src={usersgroupicon} alt="usericons" /> 180</td>
-                            <td className="evaluation-3-record">
-
-                            </td>
-                            <td className="evaluation-4-record disabled-eval"></td>
-                            <td className="final-shortlist disabled-shortlist">  </td>
-
-                          </tr> */}
-                            {/* {firstTotalData?.slice(0, countList)?.map((row, rowIndex) => (
-                            <tr key={rowIndex}>
-                              {keyColumn.map(col => (
-                                <td key={col}>{row[col] ?? ''}</td>
-                              ))}
-                            </tr>
-                          ))} */}
                             {firstTotalData?.slice(0, countList)?.map((row, rowIndex) => (
                               <tr key={rowIndex}>
                                 {keyColumn.map(col => (
@@ -1027,26 +982,6 @@ const Dashboard = () => {
                                     )}
                                   </td>
                                 ))}
-                                {/* {keyColumn.map(col => (
-                                <td
-                                  key={col}
-                                  className={`
-                                  ${col === "job_title" ? "job-title font-weight-600 height-50" : ""}
-                                  ${col === "final_shortlist" ? "final-shortlist" : ""}
-                                  ${col === "screening" ? "screening-record" : ""}
-                                  ${!["job_title", "final_shortlist", "screening"].includes(col) ? "default-cell-style" : ""}
-                                `}
-                                >
-                                  {row[col] ?? ''}
-                                  {col === "job_title" && (
-                                    <span className="openings-count">25 Openings</span>
-                                  )}
-                                </td>
-                              ))} */}
-                                {/* <td className="font-weight-600">Frontend Developer <br></br>
-                                <span>25 Openings</span>
-                              </td>                  
-                              <td className="final-shortlist"><img src={usersgroupwhite} alt="usericons" />  24</td> */}
                               </tr>
                             ))}
 
@@ -1123,18 +1058,12 @@ const Dashboard = () => {
                       <tbody>
                         <td colSpan={2}>
                           <div className="table-list-scroll">
-                            {/* {pendingReview?.map((item) => (
-                              <tr>
-                                <td>{item?.jobcompany__job_title}</td>
-                                <td className="text-end"><span className="badge-outline">{item?.pending_review} Pending</span></td>
-                              </tr>
-                            ))} */}
                             {pendingReview?.map((item) => {
-                              if (item?.pending_review>0) {
+                              if (item?.pending_review > 0) {
                                 return (
                                   (
                                     <tr>
-                                      <td onClick={() => navigate(`/JobReview/${item?.jobcompany__uid}`)} style={{cursor:"pointer"}}>{item?.jobcompany__job_title}</td>
+                                      <td onClick={() => navigate(`/JobReview/${item?.jobcompany__uid}`,{state:'pending_dashboard'})} style={{ cursor: "pointer" }}>{item?.jobcompany__job_title}</td>
                                       <td className="text-end"><span className="badge-outline">{item?.pending_review} Pending</span></td>
                                     </tr>
                                   )
@@ -1143,30 +1072,7 @@ const Dashboard = () => {
                             })}
                           </div>
                         </td>
-                        {/* <tr>
-                        <td>Full Stack Developer</td>
-                        <td className="text-end"><span className="badge-outline">12 Pending</span></td>
-                      </tr>
-                      <tr>
-                        <td>Mern Stack Developer</td>
-                        <td className="text-end"><span className="badge-outline">27 Pending</span></td>
-                      </tr>
-                      <tr>
-                        <td>Product Owner</td>
-                        <td className="text-end"><span className="badge-outline">35 Pending</span></td>
-                      </tr>
-                      <tr>
-                        <td>Product Manager - Design</td>
-                        <td className="text-end"><span className="badge-outline">09 Pending</span></td>
-                      </tr>
-                      <tr>
-                        <td>Product Manager - Marketing</td>
-                        <td className="text-end"><span className="badge-outline">16 Pending</span></td>
-                      </tr>
-                      <tr>
-                        <td>Full Stack Developer</td>
-                        <td className="text-end"><span className="badge-outline">22 Pending</span></td>
-                      </tr> */}
+
                       </tbody>
                     </table>
 
@@ -1188,23 +1094,12 @@ const Dashboard = () => {
                         <tbody>
                           {dashboardList?.total_count_data?.draft_jobs?.filter((_, index) => index <= 4)?.map((item) => (
                             <tr>
-                              <td>{item?.job_title}</td>
+                              <td onClick={() => getJobDetails(item?.job_uid)} style={{ cursor: "pointer" }}>{item?.job_title}</td>
                               <td className="text-end"><span>{item?.created_at}</span></td>
                             </tr>
                           ))
                           }
-                          {/* <tr>
-                        <td>Full Stack Developer</td>
-                        <td className="text-end"><span>01/05/2025</span></td>
-                      </tr>
-                      <tr>
-                        <td>Mern Stack Developer</td>
-                        <td className="text-end"><span>01/05/2025</span></td>
-                      </tr>
-                      <tr>
-                        <td>Product Owner</td>
-                        <td className="text-end"><span>01/05/2025</span></td>
-                      </tr> */}
+
                         </tbody>
                       </table>
                     </div>
@@ -1269,6 +1164,13 @@ const Dashboard = () => {
               </Card>
              </Col>
           </Row> */}
+          {updateModal && (
+            <UpdateJobs
+              show={updateModal}
+              handleClose={() => setUpdateModal(false)}
+              editData={data}
+            />
+          )}
         </Container>
       </div>
 
