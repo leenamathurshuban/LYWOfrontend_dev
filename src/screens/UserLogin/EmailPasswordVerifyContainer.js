@@ -182,7 +182,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { setLoginuserInfor } from "../../Slice/Login/LoginSlice";
 import { storeToken } from "../../helpers/helper";
 import { LogInCall } from "../../services/provider";
@@ -328,13 +328,9 @@ const EmailPasswordVerifyContainer = () => {
                     <input className="form-check-input" type="checkbox" id="flexCheckChecked" />
                     <label className="form-check-label" for="flexCheckChecked">Remember me</label>
                   </div>
-                  <a
-                    href="#"
-                    className="forgot_btn text-primery"
-                    onClick={() => navigate("/verifyOtpForPassword")}
-                  >
-                    Forgot password
-                  </a>
+                  <Link className="forgot_btn text-primery" to="/verifyOtpForPassword">
+                   Forgot password
+                  </Link>
                 </div>
                 <Button
                   type="submit"
@@ -344,13 +340,12 @@ const EmailPasswordVerifyContainer = () => {
                 >
                   Login
                 </Button>
-                <a
-                  href="#"
+                <div
                   className="text-primery font-weight-600 text-center mt-4 d-block text-base"
-                  onClick={() => navigate("/otp")}
+                  onClick={() => navigate("/otp?is_call_from=SetedPass")}
                 >
-                  Use OTP for Login
-                </a>
+                  Use OTP for Login..
+                </div>
               </Form>
             </div>
           </Col>

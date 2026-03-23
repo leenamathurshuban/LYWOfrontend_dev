@@ -45,7 +45,7 @@ const PendingUserSection = ({
   const handleEdit = (e, uid) => {
     const { name, value, type, checked } = e.target;
 
-    if (name === "phone_number" || name === "first_name") {
+    if (name === "phone_number" || name === "first_name" || name === "email") {
       setEditUserData((prev) => ({
         ...prev,
         [uid]: {
@@ -89,7 +89,13 @@ const PendingUserSection = ({
                   type="email"
                   placeholder="ravi@paperpencilpixel.com"
                   className="sm-fcontrol"
-                  value={item.email}
+                  name="email"
+                  value={
+                  editUserData[item.uid]?.email !== undefined
+                    ? editUserData[item.uid].email
+                    : item.email
+                }
+                 onChange={(e) => handleEdit(e, item.uid)}
                 />
               </Form.Group>
             </div>

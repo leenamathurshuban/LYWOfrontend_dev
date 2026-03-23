@@ -9,6 +9,8 @@ import {
   OtpVerifyContainer,
   OtpVerifyForPassword,
 } from "../screens/";
+import OtpRouteWrapper from "./OtpRouteWrapper";
+import SetPasswordRouteWrapper from "./setPassRouterWrapper";
 import ProtectedRoute from "./protectedRoute"; // Import the ProtectedRoute component
 import Evalation from "../screens/Evaluation/Evaluation";
 import Jobs from "../screens/Jobs/Jobs";
@@ -45,26 +47,34 @@ export const router = createBrowserRouter([
       />
     ),
   },
+  // {
+  //   path: "/otp",
+  //   element: (
+  //     <ProtectedRoute
+  //       element={<OtpVerifyContainer />}
+  //       allowAuthenticated={false} 
+  //       redirectTo="/"
+  //     />
+  //   ),
+  // },
   {
-    path: "/otp",
-    element: (
-      <ProtectedRoute
-        element={<OtpVerifyContainer />}
-        allowAuthenticated={true} 
-        redirectTo="/"
-      />
-    ),
-  },
+  path: "/otp",
+  element: <OtpRouteWrapper />,
+},
   {
-    path: "/set-password",
-    element: (
-      <ProtectedRoute
-        element={<SetPassword />}
-        allowAuthenticated={true} 
-        redirectTo="/"
-      />
-    ),
-  },
+  path: "/set-password",
+  element: <SetPasswordRouteWrapper />,
+},
+  // {
+  //   path: "/set-password",
+  //   element: (
+  //     <ProtectedRoute
+  //       element={<SetPassword />}
+  //       allowAuthenticated={false} 
+  //       redirectTo="/"
+  //     />
+  //   ),
+  // },
   {
     path: "/loginwithpassword",
     element: (

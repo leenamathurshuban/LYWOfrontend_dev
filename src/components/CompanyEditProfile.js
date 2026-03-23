@@ -945,7 +945,7 @@ import {
   Tab,
 } from "react-bootstrap";
 import { useDropzone } from "react-dropzone";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { logoMaker, removeToken } from "../helpers/helper";
 import { cprofilelogo, starIcon } from "../images/assest";
@@ -960,17 +960,20 @@ import { IndustrySelection, LocationSelection } from "../services/provider";
 import { useNavigate } from "react-router-dom";
 import { isBinaryFile } from "../utils/test";
 import Select from 'react-select';
+import { setCompanyProfileDetails } from "../Slice/Login/LoginSlice";
 
 const CompanyEditProfile = ({ show, handleClose }) => {
+  const dispatch = useDispatch();
   const companyProfileDetails = useSelector(
     (state) => state.login.CompanyProfileDetails
   );
-  console.log(companyProfileDetails)
+
   const compantUid = companyProfileDetails?.uid;
   const userInfo = useSelector((state) => state.login.loginUserInfo);
   const uid = userInfo?.uid;
   const [industries, setIndustries] = useState([]);
   const [selectedIndustry, setSelectedIndustry] = useState(null);
+  const [companyObj, setCompanyObj] = useState(null)
 
   const [Location, setLocation] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState(null);
@@ -995,8 +998,6 @@ const CompanyEditProfile = ({ show, handleClose }) => {
   };
 
   const [IndustrySearch, SetIndustrySearch] = useState("");
-  const [IndustrySearchDropdown, setIndustrySearchDropdown] = useState(false);
-  const [LocationSearchDropdown, setLocationSearchDropdown] = useState(false);
 
   const [selectedCompanyType, setSelectedCompanyType] = useState("");
   const [companyTypeValue, setCompanyTypeValue] = useState(null);
@@ -1004,15 +1005,19 @@ const CompanyEditProfile = ({ show, handleClose }) => {
   const [noOfEmploy, setnoOfEmploy] = useState("");
   const [searchLocationTerm, setLocationSearchTerm] = useState(""); //location state
 
-  // other state
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [customModalshowcustomModal, setCustomShowModal] = useState(false);
   const [companyUpdateError, setCompanyUpdateError] = useState({
-    websiteError: "",
-    logoError: "",
+    logo: "",
+    website_url: "",
+    industry: "",
+    description: "",
+    location: "",
+    number_of_employees: "",
+    company_type: "",
+
   });
   const [completionPercentage, setCompletionPercentage] = useState(0);
+
   const [ids, setIds] = useState({
     industryName: "",
     industryUid: "",
@@ -1040,8 +1045,6 @@ const CompanyEditProfile = ({ show, handleClose }) => {
     { value: "More-than-10000-employees", label: "More than 10000 employees" },
   ]
 
-  //console.log("logooo-----",companyProfileDetails?.logo)
-  // cropping img state
   const [image, setImage] = useState(null);
   const [imageName, setImageName] = useState("");
   const [zoom, setZoom] = useState(1);
@@ -1050,31 +1053,45 @@ const CompanyEditProfile = ({ show, handleClose }) => {
   const [imageFile, setImageFile] = useState(null);
   const [checkEditImage, setCheckEditImage] = useState(false);
   const [croppedImage, setCroppedImage] = useState(null);
+  const [activeUserTab,setActiveUserTab] = useState(false)
 
   useEffect(() => {
-    setDescription(companyProfileDetails?.description)
-    setWebsite(companyProfileDetails?.website_url)
-    SetIndustrySearch(companyProfileDetails?.industry?.industry_name)
-    setSelectedCompanyType(companyProfileDetails?.company_type)
-    setnoOfEmploy(companyProfileDetails?.number_of_employees)
-    setLocationSearchTerm(companyProfileDetails?.location?.location_name)
-    setIds({
+    if(companyProfileDetails?.description) setDescription(companyProfileDetails?.description)
+    if(companyProfileDetails?.website_url)setWebsite(companyProfileDetails?.website_url)
+    // if(companyProfileDetails?.industry?.industry_name)SetIndustrySearch(companyProfileDetails?.industry?.industry_name)
+    if(companyProfileDetails?.company_type)setSelectedCompanyType(companyProfileDetails?.company_type)
+    if(companyProfileDetails?.number_of_employees)setnoOfEmploy(companyProfileDetails?.number_of_employees)
+    if(companyProfileDetails?.location?.location_name)setLocationSearchTerm(companyProfileDetails?.location?.location_name)
+    if(companyProfileDetails?.industry?.industry_name&&
+companyProfileDetails?.industry?.uid&&
+companyProfileDetails?.location?.location_name&&
+companyProfileDetails?.location?.uid) {setIds({
       industryName: companyProfileDetails?.industry?.industry_name,
       industryUid: companyProfileDetails?.industry?.uid,
       location_name: companyProfileDetails?.location?.location_name,
       locationUid: companyProfileDetails?.location?.uid,
-    })
-    const filePath = companyProfileDetails?.logo;
-    setImageFile(filePath)
-    const LogoName = filePath?.split("/").pop();
-    setImageName(LogoName);
-    setImage(companyProfileDetails?.logo ? `https://bittrend.shubansoftware.com${companyProfileDetails?.logo}` : "")
-    setCroppedImage(companyProfileDetails?.logo ? `https://bittrend.shubansoftware.com${companyProfileDetails?.logo}` : "")
-    const matchType = companyTypeOption.find((opt) => opt.value === companyProfileDetails?.company_type)
-    if (matchType) setCompanyTypeValue(matchType)
+    })}
+    if(companyProfileDetails?.logo){
+      const filePath = companyProfileDetails?.logo;
+      setImageFile(filePath)
+      if(!!filePath){
+        console.log(filePath,"fileOaeds")
+        const LogoName = filePath?.split("/").pop();
+        setImageName(LogoName);
+      }
+      setImage(companyProfileDetails?.logo ? `https://bittrend.shubansoftware.com${companyProfileDetails?.logo}` : "")
+      setCroppedImage(companyProfileDetails?.logo ? `https://bittrend.shubansoftware.com${companyProfileDetails?.logo}` : "")
+    }
+    if(companyProfileDetails?.company_type){
+      const matchType = companyTypeOption.find((opt) => opt.value === companyProfileDetails?.company_type)
+      if (matchType) setCompanyTypeValue(matchType)
+      }
+      if(companyProfileDetails?.number_of_employees){
     const matchSize = companySizeOption.find((opt) => opt.value === companyProfileDetails?.number_of_employees)
     if (matchSize) setCompanySizeValue(matchSize)
+    }
   }, [companyProfileDetails])
+
   const [isZoomedImg, setIsZoomedImg] = useState(false);
 
   const navigate = useNavigate();
@@ -1084,15 +1101,84 @@ const CompanyEditProfile = ({ show, handleClose }) => {
     { label: "2:3", value: 1 },
   ];
 
-  const handleImageChange = (acceptedFiles) => {
+   const validateImage = (file) => {
+  return new Promise((resolve) => {
+    const allowedTypes = [
+      "image/svg+xml",
+      "image/png",
+      "image/jpeg",
+      "image/jpg",
+      "image/gif",
+    ];
+
+    // ❌ Type validation
+    if (!allowedTypes.includes(file.type)) {
+      resolve({
+        valid: false,
+        message: "Only SVG, PNG, JPG, or GIF files are allowed",
+      });
+      return;
+    }
+
+    // ✅ Check aspect ratio
+    const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
+
+    img.onload = () => {
+      const width = img.width;
+      const height = img.height;
+
+      const ratio = width / height;
+
+      // Allowed ratios: 1:1 (1.0) OR 2:3 (~0.67)
+      const isSquare = Math.abs(ratio - 1) < 0.01;
+      const isTwoByThree = Math.abs(ratio - (2 / 3)) < 0.01;
+
+      if (!isSquare && !isTwoByThree) {
+        resolve({
+          valid: false,
+          message: "Image must have aspect ratio 1:1 or 2:3",
+        });
+      } else {
+        resolve({
+          valid: true,
+          message: "Valid image",
+        });
+      }
+
+      URL.revokeObjectURL(objectUrl);
+    };
+
+    img.onerror = () => {
+      resolve({
+        valid: false,
+        message: "Invalid image file",
+      });
+    };
+
+    img.src = objectUrl;
+  });
+};
+
+  const handleImageChange = async(acceptedFiles) => {
     const file = acceptedFiles[0];
 
     if (file) {
+    const result = await validateImage(file);
+
+    if (!result.valid) {
+      
+      setCompanyUpdateError({...companyUpdateError,logo:"Uploaded Image Have Some Issue Check Its Matches All The Requirment And Upload Again"})
+    
+      return;
+    }
+    else{
       setImage(URL.createObjectURL(file));
       // setImage(`https://bittrend.shubansoftware.com/${file.name}`);
       setImageName(file.name);
       setLogoModal(true);
       setImageFile(file);
+    }
     }
   };
 
@@ -1127,35 +1213,6 @@ const CompanyEditProfile = ({ show, handleClose }) => {
     }
   };
 
-  // const handleSave = () => {
-  //   const img = new Image();
-  //   console.log("iiiiiii---->>>",image)
-  //   img.src = image;
-
-  //   img.onload = () => {
-  //     const canvas = document.createElement("canvas");
-  //     const ctx = canvas.getContext("2d");
-
-  //     const desiredWidth = 200;
-  //     const desiredHeight = desiredWidth / aspectRatio;
-
-  //     canvas.width = desiredWidth;
-  //     canvas.height = desiredHeight;
-
-  //     const scaledWidth = img.width * zoom;
-  //     const scaledHeight = img.height * zoom;
-
-  //     const dx = (desiredWidth - scaledWidth) / 2;
-  //     const dy = (desiredHeight - scaledHeight) / 2;
-
-  //     ctx.drawImage(img, dx, dy, scaledWidth, scaledHeight);
-
-  //     const croppedDataUrl = canvas.toDataURL("image/png");
-  //     setCroppedImage(croppedDataUrl); // Save final image
-  //     setLogoModal(false); // Close modal
-  //   };
-
-  // };
 
   const handleSave = () => {
     const img = new Image();
@@ -1206,6 +1263,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
       setLogoModal(true);
     }
   };
+
   const handleLogoCancel = () => {
     setLogoModal(false);
   };
@@ -1217,18 +1275,6 @@ const CompanyEditProfile = ({ show, handleClose }) => {
       <div className="ctm_modal_dialog">
         <div className="ctm_modal_content">
           <Modal.Header>
-            {/* <Modal.Title>
-              <img src={imgplusIcon} className="me-2" />
-              Add Company Logo
-              <img
-                src={faCross}
-               className="ms-2"
-                alt="close"
-                style={{ cursor: "pointer" }}
-                onClick={handleSave} // your custom function
-              />
-            </Modal.Title> */}
-
             <div className="d-flex justify-content-between align-items-center w-100">
               {/* Left: Plus icon + title */}
               <div className="d-flex align-items-center">
@@ -1310,11 +1356,46 @@ const CompanyEditProfile = ({ show, handleClose }) => {
     );
   };
 
-  const handleShowcustomModal = () => setCustomShowModal(true);
-  const handlecustomModalClose = () => setCustomShowModal(false);
+  const validateCompanyProfile = (companyProfileDetails, logo) => {
+  const requiredFields = [
+    "website_url",
+    "industry",
+    "description",
+    "location",
+    "number_of_employees",
+    "company_type",
+  ];
 
-  // const userInfo = useSelector((state) => state.login.loginUserInfo);
-  // const uid = userInfo?.uid;
+  let errors = {};
+
+  // ✅ Check object fields
+  requiredFields.forEach((key) => {
+    const value = companyProfileDetails?.[key];
+
+    if (value === null || value === undefined || value === "") {
+      errors[key] = "This field is required";
+    }
+  });
+
+  // ✅ Check logo separately
+  if (!logo || logo === "") {
+    errors.logo = "Logo is required";
+  }
+
+  return errors;
+};
+
+  const handleShowcustomModal = () => {
+   const errors = validateCompanyProfile(companyProfileDetails, imageFile);
+
+if (Object.keys(errors).length > 0) {
+  setCompanyUpdateError(errors);
+  return;
+}else{
+  setCustomShowModal(true);
+}
+  }
+  const handlecustomModalClose = () => setCustomShowModal(false);
 
   const logoname = logoMaker(companyProfileDetails?.company_name);
 
@@ -1382,29 +1463,6 @@ const CompanyEditProfile = ({ show, handleClose }) => {
     // setIndustries([]);
   };
 
-  const handleIndustrySearchChange = (e) => {
-    SetIndustrySearch(e.target.value);
-    setIndustrySearchDropdown(true);
-  };
-
-  // const isHeadQuerterHandleApi = (LocationQuery) => {
-  //   const url = `https://bittrend.shubansoftware.com/account-api/location-list-api/?page=1&limit=500&search=${LocationQuery}`;
-  //   LocationSelection(url)
-  //     .then((res) => {
-  //       setLocation(res.data.response);
-  //     })
-  //     .catch((error) => {
-  //       if (
-  //         error?.response?.status === 401 ||
-  //         error?.response?.data?.detail?.includes(
-  //           "Given token not valid for any token type"
-  //         )
-  //       ) {
-  //         removeToken();
-  //         navigate("/loginwithpassword");
-  //       }
-  //     });
-  // };
   const getHeadQuerterHandleApi = () => {
     const url = `https://bittrend.shubansoftware.com/account-api/location-list-api/?limit=5000`;
     LocationSelection(url)
@@ -1430,14 +1488,6 @@ const CompanyEditProfile = ({ show, handleClose }) => {
     getHeadQuerterHandleApi()
   }, [])
 
-  // useEffect(() => {
-  //   const timeoutId = setTimeout(() => {
-  //     isHeadQuerterHandleApi(searchLocationTerm);
-  //   }, 500);
-  //   return () => {
-  //     clearTimeout(timeoutId);
-  //   };
-  // }, [searchLocationTerm]);
 
   const handleLocationSelect = (LocationName) => {
     setSelectedLocation({
@@ -1454,25 +1504,6 @@ const CompanyEditProfile = ({ show, handleClose }) => {
     // setLocation([]);
   };
 
-  const handleLocationSearchChange = (e) => {
-    setLocationSearchTerm(e.target.value);
-    setLocationSearchDropdown(true);
-  };
-  const handlecloseLocationDrop = (e) => {
-    setLocationSearchTerm("")
-    setLocationSearchDropdown(false)
-    setTimeout(() => {
-      setLocation([])
-    }, 200);
-  }
-  const handleCloseIndustryCombo = (e) => {
-    SetIndustrySearch("")
-    setIndustrySearchDropdown(false)
-    setTimeout(() => {
-      setIndustries([])
-    }, 200);
-  }
-
   const updateCompanyProfile = async () => {
     if (companyUpdateError?.websiteError) {
       console.log("Invalid URL, cannot submit.");
@@ -1481,48 +1512,32 @@ const CompanyEditProfile = ({ show, handleClose }) => {
 
     try {
       const data = new FormData();
-
-      // data.append("description", description);
-      // data.append("website_url", website);
-      // data.append("company_type", selectedCompanyType);
-      // data.append("number_of_employees", noOfEmploy);
-      // data.append("industry", ids?.industryUid);
-      // data.append("location", ids?.locationUid);
-      // data.append("logo", imageFile);
-
-      // Array compare helper
-      const arraysAreEqual = (arr1, arr2) => {
-        if (!arr1 || !arr2) return false;
-        if (arr1.length !== arr2.length) return false;
-        return arr1.every((val) => arr2.includes(val));
-      };
-
       // Conditional appends
-      // if (description) {
-      data.append("description", description);
-      // }
+      if (description) {
+        data.append("description", description);
+      }
 
-      // if (website) {
-      data.append("website_url", website);
-      // }
+      if (website) {
+        data.append("website_url", website);
+      }
 
-      // if (selectedCompanyType) {
-      data.append("company_type", selectedCompanyType);
-      // }
+      if (selectedCompanyType) {
+        data.append("company_type", selectedCompanyType);
+      }
 
-      // if (noOfEmploy) {
-      data.append("number_of_employees", noOfEmploy);
-      // }
+      if (noOfEmploy) {
+        data.append("number_of_employees", noOfEmploy);
+      }
 
-      // if (industries.length > 0) {
-      // data.append("industry", industries[0]?.uid);
-      data.append("industry", ids?.industryUid);
-      // }
+      if (industries.length > 0) {
+        // data.append("industry", industries[0]?.uid);
+        data.append("industry", ids?.industryUid);
+      }
 
-      // if (Location.length > 0) {
-      // data.append("location", Location[0]?.uid);
-      data.append("location", ids?.locationUid);
-      // }
+      if (Location.length > 0) {
+        // data.append("location", Location[0]?.uid);
+        data.append("location", ids?.locationUid);
+      }
 
       // if (!imageFile || checkEditImage) {
       //   data.append("logo", imageFile);
@@ -1604,25 +1619,6 @@ const CompanyEditProfile = ({ show, handleClose }) => {
     setCompletionPercentage(calculateProfileCompletion());
   }, [companyProfileDetails]);
 
-  // const isIndustryHandleApi = (query) => {
-  //   const url = `https://bittrend.shubansoftware.com/account-api/industry-list-api/?page=1&limit=500&search=${query}`;
-  //   IndustrySelection(url)
-  //     .then((res) => {
-  //       setIndustries(res.data.response);
-  //     })
-  //     .catch((error) => {
-  //       if (
-  //         error?.response?.status === 401 ||
-  //         error?.response?.data?.detail?.includes(
-  //           "Given token not valid for any token type"
-  //         )
-  //       ) {
-  //         //console.log("Token expired, redirecting to login");
-  //         removeToken();
-  //         navigate("/loginwithpassword");
-  //       }
-  //     });
-  // };
   const getIndustryHandleApi = () => {
     const url = `https://bittrend.shubansoftware.com/account-api/industry-list-api/?limit=500`;
     IndustrySelection(url)
@@ -1650,29 +1646,33 @@ const CompanyEditProfile = ({ show, handleClose }) => {
     getIndustryHandleApi()
   }, [])
 
-  const shouldShowRecommendation = () => {   
+  const shouldShowRecommendation = () => {
     if (
       !companyProfileDetails?.logo ||
       !companyProfileDetails?.website_url ||
       !companyProfileDetails?.industry ||
       !companyProfileDetails?.industry || !companyProfileDetails?.description || (!selectedCompanyType || !companyProfileDetails?.company_type)
-    || !companyProfileDetails?.number_of_employees || (!companyProfileDetails?.location || !searchLocationTerm)
+      || !companyProfileDetails?.number_of_employees || (!companyProfileDetails?.location || !searchLocationTerm)
     ) {
       return "";
     } else {
       return 'summary-full';
-    }   
+    }
   };
 
-  // const filePath = companyProfileDetails?.logo;
-
-  // const LogoName = filePath?.split("/").pop();
-
-  console.log(
-    "companyProfileDetails?.logo----->>>",
-    companyProfileDetails?.logo
-  );
-
+  useEffect(() => {
+    let obj = {
+      ...companyProfileDetails,
+      logo: !!imageFile ? imageFile : "",
+      website_url: website ? website : "",
+      industry: !!selectedIndustry ? selectedIndustry : null,
+      description: description ? description : "",
+      location: !!selectedLocation ? selectedLocation : null,
+      number_of_employees: !!noOfEmploy ? noOfEmploy : null,
+      company_type: !!selectedCompanyType ? selectedCompanyType : null,
+    }
+    dispatch(setCompanyProfileDetails(obj));
+  }, [website, description, selectedIndustry, selectedCompanyType, noOfEmploy, selectedLocation, imageFile])
   return (
     <Modal
       show={show}
@@ -1681,7 +1681,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
       size="lg"
       className="cmprofile_mdl"
     >
-      <Tab.Container id="left-tabs-example" defaultActiveKey="first">
+      <Tab.Container id="left-tabs-example" defaultActiveKey="first"  onSelect={(k) => setActiveUserTab(k === "second")}>
         <Row>
           <aside className="model_sidebar col-md-2">
             <div className="md_sdrlogo">
@@ -1726,7 +1726,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                           <Button
                             variant="primary"
                             onClick={handleShowcustomModal}
-                            disabled={!!companyUpdateError?.websiteError}
+                            disabled={!!companyUpdateError?.website_url}
                           >
                             Save
                           </Button>
@@ -1752,219 +1752,88 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                   />
                                 </Form.Group>
                                 <Form.Group className="mb-3">
-                                  <Form.Label>Description</Form.Label>
+                                  <Form.Label className="required">Description</Form.Label>
                                   <TextEditor
                                     data={companyProfileDetails?.description}
                                     onUpdate={handleUpdate}
+                                    isError={companyUpdateError.description}
                                   />
                                 </Form.Group>
                               </Col>
                               <Col md={6}>
                                 <Form.Group className="mb-3">
-                                  <Form.Label>Website</Form.Label>
+                                  <Form.Label className="required">Website</Form.Label>
                                   <Form.Control
                                     type="url"
                                     placeholder="Website"
                                     onChange={handleWebsite}
                                     value={website}
                                   />
-                                  {companyUpdateError?.websiteError && (
+                                  {companyUpdateError?.website_url && (
                                     <p className="error">
-                                      {companyUpdateError?.websiteError}
+                                      {companyUpdateError?.website_url}
                                     </p>
                                   )}
                                 </Form.Group>
                                 <Form.Group className="col-md-12 mb-3 relative">
-                                  <Form.Label>Industry</Form.Label>
-                                  {/* <Form.Control
-                                    type="text"
-                                    placeholder="Search for an industry.."
-                                    value={IndustrySearch}
-                                    onChange={handleIndustrySearchChange}
-                                    onBlur={handleCloseIndustryCombo}
-                                  />
-
-                                  {IndustrySearchDropdown &&
-                                    industries.length > 0 && (
-                                      <div className="ctm_dropdown ct_scrollbar">
-                                        <ul>
-                                          {industries.map(
-                                            (industry) =>
-                                              IndustrySearch !==
-                                              industry?.industry_name && (
-                                                <li
-                                                  key={industry.id}
-                                                  onClick={() =>
-                                                    handleIndustrySelect(
-                                                      industry
-                                                    )
-                                                  }
-                                                >
-                                                  {industry?.industry_name}
-                                                </li>
-                                              )
-                                          )}
-                                        </ul>
-                                      </div>
-                                    )}
-
-                                  {IndustrySearchDropdown &&
-                                    industries.length === 0 && (
-                                      <p className="error">
-                                        No data found
-                                      </p>
-                                    )} */}
+                                  <Form.Label className="required">Industry</Form.Label>
                                   <Select
                                     options={industries}
                                     value={industries.find((opt) => opt.label === IndustrySearch)}
                                     isSearchable={true}
                                     noOptionsMessage={() => "No results found"}
                                     placeholder="Search for an industry.."
-                                    // filterOption={(option, inputValue) => {
-                                    //   if (!inputValue) return false; // hide all options until user types
-                                    //   return option.label.toLowerCase().includes(inputValue.toLowerCase());
-                                    // }}
                                     onChange={handleIndustrySelect}
                                     className="react_selectbox"
                                     styles={customStyles}
                                   />
+                                   {companyUpdateError?.industry && (
+                                    <p className="error">
+                                      {companyUpdateError?.industry}
+                                    </p>
+                                  )}
                                 </Form.Group>
 
                                 <Form.Group className="mb-3">
-                                  <Form.Label>Company Type</Form.Label>
-                                  {/* <Form.Select
-                                    aria-label="Default select example"
-                                    value={selectedCompanyType}
-                                    onChange={handleCompanyTypeChange}
-                                  >
-                                    <option>
-                                      {companyProfileDetails?.company_type
-                                        ? companyProfileDetails?.company_type
-                                        : "Company Type"}
-                                      {selectedCompanyType}
-                                    </option>
-                                    <option value="Publice-Company">
-                                      Public Company
-                                    </option>
-                                    <option value="Self-employed">
-                                      Self-employed
-                                    </option>
-                                    <option value="Government-Agency">
-                                      Government Agency
-                                    </option>
-                                    <option value="Nonprofit">Nonprofit</option>
-                                    <option value="Sole-Proprietorship">
-                                      Sole Proprietorship
-                                    </option>
-                                    <option value="Privately-held">
-                                      Privately held
-                                    </option>
-                                    <option value="Partnership">
-                                      Partnership
-                                    </option>
-                                  </Form.Select> */}
+                                  <Form.Label className="required">Company Type</Form.Label>
                                   <Select value={companyTypeValue} options={companyTypeOption} onChange={handleCompanyTypeChange} className="react_selectbox" styles={customStyles} />
+                                   {companyUpdateError?.company_type && (
+                                    <p className="error">
+                                      {companyUpdateError?.company_type}
+                                    </p>
+                                  )}
                                 </Form.Group>
                                 <Form.Group className="mb-3">
-                                  <Form.Label>Company Size</Form.Label>
-                                  {/* <Form.Select
-                                    aria-label="Default select example"
-                                    value={noOfEmploy}
-                                    onChange={handleNoOfTypeEmployChange}
-                                  >
-                                    <option>
-                                      {companyProfileDetails?.number_of_employees
-                                        ? companyProfileDetails?.number_of_employees
-                                        : "Company Size"}
-                                    </option>
-
-                                    <option value="1-5-employees">
-                                      1 - 5 employees
-                                    </option>
-                                    <option value="6-10-employees">
-                                      6 - 10 employees
-                                    </option>
-                                    <option value="11-50-employees">
-                                      11 - 50 employees
-                                    </option>
-                                    <option value="51-200-employees">
-                                      {" "}
-                                      51 - 200 employees{" "}
-                                    </option>
-
-                                    <option value="201-500-employees">
-                                      201 - 500 employees
-                                    </option>
-                                    <option value="501-1,000-employees">
-                                      501 - 1,000 employees
-                                    </option>
-                                    <option value="1,001-5,000-employees">
-                                      1,001 - 5,000 employees
-                                    </option>
-                                    <option value="5,001-10,000-employees">
-                                      5,001 - 10,000 employees
-                                    </option>
-                                    <option value="More-than-10000-employees">
-                                      More than 10,000 employees
-                                    </option>
-                                  </Form.Select> */}
+                                  <Form.Label className="required">Company Size</Form.Label>
                                   <Select value={companySizeValue} options={companySizeOption} onChange={handleNoOfTypeEmployChange} className="react_selectbox" styles={customStyles} />
+                                   {companyUpdateError?.number_of_employees && (
+                                    <p className="error">
+                                      {companyUpdateError?.number_of_employees}
+                                    </p>
+                                  )}
                                 </Form.Group>
 
                                 <Form.Group className="mb-3 relative">
-                                  <Form.Label>Headquarter</Form.Label>
-                                  {/* <Form.Control
-                                    type="text"
-                                    placeholder="Search for an Headquarter..."
-                                    value={searchLocationTerm}
-                                    onChange={handleLocationSearchChange}
-                                    onBlur={handlecloseLocationDrop}
-                                  />
-
-                                  {LocationSearchDropdown &&
-                                    Location.length > 0 && (
-                                      <div className="ctm_dropdown ct_scrollbar">
-                                        <ul>
-                                          {Location.map(
-                                            (item) =>
-                                              searchLocationTerm !==
-                                              item?.location_name && (
-                                                <li
-                                                  key={item.id}
-                                                  onClick={() =>
-                                                    handleLocationSelect(item)
-                                                  }
-                                                >
-                                                  {item?.location_name}
-                                                </li>
-                                              )
-                                          )}
-                                        </ul>
-                                      </div>
-                                    )}
-
-                                  {LocationSearchDropdown &&
-                                    Location.length === 0 && (
-                                      <p className="error">Headquarter Not found </p>
-                                    )} */}
+                                  <Form.Label className="required">Headquarter</Form.Label>
                                   <Select
                                     options={Location}
                                     value={Location.find((opt) => opt.label === searchLocationTerm)}
                                     isSearchable={true}
                                     noOptionsMessage={() => "No results found"}
                                     placeholder="Search for an Headquarter..."
-                                    // filterOption={(option, inputValue) => {
-                                    //   if (!inputValue) return false; // hide all options until user types
-                                    //   return option.label.toLowerCase().includes(inputValue.toLowerCase());
-                                    // }}
                                     className="react_selectbox"
                                     onChange={handleLocationSelect}
                                     styles={customStyles}
                                   />
+                                   {companyUpdateError?.location && (
+                                    <p className="error">
+                                      {companyUpdateError?.location}
+                                    </p>
+                                  )}
                                 </Form.Group>
 
                                 <Form.Group className="mb-3">
-                                  <Form.Label>Add Company Logo</Form.Label>
+                                  <Form.Label className="required">Add Company Logo</Form.Label>
 
                                   {!companyProfileDetails?.logo &&
                                     !imageFile ? (
@@ -2018,9 +1887,9 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                                     />
                                   )}
 
-                                  {companyUpdateError.logoError && (
-                                    <p className="error-message">
-                                      {companyUpdateError.logoError}
+                                  {companyUpdateError.logo && (
+                                    <p className="error-message text-danger">
+                                      {companyUpdateError.logo}
                                     </p>
                                   )}
                                 </Form.Group>
@@ -2035,7 +1904,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                         <Accordion.Item eventKey="0">
                           <Accordion.Header>Company Details</Accordion.Header>
                           <Accordion.Body>
-                            {companyProfileDetails?.logo || image !== null ? (
+                            {companyProfileDetails?.logo || imageFile !== null ? (
                               <div className="cmp_logo mt-1">
                                 <span className="cmp_textlogo">
                                   <img
@@ -2096,7 +1965,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
                         </Accordion.Item>
                       </Accordion>
                       <div className="rects-panel bottom-fixed">
-                        {shouldShowRecommendation()== '' && <h5>Recommendations</h5>}                       
+                        {shouldShowRecommendation() == '' && <h5>Recommendations</h5>}
                         <ul className="rects_list">
                           {!companyProfileDetails?.logo && (
                             <li>
@@ -2165,7 +2034,7 @@ const CompanyEditProfile = ({ show, handleClose }) => {
               </Tab.Pane>
               <Tab.Pane eventKey="second">
                 <Modal.Body>
-                  <AddUserManagement />
+                  <AddUserManagement isCall={activeUserTab} />
                 </Modal.Body>
               </Tab.Pane>
             </Tab.Content>

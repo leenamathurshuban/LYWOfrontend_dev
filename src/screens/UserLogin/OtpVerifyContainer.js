@@ -239,7 +239,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { useNavigate  } from "react-router-dom";
 import Getstarted from "../GetStarted/GetStarted";
 // import { setEmailValue } from '../Slice/Login/LoginSlice'; // Import your action
 import axios from "axios";
@@ -250,8 +250,9 @@ import { setLoginuserInfor } from "../../Slice/Login/LoginSlice";
 import appbrand from '../../images/LYWO_logo.png';
 import { toast } from "react-toastify";
 
-const OtpVerifyContainer = () => {
 
+const OtpVerifyContainer = () => {
+  
   const [validated, setValidated] = useState(false);
   const [emailError, setEmailError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -354,6 +355,10 @@ const OtpVerifyContainer = () => {
       callOtpApi(otp);
     }
   }, [otp]);
+  
+  useEffect(() => {
+   EmailVerifyApi();
+  }, []);
 
   return (
     <div className='authentication-wrapper authcover-bg'>
@@ -449,35 +454,32 @@ const OtpVerifyContainer = () => {
               >
                 Login
               </Button>
-              <a
-                href="#"
-                className={`font-weight-600 text-center mt-4 d-block text-base text-primery`}
-                style={{
-                  // color:
-                  //   otpErrormsg === "OTP verified successfully." ||
-                  //   otpErrormsg == "Incorrect OTP. Please try again."
-                  //     ? "#3538CD"
-                  //     : "#D0D5DD",
-                  // pointerEvents: otpErrormsg === "OTP verified successfully." ? 'auto' : 'none', // Disable pointer events if not verified
-                  // cursor: otpErrormsg === "OTP verified successfully." ? 'pointer' : 'not-allowed' // Change cursor to show disabled state
+              {initialCount===1?
+              <div
+                
+                className={`font-weight-600 text-center mt-4 d-block text-base`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  // navigate("/set-password?is_call_From=1stLogged")
+                  navigate("/set-password?is_call_From=1stLogged")
                 }}
+              >
+                Set Password for future login
+              </div>
+              :
+              <div
+                className={`font-weight-600 text-center mt-4 d-block text-base text-primery`}
+               
                 disabled={otpErrormsg !== "OTP verified successfully."}
                 
-                // onClick={(e) => {
-                //   e.preventDefault();
-                //   navigate("/set-password")
-                // }}
-
+              
                 onClick={(e) => {
-                  // if (otpErrormsg !== "OTP verified successfully.") {
-                  //   e.preventDefault();
-                  //   return;
-                  // }
                   navigate("/loginwithpassword");
                 }}
               >
                 Use Password for Login
-              </a>
+              </div>
+              }
             </Form>
           </div>
         </Col>

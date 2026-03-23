@@ -55,7 +55,7 @@ const OtpVerifyForPassword = () => {
       .then((response) => {
         setOtpErrorMsg(response.data.response);
         storeToken(response?.data?.response?.access)
-        navigate("/set-password")
+        navigate("/set-password?is_call_From=forgot")
       })
       .catch((error) => {
         setOtpErrorMsg(error.response.data.response);
@@ -115,11 +115,9 @@ const OtpVerifyForPassword = () => {
   };
 
 
-//   useEffect(() => {
-//     if (otp.length === 4) {
-//       callOtpApi(otp);
-//     }
-//   }, [otp]);
+  useEffect(() => {
+   EmailVerifyApi();
+  }, []);
 
   return (
     <div className='authentication-wrapper authcover-bg'>

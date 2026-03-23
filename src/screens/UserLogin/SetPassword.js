@@ -250,7 +250,7 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 import passtrue from "../../images/icons/check-tick-circle.svg";
 import passfalse from "../../images/icons/minus-circle.svg";
 import { setPasswordVerifyApi } from "../../services/provider";
@@ -258,10 +258,13 @@ import Getstarted from "../GetStarted/GetStarted";
 import appbrand from "../../images/LYWO_logo.png";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { setLoginuserInfor } from "../../Slice/Login/LoginSlice";
+import { storeToken } from "../../helpers/helper";
 
 const SetPassword = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [initialCount, setInitialCount] = useState(0);
+    const dispatch = useDispatch();
   // const [email, setEmail] = useState("");
   const [validated, setValidated] = useState(false);
 
@@ -298,6 +301,8 @@ const SetPassword = () => {
         if (response.data.success) {
           toast.success("Password set successfully")
           setPasswordErrormsg("");
+           storeToken(response?.data?.response?.access);
+                  dispatch(setLoginuserInfor(response?.data?.response));
           
         }
         navigate("/");
@@ -444,13 +449,13 @@ const SetPassword = () => {
                 >
                   Save and Login
                 </Button>
-                <a
-                  href="#"
+                <Link
+                  to="/otp"
                   className="text-primery font-weight-600 text-center mt-4 d-block text-base"
-                  onClick={() => navigate("/otp")}
+                
                 >
                   Continue without Setting Password
-                </a>
+                </Link>
 
                 <div className="pass_instructor mt-4">
                   <p>Password must have at least:</p>

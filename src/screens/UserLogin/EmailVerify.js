@@ -197,14 +197,11 @@ const EmailVerify = () => {
     IsEmailVerify(data)
       .then((response) => {
         setIsLoading(false);
-        if (
-          response.data.response.is_first_time_user === false &&
-          response.data.response.is_password_set === false ||  response.data.response.is_first_time_user === true &&
-          response.data.response.is_password_set === false
-        ) {
-          navigate("/otp");
-        } else if (response.data.response.is_password_set === true) {
+        if (response.data.response.is_first_time_user===false&&response.data.response.is_password_set === true) {
           navigate("/loginwithpassword");
+        }else{
+          console.log(response.data.response)
+          navigate("/otp?is_call_from=NonSetedPass");
         }
       })
       .catch((error) => {
@@ -245,8 +242,9 @@ const EmailVerify = () => {
   };
 
   useEffect(()=>{
-    checkIfUserIsLoggedIn()
-  })
+    dispatch(setEmailValue(""));
+    // checkIfUserIsLoggedIn()
+  },[])
 
   return (
     <div className='authentication-wrapper authcover-bg'>

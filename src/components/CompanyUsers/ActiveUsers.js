@@ -16,15 +16,15 @@ const ActiveUsersSection = ({
   const handleEdit = (e, uid) => {
     
     const { name, value, type, checked } = e.target;
-    console.log("checked----",checked)
-    if (name === "phone_number" || name === "first_name") {
+    console.log("checked----",checked,name,activeUsers)
+    if (name === "phone_number" || name === "first_name"||name === "email") {
      
       setEditUserData((prev) => ({
         ...prev,
         [uid]: {
           ...prev[uid],
           [name]: value,
-        },
+        },    
       }));
     } else if (type === "checkbox" || type === "switch") {
      
@@ -41,7 +41,6 @@ const ActiveUsersSection = ({
       }));
     }
   };
-
   return (
     <>
       {activeUsers?.map((item) => (
@@ -60,10 +59,16 @@ const ActiveUsersSection = ({
                 className="form-inline"
               >
                 <Form.Control
-                  type="email"
+                  
                   placeholder="ravi@paperpencilpixel.com"
+                  name="email"
                   className="sm-fcontrol"
-                  value={item.email}
+                  value={
+                  editUserData[item.uid]?.email !== undefined
+                    ? editUserData[item.uid].email
+                    : item.email
+                }
+                  onChange={(e) => handleEdit(e, item.uid)}
                 />
               </Form.Group>
             </div>

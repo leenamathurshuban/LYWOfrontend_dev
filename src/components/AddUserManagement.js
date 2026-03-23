@@ -10,7 +10,7 @@ import {
   Spinner,
   Table,
 } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import  starIcon from "../images/icons/star-05.svg";
 import  starIconActive from "../images/icons/star-fill-05.svg";
@@ -30,8 +30,10 @@ import {
 } from "../services/provider";
 import { removeToken } from "../helpers/helper";
 import { useNavigate } from "react-router-dom";
+import { setCompanyProfileDetails } from "../Slice/Login/LoginSlice";
 
-const AddUserManagement = () => {
+const AddUserManagement = ({isCall}) => {
+  const dispatch = useDispatch();
   const [createUserData, setCreateUserData] = useState({
     email: "",
     name: "",
@@ -58,6 +60,10 @@ const AddUserManagement = () => {
   const userRoleUid = userInfo?.user_role?.uid
 
   const handleAddNewUserRow = () => {
+    if(activeItem!=="byDefaultUsers"){
+      setActiveItem("byDefaultUsers")
+      return
+    }
     setAddRow([
       ...addRow,
       {
@@ -69,9 +75,25 @@ const AddUserManagement = () => {
     ]);
   };
 
+  // const handleCancel = (id) => {
+  //   setAddRow((prevRows) => prevRows.filter((row) => row.id !== id));
+  // };
   const handleCancel = (id) => {
-    setAddRow((prevRows) => prevRows.filter((row) => row.id !== id));
-  };
+  setAddRow((prevRows) => {
+    // If only one row → clear it
+    if (prevRows.length === 1) {
+      return prevRows.map((row) => ({
+        ...row,
+        email: "",
+        name: "",
+        phoneNumber: "",
+      }));
+    }
+
+    // Otherwise → remove the row
+    return prevRows.filter((row) => row.id !== id);
+  });
+};
 
   const handleCheckboxChange = (uid) => {
     setSelectedUids((prevSelectedUids) => {
@@ -119,23 +141,30 @@ const AddUserManagement = () => {
   const createUser = async () => {
     setIsLoading(true);
     const formData = new FormData();
-    formData.append("email", createUserData.email);
-    formData.append("first_name", createUserData.name);
-    formData.append("phone_number", createUserData.phoneNumber);
+    formData.append("email", addRow[0].email);
+    formData.append("first_name", addRow[0].name);
+    formData.append("phone_number", addRow[0].phoneNumber);
     formData.append("user_role", userRoleUid) // ComputerUser
     formData.append("company", JSON.stringify([companyProfileDetails?.uid]));
+
     try {
       const response = await createUserApi(formData);
       setIsLoading(false);
       if (response.data.status == 200) {
-        setCreateUserError({ emailError: "", phoneError: "" });
-        setCreateUserData({
-          email: "",
-          name: "",
-          phoneNumber: ""
-        })
+         setAddRow((prevRows) => {
+    // If only one row → clear it
+    if (prevRows.length === 1) {
+      return prevRows.map((row) => ({
+        ...row,
+        email: "",
+        name: "",
+        phoneNumber: "",
+      }));
+    }
+  });
         setIsLoading(false);
-        companyUserListAPI();
+        setActiveItem("pendingUser")
+        companyUserListAPI("");
       }
     } catch (error) {
       setIsLoading(false);
@@ -179,9 +208,9 @@ const AddUserManagement = () => {
     try {
       const response = await deleteUserApi(formdata);
       setIsLoading(false);
-      if (response.data == 200) {
+      if (response.data.status == 200) {
         toast.success("User deleted successfully!");
-        companyUserListAPI();
+        companyUserListAPI("");
       }
     } catch (error) {
       setIsLoading(false);
@@ -225,6 +254,9 @@ const AddUserManagement = () => {
     if (editUserData[uid]?.phone_number) {
       formdata.append("phone_number", editUserData[uid].phone_number);
     }
+    if (editUserData[uid]?.email) {
+      formdata.append("email", editUserData[uid].email);
+    }
     if (editUserData[uid]?.user_role?.uid) {
       formdata.append("user_role", editUserData[uid].user_role?.uid);
     }
@@ -255,13 +287,26 @@ const AddUserManagement = () => {
       });
   };
 
-  const handlechanges = (e) => {
-    const { name, value } = e.target;
-    setCreateUserData((prev) => ({
-      ...prev,
+  // const handlechanges = (e) => {
+  //   const { name, value } = e.target;
+  //   setAddRow((prev) => ({
+  //     ...prev,
+  //     [name]: value,
+  //   }));
+  // };
+
+  const handlechanges = (e, index) => {
+  const { name, value } = e.target;
+
+  setAddRow((prev) => {
+    const updatedRows = [...prev];
+    updatedRows[index] = {
+      ...updatedRows[index],
       [name]: value,
-    }));
-  };
+    };
+    return updatedRows;
+  });
+};
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -273,11 +318,18 @@ const AddUserManagement = () => {
     // });
   };
 
+const handleRemoveRow = (id) => {
+  setAddRow((prevRows) =>
+    prevRows.filter((row) => row.id !== id)
+  );
+};
+
   const companyUserListAPI = async (searchQuery) => {
+    console.log("called",searchQuery)
     setIsLoading(true);
     const url = searchQuery
-      ? `https://bittrend.shubansoftware.com/account-api/company-user-list-api/${companyUid}/?search=${searchQuery}`
-      : `https://bittrend.shubansoftware.com/account-api/company-user-list-api/${companyUid}/`;
+      ? `https://bittrend.shubansoftware.com/account-api/company-user-list-api/${companyUid}/?search=${searchQuery}&page=1`
+      : `https://bittrend.shubansoftware.com/account-api/company-user-list-api/${companyUid}/?page=1`;
 
     // ? `https://bittrend.shubansoftware.com/account-api/company-user-list-api/${uid}/?search=${searchQuery}`
     // : `https://bittrend.shubansoftware.com/account-api/company-user-list-api/${uid}/`;
@@ -286,6 +338,7 @@ const AddUserManagement = () => {
       const response = await CompanyUserListGetApi(url);
       setIsLoading(false);
       setCompanyUserList(response.data.response);
+      // dispatch(setCompanyProfileDetails(response.data.response))
     } catch (error) {
       setIsLoading(false);
       console.error("Error fetching company user list:", error);
@@ -296,9 +349,9 @@ const AddUserManagement = () => {
   const adminUsers = companyUserList[0]?.admin_users || [];
   const inActiveUsers = companyUserList[0]?.inactive_users || [];
   const pendingUsers = companyUserList[0]?.pending_users || [];
-
   const allUserArray = [...activeUsers, ...adminUsers, ...inActiveUsers, ...pendingUsers]
   const allSelected = selectedUids.length === allUserArray?.length;
+
   const handleSelectAll = () => {
     if (allSelected) {
       setSelectedUids([]);
@@ -306,15 +359,21 @@ const AddUserManagement = () => {
       setSelectedUids(allUserArray.map((user) => user.uid));
     }
   };
-  console.log(selectedUids)
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
 
   useEffect(() => {
-    companyUserListAPI();
-  }, []);
+   if(isCall)
+    companyUserListAPI("");
+  setAddRow([{
+        id: 1,
+        email: "",
+        name: "",
+        phoneNumber: "",
+      }])
+  }, [isCall]);
 
   useEffect(() => {
     const debounceTimer = setTimeout(() => {
@@ -523,15 +582,15 @@ const AddUserManagement = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {addRow.map((item) => (
+                  {addRow.map((item,index) => (
                     <tr key={item.id}>
                       <td>
                         <div className="d-flex align-items-center">
-                          <Form.Check
+                          {/* <Form.Check
                             className="custom-checkbox me-2_5"
                             name="group1"
                             type="checkbox"
-                          />
+                          /> */}
                           <Form.Group
                             controlId="ravi@paperpencilpixel.com"
                             className="form-inline"
@@ -540,8 +599,8 @@ const AddUserManagement = () => {
                               type="email"
                               placeholder="Email (will be used for login)"
                               className="sm-fcontrol"
-                              onChange={handlechanges}
-                              value={createUserData.email}
+                             onChange={(e) => handlechanges(e, index)}
+                              value={item.email}
                               name="email"
                             />
                             {createUserError.emailError && (
@@ -558,8 +617,8 @@ const AddUserManagement = () => {
                             type="text"
                             placeholder="Name"
                             className="sm-fcontrol"
-                            onChange={handlechanges}
-                            value={createUserData.name}
+                           onChange={(e) => handlechanges(e, index)}
+                            value={item.name}
                             name="name"
                           />
                         </Form.Group>
@@ -570,8 +629,8 @@ const AddUserManagement = () => {
                             type="text"
                             placeholder="Phone Number"
                             className="sm-fcontrol"
-                            onChange={handlechanges}
-                            value={createUserData.phoneNumber}
+                           onChange={(e) => handlechanges(e, index)}
+                            value={item.phoneNumber}
                             name="phoneNumber"
                           />
                           {createUserError.phoneError && (
@@ -594,7 +653,7 @@ const AddUserManagement = () => {
                             variant="primary"
                             className="btn-sm"
                             type="submit"
-                            disabled={createUserData.phoneNumber.length !== 10 || !createUserData.name.trim() || !createUserData.email.trim()}
+                            disabled={item.phoneNumber.length !== 10 || !item.name.trim() || !item.email.trim()}
                           >
                             Invite
                           </Button>
@@ -608,41 +667,12 @@ const AddUserManagement = () => {
                         />
                       </td>
                       <td>
-                        <Button className="btn-transpant">
-                          <svg
-                            width="20"
-                            height="20"
-                            viewBox="0 0 20 20"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M9.99984 10.8333C10.4601 10.8333 10.8332 10.4602 10.8332 9.99992C10.8332 9.53968 10.4601 9.16659 9.99984 9.16659C9.5396 9.16659 9.1665 9.53968 9.1665 9.99992C9.1665 10.4602 9.5396 10.8333 9.99984 10.8333Z"
-                              stroke="#475467"
-                              stroke-width="1.66667"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                            <path
-                              d="M9.99984 4.99992C10.4601 4.99992 10.8332 4.62682 10.8332 4.16659C10.8332 3.70635 10.4601 3.33325 9.99984 3.33325C9.5396 3.33325 9.1665 3.70635 9.1665 4.16659C9.1665 4.62682 9.5396 4.99992 9.99984 4.99992Z"
-                              stroke="#475467"
-                              stroke-width="1.66667"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                            <path
-                              d="M9.99984 16.6666C10.4601 16.6666 10.8332 16.2935 10.8332 15.8333C10.8332 15.373 10.4601 14.9999 9.99984 14.9999C9.5396 14.9999 9.1665 15.373 9.1665 15.8333C9.1665 16.2935 9.5396 16.6666 9.99984 16.6666Z"
-                              stroke="#475467"
-                              stroke-width="1.66667"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </svg>
-                        </Button>
+                        {addRow.length>1&&<Button onClick={()=>handleRemoveRow(item?.id)} className="btn-transpant text-dark">
+                         X
+                        </Button>}
                       </td>
                     </tr>
                   ))}
-
                   {activeItem === "byDefaultUsers" && (
                     <>
                       <ActiveUsersSection
@@ -768,14 +798,18 @@ const AddUserManagement = () => {
             <Button
               variant="link"
               className="link-sm p-0"
-              onClick={() => setActiveItem("byDefaultUsers")}
+              onClick={() => setActiveItem("DefaultUsers")}
             >
               Clear Filter
             </Button>
           </h5>
           <div className="flter_count">
             <span>Showing 5/15</span>
-            <span>1/5 Selected</span>
+            {activeItem==="byDefaultUsers"&&<span>{selectedUids.length}/{allUserArray.length} Selected</span>}
+            {activeItem==="activeUser"&&<span>{selectedUids?.length}/{activeUsers?.length} Selected</span>}
+            {activeItem==="adminUser"&&<span>{selectedUids?.length}/{adminUsers?.length} Selected</span>}
+            {activeItem==="inActiveUser"&&<span>{selectedUids?.length}/{inActiveUsers?.length} Selected</span>}
+            {activeItem==="pendingUser"&&<span>{selectedUids?.length}/{pendingUsers?.length} Selected</span>}
           </div>
           <ul className="rects_list">
             {ListUserSummer.map((item) => (

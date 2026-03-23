@@ -10,15 +10,27 @@ import LogoutIcon from "../images/icons/log-out-Hicon.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { GetcompanyDetailsApi, logoutApi } from "../services/provider";
 import { setCompanyProfileDetails } from "../Slice/Login/LoginSlice";
-// import {persistor} from "../../src/Slice/Store"
-// import { logout } from "../Slice/Login/LoginSlice";
+
 
 const Header = () => {
   const userInfo = useSelector((state) => state.login.loginUserInfo);
-  const logoname = logoMaker(userInfo?.default_company?.company_name ?? "Infograins Techno");
-  const filtercompany = userInfo?.company?.filter((val) => val?.company_name == userInfo?.default_company?.company_name)
   const companyInfoFetch = useSelector((state) => state.login.CompanyProfileDetails)
-  const [companyInfo, setCompanyInfo] = useState(companyInfoFetch?.company_name ? companyInfoFetch?.company_name : userInfo?.default_company?.company_name)
+  const logoname = logoMaker(companyInfoFetch?.company_name ? companyInfoFetch?.company_name : userInfo?.default_company?.company_name);
+  let filtercompany = [];
+
+if (userInfo?.default_company) {
+  // Case 1: default company exists → filter by it
+  filtercompany = userInfo?.company?.filter(
+    (val) => val?.company_name === userInfo?.default_company?.company_name
+  );
+} else if (userInfo?.company?.length > 1) {
+  // Case 2: multiple companies → take first one
+  filtercompany = [userInfo.company[0]];
+} else if (userInfo?.company?.length === 1) {
+  // Case 3: only one company → use as it is
+  filtercompany = userInfo.company;
+}
+  const [companyInfo, setCompanyInfo] = useState(companyInfoFetch?.company_name ? companyInfoFetch?.company_name : !!userInfo?.default_company?userInfo?.default_company?.company_name:userInfo?.company[0]?.company_name)
   const [compantUid, setCompantUid] = useState(companyInfoFetch?.uid ? companyInfoFetch?.uid : filtercompany[0]?.uid)
   const userOption = userInfo?.company?.map((item) => ({ value: item.company_name, label: item.company_name }))
   const navigate = useNavigate();
@@ -39,15 +51,6 @@ const Header = () => {
     navigate("/emailverify");
   };
 
-
-  // const handleCompanyDropdown = (e) => {
-  //   const { value } = e.target;
-  //   setCompanyInfo(value)
-  //   const filtercompany = userInfo?.company?.filter((val) => val?.company_name == value)
-  //   setCompantUid(filtercompany[0]?.uid)
-  // }
-
-
   const handleCompanyDropdown = (selectedOption) => {
   if (!selectedOption) return; // safeguard
   const { value } = selectedOption;
@@ -57,10 +60,7 @@ const Header = () => {
   setCompantUid(filtercompany[0]?.uid);
 };
 
-
-
   // custom style react select box
-
  const customStyles = {
   option: (provided, state) => ({
     ...provided,
@@ -74,15 +74,10 @@ const Header = () => {
   }),
 };
 
-
-  
-
-
-
-
   useEffect(() => {
     GetCompanyDetails(compantUid)
   }, [companyInfo])
+
   const GetCompanyDetails = (uid) => {
     GetcompanyDetailsApi(uid)
       .then((res) => {
@@ -103,26 +98,13 @@ const Header = () => {
         }
       });
   };
-  console.log(companyInfo)
+
   return (
     <header className="main_header">
       <div className="header-wrapper row">
         <Col className="col-4"  md={4}>
-          <div className="org_name">
+         <div className="org_name">
             <span className="orgshort_text">{logoname}</span>
-            {/* <p>{userInfo?.default_company?.company_name}</p> */}
-
-            {/* <div className="custom-select-wrapper">
-            <Form.Select
-              value={companyInfo}
-              onChange={handleCompanyDropdown}
-              className="select-dropdown-custom-event"
-            >
-              {userInfo?.company?.map((item) => (
-                <option value={item.company_name}>{item?.company_name}</option>
-              ))}
-            </Form.Select>
-            </div> */}
             <Select
               options={userOption}
               value={userOption.find((opt)=>opt.value===companyInfo)}
