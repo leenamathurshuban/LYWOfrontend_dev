@@ -508,6 +508,7 @@ const CreateJobsRevised = ({
       ...prevBadges,
       option,
     ]);
+    areaEduRef.current.value = ""; // ✅ clear input
     setAreaEducationOption([])
   }
   const handleSelectShortlistIndustries = (option) => {
@@ -515,6 +516,7 @@ const CreateJobsRevised = ({
       ...prevBadges,
       option,
     ]);
+    industriesRef.current.value = ""; // ✅ clear input
     setShorlistedIndustries([])
   }
   const handleSelectRestrictedRole = (option) => {
@@ -522,6 +524,7 @@ const CreateJobsRevised = ({
       ...prevBadges,
       option,
     ]);
+    roleRef.current.value = ""; // ✅ clear input
     setRestrictedRole([])
   }
   const handleSelectLocation = (option) => {
@@ -529,6 +532,7 @@ const CreateJobsRevised = ({
       ...prevBadges,
       option,
     ]);
+    locationRef.current.value = ""; // ✅ clear input
     setLocationList([])
   }
   const handleRemoveBadge = (index) => {
@@ -646,6 +650,7 @@ const CreateJobsRevised = ({
       ...prevBadges,
       option,
     ]);
+    spokenRef.current.value = ""; // ✅ clear input
     setSpokenLanguage([])
   }
   const handleSelectWrittenLang = (option) => {
@@ -653,6 +658,7 @@ const CreateJobsRevised = ({
       ...prevBadges,
       option,
     ]);
+    writtenRef.current.value = ""; // ✅ clear input
     setWittenLanguage([])
   }
 
@@ -2194,8 +2200,10 @@ const CreateJobsRevised = ({
                                         {aresEducationOption.map((option, idx) => (
                                           <Dropdown.Item
                                             key={idx}
-                                            onClick={(e) =>
+                                            onMouseDown={(e) =>{
+                                               e.preventDefault(); // prevents blur
                                               handleSelectAreaEducation(option)
+                                            }
                                             }
                                           >
                                             {option?.qualification_name}
@@ -2402,8 +2410,11 @@ const CreateJobsRevised = ({
                                           {shorlistedIndustries.map((option, idx) => (
                                             <Dropdown.Item
                                               key={idx}
-                                              onClick={(e) =>
+                                              onMouseDown={(e) =>
+                                              {
+                                                 e.preventDefault(); // prevents blur
                                                 handleSelectShortlistIndustries(option)
+                                              }
                                               }
                                             >
                                               {option?.industry_name}
@@ -2504,8 +2515,10 @@ const CreateJobsRevised = ({
                                           {restrictedRole.map((option, idx) => (
                                             <Dropdown.Item
                                               key={idx}
-                                              onClick={(e) =>
+                                              onMouseDown={(e) =>{
+                                                 e.preventDefault(); // prevents blur                                              
                                                 handleSelectRestrictedRole(option)
+                                              }
                                               }
                                             >
                                               {option?.is_like_name}
@@ -2739,8 +2752,10 @@ const CreateJobsRevised = ({
                                           {spokenLanguage.map((option, idx) => (
                                             <Dropdown.Item
                                               key={idx}
-                                              onClick={(e) =>
+                                              onMouseDown={(e) =>{
+                                                 e.preventDefault(); // prevents blur
                                                 handleSelectSpokenLang(option)
+                                              }
                                               }
                                             >
                                               {option?.language_name}
@@ -2823,8 +2838,10 @@ const CreateJobsRevised = ({
                                           {writtenLanguage.map((option, idx) => (
                                             <Dropdown.Item
                                               key={idx}
-                                              onClick={(e) =>
+                                              onMouseDown={(e) =>{
+                                                 e.preventDefault(); // prevents blur
                                                 handleSelectWrittenLang(option)
+                                              }
                                               }
                                             >
                                               {option?.language_name}
@@ -2949,8 +2966,10 @@ const CreateJobsRevised = ({
                                           {locationList.map((option, idx) => (
                                             <Dropdown.Item
                                               key={idx}
-                                              onClick={(e) =>
+                                              onMouseDown={(e) =>{
+                                                 e.preventDefault(); // prevents blur
                                                 handleSelectLocation(option)
+                                              }
                                               }
                                             >
                                               {option?.location_name}

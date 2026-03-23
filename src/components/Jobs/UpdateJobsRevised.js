@@ -762,6 +762,7 @@ const UpdateJobsRevised = ({
             ...prevBadges,
             option,
         ]);
+         areaEduRef.current.value = ""; // ✅ clear input
         setAreaEducationOption([])
     }
     const handleSelectShortlistIndustries = (option) => {
@@ -769,13 +770,15 @@ const UpdateJobsRevised = ({
             ...prevBadges,
             option,
         ]);
-        setShorlistedIndustries([])
+         industriesRef.current.value = ""; // ✅ clear input
+    setShorlistedIndustries([]);
     }
     const handleSelectRestrictedRole = (option) => {
         setRestrictedRoleBadges((prevBadges) => [
             ...prevBadges,
             option,
         ]);
+         roleRef.current.value = ""; // ✅ clear input
         setRestrictedRole([])
     }
     const handleSelectLocation = (option) => {
@@ -783,6 +786,7 @@ const UpdateJobsRevised = ({
             ...prevBadges,
             option,
         ]);
+         locationRef.current.value = ""; // ✅ clear input
         setLocationList([])
     }
     const handleRemoveBadge = (index) => {
@@ -941,6 +945,7 @@ const UpdateJobsRevised = ({
             ...prevBadges,
             option,
         ]);
+         spokenRef.current.value = ""; // ✅ clear input
         setSpokenLanguage([])
     }
     const handleSelectWrittenLang = (option) => {
@@ -948,6 +953,7 @@ const UpdateJobsRevised = ({
             ...prevBadges,
             option,
         ]);
+         writtenRef.current.value = ""; // ✅ clear input
         setWittenLanguage([])
     }
     const handleSaveCustomQuestion = async (isEdit, values) => {        
@@ -2261,27 +2267,28 @@ const UpdateJobsRevised = ({
             });
         }
     }, [updateFormData?.immediate_hiring])
-    console.log(shouldShowRecommendation())
+    
+    // console.log(shouldShowRecommendation())
 
-    // console.log(behaviours)
+    // // console.log(behaviours)
 
-    // console.log('add skill box', addSkillGroup)
-    // console.log("customValue,addSubSkill", skillGroupData, SelectSkillsData)
-    // console.log(skillGroupData, "group_skills")
-    // console.log('======>selecting skills', SelectSkillsData)
-    // // console.log("openStep", importantFlag)
-    console.log('must have', mustHaveSkills)
-    // console.log(components.length)
-    // console.log(IndustriesBadges)
-    // console.log('neetu', createRevisedJobData)
-    console.log('==========>update======>', updateFormData)
-    // console.log('=========>', dynamicArray)
-    console.log('dada ji', currentStep, openStep[0])
-    console.log('mahesh=====', SelectSkillsData)
-    console.log(addSubSkill)
-    console.log(components)
-    console.log(addSubSkill.length)
-    console.log(skillGroupData)
+    // // console.log('add skill box', addSkillGroup)
+    // // console.log("customValue,addSubSkill", skillGroupData, SelectSkillsData)
+    // // console.log(skillGroupData, "group_skills")
+    // // console.log('======>selecting skills', SelectSkillsData)
+    // // // console.log("openStep", importantFlag)
+    // console.log('must have', mustHaveSkills)
+    // // console.log(components.length)
+    // // console.log(IndustriesBadges)
+    // // console.log('neetu', createRevisedJobData)
+    // console.log('==========>update======>', updateFormData)
+    // // console.log('=========>', dynamicArray)
+    // console.log('dada ji', currentStep, openStep[0])
+    // console.log('mahesh=====', SelectSkillsData)
+    // console.log(addSubSkill)
+    // console.log(components)
+    // console.log(addSubSkill.length)
+    // console.log(skillGroupData)
     return (
         <>
             <Modal
@@ -2793,9 +2800,10 @@ const UpdateJobsRevised = ({
                                                                                 {aresEducationOption.map((option, idx) => (
                                                                                     <Dropdown.Item
                                                                                         key={idx}
-                                                                                        onClick={(e) =>
+                                                                                        onMouseDown={(e) =>{
+                                                                                             e.preventDefault(); // prevents blur
                                                                                             handleSelectAreaEducation(option)
-                                                                                        }
+                                                                                        }}
                                                                                     >
                                                                                         {option?.qualification_name}
                                                                                     </Dropdown.Item>
@@ -3016,11 +3024,12 @@ const UpdateJobsRevised = ({
                                                                                 <div class={`${shorlistedIndustries.length ? 'droplistmulti' : ''}`}>
                                                                                     {shorlistedIndustries.map((option, idx) => (
                                                                                         <Dropdown.Item
-                                                                                            key={idx}
-                                                                                            onClick={(e) =>
-                                                                                                handleSelectShortlistIndustries(option)
-                                                                                            }
-                                                                                        >
+    key={idx}
+    onMouseDown={(e) => {
+        e.preventDefault(); // prevents blur
+        handleSelectShortlistIndustries(option);
+    }}
+>
                                                                                             {option?.industry_name}
                                                                                         </Dropdown.Item>
                                                                                     ))}
@@ -3118,9 +3127,10 @@ const UpdateJobsRevised = ({
                                                                                     {restrictedRole.map((option, idx) => (
                                                                                         <Dropdown.Item
                                                                                             key={idx}
-                                                                                            onClick={(e) =>
+                                                                                            onMouseDown={(e) =>{
+                                                                                                 e.preventDefault(); // prevents blur
                                                                                                 handleSelectRestrictedRole(option)
-                                                                                            }
+                                                                                            }}
                                                                                         >
                                                                                             {option?.is_like_name}
                                                                                         </Dropdown.Item>
@@ -3358,8 +3368,10 @@ const UpdateJobsRevised = ({
                                                                                     {spokenLanguage.map((option, idx) => (
                                                                                         <Dropdown.Item
                                                                                             key={idx}
-                                                                                            onClick={(e) =>
+                                                                                            onMouseDown={(e) =>{
+                                                                                                 e.preventDefault(); // prevents blur
                                                                                                 handleSelectSpokenLang(option)
+                                                                                            }
                                                                                             }
                                                                                         >
                                                                                             {option?.language_name}
@@ -3443,8 +3455,10 @@ const UpdateJobsRevised = ({
                                                                                     {writtenLanguage.map((option, idx) => (
                                                                                         <Dropdown.Item
                                                                                             key={idx}
-                                                                                            onClick={(e) =>
+                                                                                            onMouseDown={(e) =>{
+                                                                                                 e.preventDefault(); // prevents blur
                                                                                                 handleSelectWrittenLang(option)
+                                                                                            }
                                                                                             }
                                                                                         >
                                                                                             {option?.language_name}
@@ -3576,9 +3590,10 @@ const UpdateJobsRevised = ({
                                                                                     {locationList.map((option, idx) => (
                                                                                         <Dropdown.Item
                                                                                             key={idx}
-                                                                                            onClick={(e) =>
+                                                                                            onMouseDown={(e) =>{
+                                                                                                 e.preventDefault(); // prevents blur
                                                                                                 handleSelectLocation(option)
-                                                                                            }
+                                                                                            }}
                                                                                         >
                                                                                             {option?.location_name}
                                                                                         </Dropdown.Item>
